@@ -1,0 +1,69 @@
+{{- if semverCompare "^1.9-0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta1
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  labels:
+    app: {{ template "traefik.name" . }}
+    chart: {{ template "traefik.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  replicas: {{ default 1 .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "traefik.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "traefik.name" . }}
+        chart: {{ template "traefik.chart" . }}
+        release: {{ .Release.Name | quote }}
+        heritage: {{ .Release.Service | quote }}
+    spec:
+      serviceAccountName: {{ template "traefik.fullname" . }}
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        name: {{ template "traefik.fullname" . }}
+        resources:
+        {{- if .Values.yaml }}
+        {{- if .Values.yaml.resources }}
+{{ toYaml .Values.yaml.resources | indent 10 }}
+        {{- end }}
+        {{- end }}
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.ports.http.port }}
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.ports.http.port }}
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        ports:
+        - name: http
+          containerPort: {{ .Values.ports.http.port }}
+          protocol: TCP
+        - name: https
+          containerPort: {{ .Values.ports.https.port }}
+          protocol: TCP
+        args:
+          - "--entryPoints.http.address=:{{ .Values.ports.http.port }}"
+          - "--entryPoints.https.address=:{{ .Values.ports.https.port }}"
+          - "--api.dashboard"
+          - "--ping"
+          - "--log.level={{ .Values.logs.loglevel }}"
