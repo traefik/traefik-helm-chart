@@ -39,7 +39,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.http.port }}
+            port: {{ .Values.ports.web.port }}
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -48,22 +48,22 @@ spec:
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.http.port }}
+            port: {{ .Values.ports.web.port }}
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
         ports:
-        - name: http
-          containerPort: {{ .Values.ports.http.port }}
+        - name: web
+          containerPort: {{ .Values.ports.web.port }}
           protocol: TCP
-        - name: https
-          containerPort: {{ .Values.ports.https.port }}
+        - name: websecure
+          containerPort: {{ .Values.ports.websecure.port }}
           protocol: TCP
         args:
-          - "--entryPoints.http.address=:{{ .Values.ports.http.port }}"
-          - "--entryPoints.https.address=:{{ .Values.ports.https.port }}"
-          - "--api.dashboard"
+          - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
+          - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
+          - "--api.insecure=true"
           - "--ping"
           - "--log.level={{ .Values.logs.loglevel }}"

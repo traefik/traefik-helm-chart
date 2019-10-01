@@ -7,7 +7,7 @@ microservices with ease.
 
 This chart bootstraps Traefik version 2 as a Kubernetes ingress controller
 
-# Prerequisites
+## Prerequisites
 
 - Kubernetes 1.10+
 - You are deploying the chart to a cluster with a cloud provider capable of provisioning an
