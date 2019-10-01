@@ -48,7 +48,7 @@ spec:
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.web.port }}
+            port: {{ .Values.ports.traefik.port }}
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -71,4 +71,5 @@ spec:
           - "--api.dashboard=true"
           - "--api.insecure=true"
           - "--ping=true"
+          - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
