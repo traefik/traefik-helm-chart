@@ -39,7 +39,7 @@ spec:
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.web.port }}
+            port: {{ .Values.ports.traefik.port }}
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -61,9 +61,14 @@ spec:
         - name: websecure
           containerPort: {{ .Values.ports.websecure.port }}
           protocol: TCP
+        - name: traefik
+          containerPort: {{ .Values.ports.traefik.port }}
+          protocol: TCP
         args:
           - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
           - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
+          - "--entryPoints.traefik.address=:{{ .Values.ports.traefik.port }}"
+          - "--api.dashboard=true"
           - "--api.insecure=true"
-          - "--ping"
+          - "--ping=true"
           - "--log.level={{ .Values.logs.loglevel }}"
