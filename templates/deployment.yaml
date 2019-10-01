@@ -1,0 +1,74 @@
+{{- if semverCompare "^1.9-0" .Capabilities.KubeVersion.GitVersion }}
+apiVersion: apps/v1
+{{- else }}
+apiVersion: apps/v1beta1
+{{- end }}
+kind: Deployment
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  labels:
+    app: {{ template "traefik.name" . }}
+    chart: {{ template "traefik.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+spec:
+  replicas: {{ default 1 .Values.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "traefik.name" . }}
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "traefik.name" . }}
+        chart: {{ template "traefik.chart" . }}
+        release: {{ .Release.Name | quote }}
+        heritage: {{ .Release.Service | quote }}
+    spec:
+      serviceAccountName: {{ template "traefik.fullname" . }}
+      terminationGracePeriodSeconds: 60
+      containers:
+      - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        name: {{ template "traefik.fullname" . }}
+        resources:
+        {{- if .Values.yaml }}
+        {{- if .Values.yaml.resources }}
+{{ toYaml .Values.yaml.resources | indent 10 }}
+        {{- end }}
+        {{- end }}
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.ports.traefik.port }}
+          failureThreshold: 1
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: {{ .Values.ports.web.port }}
+          failureThreshold: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 2
+        ports:
+        - name: web
+          containerPort: {{ .Values.ports.web.port }}
+          protocol: TCP
+        - name: websecure
+          containerPort: {{ .Values.ports.websecure.port }}
+          protocol: TCP
+        - name: traefik
+          containerPort: {{ .Values.ports.traefik.port }}
+          protocol: TCP
+        args:
+          - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
+          - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
+          - "--entryPoints.traefik.address=:{{ .Values.ports.traefik.port }}"
+          - "--api.dashboard=true"
+          - "--api.insecure=true"
+          - "--ping=true"
+          - "--log.level={{ .Values.logs.loglevel }}"

@@ -1,0 +1,27 @@
+## Default values for Traefik
+image:
+  name: traefik
+  tag: 2.0.1
+#
+deployment:
+  replicas: 1
+#
+ports:
+  web:
+    port: 8000
+  websecure:
+    port: 8443
+  traefik:
+    port: 9000
+#
+logs:
+  loglevel: INFO
+#
+yaml:
+  resources:
+    requests:
+      cpu: "100m"
+      memory: "50Mi"
+    limits:
+      cpu: "300m"
+      memory: "150Mi"
