@@ -80,4 +80,7 @@ spec:
           - "--api.insecure=true"
           - "--ping=true"
           - "--providers.kubernetescrd"
+          {{- if .Values.providers.kubernetesingress }}
+          - "--providers.kubernetesingress"
+          {{- end }}
           - "--log.level={{ .Values.logs.loglevel }}"

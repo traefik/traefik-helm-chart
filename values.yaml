@@ -20,6 +20,9 @@ ports:
 logs:
   loglevel: INFO
 #
+providers:
+  kubernetesingress: false
+#
 yaml:
   resources:
     requests:
