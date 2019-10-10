@@ -6,11 +6,16 @@ image:
 deployment:
   replicas: 1
 #
+service:
+  type: LoadBalancer
+#
 ports:
   web:
     port: 8000
+    #nodePort: 30000
   websecure:
     port: 8443
+    #nodePort: 30001
   traefik:
     port: 9000
 #
