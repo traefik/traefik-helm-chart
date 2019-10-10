@@ -1,7 +1,7 @@
 ## Default values for Traefik
 image:
   name: traefik
-  tag: 2.0.1
+  tag: 2.0.2
 #
 deployment:
   replicas: 1
