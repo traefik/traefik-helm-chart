@@ -19,6 +19,8 @@ NOTE: THIS CHART IS IN INCUBATOR STATUS, DO NOT USE IN A PRODUCTION ENVIRONMENT
 ## Configuration
 
 The following table lists the configurable parameters of the Traefik chart and their default values.
+```
 | Parameter                              | Description                                                                                                                  | Default                                           |
 | -------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- |
 | `service.annotations`                  |  Extra parameters to manage cloud load balancers. More [details](https://kubernetes.io/docs/concepts/cluster-administration/cloud-providers/#aws) |             []               |
+```
