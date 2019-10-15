@@ -73,3 +73,4 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+          - "--configfile={{ .Values.config.path }}"
