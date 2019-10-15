@@ -64,6 +64,12 @@ spec:
         - name: traefik
           containerPort: {{ .Values.ports.traefik.port }}
           protocol: TCP
+        {{- if .Values.yaml }}
+        {{- if .Values.yaml.volumeMounts }}
+        volumeMounts:
+{{ toYaml .Values.yaml.volumeMounts | indent 10 }}
+        {{- end }}
+        {{- end }}
         args:
           - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
           - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
@@ -73,4 +79,14 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+          {{- if .Values.config }}
+          {{- if .Values.config.path }}
           - "--configfile={{ .Values.config.path }}"
+          {{- end }}
+          {{- end }}
+      {{- if .Values.yaml }}
+      {{- if .Values.yaml.volumes }}
+      volumes:
+{{ toYaml .Values.yaml.volumes | indent 6 }}
+      {{- end }}
+      {{- end }}
