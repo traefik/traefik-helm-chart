@@ -14,8 +14,8 @@ ports:
   traefik:
     port: 9000
 #
-service:
-  externalTrafficPolicy: Cluster
+#service:
+#  externalTrafficPolicy: Cluster
 
 logs:
   loglevel: INFO
