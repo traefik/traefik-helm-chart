@@ -8,7 +8,7 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
-  type: {{ if (and (.Values.service) .Values.service.type) }} {{ .Values.service.type }} {{ else }} LoadBalancer {{ end }}
+  type: {{ if .Values.service }} {{ default "LoadBalancer" .Values.service.type }} {{ else }} LoadBalancer {{ end }}
   externalTrafficPolicy: {{ default "Cluster" .Values.service.externalTrafficPolicy }}
   selector:
     app: {{ template "traefik.name" . }}
@@ -17,12 +17,20 @@ spec:
   - port: 80
     name: web
     targetPort: web
-    {{- if (and (.Values.service) (eq .Values.service.type "NodePort") (not (empty .Values.ports.web.nodePort)))}}
+    {{- if .Values.service }}
+      {{- if .Values.service.type }}
+        {{- if and (eq .Values.service.type "NodePort") (not (empty .Values.ports.web.nodePort))}}
     nodePort: {{ .Values.ports.web.nodePort }}
+        {{- end }}
+      {{- end }}
     {{- end }}
   - port: 443
     name: websecure
     targetPort: websecure
-    {{- if (and (.Values.service) (eq .Values.service.type "NodePort") (not (empty .Values.ports.websecure.nodePort)))}}
+    {{- if .Values.service }}
+      {{- if .Values.service.type }}
+        {{- if and (eq .Values.service.type "NodePort") (not (empty .Values.ports.websecure.nodePort))}}
     nodePort: {{ .Values.ports.websecure.nodePort }}
+        {{- end }}
+      {{- end }}
     {{- end }}
