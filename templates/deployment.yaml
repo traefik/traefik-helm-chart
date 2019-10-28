@@ -81,3 +81,6 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+      {{- if .Values.sidecar }}
+{{ toYaml .Values.sidecar | indent 6 }}
+      {{- end }}
