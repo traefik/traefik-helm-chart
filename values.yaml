@@ -14,7 +14,7 @@ rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
 
-# Additional arguments to be passed at the startup of traeffik
+# Additional arguments to be passed at Traefik's binary
 additionalArguments: []
 #  - "--argument1"
 
