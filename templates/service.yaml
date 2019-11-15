@@ -9,7 +9,11 @@ metadata:
     heritage: {{ .Release.Service | quote }}
 spec:
   type: LoadBalancer
+  {{- if .Values.service }}
+  {{- if .Values.service.externalTrafficPolicy }}
   externalTrafficPolicy: {{ default "Cluster" .Values.service.externalTrafficPolicy }}
+  {{- end }}
+  {{- end }}
   selector:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
