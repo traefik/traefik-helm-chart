@@ -7,20 +7,24 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
-spec:
-  type: LoadBalancer
-  {{- if .Values.service }}
-  {{- if .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ default "Cluster" .Values.service.externalTrafficPolicy }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
   {{- end }}
+spec:
+  {{- $type := default "LoadBalancer" .Values.service.type }}
+  type: {{ $type }}
+  {{- with .Values.service.spec }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
   ports:
-  - port: 80
-    name: web
-    targetPort: web
-  - port: 443
-    name: websecure
-    targetPort: websecure
+  {{- range $name, $config := .Values.ports }}
+  {{- if $config.expose }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: {{ $name }}
+    targetPort: {{ $name }}
+  {{- end }}
+  {{- end }}

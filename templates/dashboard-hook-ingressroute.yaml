@@ -1,3 +1,4 @@
+{{- if .Values.dashboard.ingress.enabled }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -18,3 +19,4 @@ spec:
     services:
     - name:  {{ template "traefik.fullname" . }}-dashboard
       port: 80
+{{- end }}

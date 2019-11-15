@@ -17,6 +17,12 @@ spec:
     matchLabels:
       app: {{ template "traefik.name" . }}
       release: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      {{- with .Values.rollingUpdate }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       labels:
@@ -31,18 +37,16 @@ spec:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         name: {{ template "traefik.fullname" . }}
         resources:
-        {{- if .Values.yaml }}
-        {{- if .Values.yaml.resources }}
-{{ toYaml .Values.yaml.resources | indent 10 }}
-        {{- end }}
-        {{- if .Values.yaml.tolerations }}
+          {{- with .Values.resources }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+        {{- with .Values.tolerations }}
         tolerations:
-{{ toYaml .Values.yaml.tolerations | indent 8 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- if .Values.yaml.nodeSelector }}
+        {{- with .Values.nodeSelector }}
         nodeSelector:
-{{ toYaml .Values.yaml.nodeSelector | indent 10 }}
-        {{- end }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         readinessProbe:
           httpGet:
@@ -63,19 +67,15 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         ports:
-        - name: web
-          containerPort: {{ .Values.ports.web.port }}
+        {{- range $name, $config := .Values.ports }}
+        - name: {{ $name | quote }}
+          containerPort: {{ $config.port }}
           protocol: TCP
-        - name: websecure
-          containerPort: {{ .Values.ports.websecure.port }}
-          protocol: TCP
-        - name: traefik
-          containerPort: {{ .Values.ports.traefik.port }}
-          protocol: TCP
+        {{- end }}
         args:
-          - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
-          - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
-          - "--entryPoints.traefik.address=:{{ .Values.ports.traefik.port }}"
+          {{- range $name, $config := .Values.ports }}
+          - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
+          {{- end }}
           - "--api.dashboard=true"
           - "--api.insecure=true"
           - "--ping=true"

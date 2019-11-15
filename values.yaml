@@ -2,31 +2,81 @@
 image:
   name: traefik
   tag: 2.0.5
+
+#
+# Configure the deployment
 #
 deployment:
+  # Number of pods of the deployment
   replicas: 1
+
+rollingUpdate:
+  maxUnavailable: 1
+  maxSurge: 1
+
+# Additional arguments to be passed at the startup of traeffik
+additionalArguments: []
+#  - "--argument1"
+
+#
+# Configure Traefik entrypoints
 #
 ports:
-  web:
-    port: 8000
-  websecure:
-    port: 8443
+  # The name of this one can't be changed as it is used for the readiness and
+  # liveness probes, but you can adjust its config to your liking
   traefik:
     port: 9000
-#
-#service:
-#  externalTrafficPolicy: Cluster
+    # Defines whether the port is exposed if service.type is LoadBalancer or
+    # NodePort.
+    #
+    # You SHOULD NOT expose the traefik port on production deployments. If you
+    # want to access it from outside of your cluster, use `kubectl proxy` or
+    # create a secure ingress
+    expose: false
+    # The exposed port for this service
+    exposedPort: 9000
+  web:
+    port: 8000
+    expose: true
+    exposedPort: 80
+  websecure:
+    port: 8443
+    expose: true
+    exposedPort: 443
+
+# Options for the main traefik service, where the entrypoints traffic comes
+# from.
+service:
+  type: LoadBalancer
+  # Additional annotations (e.g. for cloud provider specific config)
+  annotations: {}
+  # Additional entries here will be added to the service spec. Cannot contains
+  # type, selector or ports entries.
+  spec: {}
+    # externalTrafficPolicy: Cluster
+    # loadBalancerIp: "1.2.3.4"
+    # clusterIP: "2.3.4.5"
+
+dashboard:
+  service:
+    # Create a service exposing the traefik port in the cluster using a
+    # ClusterIP
+    enabled: true
+  ingress:
+    # Expose the dashboard and api service via an ingress route at /dashboard
+    # and /api This is not secure and SHOULD NOT be enabled on production
+    # deployments
+    enabled: true
 
 logs:
   loglevel: INFO
 #
-yaml:
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "50Mi"
-    limits:
-      cpu: "300m"
-      memory: "150Mi"
-#  nodeSelector: {}
-#  tolerations: []
+resources: {}
+  # requests:
+  #   cpu: "100m"
+  #   memory: "50Mi"
+  # limits:
+  #   cpu: "300m"
+  #   memory: "150Mi"
+nodeSelector: {}
+tolerations: []
