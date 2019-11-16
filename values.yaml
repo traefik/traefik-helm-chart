@@ -15,8 +15,8 @@ rollingUpdate:
   maxSurge: 1
 
 # Additional arguments to be passed at Traefik's binary
-additionalArguments: []
-#  - "--argument1"
+additionalArguments: 
+#  - "--providers.kubernetesingress"
 
 #
 # Configure Traefik entrypoints
