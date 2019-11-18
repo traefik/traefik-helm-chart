@@ -1,4 +1,5 @@
 ## Default values for Traefik
+##helm upgrade --set image.tag=v2.0.0 --install --namespace=traefik2 traefik2 traefik-helm-chart-master
 image:
   name: traefik
   tag: 2.0.5
@@ -8,14 +9,71 @@ deployment:
 #
 ports:
   web:
-    port: 8000
+    port: 80
   websecure:
-    port: 8443
+    port: 443
   traefik:
     port: 9000
 #
-#service:
-#  externalTrafficPolicy: Cluster
+service:
+  externalTrafficPolicy: Cluster
+
+# https://docs.traefik.io/reference/static-configuration/env/
+# Environment variables will be part of Secret
+# Secret will be loaded into Deployment.
+# This is to ensure sensitive data is encrypted at rest.
+
+env:
+  - name: TRAEFIK_ENTRYPOINTS_web_ADDRESS
+    value: :80
+  - name: TRAEFIK_ENTRYPOINTS_websecure_ADDRESS
+    value: :443
+  - name: TRAEFIK_ENTRYPOINTS_traefik_ADDRESS
+    value: :9000
+  - name: TRAEFIK_PING
+    value: true
+  - name: TRAEFIK_ACCESSLOG
+    value: true
+  - name: TRAEFIK_ACCESSLOG_FORMAT
+    value: json
+  - name: TRAEFIK_API
+    value: true
+  - name: TRAEFIK_API_DASHBOARD
+    value: true
+  - name: TRAEFIK_API_INSECURE
+    value: true
+  - name: TRAEFIK_LOG_LEVEL
+    value: DEBUG
+  - name: TRAEFIK_PROVIDERS_KUBERNETESCRD
+    value: true
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default
+    value: true
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_CASERVER
+    value: https://acme-staging-v02.api.letsencrypt.org/directory
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_DNSCHALLENGE
+    value: true
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_DNSCHALLENGE_PROVIDER
+    value: azure
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_DNSCHALLENGE_RESOLVERS
+    value: 8.8.8.53
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_EMAIL
+    value: ekjuanrejon@gmail.com
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_HTTPCHALLENGE
+    value: false
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_STORAGE
+    value: acme.json
+  - name: TRAEFIK_CERTIFICATESRESOLVERS_default_ACME_TLSCHALLENGE
+    value: true
+  - name: AZURE_CLIENT_ID
+    value: 
+  - name: AZURE_CLIENT_SECRET
+    value: 
+  - name: AZURE_RESOURCE_GROUP
+    value: 
+  - name: AZURE_SUBSCRIPTION_ID
+    value: 
+  - name: AZURE_TENANT_ID
+    value: 
 
 logs:
   loglevel: INFO

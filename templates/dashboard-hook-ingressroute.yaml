@@ -11,10 +11,13 @@ metadata:
     heritage: {{ .Release.Service | quote }}
 spec:
   entryPoints:
-    - web
+    - websecure
   routes:
-  - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - match: HOST(`admin2.oneview-seniorliving.com`)
     kind: Rule
     services:
     - name:  {{ template "traefik.fullname" . }}-dashboard
       port: 80
+  tls:
+    certResolver: default
+    options: {}
