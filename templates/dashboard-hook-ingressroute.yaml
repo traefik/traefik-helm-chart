@@ -13,7 +13,7 @@ spec:
   entryPoints:
     - websecure
   routes:
-  - match: HOST(`admin2.oneview-seniorliving.com`)
+  - match: HOST(`dashboard.yourdomain.com`)
     kind: Rule
     services:
     - name:  {{ template "traefik.fullname" . }}-dashboard
