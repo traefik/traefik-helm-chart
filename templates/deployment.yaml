@@ -73,6 +73,8 @@ spec:
           protocol: TCP
         {{- end }}
         args:
+          - "--global.checknewversion=true"
+          - "--global.sendanonymoususage=true"
           {{- range $name, $config := .Values.ports }}
           - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
           {{- end }}
