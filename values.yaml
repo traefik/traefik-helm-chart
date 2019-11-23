@@ -36,10 +36,6 @@ ports:
 #  externalTrafficPolicy: Cluster
 
 dashboard:
-  service:
-    # Create a service exposing the traefik port in the cluster using a
-    # ClusterIP
-    enabled: true
   ingress:
     # Expose the dashboard and api service via an ingress route at /dashboard
     # and /api This is not secure and SHOULD NOT be enabled on production
