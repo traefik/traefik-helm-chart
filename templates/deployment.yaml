@@ -63,19 +63,15 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         ports:
-        - name: web
-          containerPort: {{ .Values.ports.web.port }}
+        {{- range $name, $config := .Values.ports }}
+        - name: {{ $name | quote }}
+          containerPort: {{ $config.port }}
           protocol: TCP
-        - name: websecure
-          containerPort: {{ .Values.ports.websecure.port }}
-          protocol: TCP
-        - name: traefik
-          containerPort: {{ .Values.ports.traefik.port }}
-          protocol: TCP
+        {{- end }}
         args:
-          - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
-          - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
-          - "--entryPoints.traefik.address=:{{ .Values.ports.traefik.port }}"
+          {{- range $name, $config := .Values.ports }}
+          - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
+          {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
           - "--providers.kubernetescrd"

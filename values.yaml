@@ -5,17 +5,45 @@ image:
 #
 deployment:
   replicas: 1
+
+#
+# Configure Traefik entrypoints
 #
 ports:
-  web:
-    port: 8000
-  websecure:
-    port: 8443
+  # The name of this one can't be changed as it is used for the readiness and
+  # liveness probes, but you can adjust its config to your liking
   traefik:
     port: 9000
-#
-#service:
-#  externalTrafficPolicy: Cluster
+    # Defines whether the port is exposed if service.type is LoadBalancer or
+    # NodePort.
+    #
+    # You SHOULD NOT expose the traefik port on production deployments. If you
+    # want to access it from outside of your cluster, use `kubectl proxy` or
+    # create a secure ingress
+    expose: false
+    # The exposed port for this service
+    exposedPort: 9000
+  web:
+    port: 8000
+    expose: true
+    exposedPort: 80
+  websecure:
+    port: 8443
+    expose: true
+    exposedPort: 443
+
+# Options for the main traefik service, where the entrypoints traffic comes
+# from.
+service:
+  type: LoadBalancer
+  # Additional annotations (e.g. for cloud provider specific config)
+  annotations: {}
+  # Additional entries here will be added to the service spec. Cannot contains
+  # type, selector or ports entries.
+  spec: {}
+    # externalTrafficPolicy: Cluster
+    # loadBalancerIp: "1.2.3.4"
+    # clusterIP: "2.3.4.5"
 
 logs:
   loglevel: INFO
