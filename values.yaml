@@ -16,6 +16,11 @@ rollingUpdate:
 
 #
 # Configure Traefik entry points
+# Additional arguments to be passed at Traefik's binary
+## Use curly braces to pass values: `helm install --set="{--providers.kubernetesingress,--global.checknewversion=true}" ."
+additionalArguments: []
+#  - "--providers.kubernetesingress"
+
 #
 ports:
   # The name of this one can't be changed as it is used for the readiness and
