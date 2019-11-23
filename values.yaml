@@ -17,6 +17,7 @@ rollingUpdate:
 #
 # Configure Traefik entry points
 # Additional arguments to be passed at Traefik's binary
+## Use curly braces to pass values: `helm install --set="{--providers.kubernetesingress,--log.level=DEBUG}" ."
 additionalArguments: []
 #  - "--providers.kubernetesingress"
 
