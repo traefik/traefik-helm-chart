@@ -18,9 +18,10 @@ spec:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
   ports:
-  - port: 80
-    name: web
-    targetPort: web
-  - port: 443
-    name: websecure
-    targetPort: websecure
+  {{- range $name, $config := .Values.ports }}
+  {{- if $config.expose }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: {{ $name }}
+    targetPort: {{ $name | quote }}
+  {{- end }}
+  {{- end }}
