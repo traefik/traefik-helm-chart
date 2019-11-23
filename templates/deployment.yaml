@@ -72,7 +72,7 @@ spec:
           {{- range $name, $config := .Values.ports }}
           - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
           {{- end }}
-          - "--api.dashboard=true"
+          - "--api.dashboard={{ .Values.dashboard.enable }}"
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"

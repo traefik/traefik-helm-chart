@@ -1,3 +1,4 @@
+{{- if .Values.dashboard.ingressRoute }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -18,3 +19,4 @@ spec:
     services:
     - name: api@internal
       kind: TraefikService
+{{- end -}}
