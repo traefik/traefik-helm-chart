@@ -32,7 +32,7 @@ ports:
     expose: true
     exposedPort: 443
 #
-service:
+# service:
 #  externalTrafficPolicy: Cluster
 
 logs:
