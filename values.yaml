@@ -1,4 +1,4 @@
-## Default values for Traefik
+# Default values for Traefik
 image:
   name: traefik
   tag: 2.1.0-rc2
@@ -7,7 +7,7 @@ deployment:
   replicas: 1
 
 #
-# Configure Traefik entrypoints
+# Configure Traefik entry points
 #
 ports:
   # The name of this one can't be changed as it is used for the readiness and
@@ -17,9 +17,9 @@ ports:
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
     #
-    # You SHOULD NOT expose the traefik port on production deployments. If you
-    # want to access it from outside of your cluster, use `kubectl proxy` or
-    # create a secure ingress
+    # You SHOULD NOT expose the traefik port on production deployments.
+    # If you want to access it from outside of your cluster,
+    # use `kubectl proxy` or create a secure ingress
     expose: false
     # The exposed port for this service
     exposedPort: 9000
