@@ -36,14 +36,16 @@ ports:
 #  externalTrafficPolicy: Cluster
 
 dashboard:
-  ingress:
-    # Expose the dashboard and api service via an ingress route at /dashboard
-    # and /api This is not secure and SHOULD NOT be enabled on production
-    # deployments
-    enabled: true
+  # Enable the dashboard on Traefik
+  enable: true
+
+  # Expose the dashboard and api through an ingress route at /dashboard
+  # and /api This is not secure and SHOULD NOT be enabled on production
+  # deployments
+  ingressRoute: true
 
 logs:
-  loglevel: INFO
+  loglevel: WARN
 #
 yaml:
   resources:
