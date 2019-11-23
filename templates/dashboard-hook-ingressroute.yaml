@@ -16,5 +16,5 @@ spec:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
     services:
-    - name:  {{ template "traefik.fullname" . }}-dashboard
-      port: 80
+    - name: api@internal
+      kind: TraefikService
