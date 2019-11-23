@@ -17,6 +17,12 @@ spec:
     matchLabels:
       app: {{ template "traefik.name" . }}
       release: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      {{- with .Values.rollingUpdate }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       labels:

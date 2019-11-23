@@ -2,9 +2,17 @@
 image:
   name: traefik
   tag: 2.1.0-rc2
+
+#
+# Configure the deployment
 #
 deployment:
+  # Number of pods of the deployment
   replicas: 1
+
+rollingUpdate:
+  maxUnavailable: 1
+  maxSurge: 1
 
 #
 # Configure Traefik entry points
