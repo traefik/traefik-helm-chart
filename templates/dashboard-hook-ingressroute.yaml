@@ -1,3 +1,4 @@
+{{- if .Values.dashboard.ingress.enabled }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
