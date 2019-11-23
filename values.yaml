@@ -20,13 +20,12 @@ ports:
 logs:
   loglevel: INFO
 #
-yaml:
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "50Mi"
-    limits:
-      cpu: "300m"
-      memory: "150Mi"
-#  nodeSelector: {}
-#  tolerations: []
+resources: {}
+  # requests:
+  #   cpu: "100m"
+  #   memory: "50Mi"
+  # limits:
+  #   cpu: "300m"
+  #   memory: "150Mi"
+nodeSelector: {}
+tolerations: []
