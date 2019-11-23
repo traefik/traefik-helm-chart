@@ -80,3 +80,8 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+          {{- with .Values.additionalArguments }}
+          {{- range . }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}

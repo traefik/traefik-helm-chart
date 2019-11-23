@@ -16,6 +16,10 @@ rollingUpdate:
 
 #
 # Configure Traefik entry points
+# Additional arguments to be passed at Traefik's binary
+additionalArguments: []
+#  - "--providers.kubernetesingress"
+
 #
 ports:
   # The name of this one can't be changed as it is used for the readiness and
