@@ -18,7 +18,7 @@ spec:
     - {{ . }}
   {{- end }} 
   routes:
-  - match: {{ .Values.ingressRoute.match }}
+  - match: {{ .Values.dashboard.ingressRoute.match }}
     kind: Rule
     services:
     - name: api@internal
