@@ -57,6 +57,13 @@ dashboard:
   # deployments
   ingressRoute: true
 
+# Environment variables that will be placed into a secret
+# This can be useful when loading cloud provider variables for acme
+# env:
+#  - name: name
+#    value: value
+env: []
+
 logs:
   loglevel: WARN
 #

@@ -66,6 +66,15 @@ spec:
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
+        env:
+        {{ $secretfullname := include "traefik.fullname" . }}
+        {{- range .Values.env }} 
+          - name: {{ .name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ $secretfullname }}
+                key: {{ .name }}
+        {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         - name: {{ $name | quote }}
