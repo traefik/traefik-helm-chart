@@ -1,4 +1,4 @@
-{{- if .Values.dashboard.ingressRoute }}
+{{- if .Values.dashboard.ingressRoute.enabled }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
@@ -14,11 +14,21 @@ metadata:
     heritage: {{ .Release.Service | quote }}
 spec:
   entryPoints:
-    - web
+  {{- range .Values.dashboard.ingressRoute.entryPoints }}
+    - {{ . }}
+  {{- end }} 
   routes:
-  - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - match: {{ .Values.ingressRoute.match }}
     kind: Rule
     services:
     - name: api@internal
       kind: TraefikService
+    middlewares:
+    {{- range .Values.dashboard.ingressRoute.middlewares }}
+      - name: {{ .name }}
+        namespace: {{ .namespace }}
+    {{- end }}
+  tls:
+    certResolver: {{ .Values.dashboard.ingressRoute.certResolver }}
+    options: {}
 {{- end -}}

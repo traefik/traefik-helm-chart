@@ -55,7 +55,13 @@ dashboard:
   # Expose the dashboard and api through an ingress route at /dashboard
   # and /api This is not secure and SHOULD NOT be enabled on production
   # deployments
-  ingressRoute: true
+  ingressRoute:
+    enabled: false
+    entryPoints:
+      - websecure
+    middlewares: []
+    certResolver: default
+    match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
 
 logs:
   loglevel: WARN
