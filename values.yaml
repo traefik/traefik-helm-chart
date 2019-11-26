@@ -44,9 +44,19 @@ ports:
     port: 8443
     expose: true
     exposedPort: 443
-#
-# service:
-#  externalTrafficPolicy: Cluster
+
+# Options for the main traefik service, where the entrypoints traffic comes
+# from.
+service:
+  type: LoadBalancer
+  # Additional annotations (e.g. for cloud provider specific config)
+  annotations: {}
+  # Additional entries here will be added to the service spec. Cannot contains
+  # type, selector or ports entries.
+  spec: {}
+    # externalTrafficPolicy: Cluster
+    # loadBalancerIp: "1.2.3.4"
+    # clusterIP: "2.3.4.5"
 
 dashboard:
   # Enable the dashboard on Traefik

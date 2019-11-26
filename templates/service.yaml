@@ -7,13 +7,16 @@ metadata:
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  type: LoadBalancer
-  {{- if .Values.service }}
-  {{- if .Values.service.externalTrafficPolicy }}
-  externalTrafficPolicy: {{ default "Cluster" .Values.service.externalTrafficPolicy }}
-  {{- end }}
-  {{- end }}
+  {{- $type := default "LoadBalancer" .Values.service.type }}
+  type: {{ $type }}
+  {{- with .Values.service.spec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
   selector:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
