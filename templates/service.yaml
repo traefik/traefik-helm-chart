@@ -16,7 +16,7 @@ spec:
   type: {{ $type }}
   {{- with .Values.service.spec }}
   {{- toYaml . | nindent 2 }}
-  {{- end -}}
+  {{- end }}
   selector:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
