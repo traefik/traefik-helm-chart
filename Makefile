@@ -40,6 +40,7 @@ $(HELM_REPO):
 
 helm:
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
+	@helm init --client
 
 # This target is phony to ensure there is no conflict with other dir named "traefik"
 $(SHIM_DIR):
