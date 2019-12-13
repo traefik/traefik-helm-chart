@@ -11,21 +11,29 @@ all: clean lint build deploy
 
 # Ensure the Helm chart and its metadata are valid
 lint: helm $(SHIM_DIR)
+	@echo "== Linting Chart..."
 	@helm lint $(SHIM_DIR)
+	@echo "== Linting Finished"
 
 # Generates an artefact containing the Helm Chart in the distribution directory
 build: helm $(DIST_DIR) $(SHIM_DIR)
+	@echo "== Building Chart..."
 	@helm package $(SHIM_DIR) --destination=$(DIST_DIR)
+	@echo "== Building Finished"
 
 # Prepare the Helm repository with the latest packaged charts
 deploy: build $(DIST_DIR) $(HELM_REPO)
+	@echo "== Deploying Chart..."
 	@cp $(DIST_DIR)/*tgz $(HELM_REPO)/
 	@helm repo index $(HELM_REPO)
+	@echo "== Deploying Finished"
 
 # Cleanup leftovers and distribution dir
 clean:
+	@echo "== Cleaning..."
 	@rm -rf $(DIST_DIR)
 	@unlink $(SHIM_DIR) >/dev/null 2>&1 || true
+	@echo "== Cleaning Finished"
 	
 ################################## Technical targets
 
