@@ -1,5 +1,6 @@
 
 DIST_DIR ?= $(CURDIR)/dist
+TMPDIR ?= /tmp
 SHIM_DIR ?= $(TMPDIR)/traefik
 HELM_REPO ?= $(CURDIR)/repo
 
@@ -10,7 +11,7 @@ all: clean lint build deploy
 
 # Ensure the Helm chart and its metadata are valid
 lint: helm $(SHIM_DIR)
-	@helm lint $(TMPDIR)/traefik
+	@helm lint $(SHIM_DIR)
 
 # Generates an artefact containing the Helm Chart in the distribution directory
 build: helm $(DIST_DIR) $(SHIM_DIR)
