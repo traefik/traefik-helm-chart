@@ -1,11 +1,13 @@
+dist: xenial
+sudo: required
 
 notifications:
   email:
     on_success: never
     on_failure: change
 
-sudo: required
-dist: xenial
+services:
+  - docker
 
 env:
   global:
@@ -13,9 +15,6 @@ env:
 
 install:
   - curl -L https://git.io/get_helm.sh | bash -s -- -v v2.16.1
-
-services:
-  - docker
   
 script:
   - make
