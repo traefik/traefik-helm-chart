@@ -1,0 +1,22 @@
+dist: xenial
+sudo: required
+
+notifications:
+  email:
+    on_success: never
+    on_failure: change
+
+services:
+  - docker
+
+env:
+  global:
+    - TMPDIR=/tmp
+
+install:
+  - curl -L https://git.io/get_helm.sh | bash -s -- -v v2.16.1
+
+script:
+  # validating if the chart was bumped
+  # - git diff --quiet HEAD origin/master || git diff HEAD origin/master -- Chart.yaml | grep -qE "version:.*"
+  - make
