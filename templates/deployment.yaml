@@ -40,14 +40,6 @@ spec:
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-        {{- with .Values.tolerations }}
-        tolerations:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
-        {{- with .Values.nodeSelector }}
-        nodeSelector:
-          {{- toYaml . | nindent 10 }}
-        {{- end }}
         readinessProbe:
           httpGet:
             path: /ping
@@ -87,3 +79,11 @@ spec:
           - {{ . | quote }}
           {{- end }}
           {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
