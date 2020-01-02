@@ -20,6 +20,10 @@ spec:
   selector:
     app: {{ template "traefik.name" . }}
     release: {{ .Release.Name }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   ports:
   {{- range $name, $config := .Values.ports }}
   {{- if $config.expose }}
