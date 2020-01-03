@@ -2,3 +2,4 @@ chart-dirs:
   - ./
 remote: traefik
 target-branch: "chore/lint-with-ct"
+debug: true
