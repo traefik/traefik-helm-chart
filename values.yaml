@@ -7,6 +7,7 @@ image:
 # Configure the deployment
 #
 deployment:
+  kind: Deployment
   # Number of pods of the deployment
   replicas: 1
 

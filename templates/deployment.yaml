@@ -3,7 +3,7 @@ apiVersion: apps/v1
 {{- else }}
 apiVersion: apps/v1beta1
 {{- end }}
-kind: Deployment
+kind: {{ .Values.deployment.kind }}
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
