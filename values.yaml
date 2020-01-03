@@ -6,8 +6,9 @@ image:
 #
 # Configure the deployment
 #
+useDaemonSet: false
+
 deployment:
-  kind: Deployment
   # Number of pods of the deployment
   replicas: 1
 
