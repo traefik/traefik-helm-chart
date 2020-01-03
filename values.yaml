@@ -79,6 +79,5 @@ resources: {}
   # limits:
   #   cpu: "300m"
   #   memory: "150Mi"
-affinity: {}
 nodeSelector: {}
 tolerations: []
