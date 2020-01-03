@@ -7,6 +7,8 @@ image:
 # Configure the deployment
 #
 deployment:
+  # What kind of object you want to create
+  kind: Deployment
   # Number of pods of the deployment
   replicas: 1
 
