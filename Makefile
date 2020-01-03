@@ -12,8 +12,10 @@ all: clean lint build deploy
 # Ensure the Helm chart and its metadata are valid
 lint: helm
 	@echo "== Linting Chart..."
-	@docker run --rm -ti -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.0.0-beta.1 \
-		ct lint --chart-dirs=$(CURDIR) --debug
+	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
+	@git fetch traefik master >/dev/null 2>&1 || true
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.0.0-beta.1 \
+		ct lint --config=test/ct.yaml
 	@echo "== Linting Finished"
 
 # Generates an artefact containing the Helm Chart in the distribution directory
