@@ -55,7 +55,7 @@ service:
   # type, selector or ports entries.
   spec: {}
     # externalTrafficPolicy: Cluster
-    # loadBalancerIp: "1.2.3.4"
+    # loadBalancerIP: "1.2.3.4"
     # clusterIP: "2.3.4.5"
 
 dashboard:
