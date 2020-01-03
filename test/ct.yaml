@@ -1,4 +1,0 @@
-remote: upstream
-charts:
-  - traefik
-check-version-increment: true
