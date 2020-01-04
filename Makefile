@@ -8,10 +8,11 @@ LINT_CMD ?= ct lint --config=ct.yaml
 ################################## Functionnal targets
 
 # Default Target: run all
-all: clean lint build deploy
+all: clean test build deploy
 
-# Ensure the Helm chart, YAMLs and metadatas are valid
+test: lint unit-test
 
+# Execute Static Testing
 lint: lint-requirements
 	@echo "== Linting Chart..."
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
@@ -22,6 +23,13 @@ else
 	cd $(CURDIR)/test && $(LINT_CMD)
 endif
 	@echo "== Linting Finished"
+
+# Execute Unit Testing
+unit-test: helm-unittest
+	@echo "== Unit Testing Chart..."
+	@helm unittest --color --update-snapshot ./traefik
+	@echo "== Unit Tests Finished..."
+	
 
 # Generates an artefact containing the Helm Chart in the distribution directory
 build: global-requirements $(DIST_DIR)
@@ -71,5 +79,9 @@ else
 endif
 	@echo "== Requirements for linting are met."
 
+helm-unittest: global-requirements
+	@echo "== Checking that plugin helm-unittest is available..."
+	@[ -e $(shell helm home)/plugins/helm-unittest ] || helm plugin install https://github.com/rancher/helm-unittest --version=0.1.5-rancher1
+	@echo "== plugin helm-unittest is ready"
 
-.PHONY: all global-requirements lint-requirements lint build deploy clean
+.PHONY: all global-requirements lint-requirements helm-unittest lint build deploy clean
