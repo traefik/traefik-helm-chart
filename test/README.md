@@ -8,9 +8,9 @@ This Helm Chart requires extensive testing to ensure expected behavior are met f
 
 It means that you are expected to:
 
-. Start by adding a test describing the expected behaviour, that should fails (either because the bug exists in initial state, or because the new feature had not been implemented),
-. Then, change the code according to your intent (fixing a bug, adding a feature or refactoring),
-. Finally, the test suite (including the new test you added earlier) must pass.
+1. Start by adding a test describing the expected behaviour, that should fails (either because the bug exists in initial state, or because the new feature had not been implemented),
+2. Then, change the code according to your intent (fixing a bug, adding a feature or refactoring),
+3. Finally, the test suite (including the new test you added earlier) must pass.
 
 ## Test Kinds
 
