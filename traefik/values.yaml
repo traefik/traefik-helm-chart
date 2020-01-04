@@ -65,13 +65,10 @@ dashboard:
   # Expose the dashboard and api through an ingress route at /dashboard
   # and /api This is not secure and SHOULD NOT be enabled on production
   # deployments
-  ingressRoute: true
+  ingressRoute: false
 
 logs:
   loglevel: WARN
-
-#
-# Additional YAML Configuration for customisation
 #
 resources: {}
   # requests:
