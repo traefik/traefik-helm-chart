@@ -1,0 +1,91 @@
+suite: Traefik configuration
+tests:
+  - it: should have port 8000 of pod published to 80 of service by default, and defined as entrypoint "web"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 8000
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            targetPort: web
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--entryPoints.web.address=:8000"
+        template: deployment.yaml
+  - it: should have port 8443 of pod published to 443 of service by default, and defined as entrypoint "websecure"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: websecure
+            containerPort: 8443
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure
+            port: 443
+            targetPort: websecure
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--entryPoints.websecure.address=:8443"
+        template: deployment.yaml
+  - it: should have port 9000 of pod exposed for probes but NOT published to the service by default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: traefik
+            containerPort: 9000
+            protocol: TCP
+        template: deployment.yaml
+      - notContains:
+          path: spec.ports
+          content:
+            name: traefik
+            port: 9000
+            targetPort: traefik
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--entryPoints.traefik.address=:9000"
+        template: deployment.yaml
+  - it: should have a custom port when specified via values
+    set:
+      ports:
+        ssh:
+          port: 22
+          expose: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: ssh
+            containerPort: 22
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: ssh
+            port: 22
+            targetPort: ssh
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--entryPoints.ssh.address=:22"
+        template: deployment.yaml
