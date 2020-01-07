@@ -15,8 +15,7 @@ env:
 
 install:
   - curl -L https://git.io/get_helm.sh | bash -s -- -v v2.16.1
+  - helm init --client-only
 
 script:
-  # validating if the chart was bumped
-  # - git diff --quiet HEAD origin/master || git diff HEAD origin/master -- Chart.yaml | grep -qE "version:.*"
   - make
