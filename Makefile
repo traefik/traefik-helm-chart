@@ -65,6 +65,9 @@ ifeq ($(LINT_USE_DOCKER),true)
 	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
 else
 	@command -v ct >/dev/null || ( echo "ERROR: ct binary not found. Exiting." && exit 1)
+	@command -v yamale >/dev/null || ( echo "ERROR: yamale binary not found. Exiting." && exit 1)
+	@command -v yamllint >/dev/null || ( echo "ERROR: yamllint binary not found. Exiting." && exit 1)
+	@command -v kubectl >/dev/null || ( echo "ERROR: kubectl binary not found. Exiting." && exit 1)
 endif
 	@echo "== Requirements for linting are met."
 
