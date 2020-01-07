@@ -12,11 +12,7 @@ all: clean lint build deploy
 
 # Ensure the Helm chart, YAMLs and metadatas are valid
 
-ifeq ($(LINT_USE_DOCKER),true)
-lint: docker
-else
-lint: helm ct
-endif
+lint: lint-requirements
 	@echo "== Linting Chart..."
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
@@ -28,13 +24,13 @@ endif
 	@echo "== Linting Finished"
 
 # Generates an artefact containing the Helm Chart in the distribution directory
-build: helm $(DIST_DIR)
+build: global-requirements $(DIST_DIR)
 	@echo "== Building Chart..."
 	@helm package $(CHART_DIR) --destination=$(DIST_DIR)
 	@echo "== Building Finished"
 
 # Prepare the Helm repository with the latest packaged charts
-deploy: build $(DIST_DIR) $(HELM_REPO)
+deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
 	@echo "== Deploying Chart..."
 	@cp $(DIST_DIR)/*tgz $(HELM_REPO)/
 	@helm repo index $(HELM_REPO)
@@ -51,27 +47,26 @@ clean:
 $(DIST_DIR):
 	@mkdir -p $(DIST_DIR)
 
-
 ## This directory is git-ignored for now, 
 ## and should become a worktree on the branch gh-pages in the future
 $(HELM_REPO):
 	@mkdir -p $(HELM_REPO)
 
-helm:
-	@echo "== Checking that helm is available..."
+global-requirements:
+	@echo "== Checking global requirements..."
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
-	@echo "== helm is ready"
+	@command -v git >/dev/null || ( echo "ERROR: git binary not found. Exiting." && exit 1)
+	@echo "== Global requirements are met."
 
-docker:
-	@echo "== Checking that docker is available..."
+lint-requirements: global-requirements
+	@echo "== Checking requirements for linting..."
+ifeq ($(LINT_USE_DOCKER),true)
 	@command -v docker >/dev/null || ( echo "ERROR: Docker binary not found. Exiting." && exit 1)
 	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
-	@echo "== Docker is ready"
-
-ct:
-	@echo "== Checking that ct is available..."
-	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
-	@echo "== ct is ready"
+else
+	@command -v ct >/dev/null || ( echo "ERROR: ct binary not found. Exiting." && exit 1)
+endif
+	@echo "== Requirements for linting are met."
 
 
-.PHONY: all helm lint build deploy clean docker ct
+.PHONY: all global-requirements lint-requirements lint build deploy clean
