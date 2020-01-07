@@ -3,19 +3,28 @@ DIST_DIR ?= $(CURDIR)/dist
 CHART_DIR ?= $(CURDIR)/traefik
 TMPDIR ?= /tmp
 HELM_REPO ?= $(CURDIR)/repo
-
+LINT_USE_DOCKER ?= true
+LINT_CMD ?= ct lint --config=ct.yaml
 ################################## Functionnal targets
 
 # Default Target: run all
 all: clean lint build deploy
 
-# Ensure the Helm chart and its metadata are valid
+# Ensure the Helm chart, YAMLs and metadatas are valid
+
+ifeq ($(LINT_USE_DOCKER),true)
 lint: docker
+else
+lint: helm ct
+endif
 	@echo "== Linting Chart..."
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
-	@docker run --rm -t -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.0.0-beta.1 \
-		ct lint --config=test/ct.yaml
+ifeq ($(LINT_USE_DOCKER),true)
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts/test quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
+else
+	cd $(CURDIR)/test && $(LINT_CMD)
+endif
 	@echo "== Linting Finished"
 
 # Generates an artefact containing the Helm Chart in the distribution directory
@@ -49,7 +58,9 @@ $(HELM_REPO):
 	@mkdir -p $(HELM_REPO)
 
 helm:
+	@echo "== Checking that helm is available..."
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
+	@echo "== helm is ready"
 
 docker:
 	@echo "== Checking that docker is available..."
@@ -57,4 +68,10 @@ docker:
 	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
 	@echo "== Docker is ready"
 
-.PHONY: all helm lint build deploy clean docker
+ct:
+	@echo "== Checking that ct is available..."
+	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
+	@echo "== ct is ready"
+
+
+.PHONY: all helm lint build deploy clean docker ct
