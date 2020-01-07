@@ -10,7 +10,7 @@ HELM_REPO ?= $(CURDIR)/repo
 all: clean lint build deploy
 
 # Ensure the Helm chart and its metadata are valid
-lint: helm
+lint: docker
 	@echo "== Linting Chart..."
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
@@ -50,6 +50,11 @@ $(HELM_REPO):
 
 helm:
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
-	@helm init --client-only
 
-.PHONY: all helm lint build deploy clean
+docker:
+	@echo "== Checking that docker is available..."
+	@command -v docker >/dev/null || ( echo "ERROR: Docker binary not found. Exiting." && exit 1)
+	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
+	@echo "== Docker is ready"
+
+.PHONY: all helm lint build deploy clean docker
