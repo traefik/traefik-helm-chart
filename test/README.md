@@ -33,6 +33,7 @@ The static test suite has the following properties:
 The static test suite is implemented with the tool [`ct` (Chart Testing)](https://github.com/helm/chart-testing):
 
 - The Docker image of `ct` is used to ensure all sub-dependencies (helm, kubectl, yamale, etc.) are met for an easier experience for contributor.
-- All configuration of `ct` and linters are stroed in the directory `test/`. In particular, the file `test/ct.yaml` contains
+  - If you cannot or do not to use docker, you need to install [`ct`'s prerequisites](https://github.com/helm/,chart-testing#prerequisites), and set the variable `LINT_USE_DOCKER` to a value different than true: `LINT_USE_DOCKER= make lint`.
+- All configuration of `ct` and linters are stored in the directory `test/`. In particular, the file `test/ct.yaml` contains
 the `ct` configuration.
 - Version Increment Check is done against the against the original repository, with the branch `master`. This repository is added as an additional git remote named `traefik` by the make target `lint`. If you wish to temporarly change this behavior, please edit the files `Makefile` and `test/ct.yaml`.
