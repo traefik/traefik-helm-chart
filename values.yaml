@@ -35,15 +35,10 @@ ports:
     # use `kubectl proxy` or create a secure ingress
     expose: false
     # The exposed port for this service
-    exposedPort: 9000
-  web:
-    port: 8000
+  aplicom:
+    port: 5144
     expose: true
-    exposedPort: 80
-  websecure:
-    port: 8443
-    expose: true
-    exposedPort: 443
+    exposedPort: 5144
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
@@ -53,19 +48,17 @@ service:
   annotations: {}
   # Additional entries here will be added to the service spec. Cannot contains
   # type, selector or ports entries.
-  spec: {}
-    # externalTrafficPolicy: Cluster
-    # loadBalancerIp: "1.2.3.4"
-    # clusterIP: "2.3.4.5"
+  spec:
+    loadBalancerIP: 34.77.237.30
 
 dashboard:
   # Enable the dashboard on Traefik
-  enable: true
+  enable: false
 
   # Expose the dashboard and api through an ingress route at /dashboard
   # and /api This is not secure and SHOULD NOT be enabled on production
   # deployments
-  ingressRoute: true
+  ingressRoute: false
 
 logs:
   loglevel: WARN

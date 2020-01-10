@@ -32,10 +32,23 @@ spec:
         heritage: {{ .Release.Service | quote }}
     spec:
       serviceAccountName: {{ template "traefik.fullname" . }}
+      volumes:
+        - name: config
+          configMap:
+            name: traefik-conf
+        - name: tls
+          secret:
+            secretName: aplicom-server-cert
       terminationGracePeriodSeconds: 60
       containers:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         name: {{ template "traefik.fullname" . }}
+        volumeMounts:
+          - name: config
+            mountPath: /etc/traefik/traefik.yml
+            subPath: traefik.yml
+          - name: tls
+            mountPath: /tls
         resources:
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
@@ -87,3 +100,39 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: traefik-conf
+  namespace: traefik
+data:
+  traefik.yml: |
+    global:
+      checkNewVersion: false
+      sendAnonymousUsage: false
+    log:
+      level: "{{ .Values.logs.loglevel }}"
+    ping: true
+    entryPoints:
+      traefik:
+        address: ":{{ .Values.ports.traefik.port }}"
+      aplicom-entry:
+        address: ":{{ .Values.ports.aplicom.port }}"
+    api:
+      dashboard: "{{ .Values.dashboard.enable }}"
+    providers:
+      kubernetesCRD: {}
+      file:
+        filename: /etc/traefik/traefik.yml
+        watch: true
+    tls:
+      stores:
+        default:
+          defaultCertificate:
+            certFile: /tls/tls.crt
+            keyFile: /tls/tls.key
+      options:
+        default:
+          minVersion: VersionTLS12
