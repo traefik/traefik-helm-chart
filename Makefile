@@ -83,7 +83,7 @@ endif
 
 helm-unittest: global-requirements
 	@echo "== Checking that plugin helm-unittest is available..."
-	@[ -e $(shell helm home)/plugins/helm-unittest ] || helm plugin install https://github.com/rancher/helm-unittest --version=0.1.5-rancher1
+	@[ -e $(shell helm home)/plugins/helm-unittest ] || helm plugin install https://github.com/rancher/helm-unittest --version=0.1.6-rancher1
 	@echo "== plugin helm-unittest is ready"
 
 .PHONY: all global-requirements lint-requirements helm-unittest lint build deploy clean
