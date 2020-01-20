@@ -63,6 +63,7 @@ $(HELM_REPO):
 global-requirements:
 	@echo "== Checking global requirements..."
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
+	@helm version | grep v2 || ( echo "ERROR: Only Helm v2.x supported. Exiting." && exit 1)
 	@command -v git >/dev/null || ( echo "ERROR: git binary not found. Exiting." && exit 1)
 	@echo "== Global requirements are met."
 
