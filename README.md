@@ -7,11 +7,9 @@ microservices with ease.
 
 ## Introduction
 
-This chart bootstraps Traefik version 2 as a Kubernetes ingress controller
+This chart bootstraps Traefik version 2 as a Kubernetes ingress controller,
+using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubernetes-crd/>.
 
-## Prerequisites
+## Contributing
 
-- Kubernetes 1.10+
-- You are deploying the chart to a cluster with a cloud provider capable of provisioning an
-external load balancer (e.g. AWS or GKE)
-- You control DNS for the domain(s) you intend to route through Traefik
+If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).

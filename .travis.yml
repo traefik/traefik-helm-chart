@@ -15,8 +15,9 @@ env:
 
 install:
   - curl -L https://git.io/get_helm.sh | bash -s -- -v v2.16.1
+  - helm init --client-only
+  - curl -sSL -o /tmp/ct.tgz https://github.com/helm/chart-testing/releases/download/v3.0.0-beta.1/chart-testing_3.0.0-beta.1_linux_amd64.tar.gz
+  - tar xzf /tmp/ct.tgz -C /tmp && sudo cp /tmp/ct /usr/local/bin/ct && command -v ct
 
 script:
-  # validating if the chart was bumped
-  # - git diff --quiet HEAD origin/master || git diff HEAD origin/master -- Chart.yaml | grep -qE "version:.*"
   - make

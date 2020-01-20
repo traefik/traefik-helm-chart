@@ -1,28 +1,36 @@
 
 DIST_DIR ?= $(CURDIR)/dist
+CHART_DIR ?= $(CURDIR)/traefik
 TMPDIR ?= /tmp
-SHIM_DIR ?= $(TMPDIR)/traefik
 HELM_REPO ?= $(CURDIR)/repo
-
+LINT_USE_DOCKER ?= true
+LINT_CMD ?= ct lint --config=ct.yaml
 ################################## Functionnal targets
 
 # Default Target: run all
 all: clean lint build deploy
 
-# Ensure the Helm chart and its metadata are valid
-lint: helm $(SHIM_DIR)
+# Ensure the Helm chart, YAMLs and metadatas are valid
+
+lint: lint-requirements
 	@echo "== Linting Chart..."
-	@helm lint $(SHIM_DIR)
+	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
+	@git fetch traefik master >/dev/null 2>&1 || true
+ifeq ($(LINT_USE_DOCKER),true)
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts/test quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
+else
+	cd $(CURDIR)/test && $(LINT_CMD)
+endif
 	@echo "== Linting Finished"
 
 # Generates an artefact containing the Helm Chart in the distribution directory
-build: helm $(DIST_DIR) $(SHIM_DIR)
+build: global-requirements $(DIST_DIR)
 	@echo "== Building Chart..."
-	@helm package $(SHIM_DIR) --destination=$(DIST_DIR)
+	@helm package $(CHART_DIR) --destination=$(DIST_DIR)
 	@echo "== Building Finished"
 
 # Prepare the Helm repository with the latest packaged charts
-deploy: build $(DIST_DIR) $(HELM_REPO)
+deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
 	@echo "== Deploying Chart..."
 	@cp $(DIST_DIR)/*tgz $(HELM_REPO)/
 	@helm repo index $(HELM_REPO)
@@ -32,7 +40,6 @@ deploy: build $(DIST_DIR) $(HELM_REPO)
 clean:
 	@echo "== Cleaning..."
 	@rm -rf $(DIST_DIR)
-	@unlink $(SHIM_DIR) >/dev/null 2>&1 || true
 	@echo "== Cleaning Finished"
 	
 ################################## Technical targets
@@ -40,20 +47,29 @@ clean:
 $(DIST_DIR):
 	@mkdir -p $(DIST_DIR)
 
-
 ## This directory is git-ignored for now, 
 ## and should become a worktree on the branch gh-pages in the future
 $(HELM_REPO):
 	@mkdir -p $(HELM_REPO)
 
-helm:
+global-requirements:
+	@echo "== Checking global requirements..."
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
-	@helm init --client-only
+	@command -v git >/dev/null || ( echo "ERROR: git binary not found. Exiting." && exit 1)
+	@echo "== Global requirements are met."
 
-# This target is phony to ensure there is no conflict with other dir named "traefik"
-$(SHIM_DIR):
-	@## Helm v2 require directory to have the same name as the chart
-	@[ -L $(SHIM_DIR) ] && unlink $(SHIM_DIR) || true
-	@ln -s $(CURDIR) $(SHIM_DIR) || ( echo "ERROR: cannot link $(CURDIR) to $(SHIM_DIR). Exiting." && exit 1)
+lint-requirements: global-requirements
+	@echo "== Checking requirements for linting..."
+ifeq ($(LINT_USE_DOCKER),true)
+	@command -v docker >/dev/null || ( echo "ERROR: Docker binary not found. Exiting." && exit 1)
+	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
+else
+	@command -v ct >/dev/null || ( echo "ERROR: ct binary not found. Exiting." && exit 1)
+	@command -v yamale >/dev/null || ( echo "ERROR: yamale binary not found. Exiting." && exit 1)
+	@command -v yamllint >/dev/null || ( echo "ERROR: yamllint binary not found. Exiting." && exit 1)
+	@command -v kubectl >/dev/null || ( echo "ERROR: kubectl binary not found. Exiting." && exit 1)
+endif
+	@echo "== Requirements for linting are met."
 
-.PHONY: all helm lint build deploy clean $(SHIM_DIR)
+
+.PHONY: all global-requirements lint-requirements lint build deploy clean

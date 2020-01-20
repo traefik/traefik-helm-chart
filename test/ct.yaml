@@ -1,0 +1,6 @@
+chart-dirs:
+  - ../
+all: true
+remote: traefik
+target-branch: master
+debug: true
