@@ -18,7 +18,7 @@ lint: lint-requirements
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
 ifeq ($(LINT_USE_DOCKER),true)
-	@docker run --rm -t -v $(CURDIR):/charts -w /charts/test quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts/lint quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
 else
 	cd $(CURDIR)/test && $(LINT_CMD)
 endif
