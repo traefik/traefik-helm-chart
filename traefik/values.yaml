@@ -40,7 +40,7 @@ ports:
     port: 8000
     expose: true
     exposedPort: 80
-    # Use nodeport if set. This is uself if you have configured Traefik in a
+    # Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer
     # nodePort: 32080
   websecure:
