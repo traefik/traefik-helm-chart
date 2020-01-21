@@ -40,10 +40,14 @@ ports:
     port: 8000
     expose: true
     exposedPort: 80
+    # Use nodeport if set. This is uself if you have configured Traefik in a
+    # LoadBalancer
+    # nodePort: 32080
   websecure:
     port: 8443
     expose: true
     exposedPort: 443
+    # nodePort: 32443
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.

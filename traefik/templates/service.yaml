@@ -26,5 +26,8 @@ spec:
   - port: {{ default $config.port $config.exposedPort }}
     name: {{ $name }}
     targetPort: {{ $name | quote }}
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
   {{- end }}
   {{- end }}
