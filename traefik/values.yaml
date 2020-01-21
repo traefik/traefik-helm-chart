@@ -47,7 +47,7 @@ ports:
     port: 8443
     expose: true
     exposedPort: 443
-    # nodePort: 32443
+  # nodePort: 32443
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
