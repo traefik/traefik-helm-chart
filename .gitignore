@@ -14,3 +14,6 @@
 # Outputs directories
 dist/
 repo/
+
+# Unit test for helm
+__snapshot__

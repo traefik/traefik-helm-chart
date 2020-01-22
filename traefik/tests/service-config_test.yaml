@@ -1,0 +1,47 @@
+suite: Service configuration
+templates:
+  - service.yaml
+tests:
+  - it: should be a type LoadBalancer by default
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+  - it: should be a custom type when specified via values
+    set:
+      service:
+        type: NodePort
+    asserts:
+      - equal:
+          path: spec.type
+          value: NodePort
+  - it: should have no annotations by default
+    asserts:
+      - isNull:
+          path: metadata.annotations
+  - it: should have customized annotations when specified via values
+    set:
+      service:
+        annotations:
+          azure-load-balancer-internal: true
+    asserts:
+      - equal:
+          path: metadata.annotations.azure-load-balancer-internal
+          value: true
+  - it: should have custom spec elements when specified via values
+    set:
+      service:
+        spec:
+          externalTrafficPolicy: Cluster
+          loadBalancerIP: "1.2.3.4"
+          clusterIP: "2.3.4.5"
+    asserts:
+      - equal:
+          path: spec.externalTrafficPolicy
+          value: Cluster
+      - equal:
+          path: spec.loadBalancerIP
+          value: "1.2.3.4"
+      - equal:
+          path: spec.clusterIP
+          value: "2.3.4.5"
