@@ -23,6 +23,10 @@ additionalArguments: []
 
 # Environment variables to be passed to Traefik's binary
 env: {}
+#  - name: SOME_VAR
+#    value: some-var-value
+#  - name: SOME_OTHER_VAR
+#    value: some-other-var-value
 
 #
 ports:
