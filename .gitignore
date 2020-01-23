@@ -10,3 +10,10 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# Outputs directories
+dist/
+repo/
+
+# Unit test for helm
+__snapshot__

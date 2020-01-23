@@ -1,0 +1,47 @@
+suite: Pod configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should have no nodeSelector by default
+    asserts:
+      - isNull:
+          path: spec.template.spec.nodeSelector
+  - it: should have a custom nodeSelector when specified
+    set:
+      nodeSelector:
+        planet: earth
+        disktype: ssd
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector.planet
+          value: earth
+      - equal:
+          path: spec.template.spec.nodeSelector.disktype
+          value: ssd
+          
+  - it: should have no tolerations by default
+    asserts:
+      - isNull:
+          path: spec.template.spec.tolerations
+  - it: should have a custom toleration when specified
+    set:
+      tolerations:
+        - key: "key"
+          operator: "Equal"
+          value: "value"
+          effect: "NoSchedule"
+        - key: "RSA"
+          operator: "Destructor"
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            key: "key"
+            operator: "Equal"
+            value: "value"
+            effect: "NoSchedule"
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            key: "RSA"
+            operator: "Destructor"

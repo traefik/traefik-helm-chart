@@ -1,8 +1,4 @@
-{{- if semverCompare "^1.9-0" .Capabilities.KubeVersion.GitVersion }}
 apiVersion: apps/v1
-{{- else }}
-apiVersion: apps/v1beta1
-{{- end }}
 kind: Deployment
 metadata:
   name: {{ template "traefik.fullname" . }}
@@ -17,6 +13,12 @@ spec:
     matchLabels:
       app: {{ template "traefik.name" . }}
       release: {{ .Release.Name }}
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      {{- with .Values.rollingUpdate }}
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
   template:
     metadata:
       labels:
@@ -31,19 +33,9 @@ spec:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         name: {{ template "traefik.fullname" . }}
         resources:
-        {{- if .Values.yaml }}
-        {{- if .Values.yaml.resources }}
-{{ toYaml .Values.yaml.resources | indent 10 }}
-        {{- end }}
-        {{- if .Values.yaml.tolerations }}
-        tolerations:
-{{ toYaml .Values.yaml.tolerations | indent 8 }}
-        {{- end }}
-        {{- if .Values.yaml.nodeSelector }}
-        nodeSelector:
-{{ toYaml .Values.yaml.nodeSelector | indent 10 }}
-        {{- end }}
-        {{- end }}
+          {{- with .Values.resources }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         readinessProbe:
           httpGet:
             path: /ping
@@ -63,21 +55,35 @@ spec:
           successThreshold: 1
           timeoutSeconds: 2
         ports:
-        - name: web
-          containerPort: {{ .Values.ports.web.port }}
+        {{- range $name, $config := .Values.ports }}
+        - name: {{ $name | quote }}
+          containerPort: {{ $config.port }}
           protocol: TCP
-        - name: websecure
-          containerPort: {{ .Values.ports.websecure.port }}
-          protocol: TCP
-        - name: traefik
-          containerPort: {{ .Values.ports.traefik.port }}
-          protocol: TCP
+        {{- end }}
         args:
-          - "--entryPoints.web.address=:{{ .Values.ports.web.port }}"
-          - "--entryPoints.websecure.address=:{{ .Values.ports.websecure.port }}"
-          - "--entryPoints.traefik.address=:{{ .Values.ports.traefik.port }}"
-          - "--api.dashboard=true"
-          - "--api.insecure=true"
+          - "--global.checknewversion=true"
+          - "--global.sendanonymoususage=true"
+          {{- range $name, $config := .Values.ports }}
+          - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
+          {{- end }}
+          - "--api.dashboard={{ .Values.dashboard.enable }}"
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+          {{- with .Values.additionalArguments }}
+          {{- range . }}
+          - {{ . | quote }}
+          {{- end }}
+          {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
