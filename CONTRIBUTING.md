@@ -5,7 +5,7 @@ You can find help in this document to get your contribution accepted.
 
 ## Helm Chart Guidelines
 
-Please read the [Helm Chart Guidelines](./Guidelines.md) before editing this chart.
+Please read the [Helm Chart Guidelines](./traefik/Guidelines.md) before editing this chart.
 
 ## Testing
 
