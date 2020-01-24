@@ -20,7 +20,7 @@ lint: lint-requirements
 ifeq ($(LINT_USE_DOCKER),true)
 	@docker run --rm -t -v $(CURDIR):/charts -w /charts/lint quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
 else
-	cd $(CURDIR)/test && $(LINT_CMD)
+	cd $(CHART_DIR)/tests && $(LINT_CMD)
 endif
 	@echo "== Linting Finished"
 
@@ -62,11 +62,16 @@ $(HELM_REPO):
 
 global-requirements:
 	@echo "== Checking global requirements..."
+ifeq ($(LINT_USE_DOCKER),true)
+	@command -v docker >/dev/null || ( echo "ERROR: Docker binary not found. Exiting." && exit 1)
+	@docker info >/dev/null || ( echo "ERROR: command "docker info" is in error. Exiting." && exit 1)
+else
 	@command -v helm >/dev/null || ( echo "ERROR: Helm binary not found. Exiting." && exit 1)
 	@helm version 2>/dev/null | grep v2 >/dev/null || ( echo "ERROR: Only Helm v2.x supported. Exiting." && exit 1)
 	@[ -d $(shell helm home) ]  || ( echo "ERROR: Helm not initialized. cannot find ~/.helm directory. Exiting." && exit 1)
 	@command -v git >/dev/null || ( echo "ERROR: git binary not found. Exiting." && exit 1)
 	@echo "== Global requirements are met."
+endif
 
 lint-requirements: global-requirements
 	@echo "== Checking requirements for linting..."
