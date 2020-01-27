@@ -75,9 +75,9 @@ spec:
           - {{ . | quote }}
           {{- end }}
           {{- end }}
+        {{- with .Values.env }}
         env:
-        {{- if .Values.env }}
-{{ toYaml .Values.env | indent 10 }}
+          {{ toYaml . | indent 10 }}
         {{- end }}
       {{- with .Values.affinity }}
       affinity:
