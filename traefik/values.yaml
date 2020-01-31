@@ -97,11 +97,11 @@ dashboard:
   enable: true
 
   # Expose the dashboard and api through an ingress route at /dashboard
-  # and /api on the given entrypoint. If not entrypoints specified, the
+  # and /api on the given entrypoint. If no entrypoints specified, the
   # ingress route is not created. It's recommended to only specify
   # unexposed entrypoints (e.g. traefik). You can then use something like
   #   kubectl port-forward traefik-nnnnnnn 9000:9000
-  # to make the dashboard available at http://localhost:9000/dashboard
+  # to make the dashboard available at http://localhost:9000/dashboard/
   ingressRouteEntrypoints:
     - traefik
 
