@@ -20,9 +20,9 @@ tests:
   - it: should ONLY have the dashboard exposed via traefik entrypoint by default
     asserts:
       - equal:
-        path: spec.entryPoints
-        value:
-          - traefik
+          path: spec.entryPoints
+          value:
+            - traefik
         template: dashboard-hook-ingressroute.yaml
   - it: should NOT create IngressRoute for dashboard if no entrypoints are specified
     set:
