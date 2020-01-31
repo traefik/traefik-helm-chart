@@ -1,18 +1,17 @@
-{{- if .Values.dashboard.ingressRoute }}
+{{- if .Values.dashboard.ingressRouteEntrypoints }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   annotations:
-    helm.sh/hook: "post-install"
+    helm.sh/hook: "post-install,post-upgrade"
   labels:
     app: {{ template "traefik.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
-  entryPoints:
-    - web
+  entryPoints: {{- toYaml .Values.dashboard.ingressRouteEntrypoints | nindent 4 }}
   routes:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule

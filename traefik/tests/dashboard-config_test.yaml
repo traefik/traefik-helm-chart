@@ -17,19 +17,18 @@ tests:
           content:
             --api.dashboard=false
         template: deployment.yaml
-  - it: should NOT have the dashboard exposed through an IngressRoute by default
+  - it: should ONLY have the dashboard exposed via traefik entrypoint by default
+    asserts:
+      - equal:
+        path: spec.entryPoints
+        value:
+          - traefik
+        template: dashboard-hook-ingressroute.yaml
+  - it: should NOT create IngressRoute for dashboard if no entrypoints are specified
+    set:
+      dashboard:
+        ingressRoute: []
     asserts:
       - hasDocuments:
           count: 0
-        template: dashboard-hook-ingressroute.yaml
-  - it: should have an IngressRoute defined for exposing the dashboard when specifid via values
-    set:
-      dashboard:
-        ingressRoute: true
-    asserts:
-      - hasDocuments:
-          count: 1
-        template: dashboard-hook-ingressroute.yaml
-      - isKind:
-          of: IngressRoute
         template: dashboard-hook-ingressroute.yaml
