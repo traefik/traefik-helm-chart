@@ -27,7 +27,7 @@ tests:
   - it: should NOT create IngressRoute for dashboard if no entrypoints are specified
     set:
       dashboard:
-        ingressRoute: []
+        ingressRouteEntrypoints: []
     asserts:
       - hasDocuments:
           count: 0
