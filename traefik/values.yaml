@@ -9,6 +9,8 @@ image:
 deployment:
   # Number of pods of the deployment
   replicas: 1
+
+additional:
   checkNewVersion: true
   sendAnonymousUsage: true
 
