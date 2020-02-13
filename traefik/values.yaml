@@ -10,6 +10,10 @@ deployment:
   # Number of pods of the deployment
   replicas: 1
 
+additional:
+  checkNewVersion: true
+  sendAnonymousUsage: true
+
 rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
