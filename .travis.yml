@@ -1,6 +1,11 @@
 dist: xenial
 sudo: required
 
+# blocklist
+branches:
+  except:
+  - gh-pages
+
 notifications:
   email:
     on_success: never
@@ -21,3 +26,15 @@ install:
 
 script:
   - make
+
+deploy:
+  - provider: pages
+    edge: false
+    github_token: ${GITHUB_TOKEN}
+    target_branch: gh-pages
+    local_dir: repo
+    skip_cleanup: true
+    keep_history: true
+    on:
+      repo: containous/traefik-helm-chart
+      all_branches: true

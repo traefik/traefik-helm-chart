@@ -4,7 +4,8 @@ CHART_DIR ?= $(CURDIR)/traefik
 TMPDIR ?= /tmp
 HELM_REPO ?= $(CURDIR)/repo
 LINT_USE_DOCKER ?= true
-LINT_CMD ?= ct lint --config=ct.yaml
+LINT_CMD ?= ct lint --config=lint/ct.yaml
+PROJECT ?= github.com/containous/traefik-helm-chart
 ################################## Functionnal targets
 
 # Default Target: run all
@@ -18,7 +19,7 @@ lint: lint-requirements
 	@git remote add traefik https://github.com/containous/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
 ifeq ($(LINT_USE_DOCKER),true)
-	@docker run --rm -t -v $(CURDIR):/charts -w /charts/lint quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.0.0-beta.1 $(LINT_CMD)
 else
 	cd $(CHART_DIR)/tests && $(LINT_CMD)
 endif
@@ -29,7 +30,7 @@ unit-test: helm-unittest
 	@echo "== Unit Testing Chart..."
 	@helm unittest --color --update-snapshot ./traefik
 	@echo "== Unit Tests Finished..."
-	
+
 
 # Generates an artefact containing the Helm Chart in the distribution directory
 build: global-requirements $(DIST_DIR)
@@ -40,22 +41,26 @@ build: global-requirements $(DIST_DIR)
 # Prepare the Helm repository with the latest packaged charts
 deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
 	@echo "== Deploying Chart..."
+	@rm -rf $(CURDIR)/gh-pages.zip
+	@curl -sSLO https://$(PROJECT)/archive/gh-pages.zip
+	@unzip -oj $(CURDIR)/gh-pages.zip -d $(HELM_REPO)/
 	@cp $(DIST_DIR)/*tgz $(HELM_REPO)/
-	@helm repo index $(HELM_REPO)
+	@helm repo index --merge $(HELM_REPO)/index.yaml --url https://containous.github.io/traefik-helm-chart/ $(HELM_REPO)
 	@echo "== Deploying Finished"
 
 # Cleanup leftovers and distribution dir
 clean:
 	@echo "== Cleaning..."
 	@rm -rf $(DIST_DIR)
+	@rm -rf $(HELM_REPO)
 	@echo "== Cleaning Finished"
-	
+
 ################################## Technical targets
 
 $(DIST_DIR):
 	@mkdir -p $(DIST_DIR)
 
-## This directory is git-ignored for now, 
+## This directory is git-ignored for now,
 ## and should become a worktree on the branch gh-pages in the future
 $(HELM_REPO):
 	@mkdir -p $(HELM_REPO)
