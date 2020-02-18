@@ -3,3 +3,4 @@ chart-dirs:
 remote: traefik
 target-branch: master
 debug: true
+check-version-increment: true

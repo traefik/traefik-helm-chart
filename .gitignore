@@ -4,6 +4,7 @@
 *.dll
 *.so
 *.dylib
+gh-pages.zip
 
 # Test binary, build with `go test -c`
 *.test

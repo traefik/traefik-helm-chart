@@ -1,5 +1,9 @@
 dist: xenial
-sudo: required
+
+# blocklist
+branches:
+  except:
+  - gh-pages
 
 notifications:
   email:
@@ -21,3 +25,11 @@ install:
 
 script:
   - make
+
+deploy:
+  - provider: pages
+    token: ${GITHUB_TOKEN}
+    target_branch: gh-pages
+    local_dir: repo
+    skip_cleanup: true
+    keep_history: true
