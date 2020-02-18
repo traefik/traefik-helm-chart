@@ -11,8 +11,12 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
+  {{- if .Values.dashboard.entryPoints }}
   entryPoints:
-    - web
+  {{- with .Values.dashboard.entryPoints }}
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
+  {{- end }}
   routes:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
