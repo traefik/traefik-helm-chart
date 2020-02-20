@@ -30,12 +30,12 @@ rollingUpdate:
 # - "--tls.certificates.certFile=/certs/tls.crt"
 # - "--tls.certificates.keyFile=/certs/tls.key"
 volumes: []
-#- name: public-cert
-#  mountPath: "/certs"
-#  type: secret
-#- name: configs
-#  mountPath: "/config"
-#  type: configMap
+# - name: public-cert
+#   mountPath: "/certs"
+#   type: secret
+# - name: configs
+#   mountPath: "/config"
+#   type: configMap
 
 #
 # Configure Traefik entry points
