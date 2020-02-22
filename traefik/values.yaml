@@ -103,7 +103,19 @@ dashboard:
 
 logs:
   loglevel: WARN
+
+# Enable persistence using Persistent Volume Claims
+# ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+# Used along with --certificatesresolvers.le.acme.storage=/data/acme.json to
+# persist TLS certificates.
 #
+persistence:
+  enabled: false
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  # storageClass: ""
+  path: /data
+
 resources: {}
   # requests:
   #   cpu: "100m"

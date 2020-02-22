@@ -91,17 +91,27 @@ spec:
         env:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        volumeMounts:
+          - name: data
+            mountPath: {{ .Values.persistence.path }}
       volumes:
-      {{- range .Values.volumes }}
-      - name: {{ .name }}
-        {{- if eq .type "secret" }}
-        secret:
-          secretName: {{ .name }}
-        {{- else if eq .type "configMap" }}
-        configMap:
-          name: {{ .name }}
+        - name: data
+          {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ template "traefik.fullname" . }}
+          {{- else }}
+          emptyDir: {}
+          {{- end }}
+        {{- range .Values.volumes }}
+        - name: {{ .name }}
+          {{- if eq .type "secret" }}
+          secret:
+            secretName: {{ .name }}
+          {{- else if eq .type "configMap" }}
+          configMap:
+            name: {{ .name }}
+          {{- end }}
         {{- end }}
-      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}
