@@ -59,6 +59,9 @@ spec:
         - name: {{ $name | quote }}
           containerPort: {{ $config.port }}
           protocol: TCP
+          {{- if $config.hostPort }}
+          hostPort: {{ $config.hostPort }}
+          {{- end }}
         {{- end }}
         args:
           - "--global.checknewversion={{ .Values.additional.checkNewVersion }}"
