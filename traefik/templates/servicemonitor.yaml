@@ -20,7 +20,7 @@ spec:
   - port: metrics
     path: /metrics
 {{- if .Values.metrics.serviceMonitor.interval }}
-    interval: {{ .Values.serviceMonitor.interval }}
+    interval: {{ .Values.metrics.serviceMonitor.interval }}
 {{- end }}
   jobLabel: {{ template "traefik.fullname" . }}
   namespaceSelector:

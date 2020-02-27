@@ -8,15 +8,19 @@ tests:
       - equal:
           path: spec.type
           value: ClusterIP
+        template: service-prometheus.yaml
       - equal:
           path: spec.ports[0].port
           value: 9100
+        template: service-prometheus.yaml
       - equal:
           path: spec.ports[0].name
           value: metrics
+        template: service-prometheus.yaml
       - equal:
           path: spec.ports[0].targetPort
           value: metrics
+        template: service-prometheus.yaml
     set:
       metrics.prometheus.enabled: true
   - it: should have ServiceMonitor configured
@@ -24,6 +28,19 @@ tests:
       - isKind:
           of: ServiceMonitor
         template: servicemonitor.yaml
+      - equal:
+          path: metadata.namespace
+          value: monitoring
+        template: servicemonitor.yaml
+      - equal:
+          path: spec.endpoints[0].interval
+          value: 15s
+        template: servicemonitor.yaml
     set:
-      metrics.prometheus.enabled: true
-      metrics.prometheus.serviceMonitor: true
+      metrics:
+        prometheus:
+          enabled: true
+        serviceMonitor:
+          enabled: true
+          namespace: monitoring
+          interval: 15s
