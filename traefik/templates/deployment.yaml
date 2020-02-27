@@ -70,6 +70,11 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--log.level={{ .Values.logs.loglevel }}"
+          {{- if .Values.metrics.prometheus.enabled -}}
+          - "--metrics.prometheus=true"
+          - "--entryPoints.metrics.address=:9100"
+          - "--metrics.prometheus.entryPoint=metrics"
+          {{- end -}}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}

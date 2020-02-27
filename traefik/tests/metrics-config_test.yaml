@@ -1,0 +1,29 @@
+suite: Metrics configuration
+templates:
+  - service-prometheus.yaml
+  - servicemonitor.yaml
+tests:
+  - it: should have kind Service configured correctly
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ports[0].port
+          value: 9100
+      - equal:
+          path: spec.ports[0].name
+          value: metrics
+      - equal:
+          path: spec.ports[0].targetPort
+          value: metrics
+    set:
+      metrics.prometheus.enabled: true
+  - it: should have ServiceMonitor configured
+    asserts:
+      - isKind:
+          of: ServiceMonitor
+        template: servicemonitor.yaml
+    set:
+      metrics.prometheus.enabled: true
+      metrics.prometheus.serviceMonitor: true
