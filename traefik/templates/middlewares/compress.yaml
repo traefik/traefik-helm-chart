@@ -1,0 +1,15 @@
+{{- if .Values.middlewares.compress.enabled }}
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  labels:
+    app: {{ template "traefik.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+  annotations:
+    helm.sh/hook: "post-install"
+spec:
+  compress: {}
+{{- end -}}

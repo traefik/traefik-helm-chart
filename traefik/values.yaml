@@ -82,6 +82,10 @@ dashboard:
   # deployments
   ingressRoute: false
 
+middlewares:
+  compress:
+    enabled: false
+
 logs:
   loglevel: WARN
 #
