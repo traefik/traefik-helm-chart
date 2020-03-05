@@ -1,4 +1,4 @@
-{{- if (eq .Values.controller.kind "DaemonSet") }}
+{{- if (eq .Values.kind "DaemonSet") }}
 
 apiVersion: apps/v1
 kind: DaemonSet
