@@ -7,7 +7,7 @@ tests:
       - equal:
           path: spec.replicas
           value: 1
-  - it: should have the sepcified amount of replicas when specified via values
+  - it: should have the specified amount of replicas when specified via values
     set:
       deployment:
         replicas: 3
