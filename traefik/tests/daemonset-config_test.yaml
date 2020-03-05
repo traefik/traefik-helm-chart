@@ -1,8 +1,16 @@
-suite: Daemonset configuration
+suite: DaemonSet configuration
 templates:
   - daemonset.yaml
 tests:
+  - it: should be of type DaemonSet
+    set:
+      kind: DaemonSet
+    asserts:
+    - isKind:
+        of: DaemonSet
   - it: should have a rollingUpdate strategy with default values
+    set:
+      kind: DaemonSet
     asserts:
       - equal:
           path: spec.updateStrategy.type
@@ -15,10 +23,12 @@ tests:
           value: 30
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
-      rollingUpdate:
-        maxUnavailable: 3
-        minReadySeconds: 60
-        vegetaForce: 9000
+      kind: DaemonSet
+      daemonset:
+        rollingUpdate:
+          maxUnavailable: 3
+          minReadySeconds: 60
+          vegetaForce: 9000
     asserts:
       - equal:
           path: spec.updateStrategy.type
