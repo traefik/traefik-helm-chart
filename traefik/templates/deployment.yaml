@@ -18,7 +18,7 @@ spec:
   strategy:
     type: RollingUpdate
     rollingUpdate:
-      {{- with .Values.rollingUpdate }}
+      {{- with .Values.deployment.rollingUpdate }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
   template:

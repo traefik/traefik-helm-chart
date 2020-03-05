@@ -12,14 +12,18 @@ kind: Deployment
 deployment:
   # Number of pods of the deployment
   replicas: 1
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
+daemonset:
+  rollingUpdate:
+    maxUnavailable: 1
+    minReadySeconds: 30
 
 additional:
   checkNewVersion: true
   sendAnonymousUsage: true
-
-rollingUpdate:
-  maxUnavailable: 1
-  maxSurge: 1
 
 #
 # Configure Traefik entry points
