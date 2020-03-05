@@ -1,7 +1,7 @@
-{{- if (eq .Values.controller.kind "Deployment") }}
+{{- if (eq .Values.controller.kind "DaemonSet") }}
 
 apiVersion: apps/v1
-kind: Deployment
+kind: DaemonSet
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
@@ -10,12 +10,11 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
-  replicas: {{ default 1 .Values.deployment.replicas }}
   selector:
     matchLabels:
       app: {{ template "traefik.name" . }}
       release: {{ .Release.Name }}
-  strategy:
+  updateStrategy:
     type: RollingUpdate
     rollingUpdate:
       {{- with .Values.rollingUpdate }}

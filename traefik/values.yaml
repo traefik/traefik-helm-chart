@@ -3,6 +3,9 @@ image:
   name: traefik
   tag: 2.1.3
 
+## DaemonSet or Deployment
+kind: Deployment
+
 #
 # Configure the deployment
 #
