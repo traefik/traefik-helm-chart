@@ -27,7 +27,7 @@ tests:
           value: 0
       - equal:
           path: spec.strategy.rollingUpdate.minReadySeconds
-          value: 1
+          value: 30
       - equal:
           path: spec.strategy.rollingUpdate.vegetaForce
           value: 9000
