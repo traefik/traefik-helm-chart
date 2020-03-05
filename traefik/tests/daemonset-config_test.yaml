@@ -1,0 +1,33 @@
+suite: Daemonset configuration
+templates:
+  - daemonset.yaml
+tests:
+  - it: should have a rollingUpdate strategy with default values
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.strategy.rollingUpdate.maxUnavailable
+          value: 1
+      - equal:
+          path: spec.strategy.rollingUpdate.minReadySeconds
+          value: 30
+  - it: should have a custom merged rollingUpdate strategy with specified values
+    set:
+      rollingUpdate:
+        maxUnavailable: 0
+        vegetaForce: 9000
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.strategy.rollingUpdate.maxUnavailable
+          value: 0
+      - equal:
+          path: spec.strategy.rollingUpdate.minReadySeconds
+          value: 1
+      - equal:
+          path: spec.strategy.rollingUpdate.vegetaForce
+          value: 9000
