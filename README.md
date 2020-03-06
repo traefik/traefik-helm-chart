@@ -35,6 +35,16 @@ helm repo update
 helm install traefik traefik/traefik
 ```
 
+#### Warning
+
+If you are using Helm v2
+
+You have to deploy CRDs manually witht following command:
+
+```
+kubectl apply -f traefik/crds
+```
+
 ## Contributing
 
 If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).
