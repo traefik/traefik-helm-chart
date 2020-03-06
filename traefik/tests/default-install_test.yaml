@@ -17,21 +17,6 @@ tests:
       - isKind:
           of: ServiceAccount
         template: rbac/serviceaccount.yaml
-      - isKind:
-          of: CustomResourceDefinition
-        template: crd/ingressroute.yaml
-      - isKind:
-          of: CustomResourceDefinition
-        template: crd/ingressroutetcp.yaml
-      - isKind:
-          of: CustomResourceDefinition
-        template: crd/middlewares.yaml
-      - isKind:
-          of: CustomResourceDefinition
-        template: crd/tlsoptions.yaml
-      - isKind:
-          of: CustomResourceDefinition
-        template: crd/traefikservices.yaml
   - it: should have the correct naming for each object
     asserts:
       - equal:
@@ -54,23 +39,3 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-traefik
         template: rbac/serviceaccount.yaml
-      - equal:
-          path: metadata.name
-          value: ingressroutes.traefik.containo.us
-        template: crd/ingressroute.yaml
-      - equal:
-          path: metadata.name
-          value: ingressroutetcps.traefik.containo.us
-        template: crd/ingressroutetcp.yaml
-      - equal:
-          path: metadata.name
-          value: middlewares.traefik.containo.us
-        template: crd/middlewares.yaml
-      - equal:
-          path: metadata.name
-          value: tlsoptions.traefik.containo.us
-        template: crd/tlsoptions.yaml
-      - equal:
-          path: metadata.name
-          value: traefikservices.traefik.containo.us
-        template: crd/traefikservices.yaml
