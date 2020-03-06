@@ -15,7 +15,7 @@ using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubern
 ### Prerequisites
 
 With the command `helm version`, make sure that you have:
-- Helm v2 [installed](https://helm.sh/docs/using_helm/#installing-helm)
+- Helm v3 [installed](https://helm.sh/docs/using_helm/#installing-helm)
 
 Add Traefik's chart repository to Helm:
 
@@ -33,6 +33,16 @@ helm repo update
 
 ```bash
 helm install traefik traefik/traefik
+```
+
+#### Warning
+
+If you are using Helm v2
+
+You have to deploy CRDs manually witht following command:
+
+```
+kubectl apply -f traefik/crds
 ```
 
 ## Contributing
