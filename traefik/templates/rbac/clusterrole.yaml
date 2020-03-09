@@ -33,8 +33,10 @@ rules:
     resources:
       - ingressroutes
       - ingressroutetcps
+      - ingressrouteudps
       - middlewares
       - tlsoptions
+      - tlsstores
       - traefikservices
     verbs:
       - get
