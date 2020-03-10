@@ -1,10 +1,9 @@
-{{- if .Values.dashboard.ingressRoute }}
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   annotations:
-    helm.sh/hook: "post-install"
+    helm.sh/hook: "post-install,post-upgrade"
   labels:
     app: {{ template "traefik.name" . }}
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -12,11 +11,10 @@ metadata:
     heritage: {{ .Release.Service | quote }}
 spec:
   entryPoints:
-    - web
+    - traefik
   routes:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
     services:
     - name: api@internal
       kind: TraefikService
-{{- end -}}

@@ -92,15 +92,6 @@ service:
     # loadBalancerIP: "1.2.3.4"
     # clusterIP: "2.3.4.5"
 
-dashboard:
-  # Enable the dashboard on Traefik
-  enable: true
-
-  # Expose the dashboard and api through an ingress route at /dashboard
-  # and /api This is not secure and SHOULD NOT be enabled on production
-  # deployments
-  ingressRoute: false
-
 logs:
   loglevel: WARN
 
