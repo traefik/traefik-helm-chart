@@ -1,3 +1,7 @@
+{{- if and (.Values.persistence.enabled) (ne .Values.deployment.replicas 1.0) -}}
+{{- fail (printf "You can not enabled persistence and have more than one replicas") -}}
+{{- end -}}
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
