@@ -31,7 +31,7 @@ spec:
     {{- end }}
   {{- end }}
   {{- end }}
-  {{- if eq .Values.service.type "LoadBalancer" }}  
+  {{- if eq $type "LoadBalancer" }}
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
   {{- toYaml . | nindent 2 }}
