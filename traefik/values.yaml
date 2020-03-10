@@ -116,6 +116,7 @@ persistence:
   size: 128Mi
   # storageClass: ""
   path: /data
+  annotations: {}
 
 resources: {}
   # requests:
