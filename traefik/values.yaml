@@ -106,9 +106,10 @@ logs:
 
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-# Used along with --certificatesresolvers.le.acme.storage=/data/acme.json to
-# persist TLS certificates.
-#
+# After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
+# additionalArguments:
+# - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+# It will persist TLS certificates.
 persistence:
   enabled: false
   accessMode: ReadWriteOnce
