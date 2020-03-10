@@ -66,6 +66,12 @@ spec:
           containerPort: {{ $config.port }}
           protocol: TCP
         {{- end }}
+        volumeMounts:
+        {{- range .Values.volumes }}
+        - name: {{ .name }}
+          mountPath: {{ .mountPath }}
+          readOnly: true
+        {{- end }}
         args:
           - "--global.checknewversion={{ .Values.additional.checkNewVersion }}"
           - "--global.sendanonymoususage={{ .Values.additional.sendAnonymousUsage}}"
@@ -85,6 +91,17 @@ spec:
         env:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      volumes:
+      {{- range .Values.volumes }}
+      - name: {{ .name }}
+        {{- if eq .type "secret" }}
+        secret:
+          secretName: {{ .name }}
+        {{- else if eq .type "configMap" }}
+        configMap:
+          name: {{ .name }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

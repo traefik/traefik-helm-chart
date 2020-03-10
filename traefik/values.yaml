@@ -20,6 +20,23 @@ rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
 
+
+#
+# Add volumes to the traefik pod.
+# This can be used to mount a cert pair or a configmap that holds a config.toml file.
+# After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
+# additionalArguments:
+# - "--providers.file.filename=/config/dynamic.toml"
+# - "--tls.certificates.certFile=/certs/tls.crt"
+# - "--tls.certificates.keyFile=/certs/tls.key"
+volumes: []
+# - name: public-cert
+#   mountPath: "/certs"
+#   type: secret
+# - name: configs
+#   mountPath: "/config"
+#   type: configMap
+
 #
 # Configure Traefik entry points
 # Additional arguments to be passed at Traefik's binary
