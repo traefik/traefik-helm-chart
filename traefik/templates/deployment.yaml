@@ -91,6 +91,13 @@ spec:
         env:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+          {{- range .Values.secretEnv }}
+          - name: {{ .name }}
+            valueFrom:
+              secretKeyRef:
+                name: {{ .secretName }}
+                key: {{ .secretKey }}
+          {{- end }}
         volumeMounts:
           - name: data
             mountPath: {{ .Values.persistence.path }}
