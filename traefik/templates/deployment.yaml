@@ -67,11 +67,13 @@ spec:
           protocol: TCP
         {{- end }}
         volumeMounts:
-        {{- range .Values.volumes }}
-        - name: {{ .name }}
-          mountPath: {{ .mountPath }}
-          readOnly: true
-        {{- end }}
+          - name: data
+            mountPath: {{ .Values.persistence.path }}
+          {{- range .Values.volumes }}
+          - name: {{ .name }}
+            mountPath: {{ .mountPath }}
+            readOnly: true
+          {{- end }}
         args:
           - "--global.checknewversion={{ .Values.additional.checkNewVersion }}"
           - "--global.sendanonymoususage={{ .Values.additional.sendAnonymousUsage}}"
@@ -98,9 +100,6 @@ spec:
                 name: {{ .secretName }}
                 key: {{ .secretKey }}
           {{- end }}
-        volumeMounts:
-          - name: data
-            mountPath: {{ .Values.persistence.path }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
