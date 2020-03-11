@@ -1,3 +1,14 @@
+{{- if ne .Values.deployment.replicas 1.0 -}}
+{{- with .Values.additionalArguments -}}
+{{- range . -}}
+{{- if contains ".acme." . -}}
+{{- fail (printf "You can not enabled acme if you set more than one traefik replica") -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
