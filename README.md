@@ -37,7 +37,7 @@ helm install traefik traefik/traefik
 
 If you are using Helm v2
 
-You have to deploy CRDs manually witht following command:
+You have to deploy CRDs manually with the following command:
 
 ```
 kubectl apply -f traefik/crds
