@@ -3,7 +3,30 @@ entries:
   traefik:
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.391601402Z"
+    created: "2020-03-11T10:46:58.449883586Z"
+    description: A Traefik based Kubernetes ingress controller
+    digest: 89787f456584e0c305e084022f80ce0522f44f60b6cc0ccfc4c6db645874ff60
+    home: https://traefik.io/
+    icon: http://traefik.io/traefik.logo.png
+    keywords:
+    - traefik
+    - ingress
+    maintainers:
+    - email: emile@vauge.com
+      name: emilevauge
+    - email: daniel.tomcej@gmail.com
+      name: dtomcej
+    - email: ludovic@containo.us
+      name: ldez
+    name: traefik
+    sources:
+    - https://github.com/containous/traefik
+    urls:
+    - https://containous.github.io/traefik-helm-chart/traefik-5.2.0.tgz
+    version: 5.2.0
+  - apiVersion: v2
+    appVersion: 2.1.3
+    created: "2020-03-11T10:46:58.449065346Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 1159d2842ec56483fb40893bc3be3607ac059c0d3f7f6d744843cc55462f57ba
     home: https://traefik.io/
@@ -26,7 +49,7 @@ entries:
     version: 5.1.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.390219658Z"
+    created: "2020-03-11T10:46:58.448259509Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 09b8a05223fabad2e16f29d55b743f465bbed8431459a4a3e38bdec8e8a4d107
     home: https://traefik.io/
@@ -49,7 +72,7 @@ entries:
     version: 5.0.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.388942344Z"
+    created: "2020-03-11T10:46:58.447499592Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 579995dc7087f84b8407e2ccdb4f2ce2831da42e4eb235426563ecd006ed6884
     home: https://traefik.io/
@@ -72,7 +95,7 @@ entries:
     version: 4.1.3
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.38798514Z"
+    created: "2020-03-11T10:46:58.44673462Z"
     description: A Traefik based Kubernetes ingress controller
     digest: bcc5545963823dd92485973350da16d071ebedb78e508552ced6f5cf46dc7923
     home: https://traefik.io/
@@ -95,7 +118,7 @@ entries:
     version: 4.1.2
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.386919161Z"
+    created: "2020-03-11T10:46:58.44587486Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 23a13057b65123029a4f71cd8ac1eb3eb6ac8c849cd39d2c137efa69de78a14f
     home: https://traefik.io/
@@ -118,7 +141,7 @@ entries:
     version: 4.1.1
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.385953332Z"
+    created: "2020-03-11T10:46:58.444073409Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 7172e5ef2e904523e92e0bc5c34d87b4fbd2648dc38386deffdf52ff426d6f06
     home: https://traefik.io/
@@ -141,7 +164,7 @@ entries:
     version: 4.1.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.385071909Z"
+    created: "2020-03-11T10:46:58.442138121Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 2acd1bcc8367c919559e818d6a8190b7eb0fde9121cc4672ba7eb812d4175ada
     home: https://traefik.io/
@@ -164,7 +187,7 @@ entries:
     version: 4.0.0
   - apiVersion: v1
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.384185969Z"
+    created: "2020-03-11T10:46:58.441422476Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 41525044f4673b5484cdb12863aec4c9363d0989a5337dbc5cfe591903b762d2
     home: https://traefik.io/
@@ -187,7 +210,7 @@ entries:
     version: 3.5.0
   - apiVersion: v1
     appVersion: 2.1.3
-    created: "2020-03-10T15:21:04.383072049Z"
+    created: "2020-03-11T10:46:58.440642461Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 85aeb1039e2e3131e15bb132062ebd9834b9e299fa461aad51c10fb9a6d0fc86
     home: https://traefik.io/
@@ -208,4 +231,4 @@ entries:
     urls:
     - https://containous.github.io/traefik-helm-chart/traefik-3.4.0.tgz
     version: 3.4.0
-generated: "2020-03-10T15:21:04.381630209Z"
+generated: "2020-03-11T10:46:58.439740741Z"
