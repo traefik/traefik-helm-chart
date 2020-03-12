@@ -15,7 +15,8 @@ deployment:
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
-  enabled: true
+  dashboard:
+    enabled: true
 
 additional:
   checkNewVersion: true
