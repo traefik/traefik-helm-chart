@@ -18,14 +18,9 @@ ingressRoute:
   dashboard:
     enabled: true
 
-additional:
-  checkNewVersion: true
-  sendAnonymousUsage: true
-
 rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
-
 
 #
 # Add volumes to the traefik pod.
@@ -43,9 +38,14 @@ volumes: []
 #   mountPath: "/config"
 #   type: configMap
 
+globalArguments:
+  - "--global.checknewversion"
+  - "--global.sendanonymoususage"
+
 #
-# Configure Traefik entry points
+# Configure Traefik static configuration
 # Additional arguments to be passed at Traefik's binary
+# All available options available on https://docs.traefik.io/reference/static-configuration/cli/
 ## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--global.checknewversion=true}"`
 additionalArguments: []
 #  - "--providers.kubernetesingress"
@@ -63,7 +63,7 @@ env: {}
   # - name: SOME_OTHER_VAR
   #   value: some-other-var-value
 
-#
+# Configure ports
 ports:
   # The name of this one can't be changed as it is used for the readiness and
   # liveness probes, but you can adjust its config to your liking
@@ -94,7 +94,7 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
-  # nodePort: 32443
+    # nodePort: 32443
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
@@ -112,9 +112,6 @@ service:
   loadBalancerSourceRanges: {}
     # - 192.168.0.1/32
     # - 172.16.0.0/16
-
-logs:
-  loglevel: WARN
 
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

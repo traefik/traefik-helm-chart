@@ -2,19 +2,6 @@ suite: Traefik configuration
 templates:
   - deployment.yaml
 tests:
-  - it: should have log level of WARN by default
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--log.level=WARN"
-  - it: should have log level of SUPERMAN when specified through values
-    set:
-      logs:
-        loglevel: SUPERMAN
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--log.level=SUPERMAN"
   - it: should have no additional arguments by default (testing with providers.kubernetesingress)
     asserts:
       - notContains:
