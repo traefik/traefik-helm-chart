@@ -75,6 +75,9 @@ spec:
         {{- range $name, $config := .Values.ports }}
         - name: {{ $name | quote }}
           containerPort: {{ $config.port }}
+          {{- if $config.hostPort }}
+          hostPort: {{ $config.hostPort }}
+          {{- end }}
           protocol: TCP
         {{- end }}
         volumeMounts:
