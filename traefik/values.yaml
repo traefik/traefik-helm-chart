@@ -7,10 +7,15 @@ image:
 # Configure the deployment
 #
 deployment:
+  enabled: true
   # Number of pods of the deployment
   replicas: 1
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
+
+# Create an IngressRoute for the dashboard
+ingressRoute:
+  enabled: true
 
 additional:
   checkNewVersion: true
@@ -93,6 +98,7 @@ ports:
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
 service:
+  enabled: true
   type: LoadBalancer
   # Additional annotations (e.g. for cloud provider specific config)
   annotations: {}
