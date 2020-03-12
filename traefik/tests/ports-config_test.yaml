@@ -89,3 +89,31 @@ tests:
           content:
             "--entryPoints.ssh.address=:22"
         template: deployment.yaml
+  - it: should have a hostPort when specified via values
+    set:
+      ports:
+        ssh:
+          port: 22
+          expose: true
+          hostPort: 22
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: ssh
+            containerPort: 22
+            hostPort: 22
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: ssh
+            port: 22
+            targetPort: ssh
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--entryPoints.ssh.address=:22"
+        template: deployment.yaml
