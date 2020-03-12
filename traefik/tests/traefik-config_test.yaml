@@ -6,8 +6,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--log.level=WARN"
+          content: "--log.level=WARN"
   - it: should have log level of SUPERMAN when specified through values
     set:
       logs:
@@ -15,22 +14,18 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--log.level=SUPERMAN"
+          content: "--log.level=SUPERMAN"
   - it: should have no additional arguments by default (testing with providers.kubernetesingress)
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress"
+          content: "--providers.kubernetesingress"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress=true"
+          content: "--providers.kubernetesingress=true"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress=false"
+          content: "--providers.kubernetesingress=false"
   - it: should have no custom arguments when specified by default
     set:
       additionalArguments:
@@ -39,9 +34,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress=true"
+          content: "--providers.kubernetesingress=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--the.force.is.with.me=true"
+          content: "--the.force.is.with.me=true"

@@ -1,12 +1,13 @@
-{{- if gt (int .Values.deployment.replicas) 1 -}}
-{{- with .Values.additionalArguments -}}
-{{- range . -}}
-{{- if contains ".acme." . -}}
-{{- fail (printf "You can not enabled acme if you set more than one traefik replica") -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
-{{- end -}}
+{{- if .Values.deployment.enabled -}}
+  {{- if gt (int .Values.deployment.replicas) 1 -}}
+    {{- with .Values.additionalArguments -}}
+      {{- range . -}}
+        {{- if contains ".acme." . -}}
+          {{- fail (printf "You can not enabled acme if you set more than one traefik replica") -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
 
 ---
 apiVersion: apps/v1
@@ -145,3 +146,5 @@ spec:
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+
+{{- end -}}

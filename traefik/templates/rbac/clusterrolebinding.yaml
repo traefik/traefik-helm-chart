@@ -7,6 +7,6 @@ roleRef:
   kind: ClusterRole
   name: {{ template "traefik.fullname" . }}
 subjects:
-- kind: ServiceAccount
-  name: {{ template "traefik.fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  - kind: ServiceAccount
+    name: {{ template "traefik.fullname" . }}
+    namespace: {{ .Release.Namespace }}
