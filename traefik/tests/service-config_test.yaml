@@ -35,7 +35,7 @@ tests:
           externalTrafficPolicy: Cluster
           loadBalancerIP: "1.2.3.4"
           clusterIP: "2.3.4.5"
-          loadBalancerSourceRanges: 
+          loadBalancerSourceRanges:
           - 192.168.0.1/32
           - 172.16.0.0/16
     asserts:

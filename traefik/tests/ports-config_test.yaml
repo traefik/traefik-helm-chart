@@ -18,8 +18,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--entryPoints.web.address=:8000"
+          content: "--entryPoints.web.address=:8000"
         template: deployment.yaml
   - it: should have port 8443 of pod published to 443 of service by default, and defined as entrypoint "websecure"
     asserts:
@@ -39,8 +38,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--entryPoints.websecure.address=:8443"
+          content: "--entryPoints.websecure.address=:8443"
         template: deployment.yaml
   - it: should have port 9000 of pod exposed for probes but NOT published to the service by default
     asserts:
@@ -60,8 +58,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--entryPoints.traefik.address=:9000"
+          content: "--entryPoints.traefik.address=:9000"
         template: deployment.yaml
   - it: should have a custom port when specified via values
     set:
@@ -86,8 +83,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--entryPoints.ssh.address=:22"
+          content: "--entryPoints.ssh.address=:22"
         template: deployment.yaml
   - it: should have a hostPort when specified via values
     set:
