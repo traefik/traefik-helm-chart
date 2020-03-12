@@ -1,4 +1,4 @@
-{{- if ne .Values.deployment.replicas 1.0 -}}
+{{- if gt (int .Values.deployment.replicas) 1 -}}
 {{- with .Values.additionalArguments -}}
 {{- range . -}}
 {{- if contains ".acme." . -}}
