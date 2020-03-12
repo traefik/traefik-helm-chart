@@ -40,7 +40,7 @@ volumes: []
 #
 # Configure Traefik entry points
 # Additional arguments to be passed at Traefik's binary
-## Use curly braces to pass values: `helm install --set="{--providers.kubernetesingress,--global.checknewversion=true}" ."
+## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--global.checknewversion=true}"`
 additionalArguments: []
 #  - "--providers.kubernetesingress"
 
