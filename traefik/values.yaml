@@ -113,6 +113,48 @@ service:
     # - 192.168.0.1/32
     # - 172.16.0.0/16
 
+dashboard:
+  ingress:
+    enabled: false
+    domain: traefik.example.com
+    # annotations:
+    #   key: value
+    # labels:
+    #   key: value
+    # tls:
+      # - hosts:
+      #   - traefik.example.com
+      #   secretName: traefik-default-cert
+  service:
+    enabled: false
+    type: ClusterIP
+    # Additional annotations (e.g. for cloud provider specific config)
+    annotations: {}
+    # Additional entries here will be added to the service spec. Cannot contains
+    # type, selector or ports entries.
+    spec: {}
+      # externalTrafficPolicy: Cluster
+      # loadBalancerIP: "1.2.3.4"
+      # clusterIP: "2.3.4.5"
+    loadBalancerSourceRanges: {}
+      # - 192.168.0.1/32
+      # - 172.16.0.0/16
+
+## Create HorizontalPodAutoscaler object.
+##
+# autoscaling:
+#   minReplicas: 1
+#   maxReplicas: 10
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       targetAverageUtilization: 60
+#   - type: Resource
+#     resource:
+#       name: memory
+#       targetAverageUtilization: 60
+
 logs:
   loglevel: WARN
 

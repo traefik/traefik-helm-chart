@@ -1,0 +1,38 @@
+{{- if .Values.dashboard.service.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "traefik.fullname" . }}-dashboard
+  labels:
+    app: {{ template "traefik.name" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
+  {{- with .Values.dashboard.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- $type := default "ClusterIP" .Values.dashboard.service.type }}
+  type: {{ $type }}
+  {{- with .Values.dashboard.service.spec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
+  selector:
+    app: {{ template "traefik.name" . }}
+    release: {{ .Release.Name }}
+  ports:
+  {{- $config := .Values.ports.traefik }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: "traefik"
+    targetPort: "traefik"
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
+  {{- if eq $type "LoadBalancer" }}
+  {{- with .Values.service.loadBalancerSourceRanges }}
+  loadBalancerSourceRanges:
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
+  {{- end -}}
+{{- end -}}

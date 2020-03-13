@@ -20,7 +20,9 @@ metadata:
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
 spec:
+  {{- if not .Values.autoscaling }}
   replicas: {{ default 1 .Values.deployment.replicas }}
+  {{- end }}
   selector:
     matchLabels:
       app: {{ template "traefik.name" . }}
