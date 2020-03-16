@@ -51,13 +51,13 @@ additionalArguments: []
 #  - "--providers.kubernetesingress"
 
 # Secret to be set as environment variables to be passed to Traefik's binary
-secretEnv: {}
+secretEnv: []
   # - name: SOME_VAR
   #   secretName: my-secret-name
   #   secretKey: my-secret-key
 
 # Environment variables to be passed to Traefik's binary
-env: {}
+env: []
   # - name: SOME_VAR
   #   value: some-var-value
   # - name: SOME_OTHER_VAR
@@ -109,7 +109,7 @@ service:
     # externalTrafficPolicy: Cluster
     # loadBalancerIP: "1.2.3.4"
     # clusterIP: "2.3.4.5"
-  loadBalancerSourceRanges: {}
+  loadBalancerSourceRanges: []
     # - 192.168.0.1/32
     # - 172.16.0.0/16
 
