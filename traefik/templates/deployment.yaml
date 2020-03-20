@@ -19,6 +19,12 @@ metadata:
     chart: {{ template "traefik.chart" . }}
     release: {{ .Release.Name | quote }}
     heritage: {{ .Release.Service | quote }}
+  {{- if .Values.deployment.annotations }}
+  annotations:
+  {{- range $key, $value := .Values.deployment.annotations }}
+    {{ $key | quote }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
 spec:
   replicas: {{ default 1 .Values.deployment.replicas }}
   selector:
