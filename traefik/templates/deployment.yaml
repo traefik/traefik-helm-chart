@@ -108,6 +108,9 @@ spec:
           - "--api.dashboard=true"
           - "--ping=true"
           - "--providers.kubernetescrd"
+          {{- if .Values.metrics.enabled }}
+          - "--metrics.prometheus"
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}

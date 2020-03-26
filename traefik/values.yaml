@@ -157,3 +157,9 @@ affinity: {}
 #       topologyKey: failure-domain.beta.kubernetes.io/zone
 nodeSelector: {}
 tolerations: []
+
+metrics:
+  # Prometheus metrics exporter type. (Default: false)
+  enabled: false
+  # Create a ServiceMonitor CR for prometheus-operator
+  serviceMonitor: false
