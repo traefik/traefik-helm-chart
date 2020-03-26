@@ -91,7 +91,7 @@ endif
 
 helm-unittest: global-requirements
 	@echo "== Checking that plugin helm-unittest is available..."
-	@helm plugin list 2>/dev/null | grep unittest >/dev/null || helm plugin install https://github.com/rancher/helm-unittest --version=0.1.7-rancher1
+	@helm plugin list 2>/dev/null | grep unittest >/dev/null || helm plugin install https://github.com/rancher/helm-unittest --debug
 	@echo "== plugin helm-unittest is ready"
 
 .PHONY: all global-requirements lint-requirements helm-unittest lint build deploy clean
