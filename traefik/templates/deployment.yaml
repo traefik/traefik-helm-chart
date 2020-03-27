@@ -117,13 +117,6 @@ spec:
         env:
           {{- toYaml . | nindent 10 }}
         {{- end }}
-          {{- range .Values.secretEnv }}
-          - name: {{ .name }}
-            valueFrom:
-              secretKeyRef:
-                name: {{ .secretName }}
-                key: {{ .secretKey }}
-          {{- end }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
