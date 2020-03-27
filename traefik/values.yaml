@@ -151,6 +151,9 @@ persistence:
 # affinity is left as default.
 hostNetwork: false
 
+# Additional serviceAccount annotations (e.g. for oidc authentication)
+serviceAccountAnnotations: {}
+
 resources: {}
   # requests:
   #   cpu: "100m"
