@@ -100,11 +100,15 @@ ports:
     expose: false
     # The exposed port for this service
     exposedPort: 9000
+    # The port protocol (TCP/UDP)
+    protocol: TCP
   web:
     port: 8000
     # hostPort: 8000
     expose: true
     exposedPort: 80
+    # The port protocol (TCP/UDP)
+    protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer
     # nodePort: 32080
@@ -113,6 +117,8 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
+    # The port protocol (TCP/UDP)
+    protocol: TCP
     # nodePort: 32443
 
 # Options for the main traefik service, where the entrypoints traffic comes

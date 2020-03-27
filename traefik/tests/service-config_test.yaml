@@ -42,6 +42,12 @@ tests:
             - "1.2.3.4"
     asserts:
       - equal:
+          path: spec.ports[0].name
+          value: web
+      - equal:
+          path: spec.ports[0].protocol
+          value: TCP
+      - equal:
           path: spec.externalTrafficPolicy
           value: Cluster
       - equal:
@@ -59,3 +65,18 @@ tests:
       - equal:
           path: spec.externalIPs[0]
           value: "1.2.3.4"
+  - it: should have custom spec elements when specified via values for UPD ports
+    set:
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: spec.ports[0].name
+          value: udp
+      - equal:
+          path: spec.ports[0].protocol
+          value: UDP

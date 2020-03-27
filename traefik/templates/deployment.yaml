@@ -84,7 +84,7 @@ spec:
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
           {{- end }}
-          protocol: TCP
+          protocol: {{ default "TCP" $config.protocol | quote }}
         {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
@@ -108,7 +108,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
-          - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
+          - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
