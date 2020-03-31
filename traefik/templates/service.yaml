@@ -32,6 +32,10 @@ spec:
     {{- end }}
   {{- end }}
   {{- end }}
+  {{- if ( .Values.metrics.prometheus.enabled )  }}
+  - port: {{ .Values.metrics.prometheus.port }}
+    name: {{ .Values.metrics.prometheus.entryPoint }}
+  {{- end }}
   {{- if eq $type "LoadBalancer" }}
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:

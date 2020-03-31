@@ -110,6 +110,11 @@ spec:
           - "--api.dashboard=true"
           - "--ping=true"
           - "--providers.kubernetescrd"
+          {{- if ( .Values.metrics.prometheus.enabled )  }}
+          - "--metrics.prometheus=true"
+          - "--metrics.prometheus.entryPoint={{ .Values.metrics.prometheus.entryPoint }}"
+          - "--entryPoints.metrics.address=:{{ .Values.metrics.prometheus.port }}"
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
