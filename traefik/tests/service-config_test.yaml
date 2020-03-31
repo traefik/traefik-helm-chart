@@ -36,8 +36,10 @@ tests:
           loadBalancerIP: "1.2.3.4"
           clusterIP: "2.3.4.5"
           loadBalancerSourceRanges:
-          - 192.168.0.1/32
-          - 172.16.0.0/16
+            - 192.168.0.1/32
+            - 172.16.0.0/16
+          externalIPs:
+            - "1.2.3.4"
     asserts:
       - equal:
           path: spec.externalTrafficPolicy
@@ -54,3 +56,6 @@ tests:
       - equal:
           path: spec.loadBalancerSourceRanges[1]
           value: 172.16.0.0/16
+      - equal:
+          path: spec.externalIPs[0]
+          value: "1.2.3.4"

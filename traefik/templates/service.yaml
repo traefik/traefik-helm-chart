@@ -38,4 +38,8 @@ spec:
   {{- toYaml . | nindent 2 }}
   {{- end -}}
   {{- end -}}
+  {{- with .Values.service.externalIPs }}
+  externalIPs:
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
 {{- end -}}

@@ -116,6 +116,8 @@ service:
   loadBalancerSourceRanges: []
     # - 192.168.0.1/32
     # - 172.16.0.0/16
+  externalIPs: []
+    # - 1.2.3.4
 
 ## Create HorizontalPodAutoscaler object.
 ##
