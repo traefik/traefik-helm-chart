@@ -18,7 +18,7 @@ tests:
       - equal:
           path: spec.template.spec.nodeSelector.disktype
           value: ssd
-          
+
   - it: should have no tolerations by default
     asserts:
       - isNull:

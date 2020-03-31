@@ -110,6 +110,5 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--entryPoints.ssh.address=:22"
+          content: "--entryPoints.ssh.address=:22"
         template: deployment.yaml
