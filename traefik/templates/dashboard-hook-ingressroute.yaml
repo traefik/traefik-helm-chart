@@ -5,10 +5,8 @@ metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   annotations:
     helm.sh/hook: "post-install,post-upgrade"
-  {{- if .Values.ingressRoute.annotations }}
-  {{- range $key, $value := .Values.ingressRoute.annotations }}
-    {{ $key | quote }}: {{ $value | quote }}
-  {{- end }}
+  {{- with .Values.ingressRoute.dashboard.annotations }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
   labels:
     app: {{ template "traefik.name" . }}
