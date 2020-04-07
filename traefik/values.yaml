@@ -15,6 +15,14 @@ deployment:
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
 
+# Otherwise, create a daemonset
+daemonset:
+  enabled: false
+  # Addtional deployment annotations (e.g. for jaeger-operator sidecar injection)
+  annotations: {}
+  # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
+  podAnnotations: {}
+
 # Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
