@@ -84,7 +84,7 @@ spec:
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
           {{- end }}
-          protocol: TCP
+          protocol: {{ $config.protocol }}
         {{- end }}
         volumeMounts:
           - name: data
@@ -101,6 +101,9 @@ spec:
           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
+          {{- if eq $config.protocol "UDP" }}
+          - "--entryPoints.{{$name}}.address=:{{ $config.port }}/udp"
+          {{- end }}
           - "--entryPoints.{{$name}}.address=:{{ $config.port }}"
           {{- end }}
           - "--api.dashboard=true"
