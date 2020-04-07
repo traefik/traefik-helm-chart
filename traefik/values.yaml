@@ -19,6 +19,8 @@ deployment:
 ingressRoute:
   dashboard:
     enabled: true
+    # Addtional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    annotations: {}
 
 rollingUpdate:
   maxUnavailable: 1
