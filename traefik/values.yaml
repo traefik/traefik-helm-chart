@@ -10,7 +10,7 @@ deployment:
   enabled: true
   # Number of pods of the deployment
   replicas: 1
-  # Addtional deployment annotations (e.g. for jaeger-operator sidecar injection)
+  # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
@@ -19,7 +19,7 @@ deployment:
 ingressRoute:
   dashboard:
     enabled: true
-    # Addtional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
 
 rollingUpdate:

@@ -4,13 +4,13 @@ kind: Service
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
-    app: {{ template "traefik.name" . }}
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
-  {{- with .Values.service.annotations }}
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   {{- $type := default "LoadBalancer" .Values.service.type }}
@@ -19,8 +19,8 @@ spec:
   {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
-    app: {{ template "traefik.name" . }}
-    release: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
   {{- range $name, $config := .Values.ports }}
   {{- if $config.expose }}

@@ -44,3 +44,17 @@ tests:
       - equal:
           path: spec.strategy.rollingUpdate.vegetaForce
           value: 9000
+  - it: should have annotations with specified values
+    set:
+      deployment:
+        annotations:
+          containous/powpow: annotations
+        podAnnotations:
+          containous/powpow: podAnnotations
+    asserts:
+      - equal:
+          path: metadata.annotations.containous/powpow
+          value: annotations
+      - equal:
+          path: spec.template.metadata.annotations.containous/powpow
+          value: podAnnotations

@@ -15,15 +15,13 @@ kind: Deployment
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
-    app: {{ template "traefik.name" . }}
-    chart: {{ template "traefik.chart" . }}
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
-  {{- if .Values.deployment.annotations }}
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
   annotations:
-  {{- range $key, $value := .Values.deployment.annotations }}
-    {{ $key | quote }}: {{ $value | quote }}
-  {{- end }}
+  {{- with .Values.deployment.annotations }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
@@ -31,8 +29,8 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app: {{ template "traefik.name" . }}
-      release: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ template "traefik.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -41,17 +39,15 @@ spec:
       {{- end }}
   template:
     metadata:
-      {{- if .Values.deployment.podAnnotations }}
       annotations:
-      {{- range $key, $value := .Values.deployment.podAnnotations }}
-        {{ $key }}: {{ $value | quote }}
-      {{- end }}
+      {{- with .Values.deployment.podAnnotations }}
+      {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        app: {{ template "traefik.name" . }}
-        chart: {{ template "traefik.chart" . }}
-        release: {{ .Release.Name | quote }}
-        heritage: {{ .Release.Service | quote }}
+        app.kubernetes.io/name: {{ template "traefik.name" . }}
+        helm.sh/chart: {{ template "traefik.chart" . }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ template "traefik.fullname" . }}
       terminationGracePeriodSeconds: 60
