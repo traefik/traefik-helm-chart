@@ -3,15 +3,15 @@ apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
   name: {{ template "traefik.fullname" . }}
-{{- with .Values.persistence.annotations  }}
   annotations:
-{{ toYaml . | indent 4 }}
-{{- end }}
+  {{- with .Values.persistence.annotations  }}
+  {{ toYaml . | indent 4 }}
+  {{- end }}
   labels:
-    app: {{ template "traefik.name" . }}
-    chart: {{ template "traefik.chart" . }}
-    release: {{ .Release.Name | quote }}
-    heritage: {{ .Release.Service | quote }}
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
