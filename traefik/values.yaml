@@ -152,6 +152,7 @@ persistence:
   # storageClass: ""
   path: /data
   annotations: {}
+  # subPath: "" # only mount a subpath of the Volume into the pod
 
 # If hostNetwork is true, runs traefik in the host network namespace
 # To prevent unschedulabel pods due to port collisions, if hostNetwork=true

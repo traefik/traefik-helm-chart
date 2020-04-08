@@ -50,3 +50,15 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].resources.limits.memory
           value: "150Mi"
+  - it: should not have data volumeMount subPath by default
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].volumeMounts[0].subPath
+  - it: should have data volumeMount subPath when specified in config
+    set:
+      persistence:
+        subPath: "subdir/traefik"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].subPath
+          value: "subdir/traefik"
