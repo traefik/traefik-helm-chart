@@ -20,7 +20,7 @@ spec:
   entryPoints:
     - traefik
   routes:
-  - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - match: {{ .Values.ingressRoute.dashboard.match_rule }}
     kind: Rule
     services:
     - name: api@internal

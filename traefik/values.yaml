@@ -23,6 +23,10 @@ ingressRoute:
     annotations: {}
     # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
+    # Setup Match rule for dashboard.
+    # E.g. if exposed publicly you might need to filter by Host header too
+    # match_rule: Host(`mytraefik.test`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))
+    match_rule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
 
 rollingUpdate:
   maxUnavailable: 1
