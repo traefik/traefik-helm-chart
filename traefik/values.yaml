@@ -21,6 +21,8 @@ ingressRoute:
     enabled: true
     # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
+    # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    labels: {}
 
 rollingUpdate:
   maxUnavailable: 1
