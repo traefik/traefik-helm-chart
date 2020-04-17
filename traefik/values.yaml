@@ -71,7 +71,7 @@ env: []
 #       name: secret-name
 #       key: secret-key
 
-envFrom:
+envFrom: []
 # - configMapRef:
 #     name: config-map-name
 # - secretRef:
