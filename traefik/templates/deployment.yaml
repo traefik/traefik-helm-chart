@@ -118,6 +118,10 @@ spec:
         env:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.envFrom }}
+        envFrom:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
