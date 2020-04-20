@@ -71,6 +71,12 @@ env: []
 #       name: secret-name
 #       key: secret-key
 
+envFrom: []
+# - configMapRef:
+#     name: config-map-name
+# - secretRef:
+#     name: secret-name
+
 # Configure ports
 ports:
   # The name of this one can't be changed as it is used for the readiness and

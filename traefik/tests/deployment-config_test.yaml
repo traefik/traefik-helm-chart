@@ -58,3 +58,18 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.containous/powpow
           value: podAnnotations
+  - it: should have envFrom with specified values
+    set:
+      envFrom:
+        - configMapRef:
+            name: config-map-name
+        - secretRef:
+            name: secret-name
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[0].configMapRef.name
+          value: config-map-name
+      - equal:
+          path: spec.template.spec.containers[0].envFrom[1].secretRef.name
+          value: secret-name
+
