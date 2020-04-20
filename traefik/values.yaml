@@ -200,10 +200,3 @@ securityContext:
   runAsGroup: 65532
   runAsNonRoot: true
   runAsUser: 65532
-
-serviceMonitor:
-  enabled: false
-  interval: 30s
-  labels: {}
-  namespace: ""
-  scrapeTimeout: 10s
