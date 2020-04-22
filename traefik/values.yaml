@@ -192,9 +192,8 @@ affinity: {}
 nodeSelector: {}
 tolerations: []
 
-podSecurityContext:
-  fsGroup: 65532
-
+# Pods can have priority.
+# Priority indicates the importance of a Pod relative to other Pods.
 priorityClassName: ""
 
 # Set the container security context
@@ -206,3 +205,6 @@ securityContext:
   runAsGroup: 65532
   runAsNonRoot: true
   runAsUser: 65532
+
+podSecurityContext:
+  fsGroup: 65532
