@@ -62,7 +62,7 @@ Thus, there are multiple ways to expose the dashboard.
 For instance, the dashboard access could be achieved through a port-forward :
 
 ```
-kubectl port-forward pod/my-traefik-pod 9000:9000
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 ```
 
 Another way would be to apply your own configuration, for instance,
