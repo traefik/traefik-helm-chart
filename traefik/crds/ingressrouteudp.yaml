@@ -1,11 +1,42 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: ingressrouteudps.traefik.containo.us
-
 spec:
   group: traefik.containo.us
-  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              routes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    services:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                          port:
+                            type: integer
+                          weight:
+                            type: integer
+              entryPoints:
+                type: array
+                items:
+                  type: string
   names:
     kind: IngressRouteUDP
     plural: ingressrouteudps

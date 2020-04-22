@@ -1,10 +1,132 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: ingressroutes.traefik.containo.us
 spec:
   group: traefik.containo.us
-  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              routes:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    match:
+                      type: string
+                    kind:
+                      type: string
+                    priority:
+                      type: integer
+                    services:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          sticky:
+                            type: object
+                            properties:
+                              cookie:
+                                type: object
+                                properties:
+                                  name:
+                                    type: string
+                                  secure:
+                                    type: boolean
+                                  httpOnly:
+                                    type: boolean
+                          namespace:
+                            type: string
+                          kind:
+                            type: string
+                          name:
+                            type: string
+                          weight:
+                            type: integer
+                          responseForwarding:
+                            type: object
+                            properties:
+                              flushInterval:
+                                type: string
+                          passHostHeader:
+                            type: boolean
+                          healthCheck:
+                            type: object
+                            properties:
+                              path:
+                                type: string
+                              host:
+                                type: string
+                              scheme:
+                                type: string
+                              intervalSeconds:
+                                type: integer
+                              timeoutSeconds:
+                                type: integer
+                              headers:
+                                type: object
+                          strategy:
+                            type: string
+                          scheme:
+                            type: string
+                          port:
+                            type: integer
+                    middlewares:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          namespace:
+                            type: string
+                        required:
+                          - name
+                          - namespace
+              entryPoints:
+                type: array
+                items:
+                  type: string
+              tls:
+                type: object
+                properties:
+                  secretName:
+                    type: string
+                  options:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                  store:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                  certResolver:
+                    type: string
+                  domains:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        main:
+                          type: string
+                        sans:
+                          type: array
+                          items:
+                            type: string
   names:
     kind: IngressRoute
     plural: ingressroutes

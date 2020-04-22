@@ -1,10 +1,194 @@
-apiVersion: apiextensions.k8s.io/v1beta1
+apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   name: traefikservices.traefik.containo.us
 spec:
   group: traefik.containo.us
-  version: v1alpha1
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              weighted:
+                type: object
+                properties:
+                  services:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        sticky:
+                          type: object
+                          properties:
+                            cookie:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                secure:
+                                  type: boolean
+                                httpOnly:
+                                  type: boolean
+                        namespace:
+                          type: string
+                        kind:
+                          type: string
+                        name:
+                          type: string
+                        weight:
+                          type: integer
+                        responseForwarding:
+                          type: object
+                          properties:
+                            flushInterval:
+                              type: string
+                        passHostHeader:
+                          type: boolean
+                        healthCheck:
+                          type: object
+                          properties:
+                            path:
+                              type: string
+                            host:
+                              type: string
+                            scheme:
+                              type: string
+                            intervalSeconds:
+                              type: integer
+                            timeoutSeconds:
+                              type: integer
+                            headers:
+                              type: object
+                        strategy:
+                          type: string
+                        scheme:
+                          type: string
+                        port:
+                          type: integer
+                  sticky:
+                    type: object
+                    properties:
+                      cookie:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          secure:
+                            type: boolean
+                          httpOnly:
+                            type: boolean
+              mirroring:
+                type: object
+                properties:
+                  weight:
+                    type: integer
+                  responseForwarding:
+                    type: object
+                    properties:
+                      flushInterval:
+                        type: string
+                  passHostHeader:
+                    type: boolean
+                  healthCheck:
+                    type: object
+                    properties:
+                      path:
+                        type: string
+                      host:
+                        type: string
+                      scheme:
+                        type: string
+                      intervalSeconds:
+                        type: integer
+                      timeoutSeconds:
+                        type: integer
+                      headers:
+                        type: object
+                  strategy:
+                    type: string
+                  scheme:
+                    type: string
+                  port:
+                    type: integer
+                  sticky:
+                    type: object
+                    properties:
+                      cookie:
+                        type: object
+                        properties:
+                          name:
+                            type: string
+                          secure:
+                            type: boolean
+                          httpOnly:
+                            type: boolean
+                  namespace:
+                    type: string
+                  kind:
+                    type: string
+                  name:
+                    type: string
+                  mirrors:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                        kind:
+                          type: string
+                        namespace:
+                          type: string
+                        sticky:
+                          type: object
+                          properties:
+                            cookie:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                secure:
+                                  type: boolean
+                                httpOnly:
+                                  type: boolean
+                        port:
+                          type: integer
+                        scheme:
+                          type: string
+                        strategy:
+                          type: string
+                        healthCheck:
+                          type: object
+                          properties:
+                            path:
+                              type: string
+                            host:
+                              type: string
+                            scheme:
+                              type: string
+                            intervalSeconds:
+                              type: integer
+                            timeoutSeconds:
+                              type: integer
+                            headers:
+                              type: object
+                        passHostHeader:
+                          type: boolean
+                        responseForwarding:
+                          type: object
+                          properties:
+                            flushInterval:
+                              type: string
+                        weight:
+                          type: integer
+                        percent:
+                          type: integer
   names:
     kind: TraefikService
     plural: traefikservices
