@@ -191,3 +191,20 @@ affinity: {}
 #       topologyKey: failure-domain.beta.kubernetes.io/zone
 nodeSelector: {}
 tolerations: []
+
+# Pods can have priority.
+# Priority indicates the importance of a Pod relative to other Pods.
+priorityClassName: ""
+
+# Set the container security context
+# To run the container with ports below 1024 this will need to be adjust to run as root
+securityContext:
+  capabilities:
+    drop: [ALL]
+  readOnlyRootFilesystem: true
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
+
+podSecurityContext:
+  fsGroup: 65532

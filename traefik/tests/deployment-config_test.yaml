@@ -72,4 +72,29 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].envFrom[1].secretRef.name
           value: secret-name
-
+  - it: should have priorityClassName
+    set:
+      priorityClassName: important
+    asserts:
+      - equal:
+          path: spec.template.spec.priorityClassName
+          value: important
+  - it: should have merged securityContext
+    set:
+      podSecurityContext:
+        readOnlyRootFilesystem: false
+      securityContext:
+        runAsUser: 1000
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext.fsGroup
+          value: 65532
+      - equal:
+          path: spec.template.spec.securityContext.readOnlyRootFilesystem
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 1000
