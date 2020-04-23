@@ -12,8 +12,8 @@ using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubern
 
 The Traefik HelmChart is focused on Traefik deployment configuration.
 
-To keep this HelmChart as generic as possible we tend 
-to avoid integrating any third party solutions nor any specific use cases. 
+To keep this HelmChart as generic as possible we tend
+to avoid integrating any third party solutions nor any specific use cases.
 
 Accordingly, the encouraged approach to fulfill your needs:
 1. override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
@@ -58,7 +58,7 @@ kubectl apply -f traefik/crds
 ### Exposing the Traefik dashboard
 
 This HelmChart does not expose the Traefik dashboard by default, for security concerns.
-Thus, there are multiple ways to expose the dashboard. 
+Thus, there are multiple ways to expose the dashboard.
 For instance, the dashboard access could be achieved through a port-forward :
 
 ```
@@ -87,4 +87,4 @@ spec:
 
 ## Contributing
 
-If you want to contribute to this chart, please read the [Contributing Guide](../CONTRIBUTING.md).
+If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).
