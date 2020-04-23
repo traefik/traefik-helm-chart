@@ -34,8 +34,6 @@ rollingUpdate:
 # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 # additionalArguments:
 # - "--providers.file.filename=/config/dynamic.toml"
-# - "--tls.certificates.certFile=/certs/tls.crt"
-# - "--tls.certificates.keyFile=/certs/tls.key"
 volumes: []
 # - name: public-cert
 #   mountPath: "/certs"
