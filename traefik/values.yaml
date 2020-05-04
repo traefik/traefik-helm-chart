@@ -53,7 +53,7 @@ globalArguments:
 ## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--logs.level=DEBUG}"`
 additionalArguments: []
 #  - "--providers.kubernetesingress"
-#  - "--logs.level=DEBUG"
+#  - "--log.level=DEBUG"
 
 # Environment variables to be passed to Traefik's binary
 env: []
