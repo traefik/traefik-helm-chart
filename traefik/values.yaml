@@ -165,6 +165,19 @@ persistence:
 # affinity is left as default.
 hostNetwork: false
 
+# Whether Role Based Access Control objects like roles and rolebindings should be created
+rbac:
+  # If set to true, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+  # If set to false, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
+  clusterScope: true
+  enabled: true
+
+# Whether to create the ServiceAccount
+serviceAccount:
+  create: true
+  # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
+  name:
+
 # Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}
 
