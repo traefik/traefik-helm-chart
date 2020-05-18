@@ -50,7 +50,7 @@ globalArguments:
 # Configure Traefik static configuration
 # Additional arguments to be passed at Traefik's binary
 # All available options available on https://docs.traefik.io/reference/static-configuration/cli/
-## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--logs.level=DEBUG}"`
+## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--log.level=DEBUG}"`
 additionalArguments: []
 #  - "--providers.kubernetesingress"
 #  - "--log.level=DEBUG"
