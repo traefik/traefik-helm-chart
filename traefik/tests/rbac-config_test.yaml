@@ -1,4 +1,4 @@
-suite: RBAC
+suite: RBAC Configuration
 tests:
   - it: should create default RBAC related objects
     asserts:
@@ -46,7 +46,7 @@ tests:
   - it: should create RBAC related objects at namespace scope
     set:
       rbac:
-        clusterScope: false
+        namespaced: true
     asserts:
       - isKind:
           of: Role

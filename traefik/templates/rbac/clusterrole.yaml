@@ -1,8 +1,8 @@
 {{- if .Values.rbac.enabled -}}
-{{- if .Values.rbac.clusterScope }}
-kind: ClusterRole
-{{- else }}
+{{- if .Values.rbac.namespaced }}
 kind: Role
+{{- else }}
+kind: ClusterRole
 {{- end }}
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
