@@ -113,6 +113,7 @@ spec:
           - "--api.dashboard=true"
           - "--ping=true"
           - "--providers.kubernetescrd"
+          - "--providers.kubernetesingress"
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
