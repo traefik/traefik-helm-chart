@@ -63,7 +63,7 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/clusterrolebinding.yaml
-  - it: should create ServiceAccount with custom name
+  - it: should use existing ServiceAccount
     set:
       serviceAccount:
         name: foobar
