@@ -172,11 +172,11 @@ rbac:
   namespaced: false
   enabled: true
 
-# Whether to create the ServiceAccount
+# The service account the pods will use to interact with the Kubernates API
 serviceAccount:
-  create: true
-  # The name of the service account to use. If not set and create is true, a name is generated using the fullname template
-  name:
+  # If set, an existing service account is used
+  # If not set, a service account is created automatically using the fullname template
+  name: ""
 
 # Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}

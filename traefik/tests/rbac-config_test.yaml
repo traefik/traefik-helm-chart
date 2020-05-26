@@ -1,4 +1,4 @@
-suite: RBAC Configuration
+suite: RBAC configuration
 tests:
   - it: should create default RBAC related objects
     asserts:
@@ -8,10 +8,12 @@ tests:
       - isKind:
           of: ClusterRoleBinding
         template: rbac/clusterrolebinding.yaml
-      - equal:
-          path: roleRef.kind
-          value: ClusterRole
-        template: rbac/clusterrolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/rolebinding.yaml
       - isKind:
           of: ServiceAccount
         template: rbac/serviceaccount.yaml
@@ -31,8 +33,6 @@ tests:
     set:
       rbac:
         enabled: false
-      serviceAccount:
-        create: false
     asserts:
       - hasDocuments:
           count: 0
@@ -42,7 +42,10 @@ tests:
         template: rbac/clusterrolebinding.yaml
       - hasDocuments:
           count: 0
-        template: rbac/serviceaccount.yaml
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/rolebinding.yaml
   - it: should create RBAC related objects at namespace scope
     set:
       rbac:
@@ -50,22 +53,23 @@ tests:
     asserts:
       - isKind:
           of: Role
-        template: rbac/clusterrole.yaml
+        template: rbac/role.yaml
       - isKind:
           of: RoleBinding
-        template: rbac/clusterrolebinding.yaml
-      - equal:
-          path: roleRef.kind
-          value: Role
+        template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/clusterrole.yaml
+      - hasDocuments:
+          count: 0
         template: rbac/clusterrolebinding.yaml
   - it: should create ServiceAccount with custom name
     set:
       serviceAccount:
         name: foobar
     asserts:
-      - equal:
-          path: metadata.name
-          value: foobar
+      - hasDocuments:
+          count: 0
         template: rbac/serviceaccount.yaml
       - equal:
           path: spec.template.spec.serviceAccountName
