@@ -112,8 +112,12 @@ spec:
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
+          {{- .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- end }}
+          {{- .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
