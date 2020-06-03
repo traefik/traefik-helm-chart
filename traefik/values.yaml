@@ -15,6 +15,12 @@ deployment:
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
 
+# Pod disruption budget
+podDisruptionBudget:
+  enabled: false
+  maxUnavailable: 1
+  # minAvailable: 0
+
 # Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
