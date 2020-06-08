@@ -114,6 +114,10 @@ spec:
           - "--ping=true"
           - "--providers.kubernetescrd"
           - "--providers.kubernetesingress"
+          {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
+          - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
+          - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
