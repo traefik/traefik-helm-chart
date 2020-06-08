@@ -5,8 +5,9 @@ tests:
       - isKind:
           of: Deployment
         template: deployment.yaml
-      - isKind:
-          of: Service
+      - equal:
+          path: items[0].kind
+          value: Service
         template: service.yaml
       - isKind:
           of: ClusterRole
@@ -24,7 +25,7 @@ tests:
           value: RELEASE-NAME-traefik
         template: deployment.yaml
       - equal:
-          path: metadata.name
+          path: items[0].metadata.name
           value: RELEASE-NAME-traefik
         template: service.yaml
       - equal:
