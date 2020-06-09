@@ -96,6 +96,8 @@ spec:
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
+          - name: tmp
+            mountPath: /tmp
           {{- range .Values.volumes }}
           - name: {{ .name }}
             mountPath: {{ .mountPath }}
@@ -139,6 +141,8 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           {{- if eq .type "secret" }}
