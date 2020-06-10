@@ -96,8 +96,9 @@ spec:
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
+          {{- $root := . }}
           {{- range .Values.volumes }}
-          - name: {{ .name }}
+          - name: {{ tpl (.name) $root }}
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
@@ -139,14 +140,15 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        {{- $root := . }}
         {{- range .Values.volumes }}
-        - name: {{ .name }}
+        - name: {{ tpl (.name) $root }}
           {{- if eq .type "secret" }}
           secret:
-            secretName: {{ .name }}
+            secretName: {{ tpl (.name) $root }}
           {{- else if eq .type "configMap" }}
           configMap:
-            name: {{ .name }}
+            name: {{ tpl (.name) $root }}
           {{- end }}
         {{- end }}
       {{- with .Values.affinity }}
