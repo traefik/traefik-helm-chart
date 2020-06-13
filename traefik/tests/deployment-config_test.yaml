@@ -98,3 +98,12 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].securityContext.runAsUser
           value: 1000
+  - it: should have pvc with specified value
+    set:
+      persistence:
+        enabled: true
+        existingClaim: existing-pvc
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
+          value: existing-pvc
