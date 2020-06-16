@@ -47,6 +47,9 @@ volumes: []
 # - name: configs
 #   mountPath: "/config"
 #   type: configMap
+# - name: configs
+#   mountPath: "/config"
+#   type: emptyDir
 
 globalArguments:
   - "--global.checknewversion"
@@ -233,3 +236,18 @@ securityContext:
 
 podSecurityContext:
   fsGroup: 65532
+
+
+extraContainers: []
+  # - name: echo
+  #   image: busybox
+  #   imagePullPolicy: Always
+  #   args:
+  #     - echo
+  #     - hello
+extraInitContainers:
+  - name: echo
+    image: busybox
+    args:
+      - sleep
+      - 1
