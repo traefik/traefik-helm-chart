@@ -5,7 +5,7 @@ tests:
   - it: should be a type LoadBalancer by default
     asserts:
       - equal:
-          path: spec.type
+          path: items[0].spec.type
           value: LoadBalancer
   - it: should be a custom type when specified via values
     set:
@@ -13,12 +13,12 @@ tests:
         type: NodePort
     asserts:
       - equal:
-          path: spec.type
+          path: items[0].spec.type
           value: NodePort
   - it: should have no annotations by default
     asserts:
       - isNull:
-          path: metadata.annotations
+          path: items[0].metadata.annotations
   - it: should have customized annotations when specified via values
     set:
       service:
@@ -26,7 +26,7 @@ tests:
           azure-load-balancer-internal: true
     asserts:
       - equal:
-          path: metadata.annotations.azure-load-balancer-internal
+          path: items[0].metadata.annotations.azure-load-balancer-internal
           value: true
   - it: should have custom spec elements when specified via values
     set:
@@ -42,20 +42,41 @@ tests:
             - "1.2.3.4"
     asserts:
       - equal:
-          path: spec.externalTrafficPolicy
+          path: items[0].spec.ports[0].name
+          value: web
+      - equal:
+          path: items[0].spec.ports[0].protocol
+          value: TCP
+      - equal:
+          path: items[0].spec.externalTrafficPolicy
           value: Cluster
       - equal:
-          path: spec.loadBalancerIP
+          path: items[0].spec.loadBalancerIP
           value: "1.2.3.4"
       - equal:
-          path: spec.clusterIP
+          path: items[0].spec.clusterIP
           value: "2.3.4.5"
       - equal:
-          path: spec.loadBalancerSourceRanges[0]
+          path: items[0].spec.loadBalancerSourceRanges[0]
           value: 192.168.0.1/32
       - equal:
-          path: spec.loadBalancerSourceRanges[1]
+          path: items[0].spec.loadBalancerSourceRanges[1]
           value: 172.16.0.0/16
       - equal:
-          path: spec.externalIPs[0]
+          path: items[0].spec.externalIPs[0]
           value: "1.2.3.4"
+  - it: should have custom spec elements when specified via values for UPD ports
+    set:
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[1].spec.ports[0].name
+          value: udp
+      - equal:
+          path: items[1].spec.ports[0].protocol
+          value: UDP

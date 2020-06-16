@@ -10,15 +10,16 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: spec.ports
+          path: items[0].spec.ports
           content:
             name: web
             port: 80
+            protocol: TCP
             targetPort: web
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.web.address=:8000"
+          content: "--entryPoints.web.address=:8000/tcp"
         template: deployment.yaml
   - it: should have port 8443 of pod published to 443 of service by default, and defined as entrypoint "websecure"
     asserts:
@@ -30,15 +31,16 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: spec.ports
+          path: items[0].spec.ports
           content:
             name: websecure
             port: 443
+            protocol: TCP
             targetPort: websecure
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.address=:8443"
+          content: "--entryPoints.websecure.address=:8443/tcp"
         template: deployment.yaml
   - it: should have port 9000 of pod exposed for probes but NOT published to the service by default
     asserts:
@@ -50,7 +52,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - notContains:
-          path: spec.ports
+          path: items[0].spec.ports
           content:
             name: traefik
             port: 9000
@@ -58,7 +60,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.traefik.address=:9000"
+          content: "--entryPoints.traefik.address=:9000/tcp"
         template: deployment.yaml
   - it: should have a custom port when specified via values
     set:
@@ -75,15 +77,16 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: spec.ports
+          path: items[0].spec.ports
           content:
             name: ssh
             port: 22
+            protocol: TCP
             targetPort: ssh
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.ssh.address=:22"
+          content: "--entryPoints.ssh.address=:22/tcp"
         template: deployment.yaml
   - it: should have a hostPort when specified via values
     set:
@@ -102,13 +105,41 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: spec.ports
+          path: items[0].spec.ports
           content:
             name: ssh
             port: 22
+            protocol: TCP
             targetPort: ssh
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.ssh.address=:22"
+          content: "--entryPoints.ssh.address=:22/tcp"
+        template: deployment.yaml
+  - it: should have a UDP custom port when specified via values
+    set:
+      ports:
+        udp:
+          port: 51
+          expose: true
+          protocol: UDP
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: udp
+            containerPort: 51
+            protocol: UDP
+        template: deployment.yaml
+      - contains:
+          path: items[1].spec.ports
+          content:
+            name: udp
+            port: 51
+            protocol: UDP
+            targetPort: udp
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.udp.address=:51/udp"
         template: deployment.yaml
