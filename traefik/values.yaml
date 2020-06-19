@@ -37,6 +37,11 @@ podDisruptionBudget:
 ingressRoute:
   dashboard:
     enabled: true
+    # Username for dashboard
+    username: admin
+    # Password for dashboard. Default to random string
+    # password: password
+
     # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
     # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)

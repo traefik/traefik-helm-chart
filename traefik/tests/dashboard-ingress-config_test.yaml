@@ -1,0 +1,17 @@
+suite: Dashboard Ingress configuration
+templates:
+  - dashboard-hook-ingressroute.yaml
+tests:
+  - it: should not render when dashboard is disabled
+    set:
+      ingressRoute:
+        dashboard:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should specify basic auth middleware
+    asserts:
+      - matchRegex:
+          path: spec.middlewares[0].name
+          pattern: "-dashboard-auth-middleware$"
