@@ -43,6 +43,7 @@ The name of the service account to use
 Dashboard basic auth data
 */}}
 {{- define "traefik.secret.auth" -}}
-{{- $password := default (randAlphaNum 10) .Values.ingressRoute.dashboard.password -}}
-{{- printf "%s:%s" .Values.ingressRoute.dashboard.username (sha1sum $password) -}}
+{{- $username := .Values.ingressRoute.dashboard.username -}}
+{{- $password := .Values.ingressRoute.dashboard.password -}}
+{{- printf "%s:%s" $username (sha1sum $password) -}}
 {{- end -}}

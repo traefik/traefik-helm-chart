@@ -39,8 +39,8 @@ ingressRoute:
     enabled: true
     # Username for dashboard
     username: admin
-    # Password for dashboard. Default to random string
-    # password: password
+    # Password for dashboard
+    password: password
 
     # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
