@@ -13,5 +13,5 @@ tests:
   - it: should specify basic auth middleware
     asserts:
       - matchRegex:
-          path: spec.middlewares[0].name
+          path: spec.routes[0].middlewares[0].name
           pattern: "-dashboard-auth-middleware$"

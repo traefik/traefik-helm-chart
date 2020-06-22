@@ -18,13 +18,13 @@ metadata:
     {{- end }}
 spec:
   entryPoints:
-    - traefik
+    - web
   routes:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
     services:
     - name: api@internal
       kind: TraefikService
-  middlewares:
+    middlewares:
     - name: {{ template "traefik.fullname" . }}-dashboard-auth-middleware
 {{- end -}}
