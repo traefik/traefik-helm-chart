@@ -96,6 +96,8 @@ spec:
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
+          - name: tmp
+            mountPath: /tmp
           {{- range .Values.volumes }}
           - name: {{ .name }}
             mountPath: {{ .mountPath }}
@@ -139,10 +141,12 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ template "traefik.fullname" . }}
+            claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           {{- if eq .type "secret" }}
