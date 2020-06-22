@@ -45,5 +45,5 @@ Dashboard basic auth data
 {{- define "traefik.secret.auth" -}}
 {{- $username := .Values.ingressRoute.dashboard.username -}}
 {{- $password := .Values.ingressRoute.dashboard.password -}}
-{{- printf "%s:%s" $username (sha1sum $password) -}}
+{{- htpasswd $username $password -}}
 {{- end -}}
