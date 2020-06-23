@@ -114,8 +114,12 @@ spec:
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- end }}          
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"

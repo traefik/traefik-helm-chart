@@ -34,6 +34,16 @@ rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
 
+
+#
+# Configure providers
+#
+providers:
+  kubernetesCRD:
+    enabled: true
+  kubernetesIngress:
+    enabled: true
+
 #
 # Add volumes to the traefik pod.
 # This can be used to mount a cert pair or a configmap that holds a config.toml file.
