@@ -96,6 +96,8 @@ spec:
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
+          - name: tmp
+            mountPath: /tmp
           {{- range .Values.volumes }}
           - name: {{ .name }}
             mountPath: {{ .mountPath }}
@@ -112,8 +114,12 @@ spec:
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- end }}          
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
@@ -143,10 +149,12 @@ spec:
         - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
-            claimName: {{ template "traefik.fullname" . }}
+            claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- range .Values.volumes }}
         - name: {{ .name }}
           {{- if eq .type "secret" }}
