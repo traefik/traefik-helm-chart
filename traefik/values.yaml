@@ -256,9 +256,9 @@ extraContainers: []
   #   args:
   #     - echo
   #     - hello
-extraInitContainers:
-  - name: echo
-    image: busybox
-    args:
-      - sleep
-      - 1
+extraInitContainers: []
+  # - name: echo
+  #   image: busybox
+  #   args:
+  #     - sleep
+  #     - 1
