@@ -38,12 +38,3 @@ The name of the service account to use
 {{- define "traefik.serviceAccountName" -}}
 {{- default (include "traefik.fullname" .) .Values.serviceAccount.name -}}
 {{- end -}}
-
-{{/*
-Dashboard basic auth data
-*/}}
-{{- define "traefik.secret.auth" -}}
-{{- $username := .Values.ingressRoute.dashboard.username -}}
-{{- $password := .Values.ingressRoute.dashboard.password -}}
-{{- htpasswd $username $password -}}
-{{- end -}}
