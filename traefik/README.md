@@ -57,32 +57,24 @@ kubectl apply -f traefik/crds
 
 ### Exposing the Traefik dashboard
 
-This HelmChart does not expose the Traefik dashboard by default, for security concerns.
-Thus, there are multiple ways to expose the dashboard. 
-For instance, the dashboard access could be achieved through a port-forward :
-
-```
-kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
-```
-
-Another way would be to apply your own configuration, for instance,
-by defining and applying an IngressRoute CRD (`kubectl apply -f dashboard.yaml`):
+This Helm Chart does not expose the Traefik dashboard by default, for security concerns.
+To expose the Traefik dashboard you need to configure it on `values.yaml`:
 
 ```yaml
-# dashboard.yaml
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: dashboard
-spec:
-  entryPoints:
-    - web
-  routes:
-    - match: Host(`traefik.localhost`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
-      kind: Rule
-      services:
-        - name: api@internal
-          kind: TraefikService
+# values.yaml
+ports:
+  traefik:
+    expose: true
+```
+
+Traefik dashboard will be protected using basic auth by default using basic auth with the credential admin:password.
+To change default credential you can generate credential using `htpasswd -nb <user> <password>` and put the result in `values.yaml`:
+
+```yaml
+# values.yaml
+ingressRoute:
+  dashboard:
+    userData: admin:$apr1$xTMExMm7$KlDuMHTGK7VvRHn3mgCKx.
 ```
 
 ## Contributing
