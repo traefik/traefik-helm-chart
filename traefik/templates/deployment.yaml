@@ -52,6 +52,16 @@ spec:
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
+      initContainers:
+      - name: volume-permissions
+        image: busybox:1.31.1
+        command: ["sh", "-c", "chmod -Rv 600 {{ .Values.persistence.path }}/*"]
+        volumeMounts:
+          - name: data
+            mountPath: {{ .Values.persistence.path }}
+            {{- if .Values.persistence.subPath }}
+            subPath: {{ .Values.persistence.subPath }}
+            {{- end }}
       containers:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         name: {{ template "traefik.fullname" . }}
