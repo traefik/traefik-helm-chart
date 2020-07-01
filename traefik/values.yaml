@@ -61,14 +61,14 @@ volumes: []
 #
 # Add initContainers to the traefik pod.
 # The "volume-permissions" init container is required if you run into permission issues.
-# Related issue: https://github.com/containous/traefik/issues/6972
-initContainers:
-  - name: volume-permissions
-    image: busybox:1.31.1
-    command: ["sh", "-c", "chmod -Rv 600 /data/*"]
-    volumeMounts:
-      - name: data
-        mountPath: /data
+initContainers: []
+  # Related issue: https://github.com/containous/traefik/issues/6972
+  # - name: volume-permissions
+  #   image: busybox:1.31.1
+  #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
+  #   volumeMounts:
+  #     - name: data
+  #       mountPath: /data
 
 globalArguments:
   - "--global.checknewversion"

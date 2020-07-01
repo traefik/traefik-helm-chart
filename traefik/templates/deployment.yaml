@@ -52,8 +52,8 @@ spec:
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
-      initContainers:
       {{- with .Values.initContainers }}
+      initContainers:
       {{- toYaml . | nindent 6 }}
       {{- end }}
       containers:
