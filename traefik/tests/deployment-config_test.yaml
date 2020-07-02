@@ -107,3 +107,16 @@ tests:
       - equal:
           path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
           value: existing-pvc
+  - it: should have additional containers
+    set:
+      deployment:
+        additionalContainers:
+        - image: foo:latest
+          name: bar
+      asserts:
+        - equal:
+            path: spec.additionalContainers[0].image
+            value: foo:latest
+        - equal:
+            path: spec.additionalContainers[0].name
+            value: bar
