@@ -107,3 +107,29 @@ tests:
       - equal:
           path: spec.template.spec.volumes[0].persistentVolumeClaim.claimName
           value: existing-pvc
+  - it: should have initContainer with specified value
+    set:
+      deployment:
+        initContainers:
+          - name: volume-permissions
+            image: busybox:1.31.1
+            command: ["sh"]
+            volumeMounts:
+              - name: data
+                mountPath: /data
+    asserts:
+      - equal:
+          path: spec.template.spec.initContainers[0].name
+          value: volume-permissions
+      - equal:
+          path: spec.template.spec.initContainers[0].image
+          value: busybox:1.31.1
+      - equal:
+          path: spec.template.spec.initContainers[0].command[0]
+          value: sh
+      - equal:
+          path: spec.template.spec.initContainers[0].volumeMounts[0].name
+          value: data
+      - equal:
+          path: spec.template.spec.initContainers[0].volumeMounts[0].mountPath
+          value: /data
