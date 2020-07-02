@@ -15,7 +15,7 @@ deployment:
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
   # Additional containers (e.g. for metric offloading sidecars)
-  additionalContainers: {}
+  additionalContainers: []
 
 # Pod disruption budget
 podDisruptionBudget:
