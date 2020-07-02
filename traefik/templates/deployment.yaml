@@ -141,6 +141,9 @@ spec:
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      {{- if .Values.deployment.additionalContainers }}
+        {{- toYaml .Values.deployment.additionalContainers | nindent 6 }}
+      {{- end }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
