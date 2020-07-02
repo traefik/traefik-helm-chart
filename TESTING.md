@@ -16,9 +16,18 @@ It means that you are expected to:
 
 Please note that this chart has the following kind of tests (see respective sections below for description):
 
+- [Unit Testing](#unit-testing)
 - [Static Testing](#static-testing)
 
-<!-- TODO: Add Unit testing -->
+### Unit Testing
+
+Before you can run the unit tests you need to set some `ENV`. This is required to download the binary for the given platform. You don't need it on subsequent runs.
+
+```
+export CATTLE_HELM_UNITTEST_VERSION=v0.1.6-rancher1
+export ARCH=amd64
+make unit-test
+```
 
 <!-- TODO: Add E2E testing -->
 
