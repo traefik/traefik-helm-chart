@@ -21,4 +21,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.namespaces=NAMESPACE"
-
+  - it: should have enable published Kubernetes service when specified in configuration
+    set:
+        providers:
+          kubernetesIngress:
+            publishedService:
+              enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
+  - it: should have a custom string in published Kubernetes service when specified in configuration
+    set:
+      providers:
+        kubernetesIngress:
+          publishedService:
+            enabled: true
+            pathOverride: foo/bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"

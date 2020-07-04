@@ -134,8 +134,11 @@ spec:
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- if .Values.providers.kubernetesIngress.publishedService.enabled }}
+          - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
-          {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
+          {{- end }}
+          {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
           {{- end }}

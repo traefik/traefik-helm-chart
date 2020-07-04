@@ -58,6 +58,9 @@ providers:
     enabled: true
   kubernetesIngress:
     enabled: true
+    publishedService:
+      enabled: false
+      # pathOverride: ""
 
 #
 # Add volumes to the traefik pod.
