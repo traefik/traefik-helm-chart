@@ -137,8 +137,8 @@ tests:
     set:
       deployment:
         additionalContainers:
-        - image: foo:latest
-          name: bar
+          - image: foo:latest
+            name: bar
       asserts:
         - equal:
             path: spec.additionalContainers[0].image
