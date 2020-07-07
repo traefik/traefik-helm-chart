@@ -15,7 +15,7 @@ deployment:
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
   # Additional containers (e.g. for metric offloading sidecars)
-  additionalContainers: {}
+  additionalContainers: []
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.

@@ -133,3 +133,16 @@ tests:
       - equal:
           path: spec.template.spec.initContainers[0].volumeMounts[0].mountPath
           value: /data
+  - it: should have additional containers
+    set:
+      deployment:
+        additionalContainers:
+        - image: foo:latest
+          name: bar
+      asserts:
+        - equal:
+            path: spec.additionalContainers[0].image
+            value: foo:latest
+        - equal:
+            path: spec.additionalContainers[0].name
+            value: bar
