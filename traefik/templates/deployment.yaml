@@ -52,6 +52,10 @@ spec:
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
+      {{- with .Values.deployment.initContainers }}
+      initContainers:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       containers:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
         name: {{ template "traefik.fullname" . }}
@@ -96,6 +100,8 @@ spec:
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
             {{- end }}
+          - name: tmp
+            mountPath: /tmp
           {{- $root := . }}
           {{- range .Values.volumes }}
           - name: {{ tpl (.name) $root }}
@@ -113,8 +119,12 @@ spec:
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- end }}          
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
@@ -132,6 +142,9 @@ spec:
         envFrom:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+      {{- if .Values.deployment.additionalContainers }}
+        {{- toYaml .Values.deployment.additionalContainers | nindent 6 }}
+      {{- end }}
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
@@ -140,6 +153,8 @@ spec:
           {{- else }}
           emptyDir: {}
           {{- end }}
+        - name: tmp
+          emptyDir: {}
         {{- $root := . }}
         {{- range .Values.volumes }}
         - name: {{ tpl (.name) $root }}
