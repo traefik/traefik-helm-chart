@@ -70,13 +70,13 @@ tests:
           type: configMap
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].volumeMounts[1].name
+          path: spec.template.spec.containers[0].volumeMounts[2].name
           value: "RELEASE-NAME-custom-config"
       - equal:
-          path: spec.template.spec.volumes[1].name
+          path: spec.template.spec.volumes[2].name
           value: "RELEASE-NAME-custom-config"
       - equal:
-          path: spec.template.spec.volumes[1].configMap.name
+          path: spec.template.spec.volumes[2].configMap.name
           value: "RELEASE-NAME-custom-config"
   - it: should have templated secret volume
     set:
@@ -86,11 +86,11 @@ tests:
           type: secret
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].volumeMounts[1].name
+          path: spec.template.spec.containers[0].volumeMounts[2].name
           value: "RELEASE-NAME-custom-secret"
       - equal:
-          path: spec.template.spec.volumes[1].name
+          path: spec.template.spec.volumes[2].name
           value: "RELEASE-NAME-custom-secret"
       - equal:
-          path: spec.template.spec.volumes[1].secret.secretName
+          path: spec.template.spec.volumes[2].secret.secretName
           value: "RELEASE-NAME-custom-secret"
