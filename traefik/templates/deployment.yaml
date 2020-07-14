@@ -58,6 +58,7 @@ spec:
       {{- end }}
       containers:
       - image: {{ .Values.image.name }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ template "traefik.fullname" . }}
         resources:
           {{- with .Values.resources }}

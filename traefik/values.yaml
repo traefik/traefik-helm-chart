@@ -2,6 +2,7 @@
 image:
   name: traefik
   tag: 2.2.1
+  pullPolicy: IfNotPresent
 
 #
 # Configure the deployment
