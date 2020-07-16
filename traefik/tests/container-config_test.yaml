@@ -62,7 +62,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[0].subPath
           value: "subdir/traefik"
-  - it: should have templated configMap volume
+  - it: should have templated config map volume
     set:
       volumes:
         - name: '{{ printf "%s-custom-config" .Release.Name }}'
