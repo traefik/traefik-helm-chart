@@ -90,6 +90,10 @@ spec:
         securityContext:
           {{- toYaml . | nindent 10 }}
         {{- end }}
+        {{- with .Values.lifecycle }}
+        lifecycle:
+          {{- toYaml .Values.lifecycle | nindent 10 }}
+        {{- end }}
         volumeMounts:
           - name: data
             mountPath: {{ .Values.persistence.path }}
@@ -119,7 +123,7 @@ spec:
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
-          {{- end }}          
+          {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"

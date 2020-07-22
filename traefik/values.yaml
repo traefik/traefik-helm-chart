@@ -244,3 +244,10 @@ securityContext:
 
 podSecurityContext:
   fsGroup: 65532
+
+# Container lifecycle hook
+# https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+lifecycle: {}
+#  preStop:
+#    exec:
+#      command: ["/bin/sh", "-c", "sleep 30"]
