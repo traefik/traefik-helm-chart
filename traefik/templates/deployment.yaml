@@ -92,7 +92,7 @@ spec:
         {{- end }}
         {{- with .Values.lifecycle }}
         lifecycle:
-          {{- toYaml .Values.lifecycle | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
           - name: data
