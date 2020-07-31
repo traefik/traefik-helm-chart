@@ -203,6 +203,7 @@ spec:
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
           {{- end }}
           {{- end }}
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
