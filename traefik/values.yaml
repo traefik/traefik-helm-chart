@@ -70,6 +70,17 @@ volumes: []
 #   mountPath: "/config"
 #   type: configMap
 
+# Port Redirections
+# Added in 2.2, you can make permanent redirects via entrypoints.
+# https://docs.traefik.io/routing/entrypoints/#redirection
+redirections:
+  web:
+    enabled: false
+    to: websecure
+    scheme: https
+    permanent: true
+    priority: 1
+
 globalArguments:
   - "--global.checknewversion"
   - "--global.sendanonymoususage"
