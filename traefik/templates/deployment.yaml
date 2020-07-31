@@ -179,7 +179,7 @@ spec:
           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.metrics }}
-          {{- if $config.enabled}}
+          {{- if $config.enabled }}
           - "--metrics.{{ $name }}=true"
           - "--metrics.{{ $name }}.addEntryPointsLabels={{ $config.addEntryPointsLabels }}"
           - "--metrics.{{ $name }}.addServicesLabels={{ $config.addServicesLabels }}"
@@ -202,6 +202,47 @@ spec:
           {{- if eq $name "statsd" }}
           - "--metrics.{{ $name }}.prefix={{ $config.prefix }}"
           {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- with .Values.logs }}
+          {{- if .general.filePath }}
+          - "--log.filePath={{ .general.filePath }}"
+          {{- end }}
+          {{- if .general.format }}
+          - "--log.format={{ .general.format }}"
+          {{- end }}
+          {{- if ne .general.level "ERROR" }}
+          - "--log.format={{ .general.level | upper }}"
+          {{- end }}
+          {{- if .access.enabled }}
+          - "--accesslog=true"
+          {{- if .access.filePath }}
+          - "--accesslog.filePath={{ .access.filePath }}"
+          {{- end }}
+          {{- if .access.format }}
+          - "--accesslog.format={{ .access.format }}"
+          {{- end }}
+          {{- if .access.bufferingsize }}
+          - "--accesslog.bufferingsize={{ .access.bufferingsize }}"
+          {{- end }}
+          {{- if .access.filters }}
+          {{- if .access.filters.statuscodes }}
+          - "--accesslog.filters.statuscodes={{ .access.filters.statuscodes }}"
+          {{- end }}
+          {{- if .access.filters.retryattempts }}
+          - "--accesslog.filters.retryattempts"
+          {{- end }}
+          {{- if .access.filters.minduration }}
+          - "--accesslog.filters.minduration={{ .access.filters.minduration }}"
+          {{- end }}
+          {{- end }}
+          - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
+          {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+          - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
+          {{- end }}
+          - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
+          {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+          - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
           {{- end }}
           {{- end }}
           {{- with .Values.additionalArguments }}
