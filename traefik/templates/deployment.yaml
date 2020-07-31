@@ -178,6 +178,32 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- range $name, $config := .Values.metrics }}
+          {{- if $config.enabled}}
+          - "--metrics.{{ $name }}=true"
+          - "--metrics.{{ $name }}.addEntryPointsLabels={{ $config.addEntryPointsLabels }}"
+          - "--metrics.{{ $name }}.addServicesLabels={{ $config.addServicesLabels }}"
+          {{- if ne $name "prometheus" }}
+          - "--metrics.{{ $name }}.pushInterval={{ $config.pushInterval }}"
+          - "--metrics.{{ $name }}.address={{ $config.address }}"
+          {{- end }}
+          {{- if eq $name "prometheus" }}
+          - "--metrics.{{ $name }}.buckets={{ $config.buckets }}"
+          - "--metrics.{{ $name }}.entryPoint={{ $config.entryPoint }}"
+          - "--metrics.{{ $name }}.manualRouting={{ $config.manualRouting }}"
+          {{- end }}
+          {{- if eq $name "influxdb" }}
+          - "--metrics.{{ $name }}.protocol={{ $config.protocol }}"
+          - "--metrics.{{ $name }}.database={{ $config.database }}"
+          - "--metrics.{{ $name }}.retentionPolicy={{ $config.retentionPolicy }}"
+          - "--metrics.{{ $name }}.username={{ $config.username }}"
+          - "--metrics.{{ $name }}.password={{ $config.password }}"
+          {{- end }}
+          {{- if eq $name "statsd" }}
+          - "--metrics.{{ $name }}.prefix={{ $config.prefix }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
