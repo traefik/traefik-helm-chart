@@ -52,6 +52,9 @@ spec:
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
+      {{- with .Values.deployment.dnsPolicy }}
+      dnsPolicy: {{ . }}
+      {{- end }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
       {{- toYaml . | nindent 6 }}
@@ -123,7 +126,7 @@ spec:
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
-          {{- end }}          
+          {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced}}
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
