@@ -91,6 +91,9 @@ spec:
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
           {{- end }}
+          {{- if $config.hostIP }}
+          hostIP: {{ $config.hostIP }}
+          {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
         {{- end }}
         {{- with .Values.securityContext }}
