@@ -205,9 +205,6 @@ spec:
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
-          {{- if .general.filePath }}
-          - "--log.filePath={{ .general.filePath }}"
-          {{- end }}
           {{- if .general.format }}
           - "--log.format={{ .general.format }}"
           {{- end }}
@@ -216,9 +213,6 @@ spec:
           {{- end }}
           {{- if .access.enabled }}
           - "--accesslog=true"
-          {{- if .access.filePath }}
-          - "--accesslog.filePath={{ .access.filePath }}"
-          {{- end }}
           {{- if .access.format }}
           - "--accesslog.format={{ .access.format }}"
           {{- end }}

@@ -120,9 +120,6 @@ logs:
 logs:
   # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:
-    # By default, the logs are written to the standard output.
-    # You can configure a file path instead using the filePath option.
-    # filePath: "/path/to/traefik.log"
     # By default, the logs use a text format (common), but you can
     # also ask for the json format in the format option
     # format: json
@@ -131,9 +128,6 @@ logs:
   access:
     # To enable access logs
     enabled: false
-    # By default access logs are written to the standard output.
-    # To write the logs into a log file, use the filePath option.
-    # filePath: "/path/to/traefik.access.log"
     # By default, logs are written using the Common Log Format (CLF).
     # To write logs in JSON, use json in the format option.
     # If the given format is unsupported, the default (CLF) is used instead.
