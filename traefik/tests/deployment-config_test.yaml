@@ -146,3 +146,11 @@ tests:
         - equal:
             path: spec.additionalContainers[0].name
             value: bar
+  - it: should have imagePullPolicy with specified value
+    set:
+      image:
+        pullPolicy: Always
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: Always
