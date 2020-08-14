@@ -154,8 +154,13 @@ spec:
       volumes:
         - name: data
           {{- if .Values.persistence.enabled }}
+          {{- if .Values.persistence.existingClaimSpec }}
+          persistentVolumeClaimSpec:
+            {{ .Values.persistence.existingClaimSpec }}
+          {{- else }}
           persistentVolumeClaim:
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
+          {{- end }}
           {{- else }}
           emptyDir: {}
           {{- end }}
