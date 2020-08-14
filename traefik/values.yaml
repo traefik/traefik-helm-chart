@@ -1,7 +1,7 @@
 # Default values for Traefik
 image:
   name: traefik
-  tag: 2.2.1
+  tag: 2.2.8
   pullPolicy: IfNotPresent
 
 #
@@ -27,6 +27,8 @@ deployment:
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data
+  # Custom pod DNS policy. Apply if `hostNetwork: true`
+  # dnsPolicy: ClusterFirstWithHostNet
 
 # Pod disruption budget
 podDisruptionBudget:
@@ -113,6 +115,12 @@ ports:
     port: 9000
     # Use hostPort if set.
     # hostPort: 9000
+    #
+    # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+    # means it's listening on all your interfaces and all your IPs. You may want
+    # to set this value if you need traefik to listen on specific interface
+    # only.
+    # hostIP: 192.168.100.10
 
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
