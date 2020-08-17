@@ -135,9 +135,10 @@ spec:
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
           {{- end }}
-          {{- range $name, $config := .Values.redirections }}
-          {{- if $config.enabled }}
-          - "--entrypoints.{{ $name }}.http.redirections.entryPoint.to=:{{ $config.port }}"
+          {{- range $entrypoint, $config := $.Values.ports }}
+          {{- if $config.redirectTo }}
+          {{- $toPort := index $.Values.ports $config.redirectTo }}
+          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}

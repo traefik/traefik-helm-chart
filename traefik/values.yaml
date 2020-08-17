@@ -73,14 +73,6 @@ volumes: []
 #   mountPath: "/config"
 #   type: configMap
 
-# Port Redirections
-# Added in 2.2, you can make permanent redirects via entrypoints.
-# https://docs.traefik.io/routing/entrypoints/#redirection
-redirections:
-  web:
-    enabled: false
-    port: 443
-
 # Logs
 # https://docs.traefik.io/observability/logs/
 logs:
@@ -193,6 +185,10 @@ ports:
     # Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer
     # nodePort: 32080
+    # Port Redirections
+    # Added in 2.2, you can make permanent redirects via entrypoints.
+    # https://docs.traefik.io/routing/entrypoints/#redirection
+    redirectTo: websecure
   websecure:
     port: 8443
     # hostPort: 8443
