@@ -139,6 +139,7 @@ spec:
           {{- if $config.redirectTo }}
           {{- $toPort := index $.Values.ports $config.redirectTo }}
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
+          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
