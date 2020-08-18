@@ -188,7 +188,7 @@ ports:
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
-    redirectTo: websecure
+    # redirectTo: websecure
   websecure:
     port: 8443
     # hostPort: 8443
