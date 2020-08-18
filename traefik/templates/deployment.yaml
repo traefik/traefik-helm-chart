@@ -135,6 +135,49 @@ spec:
           - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
           - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
           {{- end }}
+          {{- range $entrypoint, $config := $.Values.ports }}
+          {{- if $config.redirectTo }}
+          {{- $toPort := index $.Values.ports $config.redirectTo }}
+          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
+          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
+          {{- end }}
+          {{- end }}
+          {{- with .Values.logs }}
+          {{- if .general.format }}
+          - "--log.format={{ .general.format }}"
+          {{- end }}
+          {{- if ne .general.level "ERROR" }}
+          - "--log.format={{ .general.level | upper }}"
+          {{- end }}
+          {{- if .access.enabled }}
+          - "--accesslog=true"
+          {{- if .access.format }}
+          - "--accesslog.format={{ .access.format }}"
+          {{- end }}
+          {{- if .access.bufferingsize }}
+          - "--accesslog.bufferingsize={{ .access.bufferingsize }}"
+          {{- end }}
+          {{- if .access.filters }}
+          {{- if .access.filters.statuscodes }}
+          - "--accesslog.filters.statuscodes={{ .access.filters.statuscodes }}"
+          {{- end }}
+          {{- if .access.filters.retryattempts }}
+          - "--accesslog.filters.retryattempts"
+          {{- end }}
+          {{- if .access.filters.minduration }}
+          - "--accesslog.filters.minduration={{ .access.filters.minduration }}"
+          {{- end }}
+          {{- end }}
+          - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
+          {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+          - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
+          {{- end }}
+          - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
+          {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+          - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
