@@ -147,7 +147,7 @@ spec:
           - "--log.format={{ .general.format }}"
           {{- end }}
           {{- if ne .general.level "ERROR" }}
-          - "--log.format={{ .general.level | upper }}"
+          - "--log.level={{ .general.level | upper }}"
           {{- end }}
           {{- if .access.enabled }}
           - "--accesslog=true"
