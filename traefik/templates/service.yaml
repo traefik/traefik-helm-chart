@@ -3,7 +3,7 @@
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
 {{- range $name, $config := .Values.ports }}
-  {{- if eq ($config.protocol | toString) "UDP" }}
+  {{- if eq (toString $config.protocol) "UDP" }}
     {{ $_ := set $udpPorts $name $config }}
   {{- else }}
     {{ $_ := set $tcpPorts $name $config }}

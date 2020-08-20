@@ -36,6 +36,11 @@ podDisruptionBudget:
   # maxUnavailable: 1
   # minAvailable: 0
 
+# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
+ingressClass:
+  enabled: false
+  isDefaultClass: false
+
 # Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
