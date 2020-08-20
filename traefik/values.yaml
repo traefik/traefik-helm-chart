@@ -13,8 +13,7 @@ deployment:
   replicas: 1
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
-  # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
-  podAnnotations: {}
+
   # Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
   # Additional initContainers (e.g. for setting file permission as shown below)
@@ -263,17 +262,10 @@ service:
 ##
 autoscaling:
   enabled: false
-#   minReplicas: 1
-#   maxReplicas: 10
-#   metrics:
-#   - type: Resource
-#     resource:
-#       name: cpu
-#       targetAverageUtilization: 60
-#   - type: Resource
-#     resource:
-#       name: memory
-#       targetAverageUtilization: 60
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -307,12 +299,13 @@ rbac:
 
 # The service account the pods will use to interact with the Kubernetes API
 serviceAccount:
-  # If set, an existing service account is used
-  # If not set, a service account is created automatically using the fullname template
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
   name: ""
-
-# Additional serviceAccount annotations (e.g. for oidc authentication)
-serviceAccountAnnotations: {}
 
 resources: {}
   # requests:
@@ -350,6 +343,9 @@ securityContext:
   runAsGroup: 65532
   runAsNonRoot: true
   runAsUser: 65532
+
+# Additional pod annotations (e.g. for mesh injection or prometheus scraping)
+podAnnotations: {}
 
 podSecurityContext:
   fsGroup: 65532
