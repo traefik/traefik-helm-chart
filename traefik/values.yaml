@@ -8,7 +8,6 @@ image:
 # Configure the deployment
 #
 deployment:
-  enabled: true
   # Number of pods of the deployment
   replicas: 1
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
