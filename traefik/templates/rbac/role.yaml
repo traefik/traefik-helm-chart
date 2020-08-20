@@ -4,10 +4,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
-    app.kubernetes.io/name: {{ template "traefik.name" . }}
-    helm.sh/chart: {{ template "traefik.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- include "traefik.labels" . | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -47,4 +44,4 @@ rules:
       - get
       - list
       - watch
-{{- end -}}
+  {{- end -}}
