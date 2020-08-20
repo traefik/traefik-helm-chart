@@ -34,7 +34,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
     {{- with .Values.rollingUpdate }}
-    {{- toYaml . | nindent 6 }}
+  {{- toYaml . | nindent 6 }}
   {{- end }}
   template:
     metadata:
@@ -190,7 +190,7 @@ spec:
           envFrom:
           {{- toYaml . | nindent 10 }}
           {{- end }}
-          {{- if .Values.deployment.additionalContainers }}
+      {{- if .Values.deployment.additionalContainers }}
       {{- toYaml .Values.deployment.additionalContainers | nindent 8 }}
       {{- end }}
       volumes:
@@ -211,7 +211,7 @@ spec:
           {{- else if eq .type "configMap" }}
           configMap:
             name: {{ .name }}
-        {{- end }}
+      {{- end }}
       {{- end }}
       {{- with .Values.affinity }}
       affinity:
@@ -230,5 +230,5 @@ spec:
       {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
-      {{- toYaml . | nindent 8 }}
+  {{- toYaml . | nindent 8 }}
   {{- end }}
