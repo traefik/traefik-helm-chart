@@ -19,12 +19,9 @@ items:
     metadata:
       name: {{ template "traefik.fullname" . }}
       labels:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        helm.sh/chart: {{ template "traefik.chart" . }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-      annotations:
+      {{- include "traefik.labels" . | nindent 4 }}
       {{- with .Values.service.annotations }}
+      annotations:
       {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -34,8 +31,7 @@ items:
       {{- toYaml . | nindent 6 }}
       {{- end }}
       selector:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "traefik.selectorLabels" . | nindent 8 }}
       ports:
       {{- range $name, $config := $tcpPorts }}
       {{- if $config.expose }}
@@ -66,10 +62,7 @@ items:
     metadata:
       name: {{ template "traefik.fullname" . }}-udp
       labels:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        helm.sh/chart: {{ template "traefik.chart" . }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "traefik.labels" . | nindent 4 }}
       annotations:
       {{- with .Values.service.annotations }}
       {{- toYaml . | nindent 8 }}
@@ -81,8 +74,7 @@ items:
       {{- toYaml . | nindent 6 }}
       {{- end }}
       selector:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "traefik.selectorLabels" . | nindent 8 }}
       ports:
       {{- range $name, $config := $udpPorts }}
       {{- if $config.expose }}
