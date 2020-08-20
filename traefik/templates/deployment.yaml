@@ -82,6 +82,7 @@ spec:
             timeoutSeconds: 2
           ports:
             {{- range $name, $config := .Values.ports }}
+            {{- if $config }}
             - name: {{ $name | quote }}
               containerPort: {{ $config.port }}
               {{- if $config.hostPort }}
@@ -91,6 +92,7 @@ spec:
               hostIP: {{ $config.hostIP }}
               {{- end }}
               protocol: {{ default "TCP" $config.protocol | quote }}
+          {{- end }}
           {{- end }}
           {{- with .Values.securityContext }}
           securityContext:
@@ -116,7 +118,9 @@ spec:
               {{- end }}
               {{- end }}
             {{- range $name, $config := .Values.ports }}
+            {{- if $config }}
             - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+            {{- end }}
             {{- end }}
             - "--api.dashboard=true"
             - "--ping=true"
