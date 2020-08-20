@@ -1,0 +1,14 @@
+{{- if .Values.ingressClass.enabled -}}
+{{- if and (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) (semverCompare ">=2.3" .Values.image.tag) -}}
+apiVersion: networking.k8s.io/v1beta1
+kind: IngressClass
+metadata:
+  annotations:
+    ingressclass.kubernetes.io/is-default-class: {{ .Values.ingressClass.isDefaultClass | quote }}
+  labels:
+  {{- include "traefik.labels" . | nindent 4 }}
+  name: {{ template "traefik.fullname" . }}
+spec:
+  controller: traefik.io/ingress-controller
+  {{- end }}
+  {{- end }}
