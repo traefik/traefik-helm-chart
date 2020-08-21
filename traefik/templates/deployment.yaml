@@ -141,6 +141,25 @@ spec:
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
           {{- end }}
+          {{- if $config.tls.enabled }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls=true"
+          {{- if $config.tls.options }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.options={{ $config.tls.options | quote }}"
+          {{- end }}
+          {{- if $config.tls.certResolver }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.certResolver={{ $config.tls.certResolver | quote }}"
+          {{- end }}
+          {{- if $config.tls.domains }}
+          {{- range $index, $domain := $config }}
+          {{- if $domain.main }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}]={{ $domain.main | quote }}"
+          {{- end }}
+          {{- if $domain.sans }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}]={{ join $domain.sans | quote }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- with .Values.logs }}
           {{- if .general.format }}
