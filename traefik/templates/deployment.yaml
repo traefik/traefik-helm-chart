@@ -153,6 +153,7 @@ spec:
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
           {{- end }}
+          {{- if $config.tls }}
           {{- if $config.tls.enabled }}
           - "--entrypoints.{{ $entrypoint }}.http.tls=true"
           {{- if $config.tls.options }}
@@ -167,7 +168,8 @@ spec:
           - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}]={{ $domain.main | quote }}"
           {{- end }}
           {{- if $domain.sans }}
-          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}]={{ join $domain.sans | quote }}"
+          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}]={{ join "," $domain.sans | quote }}"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
