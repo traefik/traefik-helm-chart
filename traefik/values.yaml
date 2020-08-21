@@ -231,6 +231,18 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
+    # Set TLS at the entrypoint
+    # https://docs.traefik.io/v2.2/routing/entrypoints/#tls
+    tls:
+      enabled: false
+      options: ""
+      certResolver: ""
+      domains: []
+        # - main: example.com
+        #   sans:
+        #     - foo.example.com
+        #     - bar.example.com
+
 
 # Options for the main traefik service, where the entrypoints traffic comes
 # from.
