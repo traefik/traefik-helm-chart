@@ -175,7 +175,7 @@ ports:
     #
     # You SHOULD NOT expose the traefik port on production deployments.
     # If you want to access it from outside of your cluster,
-    # use `kubectl proxy` or create a secure ingress
+    # use `kubectl port-forward` or create a secure ingress
     expose: false
     # The exposed port for this service
     exposedPort: 9000
