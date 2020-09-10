@@ -226,6 +226,9 @@ spec:
             name: {{ tpl (.name) $root }}
           {{- end }}
         {{- end }}
+        {{- if .Values.deployment.additionalVolumes }}
+          {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+        {{- end }}
       {{- with .Values.affinity }}
       affinity:
         {{- toYaml . | nindent 8 }}

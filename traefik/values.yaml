@@ -17,6 +17,8 @@ deployment:
   podAnnotations: {}
   # Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
+  # Additional volumes available for use with initContainers and additionalContainers
+  additionalVolumes: []
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
