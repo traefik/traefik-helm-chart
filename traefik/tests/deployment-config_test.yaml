@@ -48,15 +48,15 @@ tests:
     set:
       deployment:
         annotations:
-          containous/powpow: annotations
+          traefik/powpow: annotations
         podAnnotations:
-          containous/powpow: podAnnotations
+          traefik/powpow: podAnnotations
     asserts:
       - equal:
-          path: metadata.annotations.containous/powpow
+          path: metadata.annotations.traefik/powpow
           value: annotations
       - equal:
-          path: spec.template.metadata.annotations.containous/powpow
+          path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
   - it: should have envFrom with specified values
     set:
