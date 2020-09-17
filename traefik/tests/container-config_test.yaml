@@ -18,11 +18,11 @@ tests:
   - it: should change image when image.name value is specified
     set:
       image:
-        name: containous/traefik
+        name: traefik/traefik
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: containous/traefik:2.2.8
+          value: traefik/traefik:2.2.8
 
   - it: should have no resource limit by default
     asserts:
