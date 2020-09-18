@@ -3,7 +3,31 @@ entries:
   traefik:
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.656754772Z"
+    created: "2020-09-18T15:02:58.631727606Z"
+    description: A Traefik based Kubernetes ingress controller
+    digest: 32d69909f4e819ad9a71661b7fd18102841ab52673f8176e78744e72aad8b013
+    home: https://traefik.io/
+    icon: https://raw.githubusercontent.com/traefik/traefik/v2.2/docs/content/assets/img/traefik.logo.png
+    keywords:
+    - traefik
+    - ingress
+    maintainers:
+    - email: emile@vauge.com
+      name: emilevauge
+    - email: daniel.tomcej@gmail.com
+      name: dtomcej
+    - email: ldez@traefik.io
+      name: ldez
+    name: traefik
+    sources:
+    - https://github.com/traefik/traefik
+    type: application
+    urls:
+    - https://traefik.github.io/traefik-helm-chart/traefik-9.2.1.tgz
+    version: 9.2.1
+  - apiVersion: v2
+    appVersion: 2.2.8
+    created: "2020-09-18T15:02:58.630561933Z"
     description: A Traefik based Kubernetes ingress controller
     digest: c34436b7a93a3f0abc5710fd4b6113734d08d95af96700eef2fe2137fe8dceeb
     home: https://traefik.io/
@@ -27,7 +51,7 @@ entries:
     version: 9.2.0
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.654942724Z"
+    created: "2020-09-18T15:02:58.629335905Z"
     description: A Traefik based Kubernetes ingress controller
     digest: fca77a5e763fa45228cccbd532732b6ea9294721e6301a61b1b95019fd05587d
     home: https://traefik.io/
@@ -51,7 +75,7 @@ entries:
     version: 9.1.1
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.652321709Z"
+    created: "2020-09-18T15:02:58.628073164Z"
     description: A Traefik based Kubernetes ingress controller
     digest: bf682f64f3abc27384769438b68dc8824a4a5cbd62f75f87fbcfcbe8eb782ee6
     home: https://traefik.io/
@@ -75,7 +99,7 @@ entries:
     version: 9.1.0
   - apiVersion: v2
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.650623145Z"
+    created: "2020-09-18T15:02:58.624675508Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 12365bbeeb3bd51203cd849a84d6c42e3a22b55ff2a37da7918092ad7e807e03
     home: https://traefik.io/
@@ -99,7 +123,7 @@ entries:
     version: 9.0.0
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.629239903Z"
+    created: "2020-09-18T15:02:58.604364032Z"
     description: A Traefik based Kubernetes ingress controller
     digest: e864594c81a3521a8991fd99174d587dca8f6bba17bb50dfdc9bd4494712a41a
     home: https://traefik.io/
@@ -122,7 +146,7 @@ entries:
     version: 8.13.3
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.62798164Z"
+    created: "2020-09-18T15:02:58.603208119Z"
     description: A Traefik based Kubernetes ingress controller
     digest: f27afe571b3af9d32f49b2da9fb2b24191bacedd709b0d732ef1314380c66ae4
     home: https://traefik.io/
@@ -145,7 +169,7 @@ entries:
     version: 8.13.2
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.626667672Z"
+    created: "2020-09-18T15:02:58.602032498Z"
     description: A Traefik based Kubernetes ingress controller
     digest: b0231c0d3d7c98a46f5cd916e46de02f62bb4985ba9c3fb7f8daaa684662ad87
     home: https://traefik.io/
@@ -168,7 +192,7 @@ entries:
     version: 8.13.1
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.625343419Z"
+    created: "2020-09-18T15:02:58.600405065Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 39c59de2d8343ddacf348970423e20e0e4a07494b23d45544dcee8984eb8354f
     home: https://traefik.io/
@@ -191,7 +215,7 @@ entries:
     version: 8.13.0
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.622721339Z"
+    created: "2020-09-18T15:02:58.597740041Z"
     description: A Traefik based Kubernetes ingress controller
     digest: fe698902d0cb3138dd183681d679d4ef997348d51d3988541268821703041f19
     home: https://traefik.io/
@@ -214,7 +238,7 @@ entries:
     version: 8.12.0
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.620405432Z"
+    created: "2020-09-18T15:02:58.596337329Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 225dd56fd5d61480f8bcf94337a442ac4021d0ff203925ad14979015e2b2b286
     home: https://traefik.io/
@@ -237,7 +261,7 @@ entries:
     version: 8.11.0
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.619212353Z"
+    created: "2020-09-18T15:02:58.595172431Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 11278d0d5eba67a98f289c72a081629d9b10b391d22e7576264860929cae304b
     home: https://traefik.io/
@@ -260,7 +284,7 @@ entries:
     version: 8.10.0
   - apiVersion: v1
     appVersion: 2.2.8
-    created: "2020-09-16T09:00:59.649367757Z"
+    created: "2020-09-18T15:02:58.623433123Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 3d3252872dd1df5e2c8634cba6c3724343af45fd140e7ea1437335fee855e900
     home: https://traefik.io/
@@ -283,7 +307,7 @@ entries:
     version: 8.9.2
   - apiVersion: v1
     appVersion: 2.2.5
-    created: "2020-09-16T09:00:59.648143428Z"
+    created: "2020-09-18T15:02:58.622342189Z"
     description: A Traefik based Kubernetes ingress controller
     digest: b1b603b7607119493c72838ea570a5546c0b7fec2cea0b2bf18868700b20f41c
     home: https://traefik.io/
@@ -306,7 +330,7 @@ entries:
     version: 8.9.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.647057757Z"
+    created: "2020-09-18T15:02:58.621211558Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 07484175255b61195d83323927890d6a51ab38dc493d7da5a769f92e7b0ff8aa
     home: https://traefik.io/
@@ -329,7 +353,7 @@ entries:
     version: 8.9.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.645890532Z"
+    created: "2020-09-18T15:02:58.620075192Z"
     description: A Traefik based Kubernetes ingress controller
     digest: a6f479387d142f066dfadf8d1510cf1e5bce0b5c1cbd71ebe2351b4ec65bce78
     home: https://traefik.io/
@@ -352,7 +376,7 @@ entries:
     version: 8.8.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.644769304Z"
+    created: "2020-09-18T15:02:58.619003102Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 3431b994f9fa53a7a9acab8e5310fa1a371a2bd7c82f498c6e92d43b0167260a
     home: https://traefik.io/
@@ -375,7 +399,7 @@ entries:
     version: 8.8.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.643664157Z"
+    created: "2020-09-18T15:02:58.617908812Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 51b817710f110931ddf1d5b20c6b401f86cb1fb502a19392c03c273fa5fbd5df
     home: https://traefik.io/
@@ -398,7 +422,7 @@ entries:
     version: 8.7.2
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.642607021Z"
+    created: "2020-09-18T15:02:58.616765859Z"
     description: A Traefik based Kubernetes ingress controller
     digest: ebb99d5de829756b09ae83a390a1a098772d0b886e64f2cac03091940f3e904c
     home: https://traefik.io/
@@ -421,7 +445,7 @@ entries:
     version: 8.7.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.641492089Z"
+    created: "2020-09-18T15:02:58.615705452Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 6c59ba9cb81dd4161e3983cf008173cd744df44af5a36de8e5d5e7d94c26fcfc
     home: https://traefik.io/
@@ -444,7 +468,7 @@ entries:
     version: 8.7.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.639486359Z"
+    created: "2020-09-18T15:02:58.614673451Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 1aeb6ffb270dc05d17a6309cfa1694311313d686ff10ea9ca34d4d889362bb14
     home: https://traefik.io/
@@ -467,7 +491,7 @@ entries:
     version: 8.6.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.637297199Z"
+    created: "2020-09-18T15:02:58.612494184Z"
     description: A Traefik based Kubernetes ingress controller
     digest: b3d25c485b77aef329e40af7326154c8005b9fc18a4ca8ed046b562e6dcd56ea
     home: https://traefik.io/
@@ -490,7 +514,7 @@ entries:
     version: 8.6.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.635659367Z"
+    created: "2020-09-18T15:02:58.610315723Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 9c30a88719e7b5fc206b38ada44e061e948542799b05a659a334e2a7c32ff33f
     home: https://traefik.io/
@@ -513,7 +537,7 @@ entries:
     version: 8.5.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.634527747Z"
+    created: "2020-09-18T15:02:58.609310574Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 63ced70cd1cf2c4fc816edf4513eb0706f27360699aebdcddd8cd78031c03b13
     home: https://traefik.io/
@@ -536,7 +560,7 @@ entries:
     version: 8.4.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.63348948Z"
+    created: "2020-09-18T15:02:58.608301217Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 14c9d2692bf34bd953d37ea3476bcab2ae6b63179c275a55e51d0a7f049401e1
     home: https://traefik.io/
@@ -559,7 +583,7 @@ entries:
     version: 8.4.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.632370549Z"
+    created: "2020-09-18T15:02:58.607282264Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 91163cc7d30e55fbb17efdb543ff75debb783429cc63e1ae9ac1dd1ece759d3f
     home: https://traefik.io/
@@ -582,7 +606,7 @@ entries:
     version: 8.3.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.631332984Z"
+    created: "2020-09-18T15:02:58.606282224Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 00a029b2d02e151f86d2aa84cbab5c68eb317703528164015e1ba2084a31f692
     home: https://traefik.io/
@@ -605,7 +629,7 @@ entries:
     version: 8.2.1
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.63023479Z"
+    created: "2020-09-18T15:02:58.605316391Z"
     description: A Traefik based Kubernetes ingress controller
     digest: ddf852ba86066378a24c45c97ecc43e0cd657a5b17810d85e95c09f88f0396fb
     home: https://traefik.io/
@@ -628,7 +652,7 @@ entries:
     version: 8.2.0
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.61808077Z"
+    created: "2020-09-18T15:02:58.594122635Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 99445e69fb9d11d027aff8204edec9cf8f6133cc735fbc87e7c2c69abeb32f33
     home: https://traefik.io/
@@ -651,7 +675,7 @@ entries:
     version: 8.1.5
   - apiVersion: v1
     appVersion: 2.2.1
-    created: "2020-09-16T09:00:59.617091082Z"
+    created: "2020-09-18T15:02:58.593094863Z"
     description: A Traefik based Kubernetes ingress controller
     digest: a44cebbdaffef59db916e5c1295bc185fcf746e681e4c38f4868eeba2ee0f511
     home: https://traefik.io/
@@ -674,7 +698,7 @@ entries:
     version: 8.1.4
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.616103097Z"
+    created: "2020-09-18T15:02:58.592184494Z"
     description: A Traefik based Kubernetes ingress controller
     digest: eeec38b3c2c65ac594f8a95f376b7540a52cbbf1e8edab4847982807165771ef
     home: https://traefik.io/
@@ -697,7 +721,7 @@ entries:
     version: 8.1.3
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.615125157Z"
+    created: "2020-09-18T15:02:58.591210283Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 3084e6d80f3be9dbf816edc067125f787345535afe69646217ae32fd46dc13cd
     home: https://traefik.io/
@@ -720,7 +744,7 @@ entries:
     version: 8.1.2
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.614161067Z"
+    created: "2020-09-18T15:02:58.590321673Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 4f88f5daee2fa5bde7c07be49be4f98d12369341c4ba2fd8d11b1ae7e01ae9fa
     home: https://traefik.io/
@@ -743,7 +767,7 @@ entries:
     version: 8.1.1
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.61315519Z"
+    created: "2020-09-18T15:02:58.589337491Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 03964cad523150c11fe4929e884abfd499e188d4dbe9be051bc8e1e3dc43eda1
     home: https://traefik.io/
@@ -766,7 +790,7 @@ entries:
     version: 8.1.0
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.612134694Z"
+    created: "2020-09-18T15:02:58.588416189Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 968db18043bb89dc076415750ef0d04eff1068a6bf90659ca9c315ed07c349eb
     home: https://traefik.io/
@@ -789,7 +813,7 @@ entries:
     version: 8.0.4
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.611202582Z"
+    created: "2020-09-18T15:02:58.586227527Z"
     description: A Traefik based Kubernetes ingress controller
     digest: d67a3ce20ed2450427c6ce6717265dda57977790d219f6671054c63db3bbf7f2
     home: https://traefik.io/
@@ -812,7 +836,7 @@ entries:
     version: 8.0.3
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.610144103Z"
+    created: "2020-09-18T15:02:58.584339542Z"
     description: A Traefik based Kubernetes ingress controller
     digest: d7de298ba350a58f0b643a4646b180d0bfc98b46c2c056a6c3af897ada3aa6fa
     home: https://traefik.io/
@@ -835,7 +859,7 @@ entries:
     version: 8.0.2
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.608217818Z"
+    created: "2020-09-18T15:02:58.583330679Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 3c0a9b4c1e334423debaea61c829a86f052a90879c011637db16ea7b9969e2d0
     home: https://traefik.io/
@@ -858,7 +882,7 @@ entries:
     version: 8.0.1
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.605965958Z"
+    created: "2020-09-18T15:02:58.582473857Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 74851720eaa2e0024369ad9f6e0955d705bb21f168111fdf2b9233225907e50b
     home: https://traefik.io/
@@ -881,7 +905,7 @@ entries:
     version: 8.0.0
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.60497655Z"
+    created: "2020-09-18T15:02:58.581625256Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 24cb092bacffd4dfad3403edf731eb3eceec0ca443c4bb7206a65b665030ed3f
     home: https://traefik.io/
@@ -904,7 +928,7 @@ entries:
     version: 7.2.1
   - apiVersion: v1
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.604039593Z"
+    created: "2020-09-18T15:02:58.580697446Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 411bfa5a984ee6c987aa9547277ff6bc9e708345f3106b304c5f115370ef35ef
     home: https://traefik.io/
@@ -927,7 +951,7 @@ entries:
     version: 7.2.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.603061269Z"
+    created: "2020-09-18T15:02:58.579859778Z"
     description: A Traefik based Kubernetes ingress controller
     digest: d1bab7dc4fd5a7d165b563090a1d94edb652a817dffded14deb7ea895c7aa563
     home: https://traefik.io/
@@ -950,7 +974,7 @@ entries:
     version: 7.1.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.602100507Z"
+    created: "2020-09-18T15:02:58.579012926Z"
     description: A Traefik based Kubernetes ingress controller
     digest: b6c5f0e1112970fc4817389c8261b3a1903433c1ed04f8a4a2fc0c72850c1dd2
     home: https://traefik.io/
@@ -973,7 +997,7 @@ entries:
     version: 7.0.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.60107986Z"
+    created: "2020-09-18T15:02:58.578183061Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 8da41502ca95540674f195867810bba24b56f27d2c3f927fab1d5720a30bcb72
     home: https://traefik.io/
@@ -996,7 +1020,7 @@ entries:
     version: 6.4.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.6001587Z"
+    created: "2020-09-18T15:02:58.57734509Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 91b7d63da3c4b72b9d950a40e01a560f808df8f7fb4857c8f02cfd6d58367a31
     home: https://traefik.io/
@@ -1019,7 +1043,7 @@ entries:
     version: 6.3.0
   - apiVersion: v2
     appVersion: 2.2.0
-    created: "2020-09-16T09:00:59.599203884Z"
+    created: "2020-09-18T15:02:58.576433525Z"
     description: A Traefik based Kubernetes ingress controller
     digest: d7e88a15ffb1880ddd96cccf8fd2edf28749b18ef3502cc3fe81c2cf4dc315d6
     home: https://traefik.io/
@@ -1042,7 +1066,7 @@ entries:
     version: 6.2.0
   - apiVersion: v2
     appVersion: 2.1.4
-    created: "2020-09-16T09:00:59.598291151Z"
+    created: "2020-09-18T15:02:58.575561735Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 5d76bbda1a5a82f4d9a7b0d4877bc1ec6465a53c416ef0b1d8d7da38e1ac842c
     home: https://traefik.io/
@@ -1065,7 +1089,7 @@ entries:
     version: 6.1.1
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.5973086Z"
+    created: "2020-09-18T15:02:58.574504481Z"
     description: A Traefik based Kubernetes ingress controller
     digest: f90e45138f25eb8054780325c1f662f3fdbe24d2559afdcd1a7ce1c6e1aa8512
     home: https://traefik.io/
@@ -1088,7 +1112,7 @@ entries:
     version: 6.1.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.596358551Z"
+    created: "2020-09-18T15:02:58.572549396Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 36461cd80af33412fa6e98b941b7b83310e9f95c318554027883b131c3a93258
     home: https://traefik.io/
@@ -1111,7 +1135,7 @@ entries:
     version: 6.0.2
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.595221944Z"
+    created: "2020-09-18T15:02:58.570687693Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 467603d51db6e6d2fb54110ea913248f0ade03fbe3ed3e9f09f95e014ca4d8e2
     home: https://traefik.io/
@@ -1134,7 +1158,7 @@ entries:
     version: 6.0.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.593759286Z"
+    created: "2020-09-18T15:02:58.569793212Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 97e9777d9b598dc8bc777da74e05a8813748ee2d16a3679b5f89f5ca50e0055c
     home: https://traefik.io/
@@ -1157,7 +1181,7 @@ entries:
     version: 5.6.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.591804171Z"
+    created: "2020-09-18T15:02:58.568836215Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 7d04d1264dee8d581a627db64a7e4a7e7f05a67354b8969e82cae0e70706ff04
     home: https://traefik.io/
@@ -1180,7 +1204,7 @@ entries:
     version: 5.5.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.589634816Z"
+    created: "2020-09-18T15:02:58.568012102Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 4117d280cb6836542c11aa2da3a64eaaa6b61b322be72cab9d45b9acd8309039
     home: https://traefik.io/
@@ -1203,7 +1227,7 @@ entries:
     version: 5.3.3
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.588672426Z"
+    created: "2020-09-18T15:02:58.56725179Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 79ae37f191a7f5d5f1a49b8d94cea3389d43d660f360a0384a9dcd9c492550d2
     home: https://traefik.io/
@@ -1226,7 +1250,7 @@ entries:
     version: 5.3.2
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.587768476Z"
+    created: "2020-09-18T15:02:58.566472152Z"
     description: A Traefik based Kubernetes ingress controller
     digest: e6693a12aa03b74ca967e03124ca73f16b8b0992d0ebb93864a8537893bd84a6
     home: https://traefik.io/
@@ -1249,7 +1273,7 @@ entries:
     version: 5.3.1
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.586888145Z"
+    created: "2020-09-18T15:02:58.565695267Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 204781ebcc04418782da29956c35293d0e90baf26a83938f1687e73914813948
     home: https://traefik.io/
@@ -1272,7 +1296,7 @@ entries:
     version: 5.3.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.58600013Z"
+    created: "2020-09-18T15:02:58.564802454Z"
     description: A Traefik based Kubernetes ingress controller
     digest: d0e2af56eae8edc06de57e436fa36d38722c62ab2e62cd91d7e8b91d01189360
     home: https://traefik.io/
@@ -1295,7 +1319,7 @@ entries:
     version: 5.2.1
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.58497909Z"
+    created: "2020-09-18T15:02:58.564044839Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 89787f456584e0c305e084022f80ce0522f44f60b6cc0ccfc4c6db645874ff60
     home: https://traefik.io/
@@ -1318,7 +1342,7 @@ entries:
     version: 5.2.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.583957999Z"
+    created: "2020-09-18T15:02:58.563242027Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 1159d2842ec56483fb40893bc3be3607ac059c0d3f7f6d744843cc55462f57ba
     home: https://traefik.io/
@@ -1341,7 +1365,7 @@ entries:
     version: 5.1.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.582705783Z"
+    created: "2020-09-18T15:02:58.562464873Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 09b8a05223fabad2e16f29d55b743f465bbed8431459a4a3e38bdec8e8a4d107
     home: https://traefik.io/
@@ -1364,7 +1388,7 @@ entries:
     version: 5.0.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.581752631Z"
+    created: "2020-09-18T15:02:58.560757259Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 579995dc7087f84b8407e2ccdb4f2ce2831da42e4eb235426563ecd006ed6884
     home: https://traefik.io/
@@ -1387,7 +1411,7 @@ entries:
     version: 4.1.3
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.580707841Z"
+    created: "2020-09-18T15:02:58.550505407Z"
     description: A Traefik based Kubernetes ingress controller
     digest: bcc5545963823dd92485973350da16d071ebedb78e508552ced6f5cf46dc7923
     home: https://traefik.io/
@@ -1410,7 +1434,7 @@ entries:
     version: 4.1.2
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.579783844Z"
+    created: "2020-09-18T15:02:58.547707995Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 23a13057b65123029a4f71cd8ac1eb3eb6ac8c849cd39d2c137efa69de78a14f
     home: https://traefik.io/
@@ -1433,7 +1457,7 @@ entries:
     version: 4.1.1
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.578927817Z"
+    created: "2020-09-18T15:02:58.545208505Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 7172e5ef2e904523e92e0bc5c34d87b4fbd2648dc38386deffdf52ff426d6f06
     home: https://traefik.io/
@@ -1456,7 +1480,7 @@ entries:
     version: 4.1.0
   - apiVersion: v2
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.577853033Z"
+    created: "2020-09-18T15:02:58.542826694Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 2acd1bcc8367c919559e818d6a8190b7eb0fde9121cc4672ba7eb812d4175ada
     home: https://traefik.io/
@@ -1479,7 +1503,7 @@ entries:
     version: 4.0.0
   - apiVersion: v1
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.576553311Z"
+    created: "2020-09-18T15:02:58.540571363Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 41525044f4673b5484cdb12863aec4c9363d0989a5337dbc5cfe591903b762d2
     home: https://traefik.io/
@@ -1502,7 +1526,7 @@ entries:
     version: 3.5.0
   - apiVersion: v1
     appVersion: 2.1.3
-    created: "2020-09-16T09:00:59.572964834Z"
+    created: "2020-09-18T15:02:58.53834644Z"
     description: A Traefik based Kubernetes ingress controller
     digest: 85aeb1039e2e3131e15bb132062ebd9834b9e299fa461aad51c10fb9a6d0fc86
     home: https://traefik.io/
@@ -1523,4 +1547,4 @@ entries:
     urls:
     - https://traefik.github.io/traefik-helm-chart/traefik-3.4.0.tgz
     version: 3.4.0
-generated: "2020-09-16T09:00:59.571754827Z"
+generated: "2020-09-18T15:02:58.535993411Z"
