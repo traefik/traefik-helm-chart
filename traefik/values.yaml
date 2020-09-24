@@ -1,7 +1,7 @@
 # Default values for Traefik
 image:
   name: traefik
-  tag: 2.2.8
+  tag: 2.3.0
   pullPolicy: IfNotPresent
 
 #
@@ -35,6 +35,16 @@ podDisruptionBudget:
   enabled: false
   # maxUnavailable: 1
   # minAvailable: 0
+
+# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
+ingressClass:
+  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
+  enabled: false
+  isDefaultClass: false
+
+pilot:
+  enabled: false
+  token: ""
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
