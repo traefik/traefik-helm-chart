@@ -13,5 +13,5 @@ metadata:
   name: {{ template "traefik.fullname" . }}
 spec:
   controller: traefik.io/ingress-controller
-    {{- end }}
-    {{- end }}
+  {{- end }}
+{{- end }}
