@@ -31,9 +31,9 @@ rules:
       - watch
   - apiGroups:
       - extensions
+      - networking.k8s.io
     resources:
       - ingresses/status
-      - networking.k8s.io
     verbs:
       - update
   - apiGroups:
