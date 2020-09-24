@@ -42,6 +42,10 @@ ingressClass:
   enabled: false
   isDefaultClass: false
 
+pilot:
+  enabled: false
+  token: ""
+
 # Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
