@@ -32,7 +32,7 @@ unit-test: helm-unittest
 	@echo "== Unit Tests Finished..."
 
 
-# Generates an artefact containing the Helm Chart in the distribution directory
+# Generates an artifact containing the Helm Chart in the distribution directory
 build: global-requirements $(DIST_DIR)
 	@echo "== Building Chart..."
 	@helm package $(CHART_DIR) --destination=$(DIST_DIR)
