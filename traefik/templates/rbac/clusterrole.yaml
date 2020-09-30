@@ -50,4 +50,14 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.podSecurityPolicy.enabled }}
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - {{ template "traefik.fullname" . }}
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+{{- end -}}
 {{- end -}}
