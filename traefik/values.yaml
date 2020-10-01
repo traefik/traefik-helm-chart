@@ -221,6 +221,8 @@ service:
   type: LoadBalancer
   # Additional annotations (e.g. for cloud provider specific config)
   annotations: {}
+  # Additional service labels (e.g. for filtering Service by custom labels)
+  labels: {}
   # Additional entries here will be added to the service spec. Cannot contains
   # type, selector or ports entries.
   spec: {}
