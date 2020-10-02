@@ -1,7 +1,7 @@
 # Default values for Traefik
 image:
   name: traefik
-  tag: 2.3.0
+  tag: 2.3.1
   pullPolicy: IfNotPresent
 
 #
