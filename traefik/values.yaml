@@ -281,6 +281,10 @@ rbac:
   # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
   namespaced: false
 
+# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBindin or ClusterRoleBinding
+podSecurityPolicy:
+  enabled: false
+
 # The service account the pods will use to interact with the Kubernetes API
 serviceAccount:
   # If set, an existing service account is used
