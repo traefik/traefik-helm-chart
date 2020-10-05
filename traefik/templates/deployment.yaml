@@ -206,6 +206,9 @@ spec:
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- if .Values.pilot.enabled }}
+          - "--pilot.token={{ .Values.pilot.token }}"
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}

@@ -32,7 +32,7 @@ unit-test: helm-unittest
 	@echo "== Unit Tests Finished..."
 
 
-# Generates an artefact containing the Helm Chart in the distribution directory
+# Generates an artifact containing the Helm Chart in the distribution directory
 build: global-requirements $(DIST_DIR)
 	@echo "== Building Chart..."
 	@helm package $(CHART_DIR) --destination=$(DIST_DIR)
@@ -44,8 +44,9 @@ deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
 	@rm -rf $(CURDIR)/gh-pages.zip
 	@curl -sSLO https://$(PROJECT)/archive/gh-pages.zip
 	@unzip -oj $(CURDIR)/gh-pages.zip -d $(HELM_REPO)/
-	@cp $(DIST_DIR)/*tgz $(HELM_REPO)/
-	@helm repo index --merge $(HELM_REPO)/index.yaml --url https://traefik.github.io/traefik-helm-chart/ $(HELM_REPO)
+	@cp $(DIST_DIR)/*tgz $(CURDIR)/artifacthub-repo.yml $(HELM_REPO)/
+	@cp $(CURDIR)/README.md $(HELM_REPO)/index.md
+	@helm repo index --merge $(HELM_REPO)/index.yaml --url https://helm.traefik.io/traefik/ $(HELM_REPO)
 	@echo "== Deploying Finished"
 
 # Cleanup leftovers and distribution dir

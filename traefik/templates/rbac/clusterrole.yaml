@@ -21,14 +21,17 @@ rules:
       - watch
   - apiGroups:
       - extensions
+      - networking.k8s.io
     resources:
       - ingresses
+      - ingressclasses
     verbs:
       - get
       - list
       - watch
   - apiGroups:
       - extensions
+      - networking.k8s.io
     resources:
       - ingresses/status
     verbs:
@@ -47,4 +50,14 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.podSecurityPolicy.enabled }}
+  - apiGroups:
+      - extensions
+    resourceNames:
+      - {{ template "traefik.fullname" . }}
+    resources:
+      - podsecuritypolicies
+    verbs:
+      - use
+{{- end -}}
 {{- end -}}
