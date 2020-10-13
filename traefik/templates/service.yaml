@@ -3,7 +3,7 @@
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
 {{- range $name, $config := .Values.ports }}
-  {{- if eq ($config.protocol | toString) "UDP" }}
+  {{- if eq (toString $config.protocol) "UDP" }}
     {{ $_ := set $udpPorts $name $config }}
   {{- else }}
     {{ $_ := set $tcpPorts $name $config }}
@@ -23,6 +23,9 @@ items:
         helm.sh/chart: {{ template "traefik.chart" . }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- with .Values.service.labels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       annotations:
       {{- with .Values.service.annotations }}
       {{- toYaml . | nindent 8 }}

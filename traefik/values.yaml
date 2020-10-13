@@ -1,7 +1,8 @@
 # Default values for Traefik
 image:
   name: traefik
-  tag: 2.2.5
+  tag: 2.3.1
+  pullPolicy: IfNotPresent
 
 #
 # Configure the deployment
@@ -19,19 +20,31 @@ deployment:
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
-    # Related issue: https://github.com/containous/traefik/issues/6972
+    # Related issue: https://github.com/traefik/traefik/issues/6972
     # - name: volume-permissions
     #   image: busybox:1.31.1
     #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data
+  # Custom pod DNS policy. Apply if `hostNetwork: true`
+  # dnsPolicy: ClusterFirstWithHostNet
 
 # Pod disruption budget
 podDisruptionBudget:
   enabled: false
   # maxUnavailable: 1
   # minAvailable: 0
+
+# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
+ingressClass:
+  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
+  enabled: false
+  isDefaultClass: false
+
+pilot:
+  enabled: false
+  token: ""
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
@@ -55,6 +68,12 @@ providers:
     enabled: true
   kubernetesIngress:
     enabled: true
+    # IP used for Kubernetes Ingress endpoints
+    publishedService:
+      enabled: false
+      # Published Kubernetes Service to copy status from. Format: namespace/servicename
+      # By default this Traefik service
+      # pathOverride: ""
 
 #
 # Add volumes to the traefik pod. The volume name will be passed to tpl.
@@ -69,6 +88,48 @@ volumes: []
 # - name: '{{ printf "%s-configs" .Release.Name }}'
 #   mountPath: "/config"
 #   type: configMap
+
+# Logs
+# https://docs.traefik.io/observability/logs/
+logs:
+  # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+  general:
+    # By default, the logs use a text format (common), but you can
+    # also ask for the json format in the format option
+    # format: json
+    # By default, the level is set to ERROR. Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+    level: ERROR
+  access:
+    # To enable access logs
+    enabled: false
+    # By default, logs are written using the Common Log Format (CLF).
+    # To write logs in JSON, use json in the format option.
+    # If the given format is unsupported, the default (CLF) is used instead.
+    # format: json
+    # To write the logs in an asynchronous fashion, specify a bufferingSize option.
+    # This option represents the number of log lines Traefik will keep in memory before writing
+    # them to the selected output. In some cases, this option can greatly help performances.
+    # bufferingSize: 100
+    # Filtering https://docs.traefik.io/observability/access-logs/#filtering
+    filters: {}
+      # statuscodes: "200,300-302"
+      # retryattempts: true
+      # minduration: 10ms
+    # Fields
+    # https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
+    fields:
+      general:
+        defaultmode: keep
+        names: {}
+          # Examples:
+          # ClientUsername: drop
+      headers:
+        defaultmode: drop
+        names: {}
+          # Examples:
+          # User-Agent: redact
+          # Authorization: drop
+          # Content-Type: keep
 
 globalArguments:
   - "--global.checknewversion"
@@ -112,13 +173,19 @@ ports:
     port: 9000
     # Use hostPort if set.
     # hostPort: 9000
+    #
+    # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+    # means it's listening on all your interfaces and all your IPs. You may want
+    # to set this value if you need traefik to listen on specific interface
+    # only.
+    # hostIP: 192.168.100.10
 
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
     #
     # You SHOULD NOT expose the traefik port on production deployments.
     # If you want to access it from outside of your cluster,
-    # use `kubectl proxy` or create a secure ingress
+    # use `kubectl port-forward` or create a secure ingress
     expose: false
     # The exposed port for this service
     exposedPort: 9000
@@ -134,6 +201,10 @@ ports:
     # Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer
     # nodePort: 32080
+    # Port Redirections
+    # Added in 2.2, you can make permanent redirects via entrypoints.
+    # https://docs.traefik.io/routing/entrypoints/#redirection
+    # redirectTo: websecure
   websecure:
     port: 8443
     # hostPort: 8443
@@ -150,6 +221,8 @@ service:
   type: LoadBalancer
   # Additional annotations (e.g. for cloud provider specific config)
   annotations: {}
+  # Additional service labels (e.g. for filtering Service by custom labels)
+  labels: {}
   # Additional entries here will be added to the service spec. Cannot contains
   # type, selector or ports entries.
   spec: {}
@@ -207,6 +280,10 @@ rbac:
   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
   # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
   namespaced: false
+
+# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBindin or ClusterRoleBinding
+podSecurityPolicy:
+  enabled: false
 
 # The service account the pods will use to interact with the Kubernetes API
 serviceAccount:
