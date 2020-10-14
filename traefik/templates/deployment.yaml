@@ -117,6 +117,10 @@ spec:
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
+          {{- if .Values.experimental.plugins.enabled }}
+          - name: plugins
+            mountPath: "/plugins-storage"
+          {{- end }}
         args:
           {{- with .Values.globalArguments }}
           {{- range . }}
@@ -228,6 +232,10 @@ spec:
         {{- end }}
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+        {{- end }}
+        {{- if .Values.experimental.plugins.enabled }}
+        - name: plugins
+          emptyDir: {}
         {{- end }}
       {{- with .Values.affinity }}
       affinity:

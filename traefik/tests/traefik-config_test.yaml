@@ -47,3 +47,19 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
+  - it: should have a plugin storage if the experimental feature is enabled
+    set:
+      experimental:
+        plugins:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[2]
+          value:
+            name: plugins
+            emptyDir: {}
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: plugins
+            mountPath: "/plugins-storage"
