@@ -62,7 +62,7 @@ pilot:
 # Enable experimental features
 experimental:
   plugins:
-    enabled: true
+    enabled: false
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
