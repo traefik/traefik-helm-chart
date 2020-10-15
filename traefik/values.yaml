@@ -54,9 +54,15 @@ ingressClass:
   enabled: false
   isDefaultClass: false
 
+# Activate Pilot integration
 pilot:
   enabled: false
   token: ""
+
+# Enable experimental features
+experimental:
+  plugins:
+    enabled: false
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
