@@ -52,7 +52,7 @@ rules:
       - watch
 {{- if .Values.podSecurityPolicy.enabled }}
   - apiGroups:
-      - extensions
+      - policy
     resourceNames:
       - {{ template "traefik.fullname" . }}
     resources:
