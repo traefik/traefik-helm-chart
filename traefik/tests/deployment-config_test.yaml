@@ -146,6 +146,20 @@ tests:
         - equal:
             path: spec.additionalContainers[0].name
             value: bar
+  - it: should have additional volumes
+    set:
+      deployment:
+        additionalVolumes:
+          - hostpath:
+              path: /foo
+            name: bar
+      asserts:
+        - equal:
+            path: spec.template.spec.volumes[4].hostpath.path
+            value: /foo
+        - equal:
+            path: spec.template.spec.volumes[4].name
+            value: bar
   - it: should have imagePullPolicy with specified value
     set:
       image:
