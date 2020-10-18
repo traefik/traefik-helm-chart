@@ -111,10 +111,15 @@ spec:
             {{- end }}
           - name: tmp
             mountPath: /tmp
+          {{- $root := . }}
           {{- range .Values.volumes }}
-          - name: {{ .name }}
+          - name: {{ tpl (.name) $root }}
             mountPath: {{ .mountPath }}
             readOnly: true
+          {{- end }}
+          {{- if .Values.experimental.plugins.enabled }}
+          - name: plugins
+            mountPath: "/plugins-storage"
           {{- end }}
         args:
           {{- with .Values.globalArguments }}
@@ -214,15 +219,23 @@ spec:
           {{- end }}
         - name: tmp
           emptyDir: {}
+        {{- $root := . }}
         {{- range .Values.volumes }}
-        - name: {{ .name }}
+        - name: {{ tpl (.name) $root }}
           {{- if eq .type "secret" }}
           secret:
-            secretName: {{ .name }}
+            secretName: {{ tpl (.name) $root }}
           {{- else if eq .type "configMap" }}
           configMap:
-            name: {{ .name }}
+            name: {{ tpl (.name) $root }}
           {{- end }}
+        {{- end }}
+        {{- if .Values.deployment.additionalVolumes }}
+          {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+        {{- end }}
+        {{- if .Values.experimental.plugins.enabled }}
+        - name: plugins
+          emptyDir: {}
         {{- end }}
       {{- with .Values.affinity }}
       affinity:

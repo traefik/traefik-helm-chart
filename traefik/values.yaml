@@ -18,6 +18,18 @@ deployment:
   podAnnotations: {}
   # Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
+    # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
+    # - name: socat-proxy
+    # image: alpine/socat:1.0.5
+    # args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
+    # volumeMounts:
+    #   - name: dsdsocket
+    #     mountPath: /socket
+  # Additional volumes available for use with initContainers and additionalContainers
+  additionalVolumes: []
+    # - name: dsdsocket
+    #   hostPath:
+    #   path: /var/run/statsd-exporter
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
@@ -43,9 +55,15 @@ ingressClass:
   enabled: false
   isDefaultClass: false
 
+# Activate Pilot integration
 pilot:
   enabled: false
   token: ""
+
+# Enable experimental features
+experimental:
+  plugins:
+    enabled: false
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
@@ -77,7 +95,7 @@ providers:
       # pathOverride: ""
 
 #
-# Add volumes to the traefik pod.
+# Add volumes to the traefik pod. The volume name will be passed to tpl.
 # This can be used to mount a cert pair or a configmap that holds a config.toml file.
 # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 # additionalArguments:
@@ -86,7 +104,7 @@ volumes: []
 # - name: public-cert
 #   mountPath: "/certs"
 #   type: secret
-# - name: configs
+# - name: '{{ printf "%s-configs" .Release.Name }}'
 #   mountPath: "/config"
 #   type: configMap
 

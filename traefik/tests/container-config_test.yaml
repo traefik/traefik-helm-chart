@@ -62,3 +62,47 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[0].subPath
           value: "subdir/traefik"
+  - it: should have templated config map volume
+    set:
+      volumes:
+        - name: '{{ printf "%s-custom-config" .Release.Name }}'
+          mountPath: /etc/traefik
+          type: configMap
+        - name: 'non-templated'
+          mountPath: /etc/non-templated
+          type: configMap
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].name
+          value: "RELEASE-NAME-custom-config"
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[3].name
+          value: "non-templated"
+      - equal:
+          path: spec.template.spec.volumes[2].name
+          value: "RELEASE-NAME-custom-config"
+      - equal:
+          path: spec.template.spec.volumes[2].configMap.name
+          value: "RELEASE-NAME-custom-config"
+      - equal:
+          path: spec.template.spec.volumes[3].name
+          value: "non-templated"
+      - equal:
+          path: spec.template.spec.volumes[3].configMap.name
+          value: "non-templated"
+  - it: should have templated secret volume
+    set:
+      volumes:
+        - name: '{{ printf "%s-custom-secret" .Release.Name }}'
+          mountPath: /etc/secret
+          type: secret
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].name
+          value: "RELEASE-NAME-custom-secret"
+      - equal:
+          path: spec.template.spec.volumes[2].name
+          value: "RELEASE-NAME-custom-secret"
+      - equal:
+          path: spec.template.spec.volumes[2].secret.secretName
+          value: "RELEASE-NAME-custom-secret"
