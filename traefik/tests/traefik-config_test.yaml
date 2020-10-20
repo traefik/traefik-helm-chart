@@ -63,3 +63,32 @@ tests:
           content:
             name: plugins
             mountPath: "/plugins-storage"
+  - it: should have tls configuration args when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          tls:
+            enabled: true
+            options: "foo"
+            certResolver: "certResolverFoo"
+            domains:
+              - main: "sub.domain.tld"
+                sans:
+                  - "alt1.domain.tld"
+                  - "alt2.domain.tld"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls.options=foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls.certResolver=certResolverFoo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls.domains[0].main=sub.domain.tld"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls.domains[0].sans=alt1.domain.tld,alt2.domain.tld"

@@ -153,6 +153,27 @@ spec:
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
           {{- end }}
+          {{- if $config.tls }}
+          {{- if $config.tls.enabled }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls=true"
+          {{- if $config.tls.options }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.options={{ $config.tls.options }}"
+          {{- end }}
+          {{- if $config.tls.certResolver }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.certResolver={{ $config.tls.certResolver }}"
+          {{- end }}
+          {{- if $config.tls.domains }}
+          {{- range $index, $domain := $config.tls.domains }}
+          {{- if $domain.main }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].main={{ $domain.main }}"
+          {{- end }}
+          {{- if $domain.sans }}
+          - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," $domain.sans }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- with .Values.logs }}
           {{- if .general.format }}
