@@ -102,5 +102,5 @@ tests:
             path: spec.template.spec.containers[0].volumeMounts[3].name
             value: foo-logs
         - equal:
-            path: spec.template.spec.volumes[4].mountPath
+            path: spec.template.spec.containers[0].volumeMounts[3].mountPath
             value: /var/log/traefik
