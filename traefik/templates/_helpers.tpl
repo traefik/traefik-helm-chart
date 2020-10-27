@@ -52,11 +52,11 @@ Users can provide an override for an explicit service they want bound via `.Valu
 {{- end -}}
 
 {{/*
-Construct a comma-separated list of watched namespaces
+Construct a comma-separated list of whitelisted namespaces
 */}}
 {{- define "providers.kubernetesIngress.namespaces" -}}
-{{- join "," .Values.providers.kubernetesIngress.namespaces }}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
 {{- define "providers.kubernetesCRD.namespaces" -}}
-{{- join "," .Values.providers.kubernetesCRD.namespaces }}
-{{- end -}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesCRD.namespaces) }}
+{{- end -}}
