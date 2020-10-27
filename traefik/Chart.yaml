@@ -10,6 +10,7 @@ keywords:
 home: https://traefik.io/
 sources:
   - https://github.com/traefik/traefik
+  - https://github.com/traefik/traefik-helm-chart
 maintainers:
   - name: emilevauge
     email: emile@vauge.com
