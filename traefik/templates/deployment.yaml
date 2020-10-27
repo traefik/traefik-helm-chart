@@ -151,8 +151,8 @@ spec:
           {{- end }}
           {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
-          - "--providers.kubernetescrd.namespaces={{ .Release.Namespace }}"
-          - "--providers.kubernetesingress.namespaces={{ .Release.Namespace }}"
+          - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . | default .Release.Namespace }}"
+          - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . | default .Release.Namespace }}"
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config.redirectTo }}
