@@ -49,6 +49,10 @@ spec:
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      {{- if .Values.deployment.imagePullSecrets }}
+      imagePullSecrets:
+{{ toYaml .Values.deployment.imagePullSecrets | indent 6 }}
+      {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
