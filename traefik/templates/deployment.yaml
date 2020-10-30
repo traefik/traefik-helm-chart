@@ -51,7 +51,7 @@ spec:
     spec:
       {{- if .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
-{{ toYaml .Values.deployment.imagePullSecrets | indent 6 }}
+        {{ toYaml .Values.deployment.imagePullSecrets }}
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
