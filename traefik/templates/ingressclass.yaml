@@ -1,6 +1,11 @@
-{{- if .Values.ingressClass.enabled -}}
-  {{- if and (semverCompare ">=1.18-0" .Capabilities.KubeVersion.Version) (semverCompare ">=2.3" .Values.image.tag) -}}
+{{- if and .Values.ingressClass.enabled (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" }}
+apiVersion: networking.k8s.io/v1
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
+  {{- else }}
+    {{- fail "\n\n ERROR: You must have atleast networking.k8s.io/v1beta1 to use ingressClass" }}
+  {{- end }}
 kind: IngressClass
 metadata:
   annotations:
@@ -13,5 +18,4 @@ metadata:
   name: {{ template "traefik.fullname" . }}
 spec:
   controller: traefik.io/ingress-controller
-  {{- end }}
 {{- end }}
