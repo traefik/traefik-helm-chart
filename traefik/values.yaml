@@ -42,6 +42,9 @@ deployment:
     #       mountPath: /data
   # Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
+  # Additional imagePullSecrets
+  imagePullSecrets: []
+   # - name: myRegistryKeySecretName
 
 # Pod disruption budget
 podDisruptionBudget:
