@@ -168,6 +168,10 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].imagePullPolicy
           value: Always
+  - it: should have no imagePullSecrets
+    asserts:
+      - isEmpty:
+          path: spec.template.spec.imagePullSecrets
   - it: should have imagePullSecrets with specified value
     set:
       deployment:
@@ -177,3 +181,16 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[0].name
           value: myRegistryKeySecretName
+  - it: should have multiple imagePullSecrets with specified value
+    set:
+      deployment:
+        imagePullSecrets: 
+          - name: myRegistryKeySecretName
+          - name: myOtherRegistryKeySecretName
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: myRegistryKeySecretName
+      - equal:
+          path: spec.template.spec.imagePullSecrets[1].name
+          value: myOtherRegistryKeySecretName
