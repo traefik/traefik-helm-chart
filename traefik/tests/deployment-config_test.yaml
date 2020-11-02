@@ -194,3 +194,4 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[1].name
           value: myOtherRegistryKeySecretName
+
