@@ -111,6 +111,12 @@ volumes: []
 #   mountPath: "/config"
 #   type: configMap
 
+# Additional volumeMounts to add to the Traefik container
+additionalVolumeMounts: []
+  # For instance when using a logshipper for access logs
+  # - name: traefik-logs
+  #   mountPath: /var/log/traefik
+
 # Logs
 # https://docs.traefik.io/observability/logs/
 logs:

@@ -125,6 +125,9 @@ spec:
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
+          {{- if .Values.additionalVolumeMounts }}
+            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
+          {{- end }}
         args:
           {{- with .Values.globalArguments }}
           {{- range . }}

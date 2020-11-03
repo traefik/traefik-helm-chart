@@ -92,3 +92,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http.tls.domains[0].sans=alt1.domain.tld,alt2.domain.tld"
+  - it: should have additional volumeMounts
+    set:
+      additionalVolumeMounts:
+        - name: foo-logs
+          mountPath: /var/log/traefik
+      asserts:
+        - equal:
+            path: spec.template.spec.containers[0].volumeMounts[3].name
+            value: foo-logs
+        - equal:
+            path: spec.template.spec.containers[0].volumeMounts[3].mountPath
+            value: /var/log/traefik
