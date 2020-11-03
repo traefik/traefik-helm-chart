@@ -88,8 +88,12 @@ rollingUpdate:
 providers:
   kubernetesCRD:
     enabled: true
+    namespaces: []
+      # - "default"
   kubernetesIngress:
     enabled: true
+    namespaces: []
+      # - "default"
     # IP used for Kubernetes Ingress endpoints
     publishedService:
       enabled: false

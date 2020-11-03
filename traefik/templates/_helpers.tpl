@@ -50,3 +50,13 @@ Users can provide an override for an explicit service they want bound via `.Valu
 {{- $servicePath := default $defServiceName .Values.providers.kubernetesIngress.publishedService.pathOverride }}
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
+
+{{/*
+Construct a comma-separated list of whitelisted namespaces
+*/}}
+{{- define "providers.kubernetesIngress.namespaces" -}}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesIngress.namespaces) }}
+{{- end -}}
+{{- define "providers.kubernetesCRD.namespaces" -}}
+{{- default .Release.Namespace (join "," .Values.providers.kubernetesCRD.namespaces) }}
+{{- end -}}

@@ -21,6 +21,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.namespaces=NAMESPACE"
+  - it: should have a custom string of watched namespaces when specified in configuration
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesCRD:
+          enabled: true
+          namespaces:
+          - "foo"
+          - "bar"
+        kubernetesIngress:
+          enabled: true
+          namespaces:
+          - "foo"
+          - "bar"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.namespaces=foo,bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.namespaces=foo,bar"
   - it: should have disable published Kubernetes service when default configuration
     asserts:
       - notContains:
