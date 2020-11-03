@@ -4,6 +4,7 @@ description: A Traefik based Kubernetes ingress controller
 type: application
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 version: 9.9.0
 =======
 version: 9.8.3
@@ -11,6 +12,9 @@ version: 9.8.3
 =======
 version: 9.8.4
 >>>>>>> Increment chart version
+=======
+version: 9.10.0
+>>>>>>> bump version of chart
 appVersion: 2.3.1
 keywords:
   - traefik
