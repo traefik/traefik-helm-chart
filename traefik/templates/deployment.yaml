@@ -48,6 +48,9 @@ spec:
         helm.sh/chart: {{ template "traefik.chart" . }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- with .Values.deployment.podLabels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
     spec:
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
