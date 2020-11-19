@@ -175,7 +175,7 @@ tests:
   - it: should have imagePullSecrets with specified value
     set:
       deployment:
-        imagePullSecrets: 
+        imagePullSecrets:
           - name: myRegistryKeySecretName
     asserts:
       - equal:
@@ -184,7 +184,7 @@ tests:
   - it: should have multiple imagePullSecrets with specified value
     set:
       deployment:
-        imagePullSecrets: 
+        imagePullSecrets:
           - name: myRegistryKeySecretName
           - name: myOtherRegistryKeySecretName
     asserts:
@@ -194,4 +194,12 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[1].name
           value: myOtherRegistryKeySecretName
-
+  - it: should have customized labels when specified via values
+    set:
+      deployment:
+        podLabels:
+          custom-label: custom-value
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels.custom-label
+          value: custom-value
