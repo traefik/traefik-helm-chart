@@ -397,7 +397,7 @@ podSecurityContext:
 metrics:
   prometheus:
     # Enable Prometheus metrics
-    enabled: true
+    enabled: false
     # Port used to expose Prometheus metrics
     port: 9090
     serviceMonitor:
