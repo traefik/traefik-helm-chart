@@ -1,0 +1,59 @@
+{{- if .Values.metrics.prometheus.serviceMonitor.enabled }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "traefik.fullname" . }}-metrics
+  labels:
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: metrics
+spec:
+  ports:
+  - name: metrics
+    port: {{ .Values.metrics.prometheus.port }}
+    protocol: TCP
+    targetPort: metrics
+  selector:
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  type: ClusterIP
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- if .Values.metrics.prometheus.serviceMonitor.labels }}
+{{ .Values.metrics.prometheus.serviceMonitor.labels | toYaml | indent 4 }}
+{{- end }}
+spec:
+  endpoints:
+  - port: metrics
+    honorLabels: true
+{{- if .Values.metrics.prometheus.serviceMonitor.interval }}
+    interval: {{ .Values.metrics.prometheus.serviceMonitor.interval }}
+{{- end }}
+{{- if .Values.metrics.prometheus.serviceMonitor.metricRelabelings }}
+    metricRelabelings:
+{{ tpl (toYaml .Values.metrics.prometheus.serviceMonitor.metricRelabelings | indent 6) . }}
+{{- end }}
+{{- if .Values.metrics.prometheus.serviceMonitor.relabelings }}
+    relabelings:
+{{ toYaml .Values.metrics.prometheus.serviceMonitor.relabelings | indent 6 }}
+{{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "traefik.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: metrics
+  namespaceSelector:
+    matchNames:
+    - {{ .Release.Namespace | quote }}
+{{- end }}

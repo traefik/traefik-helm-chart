@@ -392,3 +392,16 @@ securityContext:
 
 podSecurityContext:
   fsGroup: 65532
+
+# Configure metrics
+metrics:
+  prometheus:
+    # Enable Prometheus metrics
+    enabled: true
+    # Port used to expose Prometheus metrics
+    port: 9090
+    serviceMonitor:
+      # Enable deployment of Prometheus Operator ServiceMonitor resource
+      enabled: true
+      # Additional labels for the ServiceMonitor
+      labels: {}
