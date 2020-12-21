@@ -60,3 +60,16 @@ Construct a comma-separated list of whitelisted namespaces
 {{- define "providers.kubernetesCRD.namespaces" -}}
 {{- default .Release.Namespace (join "," .Values.providers.kubernetesCRD.namespaces) }}
 {{- end -}}
+
+{{/*
+Renders a value that contains template.
+Usage:
+{{ include "traefik.tplValue" ( dict "value" .Values.path.to.the.Value "context" $) }}
+*/}}
+{{- define "traefik.tplValue" -}}
+{{- if typeIs "string" .value }}
+{{- tpl .value .context }}
+{{- else }}
+{{- tpl (.value | toYaml) .context }}
+{{- end }}
+{{- end -}}
