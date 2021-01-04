@@ -65,6 +65,8 @@ For instance, the dashboard access could be achieved through a port-forward :
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 ```
 
+Accessible with the url: http://127.0.0.1:9000/dashboard/
+
 Another way would be to apply your own configuration, for instance,
 by defining and applying an IngressRoute CRD (`kubectl apply -f dashboard.yaml`):
 
@@ -84,6 +86,8 @@ spec:
         - name: api@internal
           kind: TraefikService
 ```
+
+Accessible with the url: http://traefik.localhost/dashboard/
 
 ## Contributing
 

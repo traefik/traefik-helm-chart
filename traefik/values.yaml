@@ -10,7 +10,9 @@ image:
 #
 deployment:
   enabled: true
-  # Number of pods of the deployment
+  # Can be either Deployment or DaemonSet
+  kind: Deployment
+  # Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 1
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
