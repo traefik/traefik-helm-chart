@@ -1,6 +1,5 @@
 {{- if .Release.IsUpgrade }}
-Upgrading CRDs is not supported. Delete and reinstall helm chart or apply missing crds:
+NOTE: If upgrading from traefik version 2.3 or earlier please reinstall helm chart or apply CRDs manually:
 
-Upgrading 2.x -> 2.4:
  kubectl apply -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/v{{ .Chart.Version }}/traefik/crds/serverstransports.yaml
 {{- end }}
