@@ -61,4 +61,52 @@ rules:
     verbs:
       - use
 {{- end -}}
+{{- if .Values.experimental.kubernetesServiceAPI.enabled }}
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - gatewayclasses
+      - gatewayclasses/status
+      - gateways
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - gatewayclasses/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - gateways/status
+    verbs:
+      - get
+      - patch
+      - update
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - httproutes
+    verbs:
+      - create
+      - delete
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - networking.x-k8s.io
+    resources:
+      - httproutes/status
+    verbs:
+      - get
+      - patch
+      - update
+{{- end -}}
 {{- end -}}
