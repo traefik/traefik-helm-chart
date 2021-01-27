@@ -71,6 +71,8 @@ pilot:
 experimental:
   plugins:
     enabled: false
+  kubernetesServiceAPI:
+    enabled: false
 
 # Create an IngressRoute for the dashboard
 ingressRoute:

@@ -114,6 +114,10 @@
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
           {{- end }}
+          {{- if .Values.experimental.kubernetesServiceAPI.enabled }}
+          - "--providers.kubernetesgateway"
+          - "--experimental.kubernetesgateway"
+          {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . }}"
