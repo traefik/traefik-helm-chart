@@ -190,3 +190,25 @@ tests:
           content:
             key: "RSA"
             operator: "Destructor"
+  - it: should have all k8s provider enabled when service api is enabled
+    set:
+      experimental:
+        kubernetesServiceAPI:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetescrd"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesingress"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesgateway"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesgateway"
