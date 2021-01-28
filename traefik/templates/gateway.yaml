@@ -1,11 +1,4 @@
 {{- if .Values.experimental.kubernetesServiceAPI.enabled }}
----
-kind: GatewayClass
-apiVersion: networking.x-k8s.io/v1alpha1
-metadata:
-  name: traefik
-spec:
-  controller: traefik.io/gateway-controller
 --- 
 apiVersion: networking.x-k8s.io/v1alpha1
 kind: Gateway
@@ -20,25 +13,22 @@ spec:
       protocol: HTTP
       routes: 
         kind: HTTPRoute
-        namespaces: 
-          from: Same
         selector: 
           matchLabels: 
             app: {{ .Values.experimental.kubernetesServiceAPI.appLabelSelector }}
-
     {{- range $index, $cert:= .Values.experimental.kubernetesServiceAPI.certificates }}
     - 
-      port: {{ .Values.ports.websecure.port }}
+      port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
+      tls:
+        certificateRef:
+          name: {{ $cert.name }}
+          group: {{ $cert.group }}
+          kind: {{ $cert.kind }}
       routes: 
         kind: HTTPRoute
         selector: 
           matchLabels: 
-            app: {{ .Values.experimental.kubernetesServiceAPI.appLabelSelector }}
-      tls: 
-        {{- with .Values.experimental.kubernetesServiceAPI.certificates }}
-        certificateRef: :
-        {{- toYaml . | nindent 6 }}
-        {{- end }}
+            app: {{ $.Values.experimental.kubernetesServiceAPI.appLabelSelector }}
     {{- end }}
 {{- end }}
