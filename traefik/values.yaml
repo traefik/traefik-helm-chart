@@ -338,6 +338,10 @@ hostNetwork: false
 rbac:
   enabled: true
 
+  # Adds aggregated admin, edit and view clusterroles
+  # ref: https://kubernetes.io/docs/reference/access-authn-authz/rbac/#aggregated-clusterroles
+  aggregatedClusterRoles: false
+
   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
   # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
   namespaced: false

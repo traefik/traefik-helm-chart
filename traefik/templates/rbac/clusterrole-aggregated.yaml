@@ -1,8 +1,9 @@
-{{ if .Values.rbac.enabled }}
+{{- if and .Values.rbac.enabled .Values.rbac.aggregatedClusterRoles -}}
+---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name:  {{ template "traefik.fullname" . }}-admin
+  name: {{ template "traefik.fullname" . }}-admin
   labels:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
     helm.sh/chart: {{ template "traefik.chart" . }}
@@ -56,4 +57,4 @@ rules:
   - get
   - list
   - watch
-{{ end }}
+{{- end -}}
