@@ -6,9 +6,6 @@ tests:
           of: ClusterRole
         template: rbac/clusterrole.yaml
       - isKind:
-          of: ClusterRole
-        template: rbac/clusterrole-aggregated.yaml
-      - isKind:
           of: ClusterRoleBinding
         template: rbac/clusterrolebinding.yaml
       - hasDocuments:
@@ -40,9 +37,6 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/clusterrole.yaml
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrole-aggregated.yaml
       - hasDocuments:
           count: 0
         template: rbac/clusterrolebinding.yaml
@@ -85,3 +79,15 @@ tests:
           path: subjects[0].name
           value: foobar
         template: rbac/clusterrolebinding.yaml
+  - it: should create aggregated clusterroles
+    set:
+      rbac:
+        enabled: true
+        aggregatedClusterRoles: true
+    asserts:
+      - isKind:
+          of: ClusterRole
+        template: rbac/clusterrole-aggregated.yaml
+      - hasDocuments:
+          count: 2
+        template: rbac/clusterrole-aggregated.yaml
