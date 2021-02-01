@@ -71,7 +71,7 @@ pilot:
 experimental:
   plugins:
     enabled: false
-  kubernetesServiceAPI:
+  kubernetesGateway:
     enabled: false
     appLabelSelector: "traefik"
     certificates: []

@@ -61,7 +61,7 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if .Values.experimental.kubernetesServiceAPI.enabled }}
+{{- if .Values.experimental.kubernetesGateway.enabled }}
   - apiGroups:
       - networking.x-k8s.io
     resources:

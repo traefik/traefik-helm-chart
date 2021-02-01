@@ -2,10 +2,10 @@ suite: Gateway configuration
 templates:
   - gateway.yaml
 tests:
-  - it: should have 1 gateway with the correct class and an http port
+  - it: should have one gateway with the correct class and an http port
     set:
       experimental:
-        kubernetesServiceAPI:
+        kubernetesGateway:
           enabled: true
     asserts:
       - equal:
@@ -14,10 +14,10 @@ tests:
       - equal:
           path: spec.listeners[0].port
           value: 8000
-  - it: should have 1 gateway with the correct class and an http port as well as an https port
+  - it: should have one gateway with the correct class and an http port as well as an https port
     set:
       experimental:
-        kubernetesServiceAPI:
+        kubernetesGateway:
           enabled: true
           certificates:
             - name: "my-name"

@@ -114,7 +114,7 @@
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
           {{- end }}
-          {{- if .Values.experimental.kubernetesServiceAPI.enabled }}
+          {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--providers.kubernetesgateway"
           - "--experimental.kubernetesgateway"
           {{- end }}

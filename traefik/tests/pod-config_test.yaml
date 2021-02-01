@@ -190,10 +190,10 @@ tests:
           content:
             key: "RSA"
             operator: "Destructor"
-  - it: should have all k8s provider enabled when service api is enabled
+  - it: should have all k8s provider enabled when gateway provider is enabled
     set:
       experimental:
-        kubernetesServiceAPI:
+        kubernetesGateway:
           enabled: true
     asserts:
       - contains:
