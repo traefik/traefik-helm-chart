@@ -190,3 +190,21 @@ tests:
           content:
             key: "RSA"
             operator: "Destructor"
+  - it: should have all k8s provider enabled when gateway provider is enabled
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetescrd"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesingress"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesgateway"
