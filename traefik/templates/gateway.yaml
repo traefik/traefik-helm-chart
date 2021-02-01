@@ -8,17 +8,16 @@ metadata:
 spec: 
   gatewayClassName: traefik
   listeners: 
-    - 
-      port: {{ .Values.ports.web.port }}
+    - port: {{ .Values.ports.web.port }}
       protocol: HTTP
       routes: 
         kind: HTTPRoute
         selector: 
           matchLabels: 
             app: {{ .Values.experimental.kubernetesServiceAPI.appLabelSelector }}
+
     {{- range $index, $cert:= .Values.experimental.kubernetesServiceAPI.certificates }}
-    - 
-      port: {{ $.Values.ports.websecure.port }}
+    - port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
       tls:
         certificateRef:

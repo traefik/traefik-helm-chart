@@ -20,8 +20,7 @@ tests:
         kubernetesServiceAPI:
           enabled: true
           certificates:
-            - 
-              name: "my-name"
+            - name: "my-name"
               group: "my-group"
               kind: "my-kind"
     asserts:
@@ -43,5 +42,3 @@ tests:
       - equal:
           path: spec.listeners[1].tls.certificateRef.kind
           value: "my-kind"
-
-

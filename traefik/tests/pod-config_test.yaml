@@ -208,7 +208,3 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetesgateway"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesgateway"
