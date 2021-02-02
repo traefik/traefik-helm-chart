@@ -71,6 +71,13 @@ pilot:
 experimental:
   plugins:
     enabled: false
+  kubernetesGateway:
+    enabled: false
+    appLabelSelector: "traefik"
+    certificates: []
+    # - group: "core"
+    #   kind: "Secret"
+    #   name: "mysecret"
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
