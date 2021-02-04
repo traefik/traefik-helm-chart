@@ -71,6 +71,29 @@ tests:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 2
+  - it: should have a readiness probe with specified values
+    set:
+      readinessProbe:
+        httpGet:
+          path: /pingpong
+          port: 9001
+        failureThreshold: 12
+        initialDelaySeconds: 34
+        periodSeconds: 56
+        successThreshold: 78
+        timeoutSeconds: 90
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe
+          value:
+            httpGet:
+              path: /pingpong
+              port: 9001
+            failureThreshold: 12
+            initialDelaySeconds: 34
+            periodSeconds: 56
+            successThreshold: 78
+            timeoutSeconds: 90
   - it: should have a default liveness probe
     asserts:
       - equal:
@@ -84,3 +107,26 @@ tests:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 2
+  - it: should have a liveness probe with specified values
+    set:
+      livenessProbe:
+        httpGet:
+          path: /pingpong
+          port: 9001
+        failureThreshold: 12
+        initialDelaySeconds: 34
+        periodSeconds: 56
+        successThreshold: 78
+        timeoutSeconds: 90
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            httpGet:
+              path: /pingpong
+              port: 9001
+            failureThreshold: 12
+            initialDelaySeconds: 34
+            periodSeconds: 56
+            successThreshold: 78
+            timeoutSeconds: 90
