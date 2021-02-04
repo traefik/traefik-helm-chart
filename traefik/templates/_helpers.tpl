@@ -7,6 +7,18 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "traefik.hasingressclass" -}}
+{{- if eq .Values.image.tag == "latest" -}}
+true
+{{- else -}}
+{{- if semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag) -}}
+true
+{{- else -}}
+false
+{{- end -}}
+{{- end -}}
+{{- end -}}
+
 {{/*
 Create chart name and version as used by the chart label.
 */}}
