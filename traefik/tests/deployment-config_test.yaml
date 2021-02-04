@@ -58,3 +58,29 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
+  - it: should have a default readiness probe
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe
+          value:
+            httpGet:
+              path: /ping
+              port: 9000
+            failureThreshold: 1
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
+  - it: should have a default liveness probe
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe
+          value:
+            httpGet:
+              path: /ping
+              port: 9000
+            failureThreshold: 3
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 2
