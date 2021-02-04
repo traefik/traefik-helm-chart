@@ -36,23 +36,13 @@
           {{- toYaml . | nindent 10 }}
           {{- end }}
         readinessProbe:
-          httpGet:
-            path: /ping
-            port: {{ .Values.ports.traefik.port }}
-          failureThreshold: 1
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
+          {{- with .Values.readinessProbe }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         livenessProbe:
-          httpGet:
-            path: /ping
-            port: {{ .Values.ports.traefik.port }}
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
+          {{- with .Values.livenessProbe }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}
