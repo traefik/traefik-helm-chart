@@ -33,7 +33,7 @@ deployment:
   additionalVolumes: []
     # - name: dsdsocket
     #   hostPath:
-    #   path: /var/run/statsd-exporter
+    #     path: /var/run/statsd-exporter
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
@@ -71,6 +71,13 @@ pilot:
 experimental:
   plugins:
     enabled: false
+  kubernetesGateway:
+    enabled: false
+    appLabelSelector: "traefik"
+    certificates: []
+    # - group: "core"
+    #   kind: "Secret"
+    #   name: "mysecret"
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
