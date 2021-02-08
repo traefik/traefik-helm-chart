@@ -58,3 +58,11 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
+  - it: should have strategy with specified values
+    set:
+      deployment:
+        strategy: Recreate
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: Recreate

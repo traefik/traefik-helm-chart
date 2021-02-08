@@ -32,10 +32,12 @@ spec:
       app.kubernetes.io/name: {{ template "traefik.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
   strategy:
-    type: RollingUpdate
+    type: {{ default "RollingUpdate" .Values.deployment.strategy }}
+    {{- if eq (default "RollingUpdate" .Values.deployment.strategy) "RollingUpdate" }}
     rollingUpdate:
       {{- with .Values.rollingUpdate }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+    {{- end }}
   template: {{ template "traefik.podTemplate" . }}
 {{- end -}}
