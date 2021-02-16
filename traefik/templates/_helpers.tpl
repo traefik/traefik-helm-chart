@@ -8,7 +8,7 @@ Expand the name of the chart.
 {{- end -}}
 
 {{- define "traefik.hasingressclass" -}}
-{{- if eq .Values.image.tag == "latest" -}}
+{{- if eq .Values.image.tag "latest" -}}
 true
 {{- else -}}
 {{- if semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag) -}}
