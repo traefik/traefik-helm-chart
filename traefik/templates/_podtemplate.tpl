@@ -233,9 +233,8 @@
         - name: plugins
           emptyDir: {}
         {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
+      {{- if .Values.affinity }}
+      affinity: {{- include "traefik.tplValue" (dict "value" .Values.affinity "context" $) | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
