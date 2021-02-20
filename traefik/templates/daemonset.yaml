@@ -1,8 +1,8 @@
 {{- if and .Values.deployment.enabled (eq .Values.deployment.kind "DaemonSet") -}}
   {{- with .Values.additionalArguments -}}
     {{- range . -}}
-      {{- if contains ".acme." . -}}
-        {{- fail (printf "ACME functionality is not supported when running Traefik as a DaemonSet") -}}
+      {{- if (or (contains ".acme.tlschallenge" .) (contains ".acme.httpchallenge" .) ) -}}
+        {{- fail (printf "ACME with TLS or HTTP challenge is not supported when running Traefik as a DaemonSet") -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}

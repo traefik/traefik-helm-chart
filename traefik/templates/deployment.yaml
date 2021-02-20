@@ -2,8 +2,8 @@
   {{- if gt (int .Values.deployment.replicas) 1 -}}
     {{- with .Values.additionalArguments -}}
       {{- range . -}}
-        {{- if contains ".acme." . -}}
-          {{- fail (printf "You can not enabled acme if you set more than one traefik replica") -}}
+        {{- if (or (contains ".acme.tlschallenge" .) (contains ".acme.httpchallenge" .) ) -}}
+          {{- fail (printf "You can not enable ACME using TLS or HTTP challenge if you set more than one traefik replica") -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
