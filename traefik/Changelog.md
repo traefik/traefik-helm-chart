@@ -1,8 +1,37 @@
 # Change Log
 
+## 20.2.0 
+
+**Release date:** 2021-02-27
+
+![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* Adds support for namespace overrides in subchart use 
+* Document recent changes in the README (#717) 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 97a1b71..a1ef792 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -725,5 +725,7 @@ podSecurityContext:
+ # Extra objects to deploy (value evaluated as a template)
+ #
+ # In some cases, it can avoid the need for additional, extended or adhoc deployments.
+-# See #595 for more details and traefik/tests/extra.yaml for example.
++# See #595 for more details and traefik/tests/values/extra.yaml for example.
+ extraObjects: []
++
++# namespaceOverride: traefik
+```
+
 ## 20.1.1 
 
-**Release date:** 2022-11-09
+**Release date:** 2022-11-10
 
 ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
