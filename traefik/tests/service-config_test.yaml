@@ -90,3 +90,34 @@ tests:
       - equal:
           path: items[1].spec.ports[0].protocol
           value: UDP
+  - it: should use helm managed namespace as default behavior
+    set:
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: items[1].metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].metadata.namespace
+          value: "traefik-ns-override"
+      - equal:
+          path: items[1].metadata.namespace
+          value: "traefik-ns-override"

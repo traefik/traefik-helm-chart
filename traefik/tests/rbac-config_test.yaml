@@ -79,3 +79,22 @@ tests:
           path: subjects[0].name
           value: foobar
         template: rbac/clusterrolebinding.yaml
+  - it: should use helm managed namespace as default behavior
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/role.yaml 
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+        template: rbac/role.yaml 

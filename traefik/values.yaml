@@ -401,3 +401,5 @@ securityContext:
 
 podSecurityContext:
   fsGroup: 65532
+
+# namespaceOverride: traefik
