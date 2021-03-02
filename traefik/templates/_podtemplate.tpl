@@ -20,7 +20,7 @@
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
       hostNetwork: {{ .Values.hostNetwork }}
-      {{- if and ( .Capabilities) (semverCompare ">=1.19.0" .Capabilities.KubeVersion.Version) (.Values.topologySpreadConstraints) }}
+      {{- if .Values.topologySpreadConstraints }}
       topologySpreadConstraints: {{ toYaml .Values.topologySpreadConstraints | nindent 8 }}
       {{- end }}
       {{- with .Values.deployment.dnsPolicy }}
@@ -75,7 +75,7 @@
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-          - name: {{ .Values.persistence.name }}
+          - name: data
             mountPath: {{ .Values.persistence.path }}
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
@@ -209,7 +209,7 @@
         {{- toYaml .Values.deployment.additionalContainers | nindent 6 }}
       {{- end }}
       volumes:
-        - name: {{ .Values.persistence.name }}
+        - name: data
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
