@@ -126,3 +126,16 @@ tests:
         - equal:
             path: spec.template.spec.containers[0].volumeMounts[3].mountPath
             value: /var/log/traefik
+  - it: should set KubernetesCRD allowCrossNamespace
+    set:
+      providers:
+        kubernetesCRD:
+          allowCrossNamespace: false
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowcrossnamespace=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd"
