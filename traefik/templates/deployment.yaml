@@ -3,7 +3,7 @@
     {{- with .Values.additionalArguments -}}
       {{- range . -}}
         {{- if contains ".acme." . -}}
-          {{- fail (printf "You can not enabled acme if you set more than one traefik replica") -}}
+          {{- fail (printf "You can not enable acme if you set more than one traefik replica") -}}
         {{- end -}}
       {{- end -}}
     {{- end -}}
