@@ -12,6 +12,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
     helm.sh/chart: {{ template "traefik.chart" . }}

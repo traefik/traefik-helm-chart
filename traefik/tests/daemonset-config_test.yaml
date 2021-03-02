@@ -28,3 +28,20 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
+  - it: should use helm managed namespace as default behavior
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"

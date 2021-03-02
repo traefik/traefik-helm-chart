@@ -14,6 +14,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
     helm.sh/chart: {{ template "traefik.chart" . }}
