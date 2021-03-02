@@ -126,3 +126,26 @@ tests:
         - equal:
             path: spec.template.spec.containers[0].volumeMounts[3].mountPath
             value: /var/log/traefik
+  - it: should set custom probe port
+    set:
+      additionalArguments:
+        - --ping
+        - --ping.entrypoint=web
+      ports:
+        traefik:
+          port: 9000
+          healthchecksPort: 9001
+          exposedPort: 9000
+      asserts:
+        - equal:
+            path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+            content: 9001
+        - equal:
+            path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+            content: 9001
+        - contains:
+            path: spec.template.spec.containers[0].args
+            content: "--ping"
+        - contains:
+            path: spec.template.spec.containers[0].args
+            content: "--ping.entrypoint=web"
