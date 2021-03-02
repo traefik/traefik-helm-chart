@@ -69,6 +69,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
+  - it: should match ingresses based on input label
+    set:
+        providers:
+          kubernetesIngress:
+            labelSelector: environment=devel
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.labelSelector=environment=devel"
   - it: should have a plugin storage if the experimental feature is enabled
     set:
       experimental:
