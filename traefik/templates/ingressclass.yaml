@@ -1,12 +1,13 @@
-{{- $hasigclass := "traefik.hasingressclass" }}
-{{- if and .Values.ingressClass.enabled (eq $hasigclass "true") -}}
-  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
+{{- if .Values.ingressClass.enabled -}}
+  {{- $hasigclass := "traefik.hasingressclass" }}
+  {{- if $hasigclass }}
+    {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
 apiVersion: networking.k8s.io/v1
-  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
+    {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
 apiVersion: networking.k8s.io/v1beta1
-  {{- else }}
-    {{- fail "\n\n ERROR: You must have atleast networking.k8s.io/v1beta1 to use ingressClass" }}
-  {{- end }}
+    {{- else }}
+      {{- fail "\n\n ERROR: You must have atleast networking.k8s.io/v1beta1 to use ingressClass" }}
+    {{- end }}
 kind: IngressClass
 metadata:
   annotations:
@@ -19,4 +20,5 @@ metadata:
   name: {{ template "traefik.fullname" . }}
 spec:
   controller: traefik.io/ingress-controller
+  {{- end }}
 {{- end }}
