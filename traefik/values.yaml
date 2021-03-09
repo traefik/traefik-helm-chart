@@ -16,6 +16,8 @@ deployment:
   replicas: 1
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
+  # Additional deployment labels (e.g. for filtering deployment by custom labels)
+  labels: {}
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
   # Additional Pod labels (e.g. for filtering Pod by custom labels)
