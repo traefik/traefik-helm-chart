@@ -219,3 +219,22 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetesgateway"
+  - it: should have topologySpreadConstraints enabled with specified values
+    set:
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: failure-domain.beta.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0]
+          value:
+            maxSkew: 1
+            topologyKey: failure-domain.beta.kubernetes.io/zone
+            whenUnsatisfiable: DoNotSchedule
+            labelSelector:
+              matchLabels:
+                app.kubernetes.io/instance: traefik
