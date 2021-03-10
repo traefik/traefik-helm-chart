@@ -1,4 +1,4 @@
-{{- if .Values.ingressClass.enabled -}}
+{{- if and .Values.ingressClass.enabled (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}
   {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
 apiVersion: networking.k8s.io/v1
   {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
