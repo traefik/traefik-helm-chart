@@ -42,7 +42,7 @@
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -51,7 +51,7 @@
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
