@@ -7,15 +7,11 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "traefik.hasingressclass" -}}
+{{- define "traefik.faultytag" -}}
 {{- if eq .Values.image.tag "latest" -}}
 true
 {{- else -}}
-{{- if semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag) -}}
-true
-{{- else -}}
 false
-{{- end -}}
 {{- end -}}
 {{- end -}}
 

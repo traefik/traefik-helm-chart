@@ -1,3 +1,7 @@
+{{- $faultytag := "traefik.faultytag" }}
+{{- if $faultytag }}
+  {{- fail "\n\n ERROR: latest tag should not be used" }}
+{{- end }}
 {{- define "traefik.podTemplate" }}
     metadata:
       annotations:
