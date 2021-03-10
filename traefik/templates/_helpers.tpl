@@ -7,14 +7,6 @@ Expand the name of the chart.
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "traefik.faultytag" -}}
-{{- if eq .Values.image.tag "latest" -}}
-true
-{{- else -}}
-false
-{{- end -}}
-{{- end -}}
-
 {{/*
 Create chart name and version as used by the chart label.
 */}}

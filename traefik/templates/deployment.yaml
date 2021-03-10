@@ -8,6 +8,9 @@
       {{- end -}}
     {{- end -}}
   {{- end -}}
+  {{- if eq (default .Chart.AppVersion .Values.image.tag) "latest" }}
+    {{- fail "\n\n ERROR: latest tag should not be used" }}
+  {{- end }}
 
 ---
 apiVersion: apps/v1
