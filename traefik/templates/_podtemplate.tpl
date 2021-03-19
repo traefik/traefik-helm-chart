@@ -38,7 +38,7 @@
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -47,7 +47,7 @@
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -72,7 +72,7 @@
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
-          - name: data
+          - name: {{ .Values.persistence.name }}
             mountPath: {{ .Values.persistence.path }}
             {{- if .Values.persistence.subPath }}
             subPath: {{ .Values.persistence.subPath }}
@@ -112,6 +112,9 @@
           - "--providers.kubernetesingress"
           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.labelSelector }}
+          - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
           {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
@@ -206,7 +209,7 @@
         {{- toYaml .Values.deployment.additionalContainers | nindent 6 }}
       {{- end }}
       volumes:
-        - name: data
+        - name: {{ .Values.persistence.name }}
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
