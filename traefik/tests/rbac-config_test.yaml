@@ -79,3 +79,15 @@ tests:
           path: subjects[0].name
           value: foobar
         template: rbac/clusterrolebinding.yaml
+  - it: should create aggregated clusterroles
+    set:
+      rbac:
+        enabled: true
+        aggregatedClusterRoles: true
+    asserts:
+      - isKind:
+          of: ClusterRole
+        template: rbac/clusterrole-aggregated.yaml
+      - hasDocuments:
+          count: 2
+        template: rbac/clusterrole-aggregated.yaml
