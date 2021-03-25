@@ -23,8 +23,20 @@
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
+      {{- $root := . }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
+      {{- if $root.Values.persistence.enabled }}
+      - name: fix-permissions-acme-json
+        image: busybox:1.32.1
+        command: [ "sh", "-c", "chmod 600 {{ $root.Values.persistence.path }}/acme.json" ]
+        volumeMounts:
+        - name: {{ $root.Values.persistence.name }}
+          mountPath: {{ $root.Values.persistence.path }}
+          {{- if $root.Values.persistence.subPath }}
+          subPath: {{ $root.Values.persistence.subPath }}
+          {{- end }}
+      {{- end }}
       {{- toYaml . | nindent 6 }}
       {{- end }}
       containers:
