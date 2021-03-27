@@ -238,3 +238,12 @@ tests:
             labelSelector:
               matchLabels:
                 app.kubernetes.io/instance: traefik
+  - it: should have the pilot dashboard disabled
+    set:
+      pilot:
+          dashboard: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--pilot.dashboard=false"

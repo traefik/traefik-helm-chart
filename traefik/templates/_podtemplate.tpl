@@ -116,6 +116,9 @@
           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
+          {{- if .Values.providers.kubernetesIngress.labelSelector }}
+          - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--providers.kubernetesgateway"
@@ -191,6 +194,9 @@
           {{- end }}
           {{- if .Values.pilot.enabled }}
           - "--pilot.token={{ .Values.pilot.token }}"
+          {{- end }}
+          {{- if not .Values.pilot.dashboard}}
+          - "--pilot.dashboard=false"
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
