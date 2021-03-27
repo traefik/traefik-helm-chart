@@ -418,7 +418,7 @@ podSecurityContext:
 # Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
 topologySpreadConstraints: []
 #   - maxSkew: 1
-#     topologyKey: failure-domain.beta.kubernetes.io/zone
+#     topologyKey: topology.kubernetes.io/zone
 #     whenUnsatisfiable: DoNotSchedule
 #     labelSelector:
 #       matchLabels:
