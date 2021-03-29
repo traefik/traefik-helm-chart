@@ -223,7 +223,7 @@ tests:
     set:
       topologySpreadConstraints:
       - maxSkew: 1
-        topologyKey: failure-domain.beta.kubernetes.io/zone
+        topologyKey: topology.kubernetes.io/zone
         whenUnsatisfiable: DoNotSchedule
         labelSelector:
           matchLabels:
@@ -233,7 +233,7 @@ tests:
           path: spec.template.spec.topologySpreadConstraints[0]
           value:
             maxSkew: 1
-            topologyKey: failure-domain.beta.kubernetes.io/zone
+            topologyKey: topology.kubernetes.io/zone
             whenUnsatisfiable: DoNotSchedule
             labelSelector:
               matchLabels:
