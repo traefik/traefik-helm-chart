@@ -194,9 +194,9 @@
           {{- end }}
           {{- if .Values.pilot.enabled }}
           - "--pilot.token={{ .Values.pilot.token }}"
+          {{- if hasKey .Values.pilot "dashboard" }}
+          - "--pilot.dashboard={{ .Values.pilot.dashboard }}"
           {{- end }}
-          {{- if not .Values.pilot.dashboard}}
-          - "--pilot.dashboard=false"
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
