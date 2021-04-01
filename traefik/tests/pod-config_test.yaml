@@ -219,7 +219,20 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetesgateway"
-  - it: should have topologySpreadConstraints enabled with specified values
+  - it: should have the pilot dashboard disabled
+    set:
+      pilot:
+        enabled: true
+        dashboard: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--pilot.dashboard=false"
+  - it: should have topologySpreadConstraints enabled with Kubernetes version >=1.19
+    capabilities:
+      kubeversionmajor: 1
+      kubeversionminor: 19
     set:
       topologySpreadConstraints:
       - maxSkew: 1
@@ -238,13 +251,18 @@ tests:
             labelSelector:
               matchLabels:
                 app.kubernetes.io/instance: traefik
-  - it: should have the pilot dashboard disabled
+  - it: should have topologySpreadConstraints disabled with Kubernetes version <1.19
+    capabilities:
+      kubeversionmajor: 1
+      kubeversionminor: 18
     set:
-      pilot:
-        enabled: true
-        dashboard: false
+      topologySpreadConstraints:
+      - maxSkew: 1
+        topologyKey: topology.kubernetes.io/zone
+        whenUnsatisfiable: DoNotSchedule
+        labelSelector:
+          matchLabels:
+            app.kubernetes.io/instance: traefik
     asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content:
-            "--pilot.dashboard=false"
+      - isNull:
+          path: spec.template.spec.topologySpreadConstraints
