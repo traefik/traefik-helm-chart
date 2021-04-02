@@ -219,10 +219,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetesgateway"
-  - it: should have the pilot dashboard enabled
-    set:
-      pilot:
-        enabled: true
+  - it: should have the pilot dashboard enabled by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
@@ -231,7 +228,6 @@ tests:
   - it: should have the pilot dashboard disabled
     set:
       pilot:
-        enabled: true
         dashboard: false
     asserts:
       - contains:
