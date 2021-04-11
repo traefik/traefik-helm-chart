@@ -122,8 +122,12 @@
           - "--experimental.kubernetesgateway"
           {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . }}"
+          {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config.redirectTo }}
