@@ -63,6 +63,8 @@ ingressClass:
   # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
   enabled: false
   isDefaultClass: false
+  # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
+  fallbackApiVersion:
 
 # Activate Pilot integration
 pilot:
