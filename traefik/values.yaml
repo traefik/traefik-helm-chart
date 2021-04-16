@@ -55,6 +55,8 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
     # - name: myRegistryKeySecretName
+  # Use process namespace sharing
+  shareProcessNamespace: false
 
 # Pod disruption budget
 podDisruptionBudget:

@@ -34,6 +34,9 @@
       initContainers:
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.deployment.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       containers:
       - image: "{{ .Values.image.name }}:{{ default .Chart.AppVersion .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
