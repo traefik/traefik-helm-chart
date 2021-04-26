@@ -10,6 +10,12 @@ tests:
         template: rbac/clusterrolebinding.yaml
       - hasDocuments:
           count: 0
+        template: rbac/ingressclass-clusterrole.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/ingressclass-clusterrolebinding.yaml
+      - hasDocuments:
+          count: 0
         template: rbac/role.yaml
       - hasDocuments:
           count: 0
@@ -42,6 +48,12 @@ tests:
         template: rbac/clusterrolebinding.yaml
       - hasDocuments:
           count: 0
+        template: rbac/ingressclass-clusterrole.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/ingressclass-clusterrolebinding.yaml
+      - hasDocuments:
+          count: 0
         template: rbac/role.yaml
       - hasDocuments:
           count: 0
@@ -57,6 +69,12 @@ tests:
       - isKind:
           of: RoleBinding
         template: rbac/rolebinding.yaml
+      - isKind:
+          of: ClusterRole
+        template: rbac/ingressclass-clusterrole.yaml
+      - isKind:
+          of: ClusterRoleBinding
+        template: rbac/ingressclass-clusterrolebinding.yaml
       - hasDocuments:
           count: 0
         template: rbac/clusterrole.yaml

@@ -201,6 +201,36 @@ tests:
           content:
             key: "RSA"
             operator: "Destructor"
+  - it: should request hostNetwork at Pod level when containerPort equals hostPort
+    set:
+      hostNetwork: true
+      ports:
+        web:
+          expose: true
+          hostPort: 8080
+          port: 8080
+        websecure:
+          expose: true
+          hostPort: 8443
+          port: 8443
+    asserts:
+      - equal:
+          path: spec.template.spec.hostnetwork
+          content: true
+  - it: should not request hostNetwork at Pod level when containerPort mistmatches hostPort
+    set:
+      hostNetwork: true
+      ports:
+        web:
+          port: 8080
+          hostPort: 80
+        websecure:
+          port: 8443
+          hostPort: 443
+    asserts:
+      - equal:
+          path: spec.template.spec.hostnetwork
+          content: false
   - it: should have all k8s provider enabled when gateway provider is enabled
     set:
       experimental:

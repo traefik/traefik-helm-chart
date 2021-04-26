@@ -19,7 +19,7 @@
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
       terminationGracePeriodSeconds: 60
-      hostNetwork: {{ .Values.hostNetwork }}
+      hostNetwork: {{ template "traefik.hostnetwork" . }}
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
@@ -107,6 +107,7 @@
           - "--ping=true"
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          - "--providers.kubernetescrd.allowcrossnamespace={{ .Values.providers.kubernetesCRD.allowCrossNamespace }}"
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"

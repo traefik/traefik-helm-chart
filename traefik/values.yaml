@@ -102,6 +102,7 @@ rollingUpdate:
 #
 providers:
   kubernetesCRD:
+    allowCrossNamespace: false
     enabled: true
     namespaces: []
       # - "default"

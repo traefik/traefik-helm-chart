@@ -33,6 +33,30 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 
 {{/*
+Overrides hostNetwork value in container definition, when at least one of the hostPorts exposed mismatches containerPort.
+*/}}
+{{- define "traefik.sethostnet" -}}
+    {{- if .Values.hostNetwork -}}
+        {{- range $name, $config := .Values.ports -}}
+            {{- if $config -}}
+                {{- if $config.hostPort -}}
+                    {{- if ne ($config.hostPort | int) ($config.port | int) -}}
+1
+                    {{- end -}}
+                {{- end -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+{{- define "traefik.hostnetwork" -}}
+    {{- if gt (len (include "traefik.sethostnet" .)) 0 -}}
+false
+    {{- else -}}
+{{- .Values.hostNetwork -}}
+    {{- end -}}
+{{- end -}}
+
+{{/*
 The name of the service account to use
 */}}
 {{- define "traefik.serviceAccountName" -}}
