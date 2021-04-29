@@ -94,8 +94,12 @@ ingressRoute:
     enabled: true
     # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
+      # kubernetes.io/ingress.class: "traefik-internal"
     # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    # If providers.kubernetesCRD.labelSelector is defined, add the matching label
     labels: {}
+      # environment: production
+      # method: traefik
 
 rollingUpdate:
   maxUnavailable: 1
@@ -111,6 +115,8 @@ providers:
     allowCrossNamespace: false
     namespaces: []
       # - "default"
+    # labelSelector: environment=production,method=traefik
+    # ingressClass: traefik-internal
   kubernetesIngress:
     enabled: true
     # labelSelector: environment=production,method=traefik
