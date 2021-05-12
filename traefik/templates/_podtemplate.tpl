@@ -107,6 +107,12 @@
           - "--ping=true"
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- if .Values.providers.kubernetesCRD.labelSelector }}
+          - "--providers.kubernetescrd.labelSelector={{ .Values.providers.kubernetesCRD.labelSelector }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesCRD.ingressClass }}
+          - "--providers.kubernetescrd.ingressClass={{ .Values.providers.kubernetesCRD.ingressClass }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
