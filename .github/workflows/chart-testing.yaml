@@ -19,8 +19,8 @@ jobs:
         with:
           python-version: 3.7
       - uses: helm/chart-testing-action@v2.0.1
-      - name: Debug what's wrong
-        run: git remote show
+      - name: Fetch history
+        run: git fetch --prune --unshallow
       - name: Check for chart changes
         run: |
           changed=$(ct list-changed --chart-dirs . --target-branch main --remote origin)
@@ -43,6 +43,8 @@ jobs:
         with:
           python-version: 3.7
       - uses: helm/chart-testing-action@v2.0.1
+      - name: Fetch history
+        run: git fetch --prune --unshallow
       - name: Check for chart changes
         run: |
           changed=$(ct list-changed --chart-dirs . --target-branch main)
