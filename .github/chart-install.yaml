@@ -1,4 +1,5 @@
 debug: true
-remote: origin
 upgrade: true
+chart-dirs: .
 charts: traefik
+target-branch: main

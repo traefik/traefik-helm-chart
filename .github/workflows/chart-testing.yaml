@@ -1,4 +1,4 @@
-name: Lint and test Charts
+name: Lint and test
 
 on:
   pull_request:
@@ -19,7 +19,14 @@ jobs:
         with:
           python-version: 3.7
       - uses: helm/chart-testing-action@v2.0.1
+      - name: Check for chart changes
+        run: |
+          changed=$(ct list-changed --chart-dirs . --target-branch main)
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::true"
+          fi
       - name: Lint chart
+        if: steps.list-changed.outputs.changed == 'true'
         run: ct lint --lint-conf .github/chart-lint.yaml
 
   test:
@@ -36,9 +43,9 @@ jobs:
       - uses: helm/chart-testing-action@v2.0.1
       - name: Check for chart changes
         run: |
-          changed=$(ct list-changed --chart-dirs .)
+          changed=$(ct list-changed --chart-dirs . --target-branch main)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::true"
+            echo "::set-output name=changed::$changed"
           fi
       - uses: helm/kind-action@v1.1.0
         if: steps.list-changed.outputs.changed == 'true'
