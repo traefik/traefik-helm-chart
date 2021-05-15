@@ -21,6 +21,8 @@ jobs:
       - uses: helm/chart-testing-action@v2.0.1
       - name: Fetch history
         run: git fetch --prune --unshallow
+      - name: Check github feature
+        run: echo ${{ github.head_ref || github.ref }}
       - name: Check for chart changes
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
