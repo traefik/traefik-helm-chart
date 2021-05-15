@@ -219,6 +219,34 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetesgateway"
+  - it: should have the certificate resolver options applied
+    set:
+      certResolvers:
+        myAcmeResolver:
+          email: email@example.com
+          dnsChallenge:
+            provider: myProvider
+            resolvers:
+              - 1.1.1.1
+              - 8.8.8.8
+          tlsChallenge: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--certificatesresolvers.myAcmeResolver.acme.email=email@example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.provider=myProvider"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.resolvers=1.1.1.1,8.8.8.8"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
   - it: should have the pilot dashboard enabled by default
     asserts:
       - notContains:
