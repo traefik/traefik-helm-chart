@@ -3,10 +3,10 @@ name: Lint and test
 on:
   pull_request:
     branches:
-      - $default-branch
+      - main
   push:
     branches:
-      - $default-branch
+      - main
       - feature/*
 
 jobs:
