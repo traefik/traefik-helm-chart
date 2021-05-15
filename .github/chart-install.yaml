@@ -1,0 +1,5 @@
+debug: true
+upgrade: true
+chart-dirs: .
+charts: traefik
+target-branch: main

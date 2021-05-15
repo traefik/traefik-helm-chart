@@ -1,0 +1,8 @@
+debug: true
+chart-dirs: .
+charts: traefik
+target-branch: main
+check-version-increment: true
+validate-chart-schema: true
+validate-maintainers: true
+validate-yaml: true

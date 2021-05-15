@@ -1,0 +1,60 @@
+name: Lint and test
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: helm/chart-testing-action@v2.0.1
+      - name: Fetch history
+        run: git fetch --prune --unshallow
+      - name: Check for chart changes
+        run: |
+          changed=$(ct list-changed --config .github/chart-check.yaml)
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::true"
+          fi
+      - name: Lint chart
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct lint --lint-conf .github/chart-lint.yaml
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: helm/chart-testing-action@v2.0.1
+      - name: Fetch history
+        run: git fetch --prune --unshallow
+      - name: Check for chart changes
+        run: |
+          changed=$(ct list-changed --config .github/chart-check.yaml)
+          if [[ -n "$changed" ]]; then
+            echo "::set-output name=changed::$changed"
+          fi
+      - uses: helm/kind-action@v1.1.0
+        if: steps.list-changed.outputs.changed == 'true'
+      - name: Test chart
+        if: steps.list-changed.outputs.changed == 'true'
+        run: ct install --config .github/chart-install.yaml
