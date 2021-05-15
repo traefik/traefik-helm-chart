@@ -23,7 +23,7 @@ jobs:
         run: git remote show
       - name: Check for chart changes
         run: |
-          changed=$(ct list-changed --chart-dirs . --target-branch main)
+          changed=$(ct list-changed --chart-dirs . --target-branch main --remote origin)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
