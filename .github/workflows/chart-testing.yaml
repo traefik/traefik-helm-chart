@@ -19,6 +19,8 @@ jobs:
         with:
           python-version: 3.7
       - uses: helm/chart-testing-action@v2.0.1
+      - name: Debug what's wrong
+        run: git remote show
       - name: Check for chart changes
         run: |
           changed=$(ct list-changed --chart-dirs . --target-branch main)
