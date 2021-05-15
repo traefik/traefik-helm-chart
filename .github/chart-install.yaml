@@ -1,3 +1,4 @@
 debug: true
 remote: origin
 upgrade: true
+charts: traefik
