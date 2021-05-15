@@ -1,0 +1,36 @@
+name: Lint and test Charts
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - feature/*
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Lint chart
+        uses: helm/chart-testing-action@v1.1.0
+        with:
+          config: .github/chart-lint.yaml
+          command: lint
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.0.0-rc.1
+
+      - name: Test chart
+        uses: helm/chart-testing-action@v1.1.0
+        with:
+          config: .github/chart-install.yaml
+          command: install
