@@ -2,9 +2,11 @@ name: Lint and test
 
 on:
   pull_request:
+    branches:
+      - $default-branch
   push:
     branches:
-      - main
+      - $default-branch
       - feature/*
 
 jobs:
@@ -22,7 +24,9 @@ jobs:
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Check github feature
-        run: echo ${{ github.head_ref || github.ref }}
+        run: |
+          echo "Base ref: ${{ github.base_ref }}"
+          echo "Default branch: $default-branch"
       - name: Check for chart changes
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
