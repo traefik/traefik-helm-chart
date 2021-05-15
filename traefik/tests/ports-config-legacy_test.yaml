@@ -1,4 +1,7 @@
 suite: Traefik configuration
+capabilities:
+  majorVersion: 1
+  minorVersion: 17
 tests:
   - it: should have port 8000 of pod published to 80 of service by default, and defined as entrypoint "web"
     asserts:
