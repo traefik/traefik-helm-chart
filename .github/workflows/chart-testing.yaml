@@ -51,7 +51,7 @@ jobs:
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
-            echo "::set-output name=changed::$changed"
+            echo "::set-output name=changed::true"
           fi
       - uses: helm/kind-action@v1.1.0
         if: steps.list-changed.outputs.changed == 'true'
