@@ -24,6 +24,7 @@ jobs:
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Check for chart changes
+        id: list-changed
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
@@ -48,6 +49,7 @@ jobs:
       - name: Fetch history
         run: git fetch --prune --unshallow
       - name: Check for chart changes
+        id: list-changed
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
