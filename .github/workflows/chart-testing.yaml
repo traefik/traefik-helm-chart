@@ -33,7 +33,7 @@ jobs:
           fi
       - name: Lint chart
         if: steps.list-changed.outputs.changed == 'true'
-        run: ct lint --lint-conf .github/chart-lint.yaml
+        run: ct lint --config .github/chart-lint.yaml
 
   test:
     runs-on: ubuntu-latest
