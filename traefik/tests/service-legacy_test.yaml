@@ -1,6 +1,9 @@
 suite: Service configuration
 templates:
   - service.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 17
 tests:
   - it: should be a type LoadBalancer by default
     asserts:

@@ -5,10 +5,6 @@ tests:
       - isKind:
           of: Deployment
         template: deployment.yaml
-      - equal:
-          path: items[0].kind
-          value: Service
-        template: service.yaml
       - isKind:
           of: ClusterRole
         template: rbac/clusterrole.yaml
@@ -25,10 +21,6 @@ tests:
           value: RELEASE-NAME-traefik
         template: deployment.yaml
       - equal:
-          path: items[0].metadata.name
-          value: RELEASE-NAME-traefik
-        template: service.yaml
-      - equal:
           path: metadata.name
           value: RELEASE-NAME-traefik
         template: rbac/clusterrole.yaml
@@ -40,3 +32,29 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-traefik
         template: rbac/serviceaccount.yaml
+  - it: should generate Services for legacy versions
+    capabilities:
+      majorVersion: 1
+      minorVersion: 17
+    asserts:
+    - equal:
+        path: items[0].kind
+        value: Service
+      template: service.yaml
+    - equal:
+        path: items[0].metadata.name
+        value: RELEASE-NAME-traefik
+      template: service.yaml
+  - it: should generate Services for new versions
+    capabilities:
+      majorVersion: 1
+      minorVersion: 20
+    asserts:
+    - equal:
+        path: kind
+        value: Service
+      template: service.yaml
+    - equal:
+        path: metadata.name
+        value: RELEASE-NAME-traefik
+      template: service.yaml
