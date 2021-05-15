@@ -23,7 +23,7 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Check for chart changes
         run: |
-          changed=$(ct list-changed --chart-dirs . --target-branch main --remote origin)
+          changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
@@ -47,7 +47,7 @@ jobs:
         run: git fetch --prune --unshallow
       - name: Check for chart changes
         run: |
-          changed=$(ct list-changed --chart-dirs . --target-branch main)
+          changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::$changed"
           fi
