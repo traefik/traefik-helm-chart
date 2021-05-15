@@ -11,26 +11,29 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Lint chart
-        uses: helm/chart-testing-action@v1.1.0
+      - uses: actions/checkout@v2
+      - uses: azure/setup-helm@v1
         with:
-          config: .github/chart-lint.yaml
-          command: lint
+          version: v3.4.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: helm/chart-testing-action@v2.0.1
+      - name: Lint chart
+        run: ct lint --lint-conf .github/chart-lint.yaml
 
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Create kind cluster
-        uses: helm/kind-action@v1.0.0-rc.1
-
-      - name: Test chart
-        uses: helm/chart-testing-action@v1.1.0
+      - uses: azure/setup-helm@v1
         with:
-          config: .github/chart-install.yaml
-          command: install
+          version: v3.4.0
+      - uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - uses: helm/chart-testing-action@v2.0.1
+      - uses: helm/kind-action@v1.1.0
+      - name: Test chart
+        run: ct install --config .github/chart-install.yaml

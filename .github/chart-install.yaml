@@ -1,2 +1,3 @@
 debug: true
 remote: origin
+upgrade: true
