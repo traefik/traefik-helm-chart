@@ -28,6 +28,7 @@ jobs:
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
+            echo "'$changed' has been changed!"
             echo "::set-output name=changed::true"
           fi
       - name: Lint chart
@@ -53,6 +54,7 @@ jobs:
         run: |
           changed=$(ct list-changed --config .github/chart-check.yaml)
           if [[ -n "$changed" ]]; then
+            echo "'$changed' has been changed!"
             echo "::set-output name=changed::true"
           fi
       - uses: helm/kind-action@v1.1.0
