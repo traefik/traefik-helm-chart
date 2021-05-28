@@ -1,0 +1,47 @@
+{{- if .Values.metrics.prometheus.serviceMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ template "traefik.fullname" . }}
+  {{- with .Values.metrics.prometheus.serviceMonitor.namespace }}
+  namespace: {{ . }}
+  {{- end }}
+  labels:
+    app.kubernetes.io/name: {{ template "traefik.name" . }}
+    helm.sh/chart: {{ template "traefik.chart" . }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- with .Values.metrics.prometheus.serviceMonitor.additionalLabels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  jobLabel: {{ .Values.metrics.prometheus.serviceMonitor.jobLabel | default .Release.Name }}
+  endpoints:
+    - port: metrics
+      path: /{{ .Values.metrics.prometheus.entryPoint }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.interval }}
+      interval: {{ . }}
+      {{- end }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.scrapeTimeout }}
+      scrapeTimeout: {{ . }}
+      {{- end }}
+{{- if .Values.metrics.prometheus.serviceMonitor.metricRelabelings }}
+      metricRelabelings:
+{{ tpl (toYaml .Values.metrics.prometheus.serviceMonitor.metricRelabelings | indent 6) . }}
+{{- end }}
+{{- if .Values.metrics.prometheus.serviceMonitor.relabelings }}
+      relabelings:
+{{ toYaml .Values.metrics.prometheus.serviceMonitor.relabelings | indent 6 }}
+{{- end }}
+  {{- if .Values.metrics.prometheus.serviceMonitor.namespaceSelector }}
+  namespaceSelector:
+    {{ toYaml .Values.metrics.prometheus.serviceMonitor.namespaceSelector | indent 4 -}}
+  {{ else }}
+  namespaceSelector:
+    matchNames:
+      - {{ .Release.Namespace }}
+  {{- end }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ template "traefik.name" . }}
+{{- end }}
