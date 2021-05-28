@@ -109,4 +109,28 @@ items:
       {{- toYaml . | nindent 6 }}
       {{- end -}}
 {{- end }}
+
+{{- if .Values.metrics.enabled }}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: {{ template "traefik.fullname" . }}-metrics
+      labels:
+        app.kubernetes.io/name: {{ template "traefik.name" . }}
+        helm.sh/chart: {{ template "traefik.chart" . }}
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      annotations:
+      {{- with .Values.service.annotations }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      selector:
+        app.kubernetes.io/name: {{ template "traefik.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      ports:
+      - port: 8082
+        name: metrics
+        targetPort: 8082
+{{- end }}
 {{- end -}}
