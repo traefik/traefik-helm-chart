@@ -378,8 +378,8 @@ tlsOptions: {}
 # Example:
 # tlsStore:
 #   default:
-    # defaultCertificate:
-    #   secretName: tls-cert
+#     defaultCertificate:
+#       secretName: tls-cert
 tlsStore: {}
 
 # Options for the main traefik service, where the entrypoints traffic comes
