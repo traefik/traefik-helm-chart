@@ -299,6 +299,7 @@ tlsOptions: {}
 # https://doc.traefik.io/traefik/https/tls/#default-certificate
 # Example:
 # tlsStore:
+#   default:
     # defaultCertificate:
     #   secretName: tls-cert
 tlsStore: {}
