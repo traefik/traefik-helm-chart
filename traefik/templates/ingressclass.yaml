@@ -1,7 +1,7 @@
 {{- if .Values.ingressClass.enabled  -}}
-  # If semVerValidation is defined and not disabled, check
+  # If semVerValidation is defined and true, check
   {{- if .Values.image.semVerValidation -}}{{- if eq .Values.image.semVerValidation true -}}{{- (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end }}
-  # Otherwise check
+  # Otherwise if undefined, check
   {{- else }}{{- (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end }}
   {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
 apiVersion: networking.k8s.io/v1
