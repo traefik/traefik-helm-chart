@@ -1,4 +1,4 @@
-{{- if .Values.ingressClass.enabled  -}}
+{{- if .Values.ingressClass.enabled -}}
   {{- /* If semVerValidation is defined and true, check */ -}}
   {{- if .Values.image.semVerValidation -}}{{- if eq .Values.image.semVerValidation true -}}{{- if (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end -}}{{- end -}}
   {{- /* Otherwise if undefined, check */ -}}
