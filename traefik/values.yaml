@@ -4,7 +4,7 @@ image:
   # defaults to appVersion
   tag: ""
   pullPolicy: IfNotPresent
-  # disableSemVerValidation: false
+  # semVerValidation: true
 
 #
 # Configure the deployment
