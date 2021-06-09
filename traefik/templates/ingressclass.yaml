@@ -1,8 +1,8 @@
 {{- if .Values.ingressClass.enabled  -}}
-  # If semVerValidation is defined and true, check
-  {{- if .Values.image.semVerValidation -}}{{- if eq .Values.image.semVerValidation true -}}{{- (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end }}
-  # Otherwise if undefined, check
-  {{- else }}{{- (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end }}
+  {{- /* If semVerValidation is defined and true, check */ -}}
+  {{- if .Values.image.semVerValidation -}}{{- if eq .Values.image.semVerValidation true -}}{{- if (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end -}}{{- end }}
+  {{- /* Otherwise if undefined, check */ -}}
+  {{- else }}{{- if (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end -}}{{- end }}
   {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" }}
 apiVersion: networking.k8s.io/v1
   {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
