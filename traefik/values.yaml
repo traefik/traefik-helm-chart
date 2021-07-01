@@ -300,6 +300,8 @@ tlsOptions: {}
 service:
   enabled: true
   type: LoadBalancer
+  tcpenabled: true
+  udpenabled: true
   # Additional annotations (e.g. for cloud provider specific config)
   annotations: {}
   # Additional service labels (e.g. for filtering Service by custom labels)

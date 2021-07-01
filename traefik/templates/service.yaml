@@ -16,6 +16,7 @@ metadata:
   name: {{ template "traefik.fullname" . }}
 items:
 {{- if  $tcpPorts }}
+{{- if .Values.service.tcpenabled }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -64,8 +65,10 @@ items:
       {{- toYaml . | nindent 6 }}
       {{- end -}}
 {{- end }}
+{{- end }}
 
 {{- if  $udpPorts }}
+{{- if .Values.service.udpenabled }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -110,5 +113,6 @@ items:
       externalIPs:
       {{- toYaml . | nindent 6 }}
       {{- end -}}
+{{- end }}
 {{- end }}
 {{- end -}}
