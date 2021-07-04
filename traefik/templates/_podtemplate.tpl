@@ -38,7 +38,7 @@
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 1
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -47,7 +47,7 @@
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ .Values.ports.traefik.port }}
+            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           failureThreshold: 3
           initialDelaySeconds: 10
           periodSeconds: 10
@@ -113,14 +113,21 @@
           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
+          {{- if .Values.providers.kubernetesIngress.labelSelector }}
+          - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--providers.kubernetesgateway"
           - "--experimental.kubernetesgateway"
           {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . }}"
+          {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config.redirectTo }}
@@ -188,6 +195,9 @@
           {{- end }}
           {{- if .Values.pilot.enabled }}
           - "--pilot.token={{ .Values.pilot.token }}"
+          {{- end }}
+          {{- if hasKey .Values.pilot "dashboard" }}
+          - "--pilot.dashboard={{ .Values.pilot.dashboard }}"
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
