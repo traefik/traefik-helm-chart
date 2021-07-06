@@ -43,7 +43,7 @@ helm repo update
 
 ### Kubernetes Version Support
 
-Due to changes in CRD version support, the following versions of the chart are usable and supported on the following kubernetes versions:
+Due to changes in CRD version support, the following versions of the chart are usable and supported on the following Kubernetes versions:
 
 |                         |  Kubernetes v1.15 and below | Kubernetes v1.16-v1.21 | Kubernetes v1.22 and above |
 |-------------------------|-----------------------------|------------------------|----------------------------|
