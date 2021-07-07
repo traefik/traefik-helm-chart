@@ -41,6 +41,15 @@ You can update the chart repository by running:
 helm repo update
 ```
 
+### Kubernetes Version Support
+
+Due to changes in CRD version support, the following versions of the chart are usable and supported on the following Kubernetes versions:
+
+|                         |  Kubernetes v1.15 and below | Kubernetes v1.16-v1.21 | Kubernetes v1.22 and above |
+|-------------------------|-----------------------------|------------------------|----------------------------|
+| Chart v9.20.2 and below | [x]                         | [x]                    |                            |
+| Chart 10.0.0 and above  |                             | [x]                    | [x]                        |
+
 ### Deploying Traefik
 
 ```bash
@@ -49,13 +58,7 @@ helm install traefik traefik/traefik
 
 #### Warning
 
-If you are using Helm v2
-
-You have to deploy CRDs manually with the following command:
-
-```bash
-kubectl apply -f traefik/crds
-```
+Helm v2 support was removed in the chart version 10.0.0.
 
 ### Exposing the Traefik dashboard
 
