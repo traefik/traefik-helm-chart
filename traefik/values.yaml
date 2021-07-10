@@ -404,6 +404,9 @@ ports:
     # If you want to access it from outside of your cluster,
     # use `kubectl port-forward` or create a secure ingress
     expose: false
+    # However you could expose the traefik port via an internal service
+    # Requires service.internal.enabled to be True
+    # exposeInternal: false
     # The exposed port for this service
     exposedPort: 9000
     # The port protocol (TCP/UDP)
@@ -413,10 +416,12 @@ ports:
     # hostPort: 8000
     expose: true
     exposedPort: 80
+    # exposeInternal: false
     # The port protocol (TCP/UDP)
     protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer
+    # LoadBalancer. Do not set, if both expose & exposeInternal are true while
+    # service.internal.type & service.type are either NodePort or LoadBalancer
     # nodePort: 32080
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
@@ -437,6 +442,7 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
+    # exposeInternal: false
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
@@ -556,6 +562,18 @@ service:
   # ipFamilies:
   #   - IPv4
   #   - IPv6
+  internal:
+    enabled: false
+    # Service type for internal Service, defaults to service.type
+    # type: ClusterIP
+    # Additional labels for internal Service, defaults to service.labels
+    # labels: {}
+    # Additional annotations for internal Service, defaults to service.annotations
+    # annotations: {}
+    # custom spec for internal Service, no defaults
+    spec: {}
+    loadBalancerSourceRanges: []
+    externalIPs: []
 
 ## Create HorizontalPodAutoscaler object.
 ##

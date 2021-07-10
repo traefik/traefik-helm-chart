@@ -1,0 +1,143 @@
+suite: Internal Service configuration
+templates:
+  - service-internal.yaml
+tests:
+  - it: should be a type LoadBalancer by default
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+    asserts:
+      - equal:
+          path: items[0].spec.type
+          value: LoadBalancer
+  - it: should be a custom type when specified via values
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+        type: NodePort
+    asserts:
+      - equal:
+          path: items[0].spec.type
+          value: NodePort
+  - it: should have no annotations by default
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+    asserts:
+      - isNull:
+          path: items[0].metadata.annotations
+  - it: should have internal customized annotations when specified via values
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+          annotations:
+            azure-load-balancer-internal: true
+    asserts:
+      - equal:
+          path: items[0].metadata.annotations.azure-load-balancer-internal
+          value: true
+  - it: should inherit from main customized annotations when specified via values
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        annotations:
+          azure-load-balancer-internal: true
+        internal:
+          enabled: true
+    asserts:
+      - equal:
+          path: items[0].metadata.annotations.azure-load-balancer-internal
+          value: true
+  - it: should have customized labels when specified via values
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+          labels:
+            custom-label: custom-value
+    asserts:
+      - equal:
+          path: items[0].metadata.labels.custom-label
+          value: custom-value
+
+  - it: should have custom spec elements when specified via values
+    set:
+      ports:
+        traefik:
+          exposeInternal: true
+      service:
+        internal:
+          enabled: true
+          spec:
+            externalTrafficPolicy: Cluster
+            loadBalancerIP: "1.2.3.4"
+            clusterIP: "2.3.4.5"
+            loadBalancerSourceRanges:
+              - 192.168.0.1/32
+              - 172.16.0.0/16
+            externalIPs:
+              - "1.2.3.4"
+    asserts:
+      - equal:
+          path: items[0].spec.ports[0].name
+          value: traefik
+      - equal:
+          path: items[0].spec.ports[0].protocol
+          value: TCP
+      - equal:
+          path: items[0].spec.externalTrafficPolicy
+          value: Cluster
+      - equal:
+          path: items[0].spec.loadBalancerIP
+          value: "1.2.3.4"
+      - equal:
+          path: items[0].spec.clusterIP
+          value: "2.3.4.5"
+      - equal:
+          path: items[0].spec.loadBalancerSourceRanges[0]
+          value: 192.168.0.1/32
+      - equal:
+          path: items[0].spec.loadBalancerSourceRanges[1]
+          value: 172.16.0.0/16
+      - equal:
+          path: items[0].spec.externalIPs[0]
+          value: "1.2.3.4"
+  - it: should have custom spec elements when specified via values for UPD ports
+    set:
+      service:
+        internal:
+          enabled: true
+      ports:
+        udp:
+          port: 3000
+          exposedPort: 80
+          exposeInternal: true
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].spec.ports[0].name
+          value: udp
+      - equal:
+          path: items[0].spec.ports[0].protocol
+          value: UDP
