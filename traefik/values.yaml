@@ -51,6 +51,8 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
    # - name: myRegistryKeySecretName
+  # Time in seconds, to allow the application to terminate before KILLing it.
+  terminationGracePeriodSeconds: 60
 
 # Pod disruption budget
 podDisruptionBudget:
