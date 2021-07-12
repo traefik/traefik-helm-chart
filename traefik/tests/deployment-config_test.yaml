@@ -72,3 +72,16 @@ tests:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow
           value: podLabels
+  - it: should have a terminationGracePeriodSeconds of 60 by default
+    asserts:
+      - equal:
+          path: spec.template.spec.terminationGracePeriodSeconds
+          value: 60
+  - it: should have a terminationGracePeriodSeconds of 42 when set
+    set:
+      deployment:
+        terminationGracePeriodSeconds: 42
+    asserts:
+      - equal:
+          path: spec.template.spec.terminationGracePeriodSeconds
+          value: 42
