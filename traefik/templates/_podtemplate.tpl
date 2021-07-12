@@ -18,7 +18,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds }}
+      terminationGracePeriodSeconds: {{ .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ .Values.hostNetwork }}
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
