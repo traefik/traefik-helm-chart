@@ -84,6 +84,9 @@ experimental:
     # - group: "core"
     #   kind: "Secret"
     #   name: "mysecret"
+    # By default, Gateway would be created to the Namespace you are deploying Traefik to.
+    # You may create that Gateway in another namespace, setting its name below:
+    # namespace: default
 
 # Create an IngressRoute for the dashboard
 ingressRoute:

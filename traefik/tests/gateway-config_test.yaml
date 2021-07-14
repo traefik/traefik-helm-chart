@@ -14,6 +14,9 @@ tests:
       - equal:
           path: spec.listeners[0].port
           value: 8000
+      - equal:
+          path: metadata.namespace
+          value: "NAMESPACE"
   - it: should have one gateway with the correct class and an http port as well as an https port
     set:
       experimental:
@@ -42,3 +45,13 @@ tests:
       - equal:
           path: spec.listeners[1].tls.certificateRef.kind
           value: "my-kind"
+  - it: should install gateway in custom namespace
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+          namespace: "default"
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "default"
