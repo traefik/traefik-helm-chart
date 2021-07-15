@@ -51,6 +51,8 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
    # - name: myRegistryKeySecretName
+  # Time (in seconds) before Kubernetes will send the SIGKILL signal to Traefik.
+  terminationGracePeriodSeconds: 60
 
 # Pod disruption budget
 podDisruptionBudget:
