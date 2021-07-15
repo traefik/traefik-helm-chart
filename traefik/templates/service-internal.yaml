@@ -53,8 +53,8 @@ items:
         name: {{ $name }}
         targetPort: {{ $name | quote }}
         protocol: {{ default "TCP" $config.protocol | quote }}
-        {{- if $config.nodePort }}
-        nodePort: {{ $config.nodePort }}
+        {{- if $config.nodePortInternal }}
+        nodePort: {{ $config.nodePortInternal }}
         {{- end }}
       {{- end }}
       {{- if eq $typeint "LoadBalancer" }}
@@ -104,8 +104,8 @@ items:
         name: {{ $name }}
         targetPort: {{ $name | quote }}
         protocol: {{ default "UDP" $config.protocol | quote }}
-        {{- if $config.nodePort }}
-        nodePort: {{ $config.nodePort }}
+        {{- if $config.nodePortInternal }}
+        nodePort: {{ $config.nodePortInternal }}
         {{- end }}
       {{- end }}
       {{- if eq $typeint "LoadBalancer" }}
