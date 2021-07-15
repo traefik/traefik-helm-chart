@@ -257,9 +257,7 @@ ports:
     # If you want to access it from outside of your cluster,
     # use `kubectl port-forward` or create a secure ingress
     expose: false
-    # However you could expose the traefik port via an internal service
-    # Requires service.internal.enabled to be True
-    # exposeInternal: false
+    exposeInternal: false
     # The exposed port for this service
     exposedPort: 9000
     # The port protocol (TCP/UDP)
@@ -269,13 +267,17 @@ ports:
     # hostPort: 8000
     expose: true
     exposedPort: 80
+    # We could also expose entrypoints through an *internal service*.
+    # Requires `.Values.service.internal.enabled` to be True
     # exposeInternal: false
     # The port protocol (TCP/UDP)
     protocol: TCP
-    # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer. Do not set, if both expose & exposeInternal are true while
-    # service.internal.type & service.type are either NodePort or LoadBalancer
+    # Use nodeport if set, installing traefik main service definition.
+    # This is useful if you have configured Traefik in a LoadBalancer.
     # nodePort: 32080
+    # Use nodeport if set, installing traefik internal service definition.
+    # Make sure all nodePort & nodePortInternal allocated are unique
+    # nodePortInternal: 32081
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
@@ -289,6 +291,7 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
+    # nodePortInternal: 32444
     # Set TLS at the entrypoint
     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
     tls:
@@ -315,6 +318,41 @@ ports:
     exposedPort: 9100
     # The port protocol (TCP/UDP)
     protocol: TCP
+# When `.Values.service.internal.enabled` is `True`, we could want
+# to register additional entrypoints into Traefik, assuming you would
+# want to ensure "internal" ingresses may not be accessed querying
+# your public entrypoint
+#  webinternal:
+#    port: 8001
+#    expose: false
+#    exposedPort: 80
+#    exposeInternal: true
+#    nodePort: 32082
+#    nodePortInternal: 32083
+#    protocol: TCP
+#    redirectTo: websecureinternal
+#  websecureinternal:
+#    port: 8443
+#    expose: false
+#    exposedPort: 443
+#    exposeInternal: true
+#    nodePort: 32445
+#    nodePortInternal: 32446
+#    protocol: TCP
+#    tls:
+#      enabled: true
+# Internal Service could be used exposing Traefik Prometheus metrics
+#  metrics:
+#    port: 9113
+#    expose: false
+#    exposedPort: 9113
+#    exposeInternal: true
+#    protocol: TCP
+# In which case, we would also set the following additionalArguments
+# additionalArguments:
+# - --metrics.prometheus=true
+# - --metrics.prometheus.entrypoint=metrics
+# - --metrics.prometheus.buckets=0.1,0.3,1.2,5.0
 
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
@@ -329,9 +367,18 @@ ports:
 #       - CurveP384
 tlsOptions: {}
 
-# Options for the main traefik service, where the entrypoints traffic comes
-# from.
+# Options for the traefik services, where the entrypoints traffic comes from.
+# Two services may be created: the first would target entries from your
+# `.Values.ports`, where `.expose` is `true`. The latter would include entries
+# whose `.exposeInternal` is `true`. Both of which are undefined by default,
+# assumed to be false.
+# In addition to having enabled those services, there need to be at least one
+# elligible entrypoint, for the corresponding Service object to be created. By
+# default, only the web and websecure entrypoints would be exposed, on the main
+# service.
 service:
+  # Enables main Service creation, exposing ports having their `.expose` set to
+  # `true`
   enabled: true
   type: LoadBalancer
   # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
@@ -353,15 +400,22 @@ service:
     # - 172.16.0.0/16
   externalIPs: []
     # - 1.2.3.4
+  # Options for Traefik internal service
   internal:
+    # Enables internal Service creation, exposing ports that have their
+    # `.exposeInternal` set to `true`
     enabled: false
-    # Service type for internal Service, defaults to service.type
+    # Service type for internal Service, defaults to `.Values.service.type`
     # type: ClusterIP
-    # Additional labels for internal Service, defaults to service.labels
+    # Additional labels for internal Service, defaults to `.Values.service.labels`
     # labels: {}
-    # Additional annotations for internal Service, defaults to service.annotations
-    # annotations: {}
-    # custom spec for internal Service, no defaults
+    # Additional annotations for internal Service, defaults to
+    # `.Values.service.annotations`
+    # annotations:
+    #   networking.gke.io/internal-load-balancer-subnet: gke-services
+    #   networking.gke.io/load-balancer-type: Internal
+    # Additional entries here will be added to the internal service spec. Cannot
+    # contains type, selector or ports entries.
     spec: {}
     loadBalancerSourceRanges: []
     externalIPs: []
