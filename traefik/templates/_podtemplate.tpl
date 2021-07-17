@@ -93,6 +93,11 @@
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
         args:
+          {{- if .Values.metrics.enabled }}
+          - --metrics.prometheus=true
+          - --metrics.prometheus.entryPoint=metrics
+          - --entryPoints.metrics.address=:8082
+          {{- end }}
           {{- with .Values.globalArguments }}
           {{- range . }}
           - {{ . | quote }}
