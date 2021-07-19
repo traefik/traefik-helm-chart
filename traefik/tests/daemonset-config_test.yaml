@@ -43,3 +43,15 @@ tests:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow
           value: podLabels
+  - it: should have prometheus labels with specified values
+    set:
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - equals:
+          path: metadata.annotations
+          value:
+            prometheus.io/path: /metrics
+            prometheus.io/port: 9100
+            prometheus.io/scrape: "true"

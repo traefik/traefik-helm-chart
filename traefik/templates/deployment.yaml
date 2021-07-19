@@ -29,6 +29,13 @@ metadata:
   {{- with .Values.deployment.annotations }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
+  {{- if .Values.metrics }}
+  {{- if .Values.metrics.prometheus }}
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: {{ (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
+  {{- end }}
+  {{- end }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ default 1 .Values.deployment.replicas }}
