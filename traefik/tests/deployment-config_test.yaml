@@ -78,7 +78,9 @@ tests:
         prometheus:
           entryPoint: metrics
     asserts:
-      - contains:
+      - equals:
           path: metadata.annotations
           value:
+            prometheus.io/path: /metrics
             prometheus.io/port: 9100
+            prometheus.io/scrape: "true"
