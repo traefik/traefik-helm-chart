@@ -1,0 +1,8 @@
+{{- if .Release.IsUpgrade }}
+######## Upgrade information ########
+
+If upgrading from Traefik version 2.3 or earlier please reinstall helm chart or apply CRDs manually:
+
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/v{{ .Chart.Version }}/traefik/crds/serverstransports.yaml
+
+{{- end }}
