@@ -31,7 +31,7 @@ metadata:
   {{- if .Values.metrics.prometheus }}
     prometheus.io/scrape: "true"
     prometheus.io/path: "/metrics"
-    prometheus.io/port: {{ (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
+    prometheus.io/port: {{ quote (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
   {{- end }}
   {{- end }}
 spec:
