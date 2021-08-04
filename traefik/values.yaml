@@ -434,6 +434,7 @@ topologySpreadConstraints: []
 #        app: {{ template "traefik.name" . }}
 #    maxSkew: 1
 #    topologyKey: kubernetes.io/hostname
+#    whenUnsatisfiable: DoNotSchedule
 
 # Pods can have priority.
 # Priority indicates the importance of a Pod relative to other Pods.
