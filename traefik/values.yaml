@@ -426,6 +426,14 @@ affinity: {}
 #       topologyKey: failure-domain.beta.kubernetes.io/zone
 nodeSelector: {}
 tolerations: []
+topologySpreadConstraints: []
+# # This example topologySpreadConstraints forces the scheduler to put traefik pods
+# # on nodes where no other traefik pods are scheduled.
+#  - labelSelector:
+#      matchLabels:
+#        app: {{ template "traefik.name" . }}
+#    maxSkew: 1
+#    topologyKey: kubernetes.io/hostname
 
 # Pods can have priority.
 # Priority indicates the importance of a Pod relative to other Pods.
