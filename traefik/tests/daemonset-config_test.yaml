@@ -28,3 +28,32 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
+  - it: should have labels with specified values
+    set:
+      deployment:
+        kind: DaemonSet
+        labels:
+          traefik/powpow: labels
+        podLabels:
+          traefik/powpow: podLabels
+    asserts:
+      - equal:
+          path: metadata.labels.traefik/powpow
+          value: labels
+      - equal:
+          path: spec.template.metadata.labels.traefik/powpow
+          value: podLabels
+  - it: should have prometheus labels with specified values
+    set:
+      deployment:
+        kind: DaemonSet 
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            prometheus.io/path: /metrics
+            prometheus.io/port: "9100"
+            prometheus.io/scrape: "true"

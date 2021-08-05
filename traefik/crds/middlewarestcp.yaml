@@ -4,20 +4,20 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.4.1
   creationTimestamp: null
-  name: tlsstores.traefik.containo.us
+  name: middlewaretcps.traefik.containo.us
 spec:
   group: traefik.containo.us
   names:
-    kind: TLSStore
-    listKind: TLSStoreList
-    plural: tlsstores
-    singular: tlsstore
+    kind: MiddlewareTCP
+    listKind: MiddlewareTCPList
+    plural: middlewaretcps
+    singular: middlewaretcp
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: TLSStore is a specification for a TLSStore resource.
+        description: MiddlewareTCP is a specification for a MiddlewareTCP resource.
         properties:
           apiVersion:
             description: 'APIVersion defines the versioned schema of this representation
@@ -32,21 +32,16 @@ spec:
           metadata:
             type: object
           spec:
-            description: TLSStoreSpec configures a TLSStore resource.
+            description: MiddlewareTCPSpec holds the MiddlewareTCP configuration.
             properties:
-              defaultCertificate:
-                description: DefaultCertificate holds a secret name for the TLSOption
-                  resource.
+              ipWhiteList:
+                description: TCPIPWhiteList holds the TCP ip white list configuration.
                 properties:
-                  secretName:
-                    description: SecretName is the name of the referenced Kubernetes
-                      Secret to specify the certificate details.
-                    type: string
-                required:
-                - secretName
+                  sourceRange:
+                    items:
+                      type: string
+                    type: array
                 type: object
-            required:
-            - defaultCertificate
             type: object
         required:
         - metadata

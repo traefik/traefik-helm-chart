@@ -6,6 +6,9 @@
       {{- end -}}
     {{- end -}}
   {{- end -}}
+  {{- if eq (default .Chart.AppVersion .Values.image.tag) "latest" }}
+    {{- fail "\n\n ERROR: latest tag should not be used" }}
+  {{- end }}
 
 ---
 apiVersion: apps/v1
@@ -17,12 +20,19 @@ metadata:
     helm.sh/chart: {{ template "traefik.chart" . }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
-  {{- with .Values.deployment.podLabels }}
-  {{- toYaml . | nindent 8 }}
+  {{- with .Values.deployment.labels }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
   annotations:
   {{- with .Values.deployment.annotations }}
   {{- toYaml . | nindent 4 }}
+  {{- end }}
+  {{- if .Values.metrics }}
+  {{- if .Values.metrics.prometheus }}
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/metrics"
+    prometheus.io/port: {{ quote (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
+  {{- end }}
   {{- end }}
 spec:
   selector:

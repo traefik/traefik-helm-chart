@@ -16,6 +16,8 @@ deployment:
   replicas: 1
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
+  # Additional deployment labels (e.g. for filtering deployment by custom labels)
+  labels: {}
   # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
   # Additional Pod labels (e.g. for filtering Pod by custom labels)
@@ -33,7 +35,7 @@ deployment:
   additionalVolumes: []
     # - name: dsdsocket
     #   hostPath:
-    #   path: /var/run/statsd-exporter
+    #     path: /var/run/statsd-exporter
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
@@ -61,11 +63,15 @@ ingressClass:
   # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
   enabled: false
   isDefaultClass: false
+  # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
+  fallbackApiVersion:
 
 # Activate Pilot integration
 pilot:
   enabled: false
   token: ""
+  # Toggle Pilot Dashboard
+  # dashboard: false
 
 # Enable experimental features
 experimental:
@@ -78,6 +84,9 @@ experimental:
     # - group: "core"
     #   kind: "Secret"
     #   name: "mysecret"
+    # By default, Gateway would be created to the Namespace you are deploying Traefik to.
+    # You may create that Gateway in another namespace, setting its name below:
+    # namespace: default
 
 # Create an IngressRoute for the dashboard
 ingressRoute:
@@ -103,6 +112,7 @@ providers:
       # - "default"
   kubernetesIngress:
     enabled: true
+    # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"
     # IP used for Kubernetes Ingress endpoints
@@ -118,6 +128,8 @@ providers:
 # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 # additionalArguments:
 # - "--providers.file.filename=/config/dynamic.toml"
+# - "--ping"
+# - "--ping.entrypoint=web"
 volumes: []
 # - name: public-cert
 #   mountPath: "/certs"
@@ -174,6 +186,17 @@ logs:
           # Authorization: drop
           # Content-Type: keep
 
+metrics:
+  # datadog:
+  #   address: 127.0.0.1:8125
+  # influxdb:
+  #   address: localhost:8089
+  #   protocol: udp
+  prometheus:
+    entryPoint: metrics
+  # statsd:
+  #   address: localhost:8125
+
 globalArguments:
   - "--global.checknewversion"
   - "--global.sendanonymoususage"
@@ -223,6 +246,10 @@ ports:
     # only.
     # hostIP: 192.168.100.10
 
+    # Override the liveness/readiness port. This is useful to integrate traefik
+    # with an external Load Balancer that performs healthchecks.
+    # healthchecksPort: 9000
+
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
     #
@@ -268,6 +295,20 @@ ports:
       #   sans:
       #     - foo.example.com
       #     - bar.example.com
+  metrics:
+    port: 9100
+    # hostPort: 9100
+    # Defines whether the port is exposed if service.type is LoadBalancer or
+    # NodePort.
+    #
+    # You may not want to expose the metrics port on production deployments.
+    # If you want to access it from outside of your cluster,
+    # use `kubectl port-forward` or create a secure ingress
+    expose: false
+    # The exposed port for this service
+    exposedPort: 9100
+    # The port protocol (TCP/UDP)
+    protocol: TCP
 
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
@@ -327,6 +368,7 @@ autoscaling:
 # It will persist TLS certificates.
 persistence:
   enabled: false
+  name: data
 #  existingClaim: ""
   accessMode: ReadWriteOnce
   size: 128Mi
@@ -349,7 +391,7 @@ rbac:
   # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
   namespaced: false
 
-# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBindin or ClusterRoleBinding
+# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 podSecurityPolicy:
   enabled: false
 
