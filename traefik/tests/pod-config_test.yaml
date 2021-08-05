@@ -234,3 +234,18 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--pilot.dashboard=false"
+  - it: should have prometheus labels with specified values
+    set:
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations.prometheus\.io/path
+          value: /metrics
+      - equal:
+          path: spec.template.metadata.annotations.prometheus\.io/port
+          value: "9100"
+      - equal:
+          path: spec.template.metadata.annotations.prometheus\.io/scrape
+          value: "true"
