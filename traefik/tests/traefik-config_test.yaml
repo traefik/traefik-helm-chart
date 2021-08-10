@@ -43,6 +43,36 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.namespaces=foo,bar"
+  - it: should not have the watched namespace when provider is disabled
+    set:
+      providers:
+        kubernetesCRD:
+          enabled: false
+          namespaces:
+          - "foo"
+          - "bar"
+        kubernetesIngress:
+          enabled: false
+          namespaces:
+            - "foo"
+            - "bar"
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesingress.namespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetesingress"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetescrd.namespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetescrd"
   - it: should have disable published Kubernetes service when default configuration
     asserts:
       - notContains:

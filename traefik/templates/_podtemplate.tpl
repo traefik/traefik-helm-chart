@@ -105,6 +105,25 @@
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
+          {{- if .Values.metrics }}
+          {{- if .Values.metrics.datadog }}
+          - "--metrics.datadog=true"
+          - "--metrics.datadog.address={{ .Values.metrics.datadog.address }}"
+          {{- end }}
+          {{- if .Values.metrics.influxdb }}
+          - "--metrics.influxdb=true"
+          - "--metrics.influxdb.address={{ .Values.metrics.influxdb.address }}"
+          - "--metrics.influxdb.protocol={{ .Values.metrics.influxdb.protocol }}"
+          {{- end }}
+          {{- if .Values.metrics.prometheus }}
+          - "--metrics.prometheus=true"
+          - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
+          {{- end }}
+          {{- if .Values.metrics.statsd }}
+          - "--metrics.statsd=true"
+          - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
+          {{- end }}
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
           - "--providers.kubernetescrd.allowcrossnamespace={{ .Values.providers.kubernetesCRD.allowCrossNamespace }}"
@@ -123,8 +142,12 @@
           - "--experimental.kubernetesgateway"
           {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
+          {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . }}"
+          {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config.redirectTo }}
