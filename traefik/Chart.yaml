@@ -3,7 +3,7 @@ name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
 version: 10.1.2
-appVersion: 2.4.9
+appVersion: 2.4.13
 keywords:
   - traefik
   - ingress
