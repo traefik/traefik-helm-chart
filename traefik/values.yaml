@@ -415,16 +415,14 @@ affinity: {}
 # # This example pod anti-affinity forces the scheduler to put traefik pods
 # # on nodes where no other traefik pods are scheduled.
 # # It should be used when hostNetwork: true to prevent port conflicts
-# # Make sure deployment.podLabels would set a label, to be reused in
-# # your anti-affinity (here: foo=bar)
 #   podAntiAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
 #     - labelSelector:
 #         matchExpressions:
-#         - key: foo
+#         - key: app.kubernetes.io/instance
 #           operator: In
 #           values:
-#           - bar
+#           - traefik
 #       topologyKey: failure-domain.beta.kubernetes.io/zone
 nodeSelector: {}
 tolerations: []
@@ -433,7 +431,7 @@ topologySpreadConstraints: []
 # # on nodes where no other traefik pods are scheduled.
 #   - labelSelector:
 #       matchLabels:
-#         foo: bar
+#         app.kubernetes.io/instance: traefik
 #     maxSkew: 1
 #     topologyKey: kubernetes.io/hostname
 #     whenUnsatisfiable: DoNotSchedule
