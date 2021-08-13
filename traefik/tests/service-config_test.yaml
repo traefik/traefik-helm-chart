@@ -62,6 +62,35 @@ tests:
       - equal:
           path: items[1].metadata.annotations.dns-hostname
           value: udp.example.com
+  - it: should merge protocol specific service annotations when specified via values
+    set:
+      service:
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsTCP:
+          dns-hostname: tcp.example.com 
+        annotationsUDP:
+          dns-hostname: udp.example.com 
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].metadata.annotations.azure-load-balancer-internal
+          value: true
+      - equal:
+          path: items[0].metadata.annotations.dns-hostname
+          value: tcp.example.com
+      - equal:
+          path: items[1].metadata.annotations.dns-hostname
+          value: udp.example.com
+      - equal:
+          path: items[1].metadata.annotations.azure-load-balancer-internal
+          value: true
+
   - it: should have customized labels when specified via values
     set:
       service:
