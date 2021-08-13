@@ -79,17 +79,61 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations.azure-load-balancer-internal
-          value: true
+          path: items[0].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: tcp.example.com
       - equal:
-          path: items[0].metadata.annotations.dns-hostname
-          value: tcp.example.com
+          path: items[1].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: udp.example.com
+  - it: should merge protocol specific service annotations with annotationsTCP unspecified when specified via values
+    set:
+      service:
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsUDP:
+          dns-hostname: udp.example.com 
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
       - equal:
-          path: items[1].metadata.annotations.dns-hostname
-          value: udp.example.com
+          path: items[0].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
       - equal:
-          path: items[1].metadata.annotations.azure-load-balancer-internal
-          value: true
+          path: items[1].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: udp.example.com
+  - it: should merge protocol specific service annotations with annotationsUDP unspecified when specified via values
+    set:
+      service:
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsTCP:
+          dns-hostname: tcp.example.com 
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: tcp.example.com
+      - equal:
+          path: items[1].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
   - it: should have customized labels when specified via values
     set:
       service:
