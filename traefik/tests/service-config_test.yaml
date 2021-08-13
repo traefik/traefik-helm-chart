@@ -28,6 +28,40 @@ tests:
       - equal:
           path: items[0].metadata.annotations.azure-load-balancer-internal
           value: true
+  - it: should have TCP only annotations when specified via values
+    set:
+      service:
+        annotationsTCP:
+          dns-hostname: tcp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].metadata.annotations.dns-hostname
+          value: tcp.example.com
+      - isNull:
+          path: items[1].metadata.annotations
+  - it: should have UDP only annotations when specified via values
+    set:
+      service:
+        annotationsUDP:
+          dns-hostname: udp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - isNull:
+          path: items[0].metadata.annotations
+      - equal:
+          path: items[1].metadata.annotations.dns-hostname
+          value: udp.example.com
   - it: should have customized labels when specified via values
     set:
       service:
