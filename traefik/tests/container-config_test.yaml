@@ -106,4 +106,3 @@ tests:
       - equal:
           path: spec.template.spec.volumes[2].secret.secretName
           value: "RELEASE-NAME-custom-secret"
-          
