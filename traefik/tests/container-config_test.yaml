@@ -106,3 +106,19 @@ tests:
       - equal:
           path: spec.template.spec.volumes[2].secret.secretName
           value: "RELEASE-NAME-custom-secret"
+  - it: should have prometheus labels with specified values
+    set:
+      ports:
+        metrics:
+          port: 9100
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations
+          value:
+            prometheus.io/path: /metrics
+            prometheus.io/port: "9100"
+            prometheus.io/scrape: "true"
+
