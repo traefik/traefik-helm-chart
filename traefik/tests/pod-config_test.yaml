@@ -234,3 +234,18 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--pilot.dashboard=false"
+  - it: should have prometheus annotations with specified values
+    set:
+      ports:
+        metrics:
+          port: 9100
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations
+          value:
+            prometheus.io/path: /metrics
+            prometheus.io/port: "9100"
+            prometheus.io/scrape: "true"
