@@ -4,6 +4,13 @@
       {{- with .Values.deployment.podAnnotations }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.metrics }}
+      {{- if .Values.metrics.prometheus }}
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: {{ quote (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
+      {{- end }}
+      {{- end }}
       labels:
         app.kubernetes.io/name: {{ template "traefik.name" . }}
         helm.sh/chart: {{ template "traefik.chart" . }}
