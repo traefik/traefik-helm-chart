@@ -5,7 +5,7 @@ metadata:
   name: {{ template "traefik.fullname" . }}
   annotations:
   {{- with .Values.persistence.annotations  }}
-  {{ toYaml . | indent 4 }}
+  {{ toYaml . | nindent 4 }}
   {{- end }}
     helm.sh/resource-policy: keep
   labels:
