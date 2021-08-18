@@ -29,7 +29,7 @@ items:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       annotations:
-      {{- with .Values.service.annotations }}
+      {{- with (merge .Values.service.annotationsTCP .Values.service.annotations) }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -79,7 +79,7 @@ items:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       annotations:
-      {{- with .Values.service.annotations }}
+      {{- with (merge .Values.service.annotationsUDP .Values.service.annotations) }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
