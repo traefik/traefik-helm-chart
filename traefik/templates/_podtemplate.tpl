@@ -43,6 +43,11 @@
           {{- toYaml . | nindent 10 }}
           {{- end }}
         readinessProbe:
+          {{- if .Values.ports.traefik.readinessProbe }}
+          {{- with .Values.ports.traefik.readinessProbe }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- else }}
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
@@ -51,7 +56,13 @@
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
+          {{- end }}
         livenessProbe:
+          {{- if .Values.ports.traefik.livenessProbe }}
+          {{- with .Values.ports.traefik.livenessProbe }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          {{- else }}
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
@@ -60,6 +71,7 @@
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
+          {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}

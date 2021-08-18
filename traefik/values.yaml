@@ -246,6 +246,38 @@ ports:
     # only.
     # hostIP: 192.168.100.10
 
+    # Override the readinessProbe. This is useful to use exec as health check instead of httpGet.
+    # The example shows the usage of wget inside exec, which will make the healthcheck run inside the container
+    readinessProbe: {}
+      # exec:
+      #   command:
+      #     - "wget"
+      #     - "--no-verbose"
+      #     - "--tries=1"
+      #     - "--spider"
+      #     - "http://localhost:9000/ping"
+      # failureThreshold: 1
+      # initialDelaySeconds: 10
+      # periodSeconds: 10
+      # successThreshold: 1
+      # timeoutSeconds: 2
+    
+    # Override the livenessProbe. This is useful to use exec as health check instead of httpGet
+    # The example shows the usage of wget inside exec, which will make the healthcheck run inside the container
+    livenessProbe: {}
+      # exec:
+      #   command:
+      #     - "wget"
+      #     - "--no-verbose"
+      #     - "--tries=1"
+      #     - "--spider"
+      #     - "http://localhost:9000/ping"
+      # failureThreshold: 3
+      # initialDelaySeconds: 10
+      # periodSeconds: 10
+      # successThreshold: 1
+      # timeoutSeconds: 2
+
     # Override the liveness/readiness port. This is useful to integrate traefik
     # with an external Load Balancer that performs healthchecks.
     # healthchecksPort: 9000
