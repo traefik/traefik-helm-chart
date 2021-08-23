@@ -66,7 +66,7 @@ ingressClass:
   enabled: false
   isDefaultClass: false
   # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
-  fallbackApiVersion:
+  fallbackApiVersion: ""
 
 # Activate Pilot integration
 pilot:
@@ -330,8 +330,12 @@ tlsOptions: {}
 service:
   enabled: true
   type: LoadBalancer
-  # Additional annotations (e.g. for cloud provider specific config)
+  # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
   annotations: {}
+  # Additional annotations for TCP service only
+  annotationsTCP: {}
+  # Additional annotations for UDP service only
+  annotationsUDP: {}
   # Additional service labels (e.g. for filtering Service by custom labels)
   labels: {}
   # Additional entries here will be added to the service spec. Cannot contains
