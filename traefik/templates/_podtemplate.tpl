@@ -134,6 +134,9 @@
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
           {{- end }}
+          {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
+          - "--providers.kubernetescrd.allowCrossNamespace=true"
+          {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
