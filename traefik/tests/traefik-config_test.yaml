@@ -28,6 +28,7 @@ tests:
       providers:
         kubernetesCRD:
           enabled: true
+          allowCrossNamespace: true
           namespaces:
           - "foo"
           - "bar"
@@ -40,6 +41,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.namespaces=foo,bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowCrossNamespace=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.namespaces=foo,bar"
