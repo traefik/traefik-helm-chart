@@ -367,7 +367,7 @@ ports:
 #       - CurveP384
 tlsOptions: {}
 
-# Options for the traefik services, where the entrypoints traffic comes from.
+# Options for the Traefik services, where the entrypoints traffic comes from.
 # Two services may be created: the first would target entries from your
 # `.Values.ports`, where `.expose` is `true`. The latter would include entries
 # whose `.exposeInternal` is `true`. Both of which are undefined by default,
@@ -414,6 +414,7 @@ service:
     # annotations:
     #   networking.gke.io/internal-load-balancer-subnet: gke-services
     #   networking.gke.io/load-balancer-type: Internal
+    #   metallb.universe.tf/address-pool: private-ips
     # Additional entries here will be added to the internal service spec. Cannot
     # contains type, selector or ports entries.
     spec: {}
