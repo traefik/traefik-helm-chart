@@ -28,7 +28,7 @@ endif
 # Execute Unit Testing
 unit-test: helm-unittest
 	@echo "== Unit Testing Chart..."
-	@helm unittest --color --update-snapshot ./traefik
+	@helm unittest --color --update-snapshot --helm3 ./traefik
 	@echo "== Unit Tests Finished..."
 
 

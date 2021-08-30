@@ -48,6 +48,8 @@ tests:
   - it: should have UDP only annotations when specified via values
     set:
       service:
+        annotations:
+          azure-load-balancer-internal: true
         annotationsUDP:
           dns-hostname: udp.example.com
       ports:
@@ -57,8 +59,10 @@ tests:
           exposedPort: 80
           protocol: UDP
     asserts:
-      - isNull:
+      - equal:
           path: items[0].metadata.annotations
+          value:
+            azure-load-balancer-internal: true
       - equal:
           path: items[1].metadata.annotations.dns-hostname
           value: udp.example.com
