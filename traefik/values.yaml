@@ -373,7 +373,7 @@ tlsOptions: {}
 # whose `.exposeInternal` is `true`. Both of which are undefined by default,
 # assumed to be false.
 # In addition to having enabled those services, there need to be at least one
-# elligible entrypoint, for the corresponding Service object to be created. By
+# eligible entrypoint, for the corresponding Service object to be created. By
 # default, only the web and websecure entrypoints would be exposed, on the main
 # service.
 service:
