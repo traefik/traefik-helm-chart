@@ -36,7 +36,14 @@ items:
       {{- $type := default "LoadBalancer" .Values.service.type }}
       type: {{ $type }}
       {{- with .Values.service.spec }}
+      {{- $major := .Capabilities.KubeVersion.Major -}}
+      {{- $minor := .Capabilities.KubeVersion.Minor -}}
+      {{- if and (lt (int $major) 2) (lt (int $minor) 21) -}}
+      ipFamilyPolicy: PreferDualStack
       {{- toYaml . | nindent 6 }}
+      {{- else -}}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- end }}
       selector:
         app.kubernetes.io/name: {{ template "traefik.name" . }}
