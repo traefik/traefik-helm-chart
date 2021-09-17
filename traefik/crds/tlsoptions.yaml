@@ -34,6 +34,10 @@ spec:
           spec:
             description: TLSOptionSpec configures TLS for an entry point.
             properties:
+              alpnProtocols:
+                items:
+                  type: string
+                type: array
               cipherSuites:
                 items:
                   type: string
