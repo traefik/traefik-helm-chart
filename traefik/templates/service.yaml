@@ -29,7 +29,7 @@ items:
       {{- toYaml . | nindent 8 }}
       {{- end }}
       annotations:
-      {{- with .Values.service.annotations }}
+      {{- with (merge .Values.service.annotationsTCP .Values.service.annotations) }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
@@ -75,8 +75,11 @@ items:
         helm.sh/chart: {{ template "traefik.chart" . }}
         app.kubernetes.io/managed-by: {{ .Release.Service }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- with .Values.service.labels }}
+      {{- toYaml . | nindent 8 }}
+      {{- end }}
       annotations:
-      {{- with .Values.service.annotations }}
+      {{- with (merge .Values.service.annotationsUDP .Values.service.annotations) }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
