@@ -133,6 +133,9 @@
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
+          - "--providers.kubernetescrd.allowCrossNamespace=true"
+          {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
