@@ -54,6 +54,7 @@ spec:
                     - RequestClientCert
                     - VerifyClientCertIfGiven
                     - RequireAndVerifyClientCert
+                    - RequireAnyClientCert
                     type: string
                   secretNames:
                     description: SecretName is the name of the referenced Kubernetes
