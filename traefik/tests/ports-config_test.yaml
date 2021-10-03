@@ -13,7 +13,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: items[0].spec.ports
+          path: spec.ports
           content:
             name: web
             port: 80
@@ -34,7 +34,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: items[0].spec.ports
+          path: spec.ports
           content:
             name: websecure
             port: 443
@@ -55,7 +55,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - notContains:
-          path: items[0].spec.ports
+          path: spec.ports
           content:
             name: traefik
             port: 9000
@@ -80,7 +80,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: items[0].spec.ports
+          path: spec.ports
           content:
             name: ssh
             port: 22
@@ -108,7 +108,7 @@ tests:
             protocol: TCP
         template: deployment.yaml
       - contains:
-          path: items[0].spec.ports
+          path: spec.ports
           content:
             name: ssh
             port: 22
@@ -135,13 +135,14 @@ tests:
             protocol: UDP
         template: deployment.yaml
       - contains:
-          path: items[1].spec.ports
+          path: spec.ports
           content:
             name: udp
             port: 51
             protocol: UDP
             targetPort: udp
         template: service.yaml
+        documentIndex: 1
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.udp.address=:51/udp"

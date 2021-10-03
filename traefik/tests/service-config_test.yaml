@@ -5,7 +5,7 @@ tests:
   - it: should be a type LoadBalancer by default
     asserts:
       - equal:
-          path: items[0].spec.type
+          path: spec.type
           value: LoadBalancer
   - it: should be a custom type when specified via values
     set:
@@ -13,12 +13,12 @@ tests:
         type: NodePort
     asserts:
       - equal:
-          path: items[0].spec.type
+          path: spec.type
           value: NodePort
   - it: should have no annotations by default
     asserts:
       - isNull:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
   - it: should have customized annotations when specified via values
     set:
       service:
@@ -26,7 +26,7 @@ tests:
           azure-load-balancer-internal: true
     asserts:
       - equal:
-          path: items[0].metadata.annotations.azure-load-balancer-internal
+          path: metadata.annotations.azure-load-balancer-internal
           value: true
   - it: should have TCP only annotations when specified via values
     set:
@@ -41,10 +41,11 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations.dns-hostname
+          path: metadata.annotations.dns-hostname
           value: tcp.example.com
       - isNull:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
+        documentIndex: 1
   - it: should have UDP only annotations when specified via values
     set:
       service:
@@ -58,10 +59,11 @@ tests:
           protocol: UDP
     asserts:
       - isNull:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
       - equal:
-          path: items[1].metadata.annotations.dns-hostname
+          path: metadata.annotations.dns-hostname
           value: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations when specified via values
     set:
       service:
@@ -79,15 +81,16 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations with annotationsTCP unspecified when specified via values
     set:
       service:
@@ -103,14 +106,15 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations with annotationsUDP unspecified when specified via values
     set:
       service:
@@ -126,14 +130,15 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
+        documentIndex: 1
   - it: should have customized labels when specified via values
     set:
       service:
@@ -141,9 +146,8 @@ tests:
           custom-label: custom-value
     asserts:
       - equal:
-          path: items[0].metadata.labels.custom-label
+          path: metadata.labels.custom-label
           value: custom-value
-
   - it: should have custom spec elements when specified via values
     set:
       service:
@@ -158,28 +162,28 @@ tests:
             - "1.2.3.4"
     asserts:
       - equal:
-          path: items[0].spec.ports[0].name
+          path: spec.ports[0].name
           value: web
       - equal:
-          path: items[0].spec.ports[0].protocol
+          path: spec.ports[0].protocol
           value: TCP
       - equal:
-          path: items[0].spec.externalTrafficPolicy
+          path: spec.externalTrafficPolicy
           value: Cluster
       - equal:
-          path: items[0].spec.loadBalancerIP
+          path: spec.loadBalancerIP
           value: "1.2.3.4"
       - equal:
-          path: items[0].spec.clusterIP
+          path: spec.clusterIP
           value: "2.3.4.5"
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[0]
+          path: spec.loadBalancerSourceRanges[0]
           value: 192.168.0.1/32
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[1]
+          path: spec.loadBalancerSourceRanges[1]
           value: 172.16.0.0/16
       - equal:
-          path: items[0].spec.externalIPs[0]
+          path: spec.externalIPs[0]
           value: "1.2.3.4"
   - it: should have custom spec elements when specified via values for UDP ports
     set:
@@ -191,10 +195,11 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[1].spec.ports[0].name
+          path: spec.ports[0].name
           value: udp
+        documentIndex: 1
       - equal:
-          path: items[1].spec.ports[0].protocol
+          path: spec.ports[0].protocol
           value: UDP
   - it: should not have ipFamilyPolicy when not specified
     set:
@@ -278,3 +283,4 @@ tests:
     asserts:
     - failedTemplate:
         errorMessage: "You need to expose at least one port or set enabled=false to service"
+        documentIndex: 1
