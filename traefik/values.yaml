@@ -109,8 +109,11 @@ providers:
   kubernetesCRD:
     enabled: true
     allowCrossNamespace: false
+    # ingressClass: traefik-internal
+    # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"
+
   kubernetesIngress:
     enabled: true
     # labelSelector: environment=production,method=traefik

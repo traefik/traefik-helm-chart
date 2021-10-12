@@ -133,6 +133,12 @@
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
+          {{- if .Values.providers.kubernetesCRD.labelSelector }}
+          - "--providers.kubernetescrd.labelSelector={{ .Values.providers.kubernetesCRD.labelSelector }}"
+          {{- end }}
+          {{- if .Values.providers.kubernetesCRD.ingressClass }}
+          - "--providers.kubernetescrd.ingressClass={{ .Values.providers.kubernetesCRD.ingressClass }}"
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
           {{- end }}
