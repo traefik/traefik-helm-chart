@@ -122,6 +122,7 @@ providers:
     # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"
+    # ingressClass: traefik-internal
     # IP used for Kubernetes Ingress endpoints
     publishedService:
       enabled: false
