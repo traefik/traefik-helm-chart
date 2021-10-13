@@ -109,10 +109,9 @@ providers:
   kubernetesCRD:
     enabled: true
     allowCrossNamespace: false
+    allowExternalNameServices: false
     # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
-    # If allowExternalNameServices is set to `true`, IngressRoutes are able to reference ExternalName services
-    allowExternalNameServices: false
     namespaces: []
       # - "default"
 
