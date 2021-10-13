@@ -112,6 +112,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.labelSelector=environment=devel"
+  - it: should match CRDs based on input label
+    set:
+      providers:
+        kubernetesCRD:
+          labelSelector: environment=devel
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.labelSelector=environment=devel"
+  - it: should match CRDs with ingressClass
+    set:
+      providers:
+        kubernetesCRD:
+          ingressClass: foo
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.ingressClass=foo"
   - it: should have a plugin storage if the experimental feature is enabled
     set:
       experimental:
