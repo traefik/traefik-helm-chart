@@ -154,8 +154,8 @@
           {{- if .Values.providers.kubernetesIngress.labelSelector }}
           - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
           {{- end }}
-          {{- if .Values.providers.kubernetesIngressClass.ingressClass }}
-          - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesCRD.ingressClass }}"
+          {{- if .Values.providers.kubernetesIngress.ingressClass }}
+          - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
           {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
