@@ -14,6 +14,8 @@ deployment:
   kind: Deployment
   # Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 1
+  # Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
+  terminationGracePeriodSeconds: 60
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
   # Additional deployment labels (e.g. for filtering deployment by custom labels)
@@ -108,8 +110,13 @@ rollingUpdate:
 providers:
   kubernetesCRD:
     enabled: true
+    allowCrossNamespace: false
+    allowExternalNameServices: false
+    # ingressClass: traefik-internal
+    # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"
+
   kubernetesIngress:
     enabled: true
     # labelSelector: environment=production,method=traefik
@@ -328,8 +335,12 @@ tlsOptions: {}
 service:
   enabled: true
   type: LoadBalancer
-  # Additional annotations (e.g. for cloud provider specific config)
+  # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
   annotations: {}
+  # Additional annotations for TCP service only
+  annotationsTCP: {}
+  # Additional annotations for UDP service only
+  annotationsUDP: {}
   # Additional service labels (e.g. for filtering Service by custom labels)
   labels: {}
   # Additional entries here will be added to the service spec. Cannot contains

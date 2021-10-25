@@ -2,8 +2,8 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 10.1.7
-appVersion: 2.4.13
+version: 10.6.1
+appVersion: 2.5.3
 keywords:
   - traefik
   - ingress
