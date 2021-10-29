@@ -1,5 +1,5 @@
 {{- if .Values.autoscaling.enabled }}
-apiVersion: autoscaling/v2beta1
+apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ template "traefik.fullname" . }}
@@ -17,4 +17,8 @@ spec:
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
 {{ toYaml .Values.autoscaling.metrics | indent 4 }}
+{{- if .Values.autoscaling.behavior }}
+  behaviour: 
+{{ toYaml .Values.autoscaling.behavior | indent 4 }}
+{{- end }}
 {{- end }}
