@@ -93,6 +93,8 @@ rules:
       - networking.x-k8s.io
     resources:
       - httproutes
+      - tcproutes
+      - tlsroutes
     verbs:
       - create
       - delete
