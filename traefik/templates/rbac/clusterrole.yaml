@@ -67,49 +67,23 @@ rules:
       - networking.x-k8s.io
     resources:
       - gatewayclasses
-      - gatewayclasses/status
       - gateways
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - networking.x-k8s.io
-    resources:
-      - gatewayclasses/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - networking.x-k8s.io
-    resources:
-      - gateways/status
-    verbs:
-      - get
-      - patch
-      - update
-  - apiGroups:
-      - networking.x-k8s.io
-    resources:
       - httproutes
       - tcproutes
       - tlsroutes
     verbs:
-      - create
-      - delete
       - get
       - list
-      - patch
-      - update
       - watch
   - apiGroups:
       - networking.x-k8s.io
     resources:
+      - gatewayclasses/status
+      - gateways/status
       - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
     verbs:
-      - get
-      - patch
       - update
 {{- end -}}
 {{- end -}}
