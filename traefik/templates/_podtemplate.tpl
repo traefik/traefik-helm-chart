@@ -37,6 +37,9 @@
       containers:
       - image: "{{ .Values.image.name }}:{{ default .Chart.AppVersion .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
+        {{- with .Values.deployment.lifecycle }}
+        lifecycle: {{ . | toYaml | nindent 10 }}
+        {{- end }}
         name: {{ template "traefik.fullname" . }}
         resources:
           {{- with .Values.resources }}

@@ -16,6 +16,8 @@ deployment:
   replicas: 1
   # Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
   terminationGracePeriodSeconds: 60
+  # Container Lifecycle Hook configuration (e.g. for PreStop hooks for delayed pod termination)
+  lifecycle: {}
   # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
   # Additional deployment labels (e.g. for filtering deployment by custom labels)
