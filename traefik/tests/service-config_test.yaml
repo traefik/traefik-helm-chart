@@ -68,9 +68,9 @@ tests:
         annotations:
           azure-load-balancer-internal: true
         annotationsTCP:
-          dns-hostname: tcp.example.com 
+          dns-hostname: tcp.example.com
         annotationsUDP:
-          dns-hostname: udp.example.com 
+          dns-hostname: udp.example.com
       ports:
         udp:
           port: 3000
@@ -94,7 +94,7 @@ tests:
         annotations:
           azure-load-balancer-internal: true
         annotationsUDP:
-          dns-hostname: udp.example.com 
+          dns-hostname: udp.example.com
       ports:
         udp:
           port: 3000
@@ -117,7 +117,7 @@ tests:
         annotations:
           azure-load-balancer-internal: true
         annotationsTCP:
-          dns-hostname: tcp.example.com 
+          dns-hostname: tcp.example.com
       ports:
         udp:
           port: 3000
@@ -196,3 +196,18 @@ tests:
       - equal:
           path: items[1].spec.ports[0].protocol
           value: UDP
+  - it: should not set ipFamilyPolicy if it is null
+    set:
+      service:
+        ipFamilyPolicy: null
+    asserts:
+      - isEmpty:
+          path: items[0].spec.ipFamilyPolicy
+  - it: should set ipFamilyPolicy if it is not null
+    set:
+      service:
+        ipFamilyPolicy: PreferDualStack
+    asserts:
+      - equal:
+          path: items[0].spec.ipFamilyPolicy
+          value: PreferDualStack
