@@ -354,6 +354,8 @@ service:
     # - 172.16.0.0/16
   externalIPs: []
     # - 1.2.3.4
+  # null or one of 'SingleStack', 'PreferDualStack', or 'RequireDualStack'
+  ipFamilyPolicy: null
 
 ## Create HorizontalPodAutoscaler object.
 ##
