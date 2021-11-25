@@ -6,7 +6,7 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: should have minAvailable set
+  - it: should have minAvailable set as int
     set:
       podDisruptionBudget:
         enabled: true
@@ -17,7 +17,7 @@ tests:
           value: 2
       - isEmpty:
           path: spec.maxUnavailable
-  - it: should have maxUnavailable set
+  - it: should have maxUnavailable set as int
     set:
       podDisruptionBudget:
         enabled: true
@@ -26,5 +26,27 @@ tests:
       - equal:
           path: spec.maxUnavailable
           value: 1
+      - isEmpty:
+          path: spec.minAvailable
+  - it: should have minAvailable set as percentage
+    set:
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 25%
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 25%
+      - isEmpty:
+          path: spec.maxUnavailable
+  - it: should have maxUnavailable set as percentage
+    set:
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 33%
+    asserts:
+      - equal:
+          path: spec.maxUnavailable
+          value: 33%
       - isEmpty:
           path: spec.minAvailable
