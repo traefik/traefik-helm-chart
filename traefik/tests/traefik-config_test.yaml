@@ -206,7 +206,10 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.allowcrossnamespace=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--providers.kubernetescrd.allowCrossNamespace=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd"
