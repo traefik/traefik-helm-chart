@@ -201,15 +201,25 @@ tests:
     set:
       providers:
         kubernetesCRD:
-          allowCrossNamespace: false
+          allowCrossNamespace: true
           enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowCrossNamespace=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd"
+  - it: should disable KubernetesCRD allowCrossNamespace
+    set:
+      providers:
+        kubernetesCRD:
+          allowCrossNamespace: false
+          enabled: true
+    asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd.allowCrossNamespace=true"
+          content: "--providers.kubernetescrd.allowCrossNamespace=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd"
