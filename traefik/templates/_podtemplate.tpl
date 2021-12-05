@@ -300,8 +300,8 @@
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      {{- if or (gt (.Capabilities.KubeVersion.Major | int) 1) (ge (.Capabilities.KubeVersion.Minor | int) 18) }}
-        {{- with .Values.topologySpreadConstraints }}
+      {{- with .Values.topologySpreadConstraints }}
+        {{- if or (gt (.Capabilities.KubeVersion.Major | int) 1) (ge (.Capabilities.KubeVersion.Minor | int) 18) }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
         {{- end }}
