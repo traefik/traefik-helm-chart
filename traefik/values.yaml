@@ -109,7 +109,6 @@ rollingUpdate:
 #
 providers:
   kubernetesCRD:
-    allowCrossNamespace: false
     enabled: true
     allowCrossNamespace: false
     allowExternalNameServices: false
