@@ -25,7 +25,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
-      terminationGracePeriodSeconds: 60
+      terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ template "traefik.hostnetwork" . }}
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
@@ -141,6 +141,9 @@
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
+          {{- end }}
+          {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
+          - "--providers.kubernetescrd.allowExternalNameServices=true"
           {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}

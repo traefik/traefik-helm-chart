@@ -10,6 +10,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--the.force.is.with.me=true"
+
   - it: should have namespace restriction if rbac is namespaced
     set:
       rbac:
@@ -77,6 +78,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--providers.kubernetescrd"
+
   - it: should have disable published Kubernetes service when default configuration
     asserts:
       - notContains:
@@ -103,25 +105,40 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
+
+  - it: should allow cross namespace services when specified in configuration
+    set:
+        providers:
+          kubernetesCRD:
+            allowCrossNamespace: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowCrossNamespace=true"
+  - it: should allow external name services when specified in configuration
+    set:
+        providers:
+          kubernetesCRD:
+            allowExternalNameServices: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowExternalNameServices=true"
   - it: should match ingresses based on input label
     set:
         providers:
           kubernetesIngress:
             labelSelector: environment=devel
+          kubernetesCRD:
+            labelSelector: environment=devel
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.labelSelector=environment=devel"
-  - it: should match CRDs based on input label
-    set:
-      providers:
-        kubernetesCRD:
-          labelSelector: environment=devel
-    asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.labelSelector=environment=devel"
-  - it: should match CRDs with ingressClass
+  - it: should match ingresses based on ingressClass
     set:
       providers:
         kubernetesCRD:
@@ -130,6 +147,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.ingressClass=foo"
+
   - it: should have a plugin storage if the experimental feature is enabled
     set:
       experimental:
@@ -146,6 +164,7 @@ tests:
           content:
             name: plugins
             mountPath: "/plugins-storage"
+
   - it: should have tls configuration args when specified in values.yaml for port
     set:
       ports:
@@ -175,6 +194,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http.tls.domains[0].sans=alt1.domain.tld,alt2.domain.tld"
+
   - it: should have additional volumeMounts
     set:
       additionalVolumeMounts:
