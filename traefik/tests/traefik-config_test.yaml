@@ -105,16 +105,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
-
-  - it: should allow cross namespace services when specified in configuration
-    set:
-        providers:
-          kubernetesCRD:
-            allowCrossNamespace: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.allowCrossNamespace=true"
   - it: should allow external name services when specified in configuration
     set:
         providers:
