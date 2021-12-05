@@ -13,13 +13,17 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
-  privileged: false
-  allowPrivilegeEscalation: false
   requiredDropCapabilities:
     - ALL
 {{- if not .Values.securityContext.runAsNonRoot }}
   allowedCapabilities:
     - NET_BIND_SERVICE
+  allowPrivilegeEscalation: true
+  privileged: true
+{{- else }}
+  allowedCapabilities: []
+  allowPrivilegeEscalation: false
+  privileged: false
 {{- end }}
   hostNetwork: {{ .Values.hostNetwork }}
   hostIPC: false

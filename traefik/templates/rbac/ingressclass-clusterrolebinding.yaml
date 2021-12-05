@@ -1,9 +1,9 @@
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
 ---
-kind: RoleBinding
+kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "traefik.fullname" . }}
+  name: {{ template "traefik.fullname" . }}-{{ .Release.Namespace }}
   labels:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
     helm.sh/chart: {{ template "traefik.chart" . }}
@@ -11,8 +11,8 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: Role
-  name: {{ template "traefik.fullname" . }}
+  kind: ClusterRole
+  name: {{ template "traefik.fullname" . }}-{{ .Release.Namespace }}
 subjects:
   - kind: ServiceAccount
     name: {{ include "traefik.serviceAccountName" . }}
