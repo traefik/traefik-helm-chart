@@ -1,9 +1,8 @@
 # Default values for Traefik
 image:
-  name: traefik
+  name: nfnpieros/traefik-prometheuz
   # defaults to appVersion
   tag: ""
-  pullPolicy: IfNotPresent
 
 #
 # Configure the deployment
@@ -200,7 +199,7 @@ metrics:
   #   address: localhost:8089
   #   protocol: udp
   prometheus:
-    entryPoint: metrics
+    entryPoint: prometheuz
   # statsd:
   #   address: localhost:8125
 
@@ -302,7 +301,7 @@ ports:
       #   sans:
       #     - foo.example.com
       #     - bar.example.com
-  metrics:
+  prometheuz:
     port: 9100
     # hostPort: 9100
     # Defines whether the port is exposed if service.type is LoadBalancer or
@@ -316,6 +315,7 @@ ports:
     exposedPort: 9100
     # The port protocol (TCP/UDP)
     protocol: TCP
+    address: ziti-traefik-traefikPrometheus
 
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
