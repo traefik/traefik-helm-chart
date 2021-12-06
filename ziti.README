@@ -1,0 +1,10 @@
+This helm chart has been updated to work with a version of traefik that has been configured to allow for the use of ziti when serving prometheus metrics
+
+Configuring the chart
+
+In order to get the chart work, a zitified traefik image must be built containing a ziti identity. See the zitified traefik project for more details
+https://github.com/nf-npieros/traefik
+
+Once the zitified traefik image has been created, the appVersion must be changed in Charts.yml to match the version you set when tagging the image
+
+by default the chart is set to use 'prometheuz' as the entrypoint name for prometheus. By default, the service name and identity file name are set to 'traefik' and 'traefikPrometheus' respectively. In order to chagne these names the address portion of the prometheuz entrypoint must be modified in the values.yaml file
