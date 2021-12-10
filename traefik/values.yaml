@@ -52,13 +52,15 @@ deployment:
   # dnsPolicy: ClusterFirstWithHostNet
   # Additional imagePullSecrets
   imagePullSecrets: []
-   # - name: myRegistryKeySecretName
+    # - name: myRegistryKeySecretName
 
 # Pod disruption budget
 podDisruptionBudget:
   enabled: false
   # maxUnavailable: 1
+  # maxUnavailable: 33%
   # minAvailable: 0
+  # minAvailable: 25%
 
 # Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
 ingressClass:
@@ -343,8 +345,8 @@ service:
   annotationsUDP: {}
   # Additional service labels (e.g. for filtering Service by custom labels)
   labels: {}
-  # Additional entries here will be added to the service spec. Cannot contains
-  # type, selector or ports entries.
+  # Additional entries here will be added to the service spec.
+  # Cannot contain type, selector or ports entries.
   spec: {}
     # externalTrafficPolicy: Cluster
     # loadBalancerIP: "1.2.3.4"
@@ -354,6 +356,8 @@ service:
     # - 172.16.0.0/16
   externalIPs: []
     # - 1.2.3.4
+  # One of SingleStack, PreferDualStack, or RequireDualStack.
+  # ipFamilyPolicy: SingleStack
 
 ## Create HorizontalPodAutoscaler object.
 ##
