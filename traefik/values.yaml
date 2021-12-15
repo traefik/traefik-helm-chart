@@ -431,6 +431,7 @@ service:
     spec: {}
     loadBalancerSourceRanges: []
     externalIPs: []
+    # ipFamilyPolicy: SingleStack
 
 ## Create HorizontalPodAutoscaler object.
 ##

@@ -67,6 +67,9 @@ items:
       externalIPs:
       {{- toYaml . | nindent 6 }}
       {{- end -}}
+      {{- if .Values.service.internal.ipFamilyPolicy }}
+      ipFamilyPolicy: {{ .Values.service.internal.ipFamilyPolicy }}
+      {{- end }}
 {{- end }}
 
 {{- if $udpPorts }}
@@ -118,6 +121,9 @@ items:
       externalIPs:
       {{- toYaml . | nindent 6 }}
       {{- end -}}
+      {{- if .Values.service.internal.ipFamilyPolicy }}
+      ipFamilyPolicy: {{ .Values.service.internal.ipFamilyPolicy }}
+      {{- end }}
 {{- end }}
 {{- end }}
 {{- end -}}
