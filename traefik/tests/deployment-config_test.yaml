@@ -72,7 +72,7 @@ tests:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow
           value: podLabels
-  - it: should set the minReadySeconds
+  - it: should have minReadySeconds with specified value
     set:
       deployment:
         minReadySeconds: 30
