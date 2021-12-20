@@ -118,18 +118,14 @@ tests:
   - it: should allow external name services when specified in configuration
     set:
         providers:
+          kubernetesIngress:
+            allowExternalNameServices: true
           kubernetesCRD:
             allowExternalNameServices: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.allowExternalNameServices=true"
-  - it: should allow external name services when specified in configuration
-    set:
-        providers:
-          kubernetesIngress:
-            allowExternalNameServices: true
-    asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.allowExternalNameServices=true"
