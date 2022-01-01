@@ -148,6 +148,9 @@
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
+          {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
+          - "--providers.kubernetesingress.allowExternalNameServices=true"
+          {{- end }}
           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
           {{- end }}
