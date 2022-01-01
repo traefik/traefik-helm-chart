@@ -200,6 +200,7 @@ tests:
     set:
       ports:
         udp:
+          expose: true
           port: 3000
           protocol: UDP
     asserts:
@@ -213,6 +214,7 @@ tests:
         ipFamilyPolicy: PreferDualStack
       ports:
         udp:
+          expose: true
           port: 3000
           protocol: UDP
     asserts:
