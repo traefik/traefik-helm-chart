@@ -43,5 +43,6 @@ spec:
       {{- with .Values.rollingUpdate }}
         {{- toYaml . | nindent 6 }}
       {{- end }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   template: {{ template "traefik.podTemplate" . }}
 {{- end -}}
