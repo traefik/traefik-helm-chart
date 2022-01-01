@@ -36,5 +36,6 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
+  minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   template: {{ template "traefik.podTemplate" . }}
 {{- end -}}
