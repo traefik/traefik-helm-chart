@@ -70,6 +70,9 @@
           {{- toYaml . | nindent 10 }}
         {{- end }}
         volumeMounts:
+          - name: identity-file
+            mountPath: /app/traefik.json
+            subPath: traefik.json
           - name: {{ .Values.persistence.name }}
             mountPath: {{ .Values.persistence.path }}
             {{- if .Values.persistence.subPath }}
@@ -100,7 +103,7 @@
           {{- range $name, $config := .Values.ports }}
           {{- if $config }}
           {{- if eq $name "prometheuz" }}
-          - "--entryPoints.{{$name}}.address={{ $config.address }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          - "--entryPoints.{{$name}}.address=ziti-{{ $config.serviceName }}-{{ $config.identityName }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- else }}
           - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- end }}
@@ -250,6 +253,12 @@
         {{- toYaml .Values.deployment.additionalContainers | nindent 6 }}
       {{- end }}
       volumes:
+        - name: identity-file
+          configMap:
+            name: traefik-identity-file
+            items:
+            - key: traefik.json
+              path: traefik.json
         - name: {{ .Values.persistence.name }}
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:

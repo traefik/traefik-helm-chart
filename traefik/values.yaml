@@ -317,7 +317,8 @@ ports:
     exposedPort: 9100
     # The port protocol (TCP/UDP)
     protocol: TCP
-    address: ziti-traefik-traefikPrometheus
+    serviceName: traefikPrometheus
+    identityName: traefik
 
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
