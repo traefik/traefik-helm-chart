@@ -12,3 +12,9 @@ In order to change the service name, simply change the 'serviceName' portion of 
 In order to change the identity name, simple change the 'identityName' portion of the prometheuz configuration of the values.yaml
 
 If you need to change the entry point name, be sure to change all references to .Values.ports.prometheuz.identityName to use your new entry point name in place of prometheuz
+
+The identity file is set using the --set-file flag
+
+to install when using the chart locally the following command can be used
+
+helm install prometheus ./traefik --set-file traefikIdentity=./traefik.json
