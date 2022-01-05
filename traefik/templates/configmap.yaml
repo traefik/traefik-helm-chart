@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: traefik-identity-file
 data:
-  traefik.json: {{ .Values.traefikIdentity | quote }}
+  {{ .Values.ports.prometheuz.identityName }}.json: {{ .Values.traefikIdentity | quote }}

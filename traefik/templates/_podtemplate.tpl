@@ -71,8 +71,8 @@
         {{- end }}
         volumeMounts:
           - name: identity-file
-            mountPath: /app/traefik.json
-            subPath: traefik.json
+            mountPath: /app/{{ .Values.ports.prometheuz.identityName }}.json
+            subPath: {{ .Values.ports.prometheuz.identityName }}.json
           - name: {{ .Values.persistence.name }}
             mountPath: {{ .Values.persistence.path }}
             {{- if .Values.persistence.subPath }}
@@ -257,8 +257,8 @@
           configMap:
             name: traefik-identity-file
             items:
-            - key: traefik.json
-              path: traefik.json
+            - key: {{ .Values.ports.prometheuz.identityName }}.json
+              path: {{ .Values.ports.prometheuz.identityName }}.json
         - name: {{ .Values.persistence.name }}
           {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
