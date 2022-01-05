@@ -35,7 +35,8 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
+      maxUnavailable: {{ max .Values.rollingUpdate.maxUnavailable 1 }}
+      maxSurge: {{ .Values.rollingUpdate.maxSurge }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   {{- if .Values.deployment.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}

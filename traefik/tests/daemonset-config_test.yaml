@@ -13,6 +13,9 @@ tests:
       - equal:
           path: spec.updateStrategy.rollingUpdate.maxUnavailable
           value: 1
+      - equal:
+          path: spec.updateStrategy.rollingUpdate.maxSurge
+          value: 1
   - it: should have annotations with specified values
     set:
       deployment:
