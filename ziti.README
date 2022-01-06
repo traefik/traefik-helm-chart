@@ -7,9 +7,15 @@ https://github.com/nf-npieros/traefik
 
 Once the zitified traefik image has been created, the appVersion must be changed in Charts.yml to match the version you set when tagging the image
 
-by default the chart is set to use 'prometheuz' as the entrypoint name for prometheus. By default, the service name and identity file name are set to 'traefikPrometheus' and 'traefik' respectively. 
-In order to change the service name, simply change the 'serviceName' portion of the prometheuz configuration of the values.yaml
-In order to change the identity name, simple change the 'identityName' portion of the prometheuz configuration of the values.yaml
+by default the chart is set to use 'prometheuz' as the entrypoint name for prometheus. 
+By default, the service name and identity file name are set to 'traefikPrometheus' and 'traefik' respectively. 
+
+In order to change the service name, the following argument can be added to the install
+--set ports.prometheuz.serviceName=newServiceName
+
+In order to change the identity name, the following arugment can be added to the install
+
+--set ports.prometheuz.identityName=newIdentityName
 
 If you need to change the entry point name, be sure to change all references to .Values.ports.prometheuz.identityName to use your new entry point name in place of prometheuz
 
