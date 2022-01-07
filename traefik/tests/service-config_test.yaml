@@ -251,3 +251,17 @@ tests:
           path: items[1].spec.ipFamilies
           value: 
             - IPv6
+  - it: should set the service port to advertisedPort for HTTP/3 services
+    set:
+      image:
+        tag: 2.6.0
+      ports:
+        websecure:
+          http3:
+            advertisedPort: 8843
+          tls:
+            enabled: true
+    asserts:
+    - equal:
+        path: items[1].spec.ports[0].port
+        value: 8843
