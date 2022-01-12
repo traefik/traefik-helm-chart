@@ -108,7 +108,7 @@ items:
         # We cannot use the container port name here because of https://github.com/kubernetes/kubernetes/issues/39188
         #                      ↓
         targetPort: {{ ternary $config.port ($name | quote) (hasKey $config "http3") }}
-        protocol: {{ if $config.http3 }}"UDP"{{ else }}{{ default "UDP" $config.protocol | quote }}{{ end }}
+        protocol: "UDP"
         {{- if $config.nodePort }}
         nodePort: {{ $config.nodePort }}
         {{- end }}
