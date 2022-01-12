@@ -265,3 +265,6 @@ tests:
     - equal:
         path: items[1].spec.ports[0].port
         value: 8843
+    - equal:
+        path: items[1].spec.ports[0].protocol
+        value: UDP
