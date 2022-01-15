@@ -15,7 +15,7 @@ kind: List
 metadata:
   name: {{ template "traefik.fullname" . }}
 items:
-{{- if  $tcpPorts }}
+{{- if $tcpPorts }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -66,9 +66,13 @@ items:
       {{- if .Values.service.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.ipFamilies }}
+      ipFamilies: 
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 
-{{- if  $udpPorts }}
+{{- if $udpPorts }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -119,5 +123,9 @@ items:
       {{- if .Values.service.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.ipFamilies }}
+      ipFamilies: 
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 {{- end -}}
