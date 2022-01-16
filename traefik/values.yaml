@@ -397,6 +397,15 @@ ports:
       #   sans:
       #     - foo.example.com
       #     - bar.example.com
+    #
+    # Middleware on entrypoint
+    # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+    # Example:
+    # middleware:
+    #   - auth@file
+    #   - prefix@kubernetescrd
+    #   - cb@file
+    middleware: []
   metrics:
     # When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
