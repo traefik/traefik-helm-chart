@@ -36,7 +36,7 @@ spec:
     type: RollingUpdate
     rollingUpdate:
       maxUnavailable: {{ max .Values.rollingUpdate.maxUnavailable 1 }}
-      {{- if semverCompare ">=1.21" (.Capabilities.KubeVersion.String) }}
+      {{- if or (gt (int .Capabilities.KubeVersion.Major) 1) (and (eq (int .Capabilities.KubeVersion.Major) 1) (gt (int .Capabilities.KubeVersion.Minor) 20)) }}
       maxSurge: {{ .Values.rollingUpdate.maxSurge }}
       {{- end }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
