@@ -131,6 +131,11 @@
           - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
           {{- end }}
           {{- end }}
+          {{- if .Values.tracing }}
+          {{- if .Values.tracing.instana }}
+          - "--tracing.instana=true"
+          {{- end }}
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
           {{- if .Values.providers.kubernetesCRD.labelSelector }}
