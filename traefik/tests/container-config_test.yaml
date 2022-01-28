@@ -6,7 +6,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik:2.5.6
+          value: traefik:2.6.0
   - it: should change image when image.tag value is specified
     set:
       image:
@@ -22,7 +22,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik/traefik:2.5.6
+          value: traefik/traefik:2.6.0
 
   - it: should have no resource limit by default
     asserts:
