@@ -85,9 +85,8 @@ experimental:
     enabled: false
   kubernetesGateway:
     enabled: false
-    appLabelSelector: "traefik"
-    certificates: []
-    # - group: "core"
+    # certificate:
+    #   group: "core"
     #   kind: "Secret"
     #   name: "mysecret"
     # By default, Gateway would be created to the Namespace you are deploying Traefik to.
