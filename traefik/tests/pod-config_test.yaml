@@ -257,3 +257,13 @@ tests:
             prometheus.io/path: /metrics
             prometheus.io/port: "9100"
             prometheus.io/scrape: "true"
+  - it: should have instana tracing enabled
+    set:
+      tracing:
+        instana:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--tracing.instana=true"
