@@ -82,7 +82,7 @@ tests:
   - it: should prefix cluster resources with provided value
     set:
       rbac:
-        clusterFullName: prefix-
+        prefix: prefix-
     asserts:
       - equal:
           path: metadata.name
@@ -95,7 +95,7 @@ tests:
   - it: should add dash to cluster full name
     set:
       rbac:
-        clusterFullName: prefix
+        prefix: prefix
     asserts:
       - equal:
           path: metadata.name

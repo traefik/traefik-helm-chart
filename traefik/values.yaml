@@ -417,7 +417,7 @@ rbac:
   # Prefix for cluster resources to enable multiple installs per cluster.
   # This creates unique cluster roles and cluster role binding names
   # Only works if namespace is set to false and enables is set to true
-  clusterFullName: ""
+  prefix: ""
 
 # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 podSecurityPolicy:
