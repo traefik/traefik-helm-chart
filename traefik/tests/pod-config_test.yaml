@@ -149,6 +149,14 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[1].name
           value: myOtherRegistryKeySecretName
+  - it: should have shareProcessNamespace enabled
+    set:
+      deployment:
+        shareProcessNamespace: true
+    asserts:
+      - equal:
+          path: spec.template.spec.shareProcessNamespace
+          value: true
   - it: should have customized labels when specified via values
     set:
       deployment:
@@ -257,3 +265,13 @@ tests:
             prometheus.io/path: /metrics
             prometheus.io/port: "9100"
             prometheus.io/scrape: "true"
+  - it: should have instana tracing enabled
+    set:
+      tracing:
+        instana:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--tracing.instana=true"

@@ -64,7 +64,14 @@ rules:
 {{- end -}}
 {{- if .Values.experimental.kubernetesGateway.enabled }}
   - apiGroups:
-      - networking.x-k8s.io
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
     resources:
       - gatewayclasses
       - gateways
@@ -76,7 +83,7 @@ rules:
       - list
       - watch
   - apiGroups:
-      - networking.x-k8s.io
+      - gateway.networking.k8s.io
     resources:
       - gatewayclasses/status
       - gateways/status

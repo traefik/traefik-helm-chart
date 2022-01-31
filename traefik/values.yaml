@@ -50,6 +50,8 @@ deployment:
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data
+  # Use process namespace sharing
+  shareProcessNamespace: false
   # Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
   # Additional imagePullSecrets
@@ -85,9 +87,8 @@ experimental:
     enabled: false
   kubernetesGateway:
     enabled: false
-    appLabelSelector: "traefik"
-    certificates: []
-    # - group: "core"
+    # certificate:
+    #   group: "core"
     #   kind: "Secret"
     #   name: "mysecret"
     # By default, Gateway would be created to the Namespace you are deploying Traefik to.
@@ -208,6 +209,10 @@ metrics:
     entryPoint: metrics
   # statsd:
   #   address: localhost:8125
+
+tracing: {}
+  # instana:
+  #   enabled: true
 
 globalArguments:
   - "--global.checknewversion"
@@ -440,13 +445,13 @@ affinity: {}
 # # It should be used when hostNetwork: true to prevent port conflicts
 #   podAntiAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
-#     - labelSelector:
-#         matchExpressions:
-#         - key: app
-#           operator: In
-#           values:
-#           - {{ template "traefik.name" . }}
-#       topologyKey: failure-domain.beta.kubernetes.io/zone
+#       - labelSelector:
+#           matchExpressions:
+#             - key: app.kubernetes.io/name
+#               operator: In
+#               values:
+#                 - {{ template "traefik.name" . }}
+#         topologyKey: kubernetes.io/hostname
 nodeSelector: {}
 tolerations: []
 

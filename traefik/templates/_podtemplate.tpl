@@ -34,6 +34,9 @@
       initContainers:
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.deployment.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       containers:
       - image: "{{ .Values.image.name }}:{{ default .Chart.AppVersion .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -129,6 +132,11 @@
           {{- if .Values.metrics.statsd }}
           - "--metrics.statsd=true"
           - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing }}
+          {{- if .Values.tracing.instana }}
+          - "--tracing.instana=true"
           {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
