@@ -208,6 +208,10 @@ metrics:
   # statsd:
   #   address: localhost:8125
 
+tracing: {}
+  # instana:
+  #   enabled: true
+
 globalArguments:
   - "--global.checknewversion"
   - "--global.sendanonymoususage"
