@@ -2,7 +2,7 @@
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "traefik.fullname" . }}
+  name: {{ template "traefik.rbac.clusterFullname" . }}
   labels:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
     helm.sh/chart: {{ template "traefik.chart" . }}
@@ -56,7 +56,7 @@ rules:
   - apiGroups:
       - policy
     resourceNames:
-      - {{ template "traefik.fullname" . }}
+      - {{ template "traefik.rbac.clusterFullname" . }}
     resources:
       - podsecuritypolicies
     verbs:

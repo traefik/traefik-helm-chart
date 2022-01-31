@@ -79,3 +79,25 @@ tests:
           path: subjects[0].name
           value: foobar
         template: rbac/clusterrolebinding.yaml
+  - it: should prefix cluster resources with provided value
+    set:
+      rbac:
+        clusterFullName: prefix-
+    asserts:
+      - equal:
+          path: metadata.name
+          value: prefix-RELEASE-NAME-traefik
+        template: rbac/clusterrolebinding.yaml
+      - equal:
+          path: metadata.name
+          value: prefix-RELEASE-NAME-traefik
+        template: rbac/clusterrole.yaml
+  - it: should add dash to cluster full name
+    set:
+      rbac:
+        clusterFullName: prefix
+    asserts:
+      - equal:
+          path: metadata.name
+          value: prefix-RELEASE-NAME-traefik
+        template: rbac/clusterrolebinding.yaml
