@@ -37,12 +37,12 @@ Create a default fully qualified cluster name. This allows multiple traefik inst
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 */}}
 {{- define "traefik.rbac.clusterFullname" -}}
-{{- $trimmedClusterName := .Values.rbac.clusterFullName | trimSuffix "-" -}}
+{{- $trimmedClusterName := .Values.rbac.clusterFullName | trunc 63 | trimSuffix "-" -}}
 {{- if $trimmedClusterName -}}
 {{- $trimmedClusterName = printf "%s-" $trimmedClusterName -}}
 {{- end -}}
 {{- $clusterFullName := printf "%s%s" $trimmedClusterName (include "traefik.fullname" .) -}}
-{{- default $clusterFullName | trunc 63 -}}
+{{- $clusterFullName | trunc 63 -}}
 {{- end -}}
 
 {{/*
