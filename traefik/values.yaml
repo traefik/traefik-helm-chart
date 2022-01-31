@@ -50,6 +50,8 @@ deployment:
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data
+  # Use process namespace sharing
+  shareProcessNamespace: false
   # Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
   # Additional imagePullSecrets
