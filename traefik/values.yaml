@@ -438,13 +438,13 @@ affinity: {}
 # # It should be used when hostNetwork: true to prevent port conflicts
 #   podAntiAffinity:
 #     requiredDuringSchedulingIgnoredDuringExecution:
-#     - labelSelector:
-#         matchExpressions:
-#         - key: app
-#           operator: In
-#           values:
-#           - {{ template "traefik.name" . }}
-#       topologyKey: failure-domain.beta.kubernetes.io/zone
+#       - labelSelector:
+#           matchExpressions:
+#             - key: app.kubernetes.io/name
+#               operator: In
+#               values:
+#                 - {{ template "traefik.name" . }}
+#         topologyKey: kubernetes.io/hostname
 nodeSelector: {}
 tolerations: []
 
