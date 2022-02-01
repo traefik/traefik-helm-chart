@@ -245,6 +245,9 @@ tests:
         - equal:
             path: spec.template.spec.containers[0].readinessProbe.httpGet.port
             content: 9001
+        - equal:
+            path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
+            content: "HTTP"
         - contains:
             path: spec.template.spec.containers[0].args
             content: "--ping"
