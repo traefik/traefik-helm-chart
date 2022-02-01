@@ -237,7 +237,7 @@ tests:
     set:
       service:
         ipFamilies:
-        - IPv6
+          - IPv6
       ports:
         udp:
           port: 3000
@@ -246,8 +246,8 @@ tests:
       - equal:
           path: items[0].spec.ipFamilies
           value: 
-          - IPv6
+            - IPv6
       - equal:
           path: items[1].spec.ipFamilies
           value: 
-          - IPv6
+            - IPv6
