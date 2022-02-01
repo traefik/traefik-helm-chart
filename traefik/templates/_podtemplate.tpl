@@ -49,11 +49,13 @@
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
+            scheme: {{ default "HTTP" .Values.ports.traefik.healthchecksScheme }}
           {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
+            scheme: {{ default "HTTP" .Values.ports.traefik.healthchecksScheme }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
         lifecycle:
           {{- with .Values.deployment.lifecycle }}

@@ -340,6 +340,10 @@ ports:
     # with an external Load Balancer that performs healthchecks.
     # healthchecksPort: 9000
 
+    # Override the liveness/readiness scheme. Useful for getting ping to
+    # respond on websecure entryPoint.
+    # healthchecksScheme: HTTPS
+
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
     #
