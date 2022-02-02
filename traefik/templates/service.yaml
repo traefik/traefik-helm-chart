@@ -6,7 +6,7 @@
   {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
     {{ $_ := set $udpPorts $name $config }}
   {{- end }}
-  {{- if or $config.http3 (eq (toString (default "TCP" $config.protocol)) "TCP") }}
+  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
     {{ $_ := set $tcpPorts $name $config }}
   {{- end }}
 {{- end }}
@@ -48,7 +48,7 @@ items:
       - port: {{ default $config.port $config.exposedPort }}
         name: {{ $name }}
         targetPort: {{ $name | quote }}
-        protocol: {{ default "TCP" $config.protocol | quote }}
+        protocol: TCP
         {{- if $config.nodePort }}
         nodePort: {{ $config.nodePort }}
         {{- end }}
@@ -102,13 +102,13 @@ items:
       ports:
       {{- range $name, $config := $udpPorts }}
       {{- if $config.expose }}
-        # HTTP/3 advertisedPort overrides exposedPort
-      - port: {{ default $config.port (default $config.exposedPort ($config.http3).advertisedPort) }}
+      - port: {{ default $config.port $config.exposedPort }}
         name: {{ $name }}
-        # We cannot use the container port name here because of https://github.com/kubernetes/kubernetes/issues/39188
-        #                      ↓
-        targetPort: {{ ternary $config.port ($name | quote) (hasKey $config "http3") }}
-        protocol: "UDP"
+        # Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
+        # to define the HTTP/3 UDP port as a containerPort. TCP and UDP containerPort will have
+        # the same value which will break the chart upgrade.
+        targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
+        protocol: UDP
         {{- if $config.nodePort }}
         nodePort: {{ $config.nodePort }}
         {{- end }}

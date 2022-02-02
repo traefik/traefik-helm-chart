@@ -302,11 +302,10 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
-    # Enable http3, requires explicit enabled in experimental section and tls.
-    # http3:
-    #   # Set the advertised port for HTTP/3. This works in Træfik 2.6+ only.
-    #   # Note that you cannot have a UDP Ingress on the same port.
-    #   advertisedPort: 443
+    # Enable HTTP/3.
+    # Requires enabling experimental http3 feature and tls.
+    # Note that you cannot have a UDP entrypoint with the same port.
+    # http3: true
     # Set TLS at the entrypoint
     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
     tls:

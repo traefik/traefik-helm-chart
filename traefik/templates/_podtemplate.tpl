@@ -110,7 +110,7 @@
           {{- end }}
           {{- range $name, $config := .Values.ports }}
           {{- if $config }}
-          - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- end }}
           {{- end }}
           - "--api.dashboard=true"
@@ -206,14 +206,11 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- if hasKey $config "http3" }}
+          {{- if $config.http3 }}
           {{- if semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)}}
-          - "--entrypoints.{{ $entrypoint }}.http3"
-          {{ else }}
-          - "--entrypoints.{{ $entrypoint }}.enabledHTTP3=true"
-          {{ end }}
-          {{- if and $config.http3.advertisedPort (semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)) }}
-          - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
+          - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ default $config.port $config.exposedPort }}"
+          {{- else }}
+          - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
           {{- end }}
           {{- end }}
           {{- end }}
