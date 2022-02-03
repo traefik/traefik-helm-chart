@@ -1,7 +1,6 @@
 suite: GatewayClass configuration
 templates:
   - gatewayclass.yaml
-
 tests:
   - it: should have one GatewayClass with contollerName value traefik.io/gateway-controller
     set:

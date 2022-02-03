@@ -1,7 +1,6 @@
 suite: Gateway configuration
 templates:
   - gateway.yaml
-
 tests:
   - it: should have one Gateway with the correct class and an http port
     set:
