@@ -273,5 +273,64 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--tracing.instana=true"
+          content: "--tracing.instana=true"
+  - it: should not have the http3 experimental flag by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.http3=true"
+  - it: should have the http3 experimental flag if enabled via values
+    set:
+      experimental:
+        http3:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.http3=true"
+  - it: should not have http3 config flag by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should not have http3 config flag when tls is disabled
+    set:
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should have http3 config flag enableHTTP3 when image tag < 2.6.0
+    set:
+      image:
+        tag: 2.5.6
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+  - it: should have http3 config flag advertisedPort when image tag >= 2.6.0
+    set:
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"

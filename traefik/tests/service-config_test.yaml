@@ -251,20 +251,20 @@ tests:
           path: items[1].spec.ipFamilies
           value: 
             - IPv6
-  - it: should set the service port to advertisedPort for HTTP/3 services
+  - it: should have http3 UDP port when enabled via values
     set:
-      image:
-        tag: 2.6.0
       ports:
         websecure:
-          http3:
-            advertisedPort: 8843
+          http3: true
           tls:
             enabled: true
     asserts:
     - equal:
         path: items[1].spec.ports[0].port
-        value: 8843
+        value: 443
+    - equal:
+        path: items[1].spec.ports[0].targetPort
+        value: 8443
     - equal:
         path: items[1].spec.ports[0].protocol
         value: UDP
