@@ -49,20 +49,14 @@
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-          failureThreshold: 1
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
+          {{- toYaml .Values.readiness.probe | trim | nindent 10 }}
+          {{- end }}
         livenessProbe:
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-          failureThreshold: 3
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          successThreshold: 1
-          timeoutSeconds: 2
+          {{- toYaml .Values.liveness.probe | trim | nindent 10 }}
+          {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}
