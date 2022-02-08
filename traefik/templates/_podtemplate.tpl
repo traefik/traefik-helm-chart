@@ -450,9 +450,9 @@
         - name: plugins
           emptyDir: {}
         {{- end }}
-      {{- with .Values.affinity }}
+      {{- if .Values.affinity }}
       affinity:
-        {{- toYaml . | nindent 8 }}
+        {{- tpl .Values.affinity . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
