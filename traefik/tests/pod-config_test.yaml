@@ -278,6 +278,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.instana=true"
+  - it: should have datadog tracing enabled
+    set:
+      tracing:
+        datadog:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.datadog=true"
   - it: should not have the http3 experimental flag by default
     asserts:
       - notContains:
