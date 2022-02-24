@@ -30,6 +30,10 @@
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
+      {{- with .Values.deployment.readinessGates }}
+      readinessGates:
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
       {{- toYaml . | nindent 6 }}
@@ -63,6 +67,10 @@
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 2
+        lifecycle:
+          {{- with .Values.deployment.lifecycle }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}

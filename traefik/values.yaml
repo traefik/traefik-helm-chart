@@ -57,6 +57,10 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
     # - name: myRegistryKeySecretName
+  # Use readiness gates
+  readinessGates: []
+  # Pod lifecycle actions
+  lifecycle: {}
 
 # Pod disruption budget
 podDisruptionBudget:
