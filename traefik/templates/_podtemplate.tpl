@@ -128,6 +128,9 @@
           {{- if .Values.metrics.prometheus }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
+          {{- if .Values.metrics.prometheus.addrouterslabels }}
+          - "--metrics.prometheus.addrouterslabels={{ .Values.metrics.prometheus.addrouterslabels }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.metrics.statsd }}
           - "--metrics.statsd=true"
