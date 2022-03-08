@@ -128,8 +128,10 @@
           {{- if .Values.metrics.prometheus }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
+          {{- if semverCompare ">=2.5.0" (default $.Chart.AppVersion $.Values.image.tag)}}
           {{- if .Values.metrics.prometheus.addrouterslabels }}
-          - "--metrics.prometheus.addrouterslabels={{ .Values.metrics.prometheus.addrouterslabels }}"
+          - "--metrics.prometheus.addrouterslabels=true"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- if .Values.metrics.statsd }}
