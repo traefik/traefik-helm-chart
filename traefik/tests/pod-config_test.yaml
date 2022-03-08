@@ -260,15 +260,15 @@ tests:
             prometheus.io/path: /metrics
             prometheus.io/port: "9100"
             prometheus.io/scrape: "true"
-  - it: should have prometheus addrouterslabels enabled
+  - it: should have prometheus addRoutersLabels enabled
     set:
       metrics:
         prometheus:
-          addrouterslabels: true
+          addRoutersLabels: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus.addrouterslabels=true"
+          content: "--metrics.prometheus.addRoutersLabels=true"
   - it: should have instana tracing enabled
     set:
       tracing:

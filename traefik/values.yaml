@@ -209,7 +209,7 @@ metrics:
   #   protocol: udp
   prometheus:
     entryPoint: metrics
-    # addrouterslabels: true
+  #  addRoutersLabels: true
   # statsd:
   #   address: localhost:8125
 
