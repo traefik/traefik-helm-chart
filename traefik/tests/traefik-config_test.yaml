@@ -64,20 +64,16 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress.namespaces"
+          content: "--providers.kubernetesingress.namespaces"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress"
+          content: "--providers.kubernetesingress"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd.namespaces"
+          content: "--providers.kubernetescrd.namespaces"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd"
+          content: "--providers.kubernetescrd"
 
   - it: should have disable published Kubernetes service when default configuration
     asserts:

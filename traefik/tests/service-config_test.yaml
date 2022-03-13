@@ -222,3 +222,49 @@ tests:
       - equal:
           path: items[1].spec.ipFamilyPolicy
           value: PreferDualStack
+  - it: should not have ipFamilies when not specified
+    set:
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - isEmpty:
+          path: items[0].spec.ipFamilies
+      - isEmpty:
+          path: items[1].spec.ipFamilies
+  - it: should have custom ipFamilies when specified via values
+    set:
+      service:
+        ipFamilies:
+          - IPv6
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: items[0].spec.ipFamilies
+          value: 
+            - IPv6
+      - equal:
+          path: items[1].spec.ipFamilies
+          value: 
+            - IPv6
+  - it: should have http3 UDP port when enabled via values
+    set:
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: true
+    asserts:
+    - equal:
+        path: items[1].spec.ports[0].port
+        value: 443
+    - equal:
+        path: items[1].spec.ports[0].targetPort
+        value: 8443
+    - equal:
+        path: items[1].spec.ports[0].protocol
+        value: UDP
