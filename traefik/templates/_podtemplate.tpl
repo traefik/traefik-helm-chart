@@ -34,6 +34,9 @@
       initContainers:
       {{- toYaml . | nindent 6 }}
       {{- end }}
+      {{- if .Values.deployment.shareProcessNamespace }}
+      shareProcessNamespace: true
+      {{- end }}
       containers:
       - image: "{{ .Values.image.name }}:{{ default .Chart.AppVersion .Values.image.tag }}"
         imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -107,7 +110,7 @@
           {{- end }}
           {{- range $name, $config := .Values.ports }}
           {{- if $config }}
-          - "--entryPoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- end }}
           {{- end }}
           - "--api.dashboard=true"
@@ -125,10 +128,18 @@
           {{- if .Values.metrics.prometheus }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
+          {{- if .Values.metrics.prometheus.addRoutersLabels }}
+          - "--metrics.prometheus.addRoutersLabels=true"
+          {{- end }}
           {{- end }}
           {{- if .Values.metrics.statsd }}
           - "--metrics.statsd=true"
           - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing }}
+          {{- if .Values.tracing.instana }}
+          - "--tracing.instana=true"
           {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
@@ -165,6 +176,9 @@
           - "--providers.kubernetesgateway"
           - "--experimental.kubernetesgateway"
           {{- end }}
+          {{- if .Values.experimental.http3.enabled }}
+          - "--experimental.http3=true"
+          {{- end }}
           {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
@@ -196,6 +210,13 @@
           {{- if $domain.sans }}
           - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," $domain.sans }}"
           {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- if $config.http3 }}
+          {{- if semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)}}
+          - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ default $config.port $config.exposedPort }}"
+          {{- else }}
+          - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
           {{- end }}
           {{- end }}
           {{- end }}
