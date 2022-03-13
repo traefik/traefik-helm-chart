@@ -233,8 +233,6 @@ tests:
     asserts:
       - isEmpty:
           path: items[0].spec.ipFamilies
-      - isEmpty:
-          path: items[1].spec.ipFamilies
   - it: should have custom ipFamilies when specified via values
     set:
       service:
@@ -247,11 +245,7 @@ tests:
     asserts:
       - equal:
           path: items[0].spec.ipFamilies
-          value: 
-            - IPv6
-      - equal:
-          path: items[1].spec.ipFamilies
-          value: 
+          value:
             - IPv6
   - it: should have http3 UDP port when enabled via values
     set:

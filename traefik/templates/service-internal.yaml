@@ -110,8 +110,11 @@ items:
       {{- range $name, $config := $udpPorts }}
       - port: {{ default $config.port $config.exposedPort }}
         name: {{ $name }}
-        targetPort: {{ $name | quote }}
-        protocol: {{ default "UDP" $config.protocol | quote }}
+        # Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
+        # to define the HTTP/3 UDP port as a containerPort. TCP and UDP containerPort will have
+        # the same value which will break the chart upgrade.
+        targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
+        protocol: UDP
         {{- if $config.nodePortInternal }}
         nodePort: {{ $config.nodePortInternal }}
         {{- end }}
