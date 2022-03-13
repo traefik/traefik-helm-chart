@@ -3,9 +3,10 @@
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
 {{- range $name, $config := .Values.ports }}
-  {{- if eq (toString $config.protocol) "UDP" }}
+  {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
     {{ $_ := set $udpPorts $name $config }}
-  {{- else }}
+  {{- end }}
+  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
     {{ $_ := set $tcpPorts $name $config }}
   {{- end }}
 {{- end }}
@@ -15,7 +16,7 @@ kind: List
 metadata:
   name: {{ template "traefik.fullname" . }}
 items:
-{{- if  $tcpPorts }}
+{{- if $tcpPorts }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -47,7 +48,7 @@ items:
       - port: {{ default $config.port $config.exposedPort }}
         name: {{ $name }}
         targetPort: {{ $name | quote }}
-        protocol: {{ default "TCP" $config.protocol | quote }}
+        protocol: TCP
         {{- if $config.nodePort }}
         nodePort: {{ $config.nodePort }}
         {{- end }}
@@ -66,9 +67,13 @@ items:
       {{- if .Values.service.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.ipFamilies }}
+      ipFamilies: 
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 
-{{- if  $udpPorts }}
+{{- if $udpPorts }}
   - apiVersion: v1
     kind: Service
     metadata:
@@ -99,8 +104,11 @@ items:
       {{- if $config.expose }}
       - port: {{ default $config.port $config.exposedPort }}
         name: {{ $name }}
-        targetPort: {{ $name | quote }}
-        protocol: {{ default "UDP" $config.protocol | quote }}
+        # Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
+        # to define the HTTP/3 UDP port as a containerPort. TCP and UDP containerPort will have
+        # the same value which will break the chart upgrade.
+        targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
+        protocol: UDP
         {{- if $config.nodePort }}
         nodePort: {{ $config.nodePort }}
         {{- end }}
@@ -119,5 +127,9 @@ items:
       {{- if .Values.service.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.ipFamilies }}
+      ipFamilies: 
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 {{- end -}}

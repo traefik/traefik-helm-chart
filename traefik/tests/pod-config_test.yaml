@@ -149,6 +149,14 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[1].name
           value: myOtherRegistryKeySecretName
+  - it: should have shareProcessNamespace enabled
+    set:
+      deployment:
+        shareProcessNamespace: true
+    asserts:
+      - equal:
+          path: spec.template.spec.shareProcessNamespace
+          value: true
   - it: should have customized labels when specified via values
     set:
       deployment:
@@ -217,22 +225,18 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd"
+          content: "--providers.kubernetescrd"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress"
+          content: "--providers.kubernetesingress"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesgateway"
+          content: "--providers.kubernetesgateway"
   - it: should have the pilot dashboard enabled by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--pilot.dashboard=false"
+          content: "--pilot.dashboard=false"
   - it: should have the pilot dashboard disabled
     set:
       pilot:
@@ -240,8 +244,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--pilot.dashboard=false"
+          content: "--pilot.dashboard=false"
   - it: should have prometheus annotations with specified values
     set:
       ports:
@@ -257,3 +260,81 @@ tests:
             prometheus.io/path: /metrics
             prometheus.io/port: "9100"
             prometheus.io/scrape: "true"
+  - it: should have prometheus addRoutersLabels enabled
+    set:
+      metrics:
+        prometheus:
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addRoutersLabels=true"
+  - it: should have instana tracing enabled
+    set:
+      tracing:
+        instana:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.instana=true"
+  - it: should not have the http3 experimental flag by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.http3=true"
+  - it: should have the http3 experimental flag if enabled via values
+    set:
+      experimental:
+        http3:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.http3=true"
+  - it: should not have http3 config flag by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should not have http3 config flag when tls is disabled
+    set:
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should have http3 config flag enableHTTP3 when image tag < 2.6.0
+    set:
+      image:
+        tag: 2.5.6
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.enableHTTP3=true"
+  - it: should have http3 config flag advertisedPort when image tag >= 2.6.0
+    set:
+      ports:
+        websecure:
+          http3: true
+          tls:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
