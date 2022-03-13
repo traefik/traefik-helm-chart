@@ -4,9 +4,10 @@
 {{ $udpPorts := dict }}
 {{- range $name, $config := .Values.ports }}
   {{- if $config.exposeInternal }}
-    {{- if eq (toString $config.protocol) "UDP" }}
+    {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
       {{ $_ := set $udpPorts $name $config }}
-    {{- else }}
+    {{- end }}
+    {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
       {{ $_ := set $tcpPorts $name $config }}
     {{- end }}
   {{- end }}
@@ -70,6 +71,10 @@ items:
       {{- if .Values.service.internal.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.internal.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.internal.ipFamilies }}
+      ipFamilies:
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 
 {{- if $udpPorts }}
@@ -124,6 +129,10 @@ items:
       {{- if .Values.service.internal.ipFamilyPolicy }}
       ipFamilyPolicy: {{ .Values.service.internal.ipFamilyPolicy }}
       {{- end }}
+      {{- with .Values.service.internal.ipFamilies }}
+      ipFamilies:
+      {{- toYaml . | nindent 6 }}
+      {{- end -}}
 {{- end }}
 {{- end }}
 {{- end -}}
