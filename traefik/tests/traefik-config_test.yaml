@@ -64,20 +64,16 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress.namespaces"
+          content: "--providers.kubernetesingress.namespaces"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetesingress"
+          content: "--providers.kubernetesingress"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd.namespaces"
+          content: "--providers.kubernetescrd.namespaces"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--providers.kubernetescrd"
+          content: "--providers.kubernetescrd"
 
   - it: should have disable published Kubernetes service when default configuration
     asserts:
@@ -108,12 +104,17 @@ tests:
   - it: should allow external name services when specified in configuration
     set:
         providers:
+          kubernetesIngress:
+            allowExternalNameServices: true
           kubernetesCRD:
             allowExternalNameServices: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.allowExternalNameServices=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.allowExternalNameServices=true"
   - it: should match ingresses based on input label
     set:
         providers:
