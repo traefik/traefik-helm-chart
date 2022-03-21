@@ -57,10 +57,21 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
     # - name: myRegistryKeySecretName
-  # Use readiness gates
+  # Use readiness gates (e.g to specify a list of additional conditions for pod readiness)
   readinessGates: []
+    # Example with AWS LB Controller to set pod healthiness based on its registration state on a given Application Load Balancer
+    # - conditionType: target-health.alb.ingress.k8s.aws/traefik-ingress_traefik-service_9000
   # Pod lifecycle actions
   lifecycle: {}
+    # preStop:
+    #   exec:
+    #     command: ["/bin/sh", "-c", "sleep 40"]
+    # postStart:
+    #   httpGet:
+    #     path: /ping
+    #     port: 9000
+    #     host: localhost
+    #     scheme: HTTP
 
 # Pod disruption budget
 podDisruptionBudget:

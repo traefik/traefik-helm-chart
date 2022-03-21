@@ -52,3 +52,49 @@ tests:
       - equal:
           path: spec.minReadySeconds
           value: 30
+  - it: should have a preStop hook with specified values
+    set:
+      deployment:
+        kind: DaemonSet
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/bin/sh", "-c", "sleep 40"]
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
+          value: ["/bin/sh", "-c", "sleep 40"]
+  - it: should have a postStart hook with specified values
+    set:
+      deployment:
+        kind: DaemonSet
+        lifecycle:
+          postStart:
+            httpGet:
+              path: /ping
+              port: 9000
+              host: localhost
+              scheme: HTTP
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.path
+          value: /ping
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.port
+          value: 9000
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.host
+          value: localhost
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.scheme
+          value: HTTP
+  - it: should have readinessGates with specified values
+    set:
+      deployment:
+        kind: DaemonSet
+        readinessGates:
+          - conditionType: target-health.alb.ingress.k8s.aws/traefik-ingress_traefik-service_9000
+    asserts:
+      - equal:
+          path: spec.template.spec.readinessGates[0].conditionType
+          value: target-health.alb.ingress.k8s.aws/traefik-ingress_traefik-service_9000
