@@ -147,13 +147,13 @@
           - "--tracing.datadog.localAgentHostPort={{ .Values.tracing.datadog.localAgentHostPort }}"
           {{- end }}
           {{- if .Values.tracing.datadog.debug }}
-          - "--tracing.datadog.debug={{ .Values.tracing.datadog.debug | default false }}"
+          - "--tracing.datadog.debug=true"
           {{- end }}
           {{- if .Values.tracing.datadog.globalTag }}
           - "--tracing.datadog.globalTag={{ .Values.tracing.datadog.globalTag }}"
           {{- end }}
           {{- if .Values.tracing.datadog.prioritySampling }}
-          - "--tracing.datadog.prioritySampling={{ .Values.tracing.datadog.prioritySampling }}"
+          - "--tracing.datadog.prioritySampling=true"
           {{- end }}
           {{- end }}
           {{- end }}
