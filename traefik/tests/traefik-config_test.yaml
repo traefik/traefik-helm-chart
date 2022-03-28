@@ -31,13 +31,13 @@ tests:
           enabled: true
           allowCrossNamespace: true
           namespaces:
-          - "foo"
-          - "bar"
+            - "foo"
+            - "bar"
         kubernetesIngress:
           enabled: true
           namespaces:
-          - "foo"
-          - "bar"
+            - "foo"
+            - "bar"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -54,8 +54,8 @@ tests:
         kubernetesCRD:
           enabled: false
           namespaces:
-          - "foo"
-          - "bar"
+            - "foo"
+            - "bar"
         kubernetesIngress:
           enabled: false
           namespaces:
@@ -82,10 +82,10 @@ tests:
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
   - it: should have enable published Kubernetes service when specified in configuration
     set:
-        providers:
-          kubernetesIngress:
-            publishedService:
-              enabled: true
+      providers:
+        kubernetesIngress:
+          publishedService:
+            enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -104,20 +104,20 @@ tests:
 
   - it: should allow cross namespace services when specified in configuration
     set:
-        providers:
-          kubernetesCRD:
-            allowCrossNamespace: true
+      providers:
+        kubernetesCRD:
+          allowCrossNamespace: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.allowCrossNamespace=true"
   - it: should allow external name services when specified in configuration
     set:
-        providers:
-          kubernetesIngress:
-            allowExternalNameServices: true
-          kubernetesCRD:
-            allowExternalNameServices: true
+      providers:
+        kubernetesIngress:
+          allowExternalNameServices: true
+        kubernetesCRD:
+          allowExternalNameServices: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -127,20 +127,20 @@ tests:
           content: "--providers.kubernetesingress.allowExternalNameServices=true"
   - it: should allow empty services when specified in configuration
     set:
-        providers:
-          kubernetesIngress:
-            allowEmptyServices: true
+      providers:
+        kubernetesIngress:
+          allowEmptyServices: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.allowEmptyServices=true"
   - it: should match ingresses based on input label
     set:
-        providers:
-          kubernetesIngress:
-            labelSelector: environment=devel
-          kubernetesCRD:
-            labelSelector: environment=devel
+      providers:
+        kubernetesIngress:
+          labelSelector: environment=devel
+        kubernetesCRD:
+          labelSelector: environment=devel
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -151,12 +151,17 @@ tests:
   - it: should match ingresses based on ingressClass
     set:
       providers:
+        kubernetesIngress:
+          ingressClass: foo
         kubernetesCRD:
           ingressClass: foo
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.ingressClass=foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressClass=foo"
 
   - it: should have a plugin storage if the experimental feature is enabled
     set:
