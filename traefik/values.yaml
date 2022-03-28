@@ -127,7 +127,7 @@ providers:
   kubernetesIngress:
     enabled: true
     allowExternalNameServices: false
-    # allowEmptyServices: false
+    allowEmptyServices: false
     # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"

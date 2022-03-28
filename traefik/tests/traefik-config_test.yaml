@@ -125,6 +125,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.allowExternalNameServices=true"
+  - it: should allow empty services when specified in configuration
+    set:
+        providers:
+          kubernetesIngress:
+            allowEmptyServices: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.allowEmptyServices=true"
   - it: should match ingresses based on input label
     set:
         providers:
