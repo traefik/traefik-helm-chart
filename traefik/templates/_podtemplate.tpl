@@ -141,6 +141,21 @@
           {{- if .Values.tracing.instana }}
           - "--tracing.instana=true"
           {{- end }}
+          {{- if .Values.tracing.datadog }}
+          - "--tracing.datadog=true"
+          {{- if .Values.tracing.datadog.localAgentHostPort }}
+          - "--tracing.datadog.localAgentHostPort={{ .Values.tracing.datadog.localAgentHostPort }}"
+          {{- end }}
+          {{- if .Values.tracing.datadog.debug }}
+          - "--tracing.datadog.debug=true"
+          {{- end }}
+          {{- if .Values.tracing.datadog.globalTag }}
+          - "--tracing.datadog.globalTag={{ .Values.tracing.datadog.globalTag }}"
+          {{- end }}
+          {{- if .Values.tracing.datadog.prioritySampling }}
+          - "--tracing.datadog.prioritySampling=true"
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
