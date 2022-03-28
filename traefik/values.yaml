@@ -110,6 +110,20 @@ rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
 
+# Customize liveness and readiness probe values.
+readinessProbe:
+  failureThreshold: 1
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+
+livenessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
 
 #
 # Configure providers
@@ -384,23 +398,6 @@ service:
   # ipFamilies:
   #   - IPv4
   #   - IPv6
-
-## Customize liveness and readiness probes
-readiness:
-  probe:
-    failureThreshold: 1
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
-
-liveness:
-  probe:
-    failureThreshold: 3
-    initialDelaySeconds: 10
-    periodSeconds: 10
-    successThreshold: 1
-    timeoutSeconds: 2
 
 ## Create HorizontalPodAutoscaler object.
 ##

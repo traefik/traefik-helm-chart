@@ -49,14 +49,12 @@
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-          {{- toYaml .Values.readiness.probe | trim | nindent 10 }}
-          {{- end }}
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-          {{- toYaml .Values.liveness.probe | trim | nindent 10 }}
-          {{- end }}
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}
