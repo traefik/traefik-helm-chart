@@ -89,6 +89,7 @@ experimental:
     enabled: false
   kubernetesGateway:
     enabled: false
+    create: true
     # certificate:
     #   group: "core"
     #   kind: "Secret"

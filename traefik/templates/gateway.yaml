@@ -1,4 +1,5 @@
 {{- if .Values.experimental.kubernetesGateway.enabled }}
+{{- if .Values.experimental.kubernetesGateway.create }}
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: Gateway
@@ -22,4 +23,5 @@ spec:
             group: {{ .Values.experimental.kubernetesGateway.certificate.group }}
             kind: {{ .Values.experimental.kubernetesGateway.certificate.kind }}
     {{- end }}
+{{- end }}
 {{- end }}
