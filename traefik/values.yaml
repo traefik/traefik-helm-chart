@@ -110,6 +110,20 @@ rollingUpdate:
   maxUnavailable: 1
   maxSurge: 1
 
+# Customize liveness and readiness probe values.
+readinessProbe:
+  failureThreshold: 1
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
+
+livenessProbe:
+  failureThreshold: 3
+  initialDelaySeconds: 10
+  periodSeconds: 10
+  successThreshold: 1
+  timeoutSeconds: 2
 
 #
 # Configure providers
@@ -127,6 +141,8 @@ providers:
   kubernetesIngress:
     enabled: true
     allowExternalNameServices: false
+    allowEmptyServices: false
+    # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
     namespaces: []
       # - "default"
@@ -216,6 +232,11 @@ metrics:
 tracing: {}
   # instana:
   #   enabled: true
+  # datadog:
+  #   localAgentHostPort: 127.0.0.1:8126
+  #   debug: false
+  #   globalTag: ""
+  #   prioritySampling: false
 
 globalArguments:
   - "--global.checknewversion"
