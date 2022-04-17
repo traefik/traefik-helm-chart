@@ -338,9 +338,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.topologySpreadConstraints }}
-        {{- if or (gt (.Capabilities.KubeVersion.Major | int) 1) (ge (.Capabilities.KubeVersion.Minor | int) 18) }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
-        {{- end }}
       {{- end }}
 {{ end -}}
