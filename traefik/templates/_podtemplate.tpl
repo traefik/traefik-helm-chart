@@ -110,7 +110,9 @@
           {{- if .Values.metrics }}
           {{- if .Values.metrics.datadog }}
           - "--metrics.datadog=true"
+          {{- if .Values.metrics.datadog.address }}
           - "--metrics.datadog.address={{ .Values.metrics.datadog.address }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.metrics.influxdb }}
           - "--metrics.influxdb=true"
