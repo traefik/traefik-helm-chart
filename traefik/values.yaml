@@ -133,6 +133,7 @@ providers:
     enabled: true
     allowCrossNamespace: false
     allowExternalNameServices: false
+    allowEmptyServices: false
     # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
     namespaces: []

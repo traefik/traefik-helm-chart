@@ -163,6 +163,9 @@
           {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
           {{- end }}
+          {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
+          - "--providers.kubernetescrd.allowEmptyServices=true"
+          {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
