@@ -138,7 +138,7 @@ tests:
           content: "--providers.kubernetesingress.allowEmptyServices=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesCRD.allowEmptyServices=true"
+          content: "--providers.kubernetescrd.allowEmptyServices=true"
   - it: should match ingresses based on input label
     set:
       providers:
