@@ -138,6 +138,18 @@
           {{- if .Values.tracing }}
           {{- if .Values.tracing.instana }}
           - "--tracing.instana=true"
+          {{- if .Values.tracing.instana.localAgentHost }}
+          - "--tracing.instana.localAgentHost={{ .Values.tracing.instana.localAgentHost }}"
+          {{- end }}
+          {{- if .Values.tracing.instana.localAgentPort }}
+          - "--tracing.instana.localAgentPort={{ .Values.tracing.instana.localAgentPort }}"
+          {{- end }}
+          {{- if .Values.tracing.instana.logLevel }}
+          - "--tracing.instana.logLevel={{ .Values.tracing.instana.logLevel }}"
+          {{- end }}
+          {{- if .Values.tracing.instana.enableAutoProfile }}
+          - "--tracing.instana.enableAutoProfile={{ .Values.tracing.instana.enableAutoProfile }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.tracing.datadog }}
           - "--tracing.datadog=true"
@@ -152,6 +164,95 @@
           {{- end }}
           {{- if .Values.tracing.datadog.prioritySampling }}
           - "--tracing.datadog.prioritySampling=true"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing.jaeger }}
+          - "--tracing.jaeger=true"
+          {{- if .Values.tracing.jaeger.samplingServerURL }}
+          - "--tracing.jaeger.samplingServerURL={{ .Values.tracing.jaeger.samplingServerURL }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.samplingType }}
+          - "--tracing.jaeger.samplingType={{ .Values.tracing.jaeger.samplingType }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.samplingParam }}
+          - "--tracing.jaeger.samplingParam={{ .Values.tracing.jaeger.samplingParam }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.localAgentHostPort }}
+          - "--tracing.jaeger.localAgentHostPort={{ .Values.tracing.jaeger.localAgentHostPort }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.gen128Bit }}
+          - "--tracing.jaeger.gen128Bit={{ .Values.tracing.jaeger.gen128Bit }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.propagation }}
+          - "--tracing.jaeger.propagation={{ .Values.tracing.jaeger.propagation }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.traceContextHeaderName }}
+          - "--tracing.jaeger.traceContextHeaderName={{ .Values.tracing.jaeger.traceContextHeaderName }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.disableAttemptReconnecting }}
+          - "--tracing.jaeger.disableAttemptReconnecting={{ .Values.tracing.jaeger.disableAttemptReconnecting }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.collector }}
+          {{- if .Values.tracing.jaeger.collector.endpoint }}
+          - "--tracing.jaeger.collector.endpoint={{ .Values.tracing.jaeger.collector.endpoint }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.collector.user }}
+          - "--tracing.jaeger.collector.user={{ .Values.tracing.jaeger.collector.user }}"
+          {{- end }}
+          {{- if .Values.tracing.jaeger.collector.password }}
+          - "--tracing.jaeger.collector.password={{ .Values.tracing.jaeger.collector.password }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing.zipkin }}
+          - "--tracing.zipkin=true"
+          {{- if .Values.tracing.zipkin.httpEndpoint }}
+          - "--tracing.zipkin.httpEndpoint={{ .Values.tracing.zipkin.httpEndpoint }}"
+          {{- end }}
+          {{- if .Values.tracing.zipkin.sameSpan }}
+          - "--tracing.zipkin.sameSpan={{ .Values.tracing.zipkin.sameSpan }}"
+          {{- end }}
+          {{- if .Values.tracing.zipkin.id128Bit }}
+          - "--tracing.zipkin.id128Bit={{ .Values.tracing.zipkin.id128Bit }}"
+          {{- end }}
+          {{- if .Values.tracing.zipkin.sampleRate }}
+          - "--tracing.zipkin.sampleRate={{ .Values.tracing.zipkin.sampleRate }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing.haystack }}
+          - "--tracing.haystack=true"
+          {{- if .Values.tracing.haystack.localAgentHost }}
+          - "--tracing.haystack.localAgentHost={{ .Values.tracing.haystack.localAgentHost }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.localAgentPort }}
+          - "--tracing.haystack.localAgentPort={{ .Values.tracing.haystack.localAgentPort }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.globalTag }}
+          - "--tracing.haystack.globalTag={{ .Values.tracing.haystack.globalTag }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.traceIDHeaderName }}
+          - "--tracing.haystack.traceIDHeaderName={{ .Values.tracing.haystack.traceIDHeaderName }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.parentIDHeaderName }}
+          - "--tracing.haystack.parentIDHeaderName={{ .Values.tracing.haystack.parentIDHeaderName }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.spanIDHeaderName }}
+          - "--tracing.haystack.spanIDHeaderName={{ .Values.tracing.haystack.spanIDHeaderName }}"
+          {{- end }}
+          {{- if .Values.tracing.haystack.baggagePrefixHeaderName }}
+          - "--tracing.haystack.baggagePrefixHeaderName={{ .Values.tracing.haystack.baggagePrefixHeaderName }}"
+          {{- end }}
+          {{- end }}
+          {{- if .Values.tracing.elastic }}
+          - "--tracing.elastic=true"
+          {{- if .Values.tracing.elastic.serverURL }}
+          - "--tracing.elastic.serverURL={{ .Values.tracing.elastic.serverURL }}"
+          {{- end }}
+          {{- if .Values.tracing.elastic.secretToken }}
+          - "--tracing.elastic.secretToken={{ .Values.tracing.elastic.secretToken }}"
+          {{- end }}
+          {{- if .Values.tracing.elastic.serviceEnvironment }}
+          - "--tracing.elastic.serviceEnvironment={{ .Values.tracing.elastic.serviceEnvironment }}"
           {{- end }}
           {{- end }}
           {{- end }}

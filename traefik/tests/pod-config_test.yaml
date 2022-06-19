@@ -297,7 +297,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.addRoutersLabels=true"
-  - it: should have instana tracing enabled
+  - it: should have Instana tracing enabled
     set:
       tracing:
         instana:
@@ -315,6 +315,42 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.datadog=true"
+  - it: should have Jaeger tracing enabled
+    set:
+      tracing:
+        jaeger:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.jaeger=true"
+  - it: should have Zipkin tracing enabled
+    set:
+      tracing:
+        zipkin:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.zipkin=true"
+  - it: should have Haystack tracing enabled
+    set:
+      tracing:
+        haystack:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.haystack=true"
+  - it: should have Elastic tracing enabled
+    set:
+      tracing:
+        elastic:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.elastic=true"
   - it: should not have the http3 experimental flag by default
     asserts:
       - notContains:
