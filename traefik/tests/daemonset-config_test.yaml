@@ -52,3 +52,12 @@ tests:
       - equal:
           path: spec.minReadySeconds
           value: 30
+  - it: should have revisionHistoryLimit with specified value
+    set:
+      deployment:
+        kind: DaemonSet
+        revisionHistoryLimit: 1
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 1
