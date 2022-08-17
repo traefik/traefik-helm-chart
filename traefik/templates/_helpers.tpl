@@ -8,6 +8,17 @@ Expand the name of the chart.
 {{- end -}}
 
 {{/*
+Allow the release namespace to be overridden for multi-namespace deployments in combined charts
+*/}}
+{{- define "traefik.namespace" -}}
+  {{- if .Values.namespaceOverride -}}
+    {{- .Values.namespaceOverride -}}
+  {{- else -}}
+    {{- .Release.Namespace -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
 Create chart name and version as used by the chart label.
 */}}
 {{- define "traefik.chart" -}}
@@ -46,7 +57,7 @@ service generated.
 Users can provide an override for an explicit service they want bound via `.Values.providers.kubernetesIngress.publishedService.pathOverride`
 */}}
 {{- define "providers.kubernetesIngress.publishedServicePath" -}}
-{{- $defServiceName := printf "%s/%s" .Release.Namespace (include "traefik.fullname" .) -}}
+{{- $defServiceName := printf "%s/%s" (include "traefik.namespace" .) (include "traefik.fullname" .) -}}
 {{- $servicePath := default $defServiceName .Values.providers.kubernetesIngress.publishedService.pathOverride }}
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
@@ -55,8 +66,8 @@ Users can provide an override for an explicit service they want bound via `.Valu
 Construct a comma-separated list of whitelisted namespaces
 */}}
 {{- define "providers.kubernetesIngress.namespaces" -}}
-{{- default .Release.Namespace (join "," .Values.providers.kubernetesIngress.namespaces) }}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
 {{- define "providers.kubernetesCRD.namespaces" -}}
-{{- default .Release.Namespace (join "," .Values.providers.kubernetesCRD.namespaces) }}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesCRD.namespaces) }}
 {{- end -}}
