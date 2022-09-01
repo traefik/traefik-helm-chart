@@ -4,7 +4,7 @@ apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: Gateway
 metadata:
   name: traefik-gateway
-  namespace: {{ default template "traefik.namespace" . .Values.experimental.kubernetesGateway.namespace }}
+  namespace: {{ .Values.experimental.kubernetesGateway.namespace | default (include "traefik.namespace" .) }}
 spec:
   gatewayClassName: traefik
   listeners:
