@@ -15,6 +15,14 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
+  - it: should have revisionHistoryLimit with specified value
+    set:
+      deployment:
+        revisionHistoryLimit: 1
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 1
   - it: should have a rollingUpdate strategy with default values
     asserts:
       - equal:

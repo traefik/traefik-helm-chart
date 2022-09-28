@@ -110,7 +110,9 @@
           {{- if .Values.metrics }}
           {{- if .Values.metrics.datadog }}
           - "--metrics.datadog=true"
+          {{- if .Values.metrics.datadog.address }}
           - "--metrics.datadog.address={{ .Values.metrics.datadog.address }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.metrics.influxdb }}
           - "--metrics.influxdb=true"
@@ -162,6 +164,9 @@
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
+          {{- end }}
+          {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
+          - "--providers.kubernetescrd.allowEmptyServices=true"
           {{- end }}
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
@@ -273,6 +278,17 @@
           {{- end }}
           {{- if hasKey .Values.pilot "dashboard" }}
           - "--pilot.dashboard={{ .Values.pilot.dashboard }}"
+          {{- end }}
+          {{- range $resolver, $config := $.Values.certResolvers }}
+          {{- range $option, $setting := $config }}
+          {{- if kindIs "map" $setting }}
+          {{- range $field, $value := $setting }}
+          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}.{{ $field }}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}"
+          {{- end }}
+          {{- else }}
+          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}={{ $setting }}"
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
