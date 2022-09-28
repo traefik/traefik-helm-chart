@@ -15,26 +15,20 @@ rules:
       - networking.k8s.io
     resources:
       - ingressclasses
+{{- if not .Values.rbac.namespaced }}
+      - ingresses
+{{- end }}
     verbs:
       - get
       - list
       - watch
-{{- if not .Values.rbac.namespaced -}}
+{{- if not .Values.rbac.namespaced }}
   - apiGroups:
       - ""
     resources:
       - services
       - endpoints
       - secrets
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses
     verbs:
       - get
       - list
