@@ -57,12 +57,19 @@ tests:
       - isKind:
           of: RoleBinding
         template: rbac/rolebinding.yaml
-      - hasDocuments:
-          count: 0
+      - notContains:
+          path: rules
+          content:
+            - apiGroups:
+                - extensions
+                - networking.k8s.io
+              resources:
+                - ingresses
+              verbs:
+                - get
+                - list
+                - watch
         template: rbac/clusterrole.yaml
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrolebinding.yaml
   - it: should use existing ServiceAccount
     set:
       serviceAccount:
