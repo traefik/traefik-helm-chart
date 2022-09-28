@@ -1,5 +1,5 @@
 {{- if .Values.experimental.kubernetesGateway.enabled }}
-{{- if .Values.experimental.kubernetesGateway.create }}
+{{- if .Values.experimental.kubernetesGateway.gateway.enabled }}
 ---
 apiVersion: gateway.networking.k8s.io/v1alpha2
 kind: Gateway
