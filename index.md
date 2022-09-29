@@ -56,6 +56,10 @@ Due to changes in CRD version support, the following versions of the chart are u
 helm install traefik traefik/traefik
 ```
 
+### Documentation reference
+
+Default and possible configurations are described in the [values.yaml](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml) file.
+
 #### Warning
 
 Helm v2 support was removed in the chart version 10.0.0.
@@ -96,4 +100,4 @@ Accessible with the url: http://traefik.localhost/dashboard/
 
 ## Contributing
 
-If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).
+If you want to contribute to the [source code](https://github.com/traefik/traefik-helm-chart) of this chart, please read the [Contributing Guide](./CONTRIBUTING.md).
