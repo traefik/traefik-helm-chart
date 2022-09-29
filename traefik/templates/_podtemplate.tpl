@@ -55,6 +55,10 @@
             path: /ping
             port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
+        lifecycle:
+          {{- with .Values.deployment.lifecycle }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}

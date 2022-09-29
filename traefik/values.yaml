@@ -59,6 +59,17 @@ deployment:
   # Additional imagePullSecrets
   imagePullSecrets: []
     # - name: myRegistryKeySecretName
+  # Pod lifecycle actions
+  lifecycle: {}
+    # preStop:
+    #   exec:
+    #     command: ["/bin/sh", "-c", "sleep 40"]
+    # postStart:
+    #   httpGet:
+    #     path: /ping
+    #     port: 9000
+    #     host: localhost
+    #     scheme: HTTP
 
 # Pod disruption budget
 podDisruptionBudget:
