@@ -27,6 +27,7 @@ jobs:
           curl -L https://git.io/get_helm.sh | bash -s -- -v v3.9.4
           curl -sSL -o /tmp/ct.tgz https://github.com/helm/chart-testing/releases/download/v3.7.1/chart-testing_3.7.1_linux_amd64.tar.gz
           tar xzf /tmp/ct.tgz -C /tmp && sudo cp /tmp/ct /usr/local/bin/ct && command -v ct
+          pip install yamale
 
       - name: Make
         run: make
