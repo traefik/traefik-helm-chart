@@ -4,7 +4,7 @@ CHART_DIR ?= $(CURDIR)/traefik
 TMPDIR ?= /tmp
 HELM_REPO ?= $(CURDIR)/repo
 LINT_USE_DOCKER ?= true
-LINT_CMD ?= ct lint --config=lint/ct.yaml
+LINT_CMD ?= git config --global --add safe.directory ./ && ct lint --config=ct.yaml
 PROJECT ?= github.com/traefik/traefik-helm-chart
 ################################## Functionnal targets
 
@@ -19,7 +19,7 @@ lint: lint-requirements
 	@git remote add traefik https://github.com/traefik/traefik-helm-chart >/dev/null 2>&1 || true
 	@git fetch traefik master >/dev/null 2>&1 || true
 ifeq ($(LINT_USE_DOCKER),true)
-	@docker run --rm -t -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.5.0 $(LINT_CMD)
+	@docker run --rm -t -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.7.1 $(LINT_CMD)
 else
 	cd $(CHART_DIR)/tests && $(LINT_CMD)
 endif
@@ -28,7 +28,7 @@ endif
 # Execute Unit Testing
 unit-test: helm-unittest
 	@echo "== Unit Testing Chart..."
-	@helm unittest --color --update-snapshot ./traefik
+	@helm unittest --color --update-snapshot --helm3 ./traefik
 	@echo "== Unit Tests Finished..."
 
 
@@ -92,7 +92,7 @@ endif
 
 helm-unittest: global-requirements
 	@echo "== Checking that plugin helm-unittest is available..."
-	@helm plugin list 2>/dev/null | grep unittest >/dev/null || helm plugin install https://github.com/rancher/helm-unittest --debug
+	@helm plugin list 2>/dev/null | grep unittest >/dev/null ||  helm plugin install https://github.com/quintush/helm-unittest
 	@echo "== plugin helm-unittest is ready"
 
 .PHONY: all global-requirements lint-requirements helm-unittest lint build deploy clean
