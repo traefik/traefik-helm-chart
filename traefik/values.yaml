@@ -120,6 +120,8 @@ ingressRoute:
     annotations: {}
     # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
+    # Specify the target containers for the dashboard ingress route, (e.g. traefik, web, websecure).
+    entryPoints: ["traefik"]
 
 rollingUpdate:
   maxUnavailable: 1

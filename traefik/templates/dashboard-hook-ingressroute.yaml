@@ -18,7 +18,9 @@ metadata:
     {{- end }}
 spec:
   entryPoints:
-    - traefik
+  {{- range .Values.ingressRoute.dashboard.entryPoints }}
+  - {{ .  | nindent 4 }}
+  {{ end }}
   routes:
   - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     kind: Rule
