@@ -402,7 +402,7 @@ ports:
     # https://doc.traefik.io/traefik/middlewares/overview/
     # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
     # /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
-    # It follows provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
+    # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
     # middlewares:
     #   - namespace-name1@kubernetescrd
     #   - namespace-name2@kubernetescrd
