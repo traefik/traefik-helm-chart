@@ -2,6 +2,7 @@
 
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
+{{ $exposedPorts := false }}
 {{- range $name, $config := .Values.ports }}
   {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
     {{ $_ := set $udpPorts $name $config }}
@@ -9,6 +10,13 @@
   {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
     {{ $_ := set $tcpPorts $name $config }}
   {{- end }}
+  {{- if (eq $config.expose true) }}
+    {{ $exposedPorts = true }}
+  {{- end }}
+{{- end }}
+
+{{- if (eq $exposedPorts false) }}
+  {{ fail "You need to expose at least one port or set enabled=false to service" }}
 {{- end }}
 
 apiVersion: v1
