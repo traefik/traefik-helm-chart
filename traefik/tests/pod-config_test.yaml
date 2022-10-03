@@ -411,3 +411,33 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should join entrypoints middleware when there are multiples
+    set:
+      ports:
+        websecure:
+          middlewares:
+            - auth@file
+            - strip@kubernetes-crd
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.middlewares=auth@file,strip@kubernetes-crd"
+  - it: should apply middleware on entrypoint
+    set:
+      ports:
+        web:
+          middlewares:
+            - auth@file
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.http.middlewares=auth@file"
+  - it: should not complain when there are no middlewares on entrypoint
+    set:
+      ports:
+        web:
+          middlewares:
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.http.middlewares="

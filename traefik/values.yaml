@@ -398,14 +398,15 @@ ports:
       #     - foo.example.com
       #     - bar.example.com
     #
-    # Middleware on entrypoint
+    # One can apply Middlewares on entrypoint
+    # https://doc.traefik.io/traefik/middlewares/overview/
     # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
-    # Example:
-    # middleware:
-    #   - auth@file
-    #   - prefix@kubernetescrd
-    #   - cb@file
-    middleware: []
+    # /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
+    # It follows provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
+    # middlewares:
+    #   - namespace-name1@kubernetescrd
+    #   - namespace-name2@kubernetescrd
+    middlewares: []
   metrics:
     # When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations

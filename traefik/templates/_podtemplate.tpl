@@ -315,8 +315,8 @@
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
           {{- end }}
-          {{- if $config.middleware }}
-          - "--entrypoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middleware }}"
+          {{- if $config.middlewares }}
+          - "--entrypoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"
           {{- end }}
           {{- if $config.tls }}
           {{- if $config.tls.enabled }}
