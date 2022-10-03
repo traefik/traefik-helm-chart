@@ -398,7 +398,7 @@ ports:
       #     - foo.example.com
       #     - bar.example.com
     #
-    # One can apply Middlewares on entrypoint
+    # One can apply Middlewares on an entrypoint
     # https://doc.traefik.io/traefik/middlewares/overview/
     # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
     # /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
