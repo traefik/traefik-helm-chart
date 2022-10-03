@@ -132,14 +132,14 @@ rollingUpdate:
 # Customize liveness and readiness probe values.
 readinessProbe:
   failureThreshold: 1
-  initialDelaySeconds: 10
+  initialDelaySeconds: 2
   periodSeconds: 10
   successThreshold: 1
   timeoutSeconds: 2
 
 livenessProbe:
   failureThreshold: 3
-  initialDelaySeconds: 10
+  initialDelaySeconds: 2
   periodSeconds: 10
   successThreshold: 1
   timeoutSeconds: 2

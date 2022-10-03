@@ -2,10 +2,10 @@ suite: DaemonSet configuration
 templates:
   - daemonset.yaml
 tests:
-  - it: [v1.21+] should have a rollingUpdate strategy with default values
+  - it: should have a rollingUpdate strategy with default values
     capabilities:
-      kubeversionmajor: 1
-      kubeversionminor: 21
+      majorVersion: 1
+      minorVersion: 21
     set:
       deployment:
         kind: DaemonSet
@@ -21,8 +21,8 @@ tests:
           value: 1
   - it: should have a rollingUpdate strategy with default values
     capabilities:
-      kubeversionmajor: 1
-      kubeversionminor: 20
+      majorVersion: 1
+      minorVersion: 20
     set:
       deployment:
         kind: DaemonSet
