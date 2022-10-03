@@ -268,3 +268,13 @@ tests:
     - equal:
         path: items[1].spec.ports[0].protocol
         value: UDP
+  - it: should fail when there is no exposed port
+    set:
+      ports:
+        web:
+          expose: false
+        websecure:
+          expose: false
+    asserts:
+    - failedTemplate:
+        errorMessage: "You need to expose at least one port or set enabled=false to service"
