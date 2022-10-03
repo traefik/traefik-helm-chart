@@ -1,0 +1,26 @@
+suite: Dashboard IngressRoute configuration
+templates:
+  - dashboard-hook-ingressroute.yaml
+tests:
+  - it: should allow disabling dashboard exposure using ingressRoute
+    set:
+      ingressRoute:
+        dashboard:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should have traefik as default entryPoints
+    asserts:
+      - equal:
+          path: spec.entryPoints
+          value: ["traefik"]
+  - it: should support setting websecure as entryPoint
+    set:
+      ingressRoute:
+        dashboard:
+          entryPoints: ["websecure"]      
+    asserts:
+      - equal:
+          path: spec.entryPoints
+          value: ["websecure"]
