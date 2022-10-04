@@ -30,7 +30,7 @@ tests:
           value: RollingUpdate
       - equal:
           path: spec.strategy.rollingUpdate.maxUnavailable
-          value: 1
+          value: 0
       - equal:
           path: spec.strategy.rollingUpdate.maxSurge
           value: 1
