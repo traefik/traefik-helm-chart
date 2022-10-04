@@ -598,3 +598,10 @@ securityContext:
 
 podSecurityContext:
   fsGroup: 65532
+
+#
+# Extra objects to deploy (value evaluated as a template)
+#
+# In some cases, it can avoid the need for additional, extended or adhoc deployments.
+# See #595 for more details and traefik/tests/extra.yaml for example.
+extraObjects: []

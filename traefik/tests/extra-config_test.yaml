@@ -1,0 +1,20 @@
+suite: Traefik configuration
+templates:
+  - extra-objects.yaml
+tests:
+  - it: should deploy an extra object
+    values:
+      - ./values/extra.yaml
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: data.something
+          value: "extra"
+  - it: should render a templated extra object
+    values:
+      - ./values/extra.yaml
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: data.something
+          value: "templated"

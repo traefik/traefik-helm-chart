@@ -1,0 +1,14 @@
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: "extra"
+    data:
+      something: "extra"
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: "templated"
+    data:
+      something: {{ printf "templated" }}
