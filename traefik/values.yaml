@@ -504,7 +504,7 @@ autoscaling:
 #       - type: Pods
 #         value: 1
 #         periodSeconds: 60
-  
+
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 # After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:

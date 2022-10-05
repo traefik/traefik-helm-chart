@@ -1,0 +1,10 @@
+autoscaling: 
+  enabled: true
+  maxReplicas: 2
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
