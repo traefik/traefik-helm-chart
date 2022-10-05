@@ -245,11 +245,11 @@ tests:
     asserts:
       - equal:
           path: items[0].spec.ipFamilies
-          value: 
+          value:
             - IPv6
       - equal:
           path: items[1].spec.ipFamilies
-          value: 
+          value:
             - IPv6
   - it: should have http3 UDP port when enabled via values
     set:
