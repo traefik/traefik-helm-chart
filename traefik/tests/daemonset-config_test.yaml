@@ -117,3 +117,13 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.scheme
           value: HTTP
+  - it: should fail when hostNetwork and default maxUnavailable 0
+    set:
+      deployment:
+        kind: DaemonSet
+      rollingUpdate:
+        maxUnavailable: 0
+      hostNetwork: true
+    asserts:
+    - failedTemplate:
+        errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
