@@ -1,0 +1,77 @@
+suite: HPA configuration
+templates:
+  - hpa.yaml
+tests:
+  - it: should use autoscaling/v2 when available
+    capabilities:
+      apiVersions:
+        - autoscaling/v2
+    values:
+      - ./values/hpa.yaml
+    asserts:
+      - isAPIVersion:
+          of: autoscaling/v2
+  - it: should use autoscaling/v2beta2 otherwise
+    capabilities:
+      apiVersions:
+        - autoscaling/v2beta2
+    values:
+      - ./values/hpa.yaml
+    asserts:
+      - isAPIVersion:
+          of: autoscaling/v2beta2
+  - it: should use autoscaling/v2beta1 
+    capabilities:
+      apiVersions:
+        - autoscaling/v2beta1
+    values:
+      - ./values/hpa.yaml
+    asserts:
+      - isAPIVersion:
+          of: autoscaling/v2beta1
+  - it: should prefer to use autoscaling/v2 when available
+    capabilities:
+      apiVersions:
+        - autoscaling/v2beta2
+        - autoscaling/v2beta1
+        - autoscaling/v1
+        - autoscaling/v2
+    values:
+      - ./values/hpa.yaml
+    asserts:
+      - isAPIVersion:
+          of: autoscaling/v2
+  - it: should fail without maxReplicas
+    capabilities:
+      apiVersions:
+        - autoscaling/v2
+    set:
+      autoscaling:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "maxReplicas is required on HPA"
+  - it: should fail without autoscaling/v2 capabilities
+    capabilities:
+      apiVersions:
+        - autoscaling/v1
+    set:
+      autoscaling:
+        enabled: true
+        maxReplicas: 3
+    asserts:
+      - failedTemplate:
+          errorMessage: "You must have at least autoscaling/v2beta1 to use HorizontalPodAutoscaler"
+  - it: should not contains metrics nor behavior when they are not set
+    capabilities:
+      apiVersions:
+        - autoscaling/v2
+    set:
+      autoscaling:
+        enabled: true
+        maxReplicas: 3
+    asserts:
+      - isEmpty:
+          path: spec.metrics
+      - isEmpty:
+          path: spec.behavior

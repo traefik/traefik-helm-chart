@@ -488,11 +488,22 @@ autoscaling:
 #   - type: Resource
 #     resource:
 #       name: cpu
-#       targetAverageUtilization: 60
+#       target:
+#         type: Utilization
+#         averageUtilization: 60
 #   - type: Resource
 #     resource:
 #       name: memory
-#       targetAverageUtilization: 60
+#       target:
+#         type: Utilization
+#         averageUtilization: 60
+#   behavior:
+#     scaleDown:
+#       stabilizationWindowSeconds: 300
+#       policies:
+#       - type: Pods
+#         value: 1
+#         periodSeconds: 60
 
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
