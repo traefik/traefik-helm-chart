@@ -35,7 +35,7 @@ spec:
 {{ toYaml .Values.autoscaling.metrics | indent 4 }}
 {{- end }}
 {{- if .Values.autoscaling.behavior }}
-  behaviour: 
+  behavior:
 {{ toYaml .Values.autoscaling.behavior | indent 4 }}
 {{- end }}
 {{- end }}
