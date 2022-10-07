@@ -441,3 +441,16 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.web.http.middlewares="
+  - it: should fail when user want to use hostnetwork with hostport != containerport
+    set:
+      hostNetwork: true
+      ports:
+        websecure:
+          port: 443
+          hostPort: 443
+        web:
+          port: 8081
+          hostPort: 81
+    asserts:
+      - failedTemplate:
+          errorMessage: "All hostPort must match their respective containerPort when `hostNetwork` is enabled"
