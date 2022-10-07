@@ -1,0 +1,38 @@
+suite: HPA configuration
+templates:
+  - ingressclass.yaml
+tests:
+  - it: should provide an IngressClass when enabled and prefer v1 api
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
+        - networking.k8s.io/v1beta1
+    set:
+      ingressClass:
+        enabled: true
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+  - it: should provide an IngressClass with only v1beta1 api
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1beta1
+    set:
+      ingressClass:
+        enabled: true
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1beta1
+  - it: should fail when asking to deploy IngressClass on Traefik < 2.3
+    set:
+      ingressClass:
+        enabled: true
+    chart:
+      appVersion: v2.1.0
+    asserts:
+      - failedTemplate:
+          errorMessage: "IngressClass cannot be used with Traefik < 2.3.0"

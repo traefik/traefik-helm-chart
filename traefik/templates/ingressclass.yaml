@@ -1,9 +1,10 @@
 {{- if .Values.ingressClass.enabled -}}
-  {{- /* If semVerValidation is set as true or undefined, check */ -}}
-  {{- if or .Values.image.semVerValidation (not (hasKey .Values.image "semVerValidation")) -}}{{- if (semverCompare ">=2.3.0" (default .Chart.AppVersion .Values.image.tag)) -}}{{- end -}}{{- end -}}
-  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1/IngressClass" -}}
+  {{- if (semverCompare "<2.3.0" (.Chart.AppVersion)) -}}
+    {{- fail "ERROR: IngressClass cannot be used with Traefik < 2.3.0" -}}
+  {{- end -}}
+  {{- if .Capabilities.APIVersions.Has "networking.k8s.io/v1" -}}
 apiVersion: networking.k8s.io/v1
-  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1/IngressClass" }}
+  {{- else if .Capabilities.APIVersions.Has "networking.k8s.io/v1beta1" }}
 apiVersion: networking.k8s.io/v1beta1
   {{- else if or (eq .Values.ingressClass.fallbackApiVersion "v1beta1") (eq .Values.ingressClass.fallbackApiVersion "v1") }}
 apiVersion: {{ printf "networking.k8s.io/%s" .Values.ingressClass.fallbackApiVersion }}
