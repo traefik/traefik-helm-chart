@@ -98,7 +98,7 @@ Accessible with the url: http://traefik.localhost/dashboard/
 
 ```bash
 # Update repository
-helm repo update traefik/traefik
+helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
 # Upgrade Traefik
