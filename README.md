@@ -35,12 +35,6 @@ Add Traefik's chart repository to Helm:
 helm repo add traefik https://helm.traefik.io/traefik
 ```
 
-You can update the chart repository by running:
-
-```bash
-helm repo update
-```
-
 ### Kubernetes Version Support
 
 Due to changes in CRD version support, the following versions of the chart are usable and supported on the following Kubernetes versions:
@@ -54,6 +48,12 @@ Due to changes in CRD version support, the following versions of the chart are u
 
 ```bash
 helm install traefik traefik/traefik
+```
+
+You can customize the install with a `values` file. Documentation on all parameters is in the [default file](./traefik/values.yaml).
+
+```bash
+helm install -f myvalues.yaml traefik traefik/traefik
 ```
 
 #### Warning
@@ -93,6 +93,29 @@ spec:
 ```
 
 Accessible with the url: http://traefik.localhost/dashboard/
+
+## Upgrading
+
+```bash
+# Update repository
+helm repo update traefik/traefik
+# See current Chart & Traefik version
+helm search repo traefik/traefik
+# Upgrade Traefik
+helm upgrade traefik traefik/traefik
+```
+
+New major version indicates that there is an incompatible breaking change.
+
+### Upgrading CRDs
+
+With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of Traefik before upgrading CRDs.
+
+```bash
+kubectl apply -f https://raw.githubusercontent.com/traefik/traefik/master/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+```
+
+Note: You can replace `master` with a specific version of Traefik, according to your need.
 
 ## Contributing
 
