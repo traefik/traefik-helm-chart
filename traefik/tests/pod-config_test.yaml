@@ -454,3 +454,18 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "All hostPort must match their respective containerPort when `hostNetwork` is enabled"
+  - it: should pass when user want to set hostport != containerport without hostNetwork
+    set:
+      hostNetwork: false
+      ports:
+        websecure:
+          port: 443
+          hostPort: 443
+        web:
+          port: 8081
+          hostPort: 81
+    asserts:
+      - isKind:
+          of: Deployment
+      - isAPIVersion:
+          of: apps/v1
