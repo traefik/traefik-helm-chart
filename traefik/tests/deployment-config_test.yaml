@@ -122,3 +122,10 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.scheme
           value: HTTP
+  - it: should have affinity with specified value
+    values:
+      - ./values/antiaffinity.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey
+          value: kubernetes.io/hostname
