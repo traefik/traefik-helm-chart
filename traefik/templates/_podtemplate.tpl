@@ -62,9 +62,10 @@
           {{- toYaml . | nindent 10 }}
           {{- end }}
         ports:
+        {{ $hostNetwork := .Values.hostNetwork }}
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}
-          {{- if and $config.hostPort $config.port }}
+          {{- if and $hostNetwork (and $config.hostPort $config.port) }}
             {{- if ne ($config.hostPort | int) ($config.port | int) }}
               {{- fail "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled" }}
             {{- end }}
