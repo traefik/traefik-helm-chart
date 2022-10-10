@@ -582,13 +582,13 @@ resources: {}
 # This example pod anti-affinity forces the scheduler to put traefik pods
 # on nodes where no other traefik pods are scheduled.
 # It should be used when hostNetwork: true to prevent port conflicts
-affinity: |
+affinity: {}
 #  podAntiAffinity:
 #    requiredDuringSchedulingIgnoredDuringExecution:
 #      - labelSelector:
 #          matchLabels:
-#            app.kubernetes.io/name: {{ template "traefik.name" . }}
-#            app.kubernetes.io/instance: {{ .Release.Name }}
+#            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+#            app.kubernetes.io/instance: '{{ .Release.Name }}'
 #        topologyKey: kubernetes.io/hostname
 
 nodeSelector: {}

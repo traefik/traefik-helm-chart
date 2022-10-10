@@ -452,7 +452,7 @@
         {{- end }}
       {{- if .Values.affinity }}
       affinity:
-        {{- tpl .Values.affinity . | nindent 8 }}
+        {{- tpl (toYaml .Values.affinity) . | nindent 8 }}
       {{- end }}
       {{- with .Values.tolerations }}
       tolerations:
