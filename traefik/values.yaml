@@ -342,6 +342,7 @@ ports:
 
     # Override the liveness/readiness port. This is useful to integrate traefik
     # with an external Load Balancer that performs healthchecks.
+    # Default: ports.traefik.port
     # healthchecksPort: 9000
 
     # Override the liveness/readiness scheme. Useful for getting ping to

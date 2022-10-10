@@ -1,0 +1,13 @@
+---
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  - ingressroutetcp.yaml
+  - ingressrouteudp.yaml
+  - ingressroute.yaml
+  - middlewarestcp.yaml
+  - middlewares.yaml
+  - serverstransports.yaml
+  - tlsoptions.yaml
+  - tlsstores.yaml
+  - traefikservices.yaml
