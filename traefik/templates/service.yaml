@@ -51,7 +51,7 @@ spec:
   - port: {{ default $config.port $config.exposedPort }}
     name: {{ $name }}
     targetPort: {{ $name | quote }}
-    protocol: {{ default "TCP" $config.protocol | quote }}
+    protocol: TCP
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}
     {{- end }}
@@ -69,7 +69,11 @@ spec:
   {{- end -}}
   {{- if .Values.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
-  {{- end }}  
+  {{- end }}
+  {{- with .Values.service.ipFamilies }}
+  ipFamilies: 
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
 {{- end }}
 
 {{- if  $udpPorts }}
@@ -94,7 +98,7 @@ spec:
   {{- $type := default "LoadBalancer" .Values.service.type }}
   type: {{ $type }}
   {{- with .Values.service.spec }}
-  {{- toYaml . | nindent 4 }}
+  {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
     app.kubernetes.io/name: {{ template "traefik.name" . }}
@@ -104,8 +108,8 @@ spec:
   {{- if $config.expose }}
   - port: {{ default $config.port $config.exposedPort }}
     name: {{ $name }}
-    targetPort: {{ $name | quote }}
-    protocol: {{ default "UDP" $config.protocol | quote }}
+    targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
+    protocol: UDP
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}
     {{- end }}
@@ -124,5 +128,9 @@ spec:
   {{- if .Values.service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
   {{- end }}
+  {{- with .Values.service.ipFamilies }}
+  ipFamilies: 
+  {{- toYaml . | nindent 2 }}
+  {{- end -}}
 {{- end }}
 {{- end -}}

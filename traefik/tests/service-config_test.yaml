@@ -43,6 +43,7 @@ tests:
       - equal:
           path: metadata.annotations.dns-hostname
           value: tcp.example.com
+        documentIndex: 0
       - isNull:
           path: metadata.annotations
         documentIndex: 1
@@ -60,6 +61,7 @@ tests:
     asserts:
       - isNull:
           path: metadata.annotations
+        documentIndex: 0
       - equal:
           path: metadata.annotations.dns-hostname
           value: udp.example.com
@@ -85,6 +87,7 @@ tests:
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
+        documentIndex: 0
       - equal:
           path: metadata.annotations
           value:
@@ -109,6 +112,7 @@ tests:
           path: metadata.annotations
           value:
             azure-load-balancer-internal: true
+        documentIndex: 0
       - equal:
           path: metadata.annotations
           value:
@@ -134,6 +138,7 @@ tests:
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
+        documentIndex: 0
       - equal:
           path: metadata.annotations
           value:
@@ -160,6 +165,7 @@ tests:
             - 172.16.0.0/16
           externalIPs:
             - "1.2.3.4"
+    documentIndex: 0
     asserts:
       - equal:
           path: spec.ports[0].name
@@ -193,11 +199,11 @@ tests:
           expose: true
           exposedPort: 80
           protocol: UDP
+    documentIndex: 1
     asserts:
       - equal:
           path: spec.ports[0].name
           value: udp
-        documentIndex: 1
       - equal:
           path: spec.ports[0].protocol
           value: UDP
@@ -209,9 +215,11 @@ tests:
           protocol: UDP
     asserts:
       - isEmpty:
-          path: items[0].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
+        documentIndex: 0
       - isEmpty:
-          path: items[1].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
+        documentIndex: 1
   - it: should have custom ipFamilyPolicy when specified via values
     set:
       service:
@@ -222,11 +230,13 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
           value: PreferDualStack
+        documentIndex: 0
       - equal:
-          path: items[1].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
           value: PreferDualStack
+        documentIndex: 1
   - it: should not have ipFamilies when not specified
     set:
       ports:
@@ -235,9 +245,11 @@ tests:
           protocol: UDP
     asserts:
       - isEmpty:
-          path: items[0].spec.ipFamilies
+          path: spec.ipFamilies
+        documentIndex: 0
       - isEmpty:
-          path: items[1].spec.ipFamilies
+          path: spec.ipFamilies
+        documentIndex: 1
   - it: should have custom ipFamilies when specified via values
     set:
       service:
@@ -249,13 +261,15 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].spec.ipFamilies
+          path: spec.ipFamilies
           value:
             - IPv6
+          documentIndex: 0
       - equal:
-          path: items[1].spec.ipFamilies
+          path: spec.ipFamilies
           value:
             - IPv6
+          documentIndex: 1
   - it: should have http3 UDP port when enabled via values
     set:
       ports:
@@ -263,16 +277,18 @@ tests:
           http3: true
           tls:
             enabled: true
+    documentIndex: 1
     asserts:
     - equal:
-        path: items[1].spec.ports[0].port
+        path: spec.ports[0].port
         value: 443
     - equal:
-        path: items[1].spec.ports[0].targetPort
+        path: spec.ports[0].targetPort
         value: 8443
     - equal:
-        path: items[1].spec.ports[0].protocol
+        path: spec.ports[0].protocol
         value: UDP
+      documentIndex: 1
   - it: should fail when there is no exposed port
     set:
       ports:
