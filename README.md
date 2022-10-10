@@ -112,15 +112,7 @@ New major version indicates that there is an incompatible breaking change.
 With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
 
 ```bash
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/ingressroute.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/ingressroutetcp.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/ingressrouteudp.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/middlewares.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/middlewarestcp.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/serverstransports.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/tlsoptions.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/tlsstores.yaml
-kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik-helm-chart/master/traefik/crds/traefikservices.yaml
+kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 ```
 
 Note: You can replace `master` with a specific version of this chart, according to your need.
