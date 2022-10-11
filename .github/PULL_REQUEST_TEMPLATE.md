@@ -16,6 +16,6 @@ HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/su
 
 ### More
 
-- [ ] Yes, I updated tests accordingly
+- [ ] Yes, I updated the tests accordingly
 - [ ] Yes, `make test` is all green
 
