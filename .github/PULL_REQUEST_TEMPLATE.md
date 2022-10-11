@@ -16,8 +16,6 @@ HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/su
 
 ### More
 
-- [ ] Yes, I updated the [chart version](https://github.com/traefik/traefik-helm-chart/blob/9b32ed1b414cc0be1ad46bcb335fcfc93ded06f3/traefik/Chart.yaml#L5)
+- [ ] Yes, I updated tests accordingly
+- [ ] Yes, `make test` is all green
 
-### Additional Notes
-
-<!-- Anything else we should know when reviewing? -->
