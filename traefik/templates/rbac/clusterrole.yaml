@@ -20,7 +20,6 @@ rules:
       - list
       - watch
 {{- if not .Values.rbac.namespaced }}
-{{- if .Values.providers.kubernetesIngress.enabled }}
   - apiGroups:
       - ""
     resources:
@@ -31,6 +30,7 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.providers.kubernetesIngress.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io

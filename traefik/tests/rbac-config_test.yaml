@@ -86,3 +86,46 @@ tests:
           path: subjects[0].name
           value: foobar
         template: rbac/clusterrolebinding.yaml
+  - it: ClusterRole should not be able to update ingresses/status when kubernetesIngress is disabled
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: false
+    asserts:
+      - notContains:
+          path: rules
+          content:
+            - apiGroups:
+                - extensions
+                - networking.k8s.io
+              resources:
+                - ingresses/status
+              verbs:
+                - update
+        template: rbac/clusterrole.yaml
+  - it: ClusterRole should not be able to read CRDs when kubernetesCRD is disabled
+    set:
+      providers:
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - notContains:
+          path: rules
+          content:
+            - apiGroups:
+                - traefik.containo.us
+              resources:
+                - ingressroutes
+                - ingressroutetcps
+                - ingressrouteudps
+                - middlewares
+                - middlewaretcps
+                - tlsoptions
+                - tlsstores
+                - traefikservices
+                - serverstransports
+              verbs:
+                - get
+                - list
+                - watch
+        template: rbac/clusterrole.yaml
