@@ -5,7 +5,7 @@ tests:
   - it: should be a type LoadBalancer by default
     asserts:
       - equal:
-          path: items[0].spec.type
+          path: spec.type
           value: LoadBalancer
   - it: should be a custom type when specified via values
     set:
@@ -13,12 +13,12 @@ tests:
         type: NodePort
     asserts:
       - equal:
-          path: items[0].spec.type
+          path: spec.type
           value: NodePort
   - it: should have no annotations by default
     asserts:
       - isNull:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
   - it: should have customized annotations when specified via values
     set:
       service:
@@ -26,7 +26,7 @@ tests:
           azure-load-balancer-internal: true
     asserts:
       - equal:
-          path: items[0].metadata.annotations.azure-load-balancer-internal
+          path: metadata.annotations.azure-load-balancer-internal
           value: true
   - it: should have TCP only annotations when specified via values
     set:
@@ -41,10 +41,12 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations.dns-hostname
+          path: metadata.annotations.dns-hostname
           value: tcp.example.com
+        documentIndex: 0
       - isNull:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
+        documentIndex: 1
   - it: should have UDP only annotations when specified via values
     set:
       service:
@@ -58,10 +60,12 @@ tests:
           protocol: UDP
     asserts:
       - isNull:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
+        documentIndex: 0
       - equal:
-          path: items[1].metadata.annotations.dns-hostname
+          path: metadata.annotations.dns-hostname
           value: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations when specified via values
     set:
       service:
@@ -79,15 +83,17 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
+        documentIndex: 0
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations with annotationsTCP unspecified when specified via values
     set:
       service:
@@ -103,14 +109,16 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
+        documentIndex: 0
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: udp.example.com
+        documentIndex: 1
   - it: should merge protocol specific service annotations with annotationsUDP unspecified when specified via values
     set:
       service:
@@ -126,14 +134,16 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
             dns-hostname: tcp.example.com
+        documentIndex: 0
       - equal:
-          path: items[1].metadata.annotations
+          path: metadata.annotations
           value:
             azure-load-balancer-internal: true
+        documentIndex: 1
   - it: should have customized labels when specified via values
     set:
       service:
@@ -141,9 +151,8 @@ tests:
           custom-label: custom-value
     asserts:
       - equal:
-          path: items[0].metadata.labels.custom-label
+          path: metadata.labels.custom-label
           value: custom-value
-
   - it: should have custom spec elements when specified via values
     set:
       service:
@@ -156,30 +165,31 @@ tests:
             - 172.16.0.0/16
           externalIPs:
             - "1.2.3.4"
+    documentIndex: 0
     asserts:
       - equal:
-          path: items[0].spec.ports[0].name
+          path: spec.ports[0].name
           value: web
       - equal:
-          path: items[0].spec.ports[0].protocol
+          path: spec.ports[0].protocol
           value: TCP
       - equal:
-          path: items[0].spec.externalTrafficPolicy
+          path: spec.externalTrafficPolicy
           value: Cluster
       - equal:
-          path: items[0].spec.loadBalancerIP
+          path: spec.loadBalancerIP
           value: "1.2.3.4"
       - equal:
-          path: items[0].spec.clusterIP
+          path: spec.clusterIP
           value: "2.3.4.5"
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[0]
+          path: spec.loadBalancerSourceRanges[0]
           value: 192.168.0.1/32
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[1]
+          path: spec.loadBalancerSourceRanges[1]
           value: 172.16.0.0/16
       - equal:
-          path: items[0].spec.externalIPs[0]
+          path: spec.externalIPs[0]
           value: "1.2.3.4"
   - it: should have custom spec elements when specified via values for UDP ports
     set:
@@ -189,12 +199,13 @@ tests:
           expose: true
           exposedPort: 80
           protocol: UDP
+    documentIndex: 1
     asserts:
       - equal:
-          path: items[1].spec.ports[0].name
+          path: spec.ports[0].name
           value: udp
       - equal:
-          path: items[1].spec.ports[0].protocol
+          path: spec.ports[0].protocol
           value: UDP
   - it: should not have ipFamilyPolicy when not specified
     set:
@@ -204,9 +215,11 @@ tests:
           protocol: UDP
     asserts:
       - isEmpty:
-          path: items[0].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
+        documentIndex: 0
       - isEmpty:
-          path: items[1].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
+        documentIndex: 1
   - it: should have custom ipFamilyPolicy when specified via values
     set:
       service:
@@ -217,11 +230,13 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
           value: PreferDualStack
+        documentIndex: 0
       - equal:
-          path: items[1].spec.ipFamilyPolicy
+          path: spec.ipFamilyPolicy
           value: PreferDualStack
+        documentIndex: 1
   - it: should not have ipFamilies when not specified
     set:
       ports:
@@ -230,9 +245,11 @@ tests:
           protocol: UDP
     asserts:
       - isEmpty:
-          path: items[0].spec.ipFamilies
+          path: spec.ipFamilies
+        documentIndex: 0
       - isEmpty:
-          path: items[1].spec.ipFamilies
+          path: spec.ipFamilies
+        documentIndex: 1
   - it: should have custom ipFamilies when specified via values
     set:
       service:
@@ -244,13 +261,15 @@ tests:
           protocol: UDP
     asserts:
       - equal:
-          path: items[0].spec.ipFamilies
+          path: spec.ipFamilies
           value:
             - IPv6
+          documentIndex: 0
       - equal:
-          path: items[1].spec.ipFamilies
+          path: spec.ipFamilies
           value:
             - IPv6
+          documentIndex: 1
   - it: should have http3 UDP port when enabled via values
     set:
       ports:
@@ -258,16 +277,18 @@ tests:
           http3: true
           tls:
             enabled: true
+    documentIndex: 1
     asserts:
     - equal:
-        path: items[1].spec.ports[0].port
+        path: spec.ports[0].port
         value: 443
     - equal:
-        path: items[1].spec.ports[0].targetPort
+        path: spec.ports[0].targetPort
         value: 8443
     - equal:
-        path: items[1].spec.ports[0].protocol
+        path: spec.ports[0].protocol
         value: UDP
+      documentIndex: 1
   - it: should fail when there is no exposed port
     set:
       ports:
@@ -278,3 +299,4 @@ tests:
     asserts:
     - failedTemplate:
         errorMessage: "You need to expose at least one port or set enabled=false to service"
+        documentIndex: 1

@@ -19,125 +19,57 @@
   {{ fail "You need to expose at least one port or set enabled=false to service" }}
 {{- end }}
 
+{{- if  $tcpPorts }}
 apiVersion: v1
-kind: List
+kind: Service
 metadata:
   name: {{ template "traefik.fullname" . }}
-items:
-{{- if $tcpPorts }}
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: {{ template "traefik.fullname" . }}
-      labels:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        helm.sh/chart: {{ template "traefik.chart" . }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-      {{- with .Values.service.labels }}
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-      annotations:
-      {{- with (merge .Values.service.annotationsTCP .Values.service.annotations) }}
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-    spec:
-      {{- $type := default "LoadBalancer" .Values.service.type }}
-      type: {{ $type }}
-      {{- with .Values.service.spec }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-      selector:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-      ports:
-      {{- range $name, $config := $tcpPorts }}
-      {{- if $config.expose }}
-      - port: {{ default $config.port $config.exposedPort }}
-        name: {{ $name }}
-        targetPort: {{ $name | quote }}
-        protocol: TCP
-        {{- if $config.nodePort }}
-        nodePort: {{ $config.nodePort }}
-        {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if eq $type "LoadBalancer" }}
-      {{- with .Values.service.loadBalancerSourceRanges }}
-      loadBalancerSourceRanges:
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
-      {{- end -}}
-      {{- with .Values.service.externalIPs }}
-      externalIPs:
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
-      {{- if .Values.service.ipFamilyPolicy }}
-      ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
-      {{- end }}
-      {{- with .Values.service.ipFamilies }}
-      ipFamilies: 
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
+  {{- template "traefik.service-metadata" . }}
+  annotations:
+  {{- with (merge .Values.service.annotationsTCP .Values.service.annotations) }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- template "traefik.service-spec" . }}
+  ports:
+  {{- range $name, $config := $tcpPorts }}
+  {{- if $config.expose }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: {{ $name }}
+    targetPort: {{ $name | quote }}
+    protocol: TCP
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}
 
-{{- if $udpPorts }}
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: {{ template "traefik.fullname" . }}-udp
-      labels:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        helm.sh/chart: {{ template "traefik.chart" . }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-      {{- with .Values.service.labels }}
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-      annotations:
-      {{- with (merge .Values.service.annotationsUDP .Values.service.annotations) }}
-      {{- toYaml . | nindent 8 }}
-      {{- end }}
-    spec:
-      {{- $type := default "LoadBalancer" .Values.service.type }}
-      type: {{ $type }}
-      {{- with .Values.service.spec }}
-      {{- toYaml . | nindent 6 }}
-      {{- end }}
-      selector:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
-      ports:
-      {{- range $name, $config := $udpPorts }}
-      {{- if $config.expose }}
-      - port: {{ default $config.port $config.exposedPort }}
-        name: {{ $name }}
-        # Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
-        # to define the HTTP/3 UDP port as a containerPort. TCP and UDP containerPort will have
-        # the same value which will break the chart upgrade.
-        targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
-        protocol: UDP
-        {{- if $config.nodePort }}
-        nodePort: {{ $config.nodePort }}
-        {{- end }}
-      {{- end }}
-      {{- end }}
-      {{- if eq $type "LoadBalancer" }}
-      {{- with .Values.service.loadBalancerSourceRanges }}
-      loadBalancerSourceRanges:
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
-      {{- end -}}
-      {{- with .Values.service.externalIPs }}
-      externalIPs:
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
-      {{- if .Values.service.ipFamilyPolicy }}
-      ipFamilyPolicy: {{ .Values.service.ipFamilyPolicy }}
-      {{- end }}
-      {{- with .Values.service.ipFamilies }}
-      ipFamilies: 
-      {{- toYaml . | nindent 6 }}
-      {{- end -}}
+{{- if  $udpPorts }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "traefik.fullname" . }}-udp
+  {{- template "traefik.service-metadata" . }}
+  annotations:
+  {{- with (merge .Values.service.annotationsUDP .Values.service.annotations) }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- template "traefik.service-spec" . }}
+  ports:
+  {{- range $name, $config := $udpPorts }}
+  {{- if $config.expose }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: {{ $name }}
+    targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
+    protocol: UDP
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}
+
 {{- end -}}
