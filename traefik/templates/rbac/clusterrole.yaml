@@ -30,6 +30,7 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.providers.kubernetesIngress.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -37,6 +38,8 @@ rules:
       - ingresses/status
     verbs:
       - update
+{{- end -}}
+{{- if .Values.providers.kubernetesCRD.enabled }}
   - apiGroups:
       - traefik.containo.us
     resources:
@@ -53,6 +56,7 @@ rules:
       - get
       - list
       - watch
+{{- end -}}
 {{- if .Values.podSecurityPolicy.enabled }}
   - apiGroups:
       - policy
