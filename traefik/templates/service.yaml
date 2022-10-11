@@ -3,20 +3,21 @@
 {{- $tcpPorts := dict -}}
 {{- $udpPorts := dict -}}
 {{- $exposedPorts := false -}}
-{{ $experimentalHttp3Enabled := .Values.experimental.http3.enabled }}
+{{- $experimentalHttp3Enabled := .Values.experimental.http3.enabled -}}
 {{- range $name, $config := .Values.ports -}}
-  {{- if (and $config.http3 (not $experimentalHttp3Enabled)) }}
-    {{ fail "ERROR: You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature" }}
-  {{- end }}
   {{- if $config.http3 -}}
+    {{- if (and $config.http3.expose (not $config.tls.enabled)) -}}
+      {{- fail "ERROR: You need to enable tls to expose http3 port" -}}
+    {{- end -}}
+    {{- if (and $config.http3.expose (not $experimentalHttp3Enabled)) -}}
+      {{- fail "ERROR: You cannot expose http3 port without enabling http3 experimental feature" -}}
+    {{- end -}}
     {{/* Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
       to define the HTTP/3 UDP port as a (named) containerPort. TCP and UDP containerPort
       will have the same value for 'port' which will break the chart upgrade. Therefore
       we manually refer to port number for HTTP/3. */}}
     {{- $http3Name := (toString $config.port) }}
-    {{- $http3Config := deepCopy $config -}}
-    {{- $http3Config := set $http3Config "protocol" "UDP" -}}
-    {{- $_ := set $udpPorts $http3Name $http3Config -}}
+    {{- $_ := set $udpPorts $http3Name $config.http3 -}}
   {{- end -}}
   {{- if eq (toString $config.protocol) "UDP" -}}
     {{ $_ := set $udpPorts $name $config -}}
@@ -33,7 +34,7 @@
   {{- fail "You need to expose at least one port or set enabled=false to service" -}}
 {{- end -}}
 
-{{- if $tcpPorts }}
+{{- if (or $tcpPorts .Values.service.single) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -47,9 +48,12 @@ spec:
   {{- template "traefik.service-spec" . }}
   ports:
   {{- template "traefik.service-ports" $tcpPorts }}
+{{- if .Values.service.single }}
+  {{- template "traefik.service-ports" $udpPorts }}
+{{- end }}
 {{- end }}
 
-{{- if $udpPorts }}
+{{- if (and $udpPorts (not .Values.service.single)) }}
 ---
 apiVersion: v1
 kind: Service

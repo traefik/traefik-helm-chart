@@ -421,10 +421,16 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
-    # Enable HTTP/3.
-    # Requires enabling experimental http3 feature and tls.
-    # Note that you cannot have a UDP entrypoint with the same port.
-    # http3: true
+    http3:
+      port: 8443
+      # hostPort: 8443
+      # Enable HTTP/3.
+      # Requires enabling experimental http3 feature and tls.
+      expose: false
+      # Note that you cannot have another UDP entrypoint with the same (exposed) port.
+      exposedPort: 8443
+      # The port protocol (TCP/UDP)
+      protocol: UDP
     # Set TLS at the entrypoint
     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
     tls:
@@ -500,6 +506,7 @@ tlsStore: {}
 # from.
 service:
   enabled: true
+  single: true
   type: LoadBalancer
   # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
   annotations: {}
