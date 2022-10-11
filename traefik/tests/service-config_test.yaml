@@ -287,7 +287,7 @@ tests:
         value: 443
     - equal:
         path: spec.ports[0].targetPort
-        value: 8443
+        value: "8443"
     - equal:
         path: spec.ports[0].protocol
         value: UDP

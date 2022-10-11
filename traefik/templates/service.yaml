@@ -1,29 +1,39 @@
 {{- if .Values.service.enabled -}}
 
-{{ $tcpPorts := dict }}
-{{ $udpPorts := dict }}
-{{ $exposedPorts := false }}
+{{- $tcpPorts := dict -}}
+{{- $udpPorts := dict -}}
+{{- $exposedPorts := false -}}
 {{ $experimentalHttp3Enabled := .Values.experimental.http3.enabled }}
-{{- range $name, $config := .Values.ports }}
+{{- range $name, $config := .Values.ports -}}
   {{- if (and $config.http3 (not $experimentalHttp3Enabled)) }}
     {{ fail "ERROR: You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature" }}
   {{- end }}
-  {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
-    {{ $_ := set $udpPorts $name $config }}
-  {{- end }}
-  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
-    {{ $_ := set $tcpPorts $name $config }}
-  {{- end }}
-  {{- if (eq $config.expose true) }}
-    {{ $exposedPorts = true }}
-  {{- end }}
-{{- end }}
+  {{- if $config.http3 -}}
+    {{/* Due to https://github.com/kubernetes/kubernetes/issues/58477 it is not possible
+      to define the HTTP/3 UDP port as a (named) containerPort. TCP and UDP containerPort
+      will have the same value for 'port' which will break the chart upgrade. Therefore
+      we manually refer to port number for HTTP/3. */}}
+    {{- $http3Name := (toString $config.port) }}
+    {{- $http3Config := deepCopy $config -}}
+    {{- $http3Config := set $http3Config "protocol" "UDP" -}}
+    {{- $_ := set $udpPorts $http3Name $http3Config -}}
+  {{- end -}}
+  {{- if eq (toString $config.protocol) "UDP" -}}
+    {{ $_ := set $udpPorts $name $config -}}
+  {{- end -}}
+  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" -}}
+    {{ $_ := set $tcpPorts $name $config -}}
+  {{- end -}}
+  {{- if (eq $config.expose true) -}}
+    {{- $exposedPorts = true -}}
+  {{- end -}}
+{{- end -}}
 
-{{- if (eq $exposedPorts false) }}
-  {{ fail "You need to expose at least one port or set enabled=false to service" }}
-{{- end }}
+{{- if (eq $exposedPorts false) -}}
+  {{- fail "You need to expose at least one port or set enabled=false to service" -}}
+{{- end -}}
 
-{{- if  $tcpPorts }}
+{{- if $tcpPorts }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -36,20 +46,10 @@ metadata:
 spec:
   {{- template "traefik.service-spec" . }}
   ports:
-  {{- range $name, $config := $tcpPorts }}
-  {{- if $config.expose }}
-  - port: {{ default $config.port $config.exposedPort }}
-    name: {{ $name }}
-    targetPort: {{ $name | quote }}
-    protocol: TCP
-    {{- if $config.nodePort }}
-    nodePort: {{ $config.nodePort }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+  {{- template "traefik.service-ports" $tcpPorts }}
 {{- end }}
 
-{{- if  $udpPorts }}
+{{- if $udpPorts }}
 ---
 apiVersion: v1
 kind: Service
@@ -63,17 +63,7 @@ metadata:
 spec:
   {{- template "traefik.service-spec" . }}
   ports:
-  {{- range $name, $config := $udpPorts }}
-  {{- if $config.expose }}
-  - port: {{ default $config.port $config.exposedPort }}
-    name: {{ $name }}
-    targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
-    protocol: UDP
-    {{- if $config.nodePort }}
-    nodePort: {{ $config.nodePort }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+  {{- template "traefik.service-ports" $udpPorts }}
 {{- end }}
 
 {{- end -}}
