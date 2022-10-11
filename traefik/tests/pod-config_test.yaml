@@ -364,7 +364,8 @@ tests:
     set:
       ports:
         websecure:
-          http3: true
+          http3:
+            expose: true
           tls:
             enabled: false
       experimental:
@@ -383,7 +384,8 @@ tests:
         tag: 2.5.6
       ports:
         websecure:
-          http3: true
+          http3:
+            expose: true
           tls:
             enabled: true
       experimental:
@@ -397,7 +399,8 @@ tests:
     set:
       ports:
         websecure:
-          http3: true
+          http3:
+            expose: true
           tls:
             enabled: true
       experimental:
@@ -406,7 +409,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=443"
+          content: "--entrypoints.websecure.http3.advertisedPort=8443"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:

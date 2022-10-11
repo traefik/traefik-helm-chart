@@ -28,122 +28,6 @@ tests:
       - equal:
           path: metadata.annotations.azure-load-balancer-internal
           value: true
-  - it: should have TCP only annotations when specified via values
-    set:
-      service:
-        annotationsTCP:
-          dns-hostname: tcp.example.com
-      ports:
-        udp:
-          port: 3000
-          expose: true
-          exposedPort: 80
-          protocol: UDP
-    asserts:
-      - equal:
-          path: metadata.annotations.dns-hostname
-          value: tcp.example.com
-        documentIndex: 0
-      - isNull:
-          path: metadata.annotations
-        documentIndex: 1
-  - it: should have UDP only annotations when specified via values
-    set:
-      service:
-        annotationsUDP:
-          dns-hostname: udp.example.com
-      ports:
-        udp:
-          port: 3000
-          expose: true
-          exposedPort: 80
-          protocol: UDP
-    asserts:
-      - isNull:
-          path: metadata.annotations
-        documentIndex: 0
-      - equal:
-          path: metadata.annotations.dns-hostname
-          value: udp.example.com
-        documentIndex: 1
-  - it: should merge protocol specific service annotations when specified via values
-    set:
-      service:
-        annotations:
-          azure-load-balancer-internal: true
-        annotationsTCP:
-          dns-hostname: tcp.example.com
-        annotationsUDP:
-          dns-hostname: udp.example.com
-      ports:
-        udp:
-          port: 3000
-          expose: true
-          exposedPort: 80
-          protocol: UDP
-    asserts:
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-            dns-hostname: tcp.example.com
-        documentIndex: 0
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-            dns-hostname: udp.example.com
-        documentIndex: 1
-  - it: should merge protocol specific service annotations with annotationsTCP unspecified when specified via values
-    set:
-      service:
-        annotations:
-          azure-load-balancer-internal: true
-        annotationsUDP:
-          dns-hostname: udp.example.com
-      ports:
-        udp:
-          port: 3000
-          expose: true
-          exposedPort: 80
-          protocol: UDP
-    asserts:
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-        documentIndex: 0
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-            dns-hostname: udp.example.com
-        documentIndex: 1
-  - it: should merge protocol specific service annotations with annotationsUDP unspecified when specified via values
-    set:
-      service:
-        annotations:
-          azure-load-balancer-internal: true
-        annotationsTCP:
-          dns-hostname: tcp.example.com
-      ports:
-        udp:
-          port: 3000
-          expose: true
-          exposedPort: 80
-          protocol: UDP
-    asserts:
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-            dns-hostname: tcp.example.com
-        documentIndex: 0
-      - equal:
-          path: metadata.annotations
-          value:
-            azure-load-balancer-internal: true
-        documentIndex: 1
   - it: should have customized labels when specified via values
     set:
       service:
@@ -191,15 +75,42 @@ tests:
       - equal:
           path: spec.externalIPs[0]
           value: "1.2.3.4"
+  - it: should have custom spec elements when specified via values for TCP ports
+    set:
+      ports:
+        web:
+          expose: false
+        websecure:
+          expose: false
+        tcp:
+          port: 3000
+          expose: true
+          exposedPort: 8080
+          protocol: TCP
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: spec.ports[0].name
+          value: tcp
+      - equal:
+          path: spec.ports[0].protocol
+          value: TCP
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
   - it: should have custom spec elements when specified via values for UDP ports
     set:
       ports:
+        web:
+          expose: false
+        websecure:
+          expose: false
         udp:
           port: 3000
           expose: true
-          exposedPort: 80
+          exposedPort: 8080
           protocol: UDP
-    documentIndex: 1
+    documentIndex: 0
     asserts:
       - equal:
           path: spec.ports[0].name
@@ -207,6 +118,9 @@ tests:
       - equal:
           path: spec.ports[0].protocol
           value: UDP
+      - equal:
+          path: spec.ports[0].port
+          value: 8080
   - it: should not have ipFamilyPolicy when not specified
     set:
       ports:
@@ -217,9 +131,6 @@ tests:
       - isEmpty:
           path: spec.ipFamilyPolicy
         documentIndex: 0
-      - isEmpty:
-          path: spec.ipFamilyPolicy
-        documentIndex: 1
   - it: should have custom ipFamilyPolicy when specified via values
     set:
       service:
@@ -233,10 +144,6 @@ tests:
           path: spec.ipFamilyPolicy
           value: PreferDualStack
         documentIndex: 0
-      - equal:
-          path: spec.ipFamilyPolicy
-          value: PreferDualStack
-        documentIndex: 1
   - it: should not have ipFamilies when not specified
     set:
       ports:
@@ -247,9 +154,6 @@ tests:
       - isEmpty:
           path: spec.ipFamilies
         documentIndex: 0
-      - isEmpty:
-          path: spec.ipFamilies
-        documentIndex: 1
   - it: should have custom ipFamilies when specified via values
     set:
       service:
@@ -265,33 +169,28 @@ tests:
           value:
             - IPv6
           documentIndex: 0
-      - equal:
-          path: spec.ipFamilies
-          value:
-            - IPv6
-          documentIndex: 1
   - it: should have http3 UDP port when enabled via values
     set:
-      ports:
-        websecure:
-          http3: true
-          tls:
-            enabled: true
       experimental:
         http3:
           enabled: true
-    documentIndex: 1
+      ports:
+        websecure:
+          http3:
+            expose: true
+          tls:
+            enabled: true
+    documentIndex: 0
     asserts:
     - equal:
-        path: spec.ports[0].port
-        value: 443
+        path: spec.ports[2].port
+        value: 8443
     - equal:
-        path: spec.ports[0].targetPort
+        path: spec.ports[2].targetPort
         value: "8443"
     - equal:
-        path: spec.ports[0].protocol
+        path: spec.ports[2].protocol
         value: UDP
-      documentIndex: 1
   - it: should fail when there is no exposed port
     set:
       ports:
@@ -307,7 +206,8 @@ tests:
     set:
       ports:
         websecure:
-          http3: true
+          http3:
+            expose: true
     asserts:
       - failedTemplate:
-          errorMessage: "You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature"
+          errorMessage: "You cannot expose http3 port without enabling http3 experimental feature"

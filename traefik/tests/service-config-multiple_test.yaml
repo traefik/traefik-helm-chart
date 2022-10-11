@@ -1,0 +1,212 @@
+suite: Service configuration (split TCP/UDP services)
+templates:
+  - service.yaml
+tests:
+  - it: should have TCP only annotations when specified via values
+    set:
+      service:
+        single: false
+        annotationsTCP:
+          dns-hostname: tcp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.annotations.dns-hostname
+          value: tcp.example.com
+        documentIndex: 0
+      - isNull:
+          path: metadata.annotations
+        documentIndex: 1
+  - it: should have UDP only annotations when specified via values
+    set:
+      service:
+        single: false
+        annotationsUDP:
+          dns-hostname: udp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - isNull:
+          path: metadata.annotations
+        documentIndex: 0
+      - equal:
+          path: metadata.annotations.dns-hostname
+          value: udp.example.com
+        documentIndex: 1
+  - it: should merge protocol specific service annotations when specified via values
+    set:
+      service:
+        single: false
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsTCP:
+          dns-hostname: tcp.example.com
+        annotationsUDP:
+          dns-hostname: udp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: tcp.example.com
+        documentIndex: 0
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: udp.example.com
+        documentIndex: 1
+  - it: should merge protocol specific service annotations with annotationsTCP unspecified when specified via values
+    set:
+      service:
+        single: false
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsUDP:
+          dns-hostname: udp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+        documentIndex: 0
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: udp.example.com
+        documentIndex: 1
+  - it: should merge protocol specific service annotations with annotationsUDP unspecified when specified via values
+    set:
+      service:
+        single: false
+        annotations:
+          azure-load-balancer-internal: true
+        annotationsTCP:
+          dns-hostname: tcp.example.com
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+            dns-hostname: tcp.example.com
+        documentIndex: 0
+      - equal:
+          path: metadata.annotations
+          value:
+            azure-load-balancer-internal: true
+        documentIndex: 1
+  - it: should have custom spec elements when specified via values for UDP ports
+    set:
+      service:
+        single: false
+      ports:
+        udp:
+          port: 3000
+          expose: true
+          exposedPort: 80
+          protocol: UDP
+    documentIndex: 1
+    asserts:
+      - equal:
+          path: spec.ports[0].name
+          value: udp
+      - equal:
+          path: spec.ports[0].protocol
+          value: UDP
+  - it: should not have ipFamilyPolicy on either service when not specified
+    set:
+      service:
+        single: false
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - isEmpty:
+          path: spec.ipFamilyPolicy
+        documentIndex: 0
+      - isEmpty:
+          path: spec.ipFamilyPolicy
+        documentIndex: 1
+  - it: should have custom ipFamilyPolicy on both services when specified via values
+    set:
+      service:
+        single: false
+        ipFamilyPolicy: PreferDualStack
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: spec.ipFamilyPolicy
+          value: PreferDualStack
+        documentIndex: 0
+      - equal:
+          path: spec.ipFamilyPolicy
+          value: PreferDualStack
+        documentIndex: 1
+  - it: should not have ipFamilies on either service when not specified
+    set:
+      service:
+        single: false
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - isEmpty:
+          path: spec.ipFamilies
+        documentIndex: 0
+      - isEmpty:
+          path: spec.ipFamilies
+        documentIndex: 1
+  - it: should have custom ipFamilies on both services when specified via values
+    set:
+      service:
+        single: false
+        ipFamilies:
+          - IPv6
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: spec.ipFamilies
+          value:
+            - IPv6
+          documentIndex: 0
+      - equal:
+          path: spec.ipFamilies
+          value:
+            - IPv6
+          documentIndex: 1
