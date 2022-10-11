@@ -12,10 +12,7 @@
       {{- end }}
       {{- end }}
       labels:
-        app.kubernetes.io/name: {{ template "traefik.name" . }}
-        helm.sh/chart: {{ template "traefik.chart" . }}
-        app.kubernetes.io/managed-by: {{ .Release.Service }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "traefik.labels" . | nindent 8 -}}
       {{- with .Values.deployment.podLabels }}
       {{- toYaml . | nindent 8 }}
       {{- end }}

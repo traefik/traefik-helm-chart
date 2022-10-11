@@ -32,6 +32,14 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+{{/* Generate basic labels */}}
+{{- define "traefik.labels" -}}
+app.kubernetes.io/name: {{ template "traefik.name" . }}
+helm.sh/chart: {{ template "traefik.chart" . }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
 {{/*
 The name of the service account to use
 */}}
