@@ -1,9 +1,6 @@
 {{- define "traefik.service-metadata" }}
   labels:
-    app.kubernetes.io/name: {{ template "traefik.name" . }}
-    helm.sh/chart: {{ template "traefik.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- include "traefik.labels" . | nindent 4 -}}
   {{- with .Values.service.labels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -36,4 +33,3 @@
   {{- toYaml . | nindent 2 }}
   {{- end -}}
 {{- end }}
-
