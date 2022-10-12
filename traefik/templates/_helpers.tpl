@@ -32,12 +32,31 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{/* Generate basic labels */}}
-{{- define "traefik.labels" -}}
+{{/* Generate common labels */}}
+{{- define "traefik.commonLabels" -}}
 app.kubernetes.io/name: {{ template "traefik.name" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- end }}
+
+{{/* Generate basic labels */}}
+{{- define "traefik.labels" -}}
+{{ template "traefik.commonLabels" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}
+
+{{/*
+Generate basic labels for ClusterRole and ClusterRoleBinding.
+Adds the namespace to app.kubernetes.io/instance when it is
+a namespaced release.
+*/}}
+{{- define "traefik.clusterRoleLabels" -}}
+{{ template "traefik.commonLabels" . }}
+{{ if .Values.rbac.namespaced -}}
+app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Release.Namespace }}
+{{- else -}}
+app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end -}}
 {{- end }}
 
 {{/*
@@ -45,6 +64,19 @@ The name of the service account to use
 */}}
 {{- define "traefik.serviceAccountName" -}}
 {{- default (include "traefik.fullname" .) .Values.serviceAccount.name -}}
+{{- end -}}
+
+{{/*
+The name of the ClusterRole and ClusterRoleBinding to use.
+Adds the namespace to name to prevent duplicate resource names when there
+are multiple namespaced releases with the same release name.
+*/}}
+{{- define "traefik.clusterRoleName" -}}
+{{- if .Values.rbac.namespaced -}}
+{{- template "traefik.fullname" . -}}-{{ .Release.Namespace }}
+{{- else -}}
+{{- template "traefik.fullname" . -}}
+{{- end -}}
 {{- end -}}
 
 {{/*
