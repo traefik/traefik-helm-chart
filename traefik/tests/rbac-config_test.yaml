@@ -70,6 +70,15 @@ tests:
                 - list
                 - watch
         template: rbac/clusterrole.yaml
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.*-NAMESPACE$
+        template: rbac/clusterrole.yaml
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.*-NAMESPACE$
+        template: rbac/clusterrolebinding.yaml
+
   - it: should use existing ServiceAccount
     set:
       serviceAccount:
