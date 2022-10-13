@@ -238,22 +238,22 @@ tests:
           port: 9000
           healthchecksPort: 9001
           exposedPort: 9000
-      asserts:
-        - equal:
-            path: spec.template.spec.containers[0].livenessProbe.httpGet.port
-            content: 9001
-        - equal:
-            path: spec.template.spec.containers[0].readinessProbe.httpGet.port
-            content: 9001
-        - equal:
-            path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
-            content: "HTTP"
-        - contains:
-            path: spec.template.spec.containers[0].args
-            content: "--ping"
-        - contains:
-            path: spec.template.spec.containers[0].args
-            content: "--ping.entrypoint=web"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 9001
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: 9001
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
+          value: "HTTP"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ping"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ping.entrypoint=web"
   - it: should set custom probe scheme
     set:
       additionalArguments:
@@ -265,19 +265,34 @@ tests:
           healthchecksPort: 8443
           healthchecksScheme: HTTPS
           exposedPort: 9000
-      asserts:
-        - equal:
-            path: spec.template.spec.containers[0].livenessProbe.httpGet.port
-            content: 8443
-        - equal:
-            path: spec.template.spec.containers[0].readinessProbe.httpGet.port
-            content: 8443
-        - equal:
-            path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
-            content: "HTTPS"
-        - contains:
-            path: spec.template.spec.containers[0].args
-            content: "--ping"
-        - contains:
-            path: spec.template.spec.containers[0].args
-            content: "--ping.entrypoint=websecure"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 8443
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: 8443
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
+          value: "HTTPS"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ping"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ping.entrypoint=websecure"
+  - it: should enable tls on websecure entrypoints by default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls=true"
+  - it: should be possible to disable tls on websecure entrypoint
+    set:
+      ports:
+        websecure:
+          tls:
+            enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http.tls=true"
