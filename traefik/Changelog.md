@@ -1,5 +1,80 @@
 # Change Log
 
+## 15.0.0 
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* Enable TLS by default on `websecure` (#560)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 400a29a..fc2c371 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -389,7 +389,7 @@ ports:
+     # Set TLS at the entrypoint
+     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
+     tls:
+-      enabled: false
++      enabled: true
+       # this is the name of a TLSOption definition
+       options: ""
+       certResolver: ""
+```
+
+## 14.0.2 
+
+**Release date:** 2022-10-13
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :memo: Add Changelog (#661) 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
+## 14.0.1 
+
+**Release date:** 2022-10-11
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :memo: Update workaround for permissions 660 on acme.json 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index a4e4ff2..400a29a 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -45,10 +45,10 @@ deployment:
+   # Additional initContainers (e.g. for setting file permission as shown below)
+   initContainers: []
+     # The "volume-permissions" init container is required if you run into permission issues.
+-    # Related issue: https://github.com/traefik/traefik/issues/6972
++    # Related issue: https://github.com/traefik/traefik/issues/6825
+     # - name: volume-permissions
+-    #   image: busybox:1.31.1
+-    #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
++    #   image: busybox:1.35
++    #   command: ["sh", "-c", "touch /data/acme.json && chmod -Rv 600 /data/* && chown 65532:65532 /data/acme.json"]
+     #   volumeMounts:
+     #     - name: data
+     #       mountPath: /data
+```
+
 ## 14.0.0 
 
 **Release date:** 2022-10-11
