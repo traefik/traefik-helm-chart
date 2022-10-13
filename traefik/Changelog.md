@@ -2,7 +2,7 @@
 
 ## 15.1.0 
 
-**Release date:** 2022-10-13
+**Release date:** 2022-10-14
 
 ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -26,7 +26,7 @@ index fc2c371..8b4f626 100644
 +# # on nodes where no other traefik pods are scheduled.
 +#  - labelSelector:
 +#      matchLabels:
-+#        app: {{ template "traefik.name" . }}
++#        app: '{{ template "traefik.name" . }}'
 +#    maxSkew: 1
 +#    topologyKey: kubernetes.io/hostname
 +#    whenUnsatisfiable: DoNotSchedule

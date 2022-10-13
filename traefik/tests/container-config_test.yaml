@@ -128,10 +128,10 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]
           value: whatever
-  - it: should set a topologySpreadConstraints
+  - it: should set a topologySpreadConstraints on kubernetes >= 1.19
     capabilities:
       majorVersion: 1
-      minorVersion: 22
+      minorVersion: 19
     set:
       topologySpreadConstraints:
       - labelSelector:
@@ -146,6 +146,24 @@ tests:
       - equal:
           path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels.app
           value: whatever
+  - it: should set a templated topologySpreadConstraints on kubernetes >= 1.19
+    capabilities:
+      majorVersion: 1
+      minorVersion: 19
+    set:
+      topologySpreadConstraints:
+      - labelSelector:
+          matchLabels:
+            app: '{{ template "traefik.name" . }}'
+        maxSkew: 1
+        topologyKey: kubernetes.io/hostname
+    asserts:
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].topologyKey
+          value: kubernetes.io/hostname
+      - equal:
+          path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels.app
+          value: traefik
   - it: should set fail to set topologySpreadConstraints on kubernetes 1.18
     capabilities:
       majorVersion: 1
