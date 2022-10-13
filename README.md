@@ -96,6 +96,8 @@ Accessible with the url: http://traefik.localhost/dashboard/
 
 ## Upgrading
 
+One can check what has changed in the [Changelog](./traefik/Changelog.md).
+
 ```bash
 # Update repository
 helm repo update
