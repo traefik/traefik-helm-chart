@@ -1,5 +1,70 @@
 # Change Log
 
+## 15.3.0 
+
+**Release date:** 2022-10-18
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 📌 Add capacity to enable user-facing roles on ClusterRole (#664)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 76aac93..03fdaed 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -553,10 +553,12 @@ hostNetwork: false
+ # Whether Role Based Access Control objects like roles and rolebindings should be created
+ rbac:
+   enabled: true
+-
+   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+   # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
+   namespaced: false
++  # Enable user-facing roles
++  # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
++  # aggregateTo: [ "admin" ]
+ 
+ # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
+ podSecurityPolicy:
+```
+
+## 15.2.2 
+
+**Release date:** 2022-10-17
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* Fix provider namespace changes 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
+## 15.2.1 
+
+**Release date:** 2022-10-17
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🐛 fix provider namespace changes 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 15.2.0 
 
 **Release date:** 2022-10-17
@@ -8,7 +73,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :bug: Allow to watch on specific namespaces without using rbac.namespaced (#666)
+* :bug: Allow to watch on specific namespaces without using rbac.namespaced (#666) 
 
 ### Default value changes
 

@@ -553,10 +553,12 @@ hostNetwork: false
 # Whether Role Based Access Control objects like roles and rolebindings should be created
 rbac:
   enabled: true
-
   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
   # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
   namespaced: false
+  # Enable user-facing roles
+  # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+  # aggregateTo: [ "admin" ]
 
 # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 podSecurityPolicy:
