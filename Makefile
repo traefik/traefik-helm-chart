@@ -38,6 +38,9 @@ build: global-requirements $(DIST_DIR)
 	@helm package $(CHART_DIR) --destination=$(DIST_DIR)
 	@echo "== Building Finished"
 
+changelog:
+	@docker run -it --rm -v $(CURDIR):/data mogensen/helm-changelog:latest
+
 # Prepare the Helm repository with the latest packaged charts
 deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
 	@echo "== Deploying Chart..."
