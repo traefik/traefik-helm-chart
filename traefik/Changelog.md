@@ -1,12 +1,49 @@
 # Change Log
 
-## 15.0.0 
+## 15.1.0 
+
+**Release date:** 2022-10-13
 
 ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* Enable TLS by default on `websecure` (#560)
+* feat: Add optional topologySpreadConstraints
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index fc2c371..8b4f626 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -593,6 +593,14 @@ affinity: {}
+ 
+ nodeSelector: {}
+ tolerations: []
++topologySpreadConstraints: []
++# # This example topologySpreadConstraints forces the scheduler to put traefik pods
++# # on nodes where no other traefik pods are scheduled.
++#  - labelSelector:
++#      matchLabels:
++#        app: {{ template "traefik.name" . }}
++#    maxSkew: 1
++#    topologyKey: kubernetes.io/hostname
++#    whenUnsatisfiable: DoNotSchedule
+ 
+ # Pods can have priority.
+ # Priority indicates the importance of a Pod relative to other Pods.
+```
+
+## 15.0.0 
+
+**Release date:** 2022-10-13
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :rocket: Enable TLS by default on `websecure` port (#657) 
 
 ### Default value changes
 

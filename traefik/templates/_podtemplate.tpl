@@ -466,6 +466,9 @@
       securityContext:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if and .Values.topologySpreadConstraints (semverCompare "<1.19.0" .Capabilities.KubeVersion.Version) }}
+        {{- fail "ERROR: topologySpreadConstraints are supported only on kubernetes >= v1.19" -}} 
+      {{- end }}
       {{- with .Values.topologySpreadConstraints }}
       topologySpreadConstraints:
         {{- toYaml . | nindent 8 }}
