@@ -1,5 +1,40 @@
 # Change Log
 
+## 16.0.0 
+
+**Release date:** 2022-10-19
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :fire: Remove `Pilot` and `fallbackApiVersion` 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 03fdaed..7e335b5 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -84,15 +84,6 @@ ingressClass:
+   # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
+   enabled: false
+   isDefaultClass: false
+-  # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
+-  fallbackApiVersion: ""
+-
+-# Activate Pilot integration
+-pilot:
+-  enabled: false
+-  token: ""
+-  # Toggle Pilot Dashboard
+-  # dashboard: false
+ 
+ # Enable experimental features
+ experimental:
+```
+
 ## 15.3.1 
 
 **Release date:** 2022-10-18
@@ -8,7 +43,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :art: Improve `IngressRoute` structure 
+* :art: Improve `IngressRoute` structure (#674) 
 
 ### Default value changes
 

@@ -388,12 +388,6 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- if .Values.pilot.enabled }}
-          - "--pilot.token={{ .Values.pilot.token }}"
-          {{- end }}
-          {{- if hasKey .Values.pilot "dashboard" }}
-          - "--pilot.dashboard={{ .Values.pilot.dashboard }}"
-          {{- end }}
           {{- range $resolver, $config := $.Values.certResolvers }}
           {{- range $option, $setting := $config }}
           {{- if kindIs "map" $setting }}
