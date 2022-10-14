@@ -380,6 +380,9 @@ tests:
           http3: true
           tls:
             enabled: false
+      experimental:
+        http3:
+          enabled: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
@@ -396,6 +399,9 @@ tests:
           http3: true
           tls:
             enabled: true
+      experimental:
+        http3:
+          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -407,6 +413,9 @@ tests:
           http3: true
           tls:
             enabled: true
+      experimental:
+        http3:
+          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args

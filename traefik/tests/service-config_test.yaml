@@ -277,6 +277,9 @@ tests:
           http3: true
           tls:
             enabled: true
+      experimental:
+        http3:
+          enabled: true
     documentIndex: 1
     asserts:
     - equal:
@@ -300,3 +303,11 @@ tests:
     - failedTemplate:
         errorMessage: "You need to expose at least one port or set enabled=false to service"
         documentIndex: 1
+  - it: should not be possible to use http3 without enabling experimental http3 feature
+    set:
+      ports:
+        websecure:
+          http3: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature"
