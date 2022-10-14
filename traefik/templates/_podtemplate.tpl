@@ -304,12 +304,14 @@
           {{- if .Values.experimental.http3.enabled }}
           - "--experimental.http3=true"
           {{- end }}
-          {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
-          {{- if .Values.providers.kubernetesCRD.enabled }}
-          - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" . }}"
+          {{- with .Values.providers.kubernetesCRD }}
+          {{- if (and .enabled (or $.Values.rbac.enabled .namespaces)) }}
+          - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
           {{- end }}
-          {{- if .Values.providers.kubernetesIngress.enabled }}
-          - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" . }}"
+          {{- end }}
+          {{- with .Values.providers.kubernetesIngress }}
+          {{- if (and .enabled (or $.Values.rbac.enabled .namespaces)) }}
+          - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" $ }}"
           {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}

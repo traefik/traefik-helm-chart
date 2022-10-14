@@ -296,3 +296,19 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http.tls=true"
+  - it: should allow to set namespace on providers by default, without rbac.namespaced
+    set:
+      providers:
+        kubernetesCRD:
+          enabled: true
+          namespaces: [ ns1, ns2 ]
+        kubernetesIngress:
+          enabled: true
+          namespaces: [ ns3, ns4 ]
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.namespaces=ns1,ns2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.namespaces=ns3,ns4"

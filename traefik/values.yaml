@@ -555,7 +555,7 @@ rbac:
   enabled: true
 
   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
-  # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
+  # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
   namespaced: false
 
 # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding

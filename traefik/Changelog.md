@@ -1,5 +1,33 @@
 # Change Log
 
+## 15.2.0 
+
+**Release date:** 2022-10-17
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :bug: Allow to watch on specific namespaces without using rbac.namespaced (#666)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 781ac15..76aac93 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -555,7 +555,7 @@ rbac:
+   enabled: true
+ 
+   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+-  # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
++  # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
+   namespaced: false
+ 
+ # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
+```
+
 ## 15.1.1 
 
 **Release date:** 2022-10-17
@@ -8,7 +36,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :goal_net: Fail gracefully when http3 is not enabled correctly 
+* :goal_net: Fail gracefully when http3 is not enabled correctly (#667) 
 
 ### Default value changes
 
