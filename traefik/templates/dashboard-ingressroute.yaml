@@ -4,7 +4,6 @@ kind: IngressRoute
 metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   annotations:
-    helm.sh/hook: "post-install,post-upgrade"
     {{- with .Values.ingressRoute.dashboard.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

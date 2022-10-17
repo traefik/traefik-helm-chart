@@ -1,6 +1,6 @@
 suite: Dashboard IngressRoute configuration
 templates:
-  - dashboard-hook-ingressroute.yaml
+  - dashboard-ingressroute.yaml
 tests:
   - it: should allow disabling dashboard exposure using ingressRoute
     set:
