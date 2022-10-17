@@ -3,7 +3,11 @@
 {{ $tcpPorts := dict }}
 {{ $udpPorts := dict }}
 {{ $exposedPorts := false }}
+{{ $experimentalHttp3Enabled := .Values.experimental.http3.enabled }}
 {{- range $name, $config := .Values.ports }}
+  {{- if (and $config.http3 (not $experimentalHttp3Enabled)) }}
+    {{ fail "ERROR: You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature" }}
+  {{- end }}
   {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
     {{ $_ := set $udpPorts $name $config }}
   {{- end }}

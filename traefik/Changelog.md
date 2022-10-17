@@ -1,5 +1,21 @@
 # Change Log
 
+## 15.1.1 
+
+**Release date:** 2022-10-17
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :goal_net: Fail gracefully when http3 is not enabled correctly 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 15.1.0 
 
 **Release date:** 2022-10-14
@@ -8,16 +24,16 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* feat: Add optional topologySpreadConstraints
+* :sparkles: add optional topologySpreadConstraints (#663) 
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index fc2c371..8b4f626 100644
+index fc2c371..781ac15 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
-@@ -593,6 +593,14 @@ affinity: {}
+@@ -593,6 +593,15 @@ affinity: {}
  
  nodeSelector: {}
  tolerations: []
