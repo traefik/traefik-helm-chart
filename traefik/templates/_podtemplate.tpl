@@ -305,12 +305,12 @@
           - "--experimental.http3=true"
           {{- end }}
           {{- with .Values.providers.kubernetesCRD }}
-          {{- if (and .enabled (or $.Values.rbac.enabled (not (empty .namespaces)))) }}
+          {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
           {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
-          {{- if (and .enabled (or $.Values.rbac.enabled (not (empty .namespaces)))) }}
+          {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" $ }}"
           {{- end }}
           {{- end }}
