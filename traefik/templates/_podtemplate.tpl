@@ -305,12 +305,12 @@
           - "--experimental.http3=true"
           {{- end }}
           {{- with .Values.providers.kubernetesCRD }}
-          {{- if (and .enabled (or $.Values.rbac.enabled .namespaces)) }}
+          {{- if (and .enabled (or $.Values.rbac.enabled (not (empty .namespaces)))) }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
           {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
-          {{- if (and .enabled (or $.Values.rbac.enabled .namespaces)) }}
+          {{- if (and .enabled (or $.Values.rbac.enabled (not (empty .namespaces)))) }}
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" $ }}"
           {{- end }}
           {{- end }}
@@ -470,7 +470,7 @@
       {{- end }}
       {{- if .Values.topologySpreadConstraints }}
       {{- if (semverCompare "<1.19.0" .Capabilities.KubeVersion.Version) }}
-        {{- fail "ERROR: topologySpreadConstraints are supported only on kubernetes >= v1.19" -}} 
+        {{- fail "ERROR: topologySpreadConstraints are supported only on kubernetes >= v1.19" -}}
       {{- end }}
       topologySpreadConstraints:
         {{- tpl (toYaml .Values.topologySpreadConstraints) . | nindent 8 }}

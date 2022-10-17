@@ -298,6 +298,8 @@ tests:
           content: "--entrypoints.websecure.http.tls=true"
   - it: should allow to set namespace on providers by default, without rbac.namespaced
     set:
+      rbac:
+        namespaced: false
       providers:
         kubernetesCRD:
           enabled: true
@@ -312,3 +314,11 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.namespaces=ns3,ns4"
+  - it: should not set namespace on providers by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.namespaces="
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.namespaces="
