@@ -318,7 +318,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.namespaces="
+          content: "--providers.kubernetescrd.namespaces=NAMESPACE"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.namespaces="
+          content: "--providers.kubernetesingress.namespaces=NAMESPACE"
