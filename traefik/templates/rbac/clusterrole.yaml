@@ -6,6 +6,9 @@ metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
+    {{- range .Values.rbac.aggregateTo }}
+    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
+    {{- end }}
 rules:
   - apiGroups:
       - extensions
