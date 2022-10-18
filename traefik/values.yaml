@@ -229,7 +229,6 @@ logs:
           # Content-Type: keep
 
 metrics:
-  enabled: true
   # datadog:
   #   address: 127.0.0.1:8125
   # influxdb:
@@ -238,51 +237,46 @@ metrics:
   prometheus:
     entryPoint: metrics
   #  addRoutersLabels: true
-    serviceMonitor:
-      enabled: false
-      additionalLabels:
-        release: kube-prometheus-stack
-      namespace: ""
-      namespaceSelector: {}
-      ## metric relabel configs to apply to samples before ingestion.
-      ##
-      metricRelabelings: []
-      # - sourceLabels: [__name__]
-      #   separator: ;
-      #   regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
-      #   replacement: $1
-      #   action: drop
-      ## relabel configs to apply to samples after ingestion.
-      ##
-      relabelings: []
-      # - sourceLabels: [__meta_kubernetes_pod_node_name]
-      #   separator: ;
-      #   regex: ^(.*)$
-      #   targetLabel: nodename
-      #   replacement: $1
-      #   action: replace
-      ## Additional serviceMonitor config
-      ##
-      # jobLabel: traefik
-      # scrapeInterval: 30s
-      # scrapeTimeout: 5s
-      # honorLabels: true
-    prometheusRule:
-      enabled: false
-      additionalLabels: {}
-      namespace: ""
-      rules: []
-      # - alert: TraefikDown
-      #   expr: up{job="traefik"} == 0
-      #   for: 5m
-      #   labels:
-      #     context: traefik
-      #     severity: warning
-      #   annotations:
-      #     summary: "Traefik Down"
-      #     description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
-  # statsd:
-  #   address: localhost:8125
+  #  statsd:
+  #    address: localhost:8125
+##
+##  enable optional CRDs for Prometheus Operator
+##
+  #  serviceMonitor:
+  #    additionalLabels:
+  #      foo: bar
+  #    namespace: "another-namespace"
+  #    namespaceSelector: {}
+  #    metricRelabelings: []
+  #      - sourceLabels: [__name__]
+  #        separator: ;
+  #        regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+  #        replacement: $1
+  #        action: drop
+  #    relabelings: []
+  #      - sourceLabels: [__meta_kubernetes_pod_node_name]
+  #        separator: ;
+  #        regex: ^(.*)$
+  #        targetLabel: nodename
+  #        replacement: $1
+  #        action: replace
+  #    jobLabel: traefik
+  #    scrapeInterval: 30s
+  #    scrapeTimeout: 5s
+  #    honorLabels: true
+  #  prometheusRule:
+  #    additionalLabels: {}
+  #    namespace: "another-namespace"
+  #    rules:
+  #      - alert: TraefikDown
+  #        expr: up{job="traefik"} == 0
+  #        for: 5m
+  #        labels:
+  #          context: traefik
+  #          severity: warning
+  #        annotations:
+  #          summary: "Traefik Down"
+  #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 
 tracing: {}
   # instana:

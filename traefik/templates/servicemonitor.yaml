@@ -1,4 +1,8 @@
-{{- if .Values.metrics.prometheus.serviceMonitor.enabled }}
+{{- if .Values.metrics.prometheus }}
+{{- if .Values.metrics.prometheus.serviceMonitor }}
+{{- if (not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1")) }}
+  {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
+{{- end }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
@@ -7,10 +11,7 @@ metadata:
   namespace: {{ . }}
   {{- end }}
   labels:
-    app.kubernetes.io/name: {{ template "traefik.name" . }}
-    helm.sh/chart: {{ template "traefik.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "traefik.labels" . | nindent 4 }}
     {{- with .Values.metrics.prometheus.serviceMonitor.additionalLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -44,4 +45,5 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ template "traefik.name" . }}
+{{- end }}
 {{- end }}

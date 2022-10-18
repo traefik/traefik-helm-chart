@@ -1,4 +1,8 @@
-{{- if .Values.metrics.prometheus.prometheusRule.enabled }}
+{{- if .Values.metrics.prometheus }}
+{{- if .Values.metrics.prometheus.prometheusRule }}
+{{- if (not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1")) }}
+  {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
+{{- end }}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -7,18 +11,18 @@ metadata:
   namespace: {{ .Values.metrics.prometheus.prometheusRule.namespace }}
   {{- end }}
   labels:
-    app.kubernetes.io/name: {{ template "traefik.name" . }}
-    helm.sh/chart: {{ template "traefik.chart" . }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "traefik.labels" . | nindent 4 }}
     {{- with .Values.metrics.prometheus.prometheusRule.additionalLabels }}
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  {{- with .Values.metrics.prometheus.prometheusRule.rules }}
+  {{- if .Values.metrics.prometheus.prometheusRule.rules }}
   groups:
-  - name: {{ template "traefik.name" . }}
+  - name: {{ template "traefik.name" $ }}
     rules:
-    {{- toYaml . | nindent 4 }}
+    {{- with .Values.metrics.prometheus.prometheusRule.rules }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
   {{- end }}
+{{- end }}
 {{- end }}
