@@ -1,5 +1,58 @@
 # Change Log
 
+## 16.2.0 
+
+**Release date:** 2022-10-20
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* Add forwardedHeaders and proxyProtocol config 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 9b5afc4..6a90bc6 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -403,6 +403,16 @@ ports:
+     # Added in 2.2, you can make permanent redirects via entrypoints.
+     # https://docs.traefik.io/routing/entrypoints/#redirection
+     # redirectTo: websecure
++    #
++    # Trust forwarded  headers information (X-Forwarded-*).
++    # forwardedHeaders:
++    #   trustedIPs: []
++    #   insecure: false
++    #
++    # Enable the Proxy Protocol header parsing for the entry point
++    # proxyProtocol:
++    #   trustedIPs: []
++    #   insecure: false
+   websecure:
+     port: 8443
+     # hostPort: 8443
+@@ -428,6 +438,16 @@ ports:
+       #     - foo.example.com
+       #     - bar.example.com
+     #
++    # Trust forwarded  headers information (X-Forwarded-*).
++    # forwardedHeaders:
++    #   trustedIPs: []
++    #   insecure: false
++    #
++    # Enable the Proxy Protocol header parsing for the entry point
++    # proxyProtocol:
++    #   trustedIPs: []
++    #   insecure: false
++    #
+     # One can apply Middlewares on an entrypoint
+     # https://doc.traefik.io/traefik/middlewares/overview/
+     # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+```
+
 ## 16.1.0 
 
 **Release date:** 2022-10-19
@@ -8,7 +61,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* ✨ add optional ServiceMonitor & PrometheusRule CRDs
+* ✨ add optional ServiceMonitor & PrometheusRules CRDs (#425) 
 
 ### Default value changes
 

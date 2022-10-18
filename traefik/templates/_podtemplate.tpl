@@ -349,6 +349,22 @@
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
           {{- end }}
           {{- end }}
+          {{- if $config.forwardedHeaders }}
+          {{- if $config.forwardedHeaders.trustedIPs }}
+          - "--entrypoints.{{ $entrypoint }}.forwardedHeaders.trustedIPs={{ join "," $config.forwardedHeaders.trustedIPs }}"
+          {{- end }}
+          {{- if $config.forwardedHeaders.insecure }}
+          - "--entrypoints.{{ $entrypoint }}.forwardedHeaders.insecure"
+          {{- end }}
+          {{- end }}
+          {{- if $config.proxyProtocol }}
+          {{- if $config.proxyProtocol.trustedIPs }}
+          - "--entrypoints.{{ $entrypoint }}.proxyProtocol.trustedIPs={{ join "," $config.proxyProtocol.trustedIPs }}"
+          {{- end }}
+          {{- if $config.proxyProtocol.insecure }}
+          - "--entrypoints.{{ $entrypoint }}.proxyProtocol.insecure"
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
