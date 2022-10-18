@@ -24,3 +24,13 @@ tests:
       - equal:
           path: spec.entryPoints
           value: ["websecure"]
+  - it: should support adding specific label on IngressRoute
+    set:
+      ingressRoute:
+        dashboard:
+          labels:
+            foo: bar
+    asserts:
+      - equal:
+          path: metadata.labels.foo
+          value: bar

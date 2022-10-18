@@ -1,5 +1,21 @@
 # Change Log
 
+## 15.3.1 
+
+**Release date:** 2022-10-18
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :art: Improve `IngressRoute` structure 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 15.3.0 
 
 **Release date:** 2022-10-18
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 📌 Add capacity to enable user-facing roles on ClusterRole (#664)
+* 📌 Add capacity to enable User-facing role 
 
 ### Default value changes
 
