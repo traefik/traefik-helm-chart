@@ -5,6 +5,16 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
 
+# Enabling Hub integration will enable xxx
+hub:
+  enabled: false
+  # Enabling Hub will enable :
+  # * experimental Hub feature
+  # * addRoutersLabels on prometheus metrics
+  # * allowExternalNameServices on KubernetesIngress provider
+  # * allowExternalNameServices on KubernetesCRD provider
+  # * force service to be ClusterIP
+
 #
 # Configure the deployment
 #

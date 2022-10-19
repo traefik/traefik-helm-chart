@@ -131,7 +131,7 @@
           {{- if .Values.metrics.prometheus }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
-          {{- if .Values.metrics.prometheus.addRoutersLabels }}
+          {{- if (or .Values.metrics.prometheus.addRoutersLabels .Values.hub.enabled) }}
           - "--metrics.prometheus.addRoutersLabels=true"
           {{- end }}
           {{- end }}
@@ -269,10 +269,10 @@
           {{- if .Values.providers.kubernetesCRD.ingressClass }}
           - "--providers.kubernetescrd.ingressClass={{ .Values.providers.kubernetesCRD.ingressClass }}"
           {{- end }}
-          {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
+          {{- if (or .Values.providers.kubernetesCRD.allowCrossNamespace .Values.hub.enabled) }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
           {{- end }}
-          {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
+          {{- if (or .Values.providers.kubernetesCRD.allowExternalNameServices .Values.hub.enabled) }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
@@ -418,6 +418,10 @@
           - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}={{ $setting }}"
           {{- end }}
           {{- end }}
+          {{- end }}
+          {{- if .Values.hub.enabled }}
+          - "--experimental.hub"
+          - "--hub"
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
