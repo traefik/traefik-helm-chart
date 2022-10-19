@@ -1,0 +1,53 @@
+suite: ServiceMonitor configuration
+templates:
+  - servicemonitor.yaml
+tests:
+  - it: should not provide ServiceMonitor by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should fail to provide ServiceMonitor without the API
+    values:
+      - ./values/servicemonitor.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "You have to deploy monitoring.coreos.com/v1 first"
+  - it: should successfully provide ServiceMonitor with example values
+    values:
+      - ./values/servicemonitor.yaml
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.jobLabel
+          value: another-label
+      - contains:
+          path: spec.endpoints
+          content:
+            port: metrics
+            path: /metrics
+            scrapeTimeout: 5s
+            metricRelabelings:
+            - action: drop
+              regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+              replacement: $1
+              separator: ;
+              sourceLabels:
+              - __name__
+            relabelings:
+            - action: replace
+              regex: ^(.*)$
+              replacement: $1
+              separator: ;
+              sourceLabels:
+              - __meta_kubernetes_pod_node_name
+              targetLabel: nodename
+      - equal:
+          path: spec.namespaceSelector.any
+          value: true
+      - equal:
+          path: spec.selector.matchLabels.[app.kubernetes.io/name]
+          value: traefik

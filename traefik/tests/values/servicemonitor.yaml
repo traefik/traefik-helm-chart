@@ -1,0 +1,27 @@
+metrics:
+  prometheus:
+    serviceMonitor:
+      enabled: true
+      additionalLabels:
+        release: traefik-release
+      namespace: another-namespace
+      namespaceSelector:
+        any: true
+      metricRelabelings:
+       - sourceLabels: [__name__]
+         separator: ;
+         regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+         replacement: $1
+         action: drop
+      relabelings:
+       - sourceLabels: [__meta_kubernetes_pod_node_name]
+         separator: ;
+         regex: ^(.*)$
+         targetLabel: nodename
+         replacement: $1
+         action: replace
+      jobLabel: another-label
+      scrapeInterval: 30s
+      scrapeTimeout: 5s
+      honorLabels: true
+

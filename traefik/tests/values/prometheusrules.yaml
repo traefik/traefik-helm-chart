@@ -1,0 +1,17 @@
+metrics:
+  prometheus:
+    prometheusRule:
+      enabled: true
+      additionalLabels:
+        foo: bar
+      namespace: another-namespace
+      rules:
+        - alert: TraefikDown
+          expr: up{job="traefik"} == 0
+          for: 5m
+          labels:
+            context: traefik
+            severity: warning
+          annotations:
+            summary: "Traefik Down"
+            description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"

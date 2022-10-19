@@ -1,0 +1,43 @@
+suite: PrometheusRules configuration
+templates:
+  - prometheusrules.yaml
+tests:
+  - it: should not provide PrometheusRules by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should fail to provide PrometheusRules without the API
+    values:
+      - ./values/prometheusrules.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "You have to deploy monitoring.coreos.com/v1 first"
+  - it: should successfully provide PrometheusRules with the API and example values
+    values:
+      - ./values/prometheusrules.yaml
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.namespace
+          value: another-namespace
+      - equal:
+          path: metadata.labels.foo
+          value: bar
+      - contains:
+          path: spec.groups
+          content:
+            name: traefik
+            rules:
+              - alert: TraefikDown
+                annotations:      
+                  description: '{{ $labels.pod }} on {{ $labels.nodename }} is down'
+                  summary: Traefik Down
+                expr: up{job="traefik"} == 0
+                for: 5m
+                labels:
+                  context: traefik
+                  severity: warning

@@ -1,5 +1,73 @@
 # Change Log
 
+## 16.1.0 
+
+**Release date:** 2022-10-19
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* ✨ add optional ServiceMonitor & PrometheusRule CRDs
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 7e335b5..9b5afc4 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -237,8 +237,46 @@ metrics:
+   prometheus:
+     entryPoint: metrics
+   #  addRoutersLabels: true
+-  # statsd:
+-  #   address: localhost:8125
++  #  statsd:
++  #    address: localhost:8125
++##
++##  enable optional CRDs for Prometheus Operator
++##
++  #  serviceMonitor:
++  #    additionalLabels:
++  #      foo: bar
++  #    namespace: "another-namespace"
++  #    namespaceSelector: {}
++  #    metricRelabelings: []
++  #      - sourceLabels: [__name__]
++  #        separator: ;
++  #        regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
++  #        replacement: $1
++  #        action: drop
++  #    relabelings: []
++  #      - sourceLabels: [__meta_kubernetes_pod_node_name]
++  #        separator: ;
++  #        regex: ^(.*)$
++  #        targetLabel: nodename
++  #        replacement: $1
++  #        action: replace
++  #    jobLabel: traefik
++  #    scrapeInterval: 30s
++  #    scrapeTimeout: 5s
++  #    honorLabels: true
++  #  prometheusRule:
++  #    additionalLabels: {}
++  #    namespace: "another-namespace"
++  #    rules:
++  #      - alert: TraefikDown
++  #        expr: up{job="traefik"} == 0
++  #        for: 5m
++  #        labels:
++  #          context: traefik
++  #          severity: warning
++  #        annotations:
++  #          summary: "Traefik Down"
++  #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
+ 
+ tracing: {}
+   # instana:
+```
+
 ## 16.0.0 
 
 **Release date:** 2022-10-19
@@ -8,7 +76,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :fire: Remove `Pilot` and `fallbackApiVersion` 
+* :fire: Remove `Pilot` and `fallbackApiVersion` (#665) 
 
 ### Default value changes
 
