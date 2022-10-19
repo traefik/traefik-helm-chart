@@ -260,19 +260,6 @@ tests:
           path: spec.template.spec.containers[0].args
           content:
             "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
-  - it: should have the pilot dashboard enabled by default
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--pilot.dashboard=false"
-  - it: should have the pilot dashboard disabled
-    set:
-      pilot:
-        dashboard: false
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--pilot.dashboard=false"
   - it: should have prometheus annotations with specified values
     set:
       ports:
