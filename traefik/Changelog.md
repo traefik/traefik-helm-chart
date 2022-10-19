@@ -1,6 +1,53 @@
 # Change Log
 
-## 18.0.0
+## 18.1.0 
+
+**Release date:** 2022-10-27
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🚀 Add native support for Traefik Hub 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index acce704..02d1f89 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -5,6 +5,27 @@ image:
+   tag: ""
+   pullPolicy: IfNotPresent
+ 
++#
++# Configure integration with Traefik Hub
++#
++hub:
++  ## Enabling Hub will:
++  # * enable Traefik Hub integration on Traefik
++  # * add `traefikhub-tunl` endpoint
++  # * enable addRoutersLabels on prometheus metrics
++  # * enable allowExternalNameServices on KubernetesIngress provider
++  # * enable allowCrossNamespace on KubernetesCRD provider
++  # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
++  enabled: false
++  ## Default port can be changed
++  # tunnelPort: 9901
++  ## TLS is optional. Insecure is mutually exclusive with any other options
++  # tls:
++  #   insecure: false
++  #   ca: "/path/to/ca.pem"
++  #   cert: "/path/to/cert.pem"
++  #   key: "/path/to/key.pem"
++
+ #
+ # Configure the deployment
+ #
+```
+
+## 18.0.0 
 
 **Release date:** 2022-10-26
 
@@ -8,19 +55,17 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* Provides single service using `MixedProtocolLBService` feature gate, by default.
-* Dual service is still possible by setting `service.single=false`
-* Refactor and improve http3 deployments
+* Refactor http3 and merge TCP with UDP ports into a single service (#656) 
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index fc5aff3..8ba1f11 100644
+index 807bd09..acce704 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -87,8 +87,6 @@ ingressClass:
-
+ 
  # Enable experimental features
  experimental:
 -  http3:
@@ -28,10 +73,16 @@ index fc5aff3..8ba1f11 100644
    plugins:
      enabled: false
    kubernetesGateway:
-@@ -421,18 +419,19 @@ ports:
+@@ -421,12 +419,19 @@ ports:
      # The port protocol (TCP/UDP)
      protocol: TCP
      # nodePort: 32443
+-    # Enable HTTP/3.
+-    # Requires enabling experimental http3 feature and tls.
+-    # Note that you cannot have a UDP entrypoint with the same port.
+-    # http3: true
+-    # Set TLS at the entrypoint
+-    # https://doc.traefik.io/traefik/routing/entrypoints/#tls
 +    #
 +    ## Enable HTTP/3 on the entrypoint
 +    ## Enabling it will also enable http3 experimental feature
@@ -39,7 +90,7 @@ index fc5aff3..8ba1f11 100644
 +    ## There are known limitations when trying to listen on same ports for
 +    ## TCP & UDP (Http3). There is a workaround in this chart using dual Service.
 +    ## https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741
-     http3:
++    http3:
 +      enabled: false
 +    # advertisedPort: 4443
 +    #
@@ -48,7 +99,7 @@ index fc5aff3..8ba1f11 100644
      tls:
        enabled: true
        # this is the name of a TLSOption definition
-@@ -500,6 +506,7 @@ tlsStore: {}
+@@ -500,6 +505,7 @@ tlsStore: {}
  # from.
  service:
    enabled: true
@@ -56,7 +107,6 @@ index fc5aff3..8ba1f11 100644
    type: LoadBalancer
    # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
    annotations: {}
-
 ```
 
 ## 17.0.5 

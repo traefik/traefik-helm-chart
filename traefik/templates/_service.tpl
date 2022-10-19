@@ -7,7 +7,7 @@
 {{- end }}
 
 {{- define "traefik.service-spec" -}}
-  {{- $type := .Values.hub.enabled | ternary "ClusterIP" (default "LoadBalancer" .Values.service.type) }}
+  {{- $type := default "LoadBalancer" .Values.service.type }}
   type: {{ $type }}
   {{- with .Values.service.spec }}
   {{- toYaml . | nindent 2 }}

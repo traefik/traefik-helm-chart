@@ -1,0 +1,20 @@
+
+
+Traefik Proxy {{ .Chart.AppVersion }} has been deployed successfully 
+on {{ .Release.Namespace }} namespace !
+
+{{- if .Values.hub.enabled }}
+{{- if coalesce (ne .Release.Namespace "hub-agent") .Values.hub.tunnelPort (ne (.Values.ports.metrics.port | int) 9100) }}
+
+Traefik Hub integration is enabled ! With your specific parameters, 
+`metricsURL`, `tunnelHost` and `tunnelPort` needs to be set accordingly
+on hub-agent Helm Chart. Based on this Chart, it should be:
+
+  --set controllerDeployment.traefik.metricsURL=traefik-hub.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.ports.metrics.port }}/metrics
+  --set tunnelDeployment.traefik.tunnelHost=traefik-hub.{{ .Release.Namespace }}.svc.cluster.local
+  --set tunnelDeployment.traefik.tunnelPort={{ default 9901 .Values.hub.tunnelPort }}
+
+See https://doc.traefik.io/traefik-hub/install/#traefik-hub-agent-install-with-helmchart
+
+{{- end }}
+{{- end }}

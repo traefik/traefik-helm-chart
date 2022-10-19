@@ -59,7 +59,7 @@
           {{- toYaml . | nindent 10 }}
           {{- end }}
         ports:
-        {{ $hostNetwork := .Values.hostNetwork }}
+        {{- $hostNetwork := .Values.hostNetwork }}
         {{- range $name, $config := .Values.ports }}
         {{- if $config }}
           {{- if and $hostNetwork (and $config.hostPort $config.port) }}
@@ -77,6 +77,11 @@
           {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
         {{- end }}
+        {{- end }}
+        {{- if .Values.hub.enabled }}
+        - name: "traefikhub-tunl"
+          containerPort: {{ default 9901 .Values.hub.tunnelPort }}
+          protocol: "TCP"
         {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
@@ -422,6 +427,26 @@
           {{- if .Values.hub.enabled }}
           - "--experimental.hub"
           - "--hub"
+          {{- if .Values.hub.tunnelPort }}
+          - --entrypoints.traefikhub-tunl.address=:{{.Values.hub.tunnelPort}}
+          {{- end }}
+          {{- with .Values.hub.tls }}
+          {{- if (and .insecure (coalesce .ca .cert .key)) }}
+            {{- fail "ERROR: You cannot specify insecure and certs on TLS for Traefik Hub at the same time" }}
+          {{- end }}
+          {{- if .insecure }}
+          - "--hub.tls.insecure=true"
+          {{- end }}
+          {{- if .ca }}
+          - "--hub.tls.ca={{ .ca }}"
+          {{- end }}
+          {{- if .cert }}
+          - "--hub.tls.cert={{ .cert }}"
+          {{- end }}
+          {{- if .key }}
+          - "--hub.tls.key={{ .key }}"
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}

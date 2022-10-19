@@ -1,4 +1,4 @@
-suite: HPA configuration
+suite: IngressClass configuration
 templates:
   - ingressclass.yaml
 tests:
