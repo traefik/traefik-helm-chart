@@ -404,9 +404,6 @@ ports:
     # If you want to access it from outside of your cluster,
     # use `kubectl port-forward` or create a secure ingress
     expose: false
-    # However you could expose the traefik port via an internal service
-    # Requires service.internal.enabled to be True
-    # exposeInternal: false
     # The exposed port for this service
     exposedPort: 9000
     # The port protocol (TCP/UDP)
@@ -416,12 +413,10 @@ ports:
     # hostPort: 8000
     expose: true
     exposedPort: 80
-    # exposeInternal: false
     # The port protocol (TCP/UDP)
     protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer. Do not set, if both expose & exposeInternal are true while
-    # service.internal.type & service.type are either NodePort or LoadBalancer
+    # LoadBalancer.
     # nodePort: 32080
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
@@ -442,7 +437,6 @@ ports:
     # hostPort: 8443
     expose: true
     exposedPort: 443
-    # exposeInternal: false
     # The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
@@ -555,25 +549,24 @@ service:
     # - 172.16.0.0/16
   externalIPs: []
     # - 1.2.3.4
-  # One of SingleStack, PreferDualStack, or RequireDualStack.
+  ## One of SingleStack, PreferDualStack, or RequireDualStack.
   # ipFamilyPolicy: SingleStack
-  # List of IP families (e.g. IPv4 and/or IPv6).
-  # ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
+  ## List of IP families (e.g. IPv4 and/or IPv6).
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
   # ipFamilies:
   #   - IPv4
   #   - IPv6
-  internal:
-    enabled: false
-    # Service type for internal Service, defaults to service.type
-    # type: ClusterIP
-    # Additional labels for internal Service, defaults to service.labels
-    # labels: {}
-    # Additional annotations for internal Service, defaults to service.annotations
-    # annotations: {}
-    # custom spec for internal Service, no defaults
-    spec: {}
-    loadBalancerSourceRanges: []
-    externalIPs: []
+  ##
+  ## An additionnal and optional internal Service.
+  ## Same parameters as external Service
+  # internal:
+  #   type: ClusterIP
+  #   # labels: {}
+  #   # annotations: {}
+  #   # spec: {}
+  #   # loadBalancerSourceRanges: []
+  #   # externalIPs: []
+  #   # ipFamilies: [ "IPv4","IPv6" ]
 
 ## Create HorizontalPodAutoscaler object.
 ##

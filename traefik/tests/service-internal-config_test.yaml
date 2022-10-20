@@ -2,90 +2,61 @@ suite: Internal Service configuration
 templates:
   - service-internal.yaml
 tests:
-  - it: should be a type LoadBalancer by default
+  - it: should not provide an internal service by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should be possible to configure an internal LoadBalancer Service
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
         internal:
-          enabled: true
+          type: LoadBalancer
     asserts:
       - equal:
-          path: items[0].spec.type
+          path: spec.type
           value: LoadBalancer
-  - it: should be a custom type when specified via values
+  - it: should be possible to configure only an internal Service
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
+        enabled: false
         internal:
-          enabled: true
-        type: NodePort
+          type: LoadBalancer
     asserts:
       - equal:
-          path: items[0].spec.type
-          value: NodePort
-  - it: should have no annotations by default
+          path: spec.type
+          value: LoadBalancer
+  - it: should fail when the name is too long
+    release:
+      name: yesthisnameiscontainingwaymorethan50charactersinit
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
         internal:
-          enabled: true
+          type: ClusterIP
     asserts:
-      - isNull:
-          path: items[0].metadata.annotations
+      - failedTemplate:
+          errorMessage: "Cannot create an internal service when name contains more than 50 characters"
   - it: should have internal customized annotations when specified via values
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
         internal:
-          enabled: true
           annotations:
             azure-load-balancer-internal: true
     asserts:
       - equal:
-          path: items[0].metadata.annotations.azure-load-balancer-internal
-          value: true
-  - it: should inherit from main customized annotations when specified via values
-    set:
-      ports:
-        traefik:
-          exposeInternal: true
-      service:
-        annotations:
-          azure-load-balancer-internal: true
-        internal:
-          enabled: true
-    asserts:
-      - equal:
-          path: items[0].metadata.annotations.azure-load-balancer-internal
+          path: metadata.annotations.azure-load-balancer-internal
           value: true
   - it: should have customized labels when specified via values
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
         internal:
-          enabled: true
           labels:
             custom-label: custom-value
     asserts:
       - equal:
-          path: items[0].metadata.labels.custom-label
+          path: metadata.labels.custom-label
           value: custom-value
-
   - it: should have custom spec elements when specified via values
     set:
-      ports:
-        traefik:
-          exposeInternal: true
       service:
         internal:
           enabled: true
@@ -100,44 +71,26 @@ tests:
               - "1.2.3.4"
     asserts:
       - equal:
-          path: items[0].spec.ports[0].name
-          value: traefik
+          path: spec.ports[0].name
+          value: web
       - equal:
-          path: items[0].spec.ports[0].protocol
+          path: spec.ports[0].protocol
           value: TCP
       - equal:
-          path: items[0].spec.externalTrafficPolicy
+          path: spec.externalTrafficPolicy
           value: Cluster
       - equal:
-          path: items[0].spec.loadBalancerIP
+          path: spec.loadBalancerIP
           value: "1.2.3.4"
       - equal:
-          path: items[0].spec.clusterIP
+          path: spec.clusterIP
           value: "2.3.4.5"
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[0]
+          path: spec.loadBalancerSourceRanges[0]
           value: 192.168.0.1/32
       - equal:
-          path: items[0].spec.loadBalancerSourceRanges[1]
+          path: spec.loadBalancerSourceRanges[1]
           value: 172.16.0.0/16
       - equal:
-          path: items[0].spec.externalIPs[0]
+          path: spec.externalIPs[0]
           value: "1.2.3.4"
-  - it: should have custom spec elements when specified via values for UPD ports
-    set:
-      service:
-        internal:
-          enabled: true
-      ports:
-        udp:
-          port: 3000
-          exposedPort: 80
-          exposeInternal: true
-          protocol: UDP
-    asserts:
-      - equal:
-          path: items[0].spec.ports[0].name
-          value: udp
-      - equal:
-          path: items[0].spec.ports[0].protocol
-          value: UDP
