@@ -1,6 +1,6 @@
 # Change Log
 
-## 17.0.0
+## 17.0.1 
 
 **Release date:** 2022-10-20
 
@@ -8,7 +8,35 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :bug: Fix `ClusterRole`, `ClusterRoleBinding` names and `app.kubernetes.io/instance` label
+* :bug: Unify all labels selector with traefik chart labels 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 6a90bc6..807bd09 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -639,7 +639,7 @@ affinity: {}
+ #      - labelSelector:
+ #          matchLabels:
+ #            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+-#            app.kubernetes.io/instance: '{{ .Release.Name }}'
++#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
+ #        topologyKey: kubernetes.io/hostname
+ 
+ nodeSelector: {}
+```
+
+## 17.0.0 
+
+**Release date:** 2022-10-20
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :bug: Fix `ClusterRole`, `ClusterRoleBinding` names and `app.kubernetes.io/instance` label (#662) 
 
 ### Default value changes
 

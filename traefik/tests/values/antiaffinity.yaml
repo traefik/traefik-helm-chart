@@ -4,5 +4,5 @@ affinity:
       - labelSelector:
           matchLabels:
             app.kubernetes.io/name: '{{ template "traefik.name" . }}'
-            app.kubernetes.io/instance: '{{ .Release.Name }}'
+            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
         topologyKey: kubernetes.io/hostname

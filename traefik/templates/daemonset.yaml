@@ -19,7 +19,7 @@ kind: DaemonSet
 metadata:
   name: {{ template "traefik.fullname" . }}
   labels:
-  {{- include "traefik.labels" . | nindent 4 -}}
+  {{- include "traefik.labels" . | nindent 4 }}
   {{- with .Values.deployment.labels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
@@ -30,8 +30,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "traefik.name" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- include "traefik.labels" . | nindent 6 }}
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
