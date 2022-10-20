@@ -32,31 +32,12 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{/* Generate common labels */}}
-{{- define "traefik.commonLabels" -}}
+{{/* Generate basic labels */}}
+{{- define "traefik.labels" -}}
 app.kubernetes.io/name: {{ template "traefik.name" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end }}
-
-{{/* Generate basic labels */}}
-{{- define "traefik.labels" -}}
-{{ template "traefik.commonLabels" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end }}
-
-{{/*
-Generate basic labels for ClusterRole and ClusterRoleBinding.
-Adds the namespace to app.kubernetes.io/instance when it is
-a namespaced release.
-*/}}
-{{- define "traefik.clusterRoleLabels" -}}
-{{ template "traefik.commonLabels" . }}
-{{ if .Values.rbac.namespaced -}}
 app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Release.Namespace }}
-{{- else -}}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- end -}}
 {{- end }}
 
 {{/*
