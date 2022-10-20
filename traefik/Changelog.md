@@ -2,7 +2,7 @@
 
 ## 18.2.0 
 
-**Release date:** 2022-10-20
+**Release date:** 2022-10-31
 
 ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)

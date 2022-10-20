@@ -26,3 +26,4 @@ icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets
 annotations:
   artifacthub.io/changes: |
     - 🚩 Add an optional "internal" service
+    - 📝 Improve documentation on `single` service
