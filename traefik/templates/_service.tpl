@@ -13,8 +13,7 @@
   {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
-    app.kubernetes.io/name: {{ template "traefik.name" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    {{- include "traefik.labels" . | nindent 4 }}
   {{- if eq $type "LoadBalancer" }}
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:

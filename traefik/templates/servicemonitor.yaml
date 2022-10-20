@@ -44,6 +44,6 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/name: {{ template "traefik.name" . }}
+      {{- include "traefik.labels" . | nindent 6 }}
 {{- end }}
 {{- end }}
