@@ -349,6 +349,8 @@
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
           {{- end }}
           {{- end }}
+          {{- end }}
+          {{- end }}
           {{- if $config.forwardedHeaders }}
           {{- if $config.forwardedHeaders.trustedIPs }}
           - "--entrypoints.{{ $entrypoint }}.forwardedHeaders.trustedIPs={{ join "," $config.forwardedHeaders.trustedIPs }}"
@@ -363,8 +365,6 @@
           {{- end }}
           {{- if $config.proxyProtocol.insecure }}
           - "--entrypoints.{{ $entrypoint }}.proxyProtocol.insecure"
-          {{- end }}
-          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
