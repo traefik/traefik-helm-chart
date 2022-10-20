@@ -1,5 +1,21 @@
 # Change Log
 
+## 17.0.0
+
+**Release date:** 2022-10-20
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :bug: Fix `ClusterRole`, `ClusterRoleBinding` names and `app.kubernetes.io/instance` label
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 16.2.0 
 
 **Release date:** 2022-10-20
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* Add forwardedHeaders and proxyProtocol config 
+* Add forwardedHeaders and proxyProtocol config (#673) 
 
 ### Default value changes
 

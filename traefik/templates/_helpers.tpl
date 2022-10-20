@@ -37,7 +37,7 @@ If release name contains chart name it will be used as a full name.
 app.kubernetes.io/name: {{ template "traefik.name" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Release.Namespace }}
 {{- end }}
 
 {{/*
@@ -45,6 +45,15 @@ The name of the service account to use
 */}}
 {{- define "traefik.serviceAccountName" -}}
 {{- default (include "traefik.fullname" .) .Values.serviceAccount.name -}}
+{{- end -}}
+
+{{/*
+The name of the ClusterRole and ClusterRoleBinding to use.
+Adds the namespace to name to prevent duplicate resource names when there
+are multiple namespaced releases with the same release name.
+*/}}
+{{- define "traefik.clusterRoleName" -}}
+{{- (printf "%s-%s" (include "traefik.fullname" .) .Release.Namespace) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
