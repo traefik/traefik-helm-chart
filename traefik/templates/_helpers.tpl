@@ -53,11 +53,7 @@ Adds the namespace to name to prevent duplicate resource names when there
 are multiple namespaced releases with the same release name.
 */}}
 {{- define "traefik.clusterRoleName" -}}
-{{- if .Values.rbac.namespaced -}}
 {{- template "traefik.fullname" . -}}-{{ .Release.Namespace }}
-{{- else -}}
-{{- template "traefik.fullname" . -}}
-{{- end -}}
 {{- end -}}
 
 {{/*
