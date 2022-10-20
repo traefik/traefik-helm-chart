@@ -322,3 +322,45 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.namespaces=NAMESPACE"
+  - it: should have forwardedHeaders and proxyProtocol trustedIPs configuration args when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          forwardedHeaders:
+            trustedIPs:
+              - 127.0.0.1/32
+              - 192.168.1.7
+          proxyProtocol:
+            trustedIPs:
+              - 127.0.0.1/32
+              - 192.168.1.8
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.7"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.8"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.forwardedHeaders.insecure"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.proxyProtocol.insecure"
+  - it: should have forwardedHeaders and proxyProtocol insecure configuration args when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          forwardedHeaders:
+            insecure: True
+              - 127.0.0.1/32
+              - 192.168.1.7
+          proxyProtocol:
+            insecure: True
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.forwardedHeaders.insecure"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.proxyProtocol.insecure"

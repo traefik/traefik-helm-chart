@@ -403,6 +403,16 @@ ports:
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
     # redirectTo: websecure
+    #
+    # Trust forwarded  headers information (X-Forwarded-*).
+    # forwardedHeaders:
+    #   trustedIPs: []
+    #   insecure: false
+    #
+    # Enable the Proxy Protocol header parsing for the entry point
+    # proxyProtocol:
+    #   trustedIPs: []
+    #   insecure: false
   websecure:
     port: 8443
     # hostPort: 8443
@@ -427,6 +437,16 @@ ports:
       #   sans:
       #     - foo.example.com
       #     - bar.example.com
+    #
+    # Trust forwarded  headers information (X-Forwarded-*).
+    # forwardedHeaders:
+    #   trustedIPs: []
+    #   insecure: false
+    #
+    # Enable the Proxy Protocol header parsing for the entry point
+    # proxyProtocol:
+    #   trustedIPs: []
+    #   insecure: false
     #
     # One can apply Middlewares on an entrypoint
     # https://doc.traefik.io/traefik/middlewares/overview/
