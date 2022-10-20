@@ -29,11 +29,11 @@ tests:
         template: service.yaml
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-traefik
+          value: RELEASE-NAME-traefik-NAMESPACE
         template: rbac/clusterrole.yaml
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-traefik
+          value: RELEASE-NAME-traefik-NAMESPACE
         template: rbac/clusterrolebinding.yaml
       - equal:
           path: metadata.name

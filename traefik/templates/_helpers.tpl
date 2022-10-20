@@ -53,7 +53,7 @@ Adds the namespace to name to prevent duplicate resource names when there
 are multiple namespaced releases with the same release name.
 */}}
 {{- define "traefik.clusterRoleName" -}}
-{{- template "traefik.fullname" . -}}-{{ .Release.Namespace }}
+{{- (printf "%s-%s" (include "traefik.fullname" .) .Release.Namespace) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
