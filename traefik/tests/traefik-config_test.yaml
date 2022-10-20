@@ -303,10 +303,10 @@ tests:
       providers:
         kubernetesCRD:
           enabled: true
-          namespaces: [ ns1, ns2 ]
+          namespaces: [ns1, ns2]
         kubernetesIngress:
           enabled: true
-          namespaces: [ ns3, ns4 ]
+          namespaces: [ns3, ns4]
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -334,6 +334,15 @@ tests:
             trustedIPs:
               - 127.0.0.1/32
               - 192.168.1.8
+        web:
+          forwardedHeaders:
+            trustedIPs:
+              - 127.0.0.1/32
+              - 192.168.1.9
+          proxyProtocol:
+            trustedIPs:
+              - 127.0.0.1/32
+              - 192.168.1.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -347,6 +356,18 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.proxyProtocol.insecure"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.9"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.10"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.forwardedHeaders.insecure"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.proxyProtocol.insecure"
   - it: should have forwardedHeaders and proxyProtocol insecure configuration args when specified in values.yaml for port
     set:
       ports:

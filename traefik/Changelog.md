@@ -1,5 +1,21 @@
 # Change Log
 
+## 17.0.2 
+
+**Release date:** 2022-10-20
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* fix: setting ports.web.proxyProtocol.insecure=true
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 17.0.1 
 
 **Release date:** 2022-10-20
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* :bug: Unify all labels selector with traefik chart labels 
+* :bug: Unify all labels selector with traefik chart labels (#681) 
 
 ### Default value changes
 
