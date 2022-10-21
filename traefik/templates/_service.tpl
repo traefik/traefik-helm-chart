@@ -37,8 +37,8 @@
   {{- range $name, $config := . }}
   {{- if $config.expose }}
   - port: {{ default $config.port $config.exposedPort }}
-    name: {{ $name }}
-    targetPort: {{ $name | quote }}
+    name: {{ $name | quote }}
+    targetPort: {{ $name }}
     protocol: {{ default "TCP" $config.protocol }}
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}

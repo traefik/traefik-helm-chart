@@ -183,11 +183,14 @@ tests:
     documentIndex: 0
     asserts:
     - equal:
+        path: spec.ports[2].name
+        value: "8443"
+    - equal:
         path: spec.ports[2].port
         value: 8443
     - equal:
         path: spec.ports[2].targetPort
-        value: "8443"
+        value: 8443
     - equal:
         path: spec.ports[2].protocol
         value: UDP
