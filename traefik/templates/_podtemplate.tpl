@@ -343,10 +343,12 @@
           {{- end }}
           {{- end }}
           {{- if $config.http3 }}
+          {{- if $config.http3.expose }}
           {{- if semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)}}
           - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.exposedPort }}"
           {{- else }}
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}
