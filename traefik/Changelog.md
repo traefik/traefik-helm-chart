@@ -1,5 +1,59 @@
 # Change Log
 
+## 18.0.0 
+
+**Release date:** 2022-10-21
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* Update Changelog and Chart version 
+* Remove unneeded quote function from port in service template 
+* Fix: http3 config flags should not be enabled by default 
+* Add additional test for exposing http3 without enabling tls 
+* Split service tests based on single vs split service flag 
+* Merge TCP and UDP ports into single service by default 
+* Add service-ports helper to _service.tpl 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 807bd09..fc5aff3 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -421,10 +421,16 @@ ports:
+     # The port protocol (TCP/UDP)
+     protocol: TCP
+     # nodePort: 32443
+-    # Enable HTTP/3.
+-    # Requires enabling experimental http3 feature and tls.
+-    # Note that you cannot have a UDP entrypoint with the same port.
+-    # http3: true
++    http3:
++      port: 8443
++      # hostPort: 8443
++      # Enable HTTP/3.
++      # Requires enabling experimental http3 feature and tls.
++      expose: false
++      # Note that you cannot have another UDP entrypoint with the same (exposed) port.
++      exposedPort: 8443
++      # The port protocol (TCP/UDP)
++      protocol: UDP
+     # Set TLS at the entrypoint
+     # https://doc.traefik.io/traefik/routing/entrypoints/#tls
+     tls:
+@@ -500,6 +506,7 @@ tlsStore: {}
+ # from.
+ service:
+   enabled: true
++  single: true
+   type: LoadBalancer
+   # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+   annotations: {}
+```
+
 ## 17.0.5 
 
 **Release date:** 2022-10-21
