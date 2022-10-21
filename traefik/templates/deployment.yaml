@@ -35,8 +35,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
-      app.kubernetes.io/name: {{ template "traefik.name" . }}
+      {{- include "traefik.labelselector" . | nindent 6 }}
   strategy:
     type: RollingUpdate
     rollingUpdate:

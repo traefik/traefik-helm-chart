@@ -12,8 +12,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
-      app.kubernetes.io/name: {{ template "traefik.name" . }}
+      {{- include "traefik.labelselector" . | nindent 6 }}
   {{- if .Values.podDisruptionBudget.minAvailable }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   {{- end }}

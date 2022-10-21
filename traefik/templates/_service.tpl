@@ -13,7 +13,7 @@
   {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
-    {{- include "traefik.labels" . | nindent 4 }}
+    {{- include "traefik.labelselector" . | nindent 4 }}
   {{- if eq $type "LoadBalancer" }}
   {{- with .Values.service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:

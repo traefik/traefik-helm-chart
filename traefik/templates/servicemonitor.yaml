@@ -44,6 +44,6 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "traefik.labels" . | nindent 6 }}
+      {{- include "traefik.labelselector" . | nindent 6 }}
 {{- end }}
 {{- end }}
