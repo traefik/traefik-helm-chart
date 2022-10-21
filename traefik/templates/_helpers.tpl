@@ -32,10 +32,16 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
-{{/* Generate shared labels */}}
-{{- define "traefik.labels" -}}
+{{/* Shared labels used for selector*/}}
+{{/* This is an immutable field: this should not change between upgrade */}}
+{{- define "traefik.labelselector" -}}
 app.kubernetes.io/name: {{ template "traefik.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Release.Namespace }}
+{{- end }}
+
+{{/* Shared labels used in metada */}}
+{{- define "traefik.labels" -}}
+{{ include "traefik.labelselector" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
