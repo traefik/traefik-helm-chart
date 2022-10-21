@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 17.0.4
+version: 17.0.5
 appVersion: 2.9.1
 keywords:
   - traefik
@@ -18,4 +18,11 @@ maintainers:
     email: daniel.tomcej@gmail.com
   - name: ldez
     email: ldez@traefik.io
+  - name: mloiseleur
+    email: michel.loiseleur@traefik.io
+  - name: charlie-haley
+    email: charlie.haley@traefik.io
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
+annotations:
+  artifacthub.io/changes: |
+    - 📝 Add annotations changelog for artifacthub.io & update Maintainers

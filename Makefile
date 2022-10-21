@@ -39,7 +39,10 @@ build: global-requirements $(DIST_DIR)
 	@echo "== Building Finished"
 
 changelog:
+	@echo "== Updating Changelogs..."
 	@docker run -it --rm -v $(CURDIR):/data mogensen/helm-changelog:latest
+	@./hack/changelog.sh
+	@echo "== Updating finished"
 
 # Prepare the Helm repository with the latest packaged charts
 deploy: global-requirements $(DIST_DIR) $(HELM_REPO)
