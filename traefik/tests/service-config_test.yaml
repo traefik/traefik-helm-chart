@@ -211,3 +211,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "You cannot expose http3 port without enabling http3 experimental feature"
+  - it: should not be possible to use http3 without enabling tls
+    set:
+      experimental:
+        http3:
+          enabled: true
+      ports:
+        websecure:
+          tls:
+            enabled: false
+          http3:
+            expose: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "You cannot expose http3 without enabling tls"

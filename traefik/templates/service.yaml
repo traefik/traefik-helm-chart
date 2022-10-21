@@ -7,7 +7,7 @@
 {{- range $name, $config := .Values.ports -}}
   {{- if $config.http3 -}}
     {{- if (and $config.http3.expose (not $config.tls.enabled)) -}}
-      {{- fail "ERROR: You need to enable tls to expose http3 port" -}}
+      {{- fail "ERROR: You cannot expose http3 without enabling tls" -}}
     {{- end -}}
     {{- if (and $config.http3.expose (not $experimentalHttp3Enabled)) -}}
       {{- fail "ERROR: You cannot expose http3 port without enabling http3 experimental feature" -}}
