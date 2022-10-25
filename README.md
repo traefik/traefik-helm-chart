@@ -121,18 +121,23 @@ Note: You can replace `master` with a specific version of this chart, according 
 
 ### Upgrading 17.x to 18.x
 
-Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) service.
-Load balancers with mixed protocols are in [beta as of Kubernetes v1.24](https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types).
+Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
+Load balancers with mixed protocols are available since v1.20 and in 
+[beta as of Kubernetes v1.24](https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types).
 Availability may depend on your Kubernetes provider.
 
 To retain the old default behavior, set `service.single` to `false` in your values.
 
-To support HTTP/3 with a single service, the default exposed port was changed,
-as a service cannot have two ports with same port number but different protocols [due to a bug in Kubernetes](https://github.com/kubernetes/kubernetes/issues/39188).
+When using TCP and UDP with a single service, you may encounter
+[this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)
+from Kubernetes.
+
+On HTTP/3, if you want to avoid this issue, you can set
+`ports.websecure.http3.advertisedPort` to an other value than `443`
 
 If you were previously using HTTP/3, you should update your values as follows:
-  - replace the old value (`true`) of `ports.websecure.http3` with a key `expose: true`
-  - if you use a separate UDP service and want to retain the old (exposed) port, set `ports.websecure.http3.exposedPort` to `443`
+  - Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
+  - Remove `experimental.http3.enabled=true` entry
 
 ## Contributing
 

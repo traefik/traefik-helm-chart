@@ -169,25 +169,45 @@ tests:
           value:
             - IPv6
           documentIndex: 0
-  - it: should have http3 UDP port when enabled via values
+  - it: should use default websecure UDP port when http3 is enabled
     set:
-      experimental:
-        http3:
-          enabled: true
       ports:
         websecure:
           http3:
-            expose: true
+            enabled: true
           tls:
             enabled: true
     documentIndex: 0
     asserts:
     - equal:
         path: spec.ports[2].name
-        value: "8443"
+        value: "websecure-http3"
     - equal:
         path: spec.ports[2].port
+        value: 443
+    - equal:
+        path: spec.ports[2].targetPort
         value: 8443
+    - equal:
+        path: spec.ports[2].protocol
+        value: UDP
+  - it: should be possible to advertise a different http3 UDP port
+    set:
+      ports:
+        websecure:
+          http3:
+            enabled: true
+            advertisedPort: 4443
+          tls:
+            enabled: true
+    documentIndex: 0
+    asserts:
+    - equal:
+        path: spec.ports[2].name
+        value: "websecure-http3"
+    - equal:
+        path: spec.ports[2].port
+        value: 4443
     - equal:
         path: spec.ports[2].targetPort
         value: 8443
@@ -205,26 +225,14 @@ tests:
     - failedTemplate:
         errorMessage: "You need to expose at least one port or set enabled=false to service"
         documentIndex: 1
-  - it: should not be possible to use http3 without enabling experimental http3 feature
-    set:
-      ports:
-        websecure:
-          http3:
-            expose: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "You cannot expose http3 port without enabling http3 experimental feature"
   - it: should not be possible to use http3 without enabling tls
     set:
-      experimental:
-        http3:
-          enabled: true
       ports:
         websecure:
           tls:
             enabled: false
           http3:
-            expose: true
+            enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "You cannot expose http3 without enabling tls"
+          errorMessage: "You cannot enable http3 without enabling tls"

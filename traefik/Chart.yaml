@@ -25,10 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - Update Changelog and Chart version
-    - Remove unneeded quote function from port in service template
-    - Fix: http3 config flags should not be enabled by default
-    - Add additional test for exposing http3 without enabling tls
-    - Split service tests based on single vs split service flag
-    - Merge TCP and UDP ports into single service by default
-    - Add service-ports helper to _service.tpl
+    - Provides single service using `MixedProtocolLBService`, by default.
+    - Dual service is still possible by setting `service.single=false`
+    - Refactor and improve http3 deployments

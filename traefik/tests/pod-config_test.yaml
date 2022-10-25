@@ -343,15 +343,19 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.http3=true"
-  - it: should have the http3 experimental flag if enabled via values
+  - it: should have the http3 experimental flag and use default entrypoint port when http3 enabled
     set:
-      experimental:
-        http3:
-          enabled: true
+      ports:
+        websecure:
+          http3:
+            enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.http3=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3"
   - it: should not have http3 config flag by default
     asserts:
       - notContains:
@@ -367,12 +371,9 @@ tests:
       ports:
         websecure:
           http3:
-            expose: true
+            enabled: true
           tls:
             enabled: true
-      experimental:
-        http3:
-          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -382,16 +383,13 @@ tests:
       ports:
         websecure:
           http3:
-            expose: true
+            enabled: true
           tls:
             enabled: true
-      experimental:
-        http3:
-          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=8443"
+          content: "--entrypoints.websecure.http3"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:
