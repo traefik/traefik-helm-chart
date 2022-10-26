@@ -1,29 +1,32 @@
 {{- if .Values.service.enabled -}}
 
-{{ $tcpPorts := dict }}
-{{ $udpPorts := dict }}
-{{ $exposedPorts := false }}
-{{ $experimentalHttp3Enabled := .Values.experimental.http3.enabled }}
-{{- range $name, $config := .Values.ports }}
-  {{- if (and $config.http3 (not $experimentalHttp3Enabled)) }}
-    {{ fail "ERROR: You cannot use HTTP3 on an entrypoint without enabling http3 experimental feature" }}
-  {{- end }}
-  {{- if or $config.http3 (eq (toString $config.protocol) "UDP") }}
-    {{ $_ := set $udpPorts $name $config }}
-  {{- end }}
-  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" }}
-    {{ $_ := set $tcpPorts $name $config }}
-  {{- end }}
-  {{- if (eq $config.expose true) }}
-    {{ $exposedPorts = true }}
-  {{- end }}
-{{- end }}
+{{- $tcpPorts := dict -}}
+{{- $udpPorts := dict -}}
+{{- $exposedPorts := false -}}
+{{- range $name, $config := .Values.ports -}}
+  {{- if $config.http3 -}}
+  {{- if $config.http3.enabled -}}
+    {{- if (not $config.tls.enabled) -}}
+      {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
+    {{- end -}}
+  {{- end -}}
+  {{- end -}}
+  {{- if eq (toString $config.protocol) "UDP" -}}
+    {{ $_ := set $udpPorts $name $config -}}
+  {{- end -}}
+  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" -}}
+    {{ $_ := set $tcpPorts $name $config -}}
+  {{- end -}}
+  {{- if (eq $config.expose true) -}}
+    {{- $exposedPorts = true -}}
+  {{- end -}}
+{{- end -}}
 
-{{- if (eq $exposedPorts false) }}
-  {{ fail "You need to expose at least one port or set enabled=false to service" }}
-{{- end }}
+{{- if (eq $exposedPorts false) -}}
+  {{- fail "You need to expose at least one port or set enabled=false to service" -}}
+{{- end -}}
 
-{{- if  $tcpPorts }}
+{{- if (or $tcpPorts .Values.service.single) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -36,20 +39,13 @@ metadata:
 spec:
   {{- template "traefik.service-spec" . }}
   ports:
-  {{- range $name, $config := $tcpPorts }}
-  {{- if $config.expose }}
-  - port: {{ default $config.port $config.exposedPort }}
-    name: {{ $name }}
-    targetPort: {{ $name | quote }}
-    protocol: TCP
-    {{- if $config.nodePort }}
-    nodePort: {{ $config.nodePort }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+  {{- template "traefik.service-ports" $tcpPorts }}
+{{- if .Values.service.single }}
+  {{- template "traefik.service-ports" $udpPorts }}
+{{- end }}
 {{- end }}
 
-{{- if  $udpPorts }}
+{{- if (and $udpPorts (not .Values.service.single)) }}
 ---
 apiVersion: v1
 kind: Service
@@ -63,17 +59,7 @@ metadata:
 spec:
   {{- template "traefik.service-spec" . }}
   ports:
-  {{- range $name, $config := $udpPorts }}
-  {{- if $config.expose }}
-  - port: {{ default $config.port $config.exposedPort }}
-    name: {{ $name }}
-    targetPort: {{ if $config.http3 }}{{ $config.port }}{{ else }}{{ $name | quote }}{{ end }}
-    protocol: UDP
-    {{- if $config.nodePort }}
-    nodePort: {{ $config.nodePort }}
-    {{- end }}
-  {{- end }}
-  {{- end }}
+  {{- template "traefik.service-ports" $udpPorts }}
 {{- end }}
 
 {{- end -}}

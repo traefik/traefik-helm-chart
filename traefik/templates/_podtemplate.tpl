@@ -301,9 +301,6 @@
           - "--providers.kubernetesgateway"
           - "--experimental.kubernetesgateway"
           {{- end }}
-          {{- if .Values.experimental.http3.enabled }}
-          - "--experimental.http3=true"
-          {{- end }}
           {{- with .Values.providers.kubernetesCRD }}
           {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
@@ -343,10 +340,17 @@
           {{- end }}
           {{- end }}
           {{- if $config.http3 }}
+          {{- if $config.http3.enabled }}
+          - "--experimental.http3=true"
           {{- if semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)}}
-          - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ default $config.port $config.exposedPort }}"
+          {{- if $config.http3.advertisedPort }}
+          - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
+          {{- else }}
+          - "--entrypoints.{{ $entrypoint }}.http3"
+          {{- end }}
           {{- else }}
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- end }}

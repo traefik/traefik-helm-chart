@@ -142,7 +142,7 @@ tests:
             protocol: UDP
             targetPort: udp
         template: service.yaml
-        documentIndex: 1
+        documentIndex: 0
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.udp.address=:51/udp"

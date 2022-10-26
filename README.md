@@ -119,6 +119,26 @@ kubectl apply --server-side --force-conflicts -k https://github.com/traefik/trae
 
 Note: You can replace `master` with a specific version of this chart, according to your need.
 
+### Upgrading 17.x to 18.x
+
+Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
+Load balancers with mixed protocols are available since v1.20 and in 
+[beta as of Kubernetes v1.24](https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types).
+Availability may depend on your Kubernetes provider.
+
+To retain the old default behavior, set `service.single` to `false` in your values.
+
+When using TCP and UDP with a single service, you may encounter
+[this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)
+from Kubernetes.
+
+On HTTP/3, if you want to avoid this issue, you can set
+`ports.websecure.http3.advertisedPort` to an other value than `443`
+
+If you were previously using HTTP/3, you should update your values as follows:
+  - Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
+  - Remove `experimental.http3.enabled=true` entry
+
 ## Contributing
 
 If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).

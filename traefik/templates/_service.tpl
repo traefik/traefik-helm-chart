@@ -32,3 +32,29 @@
   {{- toYaml . | nindent 2 }}
   {{- end -}}
 {{- end }}
+
+{{- define "traefik.service-ports" }}
+  {{- range $name, $config := . }}
+  {{- if $config.expose }}
+  - port: {{ default $config.port $config.exposedPort }}
+    name: {{ $name | quote }}
+    targetPort: {{ $name }}
+    protocol: {{ default "TCP" $config.protocol }}
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
+  {{- end }}
+  {{- if $config.http3 }}
+  {{- if $config.http3.enabled }}
+  {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
+  - port: {{ $http3Port }}
+    name: "{{ $name }}-http3"
+    targetPort: {{ $config.port }}
+    protocol: UDP
+    {{- if $config.nodePort }}
+    nodePort: {{ $config.nodePort }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
