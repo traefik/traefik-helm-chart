@@ -1,4 +1,11 @@
 suite: RBAC configuration
+templates:
+  - rbac/clusterrole.yaml
+  - rbac/clusterrolebinding.yaml
+  - rbac/role.yaml
+  - rbac/rolebinding.yaml
+  - rbac/serviceaccount.yaml
+  - deployment.yaml
 tests:
   - it: should create default RBAC related objects
     asserts:
