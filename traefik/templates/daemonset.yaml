@@ -31,13 +31,7 @@ spec:
   selector:
     matchLabels:
       {{- include "traefik.labelselector" . | nindent 6 }}
-  updateStrategy:
-    type: RollingUpdate
-    rollingUpdate:
-      {{- if (semverCompare ">=1.21.0-0" .Capabilities.KubeVersion.Version) }}
-      maxSurge: {{ .Values.rollingUpdate.maxSurge }}
-      {{- end }}
-      maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}
+  updateStrategy: {{ toYaml .Values.updateStrategy | nindent 4 }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   {{- if .Values.deployment.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
