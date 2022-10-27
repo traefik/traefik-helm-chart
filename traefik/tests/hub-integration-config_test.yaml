@@ -1,0 +1,156 @@
+suite: Hub integration
+templates:
+  - deployment.yaml
+  - service-hub.yaml
+tests:
+  - it: should not enable Hub by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub"
+        template: deployment.yaml
+      - hasDocuments:
+          count: 0
+        template: service-hub.yaml
+  - it: should contains minimal static configuration when enabled
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.hub"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addRoutersLabels=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tls.insecure=true"
+  - it: should provide dedicated internal service for Hub when enabled
+    template: service-hub.yaml
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: metadata.name
+          value: traefik-hub
+      - contains:
+          path: spec.ports
+          content:
+            port: 9100
+            name: "metrics"
+            targetPort: metrics
+            protocol: TCP
+      - contains:
+          path: spec.ports
+          content:
+            port: 9901
+            name: "traefikhub-tunl"
+            targetPort: traefikhub-tunl
+            protocol: TCP
+  - it: should use specified ports for Hub when enabled
+    template: service-hub.yaml
+    set:
+      hub:
+        enabled: true
+        tunnelPort: 8001
+      ports:
+        metrics:
+          port: 8000
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            port: 8000
+            name: "metrics"
+            targetPort: metrics
+            protocol: TCP
+      - contains:
+          path: spec.ports
+          content:
+            port: 8001
+            name: "traefikhub-tunl"
+            targetPort: traefikhub-tunl
+            protocol: TCP
+  - it: should use default ports on entrypoints when enabled
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.traefikhub-tunl.address=:9901"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "traefikhub-tunl"
+            containerPort: 9901
+            protocol: "TCP"
+  - it: should configure custom ports on entrypoints when specified
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+        tunnelPort: 8001
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.traefikhub-tunl.address=:8001"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "traefikhub-tunl"
+            containerPort: 8001
+            protocol: "TCP"
+  - it: should configure TLS when specified
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+        tls:
+          ca: "/path/to/ca.pem"
+          cert: "/path/to/cert.pem"
+          key: "/path/to/key.pem"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tls.ca=/path/to/ca.pem"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tls.cert=/path/to/cert.pem"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tls.key=/path/to/key.pem"
+  - it: should enable TLS insecure connection when specified
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+        tls:
+          insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tls.insecure=true"
+  - it: should fail when TLS insecure & certs are both specified
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+        tls:
+          insecure: true
+          ca: "/path/to/ca.pem"
+          cert: "/path/to/cert.pem"
+          key: "/path/to/key.pem"
+    asserts:
+      - failedTemplate:
+          errorMessage: "You cannot specify insecure and certs on TLS for Traefik Hub at the same time"

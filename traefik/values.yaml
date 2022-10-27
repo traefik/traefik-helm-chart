@@ -6,6 +6,27 @@ image:
   pullPolicy: IfNotPresent
 
 #
+# Configure integration with Traefik Hub
+#
+hub:
+  ## Enabling Hub will:
+  # * enable Traefik Hub integration on Traefik
+  # * add `traefikhub-tunl` endpoint
+  # * enable addRoutersLabels on prometheus metrics
+  # * enable allowExternalNameServices on KubernetesIngress provider
+  # * enable allowCrossNamespace on KubernetesCRD provider
+  # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
+  enabled: false
+  ## Default port can be changed
+  # tunnelPort: 9901
+  ## TLS is optional. Insecure is mutually exclusive with any other options
+  # tls:
+  #   insecure: false
+  #   ca: "/path/to/ca.pem"
+  #   cert: "/path/to/cert.pem"
+  #   key: "/path/to/key.pem"
+
+#
 # Configure the deployment
 #
 deployment:
@@ -505,6 +526,8 @@ tlsStore: {}
 # from.
 service:
   enabled: true
+  ## Single service is using `MixedProtocolLBService` feature gate.
+  ## When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
   type: LoadBalancer
   # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
