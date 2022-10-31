@@ -416,7 +416,7 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer
+    # LoadBalancer.
     # nodePort: 32080
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
@@ -549,13 +549,24 @@ service:
     # - 172.16.0.0/16
   externalIPs: []
     # - 1.2.3.4
-  # One of SingleStack, PreferDualStack, or RequireDualStack.
+  ## One of SingleStack, PreferDualStack, or RequireDualStack.
   # ipFamilyPolicy: SingleStack
-  # List of IP families (e.g. IPv4 and/or IPv6).
-  # ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
+  ## List of IP families (e.g. IPv4 and/or IPv6).
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
   # ipFamilies:
   #   - IPv4
   #   - IPv6
+  ##
+  ## An additionnal and optional internal Service.
+  ## Same parameters as external Service
+  # internal:
+  #   type: ClusterIP
+  #   # labels: {}
+  #   # annotations: {}
+  #   # spec: {}
+  #   # loadBalancerSourceRanges: []
+  #   # externalIPs: []
+  #   # ipFamilies: [ "IPv4","IPv6" ]
 
 ## Create HorizontalPodAutoscaler object.
 ##
