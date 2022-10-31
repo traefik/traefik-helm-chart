@@ -1,5 +1,21 @@
 # Change Log
 
+## 18.3.0 
+
+**Release date:** 2022-10-31
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* ⬆️  Update Traefik appVersion to 2.9.4 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 18.2.0 
 
 **Release date:** 2022-10-31
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🚩 Add an optional "internal" service 
+* 🚩 Add an optional "internal" service (#683) 
 
 ### Default value changes
 
