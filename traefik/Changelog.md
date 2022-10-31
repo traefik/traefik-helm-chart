@@ -1,5 +1,21 @@
 # Change Log
 
+## 19.0.2 
+
+**Release date:** 2022-10-31
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 💬 Support volume secrets with '.' in name (#695) 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 19.0.1 
 
 **Release date:** 2022-11-03
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🐛 Fix IngressClass install on EKS 
+* 🐛 Fix IngressClass install on EKS (#699) 
 
 ### Default value changes
 

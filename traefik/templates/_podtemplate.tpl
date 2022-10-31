@@ -97,7 +97,7 @@
             mountPath: /tmp
           {{- $root := . }}
           {{- range .Values.volumes }}
-          - name: {{ tpl (.name) $root }}
+          - name: {{ tpl (.name) $root | replace "." "-" }}
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
@@ -476,7 +476,7 @@
           emptyDir: {}
         {{- $root := . }}
         {{- range .Values.volumes }}
-        - name: {{ tpl (.name) $root }}
+        - name: {{ tpl (.name) $root | replace "." "-" }}
           {{- if eq .type "secret" }}
           secret:
             secretName: {{ tpl (.name) $root }}
