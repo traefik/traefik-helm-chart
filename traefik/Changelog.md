@@ -1,5 +1,111 @@
 # Change Log
 
+## 19.0.0 
+
+**Release date:** 2022-11-02
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* ✨ Provides Default IngressClass for Traefik by default
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 69190f1..b24c1cb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -100,11 +100,10 @@ podDisruptionBudget:
+   # minAvailable: 0
+   # minAvailable: 25%
+ 
+-# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
++# Create a default IngressClass for Traefik
+ ingressClass:
+-  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
+-  enabled: false
+-  isDefaultClass: false
++  enabled: true
++  isDefaultClass: true
+ 
+ # Enable experimental features
+ experimental:
+```
+
+## 18.3.0 
+
+**Release date:** 2022-10-31
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* ⬆️  Update Traefik appVersion to 2.9.4 (#696) 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
+## 18.2.0 
+
+**Release date:** 2022-10-31
+
+![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🚩 Add an optional "internal" service (#683) 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 8033a87..69190f1 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -416,7 +416,7 @@ ports:
+     # The port protocol (TCP/UDP)
+     protocol: TCP
+     # Use nodeport if set. This is useful if you have configured Traefik in a
+-    # LoadBalancer
++    # LoadBalancer.
+     # nodePort: 32080
+     # Port Redirections
+     # Added in 2.2, you can make permanent redirects via entrypoints.
+@@ -549,13 +549,24 @@ service:
+     # - 172.16.0.0/16
+   externalIPs: []
+     # - 1.2.3.4
+-  # One of SingleStack, PreferDualStack, or RequireDualStack.
++  ## One of SingleStack, PreferDualStack, or RequireDualStack.
+   # ipFamilyPolicy: SingleStack
+-  # List of IP families (e.g. IPv4 and/or IPv6).
+-  # ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
++  ## List of IP families (e.g. IPv4 and/or IPv6).
++  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
+   # ipFamilies:
+   #   - IPv4
+   #   - IPv6
++  ##
++  ## An additionnal and optional internal Service.
++  ## Same parameters as external Service
++  # internal:
++  #   type: ClusterIP
++  #   # labels: {}
++  #   # annotations: {}
++  #   # spec: {}
++  #   # loadBalancerSourceRanges: []
++  #   # externalIPs: []
++  #   # ipFamilies: [ "IPv4","IPv6" ]
+ 
+ ## Create HorizontalPodAutoscaler object.
+ ##
+```
+
 ## 18.1.0 
 
 **Release date:** 2022-10-27
@@ -8,13 +114,13 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🚀 Add native support for Traefik Hub 
+* 🚀 Add native support for Traefik Hub (#676) 
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index acce704..02d1f89 100644
+index acce704..8033a87 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -5,6 +5,27 @@ image:
@@ -45,6 +151,15 @@ index acce704..02d1f89 100644
  #
  # Configure the deployment
  #
+@@ -505,6 +526,8 @@ tlsStore: {}
+ # from.
+ service:
+   enabled: true
++  ## Single service is using `MixedProtocolLBService` feature gate.
++  ## When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+   type: LoadBalancer
+   # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
 ```
 
 ## 18.0.0 
