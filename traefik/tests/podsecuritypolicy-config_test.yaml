@@ -1,4 +1,7 @@
 suite: PodSecurityPolicy configuration
+templates:
+  - rbac/podsecuritypolicy.yaml
+  - rbac/clusterrole.yaml
 tests:
   - it: should be disabled by default
     asserts:

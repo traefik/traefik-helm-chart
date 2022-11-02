@@ -100,11 +100,10 @@ podDisruptionBudget:
   # minAvailable: 0
   # minAvailable: 25%
 
-# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
+# Create a default IngressClass for Traefik
 ingressClass:
-  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
-  enabled: false
-  isDefaultClass: false
+  enabled: true
+  isDefaultClass: true
 
 # Enable experimental features
 experimental:

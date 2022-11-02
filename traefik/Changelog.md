@@ -1,5 +1,39 @@
 # Change Log
 
+## 19.0.0 
+
+**Release date:** 2022-11-02
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* ✨ Provides Default IngressClass for Traefik by default
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 69190f1..b24c1cb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -100,11 +100,10 @@ podDisruptionBudget:
+   # minAvailable: 0
+   # minAvailable: 25%
+ 
+-# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
++# Create a default IngressClass for Traefik
+ ingressClass:
+-  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
+-  enabled: false
+-  isDefaultClass: false
++  enabled: true
++  isDefaultClass: true
+ 
+ # Enable experimental features
+ experimental:
+```
+
 ## 18.3.0 
 
 **Release date:** 2022-10-31
@@ -8,7 +42,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* ⬆️  Update Traefik appVersion to 2.9.4 
+* ⬆️  Update Traefik appVersion to 2.9.4 (#696) 
 
 ### Default value changes
 

@@ -1,6 +1,9 @@
 suite: default install
 tests:
   - it: should generate the default objects for Traefik Ingress Controller
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
     asserts:
       - isKind:
           of: Deployment
@@ -18,6 +21,9 @@ tests:
           of: ServiceAccount
         template: rbac/serviceaccount.yaml
   - it: should have the correct naming for each object
+    capabilities:
+      apiVersions:
+        - networking.k8s.io/v1
     asserts:
       - equal:
           path: metadata.name
