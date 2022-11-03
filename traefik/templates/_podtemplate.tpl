@@ -512,7 +512,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.topologySpreadConstraints }}
-      {{- if (semverCompare "<1.19.0" .Capabilities.KubeVersion.Version) }}
+      {{- if (semverCompare "<1.19.0-0" .Capabilities.KubeVersion.Version) }}
         {{- fail "ERROR: topologySpreadConstraints are supported only on kubernetes >= v1.19" -}}
       {{- end }}
       topologySpreadConstraints:

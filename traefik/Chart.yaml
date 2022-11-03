@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 19.0.0
+version: 19.0.1
 appVersion: 2.9.4
 keywords:
   - traefik
@@ -25,4 +25,4 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - ✨ Provides Default IngressClass for Traefik by default
+    - 🐛 Fix IngressClass install on EKS
