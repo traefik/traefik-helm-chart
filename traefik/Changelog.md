@@ -1,5 +1,21 @@
 # Change Log
 
+## 19.0.1 
+
+**Release date:** 2022-11-03
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🐛 Fix IngressClass install on EKS 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 19.0.0 
 
 **Release date:** 2022-11-02
@@ -8,7 +24,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* ✨ Provides Default IngressClass for Traefik by default
+* ✨ Provides Default IngressClass for Traefik by default (#693) 
 
 ### Default value changes
 

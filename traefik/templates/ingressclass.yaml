@@ -2,9 +2,9 @@
   {{- if (semverCompare "<2.3.0" (.Chart.AppVersion)) -}}
     {{- fail "ERROR: IngressClass cannot be used with Traefik < 2.3.0" -}}
   {{- end -}}
-  {{- if (semverCompare ">=1.19.0" .Capabilities.KubeVersion.Version) -}}
+  {{- if semverCompare ">=1.19.0-0" .Capabilities.KubeVersion.Version  -}}
 apiVersion: networking.k8s.io/v1
-  {{- else if (semverCompare ">=1.16.0" .Capabilities.KubeVersion.Version) }}
+  {{- else if semverCompare ">=1.16.0-0" .Capabilities.KubeVersion.Version }}
 apiVersion: networking.k8s.io/v1beta1
   {{- else }}
     {{- fail "ERROR: You must use at least Kubernetes v1.16 with this Chart" }}

@@ -34,7 +34,7 @@ spec:
   updateStrategy:
     type: RollingUpdate
     rollingUpdate:
-      {{- if (semverCompare ">=1.21.0" .Capabilities.KubeVersion.Version) }}
+      {{- if (semverCompare ">=1.21.0-0" .Capabilities.KubeVersion.Version) }}
       maxSurge: {{ .Values.rollingUpdate.maxSurge }}
       {{- end }}
       maxUnavailable: {{ .Values.rollingUpdate.maxUnavailable }}

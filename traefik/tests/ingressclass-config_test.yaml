@@ -39,6 +39,16 @@ tests:
           of: IngressClass
       - isAPIVersion:
           of: networking.k8s.io/v1beta1
+  - it: should workaround and provide an IngressClass with v1 with only Capability (#698)
+    capabilities:
+      majorVersion: 1
+      minorVersion: 21
+      patchVersion: 14-eks-6d3986b
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1
   - it: should fail when asking to deploy IngressClass on Traefik < 2.3
     set:
       ingressClass:
