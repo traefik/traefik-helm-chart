@@ -22,11 +22,11 @@
   {{- end -}}
 {{- end -}}
 
-{{- if (eq $exposedPorts false) -}}
+{{- if and (eq $exposedPorts false) (not .Values.hub.enabled) -}}
   {{- fail "You need to expose at least one port or set enabled=false to service" -}}
 {{- end -}}
 
-{{- if (or $tcpPorts .Values.service.single) }}
+{{- if and $exposedPorts (or $tcpPorts .Values.service.single) }}
 apiVersion: v1
 kind: Service
 metadata:
@@ -45,7 +45,7 @@ spec:
 {{- end }}
 {{- end }}
 
-{{- if (and $udpPorts (not .Values.service.single)) }}
+{{- if and $exposedPorts (and $udpPorts (not .Values.service.single)) }}
 ---
 apiVersion: v1
 kind: Service
