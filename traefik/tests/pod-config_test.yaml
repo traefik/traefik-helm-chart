@@ -94,13 +94,13 @@ tests:
         additionalContainers:
           - image: foo:latest
             name: bar
-      asserts:
-        - equal:
-            path: spec.template.additionalContainers[0].image
-            value: foo:latest
-        - equal:
-            path: spec.template.additionalContainers[0].name
-            value: bar
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[1].image
+          value: foo:latest
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: bar
   - it: should have additional volumes
     set:
       deployment:
@@ -108,13 +108,29 @@ tests:
           - hostpath:
               path: /foo
             name: bar
-      asserts:
-        - equal:
-            path: spec.template.spec.volumes[4].hostpath.path
-            value: /foo
-        - equal:
-            path: spec.template.spec.volumes[4].name
-            value: bar
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[2].hostpath.path
+          value: /foo
+      - equal:
+          path: spec.template.spec.volumes[2].name
+          value: bar
+  - it: should support secret name with '.' for volumes
+    set:
+      volumes:
+        - name: certs.traefik.io
+          mountPath: "/certs"
+          type: secret
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[2].name
+          value: certs-traefik-io
+      - equal:
+          path: spec.template.spec.volumes[2].secret.secretName
+          value: certs.traefik.io
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].name
+          value: certs-traefik-io
   - it: should have imagePullPolicy with specified value
     set:
       image:
