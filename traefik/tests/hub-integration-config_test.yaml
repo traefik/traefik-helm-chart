@@ -2,6 +2,7 @@ suite: Hub integration
 templates:
   - deployment.yaml
   - service-hub.yaml
+  - service.yaml
 tests:
   - it: should not enable Hub by default
     asserts:
@@ -154,3 +155,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "You cannot specify insecure and certs on TLS for Traefik Hub at the same time"
+  - it: should not provide Service when hub is enabled without web and websecure ports
+    template: deployment.yaml
+    set:
+      hub:
+        enabled: true
+      ports:
+        web: null
+        websecure: null
+    templates:
+      - service.yaml
+    asserts:
+      - hasDocuments:
+          count: 0

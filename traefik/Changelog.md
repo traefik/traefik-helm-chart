@@ -1,14 +1,30 @@
 # Change Log
 
-## 19.0.2 
+## 19.0.3 
 
-**Release date:** 2022-10-31
+**Release date:** 2022-11-03
 
 ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 💬 Support volume secrets with '.' in name (#695) 
+* 🎨 Don't require exposed Ports when enabling Hub (#700)
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
+## 19.0.2 
+
+**Release date:** 2022-11-03
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* :speech_balloon: Support volume secrets with '.' in name (#695) 
 
 ### Default value changes
 
