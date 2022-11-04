@@ -9,8 +9,10 @@
   {{- if eq (default .Chart.AppVersion .Values.image.tag) "latest" }}
     {{- fail "\n\n ERROR: latest tag should not be used" }}
   {{- end }}
-  {{- if and (lt .Values.rollingUpdate.maxUnavailable 1.0) (.Values.hostNetwork) }}
-    {{- fail "maxUnavailable should be greater than 1 when using hostNetwork." }}
+  {{- if eq (.Values.updateStrategy.type) "RollingUpdate" }}
+    {{- if and (lt .Values.updateStrategy.rollingUpdate.maxUnavailable 1.0) (.Values.hostNetwork)  }}
+      {{- fail "maxUnavailable should be greater than 1 when using hostNetwork." }}
+    {{- end }}
   {{- end }}
 
 ---

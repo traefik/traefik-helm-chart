@@ -36,9 +36,10 @@ tests:
           value: 1
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
-      rollingUpdate:
-        maxUnavailable: 4
-        vegetaForce: 9000
+      updateStrategy:
+        rollingUpdate:
+          maxUnavailable: 4
+          vegetaForce: 9000
     asserts:
       - equal:
           path: spec.strategy.type
@@ -129,3 +130,11 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey
           value: kubernetes.io/hostname
+  - it: should have an OnDelete strategy when set
+    set:
+      updateStrategy:
+        type: OnDelete
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: OnDelete

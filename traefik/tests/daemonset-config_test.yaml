@@ -19,20 +19,6 @@ tests:
       - equal:
           path: spec.updateStrategy.rollingUpdate.maxSurge
           value: 1
-  - it: should have a rollingUpdate strategy with default values on k8s <= 1.20
-    capabilities:
-      majorVersion: 1
-      minorVersion: 20
-    set:
-      deployment:
-        kind: DaemonSet
-    asserts:
-      - equal:
-          path: spec.updateStrategy.type
-          value: RollingUpdate
-      - equal:
-          path: spec.updateStrategy.rollingUpdate.maxUnavailable
-          value: 0
   - it: should have annotations with specified values
     set:
       deployment:
@@ -121,9 +107,21 @@ tests:
     set:
       deployment:
         kind: DaemonSet
-      rollingUpdate:
-        maxUnavailable: 0
+      updateStrategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxUnavailable: 0
       hostNetwork: true
     asserts:
-    - failedTemplate:
-        errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+      - failedTemplate:
+          errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+  - it: should have an OnDelete updateStrategy when set
+    set:
+      deployment:
+        kind: DaemonSet
+      updateStrategy:
+        type: OnDelete
+    asserts:
+      - equal:
+          path: spec.updateStrategy.type
+          value: OnDelete
