@@ -1,5 +1,55 @@
 # Change Log
 
+## 19.0.4 
+
+**Release date:** 2022-11-07
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index b24c1cb..413aa88 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -261,10 +261,6 @@ metrics:
+ ##  enable optional CRDs for Prometheus Operator
+ ##
+   #  serviceMonitor:
+-  #    additionalLabels:
+-  #      foo: bar
+-  #    namespace: "another-namespace"
+-  #    namespaceSelector: {}
+   #    metricRelabelings: []
+   #      - sourceLabels: [__name__]
+   #        separator: ;
+@@ -279,9 +275,17 @@ metrics:
+   #        replacement: $1
+   #        action: replace
+   #    jobLabel: traefik
+-  #    scrapeInterval: 30s
+-  #    scrapeTimeout: 5s
++  #    interval: 30s
+   #    honorLabels: true
++  #    # (Optional)
++  #    # scrapeTimeout: 5s
++  #    # honorTimestamps: true
++  #    # enableHttp2: true
++  #    # followRedirects: true
++  #    # additionalLabels:
++  #    #   foo: bar
++  #    # namespace: "another-namespace"
++  #    # namespaceSelector: {}
+   #  prometheusRule:
+   #    additionalLabels: {}
+   #    namespace: "another-namespace"
+```
+
 ## 19.0.3 
 
 **Release date:** 2022-11-03
@@ -8,7 +58,7 @@
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🎨 Don't require exposed Ports when enabling Hub (#700)
+* 🎨 Don't require exposed Ports when enabling Hub (#700) 
 
 ### Default value changes
 
