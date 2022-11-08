@@ -1,0 +1,3 @@
+pages-branch: gh-pages
+remote: origin
+skip-existing: true

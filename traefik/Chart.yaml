@@ -25,4 +25,4 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor
+    - 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor (#703)

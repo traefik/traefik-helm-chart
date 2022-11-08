@@ -1,33 +1,26 @@
+---
 name: Test
 
 on:
+  workflow_call:
+  workflow_dispatch:
   pull_request:
-  push:
-    branches:
-      - master
 
 jobs:
-
   test:
-    name: Test
-    runs-on: ubuntu-20.04
-    if: github.repository == 'traefik/traefik-helm-chart'
-    env:
-      TMPDIR: /tmp
-
+    runs-on: ubuntu-latest
     steps:
-
-      - name: Check out code
-        uses: actions/checkout@v2
+      - name: Checkout
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - name: Install
+      - name: Configure Git
         run: |
-          curl -L https://git.io/get_helm.sh | bash -s -- -v v3.9.4
-          curl -sSL -o /tmp/ct.tgz https://github.com/helm/chart-testing/releases/download/v3.7.1/chart-testing_3.7.1_linux_amd64.tar.gz
-          tar xzf /tmp/ct.tgz -C /tmp && sudo cp /tmp/ct /usr/local/bin/ct && command -v ct
-          pip install yamale
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+      - name: Lint
+        run: make lint
 
-      - name: Make
-        run: make
+      - name: Test
+        run: make test
