@@ -2,13 +2,13 @@
 
 ## 19.0.4 
 
-**Release date:** 2022-11-07
+**Release date:** 2022-11-08
 
 ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor 
+* 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor (#703) 
 
 ### Default value changes
 
