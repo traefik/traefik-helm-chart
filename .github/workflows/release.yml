@@ -24,11 +24,15 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --global --add safe.directory /charts
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.4.1
+      - name: Publish Helm chart
+        uses: stefanprodan/helm-gh-pages@master
         with:
-          config: ./.github/chart-releaser.yaml
-        env:
-          CR_OWNER: traefik
-          CR_GIT_REPO: charts
-          CR_TOKEN: "${{ secrets.CHARTS_TOKEN }}"
+          token: ${{ secrets.CHARTS_TOKEN }}
+          charts_dir: traefik
+          charts_url: https://traefik.github.io/charts
+          owner: traefik
+          repository: charts
+          branch: master
+          target_dir: traefik
+          commit_username: traefiker
+          commit_email: 30906710+traefiker@users.noreply.github.com
