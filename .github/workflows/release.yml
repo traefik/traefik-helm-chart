@@ -28,7 +28,7 @@ jobs:
         uses: stefanprodan/helm-gh-pages@master
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
-          charts_dir: traefik
+          charts_dir: .
           charts_url: https://traefik.github.io/charts
           owner: traefik
           repository: charts
