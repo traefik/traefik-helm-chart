@@ -134,9 +134,12 @@ ingressRoute:
     # /!\ Do not expose your dashboard without any protection over the internet /!\
     entryPoints: ["traefik"]
 
-rollingUpdate:
-  maxUnavailable: 0
-  maxSurge: 1
+# Customize updateStrategy of traefik pods
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 0
+    maxSurge: 1
 
 # Customize liveness and readiness probe values.
 readinessProbe:
