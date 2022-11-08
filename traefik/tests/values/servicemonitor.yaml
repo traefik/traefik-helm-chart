@@ -21,7 +21,10 @@ metrics:
          replacement: $1
          action: replace
       jobLabel: another-label
-      scrapeInterval: 30s
+      interval: 30s
       scrapeTimeout: 5s
       honorLabels: true
+      honorTimestamps: true
+      enableHttp2: true
+      followRedirects: true
 

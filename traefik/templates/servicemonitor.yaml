@@ -20,6 +20,18 @@ spec:
   endpoints:
     - port: metrics
       path: /{{ .Values.metrics.prometheus.entryPoint }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.honorLabels }}
+      honorLabels: {{ . }}
+      {{- end }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.honorTimestamps }}
+      honorTimestamps: {{ . }}
+      {{- end }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.enableHttp2 }}
+      enableHttp2: {{ . }}
+      {{- end }}
+      {{- with .Values.metrics.prometheus.serviceMonitor.followRedirects }}
+      followRedirects: {{ . }}
+      {{- end }}
       {{- with .Values.metrics.prometheus.serviceMonitor.interval }}
       interval: {{ . }}
       {{- end }}

@@ -261,10 +261,6 @@ metrics:
 ##  enable optional CRDs for Prometheus Operator
 ##
   #  serviceMonitor:
-  #    additionalLabels:
-  #      foo: bar
-  #    namespace: "another-namespace"
-  #    namespaceSelector: {}
   #    metricRelabelings: []
   #      - sourceLabels: [__name__]
   #        separator: ;
@@ -279,9 +275,17 @@ metrics:
   #        replacement: $1
   #        action: replace
   #    jobLabel: traefik
-  #    scrapeInterval: 30s
-  #    scrapeTimeout: 5s
+  #    interval: 30s
   #    honorLabels: true
+  #    # (Optional)
+  #    # scrapeTimeout: 5s
+  #    # honorTimestamps: true
+  #    # enableHttp2: true
+  #    # followRedirects: true
+  #    # additionalLabels:
+  #    #   foo: bar
+  #    # namespace: "another-namespace"
+  #    # namespaceSelector: {}
   #  prometheusRule:
   #    additionalLabels: {}
   #    namespace: "another-namespace"
