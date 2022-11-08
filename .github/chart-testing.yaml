@@ -1,0 +1,7 @@
+remote: origin
+target-branch: master
+debug: true
+check-version-increment: true
+upgrade: true
+validate-chart-schema: true
+validate-yaml: true
