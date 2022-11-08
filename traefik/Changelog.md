@@ -1,5 +1,39 @@
 # Change Log
 
+## 20.1.0 
+
+**Release date:** 2022-11-08
+
+![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* 🔧 Adds more settings for dashboard ingressRoute 
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 2ec3736..97a1b71 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -129,10 +129,14 @@ ingressRoute:
+     annotations: {}
+     # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+     labels: {}
++    # The router match rule used for the dashboard ingressRoute
++    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+     # Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
+     # By default, it's using traefik entrypoint, which is not exposed.
+     # /!\ Do not expose your dashboard without any protection over the internet /!\
+     entryPoints: ["traefik"]
++    # Additional ingressRoute middlewares (e.g. for authentication)
++    middlewares: []
+ 
+ # Customize updateStrategy of traefik pods
+ updateStrategy:
+```
+
 ## 20.0.0 
 
 **Release date:** 2022-11-08

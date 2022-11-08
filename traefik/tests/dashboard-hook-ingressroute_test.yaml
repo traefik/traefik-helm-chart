@@ -10,6 +10,20 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+  - it: should have the expected default route match rule
+    asserts:
+      - equal:
+          path: spec.routes[0].match
+          value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - it: should support overwriting the route match rule
+    set:
+      ingressRoute:
+        dashboard:
+          matchRule: Host(`traefik.example.com`)
+    asserts:
+      - equal:
+          path: spec.routes[0].match
+          value: Host(`traefik.example.com`)
   - it: should have traefik as default entryPoints
     asserts:
       - equal:
@@ -34,3 +48,16 @@ tests:
       - equal:
           path: metadata.labels.foo
           value: bar
+  - it: should support adding middlewares
+    set:
+      ingressRoute:
+        dashboard:
+          middlewares:
+            - name: traefik-dashboard-auth
+              namespace: default
+    asserts:
+      - equal:
+          path: spec.routes[0].middlewares
+          value:
+            - name: traefik-dashboard-auth
+              namespace: default
