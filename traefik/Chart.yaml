@@ -26,3 +26,5 @@ icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets
 annotations:
   artifacthub.io/changes: |
     - Allow updateStrategy to be configurable
+    - 🐛 remove old deployment workflow
+    - ✨ migrate to centralised helm repository
