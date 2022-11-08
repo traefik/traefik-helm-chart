@@ -32,7 +32,7 @@ With the command `helm version`, make sure that you have:
 Add Traefik's chart repository to Helm:
 
 ```bash
-helm repo add traefik https://helm.traefik.io/traefik
+helm repo add traefik https://traefik.github.io/charts
 ```
 
 ### Kubernetes Version Support
@@ -122,7 +122,7 @@ Note: You can replace `master` with a specific version of this chart, according 
 ### Upgrading 17.x to 18.x
 
 Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
-Load balancers with mixed protocols are available since v1.20 and in 
+Load balancers with mixed protocols are available since v1.20 and in
 [beta as of Kubernetes v1.24](https://kubernetes.io/docs/concepts/services-networking/service/#load-balancers-with-mixed-protocol-types).
 Availability may depend on your Kubernetes provider.
 
