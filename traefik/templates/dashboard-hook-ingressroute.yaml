@@ -21,9 +21,15 @@ spec:
   - {{ . }}
   {{- end }}
   routes:
-  - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - match: {{ .Values.ingressRoute.dashboard.matchRule }}
     kind: Rule
     services:
     - name: api@internal
       kind: TraefikService
+    {{- if .Values.ingressRoute.dashboard.middlewares }}
+    middlewares:
+      {{- with .Values.ingressRoute.dashboard.middlewares }}
+      {{- toYaml . | nindent 6 }}
+      {{- end }}
+    {{- end -}}
 {{- end -}}
