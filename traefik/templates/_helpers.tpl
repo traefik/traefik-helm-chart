@@ -15,6 +15,13 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Create the chart image name.
+*/}}
+
+{{- define "traefik.image-name" -}}
+{{- printf "%s:%s" .Values.image.name (.Values.image.tag | default .Chart.AppVersion) }}
+{{- end -}}
+{{/*
 Create a default fully qualified app name.
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
 If release name contains chart name it will be used as a full name.

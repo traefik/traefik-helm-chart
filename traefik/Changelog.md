@@ -1,14 +1,31 @@
 # Change Log
 
+## 20.1.1 
+
+**Release date:** 2022-11-09
+
+![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=)
+![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+
+* fix: use consistent appVersion with Traefik Proxy 
+
+### Default value changes
+
+```diff
+# No changes in this release
+```
+
 ## 20.1.0 
 
-**Release date:** 2022-11-08
+**Release date:** 2022-11-09
 
 ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
 ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 
-* 🔧 Adds more settings for dashboard ingressRoute 
+* 🔧 Adds more settings for dashboard ingressRoute (#710) 
+* 🐛 fix chart releases 
 
 ### Default value changes
 
