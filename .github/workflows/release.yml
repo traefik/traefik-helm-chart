@@ -24,6 +24,36 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
           git config --global --add safe.directory /charts
 
+      - name: Get chart verison
+        id: chart_version
+        run: |
+          echo "CHART_VERSION=$(cat traefik/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
+
+      - name: Check if tag exists
+        id: tag_exists
+        run: |
+          TAG_EXISTS=true
+          if ! [ $(git tag -l "${{ steps.chart_version.outputs.CHART_VERSION }}") ]; then
+              TAG_EXISTS=false
+          fi
+          echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
+
+      - name: Tag release
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == false
+
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: ${{ steps.tag_version.outputs.new_tag }}
+          body: ${{ steps.tag_version.outputs.changelog }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == false
+
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
         with:
@@ -37,3 +67,4 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
+        if: steps.tag_exists.outputs.TAG_EXISTS == false
