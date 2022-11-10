@@ -50,7 +50,8 @@ Due to changes in CRD version support, the following versions of the chart are u
 helm install traefik traefik/traefik
 ```
 
-You can customize the install with a `values` file. Documentation on all parameters is in the [default file](./traefik/values.yaml).
+You can customize the install with a `values` file. There are some [EXAMPLES](./EXAMPLES.md) provided.
+Complete documentation on all available parameters is in the [default file](./traefik/values.yaml).
 
 ```bash
 helm install -f myvalues.yaml traefik traefik/traefik
