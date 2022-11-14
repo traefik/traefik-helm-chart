@@ -1,0 +1,37 @@
+suite: TlsStore configuration
+templates:
+  - tlsstore.yaml
+tests:
+  - it: should use helm managed namespace as default behavior
+    set:
+      tlsStore:
+        default:
+          defaultCertificate:
+            secretName: tls-cert
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace
+    set:
+      tlsStore:
+        default:
+          defaultCertificate:
+            secretName: tls-cert
+      namespaceOverride: "traefik-ns-override"
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+  - it: should set tlsStore config
+    set:
+      tlsStore:
+        default:
+          defaultCertificate:
+            secretName: tls-cert
+    asserts:
+      - equal:
+          path: spec.config
+          values:
+            defaultCertificate:
+              secretName: tls-cert
