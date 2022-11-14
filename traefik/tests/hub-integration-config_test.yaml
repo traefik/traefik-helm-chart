@@ -57,6 +57,26 @@ tests:
             name: "traefikhub-tunl"
             targetPort: traefikhub-tunl
             protocol: TCP
+  - it: should set internal hub service default namespace
+    template: service-hub.yaml
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "NAMESPACE"
+  - it: should set internal hub service default namespace override
+    template: service-hub.yaml
+    set:
+      namespaceOverride: "traefik-ns-override"
+      hub:
+        enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+
   - it: should use specified ports for Hub when enabled
     template: service-hub.yaml
     set:

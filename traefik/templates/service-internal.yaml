@@ -22,6 +22,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullname}}-internal
+  namespace: {{ template "traefik.namespace" . }}
   {{- template "traefik.service-internal-metadata" . }}
   annotations:
   {{- with .Values.service.internal.annotations }}
@@ -42,6 +43,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $fullname }}-internal-udp
+  namespace: {{ template "traefik.namespace" . }}
   {{- template "traefik.service-internal-metadata" . }}
   annotations:
   {{- with .Values.service.internal.annotations }}

@@ -729,5 +729,5 @@ podSecurityContext:
 extraObjects: []
 
 # This will override the default Release Namespace for Helm.
-# It will not affect individually namespaced resources such as `ServiceMonitor`
+# It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 # namespaceOverride: traefik
