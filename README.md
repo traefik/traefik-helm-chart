@@ -17,23 +17,17 @@ to avoid integrating any third party solutions nor any specific use cases.
 
 Accordingly, the encouraged approach to fulfill your needs:
 
-1. override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
-2. append your own configurations (`kubectl apply -f myconf.yaml`)
-3. extend this HelmChart ([as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/))
+1. Override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
+2. Append your own configurations (`kubectl apply -f myconf.yaml`)
+
+If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/)
 
 ## Installing
 
 ### Prerequisites
 
-With the command `helm version`, make sure that you have:
-
-- Helm v3 [installed](https://helm.sh/docs/using_helm/#installing-helm)
-
-Add Traefik's chart repository to Helm:
-
-```bash
-helm repo add traefik https://traefik.github.io/charts
-```
+1. [x] Helm **v3** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
+2. [x] Traefik's chart repository: `helm repo add traefik https://traefik.github.io/charts`
 
 ### Kubernetes Version Support
 
@@ -117,8 +111,6 @@ With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Docume
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 ```
-
-Note: You can replace `master` with a specific version of this chart, according to your need.
 
 ### Upgrading 17.x to 18.x
 
