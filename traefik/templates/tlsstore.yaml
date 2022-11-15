@@ -3,6 +3,7 @@ apiVersion: traefik.containo.us/v1alpha1
 kind: TLSStore
 metadata:
   name: {{ $name }}
+  namespace: {{ template "traefik.namespace" $ }}
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 spec:

@@ -50,3 +50,20 @@ tests:
           value: 33%
       - isEmpty:
           path: spec.minAvailable
+  - it: should use helm managed namespace as default behavior
+    set:
+      podDisruptionBudget:
+        enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+      podDisruptionBudget:
+        enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"

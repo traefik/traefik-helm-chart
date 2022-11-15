@@ -236,3 +236,47 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "You cannot enable http3 without enabling tls"
+          path: items[1].spec.ports[0].protocol
+          value: UDP
+  - it: should use helm managed namespace as default behavior UDP
+    set:
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should use helm managed namespace as default behavior TCP
+    set:
+      ports:
+        tcp:
+          port: 3000
+          protocol: TCP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace UDP
+    set:
+      namespaceOverride: "traefik-ns-override"
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+  - it: should accept overridden namespace TCP
+    set:
+      namespaceOverride: "traefik-ns-override"
+      ports:
+        tcp:
+          port: 3000
+          protocol: TCP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"

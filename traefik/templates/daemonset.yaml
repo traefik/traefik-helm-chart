@@ -20,6 +20,7 @@ apiVersion: apps/v1
 kind: DaemonSet
 metadata:
   name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
   {{- with .Values.deployment.labels }}

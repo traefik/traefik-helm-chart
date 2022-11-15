@@ -58,3 +58,22 @@ tests:
       - equal:
           path: metadata.namespace
           value: "default"
+  - it: should install Gateway in default namespace
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "NAMESPACE"
+  - it: should install Gateway in namespaceOverride
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+      namespaceOverride: "traefik-ns-override"
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"

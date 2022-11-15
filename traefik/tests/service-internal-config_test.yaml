@@ -94,3 +94,93 @@ tests:
       - equal:
           path: spec.externalIPs[0]
           value: "1.2.3.4"
+  - it: should use helm managed namespace as default behavior UDP
+    set:
+      service:
+        internal:
+          enabled: true
+          spec:
+            externalTrafficPolicy: Cluster
+            loadBalancerIP: "1.2.3.4"
+            clusterIP: "2.3.4.5"
+            loadBalancerSourceRanges:
+              - 192.168.0.1/32
+              - 172.16.0.0/16
+            externalIPs:
+              - "1.2.3.4"
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should use helm managed namespace as default behavior TCP
+    set:
+      service:
+        internal:
+          enabled: true
+          spec:
+            externalTrafficPolicy: Cluster
+            loadBalancerIP: "1.2.3.4"
+            clusterIP: "2.3.4.5"
+            loadBalancerSourceRanges:
+              - 192.168.0.1/32
+              - 172.16.0.0/16
+            externalIPs:
+              - "1.2.3.4"
+      ports:
+        tcp:
+          port: 3000
+          protocol: TCP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace UDP
+    set:
+      namespaceOverride: "traefik-ns-override"
+      service:
+        internal:
+          enabled: true
+          spec:
+            externalTrafficPolicy: Cluster
+            loadBalancerIP: "1.2.3.4"
+            clusterIP: "2.3.4.5"
+            loadBalancerSourceRanges:
+              - 192.168.0.1/32
+              - 172.16.0.0/16
+            externalIPs:
+              - "1.2.3.4"
+      ports:
+        udp:
+          port: 3000
+          protocol: UDP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+  - it: should accept overridden namespace TCP
+    set:
+      namespaceOverride: "traefik-ns-override"
+      service:
+        internal:
+          enabled: true
+          spec:
+            externalTrafficPolicy: Cluster
+            loadBalancerIP: "1.2.3.4"
+            clusterIP: "2.3.4.5"
+            loadBalancerSourceRanges:
+              - 192.168.0.1/32
+              - 172.16.0.0/16
+            externalIPs:
+              - "1.2.3.4"
+      ports:
+        tcp:
+          port: 3000
+          protocol: TCP
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"

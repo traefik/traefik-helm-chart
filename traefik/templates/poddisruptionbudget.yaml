@@ -7,6 +7,7 @@ apiVersion: policy/v1beta1
 kind: PodDisruptionBudget
 metadata:
   name: {{ template "traefik.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
 spec:

@@ -125,3 +125,20 @@ tests:
       - equal:
           path: spec.updateStrategy.type
           value: OnDelete
+  - it: should use helm managed namespace as default behavior
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
