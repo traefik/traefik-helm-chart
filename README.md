@@ -143,7 +143,7 @@ for more details.
 So you will have to delete your `Service`,  `Deployment` or `DaemonSet` in
 order to be able to upgrade.
 
-You may also upgrade by deploying an other Traefik to another namespace and
+You may also upgrade by deploying another Traefik to a different namespace and
 removing after your first Traefik.
 
 ## Contributing
