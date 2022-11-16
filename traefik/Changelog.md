@@ -1,24 +1,28 @@
 # Change Log
 
-## 20.2.0 
+## 20.2.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2021-02-27
+**Release date:** 2022-11-16
 
-![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🙈 do not namespace ingress class
+* ✨ copy LICENSE and README.md on release
 
 
-* Adds support for namespace overrides in subchart use 
-* Document recent changes in the README (#717) 
+## 20.2.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-15
+
+* ✨ add support for namespace overrides (#718)
+* Document recent changes in the README (#717)
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index 97a1b71..a1ef792 100644
+index 97a1b71..c7f84a7 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
-@@ -725,5 +725,7 @@ podSecurityContext:
+@@ -725,5 +725,9 @@ podSecurityContext:
  # Extra objects to deploy (value evaluated as a template)
  #
  # In some cases, it can avoid the need for additional, extended or adhoc deployments.
@@ -26,35 +30,24 @@ index 97a1b71..a1ef792 100644
 +# See #595 for more details and traefik/tests/values/extra.yaml for example.
  extraObjects: []
 +
++# This will override the default Release Namespace for Helm.
++# It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 +# namespaceOverride: traefik
 ```
 
-## 20.1.1 
+## 20.1.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-10
 
-![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: use consistent appVersion with Traefik Proxy
 
 
-* fix: use consistent appVersion with Traefik Proxy 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 20.1.0 
+## 20.1.0  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-09
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* 🔧 Adds more settings for dashboard ingressRoute (#710) 
-* 🐛 fix chart releases 
+* 🔧 Adds more settings for dashboard ingressRoute (#710)
+* 🐛 fix chart releases
 
 ### Default value changes
 
@@ -80,17 +73,13 @@ index 2ec3736..97a1b71 100644
  updateStrategy:
 ```
 
-## 20.0.0 
+## 20.0.0  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-08
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Allow updateStrategy to be configurable 
-* 🐛 remove old deployment workflow 
-* ✨ migrate to centralised helm repository 
+* Allow updateStrategy to be configurable
+* 🐛 remove old deployment workflow
+* ✨ migrate to centralised helm repository
 
 ### Default value changes
 
@@ -117,15 +106,11 @@ index 413aa88..2ec3736 100644
  readinessProbe:
 ```
 
-## 19.0.4 
+## 19.0.4  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-08
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor (#703) 
+* 🔧 Adds more settings & rename (wrong) scrapeInterval to (valid) interval on ServiceMonitor (#703)
 
 ### Default value changes
 
@@ -167,63 +152,32 @@ index b24c1cb..413aa88 100644
    #    namespace: "another-namespace"
 ```
 
-## 19.0.3 
+## 19.0.3  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-03
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🎨 Don't require exposed Ports when enabling Hub (#700)
 
 
-* 🎨 Don't require exposed Ports when enabling Hub (#700) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 19.0.2 
+## 19.0.2  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-03
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :speech_balloon: Support volume secrets with '.' in name (#695)
 
 
-* :speech_balloon: Support volume secrets with '.' in name (#695) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 19.0.1 
+## 19.0.1  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-03
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🐛 Fix IngressClass install on EKS (#699)
 
 
-* 🐛 Fix IngressClass install on EKS (#699) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 19.0.0 
+## 19.0.0  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-02
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* ✨ Provides Default IngressClass for Traefik by default (#693) 
+* ✨ Provides Default IngressClass for Traefik by default (#693)
 
 ### Default value changes
 
@@ -249,31 +203,18 @@ index 69190f1..b24c1cb 100644
  experimental:
 ```
 
-## 18.3.0 
+## 18.3.0  ![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-31
 
-![AppVersion: 2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=2.9.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* ⬆️  Update Traefik appVersion to 2.9.4 (#696)
 
 
-* ⬆️  Update Traefik appVersion to 2.9.4 (#696) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 18.2.0 
+## 18.2.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-31
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* 🚩 Add an optional "internal" service (#683) 
+* 🚩 Add an optional "internal" service (#683)
 
 ### Default value changes
 
@@ -321,15 +262,11 @@ index 8033a87..69190f1 100644
  ##
 ```
 
-## 18.1.0 
+## 18.1.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-27
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* 🚀 Add native support for Traefik Hub (#676) 
+* 🚀 Add native support for Traefik Hub (#676)
 
 ### Default value changes
 
@@ -377,15 +314,11 @@ index acce704..8033a87 100644
    # Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
 ```
 
-## 18.0.0 
+## 18.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-26
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Refactor http3 and merge TCP with UDP ports into a single service (#656) 
+* Refactor http3 and merge TCP with UDP ports into a single service (#656)
 
 ### Default value changes
 
@@ -439,79 +372,39 @@ index 807bd09..acce704 100644
    annotations: {}
 ```
 
-## 17.0.5 
+## 17.0.5  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-21
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 📝 Add annotations changelog for artifacthub.io & update Maintainers
 
 
-* 📝 Add annotations changelog for artifacthub.io & update Maintainers 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 17.0.4 
+## 17.0.4  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-21
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :art: Add helper function for label selector
 
 
-* :art: Add helper function for label selector 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 17.0.3 
+## 17.0.3  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-20
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🐛 fix changing label selectors
 
 
-* 🐛 fix changing label selectors 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 17.0.2 
+## 17.0.2  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-20
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: setting ports.web.proxyProtocol.insecure=true
 
 
-* fix: setting ports.web.proxyProtocol.insecure=true 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 17.0.1 
+## 17.0.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-20
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :bug: Unify all labels selector with traefik chart labels (#681) 
+* :bug: Unify all labels selector with traefik chart labels (#681)
 
 ### Default value changes
 
@@ -531,31 +424,18 @@ index 6a90bc6..807bd09 100644
  nodeSelector: {}
 ```
 
-## 17.0.0 
+## 17.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-20
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :bug: Fix `ClusterRole`, `ClusterRoleBinding` names and `app.kubernetes.io/instance` label (#662)
 
 
-* :bug: Fix `ClusterRole`, `ClusterRoleBinding` names and `app.kubernetes.io/instance` label (#662) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 16.2.0 
+## 16.2.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-20
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add forwardedHeaders and proxyProtocol config (#673) 
+* Add forwardedHeaders and proxyProtocol config (#673)
 
 ### Default value changes
 
@@ -600,15 +480,11 @@ index 9b5afc4..6a90bc6 100644
      # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
 ```
 
-## 16.1.0 
+## 16.1.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-19
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* ✨ add optional ServiceMonitor & PrometheusRules CRDs (#425) 
+* ✨ add optional ServiceMonitor & PrometheusRules CRDs (#425)
 
 ### Default value changes
 
@@ -668,15 +544,11 @@ index 7e335b5..9b5afc4 100644
    # instana:
 ```
 
-## 16.0.0 
+## 16.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-19
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :fire: Remove `Pilot` and `fallbackApiVersion` (#665) 
+* :fire: Remove `Pilot` and `fallbackApiVersion` (#665)
 
 ### Default value changes
 
@@ -703,31 +575,18 @@ index 03fdaed..7e335b5 100644
  experimental:
 ```
 
-## 15.3.1 
+## 15.3.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-18
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :art: Improve `IngressRoute` structure (#674)
 
 
-* :art: Improve `IngressRoute` structure (#674) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 15.3.0 
+## 15.3.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-18
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* 📌 Add capacity to enable User-facing role 
+* 📌 Add capacity to enable User-facing role
 
 ### Default value changes
 
@@ -752,47 +611,25 @@ index 76aac93..03fdaed 100644
  podSecurityPolicy:
 ```
 
-## 15.2.2 
+## 15.2.2  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-17
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix provider namespace changes
 
 
-* Fix provider namespace changes 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 15.2.1 
+## 15.2.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-17
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🐛 fix provider namespace changes
 
 
-* 🐛 fix provider namespace changes 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 15.2.0 
+## 15.2.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-17
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :bug: Allow to watch on specific namespaces without using rbac.namespaced (#666) 
+* :bug: Allow to watch on specific namespaces without using rbac.namespaced (#666)
 
 ### Default value changes
 
@@ -812,31 +649,18 @@ index 781ac15..76aac93 100644
  # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 ```
 
-## 15.1.1 
+## 15.1.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-17
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :goal_net: Fail gracefully when http3 is not enabled correctly (#667)
 
 
-* :goal_net: Fail gracefully when http3 is not enabled correctly (#667) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 15.1.0 
+## 15.1.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-14
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :sparkles: add optional topologySpreadConstraints (#663) 
+* :sparkles: add optional topologySpreadConstraints (#663)
 
 ### Default value changes
 
@@ -863,15 +687,11 @@ index fc2c371..781ac15 100644
  # Priority indicates the importance of a Pod relative to other Pods.
 ```
 
-## 15.0.0 
+## 15.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-13
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :rocket: Enable TLS by default on `websecure` port (#657) 
+* :rocket: Enable TLS by default on `websecure` port (#657)
 
 ### Default value changes
 
@@ -891,31 +711,18 @@ index 400a29a..fc2c371 100644
        certResolver: ""
 ```
 
-## 14.0.2 
+## 14.0.2  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-13
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :memo: Add Changelog (#661)
 
 
-* :memo: Add Changelog (#661) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 14.0.1 
+## 14.0.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-11
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :memo: Update workaround for permissions 660 on acme.json 
+* :memo: Update workaround for permissions 660 on acme.json
 
 ### Default value changes
 
@@ -940,63 +747,32 @@ index a4e4ff2..400a29a 100644
      #       mountPath: /data
 ```
 
-## 14.0.0 
+## 14.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-11
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Limit rbac to only required resources for Ingress and CRD providers
 
 
-* Limit rbac to only required resources for Ingress and CRD providers 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 13.0.1 
+## 13.0.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-11
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add helper function for common labels
 
 
-* Add helper function for common labels 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 13.0.0 
+## 13.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-11
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Moved list object to individual objects
 
 
-* Moved list object to individual objects 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.7 
+## 12.0.7  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-10
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :lipstick: Affinity templating and example (#557) 
+* :lipstick: Affinity templating and example (#557)
 
 ### Default value changes
 
@@ -1039,31 +815,18 @@ index 4431c36..a4e4ff2 100644
  
 ```
 
-## 12.0.6 
+## 12.0.6  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-10
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :bug: Ignore kustomization file used for CRDs update (#653)
 
 
-* :bug: Ignore kustomization file used for CRDs update (#653) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.5 
+## 12.0.5  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-10
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :memo: Establish Traefik & CRD update process 
+* :memo: Establish Traefik & CRD update process
 
 ### Default value changes
 
@@ -1082,79 +845,39 @@ index 3526729..4431c36 100644
      # Override the liveness/readiness scheme. Useful for getting ping to
 ```
 
-## 12.0.4 
+## 12.0.4  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-10
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Allows ingressClass to be used without semver-compatible image tag
 
 
-* Allows ingressClass to be used without semver-compatible image tag 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.3 
+## 12.0.3  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-10
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :bug: Should check hostNetwork when hostPort != containerPort
 
 
-* :bug: Should check hostNetwork when hostPort != containerPort 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.2 
+## 12.0.2  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-07
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :goal_net: Fail gracefully when hostNetwork is enabled and hostPort != containerPort
 
 
-* :goal_net: Fail gracefully when hostNetwork is enabled and hostPort != containerPort 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.1 
+## 12.0.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-07
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :bug: Fix a typo on `behavior` for HPA v2
 
 
-* :bug: Fix a typo on `behavior` for HPA v2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 12.0.0 
+## 12.0.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-06
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update default HPA API Version to `v2` and add support for behavior (#518) 
+* Update default HPA API Version to `v2` and add support for behavior (#518)
 
 ### Default value changes
 
@@ -1190,47 +913,25 @@ index 2bd51f8..3526729 100644
  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ```
 
-## 11.1.1 
+## 11.1.1  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-05
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🔊 add failure message when using maxUnavailable 0 and hostNetwork
 
 
-* 🔊 add failure message when using maxUnavailable 0 and hostNetwork 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 11.1.0 
+## 11.1.0  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-04
 
-![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik to v2.9.1
 
 
-* Update Traefik to v2.9.1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 11.0.0 
+## 11.0.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-04
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* tweak default values to avoid downtime when updating 
+* tweak default values to avoid downtime when updating
 
 ### Default value changes
 
@@ -1265,15 +966,11 @@ index 844cadc..2bd51f8 100644
    timeoutSeconds: 2
 ```
 
-## 10.33.0 
+## 10.33.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-04
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* :rocket: Add `extraObjects` value that allows creating adhoc resources 
+* :rocket: Add `extraObjects` value that allows creating adhoc resources
 
 ### Default value changes
 
@@ -1295,15 +992,11 @@ index c926bd9..844cadc 100644
 +extraObjects: []
 ```
 
-## 10.32.0 
+## 10.32.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-03
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support setting middleware on entrypoint 
+* Add support setting middleware on entrypoint
 
 ### Default value changes
 
@@ -1331,15 +1024,11 @@ index 3957448..c926bd9 100644
      # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
 ```
 
-## 10.31.0 
+## 10.31.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-03
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support setting dashboard entryPoints for ingressRoute resource 
+* Support setting dashboard entryPoints for ingressRoute resource
 
 ### Default value changes
 
@@ -1361,47 +1050,25 @@ index c9feb76..3957448 100644
    maxUnavailable: 1
 ```
 
-## 10.30.2 
+## 10.30.2  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-10-03
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :test_tube: Fail gracefully when asked to provide a service without ports
 
 
-* :test_tube: Fail gracefully when asked to provide a service without ports 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.30.1 
+## 10.30.1  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-30
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :arrow_up: Upgrade helm, ct & unittest (#638)
 
 
-* :arrow_up: Upgrade helm, ct & unittest (#638) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.30.0 
+## 10.30.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-30
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support HTTPS scheme for healthcheks 
+* Add support HTTPS scheme for healthcheks
 
 ### Default value changes
 
@@ -1423,15 +1090,11 @@ index fed4a8a..c9feb76 100644
      #
 ```
 
-## 10.29.0 
+## 10.29.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-29
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add missing tracing options 
+* Add missing tracing options
 
 ### Default value changes
 
@@ -1489,15 +1152,11 @@ index d1708cc..fed4a8a 100644
    - "--global.checknewversion"
 ```
 
-## 10.28.0 
+## 10.28.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-29
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: add lifecycle for prestop and poststart 
+* feat: add lifecycle for prestop and poststart
 
 ### Default value changes
 
@@ -1526,15 +1185,11 @@ index 19a133c..d1708cc 100644
  podDisruptionBudget:
 ```
 
-## 10.27.0 
+## 10.27.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-29
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: add create gateway option 
+* feat: add create gateway option
 
 ### Default value changes
 
@@ -1554,63 +1209,32 @@ index d9c745e..19a133c 100644
      #   kind: "Secret"
 ```
 
-## 10.26.1 
+## 10.26.1  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-28
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* 🐛 fix rbac templating (#636)
 
 
-* 🐛 fix rbac templating (#636) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.26.0 
+## 10.26.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-28
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* :bug: Fix ingressClass support when rbac.namespaced=true (#499)
 
 
-* :bug: Fix ingressClass support when rbac.namespaced=true (#499) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.25.1 
+## 10.25.1  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-28
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add ingressclasses to traefik role
 
 
-* Add ingressclasses to traefik role 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.25.0 
+## 10.25.0  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-27
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add TLSStore resource to chart 
+* Add TLSStore resource to chart
 
 ### Default value changes
 
@@ -1637,15 +1261,11 @@ index d4011c3..d9c745e 100644
  service:
 ```
 
-## 10.24.5 
+## 10.24.5  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-27
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Suggest an alternative port for metrics 
+* Suggest an alternative port for metrics
 
 ### Default value changes
 
@@ -1665,111 +1285,53 @@ index 81f2e85..d4011c3 100644
      # Defines whether the port is exposed if service.type is LoadBalancer or
 ```
 
-## 10.24.4 
+## 10.24.4  ![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-26
 
-![AppVersion: 2.8.7](https://img.shields.io/static/v1?label=AppVersion&message=2.8.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik to v2.8.7
 
 
-* Update Traefik to v2.8.7 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.24.3 
+## 10.24.3  ![AppVersion: 2.8.5](https://img.shields.io/static/v1?label=AppVersion&message=2.8.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-14
 
-![AppVersion: 2.8.5](https://img.shields.io/static/v1?label=AppVersion&message=2.8.5&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to v2.8.5
 
 
-* Update Traefik version to v2.8.5 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.24.2 
+## 10.24.2  ![AppVersion: 2.8.4](https://img.shields.io/static/v1?label=AppVersion&message=2.8.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-09-05
 
-![AppVersion: 2.8.4](https://img.shields.io/static/v1?label=AppVersion&message=2.8.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to v2.8.4
 
 
-* Update Traefik version to v2.8.4 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.24.1 
+## 10.24.1  ![AppVersion: 2.8.0](https://img.shields.io/static/v1?label=AppVersion&message=2.8.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-08-29
 
-![AppVersion: 2.8.0](https://img.shields.io/static/v1?label=AppVersion&message=2.8.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update PodDisruptionBudget apiVersion to policy/v1
 
 
-* Update PodDisruptionBudget apiVersion to policy/v1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.24.0 
+## 10.24.0  ![AppVersion: 2.8.0](https://img.shields.io/static/v1?label=AppVersion&message=2.8.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-30
 
-![AppVersion: 2.8.0](https://img.shields.io/static/v1?label=AppVersion&message=2.8.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to v2.8.0
 
 
-* Update Traefik version to v2.8.0 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.23.0 
+## 10.23.0  ![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-27
 
-![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Support environment variable usage for Datadog
 
 
-* Support environment variable usage for Datadog 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.22.0 
+## 10.22.0  ![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-22
 
-![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Allow setting revisionHistoryLimit for Deployment and DaemonSet 
+* Allow setting revisionHistoryLimit for Deployment and DaemonSet
 
 ### Default value changes
 
@@ -1789,31 +1351,18 @@ index d5785ab..81f2e85 100644
    # The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
 ```
 
-## 10.21.1 
+## 10.21.1  ![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-15
 
-![AppVersion: 2.7.1](https://img.shields.io/static/v1?label=AppVersion&message=2.7.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to 2.7.1
 
 
-* Update Traefik version to 2.7.1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.21.0 
+## 10.21.0  ![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-15
 
-![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support allowEmptyServices config for KubernetesCRD 
+* Support allowEmptyServices config for KubernetesCRD
 
 ### Default value changes
 
@@ -1832,15 +1381,11 @@ index e141e29..d5785ab 100644
      namespaces: []
 ```
 
-## 10.20.1 
+## 10.20.1  ![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-06-01
 
-![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add Acme certificate resolver configuration 
+* Add Acme certificate resolver configuration
 
 ### Default value changes
 
@@ -1879,111 +1424,53 @@ index a16b107..e141e29 100644
  # and replicas>1, a pod anti-affinity is recommended and will be set if the
 ```
 
-## 10.20.0 
+## 10.20.0  ![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-05-25
 
-![AppVersion: 2.7.0](https://img.shields.io/static/v1?label=AppVersion&message=2.7.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik Proxy to v2.7.0
 
 
-* Update Traefik Proxy to v2.7.0 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.5 
+## 10.19.5  ![AppVersion: 2.6.6](https://img.shields.io/static/v1?label=AppVersion&message=2.6.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-05-04
 
-![AppVersion: 2.6.6](https://img.shields.io/static/v1?label=AppVersion&message=2.6.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Upgrade Traefik to 2.6.6
 
 
-* Upgrade Traefik to 2.6.6 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.4 
+## 10.19.4  ![AppVersion: 2.6.3](https://img.shields.io/static/v1?label=AppVersion&message=2.6.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-31
 
-![AppVersion: 2.6.3](https://img.shields.io/static/v1?label=AppVersion&message=2.6.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik dependency version to 2.6.3
 
 
-* Update Traefik dependency version to 2.6.3 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.3 
+## 10.19.3  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-30
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update CRDs to match the ones defined in the reference documentation
 
 
-* Update CRDs to match the ones defined in the reference documentation 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.2 
+## 10.19.2  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-30
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Revert Traefik version to 2.6.2
 
 
-* Revert Traefik version to 2.6.2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.1 
+## 10.19.1  ![AppVersion: 2.6.3](https://img.shields.io/static/v1?label=AppVersion&message=2.6.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-30
 
-![AppVersion: 2.6.3](https://img.shields.io/static/v1?label=AppVersion&message=2.6.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to 2.6.3
 
 
-* Update Traefik version to 2.6.3 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.19.0 
+## 10.19.0  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-28
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support ingressClass option for KubernetesIngress provider 
+* Support ingressClass option for KubernetesIngress provider
 
 ### Default value changes
 
@@ -2002,15 +1489,11 @@ index 02ab704..a16b107 100644
        # - "default"
 ```
 
-## 10.18.0 
+## 10.18.0  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-28
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support liveness and readyness probes customization 
+* Support liveness and readyness probes customization
 
 ### Default value changes
 
@@ -2042,15 +1525,11 @@ index 15f1103..02ab704 100644
  # Configure providers
 ```
 
-## 10.17.0 
+## 10.17.0  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-28
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support Datadog tracing 
+* Support Datadog tracing
 
 ### Default value changes
 
@@ -2073,31 +1552,18 @@ index 4dccd1a..15f1103 100644
    - "--global.checknewversion"
 ```
 
-## 10.16.1 
+## 10.16.1  ![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-28
 
-![AppVersion: 2.6.2](https://img.shields.io/static/v1?label=AppVersion&message=2.6.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik version to 2.6.2
 
 
-* Update Traefik version to 2.6.2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.16.0 
+## 10.16.0  ![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-28
 
-![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Support allowEmptyServices for KubernetesIngress provider 
+* Support allowEmptyServices for KubernetesIngress provider
 
 ### Default value changes
 
@@ -2116,15 +1582,11 @@ index 1f9dbbe..4dccd1a 100644
        # - "default"
 ```
 
-## 10.15.0 
+## 10.15.0  ![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-03-08
 
-![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add metrics.prometheus.addRoutersLabels option 
+* Add metrics.prometheus.addRoutersLabels option
 
 ### Default value changes
 
@@ -2143,47 +1605,25 @@ index cd4d49b..1f9dbbe 100644
  
 ```
 
-## 10.14.2 
+## 10.14.2  ![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-02-18
 
-![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik to v2.6.1
 
 
-* Update Traefik to v2.6.1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.14.1 
+## 10.14.1  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-02-09
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add missing inFlightConn TCP middleware CRD
 
 
-* Add missing inFlightConn TCP middleware CRD 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.14.0 
+## 10.14.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-02-03
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add experimental HTTP/3 support 
+* Add experimental HTTP/3 support
 
 ### Default value changes
 
@@ -2214,15 +1654,11 @@ index d49122f..cd4d49b 100644
      tls:
 ```
 
-## 10.13.0 
+## 10.13.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-02-01
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support for ipFamilies 
+* Add support for ipFamilies
 
 ### Default value changes
 
@@ -2245,15 +1681,11 @@ index 32fce6f..d49122f 100644
  ##
 ```
 
-## 10.12.0 
+## 10.12.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-02-01
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add shareProcessNamespace option to podtemplate 
+* Add shareProcessNamespace option to podtemplate
 
 ### Default value changes
 
@@ -2273,15 +1705,11 @@ index ab25456..32fce6f 100644
    # Additional imagePullSecrets
 ```
 
-## 10.11.1 
+## 10.11.1  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-01-31
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix anti-affinity example 
+* Fix anti-affinity example
 
 ### Default value changes
 
@@ -2313,15 +1741,11 @@ index 8c72905..ab25456 100644
  
 ```
 
-## 10.11.0 
+## 10.11.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-01-31
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add setting to enable Instana tracing 
+* Add setting to enable Instana tracing
 
 ### Default value changes
 
@@ -2343,15 +1767,11 @@ index 7fe4a2c..8c72905 100644
    - "--global.sendanonymoususage"
 ```
 
-## 10.10.0 
+## 10.10.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-01-31
 
-![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update Traefik to v2.6 
+* Update Traefik to v2.6
 
 ### Default value changes
 
@@ -2374,31 +1794,18 @@ index 8ae4bd8..7fe4a2c 100644
      # By default, Gateway would be created to the Namespace you are deploying Traefik to.
 ```
 
-## 10.9.1 
+## 10.9.1  ![AppVersion: 2.5.6](https://img.shields.io/static/v1?label=AppVersion&message=2.5.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-12-24
 
-![AppVersion: 2.5.6](https://img.shields.io/static/v1?label=AppVersion&message=2.5.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump traefik version to 2.5.6
 
 
-* Bump traefik version to 2.5.6 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.9.0 
+## 10.9.0  ![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-12-20
 
-![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: add allowExternalNameServices to KubernetesIngress provider 
+* feat: add allowExternalNameServices to KubernetesIngress provider
 
 ### Default value changes
 
@@ -2417,15 +1824,11 @@ index 79df205..8ae4bd8 100644
        # - "default"
 ```
 
-## 10.8.0 
+## 10.8.0  ![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-12-20
 
-![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support to specify minReadySeconds on Deployment/DaemonSet 
+* Add support to specify minReadySeconds on Deployment/DaemonSet
 
 ### Default value changes
 
@@ -2445,15 +1848,11 @@ index 7e9186b..79df205 100644
    # Additional deployment labels (e.g. for filtering deployment by custom labels)
 ```
 
-## 10.7.1 
+## 10.7.1  ![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-12-06
 
-![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix pod disruption when using percentages 
+* Fix pod disruption when using percentages
 
 ### Default value changes
 
@@ -2481,15 +1880,11 @@ index e0655c8..7e9186b 100644
  ingressClass:
 ```
 
-## 10.7.0 
+## 10.7.0  ![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-12-06
 
-![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support for ipFamilyPolicy 
+* Add support for ipFamilyPolicy
 
 ### Default value changes
 
@@ -2520,47 +1915,25 @@ index 3ec7105..e0655c8 100644
  ##
 ```
 
-## 10.6.2 
+## 10.6.2  ![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-11-15
 
-![AppVersion: 2.5.4](https://img.shields.io/static/v1?label=AppVersion&message=2.5.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik version to 2.5.4
 
 
-* Bump Traefik version to 2.5.4 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.6.1 
+## 10.6.1  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-11-05
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add missing Gateway API resources to ClusterRole
 
 
-* Add missing Gateway API resources to ClusterRole 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.6.0 
+## 10.6.0  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-10-13
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: allow termination grace period to be configurable 
+* feat: allow termination grace period to be configurable
 
 ### Default value changes
 
@@ -2580,15 +1953,11 @@ index f06ebc6..3ec7105 100644
    # Additional deployment labels (e.g. for filtering deployment by custom labels)
 ```
 
-## 10.5.0 
+## 10.5.0  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-10-13
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: add allowExternalNameServices to Kubernetes CRD provider 
+* feat: add allowExternalNameServices to Kubernetes CRD provider
 
 ### Default value changes
 
@@ -2607,47 +1976,25 @@ index 3bcb350..f06ebc6 100644
      namespaces: []
 ```
 
-## 10.4.2 
+## 10.4.2  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-10-13
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix(crd): add permissionsPolicy to headers middleware
 
 
-* fix(crd): add permissionsPolicy to headers middleware 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.4.1 
+## 10.4.1  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-10-13
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix(crd): add peerCertURI option to ServersTransport
 
 
-* fix(crd): add peerCertURI option to ServersTransport 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.4.0 
+## 10.4.0  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-10-12
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add Kubernetes CRD labelSelector and ingressClass options 
+* Add Kubernetes CRD labelSelector and ingressClass options
 
 ### Default value changes
 
@@ -2670,47 +2017,25 @@ index f54f5fe..3bcb350 100644
      # labelSelector: environment=production,method=traefik
 ```
 
-## 10.3.6 
+## 10.3.6  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-09-24
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix missing RequireAnyClientCert value to TLSOption CRD
 
 
-* Fix missing RequireAnyClientCert value to TLSOption CRD 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.3.5 
+## 10.3.5  ![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-09-23
 
-![AppVersion: 2.5.3](https://img.shields.io/static/v1?label=AppVersion&message=2.5.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik version to 2.5.3
 
 
-* Bump Traefik version to 2.5.3 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.3.4 
+## 10.3.4  ![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-09-17
 
-![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add allowCrossNamespace option on kubernetesCRD provider 
+* Add allowCrossNamespace option on kubernetesCRD provider
 
 ### Default value changes
 
@@ -2729,79 +2054,39 @@ index 7e3a579..f54f5fe 100644
    kubernetesIngress:
 ```
 
-## 10.3.3 
+## 10.3.3  ![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-09-17
 
-![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix(crd): missing alpnProtocols in TLSOption
 
 
-* fix(crd): missing alpnProtocols in TLSOption 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.3.2 
+## 10.3.2  ![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-23
 
-![AppVersion: 2.5.1](https://img.shields.io/static/v1?label=AppVersion&message=2.5.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Releasing 2.5.1
 
 
-* Releasing 2.5.1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.3.1 
+## 10.3.1  ![AppVersion: 2.5.0](https://img.shields.io/static/v1?label=AppVersion&message=2.5.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-20
 
-![AppVersion: 2.5.0](https://img.shields.io/static/v1?label=AppVersion&message=2.5.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix Ingress RBAC for namespaced scoped deployment
 
 
-* Fix Ingress RBAC for namespaced scoped deployment 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.3.0 
+## 10.3.0  ![AppVersion: 2.5.0](https://img.shields.io/static/v1?label=AppVersion&message=2.5.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-18
 
-![AppVersion: 2.5.0](https://img.shields.io/static/v1?label=AppVersion&message=2.5.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Releasing Traefik 2.5.0
 
 
-* Releasing Traefik 2.5.0 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.2.0 
+## 10.2.0  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-18
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Allow setting TCP and UDP service annotations separately 
+* Allow setting TCP and UDP service annotations separately
 
 ### Default value changes
 
@@ -2826,47 +2111,25 @@ index 72a01ea..7e3a579 100644
    # Additional entries here will be added to the service spec. Cannot contains
 ```
 
-## 10.1.6 
+## 10.1.6  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-17
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: missing service labels
 
 
-* fix: missing service labels 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.1.5 
+## 10.1.5  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-17
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix(pvc-annotaions): see traefik/traefik-helm-chart#471
 
 
-* fix(pvc-annotaions): see traefik/traefik-helm-chart#471 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.1.4 
+## 10.1.4  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-17
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* fix(ingressclass): fallbackApiVersion default shouldn't be `nil` 
+* fix(ingressclass): fallbackApiVersion default shouldn't be `nil`
 
 ### Default value changes
 
@@ -2886,63 +2149,32 @@ index 04d336c..72a01ea 100644
  pilot:
 ```
 
-## 10.1.3 
+## 10.1.3  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-16
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Move Prometheus annotations to Pods
 
 
-* Move Prometheus annotations to Pods 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.1.2 
+## 10.1.2  ![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-08-10
 
-![AppVersion: 2.4.13](https://img.shields.io/static/v1?label=AppVersion&message=2.4.13&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Version bumped 2.4.13
 
 
-* Version bumped 2.4.13 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.1.1 
+## 10.1.1  ![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-20
 
-![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fixing Prometheus.io/port annotation
 
 
-* Fixing Prometheus.io/port annotation 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.1.0 
+## 10.1.0  ![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-20
 
-![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add metrics framework, and prom annotations 
+* Add metrics framework, and prom annotations
 
 ### Default value changes
 
@@ -2992,15 +2224,11 @@ index f6e370a..04d336c 100644
  # https://doc.traefik.io/traefik/https/tls/#tls-options
 ```
 
-## 10.0.2 
+## 10.0.2  ![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-14
 
-![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat(gateway): introduces param / pick Namespace installing Gateway 
+* feat(gateway): introduces param / pick Namespace installing Gateway
 
 ### Default value changes
 
@@ -3021,95 +2249,46 @@ index 9bf90ea..f6e370a 100644
  ingressRoute:
 ```
 
-## 10.0.1 
+## 10.0.1  ![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-14
 
-![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add RBAC for middlewaretcps
 
 
-* Add RBAC for middlewaretcps 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 10.0.0 
+## 10.0.0  ![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-07
 
-![AppVersion: 2.4.9](https://img.shields.io/static/v1?label=AppVersion&message=2.4.9&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update CRD versions
 
 
-* Update CRD versions 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.20.1 
+## 9.20.1  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-05
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Revert CRD templating
 
 
-* Revert CRD templating 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.20.0 
+## 9.20.0  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-07-05
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add support for apiextensions v1 CRDs
 
 
-* Add support for apiextensions v1 CRDs 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.19.2 
+## 9.19.2  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-06-16
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add name-metadata for service "List" object
 
 
-* Add name-metadata for service "List" object 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.19.1 
+## 9.19.1  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-05-13
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* fix simple typo 
+* fix simple typo
 
 ### Default value changes
 
@@ -3129,15 +2308,11 @@ index b30afac..9bf90ea 100644
  
 ```
 
-## 9.19.0 
+## 9.19.0  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-04-29
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix IngressClass api version 
+* Fix IngressClass api version
 
 ### Default value changes
 
@@ -3157,63 +2332,32 @@ index 0aa2d6b..b30afac 100644
  pilot:
 ```
 
-## 9.18.3 
+## 9.18.3  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-04-26
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix: ignore provider namespace args on disabled
 
 
-* Fix: ignore provider namespace args on disabled 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.18.2 
+## 9.18.2  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-04-02
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix pilot dashboard deactivation
 
 
-* Fix pilot dashboard deactivation 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.18.1 
+## 9.18.1  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-29
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Do not disable Traefik Pilot in the dashboard by default
 
 
-* Do not disable Traefik Pilot in the dashboard by default 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.18.0 
+## 9.18.0  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-24
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add an option to toggle the pilot dashboard 
+* Add an option to toggle the pilot dashboard
 
 ### Default value changes
 
@@ -3233,31 +2377,18 @@ index 017f771..0aa2d6b 100644
  experimental:
 ```
 
-## 9.17.6 
+## 9.17.6  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-24
 
-![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik to 2.4.8
 
 
-* Bump Traefik to 2.4.8 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.17.5 
+## 9.17.5  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-17
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat(labelSelector): option matching Ingresses based on labelSelectors 
+* feat(labelSelector): option matching Ingresses based on labelSelectors
 
 ### Default value changes
 
@@ -3276,63 +2407,32 @@ index 868a985..017f771 100644
      # IP used for Kubernetes Ingress endpoints
 ```
 
-## 9.17.4 
+## 9.17.4  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-17
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add helm resource-policy annotation on PVC
 
 
-* Add helm resource-policy annotation on PVC 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.17.3 
+## 9.17.3  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-17
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Throw error with explicit latest tag
 
 
-* Throw error with explicit latest tag 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.17.2 
+## 9.17.2  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-10
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix(keywords): removed by mistake
 
 
-* fix(keywords): removed by mistake 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.17.1 
+## 9.17.1  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-10
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat(healthchecksPort): Support for overriding the liveness/readiness probes port 
+* feat(healthchecksPort): Support for overriding the liveness/readiness probes port
 
 ### Default value changes
 
@@ -3363,31 +2463,18 @@ index 56abb93..868a985 100644
      #
 ```
 
-## 9.16.2 
+## 9.16.2  ![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-09
 
-![AppVersion: 2.4.7](https://img.shields.io/static/v1?label=AppVersion&message=2.4.7&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik to 2.4.7
 
 
-* Bump Traefik to 2.4.7 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.16.1 
+## 9.16.1  ![AppVersion: 2.4.6](https://img.shields.io/static/v1?label=AppVersion&message=2.4.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-09
 
-![AppVersion: 2.4.6](https://img.shields.io/static/v1?label=AppVersion&message=2.4.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Adding custom labels to deployment 
+* Adding custom labels to deployment
 
 ### Default value changes
 
@@ -3407,31 +2494,18 @@ index ba24be7..56abb93 100644
    # Additional Pod labels (e.g. for filtering Pod by custom labels)
 ```
 
-## 9.15.2 
+## 9.15.2  ![AppVersion: 2.4.6](https://img.shields.io/static/v1?label=AppVersion&message=2.4.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-02
 
-![AppVersion: 2.4.6](https://img.shields.io/static/v1?label=AppVersion&message=2.4.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Upgrade Traefik to 2.4.6
 
 
-* Upgrade Traefik to 2.4.6 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.15.1 
+## 9.15.1  ![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-02
 
-![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Configurable PVC name 
+* Configurable PVC name
 
 ### Default value changes
 
@@ -3450,47 +2524,25 @@ index 1e0e5a9..ba24be7 100644
    size: 128Mi
 ```
 
-## 9.14.4 
+## 9.14.4  ![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-03-02
 
-![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix typo
 
 
-* fix typo 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.14.3 
+## 9.14.3  ![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-02-19
 
-![AppVersion: 2.4.5](https://img.shields.io/static/v1?label=AppVersion&message=2.4.5&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik to 2.4.5
 
 
-* Bump Traefik to 2.4.5 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.14.2 
+## 9.14.2  ![AppVersion: 2.4.2](https://img.shields.io/static/v1?label=AppVersion&message=2.4.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-02-03
 
-![AppVersion: 2.4.2](https://img.shields.io/static/v1?label=AppVersion&message=2.4.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* docs: indent nit for dsdsocket example 
+* docs: indent nit for dsdsocket example
 
 ### Default value changes
 
@@ -3510,31 +2562,18 @@ index 56485ad..1e0e5a9 100644
      # The "volume-permissions" init container is required if you run into permission issues.
 ```
 
-## 9.14.1 
+## 9.14.1  ![AppVersion: 2.4.2](https://img.shields.io/static/v1?label=AppVersion&message=2.4.2&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-02-03
 
-![AppVersion: 2.4.2](https://img.shields.io/static/v1?label=AppVersion&message=2.4.2&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik to 2.4.2
 
 
-* Update Traefik to 2.4.2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.14.0 
+## 9.14.0  ![AppVersion: 2.4.0](https://img.shields.io/static/v1?label=AppVersion&message=2.4.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-02-01
 
-![AppVersion: 2.4.0](https://img.shields.io/static/v1?label=AppVersion&message=2.4.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Enable Kubernetes Gateway provider with an experimental flag 
+* Enable Kubernetes Gateway provider with an experimental flag
 
 ### Default value changes
 
@@ -3559,79 +2598,39 @@ index 50cab94..56485ad 100644
  ingressRoute:
 ```
 
-## 9.13.0 
+## 9.13.0  ![AppVersion: 2.4.0](https://img.shields.io/static/v1?label=AppVersion&message=2.4.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2021-01-22
 
-![AppVersion: 2.4.0](https://img.shields.io/static/v1?label=AppVersion&message=2.4.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update Traefik to 2.4 and add resources
 
 
-* Update Traefik to 2.4 and add resources 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.12.3 
+## 9.12.3  ![AppVersion: 2.3.6](https://img.shields.io/static/v1?label=AppVersion&message=2.3.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-12-31
 
-![AppVersion: 2.3.6](https://img.shields.io/static/v1?label=AppVersion&message=2.3.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Revert API Upgrade
 
 
-* Revert API Upgrade 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.12.2 
+## 9.12.2  ![AppVersion: 2.3.6](https://img.shields.io/static/v1?label=AppVersion&message=2.3.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-12-31
 
-![AppVersion: 2.3.6](https://img.shields.io/static/v1?label=AppVersion&message=2.3.6&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik to 2.3.6
 
 
-* Bump Traefik to 2.3.6 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.12.1 
+## 9.12.1  ![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-12-30
 
-![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Resolve #303, change CRD version from v1beta1 to v1
 
 
-* Resolve #303, change CRD version from v1beta1 to v1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.12.0 
+## 9.12.0  ![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-12-30
 
-![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Implement support for DaemonSet 
+* Implement support for DaemonSet
 
 ### Default value changes
 
@@ -3653,15 +2652,11 @@ index 60a721d..50cab94 100644
    annotations: {}
 ```
 
-## 9.11.0 
+## 9.11.0  ![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-20
 
-![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* add podLabels - custom labels 
+* add podLabels - custom labels
 
 ### Default value changes
 
@@ -3681,47 +2676,25 @@ index a187df7..60a721d 100644
      # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
 ```
 
-## 9.10.2 
+## 9.10.2  ![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-20
 
-![AppVersion: 2.3.3](https://img.shields.io/static/v1?label=AppVersion&message=2.3.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Bump Traefik to 2.3.3
 
 
-* Bump Traefik to 2.3.3 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.10.1 
+## 9.10.1  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-04
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Specify IngressClass resource when checking for cluster capability
 
 
-* Specify IngressClass resource when checking for cluster capability 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.10.0 
+## 9.10.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-03
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add list of watched provider namespaces 
+* Add list of watched provider namespaces
 
 ### Default value changes
 
@@ -3745,15 +2718,11 @@ index e6b85ca..a187df7 100644
        enabled: false
 ```
 
-## 9.9.0 
+## 9.9.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-03
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add additionalVolumeMounts for traefik container 
+* Add additionalVolumeMounts for traefik container
 
 ### Default value changes
 
@@ -3777,31 +2746,18 @@ index 37dd151..e6b85ca 100644
  logs:
 ```
 
-## 9.8.4 
+## 9.8.4  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-11-03
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: multiple ImagePullSecrets
 
 
-* fix: multiple ImagePullSecrets 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.8.3 
+## 9.8.3  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-30
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add imagePullSecrets 
+* Add imagePullSecrets
 
 ### Default value changes
 
@@ -3822,31 +2778,18 @@ index 87f60c0..37dd151 100644
  podDisruptionBudget:
 ```
 
-## 9.8.2 
+## 9.8.2  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-28
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add chart repo to source
 
 
-* Add chart repo to source 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.8.1 
+## 9.8.1  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-23
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* fix semver compare 
+* fix semver compare
 
 ### Default value changes
 
@@ -3867,15 +2810,11 @@ index 4ca1f8f..87f60c0 100644
  #
 ```
 
-## 9.8.0 
+## 9.8.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-20
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* feat: Enable entrypoint tls config + TLSOption 
+* feat: Enable entrypoint tls config + TLSOption
 
 ### Default value changes
 
@@ -3918,15 +2857,11 @@ index eee3622..4ca1f8f 100644
  # from.
 ```
 
-## 9.7.0 
+## 9.7.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-15
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add a configuration option for an emptyDir as plugin storage 
+* Add a configuration option for an emptyDir as plugin storage
 
 ### Default value changes
 
@@ -3954,15 +2889,11 @@ index b7153a1..eee3622 100644
    dashboard:
 ```
 
-## 9.6.0 
+## 9.6.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-15
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add additional volumes for init and additional containers 
+* Add additional volumes for init and additional containers
 
 ### Default value changes
 
@@ -3992,31 +2923,18 @@ index 9bac45e..b7153a1 100644
      # The "volume-permissions" init container is required if you run into permission issues.
 ```
 
-## 9.5.2 
+## 9.5.2  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-15
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Replace extensions with policy because of deprecation
 
 
-* Replace extensions with policy because of deprecation 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.5.1 
+## 9.5.1  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-14
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Template custom volume name 
+* Template custom volume name
 
 ### Default value changes
 
@@ -4045,15 +2963,11 @@ index 5a8d8ea..9bac45e 100644
  
 ```
 
-## 9.5.0 
+## 9.5.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-02
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Create PodSecurityPolicy and RBAC when needed. 
+* Create PodSecurityPolicy and RBAC when needed.
 
 ### Default value changes
 
@@ -4075,15 +2989,11 @@ index 8c4d866..5a8d8ea 100644
    # If set, an existing service account is used
 ```
 
-## 9.4.3 
+## 9.4.3  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-02
 
-![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update traefik to v2.3.1 
+* Update traefik to v2.3.1
 
 ### Default value changes
 
@@ -4103,47 +3013,25 @@ index 3df75a4..8c4d866 100644
  #
 ```
 
-## 9.4.2 
+## 9.4.2  ![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-02
 
-![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add Artifact Hub repository metadata file
 
 
-* Add Artifact Hub repository metadata file 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.4.1 
+## 9.4.1  ![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-01
 
-![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix broken chart icon url
 
 
-* Fix broken chart icon url 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.4.0 
+## 9.4.0  ![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-10-01
 
-![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Allow to specify custom labels on Service 
+* Allow to specify custom labels on Service
 
 ### Default value changes
 
@@ -4163,15 +3051,11 @@ index a6175ff..3df75a4 100644
    spec: {}
 ```
 
-## 9.3.0 
+## 9.3.0  ![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-09-24
 
-![AppVersion: 2.3.0](https://img.shields.io/static/v1?label=AppVersion&message=2.3.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Release Traefik 2.3 
+* Release Traefik 2.3
 
 ### Default value changes
 
@@ -4208,31 +3092,18 @@ index fba955d..a6175ff 100644
    dashboard:
 ```
 
-## 9.2.1 
+## 9.2.1  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-09-18
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add new helm url
 
 
-* Add new helm url 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 9.2.0 
+## 9.2.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-09-16
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* chore: move to new organization. 
+* chore: move to new organization.
 
 ### Default value changes
 
@@ -4252,15 +3123,11 @@ index 9f52c39..fba955d 100644
      #   command: ["sh", "-c", "chmod -Rv 600 /data/*"]
 ```
 
-## 9.1.1 
+## 9.1.1  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-09-04
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update reference to using kubectl proxy to kubectl port-forward 
+* Update reference to using kubectl proxy to kubectl port-forward
 
 ### Default value changes
 
@@ -4280,15 +3147,11 @@ index 7b74a39..9f52c39 100644
      exposedPort: 9000
 ```
 
-## 9.1.0 
+## 9.1.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-24
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* PublishedService option 
+* PublishedService option
 
 ### Default value changes
 
@@ -4312,66 +3175,32 @@ index e161a14..7b74a39 100644
  # Add volumes to the traefik pod.
 ```
 
-## 9.0.0 
+## 9.0.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-21
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* feat: Move Chart apiVersion: v2
 
 
-* feat: Move Chart apiVersion: v2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.13.3 
+## 8.13.3  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-21
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* bug: Check for port config
 
 
-* bug: Check for port config 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.13.2 
+## 8.13.2  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-19
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix log level configuration
 
 
-* Fix log level configuration 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.13.1 
+## 8.13.1  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-18
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Dont redirect to websecure by default 
+* Dont redirect to websecure by default
 
 ### Default value changes
 
@@ -4391,16 +3220,11 @@ index 67276f7..e161a14 100644
      # hostPort: 8443
 ```
 
-## 8.13.0 
+## 8.13.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-18
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add logging, and http redirect config 
+* Add logging, and http redirect config
 
 ### Default value changes
 
@@ -4471,16 +3295,11 @@ index 6f79580..67276f7 100644
      # hostPort: 8443
 ```
 
-## 8.12.0 
+## 8.12.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-14
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add image pull policy 
+* Add image pull policy
 
 ### Default value changes
 
@@ -4499,16 +3318,11 @@ index 10b3949..6f79580 100644
  # Configure the deployment
 ```
 
-## 8.11.0 
+## 8.11.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-12
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add dns policy option 
+* Add dns policy option
 
 ### Default value changes
 
@@ -4528,16 +3342,11 @@ index 80ddaaa..10b3949 100644
  podDisruptionBudget:
 ```
 
-## 8.10.0 
+## 8.10.0  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-11
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add hostIp to port configuration 
+* Add hostIp to port configuration
 
 ### Default value changes
 
@@ -4561,16 +3370,11 @@ index 936ab92..80ddaaa 100644
      # NodePort.
 ```
 
-## 8.9.2 
+## 8.9.2  ![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-08-10
 
-![AppVersion: 2.2.8](https://img.shields.io/static/v1?label=AppVersion&message=2.2.8&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Bump Traefik to 2.2.8 
+* Bump Traefik to 2.2.8
 
 ### Default value changes
 
@@ -4590,16 +3394,11 @@ index 42ee893..936ab92 100644
  # Configure the deployment
 ```
 
-## 8.9.1 
+## 8.9.1  ![AppVersion: 2.2.5](https://img.shields.io/static/v1?label=AppVersion&message=2.2.5&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-07-15
 
-![AppVersion: 2.2.5](https://img.shields.io/static/v1?label=AppVersion&message=2.2.5&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Upgrade traefik version 
+* Upgrade traefik version
 
 ### Default value changes
 
@@ -4619,16 +3418,11 @@ index a7fb668..42ee893 100644
  # Configure the deployment
 ```
 
-## 8.9.0 
+## 8.9.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-07-08
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* run init container to set proper permissions on volume 
+* run init container to set proper permissions on volume
 
 ### Default value changes
 
@@ -4656,16 +3450,11 @@ index 62e3a77..a7fb668 100644
  podDisruptionBudget:
 ```
 
-## 8.8.1 
+## 8.8.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-07-02
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Additional container fix 
+* Additional container fix
 
 ### Default value changes
 
@@ -4685,16 +3474,11 @@ index 85df29c..62e3a77 100644
  podDisruptionBudget:
 ```
 
-## 8.8.0 
+## 8.8.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-07-01
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* added additionalContainers option to chart 
+* added additionalContainers option to chart
 
 ### Default value changes
 
@@ -4714,33 +3498,18 @@ index 6a9dfd8..85df29c 100644
  podDisruptionBudget:
 ```
 
-## 8.7.2 
+## 8.7.2  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-30
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Update image
 
 
-* Update image 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.7.1 
+## 8.7.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-26
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update values.yaml 
+* Update values.yaml
 
 ### Default value changes
 
@@ -4760,16 +3529,11 @@ index 05f9eab..6a9dfd8 100644
    # If not set, a service account is created automatically using the fullname template
 ```
 
-## 8.7.0 
+## 8.7.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-23
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add option to disable providers 
+* Add option to disable providers
 
 ### Default value changes
 
@@ -4797,33 +3561,18 @@ index 102ae00..05f9eab 100644
  # This can be used to mount a cert pair or a configmap that holds a config.toml file.
 ```
 
-## 8.6.1 
+## 8.6.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-18
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix read-only /tmp
 
 
-* Fix read-only /tmp 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.6.0 
+## 8.6.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-17
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add existing PVC support(#158) 
+* Add existing PVC support(#158)
 
 ### Default value changes
 
@@ -4842,16 +3591,11 @@ index b2f4fc3..102ae00 100644
    # storageClass: ""
 ```
 
-## 8.5.0 
+## 8.5.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-16
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* UDP support 
+* UDP support
 
 ### Default value changes
 
@@ -4887,16 +3631,11 @@ index 9a9b668..b2f4fc3 100644
  # Options for the main traefik service, where the entrypoints traffic comes
 ```
 
-## 8.4.1 
+## 8.4.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-10
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix PDB with minAvailable set 
+* Fix PDB with minAvailable set
 
 ### Default value changes
 
@@ -4916,16 +3655,11 @@ index e812b98..9a9b668 100644
  # Create an IngressRoute for the dashboard
 ```
 
-## 8.4.0 
+## 8.4.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-09
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add pod disruption budget (#192) 
+* Add pod disruption budget (#192)
 
 ### Default value changes
 
@@ -4949,16 +3683,11 @@ index 5f44e5c..e812b98 100644
    dashboard:
 ```
 
-## 8.3.0 
+## 8.3.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-06-08
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add option to disable RBAC and ServiceAccount 
+* Add option to disable RBAC and ServiceAccount
 
 ### Default value changes
 
@@ -4990,16 +3719,11 @@ index 96bba18..5f44e5c 100644
  
 ```
 
-## 8.2.1 
+## 8.2.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-05-25
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Remove suggested providers.kubernetesingress value 
+* Remove suggested providers.kubernetesingress value
 
 ### Default value changes
 
@@ -5022,33 +3746,18 @@ index e35bdf9..96bba18 100644
  # Environment variables to be passed to Traefik's binary
 ```
 
-## 8.2.0 
+## 8.2.0  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-05-18
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add kubernetes ingress by default
 
 
-* Add kubernetes ingress by default 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.1.5 
+## 8.1.5  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-05-18
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix example log params in values.yml 
+* Fix example log params in values.yml
 
 ### Default value changes
 
@@ -5072,16 +3781,11 @@ index abe2334..e35bdf9 100644
  env: []
 ```
 
-## 8.1.4 
+## 8.1.4  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-30
 
-![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update Traefik to v2.2.1 
+* Update Traefik to v2.2.1
 
 ### Default value changes
 
@@ -5101,16 +3805,11 @@ index 57cc7e1..abe2334 100644
  # Configure the deployment
 ```
 
-## 8.1.3 
+## 8.1.3  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-29
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Clarify additionnal arguments log 
+* Clarify additionnal arguments log
 
 ### Default value changes
 
@@ -5133,16 +3832,11 @@ index d639f72..57cc7e1 100644
  env: []
 ```
 
-## 8.1.2 
+## 8.1.2  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-23
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Remove invalid flags. (#161) 
+* Remove invalid flags. (#161)
 
 ### Default value changes
 
@@ -5162,33 +3856,18 @@ index 0e7aaef..d639f72 100644
  #   mountPath: "/certs"
 ```
 
-## 8.1.1 
+## 8.1.1  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-23
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* clarify project philosophy and guidelines
 
 
-* clarify project philosophy and guidelines 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.1.0 
+## 8.1.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-22
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add priorityClassName & securityContext 
+* Add priorityClassName & securityContext
 
 ### Default value changes
 
@@ -5220,16 +3899,11 @@ index d55a40a..0e7aaef 100644
 +  fsGroup: 65532
 ```
 
-## 8.0.4 
+## 8.0.4  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-20
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Possibility to bind environment variables via envFrom 
+* Possibility to bind environment variables via envFrom
 
 ### Default value changes
 
@@ -5253,16 +3927,11 @@ index 7f8092e..d55a40a 100644
    # The name of this one can't be changed as it is used for the readiness and
 ```
 
-## 8.0.3 
+## 8.0.3  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-15
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support for data volume subPath. (#147) 
+* Add support for data volume subPath. (#147)
 
 ### Default value changes
 
@@ -5281,16 +3950,11 @@ index 152339b..7f8092e 100644
  # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
 ```
 
-## 8.0.2 
+## 8.0.2  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-10
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Ability to add custom labels to dashboard's IngressRoute 
+* Ability to add custom labels to dashboard's IngressRoute
 
 ### Default value changes
 
@@ -5310,33 +3974,18 @@ index 5d294b7..152339b 100644
    maxUnavailable: 1
 ```
 
-## 8.0.1 
+## 8.0.1  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-10
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* rbac does not need "pods" per documentation
 
 
-* rbac does not need "pods" per documentation 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 8.0.0 
+## 8.0.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-07
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* follow helm best practices 
+* follow helm best practices
 
 ### Default value changes
 
@@ -5365,16 +4014,11 @@ index e61a9fd..5d294b7 100644
  rollingUpdate:
 ```
 
-## 7.2.1 
+## 7.2.1  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-07
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* add annotations to ingressRoute 
+* add annotations to ingressRoute
 
 ### Default value changes
 
@@ -5394,32 +4038,18 @@ index 15d1c25..e61a9fd 100644
    maxUnavailable: 1
 ```
 
-## 7.2.0 
+## 7.2.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-04-03
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add support for helm 2
 
 
-* Add support for helm 2 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 7.1.0 
+## 7.1.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-31
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support for externalIPs 
+* Add support for externalIPs
 
 ### Default value changes
 
@@ -5439,15 +4069,11 @@ index 6d6d13f..15d1c25 100644
  ##
 ```
 
-## 7.0.0 
+## 7.0.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-27
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Remove secretsEnv value key 
+* Remove secretsEnv value key
 
 ### Default value changes
 
@@ -5489,15 +4115,11 @@ index 1ac720d..6d6d13f 100644
  ports:
 ```
 
-## 6.4.0 
+## 6.4.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-27
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add ability to set serviceAccount annotations 
+* Add ability to set serviceAccount annotations
 
 ### Default value changes
 
@@ -5518,15 +4140,11 @@ index 85abe42..1ac720d 100644
    #   cpu: "100m"
 ```
 
-## 6.3.0 
+## 6.3.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-27
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* hpa 
+* hpa
 
 ### Default value changes
 
@@ -5560,15 +4178,11 @@ index 2f5d132..85abe42 100644
  # After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 ```
 
-## 6.2.0 
+## 6.2.0  ![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-26
 
-![AppVersion: 2.2.0](https://img.shields.io/static/v1?label=AppVersion&message=2.2.0&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Update to v2.2 (#96) 
+* Update to v2.2 (#96)
 
 ### Default value changes
 
@@ -5588,15 +4202,11 @@ index ebd2fde..2f5d132 100644
  # Configure the deployment
 ```
 
-## 6.1.2 
+## 6.1.2  ![AppVersion: 2.1.8](https://img.shields.io/static/v1?label=AppVersion&message=2.1.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-20
 
-![AppVersion: 2.1.8](https://img.shields.io/static/v1?label=AppVersion&message=2.1.8&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Upgrade traefik version 
+* Upgrade traefik version
 
 ### Default value changes
 
@@ -5616,15 +4226,11 @@ index 65c7665..ebd2fde 100644
  # Configure the deployment
 ```
 
-## 6.1.1 
+## 6.1.1  ![AppVersion: 2.1.4](https://img.shields.io/static/v1?label=AppVersion&message=2.1.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-20
 
-![AppVersion: 2.1.4](https://img.shields.io/static/v1?label=AppVersion&message=2.1.4&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Upgrade traefik version 
+* Upgrade traefik version
 
 ### Default value changes
 
@@ -5644,15 +4250,11 @@ index 89c7ac1..65c7665 100644
  # Configure the deployment
 ```
 
-## 6.1.0 
+## 6.1.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-20
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add ability to add annotations to deployment 
+* Add ability to add annotations to deployment
 
 ### Default value changes
 
@@ -5672,31 +4274,18 @@ index 8d66111..89c7ac1 100644
  
 ```
 
-## 6.0.2 
+## 6.0.2  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-16
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Correct storage class key name
 
 
-* Correct storage class key name 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 6.0.1 
+## 6.0.1  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-16
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Change default values of arrays from objects to actual arrays 
+* Change default values of arrays from objects to actual arrays
 
 ### Default value changes
 
@@ -5732,15 +4321,11 @@ index 490b2b6..8d66111 100644
  
 ```
 
-## 6.0.0 
+## 6.0.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-15
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Cleanup 
+* Cleanup
 
 ### Default value changes
 
@@ -5811,15 +4396,11 @@ index 7aebefe..490b2b6 100644
  # After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 ```
 
-## 5.6.0 
+## 5.6.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-12
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add field enabled for resources 
+* Add field enabled for resources
 
 ### Default value changes
 
@@ -5856,15 +4437,11 @@ index 38bb263..7aebefe 100644
    annotations: {}
 ```
 
-## 5.5.0 
+## 5.5.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-12
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* expose hostnetwork option 
+* expose hostnetwork option
 
 ### Default value changes
 
@@ -5906,15 +4483,11 @@ index ecb2833..38bb263 100644
  tolerations: []
 ```
 
-## 5.4.0 
+## 5.4.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-12
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add support for hostport 
+* Add support for hostport
 
 ### Default value changes
 
@@ -5951,15 +4524,11 @@ index ec1d619..ecb2833 100644
    # nodePort: 32443
 ```
 
-## 5.3.3 
+## 5.3.3  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-12
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Fix replica check 
+* Fix replica check
 
 ### Default value changes
 
@@ -5979,79 +4548,39 @@ index 7f31548..ec1d619 100644
  
 ```
 
-## 5.3.2 
+## 5.3.2  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-11
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fixed typo in README
 
 
-* Fixed typo in README 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 5.3.1 
+## 5.3.1  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-11
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Production ready
 
 
-* Production ready 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 5.3.0 
+## 5.3.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-11
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Not authorise acme if replica > 1
 
 
-* Not authorise acme if replica > 1 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 5.2.1 
+## 5.2.1  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-11
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Fix volume mount
 
 
-* Fix volume mount 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 5.2.0 
+## 5.2.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-11
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add secret as env var 
+* Add secret as env var
 
 ### Default value changes
 
@@ -6085,15 +4614,11 @@ index ccea845..7f31548 100644
  ports:
 ```
 
-## 5.1.0 
+## 5.1.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Enhance security by add loadBalancerSourceRanges to lockdown ip address. 
+* Enhance security by add loadBalancerSourceRanges to lockdown ip address.
 
 ### Default value changes
 
@@ -6114,15 +4639,11 @@ index 78bbee0..ccea845 100644
    loglevel: WARN
 ```
 
-## 5.0.0 
+## 5.0.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Expose dashboard by default but only on traefik entrypoint 
+* Expose dashboard by default but only on traefik entrypoint
 
 ### Default value changes
 
@@ -6149,15 +4670,11 @@ index a442fca..78bbee0 100644
  
 ```
 
-## 4.1.3 
+## 4.1.3  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add annotations for PVC (#98) 
+* Add annotations for PVC (#98)
 
 ### Default value changes
 
@@ -6176,15 +4693,11 @@ index 8b2f4db..a442fca 100644
    # requests:
 ```
 
-## 4.1.2 
+## 4.1.2  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Added persistent volume support. (#86) 
+* Added persistent volume support. (#86)
 
 ### Default value changes
 
@@ -6217,15 +4730,11 @@ index 2a2554f..8b2f4db 100644
    #   cpu: "100m"
 ```
 
-## 4.1.1 
+## 4.1.1  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add values to mount secrets or configmaps as volumes to the traefik pod (#84) 
+* Add values to mount secrets or configmaps as volumes to the traefik pod (#84)
 
 ### Default value changes
 
@@ -6260,15 +4769,11 @@ index 5401832..2a2554f 100644
  # Additional arguments to be passed at Traefik's binary
 ```
 
-## 4.1.0 
+## 4.1.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-10
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Add podAnnotations to the deployment (#83) 
+* Add podAnnotations to the deployment (#83)
 
 ### Default value changes
 
@@ -6288,51 +4793,27 @@ index 5eab74b..5401832 100644
    checkNewVersion: true
 ```
 
-## 4.0.0 
+## 4.0.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-03-06
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Migrate to helm v3 (#94)
 
 
-* Migrate to helm v3 (#94) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.5.0 
+## 3.5.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-02-18
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Publish helm chart (#81)
 
 
-* Publish helm chart (#81) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.4.0 
+## 3.4.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-02-13
 
-![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Enable configuration of global checknewversion and sendanonymoususage (#80) 
-* fix: tests. 
-* feat: bump traefik to v2.1.3 
+* Enable configuration of global checknewversion and sendanonymoususage (#80)
+* fix: tests.
+* feat: bump traefik to v2.1.3
 
 ### Default value changes
 
@@ -6363,68 +4844,33 @@ index bcc42f8..5eab74b 100644
    maxSurge: 1
 ```
 
-## 3.3.3 
+## 3.3.3  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-02-05
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: chart version.
+* fix: deployment environment variables.
 
 
-* fix: chart version. 
-* fix: deployment environment variables. 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.3.2 
+## 3.3.2  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-02-03
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* ix: deployment environment variables.
 
 
-* ix: deployment environment variables. 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.3.1 
+## 3.3.1  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-01-27
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* fix: deployment environment variables.
 
 
-* fix: deployment environment variables. 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.3.0 
+## 3.3.0  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-01-24
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Enable configuration of environment variables in traefik deployment (#71) 
+* Enable configuration of environment variables in traefik deployment (#71)
 
 ### Default value changes
 
@@ -6449,33 +4895,18 @@ index 4462359..bcc42f8 100644
    # The name of this one can't be changed as it is used for the readiness and
 ```
 
-## 3.2.1 
+## 3.2.1  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-01-22
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+* Add Unit Tests for the chart (#60)
 
 
-* Add Unit Tests for the chart (#60) 
-
-### Default value changes
-
-```diff
-# No changes in this release
-```
-
-## 3.2.0 
+## 3.2.0  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-01-22
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Make NodePort configurable (#67) 
+* Make NodePort configurable (#67)
 
 ### Default value changes
 
@@ -6501,16 +4932,11 @@ index b1fe42a..4462359 100644
  # from.
 ```
 
-## 3.1.0 
+## 3.1.0  ![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2020-01-20
 
-![AppVersion: 2.1.1](https://img.shields.io/static/v1?label=AppVersion&message=2.1.1&color=success&logo=)
-![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm)
-![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
-
-
-* Switch Chart linting to ct (#59) 
+* Switch Chart linting to ct (#59)
 
 ### Default value changes
 
