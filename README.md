@@ -112,7 +112,7 @@ With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Docume
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 ```
 
-### Upgrading 17.x to 18.x
+### Upgrading from 17.x to 18.x
 
 Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
 Load balancers with mixed protocols are available since v1.20 and in
@@ -131,6 +131,20 @@ On HTTP/3, if you want to avoid this issue, you can set
 If you were previously using HTTP/3, you should update your values as follows:
   - Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
   - Remove `experimental.http3.enabled=true` entry
+
+### Upgrading from 16.x to 17.x
+
+Since v17.x, this chart provides unified labels following
+[Kubernetes recommendation](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
+
+This version needs to change an immutable field, which is not supported by
+Kubernetes and Helm, see [this issue](https://github.com/helm/helm/issues/7350)
+for more details.
+So you will have to delete your `Service`,  `Deployment` or `DaemonSet` in
+order to be able to upgrade.
+
+You may also upgrade by deploying an other Traefik to another namespace and
+removing after your first Traefik.
 
 ## Contributing
 
