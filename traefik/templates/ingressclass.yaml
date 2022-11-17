@@ -16,7 +16,6 @@ metadata:
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
   name: {{ template "traefik.fullname" . }}
-  namespace: {{ template "traefik.namespace" . }}
 spec:
   controller: traefik.io/ingress-controller
 {{- end -}}
