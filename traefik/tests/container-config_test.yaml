@@ -175,3 +175,21 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "topologySpreadConstraints are supported only on kubernetes >= v1.19"
+  - it: should set instance label to release.name-release.namespace if no override is set
+    asserts:
+      - isSubset:
+          path: spec.selector
+          content: 
+            matchLabels:
+              app.kubernetes.io/name: traefik
+              app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+  - it: should set instance label to instanceLabelOverride if set
+    set:
+      instanceLabelOverride: traefik
+    asserts:
+      - isSubset:
+          path: spec.selector
+          content: 
+            matchLabels:
+              app.kubernetes.io/name: traefik
+              app.kubernetes.io/instance: traefik

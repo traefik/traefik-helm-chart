@@ -39,11 +39,18 @@ If release name contains chart name it will be used as a full name.
 {{- end -}}
 {{- end -}}
 
+{{/*
+Allow customization of the instance label value.
+*/}}
+{{- define "traefik.instance-name" -}}
+{{- default (printf "%s-%s" .Release.Name .Release.Namespace) .Values.instanceLabelOverride | trunc 63 | trimSuffix "-" -}}
+{{- end -}}
+
 {{/* Shared labels used for selector*/}}
 {{/* This is an immutable field: this should not change between upgrade */}}
 {{- define "traefik.labelselector" -}}
 app.kubernetes.io/name: {{ template "traefik.name" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}-{{ .Release.Namespace }}
+app.kubernetes.io/instance: {{ template "traefik.instance-name" . }}
 {{- end }}
 
 {{/* Shared labels used in metada */}}
