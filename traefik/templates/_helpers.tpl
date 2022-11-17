@@ -43,7 +43,7 @@ If release name contains chart name it will be used as a full name.
 Allow customization of the instance label value.
 */}}
 {{- define "traefik.instance-name" -}}
-{{- default (printf "%s-%s" .Release.Name .Release.Namespace) .Values.instanceNameOverride | trunc 63 | trimSuffix "-" -}}
+{{- default (printf "%s-%s" .Release.Name .Release.Namespace) .Values.instanceLabelOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Shared labels used for selector*/}}

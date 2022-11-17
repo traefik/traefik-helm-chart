@@ -183,9 +183,9 @@ tests:
             matchLabels:
               app.kubernetes.io/name: traefik
               app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
-  - it: should set instance label to instanceNameOverride if set
+  - it: should set instance label to instanceLabelOverride if set
     set:
-      instanceNameOverride: traefik
+      instanceLabelOverride: traefik
     asserts:
       - isSubset:
           path: spec.selector

@@ -146,7 +146,7 @@ order to be able to upgrade.
 You may also upgrade by deploying another Traefik to a different namespace and
 removing after your first Traefik.
 
-Alternatively, since version 20.3.0 of this chart, you may set `instanceNameOverride` to the previous value of that label.
+Alternatively, since version 20.3.0 of this chart, you may set `instanceLabelOverride` to the previous value of that label.
 This will override the new `Release.Name-Release.Namespace` pattern to avoid any (longer) downtime.
 
 ## Contributing

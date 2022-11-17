@@ -1,10 +1,32 @@
 # Change Log
 
-## 20.2.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+## 20.3.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-16
 
-* 🙈 do not namespace ingress class
+* Add option to override instance label value
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c7f84a7..ca15f6a 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -731,3 +731,6 @@ extraObjects: []
+ # This will override the default Release Namespace for Helm.
+ # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
+ # namespaceOverride: traefik
++#
++## This will override the default app.kubernetes.io/instance label for all Objects.
++# instanceLabelOverride: traefik
+```
+
+## 20.2.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-17
+
+* 🙈 do not namespace ingress class (#723)
 * ✨ copy LICENSE and README.md on release
 
 
