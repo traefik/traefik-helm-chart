@@ -1,8 +1,13 @@
-{{- if (and .Values.metrics.prometheus.service.enabled (not .Values.hub.enabled)) -}}
+{{- $fullname := include "traefik.fullname" . }}
+{{- if ge (len $fullname) 50 }}
+  {{- fail "ERROR: Cannot create a metrics service when name contains more than 50 characters" }}
+{{- end }}
+
+{{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) -}}
 apiVersion: v1
 kind: Service
 metadata:
-  name: traefik-metrics
+  name: {{ $fullname }}-metrics
   namespace: {{ template "traefik.namespace" . }}
   {{- template "traefik.metrics-service-metadata" . }}
   annotations:
@@ -12,7 +17,7 @@ metadata:
 spec:
   type: ClusterIP
   selector:
-    {{- include "traefik.metricslabelselector" . | nindent 4 }}
+    {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
   - port: {{ .Values.ports.metrics.port }}
     name: "metrics"

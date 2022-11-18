@@ -11,7 +11,7 @@ metadata:
   namespace: {{ . }}
   {{- end }}
   labels:
-    {{- if (and .Values.metrics.prometheus.service.enabled (not .Values.hub.enabled)) }}
+    {{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) }}
     {{- include "traefik.metricsservicelabels" . | nindent 4 }}
     {{- else }}
     {{- include "traefik.labels" . | nindent 4 }}
@@ -60,7 +60,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- if (and .Values.metrics.prometheus.service.enabled (not .Values.hub.enabled)) }}
+      {{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) }}
       {{- include "traefik.metricslabelselector" . | nindent 6 }}
       {{- else }}
       {{- include "traefik.labelselector" . | nindent 6 }}
