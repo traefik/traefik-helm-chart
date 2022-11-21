@@ -173,6 +173,10 @@ tests:
           path: metadata.namespace
           value: NAMESPACE
         template: rbac/role.yaml
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/serviceaccount.yaml
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
@@ -183,3 +187,7 @@ tests:
           path: metadata.namespace
           value: "traefik-ns-override"
         template: rbac/role.yaml
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+        template: rbac/serviceaccount.yaml
