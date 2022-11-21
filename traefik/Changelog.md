@@ -1,10 +1,17 @@
 # Change Log
 
+## 20.3.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-21
+
+* 🐛 Fix namespace override which was missing on `ServiceAccount`
+
+
 ## 20.3.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2022-11-16
+**Release date:** 2022-11-17
 
-* Add option to override instance label value
+* Add overwrite option for instance label value (#725)
 
 ### Default value changes
 
