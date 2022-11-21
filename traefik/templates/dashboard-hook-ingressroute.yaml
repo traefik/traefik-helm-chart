@@ -7,7 +7,7 @@ metadata:
   annotations:
     helm.sh/hook: "post-install,post-upgrade"
     meta.helm.sh/release-name: {{ .Release.Name }}
-    meta.helm.sh/release-namespace: {{ .Release.Namespace }}
+    meta.helm.sh/release-namespace: {{ template "traefik.namespace" . }}
     {{- with .Values.ingressRoute.dashboard.annotations }}
     {{- toYaml . | nindent 4 }}
     {{- end }}

@@ -191,3 +191,41 @@ tests:
           path: metadata.namespace
           value: "traefik-ns-override"
         template: rbac/serviceaccount.yaml
+  - it: should use helm managed namespace for clusterrolebinding sa
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: NAMESPACE
+        template: rbac/clusterrolebinding.yaml
+  - it: should accept overridden namespace for clusterrolebinding sa
+    set:
+      namespaceOverride: "traefik-ns-override"
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: "traefik-ns-override"
+        template: rbac/clusterrolebinding.yaml
+  - it: should use helm managed namespace for rolebinding sa
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: NAMESPACE
+        template: rbac/rolebinding.yaml
+  - it: should accept overridden namespace for rolebinding sa
+    set:
+      namespaceOverride: "traefik-ns-override"
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: "traefik-ns-override"
+        template: rbac/rolebinding.yaml
