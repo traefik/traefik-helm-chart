@@ -25,4 +25,4 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - 🐛 Fix namespace override which was missing on `ServiceAccount`
+    - Add (optional) dedicated metrics service

@@ -266,9 +266,9 @@ metrics:
   #    address: localhost:8125
 ##
 ##  enable optional CRDs for Prometheus Operator
-## 
-    # create a dedicated metrics service for use with servicemonitor
-    # will only be created, when enabled set to true and hub.enabled is false
+##
+  ## Create a dedicated metrics service for use with ServiceMonitor
+  ## When hub.enabled is set to true, it's not needed: it will use hub service.
   #  service:
   #    enabled: false
   #    labels: {}

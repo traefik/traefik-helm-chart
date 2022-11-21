@@ -27,3 +27,4 @@ spec:
     nodePort: {{ .Values.ports.metrics.nodePort }}
     {{- end }}
 {{- end -}}
+

@@ -24,9 +24,9 @@ tests:
           service:
             enabled: true
             labels:
-              custom-label: custom-value
+              custom-label: label-value
             annotations:
-              custom-annotation: custom-value
+              custom-annotation: annotation-value
     asserts:
       - hasDocuments:
           count: 1
@@ -35,10 +35,10 @@ tests:
           value: ClusterIP
       - equal:
           path: metadata.labels.custom-label
-          value: custom-value
+          value: label-value
       - equal:
           path: metadata.annotations.custom-annotation
-          value: custom-value
+          value: annotation-value
       - equal:
           path: spec.selector
           value:

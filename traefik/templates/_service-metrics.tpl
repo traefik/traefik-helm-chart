@@ -19,3 +19,4 @@ app.kubernetes.io/component: metrics
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
+
