@@ -267,6 +267,12 @@ metrics:
 ##
 ##  enable optional CRDs for Prometheus Operator
 ##
+  ## Create a dedicated metrics service for use with ServiceMonitor
+  ## When hub.enabled is set to true, it's not needed: it will use hub service.
+  #  service:
+  #    enabled: false
+  #    labels: {}
+  #    annotations: {}
   #  serviceMonitor:
   #    metricRelabelings: []
   #      - sourceLabels: [__name__]

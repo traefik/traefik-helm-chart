@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 20.3.1
+version: 20.4.0
 appVersion: v2.9.4
 keywords:
   - traefik
@@ -24,6 +24,5 @@ maintainers:
     email: charlie.haley@traefik.io
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
-  artifacthub.io/changes: "- Adds support for namespace overrides in subchart use\n- Document recent changes in the README (#717)\n"
   artifacthub.io/changes: |
-    - 🐛 Fix namespace override which was missing on `ServiceAccount`
+    - Add (optional) dedicated metrics service

@@ -1,0 +1,53 @@
+suite: Metrics Service configuration
+templates:
+  - service-metrics.yaml
+tests:
+  - it: should not provide a dedicated metrics service by default
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not provide a dedicated metrics service when hub is enabled
+    set:
+      hub:
+        enabled: true
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should provide a dedicated metrics service when enabled set to true
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+            labels:
+              custom-label: label-value
+            annotations:
+              custom-annotation: annotation-value
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: metadata.labels.custom-label
+          value: label-value
+      - equal:
+          path: metadata.annotations.custom-annotation
+          value: annotation-value
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+      - contains:
+          path: spec.ports
+          content:
+            port: 9100
+            name: "metrics"
+            targetPort: metrics
+            protocol: TCP

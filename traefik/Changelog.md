@@ -1,10 +1,39 @@
 # Change Log
 
+## 20.4.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-18
+
+* Add (optional) dedicated metrics service
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ca15f6a..46690aa 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -266,7 +266,13 @@ metrics:
+   #    address: localhost:8125
+ ##
+ ##  enable optional CRDs for Prometheus Operator
+ ##
++  ## Create a dedicated metrics service for use with ServiceMonitor
++  ## When hub.enabled is set to true, it's not needed: it will use hub service.
++  #  service:
++  #    enabled: false
++  #    labels: {}
++  #    annotations: {}
+   #  serviceMonitor:
+   #    metricRelabelings: []
+   #      - sourceLabels: [__name__]
+```
+
 ## 20.3.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-21
 
-* 🐛 Fix namespace override which was missing on `ServiceAccount`
+* 🐛 Fix namespace override which was missing on `ServiceAccount` (#731)
 
 
 ## 20.3.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
