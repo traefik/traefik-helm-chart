@@ -56,7 +56,7 @@ spec:
   {{ else }}
   namespaceSelector:
     matchNames:
-      - {{ .Release.Namespace }}
+      - {{ template "traefik.namespace" . }}
   {{- end }}
   selector:
     matchLabels:

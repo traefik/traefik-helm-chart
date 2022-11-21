@@ -1,0 +1,50 @@
+suite: NOTES.txt output
+templates:
+  - NOTES.txt
+tests:
+  - it: should use helm managed namespace in release notes output
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: raw
+          value: |
+
+
+            Traefik Proxy v2.9.4 has been deployed successfully
+            on NAMESPACE namespace !
+  - it: should use helm managed namespace in release notes output
+    set:
+      namespaceOverride: "traefik-ns-override"
+    asserts:
+      - equal:
+          path: raw
+          value: |
+
+
+            Traefik Proxy v2.9.4 has been deployed successfully
+            on traefik-ns-override namespace !
+
+  - it: should output hub related notes
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - equal:
+          path: raw
+          value: |
+
+
+            Traefik Proxy v2.9.4 has been deployed successfully
+            on NAMESPACE namespace !
+
+            Traefik Hub integration is enabled ! With your specific parameters,
+            `metricsURL`, `tunnelHost` and `tunnelPort` needs to be set accordingly
+            on hub-agent Helm Chart. Based on this Chart, it should be:
+
+              --set controllerDeployment.traefik.metricsURL=traefik-hub.NAMESPACE.svc.cluster.local:9100/metrics
+              --set tunnelDeployment.traefik.tunnelHost=traefik-hub.NAMESPACE.svc.cluster.local
+              --set tunnelDeployment.traefik.tunnelPort=9901
+
+            See https://doc.traefik.io/traefik-hub/install/#traefik-hub-agent-install-with-helmchart
