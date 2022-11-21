@@ -1,0 +1,48 @@
+suite: Traefik Metrics configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should have prometheus enabled by default on metrics entrypoint
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.entrypoint=metrics"
+  - it: should enable/disable labels if set
+    set:
+      metrics:
+        prometheus:
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addRoutersLabels=true"
+  - it: should be possible to change prometheus buckets
+    set:
+      metrics:
+        prometheus:
+          buckets: "0.5,1.0,2.5"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.buckets=0.5,1.0,2.5"
+  - it: should be possible to enable manualRouting on prometheus
+    set:
+      metrics:
+        prometheus:
+          manualRouting: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.manualrouting=true"
+

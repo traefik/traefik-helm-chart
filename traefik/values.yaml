@@ -254,16 +254,30 @@ logs:
           # Content-Type: keep
 
 metrics:
-  # datadog:
-  #   address: 127.0.0.1:8125
-  # influxdb:
-  #   address: localhost:8089
-  #   protocol: udp
   prometheus:
+    ## To enable Prometheus backend
+    enabled: true
+    ## Entry point used to expose metrics.
     entryPoint: metrics
-  #  addRoutersLabels: true
-  #  statsd:
-  #    address: localhost:8125
+    ## Enable metrics on entry points. Default=true
+    # addEntryPointsLabels: false
+    ## Enable metrics on routers. Default=false
+    # addRoutersLabels: true
+    ## Enable metrics on services. Default=true
+    # addServicesLabels: false
+    ## Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
+    # buckets: "0.5,1.0,2.5"
+    ## When manualRouting is true, it disables the default internal router in
+    ## order to allow creating a custom router for prometheus@internal service.
+    # manualRouting: true
+#  statsd:
+#    address: localhost:8125
+#  datadog:
+#    address: 127.0.0.1:8125
+#  influxdb:
+#    address: localhost:8089
+#    protocol: udp
+
 ##
 ##  enable optional CRDs for Prometheus Operator
 ##

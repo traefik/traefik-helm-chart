@@ -133,11 +133,23 @@
           - "--metrics.influxdb.address={{ .Values.metrics.influxdb.address }}"
           - "--metrics.influxdb.protocol={{ .Values.metrics.influxdb.protocol }}"
           {{- end }}
-          {{- if .Values.metrics.prometheus }}
+          {{- if .Values.metrics.prometheus.enabled }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
           {{- if (or .Values.metrics.prometheus.addRoutersLabels .Values.hub.enabled) }}
           - "--metrics.prometheus.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .Values.metrics.prometheus.addEntryPointsLabels false }}
+          - "--metrics.prometheus.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .Values.metrics.prometheus.addServicesLabels false }}
+          - "--metrics.prometheus.addServicesLabels=false"
+          {{- end }}
+          {{- if .Values.metrics.prometheus.buckets }}
+          - "--metrics.prometheus.buckets={{ .Values.metrics.prometheus.buckets }}"
+          {{- end }}
+          {{- if .Values.metrics.prometheus.manualRouting }}
+          - "--metrics.prometheus.manualrouting=true"
           {{- end }}
           {{- end }}
           {{- if .Values.metrics.statsd }}
