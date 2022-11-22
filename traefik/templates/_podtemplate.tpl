@@ -174,7 +174,28 @@
           {{- if eq .addServicesLabels false }}
           - "--metrics.influxdb.addServicesLabels=false"
           {{- end }}
-
+          {{- end }}
+          {{- with .Values.metrics.influxdb2 }}
+          - "--metrics.influxdb2=true"
+          - "--metrics.influxdb2.address={{ .address }}"
+          - "--metrics.influxdb2.token={{ .token }}"
+          - "--metrics.influxdb2.org={{ .org }}"
+          - "--metrics.influxdb2.bucket={{ .bucket }}"
+          {{- with .pushInterval }}
+          - "--metrics.influxdb2.pushInterval={{ . }}"
+          {{- end }}
+          {{- range $name, $value := .additionalLabels }}
+          - "--metrics.influxdb2.additionalLabels.{{ $name }}={{ $value }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.influxdb2.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.influxdb2.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.influxdb2.addServicesLabels=false"
+          {{- end }}
           {{- end }}
           {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"

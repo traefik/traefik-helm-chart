@@ -300,8 +300,29 @@ metrics:
 #    # pushInterval: 30s
 #    ## Additional labels (influxdb tags) on all metrics.
 #    # additionalLabels:
-     #   env: production
-     #   foo: bar
+#    #   env: production
+#    #   foo: bar
+#    ## Enable metrics on entry points. Default=true
+#    # addEntryPointsLabels: false
+#    ## Enable metrics on routers. Default=false
+#    # addRoutersLabels: true
+#    ## Enable metrics on services. Default=true
+#    # addServicesLabels: false
+#  influxdb2:
+#    ## Address instructs exporter to send metrics to influxdb v2 at this address.
+#    address: localhost:8086
+#    ## Token with which to connect to InfluxDB v2.
+#    token: xxx
+#    ## Organisation where metrics will be stored.
+#    org: ""
+#    ## Bucket where metrics will be stored.
+#    bucket: ""
+#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+#    # pushInterval: 30s
+#    ## Additional labels (influxdb tags) on all metrics.
+#    # additionalLabels:
+#    #   env: production
+#    #   foo: bar
 #    ## Enable metrics on entry points. Default=true
 #    # addEntryPointsLabels: false
 #    ## Enable metrics on routers. Default=false

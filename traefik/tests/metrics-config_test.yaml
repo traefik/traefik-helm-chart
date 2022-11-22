@@ -171,4 +171,59 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb.addRoutersLabels=true"
+  - it: should be possible to set specific parameters on influxdb v2
+    set:
+      metrics:
+        influxdb2:
+          address: "localhost:8089"
+          token: xxx-yyy-zzz
+          org: traefik
+          bucket: metrics
+          pushInterval: 30s
+          additionalLabels:
+            foo: bar
+            env: prod
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.address=localhost:8089"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.token=xxx-yyy-zzz"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.org=traefik"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.bucket=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.pushInterval=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.additionalLabels.foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.additionalLabels.env=prod"
+  - it: should enable/disable labels on influxdb if set
+    set:
+      metrics:
+        influxdb2:
+          address: "localhost:8089"
+          token: xxx-yyy-zzz
+          org: traefik
+          bucket: metrics
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addRoutersLabels=true"
 
