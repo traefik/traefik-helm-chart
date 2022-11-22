@@ -273,9 +273,9 @@ metrics:
 #  datadog:
 #    ## Address instructs exporter to send metrics to datadog-agent at this address.
 #    address: "127.0.0.1:8125"
-#    ## The interval used by the exporter to push metrics to datadog-agent. Optional, Default=10s
+#    ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
 #    # pushInterval: 30s
-#    ## The prefix to use for metrics collection. Optional, Default="traefik"
+#    ## The prefix to use for metrics collection. Default="traefik"
 #    # prefix: traefik
 #    ## Enable metrics on entry points. Default=true
 #    # addEntryPointsLabels: false
@@ -283,14 +283,35 @@ metrics:
 #    # addRoutersLabels: true
 #    ## Enable metrics on services. Default=true
 #    # addServicesLabels: false
+#  influxdb:
+#    ## Address instructs exporter to send metrics to influxdb at this address.
+#    address: localhost:8089
+#    ## InfluxDB's address protocol (udp or http). Default="udp"
+#    protocol: udp
+#    ## InfluxDB database used when protocol is http. Default=""
+#    # database: ""
+#    ## InfluxDB retention policy used when protocol is http. Default=""
+#    # retentionPolicy: ""
+#    ## InfluxDB username (only with http). Default=""
+#    # username: ""
+#    ## InfluxDB password (only with http). Default=""
+#    # password: ""
+#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+#    # pushInterval: 30s
+#    ## Additional labels (influxdb tags) on all metrics.
+#    # additionalLabels:
+     #   env: production
+     #   foo: bar
+#    ## Enable metrics on entry points. Default=true
+#    # addEntryPointsLabels: false
+#    ## Enable metrics on routers. Default=false
+#    # addRoutersLabels: true
+#    ## Enable metrics on services. Default=true
+#    # addServicesLabels: false
 
-#
 
 #  statsd:
 #    address: localhost:8125
-#  influxdb:
-#    address: localhost:8089
-#    protocol: udp
 
 ##
 ##  enable optional CRDs for Prometheus Operator

@@ -143,10 +143,38 @@
           - "--metrics.datadog.addServicesLabels=false"
           {{- end }}
           {{- end }}
-          {{- if .Values.metrics.influxdb }}
+          {{- with .Values.metrics.influxdb }}
           - "--metrics.influxdb=true"
-          - "--metrics.influxdb.address={{ .Values.metrics.influxdb.address }}"
-          - "--metrics.influxdb.protocol={{ .Values.metrics.influxdb.protocol }}"
+          - "--metrics.influxdb.address={{ .address }}"
+          - "--metrics.influxdb.protocol={{ .protocol }}"
+          {{- with .database }}
+          - "--metrics.influxdb.database={{ . }}"
+          {{- end }}
+          {{- with .retentionPolicy }}
+          - "--metrics.influxdb.retentionPolicy={{ . }}"
+          {{- end }}
+          {{- with .username }}
+          - "--metrics.influxdb.username={{ . }}"
+          {{- end }}
+          {{- with .password }}
+          - "--metrics.influxdb.password={{ . }}"
+          {{- end }}
+          {{- with .pushInterval }}
+          - "--metrics.influxdb.pushInterval={{ . }}"
+          {{- end }}
+          {{- range $name, $value := .additionalLabels }}
+          - "--metrics.influxdb.additionalLabels.{{ $name }}={{ $value }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.influxdb.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.influxdb.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.influxdb.addServicesLabels=false"
+          {{- end }}
+
           {{- end }}
           {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"
