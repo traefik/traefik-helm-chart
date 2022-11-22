@@ -10,7 +10,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.entrypoint=metrics"
-  - it: should enable/disable labels if set
+  - it: should enable/disable labels on prometheus if set
     set:
       metrics:
         prometheus:
@@ -45,4 +45,52 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.manualrouting=true"
-
+  - it: should be possible to enable datadog and disable prometheus
+    set:
+      metrics:
+        prometheus: null
+        datadog:
+          address: "localhost:8125"
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.entrypoint=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.address=localhost:8125"
+  - it: should enable/disable labels on datadog if set
+    set:
+      metrics:
+        datadog:
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addRoutersLabels=true"
+  - it: should be possible to set pushInterval and prefix on datadog
+    set:
+      metrics:
+        datadog:
+          pushInterval: 30s
+          prefix: foo
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.pushInterval=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.prefix=foo"

@@ -12,7 +12,7 @@ hub:
   ## Enabling Hub will:
   # * enable Traefik Hub integration on Traefik
   # * add `traefikhub-tunl` endpoint
-  # * enable addRoutersLabels on prometheus metrics
+  # * enable Prometheus metrics with addRoutersLabels
   # * enable allowExternalNameServices on KubernetesIngress provider
   # * enable allowCrossNamespace on KubernetesCRD provider
   # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
@@ -254,9 +254,9 @@ logs:
           # Content-Type: keep
 
 metrics:
+  ## Prometheus is enabled by default.
+  ## It can be disabled by setting "prometheus: null"
   prometheus:
-    ## To enable Prometheus backend
-    enabled: true
     ## Entry point used to expose metrics.
     entryPoint: metrics
     ## Enable metrics on entry points. Default=true
@@ -270,10 +270,24 @@ metrics:
     ## When manualRouting is true, it disables the default internal router in
     ## order to allow creating a custom router for prometheus@internal service.
     # manualRouting: true
+#  datadog:
+#    ## Address instructs exporter to send metrics to datadog-agent at this address.
+#    address: "127.0.0.1:8125"
+#    ## The interval used by the exporter to push metrics to datadog-agent. Optional, Default=10s
+#    # pushInterval: 30s
+#    ## The prefix to use for metrics collection. Optional, Default="traefik"
+#    # prefix: traefik
+#    ## Enable metrics on entry points. Default=true
+#    # addEntryPointsLabels: false
+#    ## Enable metrics on routers. Default=false
+#    # addRoutersLabels: true
+#    ## Enable metrics on services. Default=true
+#    # addServicesLabels: false
+
+#
+
 #  statsd:
 #    address: localhost:8125
-#  datadog:
-#    address: 127.0.0.1:8125
 #  influxdb:
 #    address: localhost:8089
 #    protocol: udp

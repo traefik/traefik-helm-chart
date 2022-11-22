@@ -122,10 +122,25 @@
           - "--api.dashboard=true"
           - "--ping=true"
           {{- if .Values.metrics }}
-          {{- if .Values.metrics.datadog }}
+          {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
-          {{- if .Values.metrics.datadog.address }}
-          - "--metrics.datadog.address={{ .Values.metrics.datadog.address }}"
+          {{- with .address }}
+          - "--metrics.datadog.address={{ . }}"
+          {{- end }}
+          {{- with .pushInterval }}
+          - "--metrics.datadog.pushInterval={{ . }}"
+          {{- end }}
+          {{- with .prefix }}
+          - "--metrics.datadog.prefix={{ . }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.datadog.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.datadog.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.datadog.addServicesLabels=false"
           {{- end }}
           {{- end }}
           {{- if .Values.metrics.influxdb }}
@@ -133,7 +148,7 @@
           - "--metrics.influxdb.address={{ .Values.metrics.influxdb.address }}"
           - "--metrics.influxdb.protocol={{ .Values.metrics.influxdb.protocol }}"
           {{- end }}
-          {{- if .Values.metrics.prometheus.enabled }}
+          {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
           {{- if (or .Values.metrics.prometheus.addRoutersLabels .Values.hub.enabled) }}
