@@ -329,10 +329,20 @@ metrics:
 #    # addRoutersLabels: true
 #    ## Enable metrics on services. Default=true
 #    # addServicesLabels: false
-
-
 #  statsd:
+#    ## Address instructs exporter to send metrics to statsd at this address.
 #    address: localhost:8125
+#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+#    # pushInterval: 30s
+#    ## The prefix to use for metrics collection. Default="traefik"
+#    # prefix: traefik
+#    ## Enable metrics on entry points. Default=true
+#    # addEntryPointsLabels: false
+#    ## Enable metrics on routers. Default=false
+#    # addRoutersLabels: true
+#    ## Enable metrics on services. Default=true
+#    # addServicesLabels: false
+
 
 ##
 ##  enable optional CRDs for Prometheus Operator

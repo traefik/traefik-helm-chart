@@ -205,7 +205,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb2.additionalLabels.env=prod"
-  - it: should enable/disable labels on influxdb if set
+  - it: should enable/disable labels on influxdb v2 if set
     set:
       metrics:
         influxdb2:
@@ -226,4 +226,39 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb2.addRoutersLabels=true"
+  - it: should be possible to set specific parameters on statsd
+    set:
+      metrics:
+        statsd:
+          address: "localhost:8125"
+          prefix: metrics
+          pushInterval: 30s
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.address=localhost:8125"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.prefix=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.pushInterval=30s"
+  - it: should enable/disable labels on statsd if set
+    set:
+      metrics:
+        statsd:
+          address: "localhost:8125"
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addRoutersLabels=true"
 

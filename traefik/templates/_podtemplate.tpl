@@ -216,10 +216,26 @@
           - "--metrics.prometheus.manualrouting=true"
           {{- end }}
           {{- end }}
-          {{- if .Values.metrics.statsd }}
+          {{- with .Values.metrics.statsd }}
           - "--metrics.statsd=true"
-          - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
+          - "--metrics.statsd.address={{ .address }}"
+          {{- with .pushInterval }}
+          - "--metrics.statsd.pushInterval={{ . }}"
           {{- end }}
+          {{- with .prefix }}
+          - "--metrics.statsd.prefix={{ . }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.statsd.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.statsd.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.statsd.addServicesLabels=false"
+          {{- end }}
+          {{- end }}
+
           {{- end }}
           {{- if .Values.tracing }}
           {{- if .Values.tracing.instana }}
