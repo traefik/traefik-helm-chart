@@ -2,8 +2,8 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 20.5.1
-appVersion: v2.9.4
+version: 20.5.2
+appVersion: v2.9.5
 keywords:
   - traefik
   - ingress
@@ -25,4 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - 🐛 Fix namespaceSelector on ServiceMonitor
+    - ⬆️i Update Traefik appVersion to 2.9.5
+    - 🐛 Use static appVersion for testing container config

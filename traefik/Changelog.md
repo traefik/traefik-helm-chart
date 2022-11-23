@@ -1,5 +1,13 @@
 # Change Log
 
+## 20.5.2  ![AppVersion: v2.9.5](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-23
+
+* ⬆️i Update Traefik appVersion to 2.9.5
+* 🐛 Use static appVersion for testing container config
+
+
 ## 20.5.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-23
