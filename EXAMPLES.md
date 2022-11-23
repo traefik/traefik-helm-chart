@@ -35,6 +35,18 @@ autoscaling:
         averageUtilization: 80
 ```
 
+# Access Traefik dashboard without exposing it
+
+This HelmChart does not expose the Traefik dashboard by default, for security concerns.
+Thus, there are multiple ways to expose the dashboard.
+For instance, the dashboard access could be achieved through a port-forward :
+
+```bash
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
+```
+
+Accessible with the url: http://127.0.0.1:9000/dashboard/
+
 # Publish and protect Traefik Dashboard with basic Auth
 
 To expose the dashboard in a secure way as [recommended](https://doc.traefik.io/traefik/operations/dashboard/#dashboard-router-rule)
