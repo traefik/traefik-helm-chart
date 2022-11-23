@@ -1,0 +1,264 @@
+suite: Traefik Metrics configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should have prometheus enabled by default on metrics entrypoint
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.entrypoint=metrics"
+  - it: should enable/disable labels on prometheus if set
+    set:
+      metrics:
+        prometheus:
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addRoutersLabels=true"
+  - it: should be possible to change prometheus buckets
+    set:
+      metrics:
+        prometheus:
+          buckets: "0.5,1.0,2.5"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.buckets=0.5,1.0,2.5"
+  - it: should be possible to enable manualRouting on prometheus
+    set:
+      metrics:
+        prometheus:
+          manualRouting: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.manualrouting=true"
+  - it: should be possible to enable datadog and disable prometheus
+    set:
+      metrics:
+        prometheus: null
+        datadog:
+          address: "localhost:8125"
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.entrypoint=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.address=localhost:8125"
+  - it: should enable/disable labels on datadog if set
+    set:
+      metrics:
+        datadog:
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addRoutersLabels=true"
+  - it: should be possible to set pushInterval and prefix on datadog
+    set:
+      metrics:
+        datadog:
+          pushInterval: 30s
+          prefix: foo
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.pushInterval=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.prefix=foo"
+  - it: should be possible to enable influxdb without disabling prometheus
+    set:
+      metrics:
+        influxdb:
+          address: "localhost:8089"
+          protocol: udp
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.entrypoint=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.address=localhost:8089"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.protocol=udp"
+  - it: should be possible to set specific parameters on influxdb
+    set:
+      metrics:
+        influxdb:
+          address: "localhost:8089"
+          protocol: udp
+          database: db
+          retentionPolicy: two_hours
+          username: john
+          password: doe
+          pushInterval: 30s
+          additionalLabels:
+            foo: bar
+            env: prod
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.database=db"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.retentionPolicy=two_hours"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.username=john"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.password=doe"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.pushInterval=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.additionalLabels.foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.additionalLabels.env=prod"
+  - it: should enable/disable labels on influxdb if set
+    set:
+      metrics:
+        influxdb:
+          address: "localhost:8089"
+          protocol: udp
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addRoutersLabels=true"
+  - it: should be possible to set specific parameters on influxdb v2
+    set:
+      metrics:
+        influxdb2:
+          address: "localhost:8089"
+          token: xxx-yyy-zzz
+          org: traefik
+          bucket: metrics
+          pushInterval: 30s
+          additionalLabels:
+            foo: bar
+            env: prod
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.address=localhost:8089"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.token=xxx-yyy-zzz"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.org=traefik"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.bucket=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.pushInterval=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.additionalLabels.foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.additionalLabels.env=prod"
+  - it: should enable/disable labels on influxdb v2 if set
+    set:
+      metrics:
+        influxdb2:
+          address: "localhost:8089"
+          token: xxx-yyy-zzz
+          org: traefik
+          bucket: metrics
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addRoutersLabels=true"
+  - it: should be possible to set specific parameters on statsd
+    set:
+      metrics:
+        statsd:
+          address: "localhost:8125"
+          prefix: metrics
+          pushInterval: 30s
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.address=localhost:8125"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.prefix=metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.pushInterval=30s"
+  - it: should enable/disable labels on statsd if set
+    set:
+      metrics:
+        statsd:
+          address: "localhost:8125"
+          addEntryPointsLabels: false
+          addServicesLabels: false
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addServicesLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addRoutersLabels=true"
+

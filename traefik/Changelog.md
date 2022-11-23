@@ -1,20 +1,156 @@
 # Change Log
 
-## 20.4.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+## 20.5.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2022-11-18
+**Release date:** 2022-11-22
 
-* Add (optional) dedicated metrics service
+* 🚀 Add complete support on metrics options
+* 🐛 make tests use fixed version
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index ca15f6a..46690aa 100644
+index e49d02d..15f1682 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
-@@ -266,7 +266,13 @@ metrics:
-   #    address: localhost:8125
+@@ -12,7 +12,7 @@ hub:
+   ## Enabling Hub will:
+   # * enable Traefik Hub integration on Traefik
+   # * add `traefikhub-tunl` endpoint
+-  # * enable addRoutersLabels on prometheus metrics
++  # * enable Prometheus metrics with addRoutersLabels
+   # * enable allowExternalNameServices on KubernetesIngress provider
+   # * enable allowCrossNamespace on KubernetesCRD provider
+   # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
+@@ -254,16 +254,96 @@ logs:
+           # Content-Type: keep
+ 
+ metrics:
+-  # datadog:
+-  #   address: 127.0.0.1:8125
+-  # influxdb:
+-  #   address: localhost:8089
+-  #   protocol: udp
++  ## Prometheus is enabled by default.
++  ## It can be disabled by setting "prometheus: null"
+   prometheus:
++    ## Entry point used to expose metrics.
+     entryPoint: metrics
+-  #  addRoutersLabels: true
+-  #  statsd:
+-  #    address: localhost:8125
++    ## Enable metrics on entry points. Default=true
++    # addEntryPointsLabels: false
++    ## Enable metrics on routers. Default=false
++    # addRoutersLabels: true
++    ## Enable metrics on services. Default=true
++    # addServicesLabels: false
++    ## Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
++    # buckets: "0.5,1.0,2.5"
++    ## When manualRouting is true, it disables the default internal router in
++    ## order to allow creating a custom router for prometheus@internal service.
++    # manualRouting: true
++#  datadog:
++#    ## Address instructs exporter to send metrics to datadog-agent at this address.
++#    address: "127.0.0.1:8125"
++#    ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
++#    # pushInterval: 30s
++#    ## The prefix to use for metrics collection. Default="traefik"
++#    # prefix: traefik
++#    ## Enable metrics on entry points. Default=true
++#    # addEntryPointsLabels: false
++#    ## Enable metrics on routers. Default=false
++#    # addRoutersLabels: true
++#    ## Enable metrics on services. Default=true
++#    # addServicesLabels: false
++#  influxdb:
++#    ## Address instructs exporter to send metrics to influxdb at this address.
++#    address: localhost:8089
++#    ## InfluxDB's address protocol (udp or http). Default="udp"
++#    protocol: udp
++#    ## InfluxDB database used when protocol is http. Default=""
++#    # database: ""
++#    ## InfluxDB retention policy used when protocol is http. Default=""
++#    # retentionPolicy: ""
++#    ## InfluxDB username (only with http). Default=""
++#    # username: ""
++#    ## InfluxDB password (only with http). Default=""
++#    # password: ""
++#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
++#    # pushInterval: 30s
++#    ## Additional labels (influxdb tags) on all metrics.
++#    # additionalLabels:
++#    #   env: production
++#    #   foo: bar
++#    ## Enable metrics on entry points. Default=true
++#    # addEntryPointsLabels: false
++#    ## Enable metrics on routers. Default=false
++#    # addRoutersLabels: true
++#    ## Enable metrics on services. Default=true
++#    # addServicesLabels: false
++#  influxdb2:
++#    ## Address instructs exporter to send metrics to influxdb v2 at this address.
++#    address: localhost:8086
++#    ## Token with which to connect to InfluxDB v2.
++#    token: xxx
++#    ## Organisation where metrics will be stored.
++#    org: ""
++#    ## Bucket where metrics will be stored.
++#    bucket: ""
++#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
++#    # pushInterval: 30s
++#    ## Additional labels (influxdb tags) on all metrics.
++#    # additionalLabels:
++#    #   env: production
++#    #   foo: bar
++#    ## Enable metrics on entry points. Default=true
++#    # addEntryPointsLabels: false
++#    ## Enable metrics on routers. Default=false
++#    # addRoutersLabels: true
++#    ## Enable metrics on services. Default=true
++#    # addServicesLabels: false
++#  statsd:
++#    ## Address instructs exporter to send metrics to statsd at this address.
++#    address: localhost:8125
++#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
++#    # pushInterval: 30s
++#    ## The prefix to use for metrics collection. Default="traefik"
++#    # prefix: traefik
++#    ## Enable metrics on entry points. Default=true
++#    # addEntryPointsLabels: false
++#    ## Enable metrics on routers. Default=false
++#    # addRoutersLabels: true
++#    ## Enable metrics on services. Default=true
++#    # addServicesLabels: false
++
++
+ ##
+ ##  enable optional CRDs for Prometheus Operator
+ ##
+```
+
+## 20.4.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-21
+
+* 🐛 fix namespace references to support namespaceOverride
+
+
+## 20.4.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-21
+
+* Add (optional) dedicated metrics service (#727)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ca15f6a..e49d02d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -267,6 +267,12 @@ metrics:
  ##
  ##  enable optional CRDs for Prometheus Operator
  ##

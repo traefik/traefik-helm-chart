@@ -122,28 +122,120 @@
           - "--api.dashboard=true"
           - "--ping=true"
           {{- if .Values.metrics }}
-          {{- if .Values.metrics.datadog }}
+          {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
-          {{- if .Values.metrics.datadog.address }}
-          - "--metrics.datadog.address={{ .Values.metrics.datadog.address }}"
+          {{- with .address }}
+          - "--metrics.datadog.address={{ . }}"
+          {{- end }}
+          {{- with .pushInterval }}
+          - "--metrics.datadog.pushInterval={{ . }}"
+          {{- end }}
+          {{- with .prefix }}
+          - "--metrics.datadog.prefix={{ . }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.datadog.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.datadog.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.datadog.addServicesLabels=false"
           {{- end }}
           {{- end }}
-          {{- if .Values.metrics.influxdb }}
+          {{- with .Values.metrics.influxdb }}
           - "--metrics.influxdb=true"
-          - "--metrics.influxdb.address={{ .Values.metrics.influxdb.address }}"
-          - "--metrics.influxdb.protocol={{ .Values.metrics.influxdb.protocol }}"
+          - "--metrics.influxdb.address={{ .address }}"
+          - "--metrics.influxdb.protocol={{ .protocol }}"
+          {{- with .database }}
+          - "--metrics.influxdb.database={{ . }}"
           {{- end }}
-          {{- if .Values.metrics.prometheus }}
+          {{- with .retentionPolicy }}
+          - "--metrics.influxdb.retentionPolicy={{ . }}"
+          {{- end }}
+          {{- with .username }}
+          - "--metrics.influxdb.username={{ . }}"
+          {{- end }}
+          {{- with .password }}
+          - "--metrics.influxdb.password={{ . }}"
+          {{- end }}
+          {{- with .pushInterval }}
+          - "--metrics.influxdb.pushInterval={{ . }}"
+          {{- end }}
+          {{- range $name, $value := .additionalLabels }}
+          - "--metrics.influxdb.additionalLabels.{{ $name }}={{ $value }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.influxdb.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.influxdb.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.influxdb.addServicesLabels=false"
+          {{- end }}
+          {{- end }}
+          {{- with .Values.metrics.influxdb2 }}
+          - "--metrics.influxdb2=true"
+          - "--metrics.influxdb2.address={{ .address }}"
+          - "--metrics.influxdb2.token={{ .token }}"
+          - "--metrics.influxdb2.org={{ .org }}"
+          - "--metrics.influxdb2.bucket={{ .bucket }}"
+          {{- with .pushInterval }}
+          - "--metrics.influxdb2.pushInterval={{ . }}"
+          {{- end }}
+          {{- range $name, $value := .additionalLabels }}
+          - "--metrics.influxdb2.additionalLabels.{{ $name }}={{ $value }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.influxdb2.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.influxdb2.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.influxdb2.addServicesLabels=false"
+          {{- end }}
+          {{- end }}
+          {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
           {{- if (or .Values.metrics.prometheus.addRoutersLabels .Values.hub.enabled) }}
           - "--metrics.prometheus.addRoutersLabels=true"
           {{- end }}
+          {{- if eq .Values.metrics.prometheus.addEntryPointsLabels false }}
+          - "--metrics.prometheus.addEntryPointsLabels=false"
           {{- end }}
-          {{- if .Values.metrics.statsd }}
+          {{- if eq .Values.metrics.prometheus.addServicesLabels false }}
+          - "--metrics.prometheus.addServicesLabels=false"
+          {{- end }}
+          {{- if .Values.metrics.prometheus.buckets }}
+          - "--metrics.prometheus.buckets={{ .Values.metrics.prometheus.buckets }}"
+          {{- end }}
+          {{- if .Values.metrics.prometheus.manualRouting }}
+          - "--metrics.prometheus.manualrouting=true"
+          {{- end }}
+          {{- end }}
+          {{- with .Values.metrics.statsd }}
           - "--metrics.statsd=true"
-          - "--metrics.statsd.address={{ .Values.metrics.statsd.address }}"
+          - "--metrics.statsd.address={{ .address }}"
+          {{- with .pushInterval }}
+          - "--metrics.statsd.pushInterval={{ . }}"
           {{- end }}
+          {{- with .prefix }}
+          - "--metrics.statsd.prefix={{ . }}"
+          {{- end }}
+          {{- if .addRoutersLabels}}
+          - "--metrics.statsd.addRoutersLabels=true"
+          {{- end }}
+          {{- if eq .addEntryPointsLabels false }}
+          - "--metrics.statsd.addEntryPointsLabels=false"
+          {{- end }}
+          {{- if eq .addServicesLabels false }}
+          - "--metrics.statsd.addServicesLabels=false"
+          {{- end }}
+          {{- end }}
+
           {{- end }}
           {{- if .Values.tracing }}
           {{- if .Values.tracing.instana }}
