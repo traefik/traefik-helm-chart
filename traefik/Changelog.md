@@ -1,10 +1,17 @@
 # Change Log
 
+## 20.5.1  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-23
+
+* 🐛 Fix namespaceSelector on ServiceMonitor (#737)
+
+
 ## 20.5.0  ![AppVersion: v2.9.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.4&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2022-11-22
+**Release date:** 2022-11-23
 
-* 🚀 Add complete support on metrics options
+* 🚀 Add complete support on metrics options (#735)
 * 🐛 make tests use fixed version
 
 ### Default value changes
