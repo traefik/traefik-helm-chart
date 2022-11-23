@@ -52,7 +52,7 @@ spec:
 {{- end }}
   {{- if .Values.metrics.prometheus.serviceMonitor.namespaceSelector }}
   namespaceSelector:
-    {{ toYaml .Values.metrics.prometheus.serviceMonitor.namespaceSelector | indent 4 -}}
+{{ toYaml .Values.metrics.prometheus.serviceMonitor.namespaceSelector | indent 4 -}}
   {{ else }}
   namespaceSelector:
     matchNames:
