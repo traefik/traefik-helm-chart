@@ -150,3 +150,26 @@ ports:
       enabled: true
 ```
 
+# Use ProxyProtocol on Digital Ocean
+
+PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
+
+```yaml
+service:
+  enabled: true
+  type: LoadBalancer
+  annotations:
+    # This will tell DigitalOcean to enable the proxy protocol.
+    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+  spec:
+    # This is the default and should stay as cluster to keep the DO health checks working.
+    externalTrafficPolicy: Cluster
+
+additionalArguments:
+  # Tell Traefik to only trust incoming headers from the Digital Ocean Load Balancers.
+  - "--entryPoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,10.120.0.0/16"
+  - "--entryPoints.websecure.proxyProtocol.trustedIPs=127.0.0.1/32,10.120.0.0/16"
+  # Also whitelist the source of headers to trust,  the private IPs on the load balancers displayed on the networking page of DO.
+  - "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
+  - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
+```
