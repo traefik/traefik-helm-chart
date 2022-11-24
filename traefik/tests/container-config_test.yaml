@@ -1,12 +1,14 @@
 suite: Main Container configuration
 templates:
   - deployment.yaml
+chart:
+  appVersion: v2.0.0
 tests:
   - it: should have the default Docker image when no value is specified
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik:v2.9.4
+          value: traefik:v2.0.0
   - it: should change image when image.tag value is specified
     set:
       image:
@@ -22,7 +24,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik/traefik:v2.9.4
+          value: traefik/traefik:v2.0.0
 
   - it: should have no resource limit by default
     asserts:
@@ -179,7 +181,7 @@ tests:
     asserts:
       - isSubset:
           path: spec.selector
-          content: 
+          content:
             matchLabels:
               app.kubernetes.io/name: traefik
               app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
@@ -189,7 +191,7 @@ tests:
     asserts:
       - isSubset:
           path: spec.selector
-          content: 
+          content:
             matchLabels:
               app.kubernetes.io/name: traefik
               app.kubernetes.io/instance: traefik
