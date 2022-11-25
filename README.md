@@ -26,7 +26,7 @@ If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or exte
 
 ### Prerequisites
 
-1. [x] Helm **v3** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
+1. [x] Helm **v3 > 3.9.0** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
 2. [x] Traefik's chart repository: `helm repo add traefik https://traefik.github.io/charts`
 
 ### Kubernetes Version Support
