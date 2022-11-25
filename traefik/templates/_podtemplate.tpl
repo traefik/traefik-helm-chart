@@ -136,10 +136,10 @@
           {{- if .addRoutersLabels}}
           - "--metrics.datadog.addRoutersLabels=true"
           {{- end }}
-          {{- if eq .addEntryPointsLabels false }}
+          {{- if eq (.addEntryPointsLabels | toString) "false" }}
           - "--metrics.datadog.addEntryPointsLabels=false"
           {{- end }}
-          {{- if eq .addServicesLabels false }}
+          {{- if eq (.addServicesLabels | toString) "false" }}
           - "--metrics.datadog.addServicesLabels=false"
           {{- end }}
           {{- end }}
@@ -168,10 +168,10 @@
           {{- if .addRoutersLabels}}
           - "--metrics.influxdb.addRoutersLabels=true"
           {{- end }}
-          {{- if eq .addEntryPointsLabels false }}
+          {{- if eq (.addEntryPointsLabels | toString) "false" }}
           - "--metrics.influxdb.addEntryPointsLabels=false"
           {{- end }}
-          {{- if eq .addServicesLabels false }}
+          {{- if eq (.addServicesLabels | toString) "false" }}
           - "--metrics.influxdb.addServicesLabels=false"
           {{- end }}
           {{- end }}
@@ -190,23 +190,24 @@
           {{- if .addRoutersLabels}}
           - "--metrics.influxdb2.addRoutersLabels=true"
           {{- end }}
-          {{- if eq .addEntryPointsLabels false }}
+          {{- if eq (.addEntryPointsLabels | toString) "false" }}
           - "--metrics.influxdb2.addEntryPointsLabels=false"
           {{- end }}
-          {{- if eq .addServicesLabels false }}
+          {{- if eq (.addServicesLabels | toString) "false" }}
           - "--metrics.influxdb2.addServicesLabels=false"
           {{- end }}
           {{- end }}
           {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
-          {{- if (or .Values.metrics.prometheus.addRoutersLabels .Values.hub.enabled) }}
+          {{- if (or (eq (.Values.metrics.prometheus.addRoutersLabels | toString) "true") .Values.hub.enabled) }}
           - "--metrics.prometheus.addRoutersLabels=true"
           {{- end }}
-          {{- if eq .Values.metrics.prometheus.addEntryPointsLabels false }}
+          {{- if eq (.Values.metrics.prometheus.addEntryPointsLabels | toString) "false" }}
+
           - "--metrics.prometheus.addEntryPointsLabels=false"
           {{- end }}
-          {{- if eq .Values.metrics.prometheus.addServicesLabels false }}
+          {{- if eq (.Values.metrics.prometheus.addServicesLabels| toString) "false" }}
           - "--metrics.prometheus.addServicesLabels=false"
           {{- end }}
           {{- if .Values.metrics.prometheus.buckets }}
@@ -228,10 +229,10 @@
           {{- if .addRoutersLabels}}
           - "--metrics.statsd.addRoutersLabels=true"
           {{- end }}
-          {{- if eq .addEntryPointsLabels false }}
+          {{- if eq (.addEntryPointsLabels | toString) "false" }}
           - "--metrics.statsd.addEntryPointsLabels=false"
           {{- end }}
-          {{- if eq .addServicesLabels false }}
+          {{- if eq (.addServicesLabels | toString) "false" }}
           - "--metrics.statsd.addServicesLabels=false"
           {{- end }}
           {{- end }}
