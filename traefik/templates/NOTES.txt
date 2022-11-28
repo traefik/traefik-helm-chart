@@ -10,7 +10,7 @@ Traefik Hub integration is enabled ! With your specific parameters,
 `metricsURL`, `tunnelHost` and `tunnelPort` needs to be set accordingly
 on hub-agent Helm Chart. Based on this Chart, it should be:
 
-  --set controllerDeployment.traefik.metricsURL=traefik-hub.{{ template "traefik.namespace" . }}.svc.cluster.local:{{ .Values.ports.metrics.port }}/metrics
+  --set controllerDeployment.traefik.metricsURL=http://traefik-hub.{{ template "traefik.namespace" . }}.svc.cluster.local:{{ .Values.ports.metrics.port }}/metrics
   --set tunnelDeployment.traefik.tunnelHost=traefik-hub.{{ template "traefik.namespace" . }}.svc.cluster.local
   --set tunnelDeployment.traefik.tunnelPort={{ default 9901 .Values.hub.tunnelPort }}
 

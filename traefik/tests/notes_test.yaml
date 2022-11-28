@@ -45,7 +45,7 @@ tests:
             `metricsURL`, `tunnelHost` and `tunnelPort` needs to be set accordingly
             on hub-agent Helm Chart. Based on this Chart, it should be:
 
-              --set controllerDeployment.traefik.metricsURL=traefik-hub.NAMESPACE.svc.cluster.local:9100/metrics
+              --set controllerDeployment.traefik.metricsURL=http://traefik-hub.NAMESPACE.svc.cluster.local:9100/metrics
               --set tunnelDeployment.traefik.tunnelHost=traefik-hub.NAMESPACE.svc.cluster.local
               --set tunnelDeployment.traefik.tunnelPort=9901
 
