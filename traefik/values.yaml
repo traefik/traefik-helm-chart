@@ -693,10 +693,7 @@ autoscaling:
 
 # Enable persistence using Persistent Volume Claims
 # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-# After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
-# additionalArguments:
-# - "--certificatesresolvers.le.acme.storage=/data/acme.json"
-# It will persist TLS certificates.
+# It can be used to store TLS certificates, see `storage` in certResolvers
 persistence:
   enabled: false
   name: data
@@ -726,7 +723,7 @@ certResolvers: {}
 #     tlsChallenge: true
 #     httpChallenge:
 #       entryPoint: "web"
-#     # match the path to persistence
+#     # It has to match the path with a persistent volume
 #     storage: /data/acme.json
 
 # If hostNetwork is true, runs traefik in the host network namespace

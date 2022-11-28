@@ -185,3 +185,24 @@ additionalArguments:
   - "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
   - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
 ```
+
+# Use Traefik Let's Encrypt Integration with CloudFlare
+
+It needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class
+
+```yaml
+persistence:
+  enabled: true
+  storageClass: xxx
+certResolvers:
+  letsencrypt:
+    dnsChallenge:
+      provider: cloudflare
+    storage: /data/acme.json
+env:
+  - name: CF_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: yyy
+        key: zzz
+```
