@@ -1,5 +1,101 @@
 # Change Log
 
+## 20.6.0  ![AppVersion: v2.9.5](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-11-30
+
+* 🔍️ Add filePath support on access logs
+* :bug: Add missing scheme in help on Traefik Hub integration (#746)
+* :memo: Improve documentation on using PVC with TLS certificates
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 15f1682..4f2fb2a 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -211,10 +211,10 @@ additionalVolumeMounts: []
+   # - name: traefik-logs
+   #   mountPath: /var/log/traefik
+ 
+-# Logs
+-# https://docs.traefik.io/observability/logs/
++## Logs
++## https://docs.traefik.io/observability/logs/
+ logs:
+-  # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
++  ## Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+   general:
+     # By default, the logs use a text format (common), but you can
+     # also ask for the json format in the format option
+@@ -224,31 +224,32 @@ logs:
+   access:
+     # To enable access logs
+     enabled: false
+-    # By default, logs are written using the Common Log Format (CLF).
+-    # To write logs in JSON, use json in the format option.
+-    # If the given format is unsupported, the default (CLF) is used instead.
++    ## By default, logs are written using the Common Log Format (CLF) on stdout.
++    ## To write logs in JSON, use json in the format option.
++    ## If the given format is unsupported, the default (CLF) is used instead.
+     # format: json
+-    # To write the logs in an asynchronous fashion, specify a bufferingSize option.
+-    # This option represents the number of log lines Traefik will keep in memory before writing
+-    # them to the selected output. In some cases, this option can greatly help performances.
++    # filePath: "/var/log/traefik/access.log
++    ## To write the logs in an asynchronous fashion, specify a bufferingSize option.
++    ## This option represents the number of log lines Traefik will keep in memory before writing
++    ## them to the selected output. In some cases, this option can greatly help performances.
+     # bufferingSize: 100
+-    # Filtering https://docs.traefik.io/observability/access-logs/#filtering
++    ## Filtering https://docs.traefik.io/observability/access-logs/#filtering
+     filters: {}
+       # statuscodes: "200,300-302"
+       # retryattempts: true
+       # minduration: 10ms
+-    # Fields
+-    # https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
++    ## Fields
++    ## https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
+     fields:
+       general:
+         defaultmode: keep
+         names: {}
+-          # Examples:
++          ## Examples:
+           # ClientUsername: drop
+       headers:
+         defaultmode: drop
+         names: {}
+-          # Examples:
++          ## Examples:
+           # User-Agent: redact
+           # Authorization: drop
+           # Content-Type: keep
+@@ -693,10 +694,7 @@ autoscaling:
+ 
+ # Enable persistence using Persistent Volume Claims
+ # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+-# After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
+-# additionalArguments:
+-# - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+-# It will persist TLS certificates.
++# It can be used to store TLS certificates, see `storage` in certResolvers
+ persistence:
+   enabled: false
+   name: data
+@@ -726,7 +724,7 @@ certResolvers: {}
+ #     tlsChallenge: true
+ #     httpChallenge:
+ #       entryPoint: "web"
+-#     # match the path to persistence
++#     # It has to match the path with a persistent volume
+ #     storage: /data/acme.json
+ 
+ # If hostNetwork is true, runs traefik in the host network namespace
+```
+
 ## 20.5.3  ![AppVersion: v2.9.5](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-25

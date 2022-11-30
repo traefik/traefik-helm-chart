@@ -482,6 +482,9 @@
           {{- if .access.format }}
           - "--accesslog.format={{ .access.format }}"
           {{- end }}
+          {{- if .access.filePath }}
+          - "--accesslog.filepath={{ .access.filePath }}"
+          {{- end }}
           {{- if .access.bufferingsize }}
           - "--accesslog.bufferingsize={{ .access.bufferingsize }}"
           {{- end }}

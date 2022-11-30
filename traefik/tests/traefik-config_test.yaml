@@ -385,3 +385,20 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.proxyProtocol.insecure"
+  - it: should be possible to configure access logs
+    set:
+      logs:
+        access:
+          enabled: true
+          format: json
+          filePath: "/data/log"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.format=json"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.filepath=/data/log"
