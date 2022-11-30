@@ -4,7 +4,7 @@
 
 **Release date:** 2022-11-30
 
-* 🔍️ Add filePath support on access logs
+* 🔍️ Add filePath support on access logs (#747)
 * :bug: Add missing scheme in help on Traefik Hub integration (#746)
 * :memo: Improve documentation on using PVC with TLS certificates
 
