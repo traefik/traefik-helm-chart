@@ -211,10 +211,10 @@ additionalVolumeMounts: []
   # - name: traefik-logs
   #   mountPath: /var/log/traefik
 
-# Logs
-# https://docs.traefik.io/observability/logs/
+## Logs
+## https://docs.traefik.io/observability/logs/
 logs:
-  # Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
+  ## Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:
     # By default, the logs use a text format (common), but you can
     # also ask for the json format in the format option
@@ -224,31 +224,32 @@ logs:
   access:
     # To enable access logs
     enabled: false
-    # By default, logs are written using the Common Log Format (CLF).
-    # To write logs in JSON, use json in the format option.
-    # If the given format is unsupported, the default (CLF) is used instead.
+    ## By default, logs are written using the Common Log Format (CLF) on stdout.
+    ## To write logs in JSON, use json in the format option.
+    ## If the given format is unsupported, the default (CLF) is used instead.
     # format: json
-    # To write the logs in an asynchronous fashion, specify a bufferingSize option.
-    # This option represents the number of log lines Traefik will keep in memory before writing
-    # them to the selected output. In some cases, this option can greatly help performances.
+    # filePath: "/var/log/traefik/access.log
+    ## To write the logs in an asynchronous fashion, specify a bufferingSize option.
+    ## This option represents the number of log lines Traefik will keep in memory before writing
+    ## them to the selected output. In some cases, this option can greatly help performances.
     # bufferingSize: 100
-    # Filtering https://docs.traefik.io/observability/access-logs/#filtering
+    ## Filtering https://docs.traefik.io/observability/access-logs/#filtering
     filters: {}
       # statuscodes: "200,300-302"
       # retryattempts: true
       # minduration: 10ms
-    # Fields
-    # https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
+    ## Fields
+    ## https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
     fields:
       general:
         defaultmode: keep
         names: {}
-          # Examples:
+          ## Examples:
           # ClientUsername: drop
       headers:
         defaultmode: drop
         names: {}
-          # Examples:
+          ## Examples:
           # User-Agent: redact
           # Authorization: drop
           # Content-Type: keep

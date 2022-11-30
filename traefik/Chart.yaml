@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 20.5.3
+version: 20.6.0
 appVersion: v2.9.5
 keywords:
   - traefik
@@ -25,4 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - 🐛 Fix template issue with obsolete helm version + add helm version requirement
+    - 🔍️ Add filePath support on access logs
+    - :bug: Add missing scheme in help on Traefik Hub integration (#746)
+    - :memo: Improve documentation on using PVC with TLS certificates
