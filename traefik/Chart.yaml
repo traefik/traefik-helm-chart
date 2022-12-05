@@ -7,6 +7,7 @@ appVersion: v2.9.5
 keywords:
   - traefik
   - ingress
+  - networking
 home: https://traefik.io/
 sources:
   - https://github.com/traefik/traefik
