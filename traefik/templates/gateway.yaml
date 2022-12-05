@@ -6,6 +6,10 @@ kind: Gateway
 metadata:
   name: traefik-gateway
   namespace: {{ default (include "traefik.namespace" .) .Values.experimental.kubernetesGateway.namespace }}
+  {{- with .Values.experimental.kubernetesGateway.gateway.annotations }}
+  annotations:
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
 spec:
   gatewayClassName: traefik
   listeners:
