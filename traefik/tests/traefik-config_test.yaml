@@ -392,6 +392,7 @@ tests:
           enabled: true
           format: json
           filePath: "/data/log"
+          bufferingSize: 100
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -402,3 +403,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.filepath=/data/log"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.bufferingsize=100"
