@@ -485,8 +485,8 @@
           {{- if .access.filePath }}
           - "--accesslog.filepath={{ .access.filePath }}"
           {{- end }}
-          {{- if .access.bufferingsize }}
-          - "--accesslog.bufferingsize={{ .access.bufferingsize }}"
+          {{- if .access.bufferingSize }}
+          - "--accesslog.bufferingsize={{ .access.bufferingSize }}"
           {{- end }}
           {{- if .access.filters }}
           {{- if .access.filters.statuscodes }}
