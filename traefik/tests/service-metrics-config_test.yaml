@@ -2,6 +2,13 @@ suite: Metrics Service configuration
 templates:
   - service-metrics.yaml
 tests:
+  - it: "should support prometheus: null"
+    set:
+      metrics:
+        prometheus: null
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: should not provide a dedicated metrics service by default
     asserts:
       - hasDocuments:
