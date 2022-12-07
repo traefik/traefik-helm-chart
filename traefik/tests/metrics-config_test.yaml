@@ -2,6 +2,13 @@ suite: Traefik Metrics configuration
 templates:
   - deployment.yaml
 tests:
+  - it: "should support to set prometheus: null"
+    set:
+      metrics:
+        prometheus: null
+    asserts:
+      - hasDocuments:
+          count: 1
   - it: should have prometheus enabled by default on metrics entrypoint
     asserts:
       - contains:
