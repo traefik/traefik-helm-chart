@@ -2,8 +2,8 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 20.6.0
-appVersion: v2.9.5
+version: 20.7.0
+appVersion: v2.9.6
 keywords:
   - traefik
   - ingress
@@ -26,6 +26,9 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "🔍️ Add filePath support on access logs (#747)"
-    - ":bug: Add missing scheme in help on Traefik Hub integration (#746)"
-    - ":memo: Improve documentation on using PVC with TLS certificates"
+    - "⬆️  Update default Traefik release to v2.9.6"
+    - "🐛 Don't fail when prometheus is disabled (#756)"
+    - ":bug: Fix typo on bufferingSize for access logs (#753)"
+    - "✨ support for Gateway annotations"
+    - "add keywords [networking], for artifacthub category quering"
+    - ":adhesive_bandage: Add quotes for artifacthub changelog parsing (#748)"

@@ -1,5 +1,45 @@
 # Change Log
 
+## 20.7.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-12-08
+
+* ⬆️  Update default Traefik release to v2.9.6
+* 🐛 Don't fail when prometheus is disabled (#756)
+* :bug: Fix typo on bufferingSize for access logs (#753)
+* ✨ support for Gateway annotations
+* add keywords [networking], for artifacthub category quering
+* :adhesive_bandage: Add quotes for artifacthub changelog parsing (#748)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 4f2fb2a..b77539d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -120,6 +120,9 @@ experimental:
+     # By default, Gateway would be created to the Namespace you are deploying Traefik to.
+     # You may create that Gateway in another namespace, setting its name below:
+     # namespace: default
++    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
++    # annotations:
++    #   cert-manager.io/issuer: letsencrypt
+ 
+ # Create an IngressRoute for the dashboard
+ ingressRoute:
+@@ -219,7 +222,8 @@ logs:
+     # By default, the logs use a text format (common), but you can
+     # also ask for the json format in the format option
+     # format: json
+-    # By default, the level is set to ERROR. Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
++    # By default, the level is set to ERROR.
++    # Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+     level: ERROR
+   access:
+     # To enable access logs
+```
+
 ## 20.6.0  ![AppVersion: v2.9.5](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.5&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-11-30
