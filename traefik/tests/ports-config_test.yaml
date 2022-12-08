@@ -147,3 +147,40 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.udp.address=:51/udp"
         template: deployment.yaml
+
+  - it: should set entrypoint to default when configured
+    template: deployment.yaml
+    set:
+      experimental:
+        v3:
+          enabled: true
+      ports:
+        web:
+          asDefault: true
+        websecure:
+          asDefault: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.asDefault=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.asDefault=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.asDefault=true"
+
+  - it: should throw and error when default entrypoint is enabled without traefik v3
+    template: deployment.yaml
+    set:
+      experimental:
+        v3:
+          enabled: false
+      ports:
+        web:
+          asDefault: true
+        websecure:
+          asDefault: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "Default entrypoints are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`."

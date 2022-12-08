@@ -117,6 +117,12 @@
           {{- range $name, $config := .Values.ports }}
           {{- if $config }}
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          {{- with $config.asDefault }}
+          {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
+            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
+          {{- end }}
+          - "--entrypoints.{{$name}}.asDefault={{ . }}"
+          {{- end }}
           {{- end }}
           {{- end }}
           - "--api.dashboard=true"
