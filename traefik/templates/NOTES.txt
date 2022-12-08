@@ -1,6 +1,6 @@
 
 
-Traefik Proxy {{ .Chart.AppVersion }} has been deployed successfully
+Traefik Proxy {{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully
 on {{ template "traefik.namespace" . }} namespace !
 
 {{- if .Values.hub.enabled }}
