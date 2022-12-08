@@ -1,10 +1,99 @@
 # Change Log
 
+## 20.8.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2022-12-08
+
+* ✨ update chart to version 20.8.0
+* ✨ add support for default entrypoints
+* ✨ add support for OpenTelemetry and Traefik v3
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index b77539d..42a27f9 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -107,6 +107,8 @@ ingressClass:
+ 
+ # Enable experimental features
+ experimental:
++  v3:
++    enabled: false
+   plugins:
+     enabled: false
+   kubernetesGateway:
+@@ -347,7 +349,43 @@ metrics:
+ #    # addRoutersLabels: true
+ #    ## Enable metrics on services. Default=true
+ #    # addServicesLabels: false
+-
++#  openTelemetry:
++#    ## Address of the OpenTelemetry Collector to send metrics to.
++#    address: "localhost:4318"
++#    ## Enable metrics on entry points.
++#    addEntryPointsLabels: true
++#    ## Enable metrics on routers.
++#    addRoutersLabels: true
++#    ## Enable metrics on services.
++#    addServicesLabels: true
++#    ## Explicit boundaries for Histogram data points.
++#    explicitBoundaries:
++#      - "0.1"
++#      - "0.3"
++#      - "1.2"
++#      - "5.0"
++#    ## Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
++#    headers:
++#      foo: bar
++#      test: test
++#    ## Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
++#    insecure: true
++#    ## Interval at which metrics are sent to the OpenTelemetry Collector.
++#    pushInterval: 10s
++#    ## Allows to override the default URL path used for sending metrics. This option has no effect when using gRPC transport.
++#    path: /foo/v1/traces
++#    ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
++#    tls:
++#      ## The path to the certificate authority, it defaults to the system bundle.
++#      ca: path/to/ca.crt
++#      ## The path to the public certificate. When using this option, setting the key option is required.
++#      cert: path/to/foo.cert
++#      ## The path to the private key. When using this option, setting the cert option is required.
++#      key: path/to/key.key
++#      ## If set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++#      insecureSkipVerify: true
++#    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
++#    grpc: true
+ 
+ ##
+ ##  enable optional CRDs for Prometheus Operator
+@@ -510,6 +548,8 @@ ports:
+     # The port protocol (TCP/UDP)
+     protocol: TCP
+   web:
++    ## Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
++    # asDefault: true
+     port: 8000
+     # hostPort: 8000
+     expose: true
+@@ -534,6 +574,8 @@ ports:
+     #   trustedIPs: []
+     #   insecure: false
+   websecure:
++    ## Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
++    # asDefault: true
+     port: 8443
+     # hostPort: 8443
+     expose: true
+```
+
 ## 20.7.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2022-12-08
 
-* ⬆️  Update default Traefik release to v2.9.6
+* ⬆️  Update default Traefik release to v2.9.6 (#758)
 * 🐛 Don't fail when prometheus is disabled (#756)
 * :bug: Fix typo on bufferingSize for access logs (#753)
 * ✨ support for Gateway annotations
