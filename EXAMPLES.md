@@ -60,15 +60,76 @@ ingressRoute:
   dashboard:
     enabled: true
     # Custom match rule with host domain
-    matchRule: Host(`traefik.example.com`)
+    matchRule: Host(`traefik-dashboard.example.com`)
     entryPoints: ["websecure"]
     # Add custom middlewares : authentication and redirection
     middlewares:
-      - name: traefik-dashboard-redirect
       - name: traefik-dashboard-auth
 
 # Create the custom middlewares used by the IngressRoute dashboard (can also be created in another way).
+# /!\ Yes, you need to replace "changeme" password with a better one. /!\
 extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: traefik-dashboard-auth-secret
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: admin
+      password: changeme
+
+  - apiVersion: traefik.containo.us/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-dashboard-auth
+    spec:
+      basicAuth:
+        secret: traefik-dashboard-auth-secret
+```
+
+# Publish and protect Traefik Dashboard with an Ingress
+
+To expose the dashboard without IngressRoute, it's more complicated and less
+secure. You'll need to create an internal Service exposing Traefik API with
+special _traefik_ entrypoint.
+
+You'll need to double check:
+1. Service selector with your setup.
+2. Middleware annotation on the ingress, _default_ should be replaced with traefik's namespace
+
+```yaml
+ingressRoute:
+  dashboard:
+    enabled: false
+additionalArguments:
+- "--api.insecure=true"
+# Create the service, middleware and Ingress used to expose the dashboard (can also be created in another way).
+# /!\ Yes, you need to replace "changeme" password with a better one. /!\
+extraObjects:
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-api
+    spec:
+      type: ClusterIP
+      selector:
+        app.kubernetes.io/name: traefik
+        app.kubernetes.io/instance: traefik-default
+      ports:
+      - port: 8080
+        name: traefik
+        targetPort: 9000
+        protocol: TCP
+
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: traefik-dashboard-auth-secret
+    type: kubernetes.io/basic-auth
+    stringData:
+      username: admin
+      password: changeme
+
   - apiVersion: traefik.containo.us/v1alpha1
     kind: Middleware
     metadata:
@@ -77,16 +138,27 @@ extraObjects:
       basicAuth:
         secret: traefik-dashboard-auth-secret
 
-  - apiVersion: traefik.containo.us/v1alpha1
-    kind: Middleware
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
     metadata:
-      name: traefik-dashboard-redirect
+      name: traefik-dashboard
+      annotations:
+        traefik.ingress.kubernetes.io/router.entrypoints: websecure
+        traefik.ingress.kubernetes.io/router.middlewares: default-traefik-dashboard-auth@kubernetescrd
     spec:
-      redirectRegex:
-        permanent: true
-        regex: ^(https?:\/\/(\[[\w:.]+\]|[\w\._-]+)(:\d+)?)\/$
-        replacement: ${1}/dashboard/
+      rules:
+      - host: traefik-dashboard.example.com
+        http:
+          paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: traefik-api
+                port:
+                  name: traefik
 ```
+
 
 # Install on AWS
 
