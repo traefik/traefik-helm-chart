@@ -548,6 +548,8 @@ ports:
     # The port protocol (TCP/UDP)
     protocol: TCP
   web:
+    ## Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
+    # asDefault: true
     port: 8000
     # hostPort: 8000
     expose: true
@@ -572,6 +574,8 @@ ports:
     #   trustedIPs: []
     #   insecure: false
   websecure:
+    ## Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
+    # asDefault: true
     port: 8443
     # hostPort: 8443
     expose: true
