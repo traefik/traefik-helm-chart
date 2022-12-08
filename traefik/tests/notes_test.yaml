@@ -50,3 +50,16 @@ tests:
               --set tunnelDeployment.traefik.tunnelPort=9901
 
             See https://doc.traefik.io/traefik-hub/install/#traefik-hub-agent-install-with-helmchart
+
+  - it: should use tag version in release notes output if set
+    set:
+      image:
+        tag: v3.0
+    asserts:
+      - equal:
+          path: raw
+          value: |
+
+
+            Traefik Proxy v3.0 has been deployed successfully
+            on NAMESPACE namespace !
