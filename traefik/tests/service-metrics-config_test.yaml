@@ -2,6 +2,12 @@ suite: Metrics Service configuration
 templates:
   - service-metrics.yaml
 tests:
+  - it: "should not fail with long name by default"
+    release:
+      name: thisisaverylongreleasenameinordertotriggerit
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: "should support prometheus: null"
     set:
       metrics:
