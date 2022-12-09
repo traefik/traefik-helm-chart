@@ -1,11 +1,11 @@
+{{- if .Values.metrics.prometheus }}
+{{- if .Values.metrics.prometheus.service }}
+{{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) -}}
+
 {{- $fullname := include "traefik.fullname" . }}
 {{- if ge (len $fullname) 50 }}
   {{- fail "ERROR: Cannot create a metrics service when name contains more than 50 characters" }}
 {{- end }}
-
-{{- if .Values.metrics.prometheus }}
-{{- if .Values.metrics.prometheus.service }}
-{{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) -}}
 apiVersion: v1
 kind: Service
 metadata:
