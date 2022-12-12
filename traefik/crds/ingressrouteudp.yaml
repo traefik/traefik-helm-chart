@@ -6,9 +6,9 @@ metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.6.2
   creationTimestamp: null
-  name: ingressrouteudps.traefik.containo.us
+  name: ingressrouteudps.traefik.io
 spec:
-  group: traefik.containo.us
+  group: traefik.io
   names:
     kind: IngressRouteUDP
     listKind: IngressRouteUDPList
@@ -16,7 +16,7 @@ spec:
     singular: ingressrouteudp
   scope: Namespaced
   versions:
-  - name: v1alpha1
+  - name: v1
     schema:
       openAPIV3Schema:
         description: IngressRouteUDP is a CRD implementation of a Traefik UDP Router.
@@ -39,7 +39,7 @@ spec:
               entryPoints:
                 description: 'EntryPoints defines the list of entry point names to
                   bind to. Entry points have to be configured in the static configuration.
-                  More info: https://doc.traefik.io/traefik/v2.9/routing/entrypoints/
+                  More info: https://doc.traefik.io/traefik/v3.0/routing/entrypoints/
                   Default: all.'
                 items:
                   type: string
