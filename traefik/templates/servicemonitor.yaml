@@ -1,8 +1,10 @@
 {{- if .Values.metrics.prometheus }}
 {{- if .Values.metrics.prometheus.serviceMonitor }}
-{{- if (not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1")) }}
-  {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
-{{- end }}
+  {{- if (not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1")) }}
+    {{- if (not (.Values.metrics.prometheus.disableAPICheck)) }}
+      {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
+    {{- end }}
+  {{- end }}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
