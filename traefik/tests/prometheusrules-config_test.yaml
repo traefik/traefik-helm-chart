@@ -12,6 +12,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "You have to deploy monitoring.coreos.com/v1 first"
+  - it: should successfully provide PrometheusRules when disabling API check
+    values:
+      - ./values/prometheusrules.yaml
+    set:
+      metrics:
+        prometheus:
+          disableAPICheck: true
+    asserts:
+      - hasDocuments:
+          count: 1
   - it: should successfully provide PrometheusRules with the API and example values
     values:
       - ./values/prometheusrules.yaml
