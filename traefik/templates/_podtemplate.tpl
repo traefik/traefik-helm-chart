@@ -440,7 +440,7 @@
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
-          {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
+          {{- if (or .Values.providers.kubernetesIngress.allowExternalNameServices .Values.hub.enabled) }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.allowEmptyServices }}
