@@ -53,6 +53,23 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.addRoutersLabels=true"
+  - it: should explicitely enable all labels on prometheus if set
+    set:
+      metrics:
+        prometheus:
+          addEntryPointsLabels: true
+          addServicesLabels: true
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addEntryPointsLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addServicesLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.addRoutersLabels=true"
   - it: should be possible to change prometheus buckets
     set:
       metrics:
@@ -107,6 +124,23 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.datadog.addRoutersLabels=true"
+  - it: should explicitely enable all labels on datadog if set
+    set:
+      metrics:
+        datadog:
+          addEntryPointsLabels: true
+          addServicesLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addEntryPointsLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addServicesLabels=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.datadog.addRoutersLabels=<nil>"
+
   - it: should be possible to set pushInterval and prefix on datadog
     set:
       metrics:
@@ -197,6 +231,25 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb.addRoutersLabels=true"
+  - it: should explicitely enable all labels on influxdb if set
+    set:
+      metrics:
+        influxdb:
+          address: "localhost:8089"
+          protocol: udp
+          addEntryPointsLabels: true
+          addServicesLabels: true
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addEntryPointsLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addServicesLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb.addRoutersLabels=true"
   - it: should be possible to set specific parameters on influxdb v2
     set:
       metrics:
@@ -231,6 +284,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb2.additionalLabels.env=prod"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          pattern: "--metrics.influxdb2.addEntryPointsLabels=<nil>"
   - it: should enable/disable labels on influxdb v2 if set
     set:
       metrics:
@@ -252,6 +308,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.influxdb2.addRoutersLabels=true"
+  - it: should explicitely enable all labels on influxdb v2 if set
+    set:
+      metrics:
+        influxdb2:
+          address: "localhost:8089"
+          token: xxx-yyy-zzz
+          org: traefik
+          bucket: metrics
+          addEntryPointsLabels: true
+          addServicesLabels: true
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addEntryPointsLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addServicesLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.influxdb2.addRoutersLabels=true"
+
   - it: should be possible to set specific parameters on statsd
     set:
       metrics:
@@ -287,7 +365,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.statsd.addRoutersLabels=true"
-
+  - it: should explicitely enable all labels on statsd if set
+    set:
+      metrics:
+        statsd:
+          address: "localhost:8125"
+          addEntryPointsLabels: true
+          addServicesLabels: true
+          addRoutersLabels: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addEntryPointsLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addServicesLabels=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.statsd.addRoutersLabels=true"
   - it: should be possible to set specific parameters on openTelemetry
     set:
       experimental:
@@ -341,7 +436,27 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.openTelemetry.headers.test=test"
-
+  - it: should be possible to disable labels on openTelemetry
+    set:
+      experimental:
+        v3:
+          enabled: true
+      metrics:
+        openTelemetry:
+          address: "localhost:4318"
+          addEntryPointsLabels: false
+          addRoutersLabels: false
+          addServicesLabels: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.openTelemetry.addEntryPointsLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.openTelemetry.addRoutersLabels=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.openTelemetry.addServicesLabels=false"
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       experimental:
