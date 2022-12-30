@@ -4,6 +4,7 @@ description: A Traefik based Kubernetes ingress controller
 type: application
 version: 20.8.0
 appVersion: v2.9.6
+kubeVersion: ">=1.16.0-0"
 keywords:
   - traefik
   - ingress
