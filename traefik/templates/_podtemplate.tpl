@@ -131,57 +131,69 @@
           {{- if .Values.metrics }}
           {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
-          {{- with .address }}
+           {{- with .address }}
           - "--metrics.datadog.address={{ . }}"
-          {{- end }}
-          {{- with .pushInterval }}
+           {{- end }}
+           {{- with .pushInterval }}
           - "--metrics.datadog.pushInterval={{ . }}"
-          {{- end }}
-          {{- with .prefix }}
+           {{- end }}
+           {{- with .prefix }}
           - "--metrics.datadog.prefix={{ . }}"
-          {{- end }}
-          {{- if .addRoutersLabels}}
-          - "--metrics.datadog.addRoutersLabels=true"
-          {{- end }}
-          {{- if eq (.addEntryPointsLabels | toString) "false" }}
-          - "--metrics.datadog.addEntryPointsLabels=false"
-          {{- end }}
-          {{- if eq (.addServicesLabels | toString) "false" }}
-          - "--metrics.datadog.addServicesLabels=false"
-          {{- end }}
+           {{- end }}
+           {{- if ne .addRoutersLabels nil }}
+            {{- with .addRoutersLabels | toString }}
+          - "--metrics.datadog.addRoutersLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addEntryPointsLabels nil }}
+            {{- with .addEntryPointsLabels | toString }}
+          - "--metrics.datadog.addEntryPointsLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addServicesLabels nil }}
+            {{- with .addServicesLabels | toString }}
+          - "--metrics.datadog.addServicesLabels={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
 
           {{- with .Values.metrics.influxdb }}
           - "--metrics.influxdb=true"
           - "--metrics.influxdb.address={{ .address }}"
           - "--metrics.influxdb.protocol={{ .protocol }}"
-          {{- with .database }}
+           {{- with .database }}
           - "--metrics.influxdb.database={{ . }}"
-          {{- end }}
-          {{- with .retentionPolicy }}
+           {{- end }}
+           {{- with .retentionPolicy }}
           - "--metrics.influxdb.retentionPolicy={{ . }}"
-          {{- end }}
-          {{- with .username }}
+           {{- end }}
+           {{- with .username }}
           - "--metrics.influxdb.username={{ . }}"
-          {{- end }}
-          {{- with .password }}
+           {{- end }}
+           {{- with .password }}
           - "--metrics.influxdb.password={{ . }}"
-          {{- end }}
-          {{- with .pushInterval }}
+           {{- end }}
+           {{- with .pushInterval }}
           - "--metrics.influxdb.pushInterval={{ . }}"
-          {{- end }}
-          {{- range $name, $value := .additionalLabels }}
+           {{- end }}
+           {{- range $name, $value := .additionalLabels }}
           - "--metrics.influxdb.additionalLabels.{{ $name }}={{ $value }}"
-          {{- end }}
-          {{- if .addRoutersLabels}}
-          - "--metrics.influxdb.addRoutersLabels=true"
-          {{- end }}
-          {{- if eq (.addEntryPointsLabels | toString) "false" }}
-          - "--metrics.influxdb.addEntryPointsLabels=false"
-          {{- end }}
-          {{- if eq (.addServicesLabels | toString) "false" }}
-          - "--metrics.influxdb.addServicesLabels=false"
-          {{- end }}
+           {{- end }}
+           {{- if ne .addRoutersLabels nil }}
+            {{- with .addRoutersLabels | toString }}
+          - "--metrics.influxdb.addRoutersLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addEntryPointsLabels nil }}
+            {{- with .addEntryPointsLabels | toString }}
+          - "--metrics.influxdb.addEntryPointsLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addServicesLabels nil }}
+            {{- with .addServicesLabels | toString }}
+          - "--metrics.influxdb.addServicesLabels={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
 
           {{- with .Values.metrics.influxdb2 }}
@@ -190,21 +202,27 @@
           - "--metrics.influxdb2.token={{ .token }}"
           - "--metrics.influxdb2.org={{ .org }}"
           - "--metrics.influxdb2.bucket={{ .bucket }}"
-          {{- with .pushInterval }}
+           {{- with .pushInterval }}
           - "--metrics.influxdb2.pushInterval={{ . }}"
-          {{- end }}
-          {{- range $name, $value := .additionalLabels }}
+           {{- end }}
+           {{- range $name, $value := .additionalLabels }}
           - "--metrics.influxdb2.additionalLabels.{{ $name }}={{ $value }}"
-          {{- end }}
-          {{- if .addRoutersLabels}}
-          - "--metrics.influxdb2.addRoutersLabels=true"
-          {{- end }}
-          {{- if eq (.addEntryPointsLabels | toString) "false" }}
-          - "--metrics.influxdb2.addEntryPointsLabels=false"
-          {{- end }}
-          {{- if eq (.addServicesLabels | toString) "false" }}
-          - "--metrics.influxdb2.addServicesLabels=false"
-          {{- end }}
+           {{- end }}
+           {{- if ne .addRoutersLabels nil }}
+            {{- with .addRoutersLabels | toString }}
+          - "--metrics.influxdb2.addRoutersLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addEntryPointsLabels nil }}
+            {{- with .addEntryPointsLabels | toString }}
+          - "--metrics.influxdb2.addEntryPointsLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addServicesLabels nil }}
+            {{- with .addServicesLabels | toString }}
+          - "--metrics.influxdb2.addServicesLabels={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
           {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
           - "--metrics.prometheus=true"
@@ -212,12 +230,15 @@
           {{- if (or (eq (.Values.metrics.prometheus.addRoutersLabels | toString) "true") .Values.hub.enabled) }}
           - "--metrics.prometheus.addRoutersLabels=true"
           {{- end }}
-          {{- if eq (.Values.metrics.prometheus.addEntryPointsLabels | toString) "false" }}
-
-          - "--metrics.prometheus.addEntryPointsLabels=false"
+          {{- if ne .Values.metrics.prometheus.addEntryPointsLabels nil }}
+           {{- with .Values.metrics.prometheus.addEntryPointsLabels | toString }}
+          - "--metrics.prometheus.addEntryPointsLabels={{ . }}"
+           {{- end }}
           {{- end }}
-          {{- if eq (.Values.metrics.prometheus.addServicesLabels| toString) "false" }}
-          - "--metrics.prometheus.addServicesLabels=false"
+          {{- if ne .Values.metrics.prometheus.addServicesLabels nil }}
+           {{- with .Values.metrics.prometheus.addServicesLabels| toString }}
+          - "--metrics.prometheus.addServicesLabels={{ . }}"
+           {{- end }}
           {{- end }}
           {{- if .Values.metrics.prometheus.buckets }}
           - "--metrics.prometheus.buckets={{ .Values.metrics.prometheus.buckets }}"
@@ -229,74 +250,84 @@
           {{- with .Values.metrics.statsd }}
           - "--metrics.statsd=true"
           - "--metrics.statsd.address={{ .address }}"
-          {{- with .pushInterval }}
+           {{- with .pushInterval }}
           - "--metrics.statsd.pushInterval={{ . }}"
-          {{- end }}
-          {{- with .prefix }}
+           {{- end }}
+           {{- with .prefix }}
           - "--metrics.statsd.prefix={{ . }}"
-          {{- end }}
-          {{- if .addRoutersLabels}}
+           {{- end }}
+           {{- if .addRoutersLabels}}
           - "--metrics.statsd.addRoutersLabels=true"
-          {{- end }}
-          {{- if eq (.addEntryPointsLabels | toString) "false" }}
-          - "--metrics.statsd.addEntryPointsLabels=false"
-          {{- end }}
-          {{- if eq (.addServicesLabels | toString) "false" }}
-          - "--metrics.statsd.addServicesLabels=false"
-          {{- end }}
+           {{- end }}
+           {{- if ne .addEntryPointsLabels nil }}
+            {{- with .addEntryPointsLabels | toString }}
+          - "--metrics.statsd.addEntryPointsLabels={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{- if ne .addServicesLabels nil }}
+            {{- with .addServicesLabels | toString }}
+          - "--metrics.statsd.addServicesLabels={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
 
           {{- end }}
 
           {{- with .Values.metrics.openTelemetry }}
-          {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
-            {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
-          {{- end }}
+           {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
+           {{- end }}
           - "--metrics.openTelemetry=true"
           - "--metrics.openTelemetry.address={{ .address }}"
-          {{- with .addEntryPointsLabels }}
+           {{- if ne .addEntryPointsLabels nil }}
+            {{- with .addEntryPointsLabels | toString }}
           - "--metrics.openTelemetry.addEntryPointsLabels={{ . }}"
-          {{- end }}
-          {{- with .addRoutersLabels }}
+            {{- end }}
+           {{- end }}
+           {{- if ne .addRoutersLabels nil }}
+            {{- with .addRoutersLabels | toString }}
           - "--metrics.openTelemetry.addRoutersLabels={{ . }}"
-          {{- end }}
-          {{- with .addServicesLabels }}
+            {{- end }}
+           {{- end }}
+           {{- if ne .addServicesLabels nil }}
+            {{- with .addServicesLabels | toString }}
           - "--metrics.openTelemetry.addServicesLabels={{ . }}"
-          {{- end }}
-          {{- with .explicitBoundaries }}
+            {{- end }}
+           {{- end }}
+           {{- with .explicitBoundaries }}
           - "--metrics.openTelemetry.explicitBoundaries={{ join "," . }}"
-          {{- end }}
-          {{- with .headers }}
-          {{- range $name, $value := . }}
+           {{- end }}
+           {{- with .headers }}
+            {{- range $name, $value := . }}
           - "--metrics.openTelemetry.headers.{{ $name }}={{ $value }}"
-          {{- end }}
-          {{- end }}
-          {{- with .insecure }}
+            {{- end }}
+           {{- end }}
+           {{- with .insecure }}
           - "--metrics.openTelemetry.insecure={{ . }}"
-          {{- end }}
-          {{- with .pushInterval }}
+           {{- end }}
+           {{- with .pushInterval }}
           - "--metrics.openTelemetry.pushInterval={{ . }}"
-          {{- end }}
-          {{- with .path }}
+           {{- end }}
+           {{- with .path }}
           - "--metrics.openTelemetry.path={{ . }}"
-          {{- end }}
-          {{- with .tls }}
-          {{- with .ca }}
+           {{- end }}
+           {{- with .tls }}
+            {{- with .ca }}
           - "--metrics.openTelemetry.tls.ca={{ . }}"
-          {{- end }}
-          {{- with .cert }}
+            {{- end }}
+            {{- with .cert }}
           - "--metrics.openTelemetry.tls.cert={{ . }}"
-          {{- end }}
-          {{- with .key }}
+            {{- end }}
+            {{- with .key }}
           - "--metrics.openTelemetry.tls.key={{ . }}"
-          {{- end }}
-          {{- with .insecureSkipVerify }}
+            {{- end }}
+            {{- with .insecureSkipVerify }}
           - "--metrics.openTelemetry.tls.insecureSkipVerify={{ . }}"
-          {{- end }}
-          {{- end }}
-          {{- with .grpc }}
+            {{- end }}
+           {{- end }}
+           {{- with .grpc }}
           - "--metrics.openTelemetry.grpc={{ . }}"
-          {{- end }}
+           {{- end }}
           {{- end }}
 
           {{- if .Values.tracing }}
