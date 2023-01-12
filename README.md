@@ -117,7 +117,7 @@ This will override the new `Release.Name-Release.Namespace` pattern to avoid any
 
 If you want to contribute to this chart, please read the [Contributing Guide](./CONTRIBUTING.md).
 
-Thanks to all the people who already contributed!
+Thanks to all the people who have already contributed!
 
 <a href="https://github.com/traefik/traefik-helm-chart/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=traefik/traefik-helm-chart" />
