@@ -258,6 +258,25 @@ additionalArguments:
   - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
 ```
 
+# Enable plugin storage
+
+This chart follows common security practices: it runs as non root with a readonly root filesystem.
+When enabling a plugin which needs storage, you have to add it to the deployment.
+
+Here is a simple example with crowdsec. You may want to replace with your plugin or see complete exemple on crowdsec [here](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/exemples/kubernetes/README.md).
+
+```yaml
+deployment:
+  additionalVolumes:
+  - name: plugins
+additionalVolumeMounts:
+- name: plugins
+  mountPath: /plugins-storage
+additionalArguments:
+- "--experimental.plugins.bouncer.moduleName=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
+- "--experimental.plugins.bouncer.version=v1.1.9"
+```
+
 # Use Traefik Let's Encrypt Integration with CloudFlare
 
 It needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class
