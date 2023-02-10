@@ -2,6 +2,10 @@
 
 This Helm Chart requires extensive testing to ensure expected behavior are met for everyone.
 
+## Requirements
+
+All tests are run using Docker; no further dependencies are required.
+
 ## Test Driven Development
 
 "TDD" practise (Test Driven Development) should be followed when adding a new feature or fixing a bug.
@@ -21,13 +25,8 @@ Please note that this chart has the following kind of tests (see respective sect
 
 ### Unit Testing
 
-Before you can run the unit tests you need to set some `ENV`. This is required to download the binary for the given platform. You don't need it on subsequent runs.
-
-```
-export CATTLE_HELM_UNITTEST_VERSION=v0.1.6-rancher1
-export ARCH=amd64
-make unit-test
-```
+Unit test suite is run by invoking the make target `test`: `make test`.
+It is run by default on the CI.
 
 <!-- TODO: Add E2E testing -->
 
@@ -37,7 +36,7 @@ The static test suite has the following properties:
 
 - Static tests are about linting the YAML files, shell scripts and Helm elements. It is also a set of verifications around versions, names, etc.
 - Static tests are fast to run, hence it must be run for each commit and pull requests and are considered blocking when failing.
-- Static test suite is run by inovking the make target `lint`: `make lint`. It is run by default on the CI.
+- Static test suite is run by invoking the make target `lint`: `make lint`. It is run by default on the CI.
 
 The static test suite is implemented with the tool [`ct` (Chart Testing)](https://github.com/helm/chart-testing):
 
