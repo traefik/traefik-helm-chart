@@ -142,6 +142,8 @@ ingressRoute:
     entryPoints: ["traefik"]
     # Additional ingressRoute middlewares (e.g. for authentication)
     middlewares: []
+    # TLS options (e.g. secret containing certificate)
+    tls: {}
 
 # Customize updateStrategy of traefik pods
 updateStrategy:

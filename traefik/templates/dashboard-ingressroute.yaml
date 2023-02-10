@@ -28,4 +28,9 @@ spec:
     middlewares:
       {{- toYaml . | nindent 6 }}
     {{- end -}}
+
+  {{- with .Values.ingressRoute.dashboard.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 {{- end -}}
