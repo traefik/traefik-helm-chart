@@ -17,10 +17,10 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: traefik:v2.0.0-beta1
-  - it: should change image when image.name value is specified
+  - it: should change image when image.repository value is specified
     set:
       image:
-        name: traefik/traefik
+        repository: traefik/traefik
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image

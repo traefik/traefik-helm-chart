@@ -1,6 +1,6 @@
 # Default values for Traefik
 image:
-  name: traefik
+  repository: traefik
   # defaults to appVersion
   tag: ""
   pullPolicy: IfNotPresent
