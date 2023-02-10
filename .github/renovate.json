@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "gitmoji"
+  ],
+  "semanticCommits": "enabled",
+  "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
+  "rebaseWhen": "conflicted",
+  "bumpVersion": "minor",
+  "packageRules": [
+    {
+      "matchManagers": ["kubernetes"],
+      "matchDatasources": ["kubernetes-api"],
+      "description": "disable kubernetes api updates",
+      "enabled": false
+    }
+  ],
+  "regexManagers": [
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": [
+        "(^|/)Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+      ]
+    }
+  ]
+}
