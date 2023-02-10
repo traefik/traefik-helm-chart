@@ -65,3 +65,24 @@ tests:
           value:
             - name: traefik-dashboard-auth
               namespace: default
+  - it: should not have tls options by default
+    asserts:
+    - isEmpty:
+        path: spec.tls
+  - it: should support adding tls options
+    set:
+      ingressRoute:
+        dashboard:
+          tls:
+            secretName: traefik-dashboard-auth
+            options:
+              name: tls-options
+              namespace: default
+    asserts:
+      - equal:
+          path: spec.tls
+          value:
+            secretName: traefik-dashboard-auth
+            options:
+              name: tls-options
+              namespace: default
