@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base"
+  ],
+  "semanticCommits": "enabled",
+  "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
+  "rebaseWhen": "conflicted",
+  "bumpVersion": "minor",
+  "packageRules": [
+    {
+      "regexManagers": [
+        {
+          "datasourceTemplate": "docker",
+          "fileMatch": [
+            "^traefik/Chart\\.yaml$"
+          ],
+          "matchStrings": [
+            "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
+          ]
+        }
+      ]
+    }
+  ]
+}
