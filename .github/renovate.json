@@ -8,23 +8,21 @@
   "rebaseWhen": "conflicted",
   "bumpVersion": "minor",
   "packageRules": [
-        {
-          "matchManagers": ["kubernetes"],
-          "matchDatasources": ["kubernetes-api"],
-          "description": "disable kubernetes api updates",
-          "enabled": false
-        },
     {
-      "regexManagers": [
-        {
-          "datasourceTemplate": "docker",
-          "fileMatch": [
-            "^traefik/Chart\\.yaml$"
-          ],
-          "matchStrings": [
-            "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
-          ]
-        }
+      "matchManagers": ["kubernetes"],
+      "matchDatasources": ["kubernetes-api"],
+      "description": "disable kubernetes api updates",
+      "enabled": false
+    }
+  ],
+  "regexManagers": [
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": [
+        "^traefik/Chart\\.yaml$"
+      ],
+      "matchStrings": [
+        "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
     }
   ]
