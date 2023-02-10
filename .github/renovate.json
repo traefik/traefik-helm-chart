@@ -19,7 +19,7 @@
     {
       "datasourceTemplate": "docker",
       "fileMatch": [
-        "^traefik/Chart\\.yaml$"
+        "(^|/)Chart\\.yaml$"
       ],
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
