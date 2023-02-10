@@ -19,7 +19,7 @@ Create the chart image name.
 */}}
 
 {{- define "traefik.image-name" -}}
-{{- printf "%s:%s" .Values.image.name (.Values.image.tag | default .Chart.AppVersion) }}
+{{- printf "%s:%s" .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
 {{- end -}}
 {{/*
 Create a default fully qualified app name.
