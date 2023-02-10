@@ -1,8 +1,92 @@
 # Change Log
 
+## 21.0.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-02-10
+
+* 💥 New release with BREAKING changes
+* Configure Renovate (#783)
+* :bug: Disabling dashboard ingressroute should delete it (#785)
+* :boom: Rename image.name => image.repository (#784)
+* :necktie: Improve labels settings behavior on metrics providers (#774)
+* ✨ Chart.yaml - add kubeVersion: ">=1.16.0-0"
+* fix: allowExternalNameServices for kubernetes ingress when hub enabled (#772)
+* 🙈 Add a setting disable API check on Prometheus Operator (#769)
+* 📝 Improve documentation on entrypoint options
+* fix(service-metrics): invert prometheus svc & fullname length checking
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 42a27f9..780b04b 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1,6 +1,6 @@
+ # Default values for Traefik
+ image:
+-  name: traefik
++  repository: traefik
+   # defaults to appVersion
+   tag: ""
+   pullPolicy: IfNotPresent
+@@ -396,6 +396,8 @@ metrics:
+   #    enabled: false
+   #    labels: {}
+   #    annotations: {}
++  ## When set to true, it won't check if Prometheus Operator CRDs are deployed
++  #  disableAPICheck: false
+   #  serviceMonitor:
+   #    metricRelabelings: []
+   #      - sourceLabels: [__name__]
+@@ -580,7 +582,7 @@ ports:
+     # hostPort: 8443
+     expose: true
+     exposedPort: 443
+-    # The port protocol (TCP/UDP)
++    ## The port protocol (TCP/UDP)
+     protocol: TCP
+     # nodePort: 32443
+     #
+@@ -594,6 +596,16 @@ ports:
+       enabled: false
+     # advertisedPort: 4443
+     #
++    ## Trust forwarded  headers information (X-Forwarded-*).
++    #forwardedHeaders:
++    #  trustedIPs: []
++    #  insecure: false
++    #
++    ## Enable the Proxy Protocol header parsing for the entry point
++    #proxyProtocol:
++    #  trustedIPs: []
++    #  insecure: false
++    #
+     ## Set TLS at the entrypoint
+     ## https://doc.traefik.io/traefik/routing/entrypoints/#tls
+     tls:
+@@ -607,16 +619,6 @@ ports:
+       #     - foo.example.com
+       #     - bar.example.com
+     #
+-    # Trust forwarded  headers information (X-Forwarded-*).
+-    # forwardedHeaders:
+-    #   trustedIPs: []
+-    #   insecure: false
+-    #
+-    # Enable the Proxy Protocol header parsing for the entry point
+-    # proxyProtocol:
+-    #   trustedIPs: []
+-    #   insecure: false
+-    #
+     # One can apply Middlewares on an entrypoint
+     # https://doc.traefik.io/traefik/middlewares/overview/
+     # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+```
+
 ## 20.8.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2022-12-08
+**Release date:** 2022-12-09
 
 * ✨ update chart to version 20.8.0
 * ✨ add support for default entrypoints

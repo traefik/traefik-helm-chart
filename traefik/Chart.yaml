@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 20.8.0
+version: 21.0.0
 # renovate: image=traefik/traefik
 appVersion: v2.9.6
 kubeVersion: ">=1.16.0-0"
@@ -28,6 +28,13 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "✨ update chart to version 20.8.0"
-    - "✨ add support for default entrypoints"
-    - "✨ add support for OpenTelemetry and Traefik v3"
+    - "💥 New release with BREAKING changes"
+    - "Configure Renovate (#783)"
+    - ":bug: Disabling dashboard ingressroute should delete it (#785)"
+    - ":boom: Rename image.name => image.repository (#784)"
+    - ":necktie: Improve labels settings behavior on metrics providers (#774)"
+    - "✨ Chart.yaml - add kubeVersion: ">=1.16.0-0""
+    - "fix: allowExternalNameServices for kubernetes ingress when hub enabled (#772)"
+    - "🙈 Add a setting disable API check on Prometheus Operator (#769)"
+    - "📝 Improve documentation on entrypoint options"
+    - "fix(service-metrics): invert prometheus svc & fullname length checking"
