@@ -8,6 +8,12 @@
   "rebaseWhen": "conflicted",
   "bumpVersion": "minor",
   "packageRules": [
+        {
+          "matchManagers": ["kubernetes"],
+          "matchDatasources": ["kubernetes-api"],
+          "description": "disable kubernetes api updates",
+          "enabled": false
+        },
     {
       "regexManagers": [
         {
