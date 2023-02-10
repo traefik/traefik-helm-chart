@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base"
+    "gitmoji"
   ],
   "semanticCommits": "enabled",
   "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
