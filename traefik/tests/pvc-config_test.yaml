@@ -1,0 +1,20 @@
+suite: Persistent volume claim configuration
+templates:
+  - pvc.yaml
+tests:
+  - it: should have no volumeName by default
+    set:
+      persistence:
+        enabled: true
+    asserts:
+      - isNull:
+          path: spec.volumeName
+  - it: should have a volumeName when specified via values
+    set:
+      persistence:
+        enabled: true
+        volumeName: traefik
+    asserts:
+      - equal:
+          path: spec.volumeName
+          value: traefik
