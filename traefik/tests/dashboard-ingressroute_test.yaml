@@ -33,7 +33,7 @@ tests:
     set:
       ingressRoute:
         dashboard:
-          entryPoints: ["websecure"]      
+          entryPoints: ["websecure"]
     asserts:
       - equal:
           path: spec.entryPoints
@@ -48,6 +48,10 @@ tests:
       - equal:
           path: metadata.labels.foo
           value: bar
+  - it: should not have middlewares by default
+    asserts:
+    - isEmpty:
+        path: spec.routes[0].middlewares
   - it: should support adding middlewares
     set:
       ingressRoute:
@@ -60,4 +64,25 @@ tests:
           path: spec.routes[0].middlewares
           value:
             - name: traefik-dashboard-auth
+              namespace: default
+  - it: should not have tls options by default
+    asserts:
+    - isEmpty:
+        path: spec.tls
+  - it: should support adding tls options
+    set:
+      ingressRoute:
+        dashboard:
+          tls:
+            secretName: traefik-dashboard-auth
+            options:
+              name: tls-options
+              namespace: default
+    asserts:
+      - equal:
+          path: spec.tls
+          value:
+            secretName: traefik-dashboard-auth
+            options:
+              name: tls-options
               namespace: default
