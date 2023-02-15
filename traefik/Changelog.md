@@ -1,10 +1,46 @@
 # Change Log
 
+## 21.1.0  ![AppVersion: v2.9.7](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.7&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-02-15
+
+* ✨ release 21.1.0
+* ⬆️ Upgrade traefik Docker tag to v2.9.7
+* fix: traefik image name for renovate
+* feat: Add volumeName to PersistentVolumeClaim (#792)
+* Allow setting TLS options on dashboard IngressRoute
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 780b04b..cadc7a6 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -142,6 +142,8 @@ ingressRoute:
+     entryPoints: ["traefik"]
+     # Additional ingressRoute middlewares (e.g. for authentication)
+     middlewares: []
++    # TLS options (e.g. secret containing certificate)
++    tls: {}
+ 
+ # Customize updateStrategy of traefik pods
+ updateStrategy:
+@@ -750,6 +752,7 @@ persistence:
+   accessMode: ReadWriteOnce
+   size: 128Mi
+   # storageClass: ""
++  # volumeName: ""
+   path: /data
+   annotations: {}
+   # subPath: "" # only mount a subpath of the Volume into the pod
+```
+
 ## 21.0.0  ![AppVersion: v2.9.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.6&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2023-02-10
 
-* 💥 New release with BREAKING changes
+* 💥 New release with BREAKING changes (#786)
 * Configure Renovate (#783)
 * :bug: Disabling dashboard ingressroute should delete it (#785)
 * :boom: Rename image.name => image.repository (#784)
