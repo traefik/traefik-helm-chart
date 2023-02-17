@@ -396,7 +396,7 @@ spec:
 This example is using default StorageClass. You can set your own, if needed.
 
 In Traefik, ACME certificates are stored in a JSON file that needs to have a
-0600 file mode.  An initContainer is used in order to avoid an issue where CSI
+0600 file mode.  An initContainer is used to avoid an issue where CSI
 driver switch `acme.json` to 0660 mode.  See
 [#164](https://github.com/traefik/traefik-helm-chart/issues/164) for more details.
 
