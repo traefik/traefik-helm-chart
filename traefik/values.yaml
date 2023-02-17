@@ -66,10 +66,14 @@ deployment:
   # Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
-    # Related issue: https://github.com/traefik/traefik/issues/6825
+    # Related issue: https://github.com/traefik/traefik/issues/164
     # - name: volume-permissions
-    #   image: busybox:1.35
-    #   command: ["sh", "-c", "touch /data/acme.json && chmod -Rv 600 /data/* && chown 65532:65532 /data/acme.json"]
+    #   image: busybox:latest
+    #   command: ["sh", "-c", "chmod -v 600 /data/acme.json"]
+    #   securityContext:
+    #     runAsNonRoot: true
+    #     runAsGroup: 65532
+    #     runAsUser: 65532
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data

@@ -18,3 +18,11 @@ See https://doc.traefik.io/traefik-hub/install/#traefik-hub-agent-install-with-h
 
 {{- end }}
 {{- end }}
+{{- if and .Values.persistence.enabled (empty .Values.deployment.initContainer)}}
+
+🚨 When enabling persistence for certificates, permissions on acme.json can be
+lost when Traefik restart. You can ensure correct permission with an
+initContainer. See https://github.com/traefik/traefik-helm-chart/issues/396 for
+more info. 🚨
+
+{{- end }}
