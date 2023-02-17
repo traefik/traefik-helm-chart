@@ -391,3 +391,34 @@ spec:
       port: 80
 ```
 
+# Keep TLS certificates on persistent volume
+
+This example is using default StorageClass. You can set your own, if needed.
+
+In Traefik, ACME certificates are stored in a JSON file that needs to have a
+0600 file mode.  An initContainer is used in order to avoid an issue where CSI
+driver switch `acme.json` to 0660 mode.  See
+[#164](https://github.com/traefik/traefik-helm-chart/issues/164) for more details.
+
+```yaml
+additionalArguments:
+  - "--certificatesresolvers.letsencrypt.acme.email=my.email@my.company.com" #  - <= Put your email here
+  - "--certificatesResolvers.letsencrypt.acme.tlschallenge=true"
+  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+deployment:
+  initContainers:
+    - name: volume-permissions
+      image: busybox:latest
+      command: ["sh", "-c", "chmod -v 600 /data/acme.json"]
+      securityContext:
+        runAsNonRoot: true
+        runAsGroup: 65532
+        runAsUser: 65532
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  path: /data
+  # storageClass: "specific-storage-class"
+  # annotations: {}
+```
