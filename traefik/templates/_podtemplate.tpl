@@ -76,6 +76,15 @@
           hostIP: {{ $config.hostIP }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
+        {{- if $config.http3 }}
+        {{- if and $config.http3.enabled $config.hostPort }}
+        {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
+        - name: "{{ $name }}-http3"
+          containerPort: {{ $config.port }}
+          hostPort: {{ $config.hostPort }}
+          protocol: UDP
+        {{- end }}
+        {{- end }}
         {{- end }}
         {{- end }}
         {{- if .Values.hub.enabled }}
