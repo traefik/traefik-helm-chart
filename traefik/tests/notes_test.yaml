@@ -97,6 +97,6 @@ tests:
             on NAMESPACE namespace !
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
-            lost when Traefik restart. You can ensure correct permission with an
+            lost when Traefik restarts. You can ensure correct permission with an
             initContainer. See https://github.com/traefik/traefik-helm-chart/issues/396 for
             more info. 🚨
