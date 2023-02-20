@@ -34,7 +34,7 @@ tests:
           path: spec.template.spec.securityContext.readOnlyRootFilesystem
           value: false
       - equal:
-          path: spec.template.spec.containers[0].securityContext.runAsNonRoot
+          path: spec.template.spec.securityContext.runAsNonRoot
           value: true
       - equal:
           path: spec.template.spec.containers[0].securityContext.runAsUser

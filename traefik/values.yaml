@@ -69,7 +69,7 @@ deployment:
     # Related issue: https://github.com/traefik/traefik-helm-chart/issues/396
     # - name: volume-permissions
     #   image: busybox:latest
-    #   command: ["sh", "-c", "chmod -v 600 /data/acme.json"]
+    #   command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
     #   securityContext:
     #     runAsNonRoot: true
     #     runAsGroup: 65532
@@ -853,15 +853,16 @@ securityContext:
   capabilities:
     drop: [ALL]
   readOnlyRootFilesystem: true
-  runAsGroup: 65532
-  runAsNonRoot: true
-  runAsUser: 65532
 
 podSecurityContext:
 #  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
 #  # permissions for the contents of each volume to match the fsGroup. This can
 #  # be an issue when storing sensitive content like TLS Certificates /!\
 #  fsGroup: 65532
+  fsGroupChangePolicy: "OnRootMismatch"
+  runAsGroup: 65532
+  runAsNonRoot: true
+  runAsUser: 65532
 
 #
 # Extra objects to deploy (value evaluated as a template)

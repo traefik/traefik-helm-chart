@@ -396,8 +396,9 @@ spec:
 This example is using default StorageClass. You can set your own, if needed.
 
 In Traefik, ACME certificates are stored in a JSON file that needs to have a
-0600 file mode.  An initContainer is used to avoid an issue where CSI
-driver switch `acme.json` to 0660 mode.  See
+0600 file mode.  By default, Kubernetes ecursively changes ownership and
+permissions for the contents of each volume. An initContainer is used to
+avoid an issue on this sensitive file. See
 [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
 
 ```yaml
@@ -409,11 +410,7 @@ deployment:
   initContainers:
     - name: volume-permissions
       image: busybox:latest
-      command: ["sh", "-c", "chmod -v 600 /data/acme.json"]
-      securityContext:
-        runAsNonRoot: true
-        runAsGroup: 65532
-        runAsUser: 65532
+      command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json; chown 65532:65532 /data/acme.json"]
 persistence:
   enabled: true
   accessMode: ReadWriteOnce
