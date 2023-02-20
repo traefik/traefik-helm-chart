@@ -31,9 +31,6 @@ tests:
         runAsUser: 1000
     asserts:
       - equal:
-          path: spec.template.spec.securityContext.fsGroup
-          value: 65532
-      - equal:
           path: spec.template.spec.securityContext.readOnlyRootFilesystem
           value: false
       - equal:

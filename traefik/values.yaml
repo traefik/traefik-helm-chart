@@ -858,7 +858,10 @@ securityContext:
   runAsUser: 65532
 
 podSecurityContext:
-  fsGroup: 65532
+#  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
+#  # permissions for the contents of each volume to match the fsGroup. This can
+#  # be an issue when storing sensitive content like TLS Certificates /!\
+#  fsGroup: 65532
 
 #
 # Extra objects to deploy (value evaluated as a template)
