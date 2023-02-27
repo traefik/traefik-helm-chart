@@ -503,3 +503,26 @@ tests:
             hostPort: 443
             name: websecure-http3
             protocol: UDP
+  - it: should honor http3 advertised port when using hostport
+    set:
+      ports:
+        websecure:
+          hostPort: 443
+          http3:
+            enabled: true
+            advertisedPort: 1234
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 8443
+            hostPort: 443
+            name: websecure
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 8443
+            hostPort: 1234
+            name: websecure-http3
+            protocol: UDP
