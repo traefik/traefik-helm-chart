@@ -2,11 +2,25 @@ suite: PodSecurityPolicy configuration
 templates:
   - rbac/podsecuritypolicy.yaml
   - rbac/clusterrole.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 20
 tests:
   - it: should be disabled by default
     asserts:
       - hasDocuments:
           count: 0
+        template: rbac/podsecuritypolicy.yaml
+  - it: should throw an error when enabled on k8s >= v1.25
+    capabilities:
+      majorVersion: 1
+      minorVersion: 25
+    set:
+      podSecurityPolicy:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "PodSecurityPolicy has been deprecated on Kubernetes v1.25+"
         template: rbac/podsecuritypolicy.yaml
   - it: should have privileged set to false
     set:
