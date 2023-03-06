@@ -1,9 +1,3 @@
-<!--
-
-HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/submitting-pull-requests/
-
--->
-
 ### What does this PR do?
 
 <!-- A brief description of the change being made with this pull request. -->
@@ -18,4 +12,10 @@ HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/su
 
 - [ ] Yes, I updated the tests accordingly
 - [ ] Yes, I ran `make test` and all the tests passed
+
+<!--
+
+HOW TO WRITE A GOOD PULL REQUEST? https://doc.traefik.io/traefik/contributing/submitting-pull-requests/
+
+-->
 
