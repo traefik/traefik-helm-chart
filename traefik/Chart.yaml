@@ -28,5 +28,8 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "✨ release 21.2.0"
     - "⬆️ Upgrade traefik Docker tag to v2.9.8"
+    - "🚨 Fail when enabling PSP on Kubernetes v1.25+ (#801)"
+    - "Separate UDP hostPort for HTTP/3"
+    - "feat: Add volumeName to PersistentVolumeClaim (#792)"
+    - "Allow setting TLS options on dashboard IngressRoute"

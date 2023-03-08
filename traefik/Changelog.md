@@ -1,5 +1,15 @@
 # Change Log
 
+## 21.2.0  ![AppVersion: v2.9.8](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.8&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-03-07
+
+* Update Chart.yaml
+* 🚨 Fail when enabling PSP on Kubernetes v1.25+ (#801)
+* Separate UDP hostPort for HTTP/3
+* ⬆️ Upgrade traefik Docker tag to v2.9.8
+
+
 ## 21.1.0  ![AppVersion: v2.9.7](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.7&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2023-02-15
