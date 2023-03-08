@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 21.1.0
+version: 21.2.0
 # renovate: image=traefik
 appVersion: v2.9.8
 kubeVersion: ">=1.16.0-0"
@@ -28,8 +28,8 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "✨ release 21.1.0"
-    - "⬆️ Upgrade traefik Docker tag to v2.9.7"
-    - "fix: traefik image name for renovate"
+    - "⬆️ Upgrade traefik Docker tag to v2.9.8"
+    - "🚨 Fail when enabling PSP on Kubernetes v1.25+ (#801)"
+    - "Separate UDP hostPort for HTTP/3"
     - "feat: Add volumeName to PersistentVolumeClaim (#792)"
     - "Allow setting TLS options on dashboard IngressRoute"
