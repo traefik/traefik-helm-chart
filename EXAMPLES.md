@@ -397,7 +397,7 @@ This example is using default StorageClass. You can set your own, if needed.
 
 In Traefik, ACME certificates are stored in a JSON file that needs to have a
 0600 file mode.  By default, Kubernetes recursively changes ownership and
-permissions for the contents of each volume. An initContainer is used to
+permissions for the content of each volume. An initContainer is used to
 avoid an issue on this sensitive file. See
 [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
 
