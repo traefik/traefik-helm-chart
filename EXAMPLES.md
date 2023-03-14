@@ -391,3 +391,31 @@ spec:
       port: 80
 ```
 
+# Keep TLS certificates on persistent volume
+
+This example is using the default StorageClass. If needed, you can set your own.
+
+In Traefik Proxy, ACME certificates are stored in a JSON file that needs to have a
+0600 file mode.  By default, Kubernetes recursively changes ownership and
+permissions for the content of each volume. An initContainer is used to
+avoid an issue on this sensitive file. See
+[#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
+
+```yaml
+additionalArguments:
+  - "--certificatesresolvers.letsencrypt.acme.email=my.email@my.company.com" #  - <= Put your email here
+  - "--certificatesResolvers.letsencrypt.acme.tlschallenge=true"
+  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
+deployment:
+  initContainers:
+    - name: volume-permissions
+      image: busybox:latest
+      command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json; chown 65532:65532 /data/acme.json"]
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 128Mi
+  path: /data
+  # storageClass: "specific-storage-class"
+  # annotations: {}
+```

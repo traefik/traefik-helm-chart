@@ -36,7 +36,8 @@ Due to changes in CRD version support, the following versions of the chart are u
 |                         |  Kubernetes v1.15 and below | Kubernetes v1.16-v1.21 | Kubernetes v1.22 and above |
 |-------------------------|-----------------------------|------------------------|----------------------------|
 | Chart v9.20.2 and below | [x]                         | [x]                    |                            |
-| Chart 10.0.0 and above  |                             | [x]                    | [x]                        |
+| Chart v10.0.0 and above |                             | [x]                    | [x]                        |
+| Chart v22.0.0 and above |                             |                        | [x]                        |
 
 ### Deploying Traefik
 
