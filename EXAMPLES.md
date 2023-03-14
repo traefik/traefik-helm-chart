@@ -393,7 +393,7 @@ spec:
 
 # Keep TLS certificates on persistent volume
 
-This example is using default StorageClass. You can set your own, if needed.
+This example is using the default StorageClass. If needed, you can set your own.
 
 In Traefik, ACME certificates are stored in a JSON file that needs to have a
 0600 file mode.  By default, Kubernetes recursively changes ownership and
