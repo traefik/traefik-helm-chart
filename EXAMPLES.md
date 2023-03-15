@@ -281,10 +281,8 @@ additionalArguments:
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.
 
-This file needs to have 0600 permissions, meaning, only the owner of
-the file has full read and write access to it.
-By default, Kubernetes recursively changes ownership and
-permissions for the content of each volume.
+This file needs to have 0600 permissions, meaning, only the owner of the file has full read and write access to it.
+By default, Kubernetes recursively changes ownership and permissions for the content of each volume.
 
 => An initContainer can be used to avoid an issue on this sensitive file.
 See [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
