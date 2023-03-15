@@ -277,9 +277,16 @@ additionalArguments:
 - "--experimental.plugins.bouncer.version=v1.1.9"
 ```
 
-# Use Traefik Let's Encrypt Integration with CloudFlare
+# Use Traefik native Let's Encrypt Integration, without cert-manager
 
-It needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class
+This example is with CloudFlare, see here for other providers.
+
+In Traefik Proxy, ACME certificates are stored in a JSON file that needs to have a
+0600 file mode.  By default, Kubernetes recursively changes ownership and
+permissions for the content of each volume. An initContainer is used to
+avoid an issue on this sensitive file. See
+[#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
+
 
 ```yaml
 persistence:
@@ -296,7 +303,14 @@ env:
       secretKeyRef:
         name: yyy
         key: zzz
+deployment:
+  initContainers:
+    - name: volume-permissions
+      image: busybox:latest
+      command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
 ```
+
+It needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 
@@ -308,6 +322,7 @@ Setup:
 **Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token. 
 See [cert-manager documentation](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
 for creating this token with needed rights:
+
 ```yaml
 ---
 apiVersion: v1
@@ -340,6 +355,7 @@ spec:
 ```
 
 **Step 2**: Create `Certificate` in traefik namespace
+
 ```yaml
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -365,6 +381,7 @@ kubectl get certificate -n traefik
 If needed, logs of cert-manager pod can give you more information
 
 **Step 4**: Use it on the TLS Store in **values.yaml** file for this Helm Chart
+
 ```yaml
 tlsStore:
   default:
@@ -375,6 +392,7 @@ tlsStore:
 **Step 5**: Enjoy. All your `IngressRoute` use this certificate by default now. 
 
 They should use websecure entrypoint like this:
+
 ```yaml
 apiVersion: traefik.containo.us/v1alpha1
 kind: IngressRoute
@@ -389,33 +407,4 @@ spec:
     services:
     - name: XXXX
       port: 80
-```
-
-# Keep TLS certificates on persistent volume
-
-This example is using the default StorageClass. If needed, you can set your own.
-
-In Traefik Proxy, ACME certificates are stored in a JSON file that needs to have a
-0600 file mode.  By default, Kubernetes recursively changes ownership and
-permissions for the content of each volume. An initContainer is used to
-avoid an issue on this sensitive file. See
-[#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
-
-```yaml
-additionalArguments:
-  - "--certificatesresolvers.letsencrypt.acme.email=my.email@my.company.com" #  - <= Put your email here
-  - "--certificatesResolvers.letsencrypt.acme.tlschallenge=true"
-  - "--certificatesresolvers.le.acme.storage=/data/acme.json"
-deployment:
-  initContainers:
-    - name: volume-permissions
-      image: busybox:latest
-      command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json; chown 65532:65532 /data/acme.json"]
-persistence:
-  enabled: true
-  accessMode: ReadWriteOnce
-  size: 128Mi
-  path: /data
-  # storageClass: "specific-storage-class"
-  # annotations: {}
 ```
