@@ -311,7 +311,7 @@ deployment:
       command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
 ```
 
-This example needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class.
+This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.
 
 See [here](https://doc.traefik.io/traefik/https/acme/#providers) for other providers.
 
