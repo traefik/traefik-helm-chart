@@ -313,7 +313,7 @@ deployment:
 
 This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.
 
-See [here](https://doc.traefik.io/traefik/https/acme/#providers) for other providers.
+See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 
