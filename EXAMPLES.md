@@ -279,7 +279,8 @@ additionalArguments:
 
 # Use Traefik native Let's Encrypt integration, without cert-manager
 
-This example is with CloudFlare, see here for other providers.
+This example is with CloudFlare, see [here](https://doc.traefik.io/traefik/https/acme/#providers)
+for other providers.
 
 In Traefik Proxy, ACME certificates are stored in a JSON file that needs to have a
 0600 file mode.  By default, Kubernetes recursively changes ownership and
