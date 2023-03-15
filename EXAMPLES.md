@@ -277,7 +277,7 @@ additionalArguments:
 - "--experimental.plugins.bouncer.version=v1.1.9"
 ```
 
-# Use Traefik native Let's Encrypt Integration, without cert-manager
+# Use Traefik native Let's Encrypt integration, without cert-manager
 
 This example is with CloudFlare, see here for other providers.
 
