@@ -279,15 +279,15 @@ additionalArguments:
 
 # Use Traefik native Let's Encrypt integration, without cert-manager
 
-This example is with CloudFlare, see [here](https://doc.traefik.io/traefik/https/acme/#providers)
-for other providers.
+In Traefik Proxy, ACME certificates are stored in a JSON file.
 
-In Traefik Proxy, ACME certificates are stored in a JSON file that needs to have a
-0600 file mode.  By default, Kubernetes recursively changes ownership and
-permissions for the content of each volume. An initContainer is used to
-avoid an issue on this sensitive file. See
-[#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
+This file needs to have 0600 permissions, meaning, only the owner of
+the file has full read and write access to it.
+By default, Kubernetes recursively changes ownership and
+permissions for the content of each volume.
 
+=> An initContainer can be used to avoid an issue on this sensitive file.
+See [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
 
 ```yaml
 persistence:
@@ -311,7 +311,9 @@ deployment:
       command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
 ```
 
-It needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class.
+This example needs a CloudFlare token in a Kubernetes `Secret` and a working Storage Class.
+
+See [here](https://doc.traefik.io/traefik/https/acme/#providers) for other providers.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 
