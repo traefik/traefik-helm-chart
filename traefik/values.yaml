@@ -1,5 +1,6 @@
 # Default values for Traefik
 image:
+  registry: docker.io
   repository: traefik
   # defaults to appVersion
   tag: ""

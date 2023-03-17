@@ -8,7 +8,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik:v2.0.0
+          value: docker.io/traefik:v2.0.0
   - it: should change image when image.tag value is specified
     set:
       image:
@@ -16,7 +16,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik:v2.0.0-beta1
+          value: docker.io/traefik:v2.0.0-beta1
   - it: should change image when image.repository value is specified
     set:
       image:
@@ -24,7 +24,15 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik/traefik:v2.0.0
+          value: docker.io/traefik/traefik:v2.0.0
+  - it: should change image when image.registry value is specified
+    set:
+      image:
+        registry: example.org
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: example.org/traefik:v2.0.0
 
   - it: should have no resource limit by default
     asserts:
