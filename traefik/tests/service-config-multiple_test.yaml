@@ -150,10 +150,10 @@ tests:
           port: 3000
           protocol: UDP
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilyPolicy
         documentIndex: 0
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilyPolicy
         documentIndex: 1
   - it: should have custom ipFamilyPolicy on both services when specified via values
@@ -183,10 +183,10 @@ tests:
           port: 3000
           protocol: UDP
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilies
         documentIndex: 0
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilies
         documentIndex: 1
   - it: should have custom ipFamilies on both services when specified via values

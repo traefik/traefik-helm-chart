@@ -148,10 +148,8 @@ tests:
   - it: "ClusterRole should not have aggregate-to-admin label by default"
     template: rbac/clusterrole.yaml
     asserts:
-      - notEqual:
-          path: metadata.labels.[rbac.authorization.k8s.io/aggregate-to-admin]
-          value: "true"
-        template: rbac/clusterrole.yaml
+      - isNull:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
   - it: "ClusterRole should be configurable with multiples aggregate-to- label"
     set:
       rbac:
@@ -159,10 +157,10 @@ tests:
     template: rbac/clusterrole.yaml
     asserts:
       - equal:
-          path: metadata.labels.[rbac.authorization.k8s.io/aggregate-to-admin]
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
           value: "true"
       - equal:
-          path: metadata.labels.[rbac.authorization.k8s.io/aggregate-to-edit]
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
           value: "true"
   - it: should use helm managed namespace as default behavior
     set:

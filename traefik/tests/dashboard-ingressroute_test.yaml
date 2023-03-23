@@ -50,7 +50,7 @@ tests:
           value: bar
   - it: should not have middlewares by default
     asserts:
-    - isEmpty:
+    - isNull:
         path: spec.routes[0].middlewares
   - it: should support adding middlewares
     set:
@@ -67,7 +67,7 @@ tests:
               namespace: default
   - it: should not have tls options by default
     asserts:
-    - isEmpty:
+    - isNull:
         path: spec.tls
   - it: should support adding tls options
     set:

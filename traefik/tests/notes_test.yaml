@@ -9,9 +9,8 @@ tests:
       rbac:
         namespaced: true
     asserts:
-      - equal:
-          path: raw
-          value: |
+      - equalRaw:
+          value: |2
 
 
             Traefik Proxy 2.0.0 has been deployed successfully
@@ -20,9 +19,8 @@ tests:
     set:
       namespaceOverride: "traefik-ns-override"
     asserts:
-      - equal:
-          path: raw
-          value: |
+      - equalRaw:
+          value: |2
 
 
             Traefik Proxy 2.0.0 has been deployed successfully
@@ -33,9 +31,8 @@ tests:
       hub:
         enabled: true
     asserts:
-      - equal:
-          path: raw
-          value: |
+      - equalRaw:
+          value: |2
 
 
             Traefik Proxy 2.0.0 has been deployed successfully
@@ -56,9 +53,8 @@ tests:
       image:
         tag: v3.0
     asserts:
-      - equal:
-          path: raw
-          value: |
+      - equalRaw:
+          value: |2
 
 
             Traefik Proxy v3.0 has been deployed successfully
@@ -76,9 +72,8 @@ tests:
               - name: data
                 mountPath: /data
     asserts:
-      - equal:
-          path: raw
-          value: |
+      - equalRaw:
+          value: |2
 
 
             Traefik Proxy 2.0.0 has been deployed successfully
@@ -88,8 +83,7 @@ tests:
       persistence:
         enabled: true
     asserts:
-      - equal:
-          path: raw
+      - equalRaw:
           value: |
 
 

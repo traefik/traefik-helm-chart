@@ -15,7 +15,7 @@ tests:
       - equal:
           path: spec.minAvailable
           value: 2
-      - isEmpty:
+      - isNull:
           path: spec.maxUnavailable
   - it: should have maxUnavailable set as int
     set:
@@ -26,7 +26,7 @@ tests:
       - equal:
           path: spec.maxUnavailable
           value: 1
-      - isEmpty:
+      - isNull:
           path: spec.minAvailable
   - it: should have minAvailable set as percentage
     set:
@@ -37,7 +37,7 @@ tests:
       - equal:
           path: spec.minAvailable
           value: 25%
-      - isEmpty:
+      - isNull:
           path: spec.maxUnavailable
   - it: should have maxUnavailable set as percentage
     set:
@@ -48,7 +48,7 @@ tests:
       - equal:
           path: spec.maxUnavailable
           value: 33%
-      - isEmpty:
+      - isNull:
           path: spec.minAvailable
   - it: should use helm managed namespace as default behavior
     set:

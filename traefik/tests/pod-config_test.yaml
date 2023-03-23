@@ -138,7 +138,7 @@ tests:
           value: Always
   - it: should have no imagePullSecrets
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.template.spec.imagePullSecrets
   - it: should have imagePullSecrets with specified value
     set:

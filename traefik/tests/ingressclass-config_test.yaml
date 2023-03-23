@@ -16,7 +16,7 @@ tests:
       - isAPIVersion:
           of: networking.k8s.io/v1
       - equal:
-          path: metadata.annotations.[ingressclass.kubernetes.io/is-default-class]
+          path: metadata.annotations["ingressclass.kubernetes.io/is-default-class"]
           value: "true"
   - it: should be possible to provide a non-default IngressClass
     set:
@@ -28,7 +28,7 @@ tests:
       - isAPIVersion:
           of: networking.k8s.io/v1
       - equal:
-          path: metadata.annotations.[ingressclass.kubernetes.io/is-default-class]
+          path: metadata.annotations["ingressclass.kubernetes.io/is-default-class"]
           value: "false"
   - it: should provide an IngressClass with only v1beta1 api on Kubernetes v1.18
     capabilities:
