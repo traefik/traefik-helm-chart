@@ -1,10 +1,73 @@
 # Change Log
 
+## 21.2.1  ![AppVersion: v2.9.9](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.9&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-03-21
+
+* ⬆️ Upgrade traefik Docker tag to v2.9.9
+* 🎨 Introduce `image.registry` and add explicit default (it may impact custom `image.repository`)
+* :memo: Clarify the need of an initContainer when enabling persistence for TLS Certificates
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index cadc7a6..4762b77 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1,5 +1,6 @@
+ # Default values for Traefik
+ image:
++  registry: docker.io
+   repository: traefik
+   # defaults to appVersion
+   tag: ""
+@@ -66,10 +67,14 @@ deployment:
+   # Additional initContainers (e.g. for setting file permission as shown below)
+   initContainers: []
+     # The "volume-permissions" init container is required if you run into permission issues.
+-    # Related issue: https://github.com/traefik/traefik/issues/6825
++    # Related issue: https://github.com/traefik/traefik-helm-chart/issues/396
+     # - name: volume-permissions
+-    #   image: busybox:1.35
+-    #   command: ["sh", "-c", "touch /data/acme.json && chmod -Rv 600 /data/* && chown 65532:65532 /data/acme.json"]
++    #   image: busybox:latest
++    #   command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
++    #   securityContext:
++    #     runAsNonRoot: true
++    #     runAsGroup: 65532
++    #     runAsUser: 65532
+     #   volumeMounts:
+     #     - name: data
+     #       mountPath: /data
+@@ -849,13 +854,17 @@ securityContext:
+   capabilities:
+     drop: [ALL]
+   readOnlyRootFilesystem: true
++
++podSecurityContext:
++#  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
++#  # permissions for the contents of each volume to match the fsGroup. This can
++#  # be an issue when storing sensitive content like TLS Certificates /!\
++#  fsGroup: 65532
++  fsGroupChangePolicy: "OnRootMismatch"
+   runAsGroup: 65532
+   runAsNonRoot: true
+   runAsUser: 65532
+ 
+-podSecurityContext:
+-  fsGroup: 65532
+-
+ #
+ # Extra objects to deploy (value evaluated as a template)
+ #
+```
+
 ## 21.2.0  ![AppVersion: v2.9.8](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.8&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2023-03-07
+**Release date:** 2023-03-08
 
-* Update Chart.yaml
+* :sparkles: release 21.2.0 (#805)
 * 🚨 Fail when enabling PSP on Kubernetes v1.25+ (#801)
 * Separate UDP hostPort for HTTP/3
 * ⬆️ Upgrade traefik Docker tag to v2.9.8
