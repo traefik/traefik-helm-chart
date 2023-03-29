@@ -1,8 +1,15 @@
 # Change Log
 
+## 22.0.0  ![AppVersion: v2.9.9](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.9&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-03-29
+
+* BREAKING CHANGE: `image.repository` introduction may break during the upgrade. See PR #802.
+
+
 ## 21.2.1  ![AppVersion: v2.9.9](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.9&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2023-03-21
+**Release date:** 2023-03-28
 
 * ⬆️ Upgrade traefik Docker tag to v2.9.9
 * 🎨 Introduce `image.registry` and add explicit default (it may impact custom `image.repository`)
