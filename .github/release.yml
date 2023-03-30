@@ -9,6 +9,9 @@ changelog:
     - title: Bug Fixes 🐛
       labels:
         - kind/bug/fix
+    - title: Documentation 📝
+      labels: 
+        - area/documentation
     - title: Other Changes
       labels:
         - "*"
