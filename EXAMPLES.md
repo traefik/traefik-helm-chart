@@ -24,7 +24,7 @@ to adjust replicas count according to CPU Usage, you'll need to set resources an
 ```yaml
 deployment:
   replicas: null
-resources: {}
+resources:
   requests:
     cpu: "100m"
     memory: "50Mi"
