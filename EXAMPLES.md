@@ -19,10 +19,18 @@ rbac:
 # Install with auto-scaling
 
 When enabling [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
-to adjust replicas count according to CPU Usage, it's recommended to nullify replicas.
+to adjust replicas count according to CPU Usage, you'll need to set resources and nullify replicas.
+
 ```yaml
 deployment:
   replicas: null
+resources: {}
+  requests:
+    cpu: "100m"
+    memory: "50Mi"
+  limits:
+    cpu: "300m"
+    memory: "150Mi"
 autoscaling:
   enabled: true
   maxReplicas: 2
