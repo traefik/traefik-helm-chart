@@ -3,7 +3,7 @@ changelog:
     - title: Breaking Changes 🛠
       labels:
         - kind/breaking
-    - title: New Features 🎉
+    - title: New Features
       labels:
         - kind/enhancement
     - title: Bug Fixes 🐛
