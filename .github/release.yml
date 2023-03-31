@@ -1,6 +1,6 @@
 changelog:
   categories:
-    - title: Breaking Changes 🛠
+    - title: Breaking Changes
       labels:
         - kind/breaking
     - title: New Features
