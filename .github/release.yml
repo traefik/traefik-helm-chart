@@ -12,6 +12,6 @@ changelog:
     - title: Documentation
       labels: 
         - area/documentation
-    - title: Other Changes
+    - title: Misc
       labels:
         - "*"
