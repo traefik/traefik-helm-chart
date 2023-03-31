@@ -1,0 +1,139 @@
+suite: TlsOption configuration
+templates:
+  - tlsoption.yaml
+tests:
+  - it: should use helm managed namespace as default behavior
+    set:
+      tlsOptions:
+        default:
+          labels:
+            foo: bar
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should set tlsoption name
+    set:
+      tlsOptions:
+        default:
+          labels:
+            foo: bar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: default
+  - it: should set additional labels
+    set:
+      tlsOptions:
+        default:
+          labels:
+            label: label
+    asserts:
+      - equal:
+          path: metadata.labels.label
+          value: label
+  - it: should set cipherSuites
+    set:
+      tlsOptions:
+        default:
+          labels:
+          cipherSuites:
+            - cipherSuite
+    asserts:
+      - equal:
+          path: spec.cipherSuites[0]
+          value: cipherSuite
+  - it: should set alpnProtocols
+    set:
+      tlsOptions:
+        default:
+          labels:
+          alpnProtocols:
+            - alpnProtocol
+    asserts:
+      - equal:
+          path: spec.alpnProtocols[0]
+          value: alpnProtocol
+  - it: should set clientAuthConfig
+    set:
+      tlsOptions:
+        default:
+          labels:
+          clientAuth:
+            clientAuthType: clientAuthType
+    asserts:
+      - equal:
+          path: spec.clientAuth
+          value:
+            clientAuthType: clientAuthType
+  - it: should set curvePreferences
+    set:
+      tlsOptions:
+        default:
+          labels:
+          curvePreferences:
+            - curvePreference
+    asserts:
+      - equal:
+          path: spec.curvePreferences[0]
+          value: curvePreference
+  - it: should set minVersion
+    set:
+      tlsOptions:
+        default:
+          labels:
+          minVersion: minVersion
+    asserts:
+      - equal:
+          path: spec.minVersion
+          value: minVersion
+  - it: should set maxVersion
+    set:
+      tlsOptions:
+        default:
+          labels:
+          maxVersion: maxVersion
+    asserts:
+      - equal:
+          path: spec.maxVersion
+          value: maxVersion
+  - it: should set preferServerCipherSuites
+    set:
+      tlsOptions:
+        default:
+          labels:
+          preferServerCipherSuites: true
+    asserts:
+      - equal:
+          path: spec.preferServerCipherSuites
+          value: true
+  - it: should set sniStrict
+    set:
+      tlsOptions:
+        default:
+          labels:
+          sniStrict: true
+    asserts:
+      - equal:
+          path: spec.sniStrict
+          value: true
+  - it: should render config without labels
+    set:
+      tlsOptions:
+        default:
+          minVersion: minVersion
+    asserts:
+      - equal:
+          path: metadata
+          value:
+            name: default
+            namespace: NAMESPACE
+            labels:
+              app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+              app.kubernetes.io/managed-by: Helm
+              app.kubernetes.io/name: traefik
+              helm.sh/chart: traefik-22.0.0
+      - equal:
+          path: spec
+          value:
+            minVersion: minVersion

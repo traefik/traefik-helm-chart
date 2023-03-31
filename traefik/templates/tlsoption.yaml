@@ -6,7 +6,37 @@ metadata:
   namespace: {{ template "traefik.namespace" $ }}
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
+    {{- with $config.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}    
 spec:
-  {{- toYaml $config | nindent 2 }}
+  {{- with $config.alpnProtocols }}
+  alpnProtocols:
+  {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with $config.cipherSuites }}
+  cipherSuites:
+  {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with $config.clientAuth }}
+  clientAuth:
+  {{- toYaml . | nindent 6 }}
+  {{- end }}
+  {{- with $config.curvePreferences }}
+  curvePreferences:
+  {{- toYaml . | nindent 6 }}
+  {{- end }}  
+  {{- if $config.maxVersion }}
+  maxVersion: {{ $config.maxVersion }}
+  {{- end }}
+  {{- if $config.minVersion }}
+  minVersion: {{ $config.minVersion }}
+  {{- end }}
+  {{- if $config.preferServerCipherSuites }}
+  preferServerCipherSuites: {{ $config.preferServerCipherSuites }}
+  {{- end }}
+  {{- if $config.sniStrict }}
+  sniStrict: {{ $config.sniStrict }}
+  {{- end }}
 ---
 {{- end -}}
