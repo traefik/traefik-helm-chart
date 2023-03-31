@@ -77,6 +77,10 @@ With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Docume
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 ```
 
+### Upgrading after 18.X+
+
+It's detailed in [release notes](https://github.com/traefik/traefik-helm-chart/releases).
+
 ### Upgrading from 17.x to 18.x
 
 Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
