@@ -6,7 +6,7 @@ changelog:
     - title: New Features
       labels:
         - kind/enhancement
-    - title: Bug Fixes 🐛
+    - title: Bug Fixes
       labels:
         - kind/bug/fix
     - title: Documentation 📝
