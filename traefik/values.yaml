@@ -654,7 +654,7 @@ ports:
 
 # TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
-# You can add additional labels to a tlsOption
+# When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
 # Example:
 # tlsOptions:
 #   default:
