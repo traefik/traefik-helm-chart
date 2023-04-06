@@ -1,5 +1,38 @@
 # Change Log
 
+## 22.1.0  ![AppVersion: v2.9.10](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.10&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-04-06
+
+* ⬆️ Upgrade traefik Docker tag to v2.9.10
+* feat: add additional labels to tlsoption
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 4762b77..9ece303 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -654,12 +654,15 @@ ports:
+ 
+ # TLS Options are created as TLSOption CRDs
+ # https://doc.traefik.io/traefik/https/tls/#tls-options
++# When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
+ # Example:
+ # tlsOptions:
+ #   default:
++#     labels: {}
+ #     sniStrict: true
+ #     preferServerCipherSuites: true
+-#   foobar:
++#   customOptions:
++#     labels: {}
+ #     curvePreferences:
+ #       - CurveP521
+ #       - CurveP384
+```
+
 ## 22.0.0  ![AppVersion: v2.9.9](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.9&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2023-03-29
