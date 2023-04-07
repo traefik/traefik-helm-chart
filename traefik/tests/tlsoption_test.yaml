@@ -118,6 +118,8 @@ tests:
           path: spec.sniStrict
           value: true
   - it: should render config without labels
+    chart:
+      version: 1.0.0
     set:
       tlsOptions:
         default:
@@ -132,7 +134,7 @@ tests:
               app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
               app.kubernetes.io/managed-by: Helm
               app.kubernetes.io/name: traefik
-              helm.sh/chart: traefik-22.0.0
+              helm.sh/chart: traefik-1.0.0
       - equal:
           path: spec
           value:
