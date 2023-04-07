@@ -12,6 +12,9 @@ changelog:
     - title: Documentation
       labels: 
         - area/documentation
+    - tile: Dependencies
+      labels:
+        - "📌 dependencies"
     - title: Misc
       labels:
         - "*"
