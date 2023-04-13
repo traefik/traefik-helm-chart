@@ -27,6 +27,21 @@
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
+      {{- with .Values.deployment.dnsConfig }}
+      dnsConfig:
+        {{- if .searches }}
+        searches:
+          {{- toYaml .searches | nindent 10 }}
+        {{- end }}
+        {{- if .nameservers }}
+        nameservers:
+          {{- toYaml .nameservers | nindent 10 }}
+        {{- end }}
+        {{- if .options }}
+        options:
+          {{- toYaml .options | nindent 10 }}
+        {{- end }}
+      {{- end }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
       {{- toYaml . | nindent 6 }}

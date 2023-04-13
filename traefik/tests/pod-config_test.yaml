@@ -523,3 +523,49 @@ tests:
             hostPort: 1234
             name: websecure-http3
             protocol: UDP
+  - it: should have a custom list of dns nameservers
+    set:
+      deployment:
+        dnsConfig:
+          nameservers:
+            - 1.1.1.1
+            - 2001:db8:30::a
+    asserts:
+      - equal:
+          path: spec.template.spec.dnsConfig.nameservers[0]
+          value: "1.1.1.1"
+      - equal:
+          path: spec.template.spec.dnsConfig.nameservers[1]
+          value: "2001:db8:30::a"
+  - it: should have a list of dns search domain
+    set:
+      deployment:
+        dnsConfig:
+          searches:
+            - ns1.svc.cluster-domain.example
+            - my.dns.search.suffix
+    asserts:
+      - equal:
+          path: spec.template.spec.dnsConfig.searches[0]
+          value: "ns1.svc.cluster-domain.example"
+      - equal:
+          path: spec.template.spec.dnsConfig.searches[1]
+          value: "my.dns.search.suffix"
+  - it: should have a custom dns options
+    set:
+      deployment:
+        dnsConfig:
+          options:
+            - name: ndots
+              value: 2
+            - name: edns0
+    asserts:
+      - equal:
+          path: spec.template.spec.dnsConfig.options[0].name
+          value: "ndots"
+      - equal:
+          path: spec.template.spec.dnsConfig.options[0].value
+          value: 2
+      - equal:
+          path: spec.template.spec.dnsConfig.options[1].name
+          value: "edns0"
