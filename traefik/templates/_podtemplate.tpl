@@ -83,7 +83,7 @@
             {{- end }}
           {{- end }}
         - name: {{ $name | quote }}
-          containerPort: {{ $config.port }}
+          containerPort: {{ default $config.port $config.containerPort }}
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
           {{- end }}
