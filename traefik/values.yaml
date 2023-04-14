@@ -572,6 +572,7 @@ ports:
     port: 8000
     # hostPort: 8000
     expose: true
+#    containerPort: 80
     exposedPort: 80
     # The port protocol (TCP/UDP)
     protocol: TCP
@@ -598,6 +599,7 @@ ports:
     port: 8443
     # hostPort: 8443
     expose: true
+    #    containerPort: 443
     exposedPort: 443
     ## The port protocol (TCP/UDP)
     protocol: TCP
