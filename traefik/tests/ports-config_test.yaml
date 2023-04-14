@@ -184,3 +184,59 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "Default entrypoints are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`."
+
+  - it: should be possible to use a different containerPort
+    set:
+      ports:
+        ssh:
+          port: 2222
+          expose: true
+          containerPort: 22
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: ssh
+            containerPort: 22
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: ssh
+            port: 2222
+            protocol: TCP
+            targetPort: ssh
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.ssh.address=:2222/tcp"
+        template: deployment.yaml
+  - it: should be possible to use same custom containerPort and keep default exposedPort
+    set:
+      ports:
+        web:
+          port: 666
+          expose: true
+          containerPort: 666
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 666
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            protocol: TCP
+            targetPort: web
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.address=:666/tcp"
+        template: deployment.yaml
+
