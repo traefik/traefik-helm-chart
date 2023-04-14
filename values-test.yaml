@@ -1,8 +1,0 @@
-tlsOptions:
-  clientca:
-    clientAuth:
-      # caFiles:
-      #  - /clientcacerts/clientcacert.crt
-      secretNames:
-        - client-ca-cert
-      clientAuthType: RequireAndVerifyClientCert
