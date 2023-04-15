@@ -123,7 +123,7 @@
           {{- range .Values.volumes }}
           - name: {{ tpl (.name) $root | replace "." "-" }}
             mountPath: {{ .mountPath }}
-            readOnly: true
+            readOnly: {{ .readOnly }}
           {{- end }}
           {{- if .Values.experimental.plugins.enabled }}
           - name: plugins
