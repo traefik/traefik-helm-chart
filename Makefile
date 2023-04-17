@@ -1,7 +1,10 @@
 .PHONY: lint test
 
-test:
-	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts quintush/helm-unittest:3.10.1-0.2.10 /charts/hack/test.sh
+traefik/tests/__snapshot__:
+	@mkdir traefik/tests/__snapshot__
+
+test: traefik/tests/__snapshot__
+	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts helmunittest/helm-unittest:3.11.2-0.3.1 /charts/hack/test.sh
 
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.7.1 /charts/hack/lint.sh

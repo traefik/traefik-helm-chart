@@ -71,7 +71,7 @@ tests:
         enabled: true
         maxReplicas: 3
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.metrics
-      - isEmpty:
+      - isNull:
           path: spec.behavior

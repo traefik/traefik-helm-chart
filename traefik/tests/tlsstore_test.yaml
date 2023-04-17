@@ -30,8 +30,8 @@ tests:
           defaultCertificate:
             secretName: tls-cert
     asserts:
-      - equal:
-          path: spec.config
-          values:
+      - isSubset:
+          path: spec
+          content:
             defaultCertificate:
               secretName: tls-cert

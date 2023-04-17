@@ -128,7 +128,7 @@ tests:
           port: 3000
           protocol: UDP
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilyPolicy
         documentIndex: 0
   - it: should have custom ipFamilyPolicy when specified via values
@@ -151,7 +151,7 @@ tests:
           port: 3000
           protocol: UDP
     asserts:
-      - isEmpty:
+      - isNull:
           path: spec.ipFamilies
         documentIndex: 0
   - it: should have custom ipFamilies when specified via values
