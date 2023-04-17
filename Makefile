@@ -1,6 +1,9 @@
 .PHONY: lint test
 
-test:
+traefik/tests/__snapshot__:
+	@mkdir traefik/tests/__snapshot__
+
+test: traefik/tests/__snapshot__
 	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts helmunittest/helm-unittest:3.11.2-0.3.1 /charts/hack/test.sh
 
 lint:
