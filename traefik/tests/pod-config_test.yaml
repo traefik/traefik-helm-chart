@@ -1,6 +1,9 @@
 suite: Pod configuration
 templates:
   - deployment.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
 tests:
   - it: should have envFrom with specified values
     set:

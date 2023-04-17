@@ -1,6 +1,9 @@
 suite: PodDisruptionBudget configuration
 templates:
   - poddisruptionbudget.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
 tests:
   - it: should be disabled by default
     asserts:

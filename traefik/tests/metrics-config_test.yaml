@@ -1,6 +1,9 @@
 suite: Traefik Metrics configuration
 templates:
   - deployment.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
 tests:
   - it: should set default values for args
     asserts:

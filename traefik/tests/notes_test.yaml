@@ -2,7 +2,10 @@ suite: NOTES.txt output
 templates:
   - NOTES.txt
 chart:
-  appVersion: 2.0.0
+  appVersion: 2.3.0
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
 tests:
   - it: should use helm managed namespace in release notes output
     set:
@@ -13,7 +16,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.0.0 has been deployed successfully
+            Traefik Proxy 2.3.0 has been deployed successfully
             on NAMESPACE namespace !
   - it: should use helm managed namespace in release notes output
     set:
@@ -23,7 +26,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.0.0 has been deployed successfully
+            Traefik Proxy 2.3.0 has been deployed successfully
             on traefik-ns-override namespace !
 
   - it: should output hub related notes
@@ -35,7 +38,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.0.0 has been deployed successfully
+            Traefik Proxy 2.3.0 has been deployed successfully
             on NAMESPACE namespace !
 
             Traefik Hub integration is enabled ! With your specific parameters,
@@ -76,7 +79,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.0.0 has been deployed successfully
+            Traefik Proxy 2.3.0 has been deployed successfully
             on NAMESPACE namespace !
   - it: should display warning when enabling persistence without initContainer
     set:
@@ -87,7 +90,7 @@ tests:
           value: |
 
 
-            Traefik Proxy 2.0.0 has been deployed successfully
+            Traefik Proxy 2.3.0 has been deployed successfully
             on NAMESPACE namespace !
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be

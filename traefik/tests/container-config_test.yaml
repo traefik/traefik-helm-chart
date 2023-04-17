@@ -2,13 +2,16 @@ suite: Main Container configuration
 templates:
   - deployment.yaml
 chart:
-  appVersion: v2.0.0
+  appVersion: v2.3.0
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
 tests:
   - it: should have the default Docker image when no value is specified
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v2.0.0
+          value: docker.io/traefik:v2.3.0
   - it: should change image when image.tag value is specified
     set:
       image:
@@ -24,7 +27,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik/traefik:v2.0.0
+          value: docker.io/traefik/traefik:v2.3.0
   - it: should change image when image.registry value is specified
     set:
       image:
@@ -32,7 +35,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: example.org/traefik:v2.0.0
+          value: example.org/traefik:v2.3.0
 
   - it: should have no resource limit by default
     asserts:
