@@ -12,19 +12,19 @@ metadata:
 spec:
   {{- with $config.alpnProtocols }}
   alpnProtocols:
-  {{- toYaml . | nindent 6 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $config.cipherSuites }}
   cipherSuites:
-  {{- toYaml . | nindent 6 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $config.clientAuth }}
   clientAuth:
-  {{- toYaml . | nindent 6 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $config.curvePreferences }}
   curvePreferences:
-  {{- toYaml . | nindent 6 }}
+  {{- toYaml . | nindent 4 }}
   {{- end }}  
   {{- if $config.maxVersion }}
   maxVersion: {{ $config.maxVersion }}
