@@ -55,7 +55,7 @@ metadata:
   namespace: {{ template "traefik.namespace" . }}
   {{- template "traefik.service-metadata" . }}
   annotations:
-  {{- with (merge .Values.service.annotationsUDP .Values.service.annotations) }}
+  {{- with (merge dict .Values.service.annotationsUDP .Values.service.annotations) }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
