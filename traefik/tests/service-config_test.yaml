@@ -280,3 +280,30 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
+  - it: should have different target port when targetPort is different from port
+    set:
+      ports:
+        web:
+          port: 8080
+          exposedPort: 80
+          expose: true
+          targetPort: 80
+        websecure:
+          port: 443
+          exposedPort: 443
+          expose: true
+          targetPort: 80
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+      - equal:
+          path: spec.ports[0].targetPort
+          value: 80
+      - equal:
+          path: spec.ports[1].port
+          value: 443
+      - equal:
+          path: spec.ports[1].targetPort
+          value: 80

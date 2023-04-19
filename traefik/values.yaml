@@ -574,6 +574,8 @@ ports:
     # containerPort: 8000
     expose: true
     exposedPort: 80
+    ## Different target traefik port on the cluster, useful for IP type LB
+    # targetPort: 80
     # The port protocol (TCP/UDP)
     protocol: TCP
     # Use nodeport if set. This is useful if you have configured Traefik in a
@@ -601,6 +603,8 @@ ports:
     # containerPort: 8443
     expose: true
     exposedPort: 443
+    ## Different target traefik port on the cluster, useful for IP type LB
+    # targetPort: 80
     ## The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
