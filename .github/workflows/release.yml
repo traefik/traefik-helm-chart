@@ -66,7 +66,7 @@ jobs:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
-          generateReleaseNotes: false
+          prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
           artifacts: "traefik.yaml"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
