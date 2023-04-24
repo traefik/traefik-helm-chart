@@ -1,8 +1,70 @@
 # Change Log
 
+## 22.2.0  ![AppVersion: v2.9.10](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.10&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-04-24
+
+* chore: 🔧 new release
+* added targetPort support
+* fix: 🐛 annotations leaking between aliased subcharts
+* fix: indentation on `TLSOption`
+* test: 👷 Update unit tests tooling
+* feat: override container port
+* feat: allow to set dnsConfig on pod template
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 9ece303..71273cc 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -82,6 +82,16 @@ deployment:
+   shareProcessNamespace: false
+   # Custom pod DNS policy. Apply if `hostNetwork: true`
+   # dnsPolicy: ClusterFirstWithHostNet
++  dnsConfig: {}
++    # nameservers:
++    #   - 192.0.2.1 # this is an example
++    # searches:
++    #   - ns1.svc.cluster-domain.example
++    #   - my.dns.search.suffix
++    # options:
++    #   - name: ndots
++    #     value: "2"
++    #   - name: edns0
+   # Additional imagePullSecrets
+   imagePullSecrets: []
+     # - name: myRegistryKeySecretName
+@@ -561,8 +571,11 @@ ports:
+     # asDefault: true
+     port: 8000
+     # hostPort: 8000
++    # containerPort: 8000
+     expose: true
+     exposedPort: 80
++    ## Different target traefik port on the cluster, useful for IP type LB
++    # targetPort: 80
+     # The port protocol (TCP/UDP)
+     protocol: TCP
+     # Use nodeport if set. This is useful if you have configured Traefik in a
+@@ -587,8 +600,11 @@ ports:
+     # asDefault: true
+     port: 8443
+     # hostPort: 8443
++    # containerPort: 8443
+     expose: true
+     exposedPort: 443
++    ## Different target traefik port on the cluster, useful for IP type LB
++    # targetPort: 80
+     ## The port protocol (TCP/UDP)
+     protocol: TCP
+     # nodePort: 32443
+```
+
 ## 22.1.0  ![AppVersion: v2.9.10](https://img.shields.io/static/v1?label=AppVersion&message=v2.9.10&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2023-04-06
+**Release date:** 2023-04-07
 
 * ⬆️ Upgrade traefik Docker tag to v2.9.10
 * feat: add additional labels to tlsoption
