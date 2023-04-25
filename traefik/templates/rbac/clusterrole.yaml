@@ -44,6 +44,7 @@ rules:
 {{- end -}}
 {{- if .Values.providers.kubernetesCRD.enabled }}
   - apiGroups:
+      - traefik.io
       - traefik.containo.us
     resources:
       - ingressroutes
