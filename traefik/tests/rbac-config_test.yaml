@@ -227,3 +227,53 @@ tests:
           path: subjects[0].namespace
           value: "traefik-ns-override"
         template: rbac/rolebinding.yaml
+  - it: cluster rbac should be on both traefik.io and containo.us API group
+    set:
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - traefik.io
+              - traefik.containo.us
+            resources:
+              - ingressroutes
+              - ingressroutetcps
+              - ingressrouteudps
+              - middlewares
+              - middlewaretcps
+              - tlsoptions
+              - tlsstores
+              - traefikservices
+              - serverstransports
+            verbs:
+              - get
+              - list
+              - watch
+  - it: namespaced rbac should be on both traefik.io and containo.us API group
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - traefik.io
+              - traefik.containo.us
+            resources:
+              - ingressroutes
+              - ingressroutetcps
+              - ingressrouteudps
+              - middlewares
+              - middlewaretcps
+              - tlsoptions
+              - tlsstores
+              - traefikservices
+              - serverstransports
+            verbs:
+              - get
+              - list
+              - watch
