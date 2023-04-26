@@ -34,22 +34,22 @@ Kubernetes: `>=1.16.0-0`
 | affinity | object | `{}` |  |
 | autoscaling.enabled | bool | `false` |  |
 | certResolvers | object | `{}` |  |
-| deployment.additionalContainers | list | `[]` |  |
-| deployment.additionalVolumes | list | `[]` |  |
-| deployment.annotations | object | `{}` |  |
-| deployment.dnsConfig | object | `{}` |  |
+| deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
+| deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
+| deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
+| deployment.dnsConfig | object | `{}` | Custom pod DNS policy. Apply if `hostNetwork: true` dnsPolicy: ClusterFirstWithHostNet |
 | deployment.enabled | bool | `true` |  |
-| deployment.imagePullSecrets | list | `[]` |  |
-| deployment.initContainers | list | `[]` |  |
-| deployment.kind | string | `"Deployment"` |  |
-| deployment.labels | object | `{}` |  |
-| deployment.lifecycle | object | `{}` |  |
-| deployment.minReadySeconds | int | `0` |  |
-| deployment.podAnnotations | object | `{}` |  |
-| deployment.podLabels | object | `{}` |  |
-| deployment.replicas | int | `1` |  |
-| deployment.shareProcessNamespace | bool | `false` |  |
-| deployment.terminationGracePeriodSeconds | int | `60` |  |
+| deployment.imagePullSecrets | list | `[]` | Additional imagePullSecrets |
+| deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
+| deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
+| deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |
+| deployment.lifecycle | object | `{}` | Pod lifecycle actions |
+| deployment.minReadySeconds | int | `0` | The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available |
+| deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) |
+| deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
+| deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
+| deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
+| deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | `[]` |  |
 | envFrom | list | `[]` |  |
 | experimental.kubernetesGateway.enabled | bool | `false` |  |
@@ -60,7 +60,7 @@ Kubernetes: `>=1.16.0-0`
 | globalArguments[0] | string | `"--global.checknewversion"` |  |
 | globalArguments[1] | string | `"--global.sendanonymoususage"` |  |
 | hostNetwork | bool | `false` |  |
-| hub.enabled | bool | `false` |  |
+| hub.enabled | bool | `false` | Enabling Hub will: <ul><li>enable Traefik Hub integration on Traefik</li> <li>add `traefikhub-tunl` endpoint</li> <li>enable Prometheus metrics with addRoutersLabels</li> <li>enable allowExternalNameServices on KubernetesIngress provider</li> <li>enable allowCrossNamespace on KubernetesCRD provider</li> <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li> |
 | image.pullPolicy | string | `"IfNotPresent"` |  |
 | image.registry | string | `"docker.io"` |  |
 | image.repository | string | `"traefik"` |  |

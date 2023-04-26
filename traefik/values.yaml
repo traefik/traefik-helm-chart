@@ -5,22 +5,21 @@ image:
   # defaults to appVersion
   tag: ""
   pullPolicy: IfNotPresent
-
 #
-# Configure integration with Traefik Hub
+# Traefik Hub integration 
 #
 hub:
-  ## Enabling Hub will:
-  # * enable Traefik Hub integration on Traefik
-  # * add `traefikhub-tunl` endpoint
-  # * enable Prometheus metrics with addRoutersLabels
-  # * enable allowExternalNameServices on KubernetesIngress provider
-  # * enable allowCrossNamespace on KubernetesCRD provider
-  # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
+  # -- Enabling Hub will:
+  # <ul><li>enable Traefik Hub integration on Traefik</li>
+  # <li>add `traefikhub-tunl` endpoint</li>
+  # <li>enable Prometheus metrics with addRoutersLabels</li>
+  # <li>enable allowExternalNameServices on KubernetesIngress provider</li>
+  # <li>enable allowCrossNamespace on KubernetesCRD provider</li>
+  # <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li>
   enabled: false
-  ## Default port can be changed
+  # -- Optional. Default tunnel port 9901
   # tunnelPort: 9901
-  ## TLS is optional. Insecure is mutually exclusive with any other options
+  # -- Optional. Insecure is mutually exclusive with any other options
   # tls:
   #   insecure: false
   #   ca: "/path/to/ca.pem"
@@ -32,39 +31,39 @@ hub:
 #
 deployment:
   enabled: true
-  # Can be either Deployment or DaemonSet
+  # -- Deployment or DaemonSet
   kind: Deployment
-  # Number of pods of the deployment (only applies when kind == Deployment)
+  # -- Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 1
-  # Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+  # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
   # revisionHistoryLimit: 1
-  # Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
+  # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
   terminationGracePeriodSeconds: 60
-  # The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
+  # -- The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
   minReadySeconds: 0
-  # Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
+  # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
-  # Additional deployment labels (e.g. for filtering deployment by custom labels)
+  # -- Additional deployment labels (e.g. for filtering deployment by custom labels)
   labels: {}
-  # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
+  # -- Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
-  # Additional Pod labels (e.g. for filtering Pod by custom labels)
+  # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
   podLabels: {}
-  # Additional containers (e.g. for metric offloading sidecars)
+  # -- Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
     # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
     # - name: socat-proxy
-    # image: alpine/socat:1.0.5
-    # args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
-    # volumeMounts:
-    #   - name: dsdsocket
-    #     mountPath: /socket
-  # Additional volumes available for use with initContainers and additionalContainers
+    #   image: alpine/socat:1.0.5
+    #   args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
+    #   volumeMounts:
+    #     - name: dsdsocket
+    #       mountPath: /socket
+  # -- Additional volumes available for use with initContainers and additionalContainers
   additionalVolumes: []
     # - name: dsdsocket
     #   hostPath:
     #     path: /var/run/statsd-exporter
-  # Additional initContainers (e.g. for setting file permission as shown below)
+  # -- Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
     # The "volume-permissions" init container is required if you run into permission issues.
     # Related issue: https://github.com/traefik/traefik-helm-chart/issues/396
@@ -78,9 +77,9 @@ deployment:
     #   volumeMounts:
     #     - name: data
     #       mountPath: /data
-  # Use process namespace sharing
+  # -- Use process namespace sharing
   shareProcessNamespace: false
-  # Custom pod DNS policy. Apply if `hostNetwork: true`
+  # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
   dnsConfig: {}
     # nameservers:
@@ -92,10 +91,10 @@ deployment:
     #   - name: ndots
     #     value: "2"
     #   - name: edns0
-  # Additional imagePullSecrets
+  # -- Additional imagePullSecrets
   imagePullSecrets: []
     # - name: myRegistryKeySecretName
-  # Pod lifecycle actions
+  # -- Pod lifecycle actions
   lifecycle: {}
     # preStop:
     #   exec:

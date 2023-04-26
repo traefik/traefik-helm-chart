@@ -11,7 +11,7 @@ lint:
 
 docs:
 	docker run --rm -v "$(CURDIR):/helm-docs" jnorwood/helm-docs:latest
-	mv "$(CURDIR)/traefik/README.md" "$(CURDIR)/traefik/VALUES.md"
+	mv -f "$(CURDIR)/traefik/README.md" "$(CURDIR)/traefik/VALUES.md"
 
 changelog:
 	@echo "== Updating Changelogs..."
