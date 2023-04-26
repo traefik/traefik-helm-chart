@@ -24,3 +24,8 @@ jobs:
 
       - name: Test
         run: make test
+
+      - name: Track docs
+        run: |
+          make docs
+          git diff --quiet traefik/VALUES.md || echo "Values have changed. Please run make docs."
