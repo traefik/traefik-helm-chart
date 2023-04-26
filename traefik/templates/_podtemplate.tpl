@@ -637,7 +637,6 @@
           {{- end }}
           {{- end }}
           {{- if .Values.hub.enabled }}
-          - "--experimental.hub"
           - "--hub"
           {{- if .Values.hub.tunnelPort }}
           - --entrypoints.traefikhub-tunl.address=:{{.Values.hub.tunnelPort}}
