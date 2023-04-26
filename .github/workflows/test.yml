@@ -28,4 +28,7 @@ jobs:
       - name: Track docs
         run: |
           make docs
-          git diff --quiet traefik/VALUES.md || echo "Values have changed. Please run make docs."
+          if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
+          echo "Traefik values have changed. Run make docs"
+          exit 1
+          fi
