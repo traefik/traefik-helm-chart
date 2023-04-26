@@ -24,9 +24,6 @@ tests:
           content: "--hub"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.hub"
-      - contains:
-          path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.addRoutersLabels=true"
       - notContains:
           path: spec.template.spec.containers[0].args
