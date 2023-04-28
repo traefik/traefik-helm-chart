@@ -15,6 +15,12 @@ templates:
   - service.yaml
   - tlsoption.yaml
   - tlsstore.yaml
+  - rbac/clusterrole.yaml
+  - rbac/clusterrolebinding.yaml
+  - rbac/podsecuritypolicy.yaml
+  - rbac/role.yaml
+  - rbac/rolebinding.yaml
+  - rbac/serviceaccount.yaml
 
 tests:
   - it: "should contains labels metadata"
@@ -32,6 +38,9 @@ tests:
       hub.enabled: enabled
       tlsStore.a: {}
       tlsOptions.a: {}
+      podSecurityPolicy.enabled: true
+      rbac.enabled: true
+      rbac.namespaced: true
       commonLabels:
         globalLabel: isConfigured
     capabilities:
