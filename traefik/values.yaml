@@ -6,6 +6,10 @@ image:
   tag: ""
   pullPolicy: IfNotPresent
 
+# Add additional label to all resources
+# commonLabels:
+#   key: value
+
 #
 # Configure integration with Traefik Hub
 #
