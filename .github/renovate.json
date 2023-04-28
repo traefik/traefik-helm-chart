@@ -25,6 +25,15 @@
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
+    },
+    {
+      "datasourceTemplate": "docker",
+      "fileMatch": [
+        "^Makefile$"
+      ],
+      "matchStrings": [
+        "^IMAGE_(.+)=(?<depName>.*?):(?<currentValue>[\\w+\\.\\-]*)$"
+      ]
     }
   ]
 }
