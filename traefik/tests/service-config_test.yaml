@@ -37,6 +37,10 @@ tests:
       - equal:
           path: metadata.labels.custom-label
           value: custom-value
+  - it: should have no load balancer class by default
+    asserts:
+      - isNull:
+          path: spec.loadBalancerClass
   - it: should have custom spec elements when specified via values
     set:
       service:
@@ -44,6 +48,7 @@ tests:
           externalTrafficPolicy: Cluster
           loadBalancerIP: "1.2.3.4"
           clusterIP: "2.3.4.5"
+          loadBalancerClass: myclass
           loadBalancerSourceRanges:
             - 192.168.0.1/32
             - 172.16.0.0/16
@@ -75,6 +80,9 @@ tests:
       - equal:
           path: spec.externalIPs[0]
           value: "1.2.3.4"
+      - equal:
+          path: spec.loadBalancerClass
+          value: myclass
   - it: should have custom spec elements when specified via values for TCP ports
     set:
       ports:
