@@ -9,6 +9,9 @@
 {{- define "traefik.service-spec" -}}
   {{- $type := default "LoadBalancer" .Values.service.type }}
   type: {{ $type }}
+  {{- with .Values.service.loadBalancerClass }}
+  loadBalancerClass: {{ . }}
+  {{- end}}
   {{- with .Values.service.spec }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
