@@ -5,6 +5,11 @@ image:
   # defaults to appVersion
   tag: ""
   pullPolicy: IfNotPresent
+
+# Add additional label to all resources
+# commonLabels:
+#   key: value
+
 #
 # Traefik Hub integration 
 #
@@ -717,6 +722,8 @@ service:
   loadBalancerSourceRanges: []
     # - 192.168.0.1/32
     # - 172.16.0.0/16
+  ## Class of the load balancer implementation
+  # loadBalancerClass: service.k8s.aws/nlb
   externalIPs: []
     # - 1.2.3.4
   ## One of SingleStack, PreferDualStack, or RequireDualStack.
