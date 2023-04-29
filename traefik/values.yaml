@@ -749,8 +749,8 @@ service:
   #   # externalIPs: []
   #   # ipFamilies: [ "IPv4","IPv6" ]
 
-## -- Create HorizontalPodAutoscaler object.
 autoscaling:
+  ## -- Create HorizontalPodAutoscaler object.
   enabled: false
 #   minReplicas: 1
 #   maxReplicas: 10
