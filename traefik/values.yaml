@@ -128,13 +128,16 @@ ingressClass:
   enabled: true
   isDefaultClass: true
 
-# -- Enable experimental features
+# Traefik experimental features
 experimental:
   v3:
+    # -- Enable traefik version 3
     enabled: false
   plugins:
+    # -- Enable traefik experimental plugins
     enabled: false
   kubernetesGateway:
+    # -- Enable traefik experimental kubernetes gateway
     enabled: false
     gateway:
       enabled: true
@@ -149,23 +152,24 @@ experimental:
     # annotations:
     #   cert-manager.io/issuer: letsencrypt
 
-# -- Create an IngressRoute for the dashboard
+## Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
+    # -- Create an IngressRoute for the dashboard
     enabled: true
-    # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
     annotations: {}
-    # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
-    # The router match rule used for the dashboard ingressRoute
+    # -- The router match rule used for the dashboard ingressRoute
     matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
-    # Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
+    # -- Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
     # By default, it's using traefik entrypoint, which is not exposed.
     # /!\ Do not expose your dashboard without any protection over the internet /!\
     entryPoints: ["traefik"]
-    # Additional ingressRoute middlewares (e.g. for authentication)
+    # -- Additional ingressRoute middlewares (e.g. for authentication)
     middlewares: []
-    # TLS options (e.g. secret containing certificate)
+    # -- TLS options (e.g. secret containing certificate)
     tls: {}
 
 # -- Customize updateStrategy of traefik pods
@@ -283,12 +287,16 @@ logs:
     ## -- Fields https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
     fields:
       general:
+        # -- Available modes: keep, drop, redact.
         defaultmode: keep
+        # -- Names of the fields to limit.
         names: {}
           ## Examples:
           # ClientUsername: drop
       headers:
+        # -- Available modes: keep, drop, redact.
         defaultmode: drop
+        # -- Names of the headers to limit.
         names: {}
           ## Examples:
           # User-Agent: redact

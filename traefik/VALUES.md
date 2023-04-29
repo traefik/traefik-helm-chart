@@ -52,7 +52,10 @@ Kubernetes: `>=1.16.0-0`
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | `[]` | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
-| experimental | object | `{"kubernetesGateway":{"enabled":false,"gateway":{"enabled":true}},"plugins":{"enabled":false},"v3":{"enabled":false}}` | Enable experimental features |
+| experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental kubernetes gateway |
+| experimental.kubernetesGateway.gateway.enabled | bool | `true` |  |
+| experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
+| experimental.v3.enabled | bool | `false` | Enable traefik version 3 |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
@@ -63,7 +66,13 @@ Kubernetes: `>=1.16.0-0`
 | image.repository | string | `"traefik"` | Traefik image repository |
 | image.tag | string | `""` | defaults to appVersion |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
-| ingressRoute | object | `{"dashboard":{"annotations":{},"enabled":true,"entryPoints":["traefik"],"labels":{},"matchRule":"PathPrefix(`/dashboard`) || PathPrefix(`/api`)","middlewares":[],"tls":{}}}` | Create an IngressRoute for the dashboard |
+| ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
+| ingressRoute.dashboard.enabled | bool | `true` | Create an IngressRoute for the dashboard |
+| ingressRoute.dashboard.entryPoints | list | `["traefik"]` | Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure). By default, it's using traefik entrypoint, which is not exposed. /!\ Do not expose your dashboard without any protection over the internet /!\ |
+| ingressRoute.dashboard.labels | object | `{}` | Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels) |
+| ingressRoute.dashboard.matchRule | string | `"PathPrefix(`/dashboard`) || PathPrefix(`/api`)"` | The router match rule used for the dashboard ingressRoute |
+| ingressRoute.dashboard.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
+| ingressRoute.dashboard.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
 | livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | The livenessProbe checks container health with customized values for parameters such as failure threshold and timeout. |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
@@ -71,10 +80,10 @@ Kubernetes: `>=1.16.0-0`
 | livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.enabled | bool | `false` | To enable access logs |
-| logs.access.fields.general.defaultmode | string | `"keep"` |  |
-| logs.access.fields.general.names | object | `{}` |  |
-| logs.access.fields.headers.defaultmode | string | `"drop"` |  |
-| logs.access.fields.headers.names | object | `{}` |  |
+| logs.access.fields.general.defaultmode | string | `"keep"` | Available modes: keep, drop, redact. |
+| logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
+| logs.access.fields.headers.defaultmode | string | `"drop"` | Available modes: keep, drop, redact. |
+| logs.access.fields.headers.names | object | `{}` | Names of the headers to limit. |
 | logs.access.filters | object | `{}` |  |
 | logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
 | metrics.prometheus.entryPoint | string | `"metrics"` |  |
