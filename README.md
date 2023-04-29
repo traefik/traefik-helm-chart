@@ -64,7 +64,7 @@ helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
 # Upgrade Traefik
-helm upgrade --reuse-values traefik traefik/traefik
+helm upgrade traefik traefik/traefik
 ```
 
 New major version indicates that there is an incompatible breaking change.

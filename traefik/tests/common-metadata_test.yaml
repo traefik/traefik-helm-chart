@@ -1,0 +1,62 @@
+suite: Resources contains metadata
+templates:
+  - dashboard-ingressroute.yaml
+  - deployment.yaml
+  - gatewayclass.yaml
+  - gateway.yaml
+  - hpa.yaml
+  - ingressclass.yaml
+  - poddisruptionbudget.yaml
+  - prometheusrules.yaml
+  - pvc.yaml
+  - service-hub.yaml
+  - service-internal.yaml
+  - servicemonitor.yaml
+  - service.yaml
+  - tlsoption.yaml
+  - tlsstore.yaml
+  - rbac/clusterrole.yaml
+  - rbac/clusterrolebinding.yaml
+  - rbac/podsecuritypolicy.yaml
+  - rbac/role.yaml
+  - rbac/rolebinding.yaml
+  - rbac/serviceaccount.yaml
+
+tests:
+  - it: "should contains labels metadata"
+    set:
+      experimental.kubernetesGateway.enabled: true
+      experimental.kubernetesGateway.gateway.enabled: true
+      autoscaling.enabled: true
+      autoscaling.maxReplicas: 10
+      podDisruptionBudget.enabled: true
+      metrics.prometheus.prometheusRule.namespace: test
+      metrics.prometheus.serviceMonitor.namespace: test
+      metrics.prometheus.service.enabled: true
+      service.internal.a: {}
+      persistence.enabled: true
+      hub.enabled: enabled
+      tlsStore.a: {}
+      tlsOptions.a: {}
+      podSecurityPolicy.enabled: true
+      rbac.enabled: true
+      rbac.namespaced: true
+      commonLabels:
+        globalLabel: isConfigured
+    capabilities:
+      majorVersion: 1
+      minorVersion: 16
+      apiVersions:
+        - monitoring.coreos.com/v1
+        - autoscaling/v2beta1
+    asserts:
+      - isNotEmpty:
+          path: metadata.labels
+      - isSubset:
+          path: metadata.labels
+          content:
+            app.kubernetes.io/managed-by: Helm
+      - isSubset:
+          path: metadata.labels
+          content:
+            globalLabel: isConfigured

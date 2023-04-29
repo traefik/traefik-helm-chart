@@ -6,6 +6,8 @@ kind: Gateway
 metadata:
   name: traefik-gateway
   namespace: {{ default (include "traefik.namespace" .) .Values.experimental.kubernetesGateway.namespace }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
   {{- with .Values.experimental.kubernetesGateway.gateway.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
