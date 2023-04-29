@@ -137,9 +137,10 @@ experimental:
     # -- Enable traefik experimental plugins
     enabled: false
   kubernetesGateway:
-    # -- Enable traefik experimental kubernetes gateway
+    # -- Enable traefik experimental GatewayClass CRD
     enabled: false
     gateway:
+      # -- Enable traefik regular kubernetes gateway
       enabled: true
     # certificate:
     #   group: "core"
@@ -162,7 +163,7 @@ ingressRoute:
     # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
     labels: {}
     # -- The router match rule used for the dashboard ingressRoute
-    matchRule: "PathPrefix(`/dashboard`) || PathPrefix(`/api`)"
+    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     # -- Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
     # By default, it's using traefik entrypoint, which is not exposed.
     # /!\ Do not expose your dashboard without any protection over the internet /!\
@@ -279,12 +280,14 @@ logs:
     ## This option represents the number of log lines Traefik will keep in memory before writing
     ## them to the selected output. In some cases, this option can greatly help performances.
     # bufferingSize: 100
-    ## -- Filtering https://docs.traefik.io/observability/access-logs/#filtering
+    ## Filtering
+    # -- https://docs.traefik.io/observability/access-logs/#filtering
     filters: {}
       # statuscodes: "200,300-302"
       # retryattempts: true
       # minduration: 10ms
-    ## -- Fields https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
+    ## Fields
+    # -- https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
     fields:
       general:
         # -- Available modes: keep, drop, redact.
@@ -307,7 +310,7 @@ metrics:
   ## -- Prometheus is enabled by default.
   ## -- It can be disabled by setting "prometheus: null"
   prometheus:
-    ## Entry point used to expose metrics.
+    # -- Entry point used to expose metrics.
     entryPoint: metrics
     ## Enable metrics on entry points. Default=true
     # addEntryPointsLabels: false
@@ -863,6 +866,7 @@ serviceAccount:
 # -- Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}
 
+# -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
 resources: {}
   # requests:
   #   cpu: "100m"
@@ -911,13 +915,17 @@ securityContext:
   readOnlyRootFilesystem: true
 
 podSecurityContext:
-# -- /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
-# -- permissions for the contents of each volume to match the fsGroup. This can
-# -- be an issue when storing sensitive content like TLS Certificates /!\
+  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
+  # permissions for the contents of each volume to match the fsGroup. This can
+  # be an issue when storing sensitive content like TLS Certificates /!\
   # fsGroup: 65532
+  # -- Specifies the policy for changing ownership and permissions of volume contents to match the fsGroup.
   fsGroupChangePolicy: "OnRootMismatch"
+  # -- The ID of the group for all containers in the pod to run as.
   runAsGroup: 65532
+  # -- Specifies whether the containers should run as a non-root user.
   runAsNonRoot: true
+  # -- The ID of the user for all containers in the pod to run as.
   runAsUser: 65532
 
 #

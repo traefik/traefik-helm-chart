@@ -52,8 +52,8 @@ Kubernetes: `>=1.16.0-0`
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | `[]` | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
-| experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental kubernetes gateway |
-| experimental.kubernetesGateway.gateway.enabled | bool | `true` |  |
+| experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
+| experimental.kubernetesGateway.gateway.enabled | bool | `true` | Enable traefik regular kubernetes gateway |
 | experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
 | experimental.v3.enabled | bool | `false` | Enable traefik version 3 |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
@@ -80,20 +80,21 @@ Kubernetes: `>=1.16.0-0`
 | livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.enabled | bool | `false` | To enable access logs |
+| logs.access.fields | object | `{"general":{"defaultmode":"keep","names":{}},"headers":{"defaultmode":"drop","names":{}}}` | https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers |
 | logs.access.fields.general.defaultmode | string | `"keep"` | Available modes: keep, drop, redact. |
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Available modes: keep, drop, redact. |
 | logs.access.fields.headers.names | object | `{}` | Names of the headers to limit. |
-| logs.access.filters | object | `{}` |  |
+| logs.access.filters | object | `{}` | https://docs.traefik.io/observability/access-logs/#filtering |
 | logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
-| metrics.prometheus.entryPoint | string | `"metrics"` |  |
+| metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence | object | `{"accessMode":"ReadWriteOnce","annotations":{},"enabled":false,"name":"data","path":"/data","size":"128Mi"}` | It can be used to store TLS certificates, see `storage` in certResolvers |
 | podDisruptionBudget | object | `{"enabled":false}` | Pod disruption budget |
-| podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | be an issue when storing sensitive content like TLS Certificates /!\ fsGroup: 65532 |
-| podSecurityContext.runAsGroup | int | `65532` |  |
-| podSecurityContext.runAsNonRoot | bool | `true` |  |
-| podSecurityContext.runAsUser | int | `65532` |  |
+| podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | Specifies the policy for changing ownership and permissions of volume contents to match the fsGroup. |
+| podSecurityContext.runAsGroup | int | `65532` | The ID of the group for all containers in the pod to run as. |
+| podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
+| podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports | object | `{"metrics":{"expose":false,"exposedPort":9100,"port":9100,"protocol":"TCP"},"traefik":{"expose":false,"exposedPort":9000,"port":9000,"protocol":"TCP"},"web":{"expose":true,"exposedPort":80,"port":8000,"protocol":"TCP"},"websecure":{"expose":true,"exposedPort":443,"http3":{"enabled":false},"middlewares":[],"port":8443,"protocol":"TCP","tls":{"certResolver":"","domains":[],"enabled":true,"options":""}}}` | Configure ports |
 | ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside of your cluster, use `kubectl port-forward` or create a secure ingress |
@@ -114,7 +115,7 @@ Kubernetes: `>=1.16.0-0`
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
 | readinessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
-| resources | object | `{}` |  |
+| resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
 | securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjust to run as root |
 | service | object | `{"annotations":{},"annotationsTCP":{},"annotationsUDP":{},"enabled":true,"externalIPs":[],"labels":{},"loadBalancerSourceRanges":[],"single":true,"spec":{},"type":"LoadBalancer"}` | Options for the main traefik service, where the entrypoints traffic comes from. |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
