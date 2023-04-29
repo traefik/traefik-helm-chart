@@ -1,9 +1,12 @@
 # Default values for Traefik
 image:
+  # -- Traefik image host registry
   registry: docker.io
+  # -- Traefik image repository
   repository: traefik
-  # defaults to appVersion
+  # -- defaults to appVersion
   tag: ""
+  # -- Traefik image pull policy
   pullPolicy: IfNotPresent
 
 # -- Add additional label to all resources
@@ -35,6 +38,7 @@ hub:
 # Configure the deployment
 #
 deployment:
+  # -- Enable deployment
   enabled: true
   # -- Deployment or DaemonSet
   kind: Deployment
@@ -219,10 +223,10 @@ providers:
 # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
 # This can be used to mount a cert pair or a configmap that holds a config.toml file.
 # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
-# additionalArguments:
+# `additionalArguments:
 # - "--providers.file.filename=/config/dynamic.toml"
 # - "--ping"
-# - "--ping.entrypoint=web"
+# - "--ping.entrypoint=web"`
 volumes: []
 # - name: public-cert
 #   mountPath: "/certs"
@@ -233,7 +237,7 @@ volumes: []
 
 # -- Additional volumeMounts to add to the Traefik container
 additionalVolumeMounts: []
-  # For instance when using a logshipper for access logs
+  # -- For instance when using a logshipper for access logs
   # - name: traefik-logs
   #   mountPath: /var/log/traefik
 
@@ -457,6 +461,8 @@ metrics:
   #          summary: "Traefik Down"
   #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 
+## Tracing
+# -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing: {}
   # instana:
   #   localAgentHost: 127.0.0.1
@@ -744,7 +750,6 @@ service:
   #   # ipFamilies: [ "IPv4","IPv6" ]
 
 ## -- Create HorizontalPodAutoscaler object.
-##
 autoscaling:
   enabled: false
 #   minReplicas: 1
@@ -786,6 +791,7 @@ persistence:
   # -- Only mount a subpath of the Volume into the pod
   # subPath: ""
 
+# -- Certificates resolvers configuration
 certResolvers: {}
 #   letsencrypt:
 #     # for challenge options cf. https://doc.traefik.io/traefik/https/acme/
@@ -856,8 +862,12 @@ affinity: {}
 #            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
 #        topologyKey: kubernetes.io/hostname
 
+# -- nodeSelector is the simplest recommended form of node selection constraint.
 nodeSelector: {}
+# -- Tolerations allow the scheduler to schedule pods with matching taints.
 tolerations: []
+# -- You can use topology spread constraints to control 
+# how Pods are spread across your cluster among failure-domains.
 topologySpreadConstraints: []
 # This example topologySpreadConstraints forces the scheduler to put traefik pods
 # on nodes where no other traefik pods are scheduled.

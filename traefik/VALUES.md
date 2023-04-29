@@ -33,12 +33,12 @@ Kubernetes: `>=1.16.0-0`
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | autoscaling.enabled | bool | `false` |  |
-| certResolvers | object | `{}` |  |
+| certResolvers | object | `{}` | Certificates resolvers configuration |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
 | deployment.dnsConfig | object | `{}` | Custom pod DNS policy. Apply if `hostNetwork: true` dnsPolicy: ClusterFirstWithHostNet |
-| deployment.enabled | bool | `true` |  |
+| deployment.enabled | bool | `true` | Enable deployment |
 | deployment.imagePullSecrets | list | `[]` | Additional imagePullSecrets |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
@@ -59,10 +59,10 @@ Kubernetes: `>=1.16.0-0`
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub | object | `{"enabled":false}` | Add additional label to all resources commonLabels:   key: value  Traefik Hub integration   |
 | hub.enabled | bool | `false` | Enabling Hub will: <ul><li>enable Traefik Hub integration on Traefik</li> <li>add `traefikhub-tunl` endpoint</li> <li>enable Prometheus metrics with addRoutersLabels</li> <li>enable allowExternalNameServices on KubernetesIngress provider</li> <li>enable allowCrossNamespace on KubernetesCRD provider</li> <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li> |
-| image.pullPolicy | string | `"IfNotPresent"` |  |
-| image.registry | string | `"docker.io"` |  |
-| image.repository | string | `"traefik"` |  |
-| image.tag | string | `""` |  |
+| image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
+| image.registry | string | `"docker.io"` | Traefik image host registry |
+| image.repository | string | `"traefik"` | Traefik image repository |
+| image.tag | string | `""` | defaults to appVersion |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
 | ingressRoute | object | `{"dashboard":{"annotations":{},"enabled":true,"entryPoints":["traefik"],"labels":{},"matchRule":"PathPrefix(`/dashboard`) || PathPrefix(`/api`)","middlewares":[],"tls":{}}}` | Create an IngressRoute for the dashboard |
 | livenessProbe.failureThreshold | int | `3` |  |
@@ -78,7 +78,7 @@ Kubernetes: `>=1.16.0-0`
 | logs.access.filters | object | `{}` |  |
 | logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
 | metrics.prometheus.entryPoint | string | `"metrics"` |  |
-| nodeSelector | object | `{}` |  |
+| nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence | object | `{"accessMode":"ReadWriteOnce","annotations":{},"enabled":false,"name":"data","path":"/data","size":"128Mi"}` | It can be used to store TLS certificates, see `storage` in certResolvers |
 | podDisruptionBudget | object | `{"enabled":false}` | Pod disruption budget |
 | podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | be an issue when storing sensitive content like TLS Certificates /!\ fsGroup: 65532 |
@@ -112,11 +112,11 @@ Kubernetes: `>=1.16.0-0`
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
-| tolerations | list | `[]` |  |
-| topologySpreadConstraints | list | `[]` |  |
-| tracing | object | `{}` |  |
+| tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
+| topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control  how Pods are spread across your cluster among failure-domains. |
+| tracing | object | `{}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
 | updateStrategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"}` | Customize updateStrategy of traefik pods |
-| volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web" |
+| volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------
 Autogenerated from chart metadata using [helm-docs v1.11.0](https://github.com/norwoodj/helm-docs/releases/v1.11.0)
