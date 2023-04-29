@@ -175,19 +175,30 @@ updateStrategy:
     maxUnavailable: 0
     maxSurge: 1
 
-# -- Customize liveness and readiness probe values.
+## Customize liveness and readiness probe values.
+# -- The readinessProbe checks container readiness with customized values for parameters such as failure threshold and timeout.
 readinessProbe:
+  # -- The number of consecutive failures allowed before considering the probe as failed.
   failureThreshold: 1
+  # -- The number of seconds to wait before starting the first probe.
   initialDelaySeconds: 2
+  # -- The number of seconds to wait between consecutive probes.
   periodSeconds: 10
+  # -- The minimum consecutive successes required to consider the probe successful.
   successThreshold: 1
+  # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
-
+# -- The livenessProbe checks container health with customized values for parameters such as failure threshold and timeout.
 livenessProbe:
+  # -- The number of consecutive failures allowed before considering the probe as failed.
   failureThreshold: 3
+  # -- The number of seconds to wait before starting the first probe.
   initialDelaySeconds: 2
+  # -- The number of seconds to wait between consecutive probes.
   periodSeconds: 10
+  # -- The minimum consecutive successes required to consider the probe successful.
   successThreshold: 1
+  # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
 
 #
@@ -505,6 +516,7 @@ tracing: {}
   #   secretToken: ""
   #   serviceEnvironment: ""
 
+# -- Global command arguments to be passed to all traefik's pods
 globalArguments:
   - "--global.checknewversion"
   - "--global.sendanonymoususage"
@@ -533,6 +545,7 @@ env: []
 #       name: secret-name
 #       key: secret-key
 
+# -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []
 # - configMapRef:
 #     name: config-map-name

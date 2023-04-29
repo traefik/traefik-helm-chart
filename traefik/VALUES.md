@@ -51,11 +51,10 @@ Kubernetes: `>=1.16.0-0`
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | `[]` | Environment variables to be passed to Traefik's binary |
-| envFrom | list | `[]` |  |
+| envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental | object | `{"kubernetesGateway":{"enabled":false,"gateway":{"enabled":true}},"plugins":{"enabled":false},"v3":{"enabled":false}}` | Enable experimental features |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
-| globalArguments[0] | string | `"--global.checknewversion"` |  |
-| globalArguments[1] | string | `"--global.sendanonymoususage"` |  |
+| globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub | object | `{"enabled":false}` | Add additional label to all resources commonLabels:   key: value  Traefik Hub integration   |
 | hub.enabled | bool | `false` | Enabling Hub will: <ul><li>enable Traefik Hub integration on Traefik</li> <li>add `traefikhub-tunl` endpoint</li> <li>enable Prometheus metrics with addRoutersLabels</li> <li>enable allowExternalNameServices on KubernetesIngress provider</li> <li>enable allowCrossNamespace on KubernetesCRD provider</li> <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li> |
@@ -65,11 +64,12 @@ Kubernetes: `>=1.16.0-0`
 | image.tag | string | `""` | defaults to appVersion |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
 | ingressRoute | object | `{"dashboard":{"annotations":{},"enabled":true,"entryPoints":["traefik"],"labels":{},"matchRule":"PathPrefix(`/dashboard`) || PathPrefix(`/api`)","middlewares":[],"tls":{}}}` | Create an IngressRoute for the dashboard |
-| livenessProbe.failureThreshold | int | `3` |  |
-| livenessProbe.initialDelaySeconds | int | `2` |  |
-| livenessProbe.periodSeconds | int | `10` |  |
-| livenessProbe.successThreshold | int | `1` |  |
-| livenessProbe.timeoutSeconds | int | `2` |  |
+| livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | The livenessProbe checks container health with customized values for parameters such as failure threshold and timeout. |
+| livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
+| livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
+| livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
+| livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
+| livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.enabled | bool | `false` | To enable access logs |
 | logs.access.fields.general.defaultmode | string | `"keep"` |  |
 | logs.access.fields.general.names | object | `{}` |  |
@@ -99,7 +99,12 @@ Kubernetes: `>=1.16.0-0`
 | priorityClassName | string | `""` | Priority indicates the importance of a Pod relative to other Pods. |
 | providers | object | `{"kubernetesCRD":{"allowCrossNamespace":false,"allowEmptyServices":false,"allowExternalNameServices":false,"enabled":true,"namespaces":[]},"kubernetesIngress":{"allowEmptyServices":false,"allowExternalNameServices":false,"enabled":true,"namespaces":[],"publishedService":{"enabled":false}}}` | Configure providers  |
 | rbac | object | `{"enabled":true,"namespaced":false}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
-| readinessProbe | object | `{"failureThreshold":1,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | Customize liveness and readiness probe values. |
+| readinessProbe | object | `{"failureThreshold":1,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | The readinessProbe checks container readiness with customized values for parameters such as failure threshold and timeout. |
+| readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
+| readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
+| readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
+| readinessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
+| readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` |  |
 | securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjust to run as root |
 | service | object | `{"annotations":{},"annotationsTCP":{},"annotationsUDP":{},"enabled":true,"externalIPs":[],"labels":{},"loadBalancerSourceRanges":[],"single":true,"spec":{},"type":"LoadBalancer"}` | Options for the main traefik service, where the entrypoints traffic comes from. |
