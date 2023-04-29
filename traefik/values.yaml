@@ -750,7 +750,7 @@ service:
   #   # ipFamilies: [ "IPv4","IPv6" ]
 
 autoscaling:
-  ## -- Create HorizontalPodAutoscaler object.
+  # -- Create HorizontalPodAutoscaler object.
   enabled: false
 #   minReplicas: 1
 #   maxReplicas: 10

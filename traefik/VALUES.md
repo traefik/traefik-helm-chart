@@ -32,7 +32,7 @@ Kubernetes: `>=1.16.0-0`
 | additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary All available options available on https://docs.traefik.io/reference/static-configuration/cli/ # Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
-| autoscaling.enabled | bool | `false` |  |
+| autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. |
 | certResolvers | object | `{}` | Certificates resolvers configuration |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
