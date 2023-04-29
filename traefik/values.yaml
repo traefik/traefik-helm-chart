@@ -106,7 +106,7 @@ deployment:
     #     host: localhost
     #     scheme: HTTP
 
-# Pod disruption budget
+# -- Pod disruption budget
 podDisruptionBudget:
   enabled: false
   # maxUnavailable: 1
@@ -114,12 +114,12 @@ podDisruptionBudget:
   # minAvailable: 0
   # minAvailable: 25%
 
-# Create a default IngressClass for Traefik
+# -- Create a default IngressClass for Traefik
 ingressClass:
   enabled: true
   isDefaultClass: true
 
-# Enable experimental features
+# -- Enable experimental features
 experimental:
   v3:
     enabled: false
@@ -140,7 +140,7 @@ experimental:
     # annotations:
     #   cert-manager.io/issuer: letsencrypt
 
-# Create an IngressRoute for the dashboard
+# -- Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
     enabled: true
@@ -159,14 +159,14 @@ ingressRoute:
     # TLS options (e.g. secret containing certificate)
     tls: {}
 
-# Customize updateStrategy of traefik pods
+# -- Customize updateStrategy of traefik pods
 updateStrategy:
   type: RollingUpdate
   rollingUpdate:
     maxUnavailable: 0
     maxSurge: 1
 
-# Customize liveness and readiness probe values.
+# -- Customize liveness and readiness probe values.
 readinessProbe:
   failureThreshold: 1
   initialDelaySeconds: 2
@@ -182,7 +182,7 @@ livenessProbe:
   timeoutSeconds: 2
 
 #
-# Configure providers
+# -- Configure providers
 #
 providers:
   kubernetesCRD:
