@@ -315,6 +315,9 @@ deployment:
     - name: volume-permissions
       image: busybox:latest
       command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
+      volumeMounts:
+      - mountPath: /data
+        name: data
 ```
 
 This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.

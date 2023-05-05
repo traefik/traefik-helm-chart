@@ -1,13 +1,16 @@
 .PHONY: lint test
 
+IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.11.2-0.3.1
+IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.7.1
+
 traefik/tests/__snapshot__:
 	@mkdir traefik/tests/__snapshot__
 
 test: traefik/tests/__snapshot__
-	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts helmunittest/helm-unittest:3.11.2-0.3.1 /charts/hack/test.sh
+	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_HELM_UNITTEST) /charts/hack/test.sh
 
 lint:
-	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts quay.io/helmpack/chart-testing:v3.7.1 /charts/hack/lint.sh
+	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/lint.sh
 
 docs:
 	docker run --rm -v "$(CURDIR):/helm-docs" jnorwood/helm-docs:latest
