@@ -173,15 +173,13 @@ ingressRoute:
     # -- TLS options (e.g. secret containing certificate)
     tls: {}
 
-# -- Customize updateStrategy of traefik pods
 updateStrategy:
+  # -- Customize updateStrategy: RollingUpdate or OnDelete
   type: RollingUpdate
   rollingUpdate:
     maxUnavailable: 0
     maxSurge: 1
 
-## Customize liveness and readiness probe values.
-# -- The readinessProbe checks container readiness with customized values for parameters such as failure threshold and timeout.
 readinessProbe:
   # -- The number of consecutive failures allowed before considering the probe as failed.
   failureThreshold: 1
@@ -193,7 +191,6 @@ readinessProbe:
   successThreshold: 1
   # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
-# -- The livenessProbe checks container health with customized values for parameters such as failure threshold and timeout.
 livenessProbe:
   # -- The number of consecutive failures allowed before considering the probe as failed.
   failureThreshold: 3
@@ -206,26 +203,32 @@ livenessProbe:
   # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
 
-#
-# -- Configure providers
-#
 providers:
   kubernetesCRD:
+    # -- Load Kubernetes IngressRoute provider
     enabled: true
+    # -- Allows IngressRoute to reference resources in namespace other than theirs
     allowCrossNamespace: false
+    # -- Allows to reference ExternalName services in IngressRoute
     allowExternalNameServices: false
+    # -- Allows to return 503 when there is no endpoints available
     allowEmptyServices: false
     # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
       # - "default"
 
   kubernetesIngress:
+    # -- Load Kubernetes IngressRoute provider
     enabled: true
+    # -- Allows to reference ExternalName services in Ingress
     allowExternalNameServices: false
+    # -- Allows to return 503 when there is no endpoints available
     allowEmptyServices: false
     # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
       # - "default"
     # IP used for Kubernetes Ingress endpoints
@@ -257,10 +260,7 @@ additionalVolumeMounts: []
   # - name: traefik-logs
   #   mountPath: /var/log/traefik
 
-## Logs
-## -- https://docs.traefik.io/observability/logs/
 logs:
-  ## -- Traefik logs concern everything that happens to Traefik itself (startup, configuration, events, shutdown, and so on).
   general:
     # -- By default, the logs use a text format (common), but you can
     # also ask for the json format in the format option
@@ -286,8 +286,6 @@ logs:
       # statuscodes: "200,300-302"
       # retryattempts: true
       # minduration: 10ms
-    ## Fields
-    # -- https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers
     fields:
       general:
         # -- Available modes: keep, drop, redact.
@@ -563,16 +561,13 @@ envFrom: []
 # - secretRef:
 #     name: secret-name
 
-# -- Configure ports
 ports:
-  # -- The name of this one can't be changed as it is used for the readiness and
-  # -- liveness probes, but you can adjust its config to your liking
   traefik:
     port: 9000
-    # Use hostPort if set.
+    # -- Use hostPort if set.
     # hostPort: 9000
     #
-    # Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+    # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
     # means it's listening on all your interfaces and all your IPs. You may want
     # to set this value if you need traefik to listen on specific interface
     # only.
@@ -725,8 +720,6 @@ tlsOptions: {}
 #       secretName: tls-cert
 tlsStore: {}
 
-# -- Options for the main traefik service, where the entrypoints traffic comes
-# from.
 service:
   enabled: true
   ## -- Single service is using `MixedProtocolLBService` feature gate.
@@ -799,10 +792,10 @@ autoscaling:
 #         value: 1
 #         periodSeconds: 60
 
-# -- Enable persistence using Persistent Volume Claims
-# ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-# -- It can be used to store TLS certificates, see `storage` in certResolvers
 persistence:
+  # -- Enable persistence using Persistent Volume Claims
+  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+  # It can be used to store TLS certificates, see `storage` in certResolvers
   enabled: false
   name: data
 #  existingClaim: ""

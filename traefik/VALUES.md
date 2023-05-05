@@ -73,14 +73,12 @@ Kubernetes: `>=1.16.0-0`
 | ingressRoute.dashboard.matchRule | string | `"PathPrefix(`/dashboard`) || PathPrefix(`/api`)"` | The router match rule used for the dashboard ingressRoute |
 | ingressRoute.dashboard.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
 | ingressRoute.dashboard.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
-| livenessProbe | object | `{"failureThreshold":3,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | The livenessProbe checks container health with customized values for parameters such as failure threshold and timeout. |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
 | livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.enabled | bool | `false` | To enable access logs |
-| logs.access.fields | object | `{"general":{"defaultmode":"keep","names":{}},"headers":{"defaultmode":"drop","names":{}}}` | https://docs.traefik.io/observability/access-logs/#limiting-the-fieldsincluding-headers |
 | logs.access.fields.general.defaultmode | string | `"keep"` | Available modes: keep, drop, redact. |
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Available modes: keep, drop, redact. |
@@ -89,27 +87,52 @@ Kubernetes: `>=1.16.0-0`
 | logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
-| persistence | object | `{"accessMode":"ReadWriteOnce","annotations":{},"enabled":false,"name":"data","path":"/data","size":"128Mi"}` | It can be used to store TLS certificates, see `storage` in certResolvers |
+| persistence.accessMode | string | `"ReadWriteOnce"` |  |
+| persistence.annotations | object | `{}` |  |
+| persistence.enabled | bool | `false` | Enable persistence using Persistent Volume Claims ref: http://kubernetes.io/docs/user-guide/persistent-volumes/ It can be used to store TLS certificates, see `storage` in certResolvers |
+| persistence.name | string | `"data"` |  |
+| persistence.path | string | `"/data"` |  |
+| persistence.size | string | `"128Mi"` |  |
 | podDisruptionBudget | object | `{"enabled":false}` | Pod disruption budget |
 | podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | Specifies the policy for changing ownership and permissions of volume contents to match the fsGroup. |
 | podSecurityContext.runAsGroup | int | `65532` | The ID of the group for all containers in the pod to run as. |
 | podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
 | podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
-| ports | object | `{"metrics":{"expose":false,"exposedPort":9100,"port":9100,"protocol":"TCP"},"traefik":{"expose":false,"exposedPort":9000,"port":9000,"protocol":"TCP"},"web":{"expose":true,"exposedPort":80,"port":8000,"protocol":"TCP"},"websecure":{"expose":true,"exposedPort":443,"http3":{"enabled":false},"middlewares":[],"port":8443,"protocol":"TCP","tls":{"certResolver":"","domains":[],"enabled":true,"options":""}}}` | Configure ports |
 | ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside of your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.traefik | object | `{"expose":false,"exposedPort":9000,"port":9000,"protocol":"TCP"}` | liveness probes, but you can adjust its config to your liking |
 | ports.traefik.expose | bool | `false` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside of your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `9000` | The exposed port for this service |
+| ports.traefik.port | int | `9000` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| ports.web.expose | bool | `true` |  |
+| ports.web.exposedPort | int | `80` |  |
+| ports.web.port | int | `8000` |  |
+| ports.web.protocol | string | `"TCP"` |  |
+| ports.websecure.expose | bool | `true` |  |
+| ports.websecure.exposedPort | int | `443` |  |
+| ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace middlewares:   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
+| ports.websecure.port | int | `8443` |  |
+| ports.websecure.protocol | string | `"TCP"` |  |
+| ports.websecure.tls.certResolver | string | `""` |  |
+| ports.websecure.tls.domains | list | `[]` |  |
+| ports.websecure.tls.enabled | bool | `true` |  |
+| ports.websecure.tls.options | string | `""` |  |
 | priorityClassName | string | `""` | Priority indicates the importance of a Pod relative to other Pods. |
-| providers | object | `{"kubernetesCRD":{"allowCrossNamespace":false,"allowEmptyServices":false,"allowExternalNameServices":false,"enabled":true,"namespaces":[]},"kubernetesIngress":{"allowEmptyServices":false,"allowExternalNameServices":false,"enabled":true,"namespaces":[],"publishedService":{"enabled":false}}}` | Configure providers  |
+| providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
+| providers.kubernetesCRD.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
+| providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
+| providers.kubernetesCRD.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
+| providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
+| providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
+| providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
+| providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
+| providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
+| providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
 | rbac | object | `{"enabled":true,"namespaced":false}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
-| readinessProbe | object | `{"failureThreshold":1,"initialDelaySeconds":2,"periodSeconds":10,"successThreshold":1,"timeoutSeconds":2}` | The readinessProbe checks container readiness with customized values for parameters such as failure threshold and timeout. |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
@@ -117,12 +140,16 @@ Kubernetes: `>=1.16.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
 | securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjust to run as root |
-| service | object | `{"annotations":{},"annotationsTCP":{},"annotationsUDP":{},"enabled":true,"externalIPs":[],"labels":{},"loadBalancerSourceRanges":[],"single":true,"spec":{},"type":"LoadBalancer"}` | Options for the main traefik service, where the entrypoints traffic comes from. |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
+| service.enabled | bool | `true` |  |
+| service.externalIPs | list | `[]` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
+| service.loadBalancerSourceRanges | list | `[]` |  |
+| service.single | bool | `true` |  |
 | service.spec | object | `{}` | Cannot contain type, selector or ports entries. |
+| service.type | string | `"LoadBalancer"` |  |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
@@ -130,7 +157,9 @@ Kubernetes: `>=1.16.0-0`
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
 | topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control  how Pods are spread across your cluster among failure-domains. |
 | tracing | object | `{}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
-| updateStrategy | object | `{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"}` | Customize updateStrategy of traefik pods |
+| updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
+| updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
+| updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy: RollingUpdate or OnDelete |
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------
