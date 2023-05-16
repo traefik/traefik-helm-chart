@@ -24,3 +24,11 @@ jobs:
 
       - name: Test
         run: make test
+
+      - name: Track docs
+        run: |
+          make docs
+          if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
+          echo "Traefik values have changed. Run make docs"
+          exit 1
+          fi

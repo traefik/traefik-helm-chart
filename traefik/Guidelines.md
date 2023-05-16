@@ -2,19 +2,22 @@
 
 This document outlines the guidelines for developing, managing and extending the Traefik helm chart.
 
+This Helm Chart is documented using field description from comments with [helm-docs](https://github.com/norwoodj/helm-docs).
+
 Optionallity
 All non-critical features (Features not mandatory to starting Traefik) in the helm chart must be optional. All non-critical features should be disabled (commented out) in the values.yaml file. All optional non-critical features should be disabled (commented out) in the values.yaml file, and have a comment # (Optional) in the line above. This allows minimal configuration, and ease of extension.
 
-## Critical Feature Example
+## Feature Example
 
 ```yaml
 image:
-  name: traefik
+  # -- Traefik image host registry
+  registry: docker.io
 ```
 
-This feature is critical, and therefore is defined clearly in the values.yaml file.
+This feature is expected and therefore is defined clearly in the values.yaml file.
 
-## Non-Critical Feature Example
+## Optional Feature Example
 
 ```yaml
 # storage:
@@ -22,7 +25,7 @@ This feature is critical, and therefore is defined clearly in the values.yaml fi
 #     type: emptyDir
 ```
 
-This feature is non-critical, and therefore is commented out by default in the values.yaml file.
+This feature is optional, non-critical, and therefore is commented out by default in the values.yaml file.
 
 To allow this, template blocks that use this need to recursively test for existence of values before using them:
 
@@ -87,7 +90,3 @@ There should be an empty commented line between each primary key in the values.y
 ## Values YAML Design
 
 The values.yaml file is designed to be user-friendly. It does not have to resemble the templated configuration if it is not conducive. Similarly, value names to not have to correspond to fields in the tempate if it is not condusive.
-
-## Comments
-
-The values.yaml file should not contain comments or explainations of what options are, or what values are available. The values table in the README file is for this purpose.

@@ -12,6 +12,10 @@ test: traefik/tests/__snapshot__
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/lint.sh
 
+docs:
+	docker run --rm -v "$(CURDIR):/helm-docs" jnorwood/helm-docs:latest
+	mv -f "$(CURDIR)/traefik/README.md" "$(CURDIR)/traefik/VALUES.md"
+
 changelog:
 	@echo "== Updating Changelogs..."
 	@docker run -it --rm -v $(CURDIR):/data ghcr.io/mloiseleur/helm-changelog:v0.0.2
