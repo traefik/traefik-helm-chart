@@ -66,15 +66,13 @@ tests:
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
           value: traefik
-  - it: should provide ServiceMonitor pointing to metrics service, when hub is disabled and prometheus.service.enabled is true
+  - it: should provide ServiceMonitor pointing to metrics service, when prometheus.service.enabled is true
     capabilities:
       apiVersions:
         - monitoring.coreos.com/v1
     values:
       - ./values/servicemonitor.yaml
     set:
-      hub:
-        enabled: false
       metrics:
         prometheus:
           service:
@@ -85,23 +83,3 @@ tests:
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/component"]
           value: metrics
-  - it: should provide ServiceMonitor pointing to hub service, when hub is enabled
-    values:
-      - ./values/servicemonitor.yaml
-    capabilities:
-      apiVersions:
-        - monitoring.coreos.com/v1
-    set:
-      hub:
-        enabled: true
-      metrics:
-        prometheus:
-          service:
-            enabled: true
-    asserts:
-      - hasDocuments:
-          count: 1
-      - isNotSubset:
-          path: spec.selector.matchLabels
-          content:
-            app.kubernetes.io/component: metrics

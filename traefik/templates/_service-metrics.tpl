@@ -18,5 +18,8 @@ app.kubernetes.io/component: metrics
 {{ include "traefik.metricslabelselector" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
+{{- end }}
 {{- end }}
 

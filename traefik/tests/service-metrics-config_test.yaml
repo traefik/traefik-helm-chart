@@ -19,17 +19,6 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
-  - it: should not provide a dedicated metrics service when hub is enabled
-    set:
-      hub:
-        enabled: true
-      metrics:
-        prometheus:
-          service:
-            enabled: true
-    asserts:
-      - hasDocuments:
-          count: 0
   - it: should provide a dedicated metrics service when enabled set to true
     set:
       metrics:

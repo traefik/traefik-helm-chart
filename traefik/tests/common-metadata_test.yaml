@@ -9,7 +9,6 @@ templates:
   - poddisruptionbudget.yaml
   - prometheusrules.yaml
   - pvc.yaml
-  - service-hub.yaml
   - service-internal.yaml
   - servicemonitor.yaml
   - service.yaml
@@ -35,7 +34,6 @@ tests:
       metrics.prometheus.service.enabled: true
       service.internal.a: {}
       persistence.enabled: true
-      hub.enabled: enabled
       tlsStore.a: {}
       tlsOptions.a: {}
       podSecurityPolicy.enabled: true

@@ -58,8 +58,8 @@ app.kubernetes.io/instance: {{ template "traefik.instance-name" . }}
 {{ include "traefik.labelselector" . }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Values.commonLabels }}
-{{ toYaml .Values.commonLabels }}
+{{- with .Values.commonLabels }}
+{{ toYaml . }}
 {{- end }}
 {{- end }}
 

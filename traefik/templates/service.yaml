@@ -22,7 +22,7 @@
   {{- end -}}
 {{- end -}}
 
-{{- if and (eq $exposedPorts false) (not .Values.hub.enabled) -}}
+{{- if (eq $exposedPorts false) -}}
   {{- fail "You need to expose at least one port or set enabled=false to service" -}}
 {{- end -}}
 
