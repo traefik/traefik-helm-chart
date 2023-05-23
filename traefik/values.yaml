@@ -10,8 +10,7 @@ image:
   pullPolicy: IfNotPresent
 
 # -- Add additional label to all resources
-# commonLabels:
-#   key: value
+commonLabels: {}
 
 #
 # Configure the deployment

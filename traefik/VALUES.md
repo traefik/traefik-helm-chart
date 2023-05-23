@@ -34,7 +34,7 @@ Kubernetes: `>=1.16.0-0`
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. |
 | certResolvers | object | `{}` | Certificates resolvers configuration |
-| deployment | object | `{"additionalContainers":[],"additionalVolumes":[],"annotations":{},"dnsConfig":{},"enabled":true,"imagePullSecrets":[],"initContainers":[],"kind":"Deployment","labels":{},"lifecycle":{},"minReadySeconds":0,"podAnnotations":{},"podLabels":{},"replicas":1,"shareProcessNamespace":false,"terminationGracePeriodSeconds":60}` | Add additional label to all resources commonLabels:   key: value  Configure the deployment  |
+| commonLabels | object | `{}` | Add additional label to all resources |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
