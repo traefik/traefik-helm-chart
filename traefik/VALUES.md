@@ -34,6 +34,7 @@ Kubernetes: `>=1.16.0-0`
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. |
 | certResolvers | object | `{}` | Certificates resolvers configuration |
+| commonLabels | object | `{}` | Add additional label to all resources |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
@@ -59,8 +60,6 @@ Kubernetes: `>=1.16.0-0`
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
-| hub | object | `{"enabled":false}` | Add additional label to all resources commonLabels:   key: value  Traefik Hub integration   |
-| hub.enabled | bool | `false` | Enabling Hub will: <ul><li>enable Traefik Hub integration on Traefik</li> <li>add `traefikhub-tunl` endpoint</li> <li>enable Prometheus metrics with addRoutersLabels</li> <li>enable allowExternalNameServices on KubernetesIngress provider</li> <li>enable allowCrossNamespace on KubernetesCRD provider</li> <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li> |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |

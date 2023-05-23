@@ -1,6 +1,6 @@
 {{- if .Values.metrics.prometheus }}
 {{- if .Values.metrics.prometheus.service }}
-{{- if (and (.Values.metrics.prometheus.service).enabled (not .Values.hub.enabled)) -}}
+{{- if (.Values.metrics.prometheus.service).enabled -}}
 
 {{- $fullname := include "traefik.fullname" . }}
 {{- if ge (len $fullname) 50 }}

@@ -10,29 +10,7 @@ image:
   pullPolicy: IfNotPresent
 
 # -- Add additional label to all resources
-# commonLabels:
-#   key: value
-
-#
-# Traefik Hub integration 
-#
-hub:
-  # -- Enabling Hub will:
-  # <ul><li>enable Traefik Hub integration on Traefik</li>
-  # <li>add `traefikhub-tunl` endpoint</li>
-  # <li>enable Prometheus metrics with addRoutersLabels</li>
-  # <li>enable allowExternalNameServices on KubernetesIngress provider</li>
-  # <li>enable allowCrossNamespace on KubernetesCRD provider</li>
-  # <li>add an internal (ClusterIP) Service, dedicated for Traefik Hub</li>
-  enabled: false
-  # -- Optional. Default tunnel port 9901
-  # tunnelPort: 9901
-  # -- Optional. Insecure is mutually exclusive with any other options
-  # tls:
-  #   insecure: false
-  #   ca: "/path/to/ca.pem"
-  #   cert: "/path/to/cert.pem"
-  #   key: "/path/to/key.pem"
+commonLabels: {}
 
 #
 # Configure the deployment
@@ -434,7 +412,6 @@ metrics:
 ## -- enable optional CRDs for Prometheus Operator
 ##
   ## Create a dedicated metrics service for use with ServiceMonitor
-  ## When hub.enabled is set to true, it's not needed: it will use hub service.
   #  service:
   #    enabled: false
   #    labels: {}

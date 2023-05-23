@@ -102,11 +102,6 @@
         {{- end }}
         {{- end }}
         {{- end }}
-        {{- if .Values.hub.enabled }}
-        - name: "traefikhub-tunl"
-          containerPort: {{ default 9901 .Values.hub.tunnelPort }}
-          protocol: "TCP"
-        {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
@@ -248,10 +243,10 @@
             {{- end }}
            {{- end }}
           {{- end }}
-          {{- if (or .Values.metrics.prometheus .Values.hub.enabled) }}
+          {{- if (.Values.metrics.prometheus) }}
           - "--metrics.prometheus=true"
           - "--metrics.prometheus.entrypoint={{ .Values.metrics.prometheus.entryPoint }}"
-          {{- if (or (eq (.Values.metrics.prometheus.addRoutersLabels | toString) "true") .Values.hub.enabled) }}
+          {{- if (eq (.Values.metrics.prometheus.addRoutersLabels | toString) "true") }}
           - "--metrics.prometheus.addRoutersLabels=true"
           {{- end }}
           {{- if ne .Values.metrics.prometheus.addEntryPointsLabels nil }}
@@ -483,10 +478,10 @@
           {{- if .Values.providers.kubernetesCRD.ingressClass }}
           - "--providers.kubernetescrd.ingressClass={{ .Values.providers.kubernetesCRD.ingressClass }}"
           {{- end }}
-          {{- if (or .Values.providers.kubernetesCRD.allowCrossNamespace .Values.hub.enabled) }}
+          {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
           {{- end }}
-          {{- if (or .Values.providers.kubernetesCRD.allowExternalNameServices .Values.hub.enabled) }}
+          {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
@@ -495,7 +490,7 @@
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.enabled }}
           - "--providers.kubernetesingress"
-          {{- if (or .Values.providers.kubernetesIngress.allowExternalNameServices .Values.hub.enabled) }}
+          {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
           {{- end }}
           {{- if .Values.providers.kubernetesIngress.allowEmptyServices }}
@@ -633,29 +628,6 @@
           {{- end }}
           {{- else }}
           - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}={{ $setting }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- if .Values.hub.enabled }}
-          - "--hub"
-          {{- if .Values.hub.tunnelPort }}
-          - --entrypoints.traefikhub-tunl.address=:{{.Values.hub.tunnelPort}}
-          {{- end }}
-          {{- with .Values.hub.tls }}
-          {{- if (and .insecure (coalesce .ca .cert .key)) }}
-            {{- fail "ERROR: You cannot specify insecure and certs on TLS for Traefik Hub at the same time" }}
-          {{- end }}
-          {{- if .insecure }}
-          - "--hub.tls.insecure=true"
-          {{- end }}
-          {{- if .ca }}
-          - "--hub.tls.ca={{ .ca }}"
-          {{- end }}
-          {{- if .cert }}
-          - "--hub.tls.cert={{ .cert }}"
-          {{- end }}
-          {{- if .key }}
-          - "--hub.tls.key={{ .key }}"
           {{- end }}
           {{- end }}
           {{- end }}
