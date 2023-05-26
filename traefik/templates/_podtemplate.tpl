@@ -550,8 +550,10 @@
           {{- end }}
           {{- if $config.http3 }}
           {{- if $config.http3.enabled }}
+          {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
           - "--experimental.http3=true"
-          {{- if semverCompare ">=2.6.0" (default $.Chart.AppVersion $.Values.image.tag)}}
+          {{- end }}
+          {{- if semverCompare ">=2.6.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
           {{- if $config.http3.advertisedPort }}
           - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
           {{- else }}
