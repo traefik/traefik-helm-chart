@@ -612,6 +612,8 @@ ports:
     ## -- The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
+    ## -- Specify an application protocol. This may be used as a hint for a Layer 7 load balancer.
+    # appProtocol: https
     #
     ## -- Enable HTTP/3 on the entrypoint
     ## Enabling it will also enable http3 experimental feature
