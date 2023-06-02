@@ -4,14 +4,10 @@
   {{- fail "ERROR: maxReplicas is required on HPA" }}
 {{- end }}
 
-{{- if .Capabilities.APIVersions.Has "autoscaling/v2" }}
+{{- if semverCompare ">=1.23.0-0" .Capabilities.KubeVersion.Version }}
 apiVersion: autoscaling/v2
-{{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta2" }}
-apiVersion: autoscaling/v2beta2
-{{- else if .Capabilities.APIVersions.Has "autoscaling/v2beta1" }}
-apiVersion: autoscaling/v2beta1
 {{- else }}
-  {{- fail "ERROR: You must have at least autoscaling/v2beta1 to use HorizontalPodAutoscaler" }}
+apiVersion: autoscaling/v2beta2
 {{- end }}
 kind: HorizontalPodAutoscaler
 metadata:
