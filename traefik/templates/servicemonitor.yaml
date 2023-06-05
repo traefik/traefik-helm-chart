@@ -24,7 +24,7 @@ metadata:
 spec:
   jobLabel: {{ .Values.metrics.prometheus.serviceMonitor.jobLabel | default .Release.Name }}
   endpoints:
-    - port: metrics
+    - targetPort: metrics
       path: /{{ .Values.metrics.prometheus.entryPoint }}
       {{- with .Values.metrics.prometheus.serviceMonitor.honorLabels }}
       honorLabels: {{ . }}
