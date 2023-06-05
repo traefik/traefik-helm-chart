@@ -37,7 +37,7 @@ tests:
       - contains:
           path: spec.endpoints
           content:
-            port: metrics
+            targetPort: metrics
             path: /metrics
             enableHttp2: true
             followRedirects: true
