@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 23.0.1
+version: 23.1.0
 # renovate: image=traefik
 appVersion: v2.10.1
 kubeVersion: ">=1.16.0-0"
@@ -28,4 +28,13 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "⬆️ Upgrade traefik Docker tag to v2.10.1"
+    - "release: 🚀 publish v23.1.0"
+    - "feat: ✨ add a warning when labelSelector don't match"
+    - "feat: add optional `appProtocol` field on Service ports"
+    - "feat: ➖ remove Traefik Hub v1 integration"
+    - "feat: allow specifying service loadBalancerClass"
+    - "feat: common labels for all resources"
+    - "fix: 🐛 use k8s version for hpa api version"
+    - "fix: 🐛 http3 support on traefik v3"
+    - "fix: use `targetPort` instead of `port` on ServiceMonitor"
+    - "doc: added values README via helm-docs cli"
