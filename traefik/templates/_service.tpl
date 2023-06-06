@@ -46,6 +46,9 @@
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}
     {{- end }}
+    {{- if $config.appProtocol }}
+    appProtocol: {{ $config.appProtocol }}
+    {{- end }}
   {{- end }}
   {{- if $config.http3 }}
   {{- if $config.http3.enabled }}
@@ -56,6 +59,9 @@
     protocol: UDP
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}
+    {{- end }}
+    {{- if $config.appProtocol }}
+    appProtocol: {{ $config.appProtocol }}
     {{- end }}
   {{- end }}
   {{- end }}

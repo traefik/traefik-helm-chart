@@ -177,6 +177,28 @@ tests:
           value:
             - IPv6
           documentIndex: 0
+  - it: should not have appProtocol when not specified
+    documentIndex: 0
+    asserts:
+      - isNull:
+          path: spec.ports[0].appProtocol
+      - isNull:
+          path: spec.ports[1].appProtocol
+  - it: should have custom appProtocol when specified via values
+    set:
+      ports:
+        web:
+          appProtocol: http
+        websecure:
+          appProtocol: https
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: spec.ports[0].appProtocol
+          value: http
+      - equal:
+          path: spec.ports[1].appProtocol
+          value: https
   - it: should use default websecure UDP port when http3 is enabled
     set:
       ports:
