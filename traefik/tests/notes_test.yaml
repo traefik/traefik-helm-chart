@@ -16,8 +16,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.3.0 has been deployed successfully
-            on NAMESPACE namespace !
+            Traefik Proxy 2.3.0 has been deployed successfully on NAMESPACE namespace !
   - it: should use helm managed namespace in release notes output
     set:
       namespaceOverride: "traefik-ns-override"
@@ -26,8 +25,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.3.0 has been deployed successfully
-            on traefik-ns-override namespace !
+            Traefik Proxy 2.3.0 has been deployed successfully on traefik-ns-override namespace !
   - it: should use tag version in release notes output if set
     set:
       image:
@@ -37,8 +35,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy v3.0 has been deployed successfully
-            on NAMESPACE namespace !
+            Traefik Proxy v3.0 has been deployed successfully on NAMESPACE namespace !
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
@@ -56,8 +53,7 @@ tests:
           value: |2
 
 
-            Traefik Proxy 2.3.0 has been deployed successfully
-            on NAMESPACE namespace !
+            Traefik Proxy 2.3.0 has been deployed successfully on NAMESPACE namespace !
   - it: should display warning when enabling persistence without initContainer
     set:
       persistence:
@@ -67,10 +63,26 @@ tests:
           value: |
 
 
-            Traefik Proxy 2.3.0 has been deployed successfully
-            on NAMESPACE namespace !
+            Traefik Proxy 2.3.0 has been deployed successfully on NAMESPACE namespace !
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
             lost when Traefik restarts. You can ensure correct permissions with an
             initContainer. See https://github.com/traefik/traefik-helm-chart/issues/396 for
             more info. 🚨
+  - it: should display warning when enabling labelSelector without applying it
+    set:
+      commonLabels:
+        is: here
+      providers:
+        kubernetesCRD:
+          labelSelector: not_here=CRD,is=here
+        kubernetesIngress:
+          labelSelector: not_here=Ingress,is=here
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            Traefik Proxy 2.3.0 has been deployed successfully on NAMESPACE namespace !
+            🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider 🚨
+            🚨 Resources populated with this chart don't match with labelSelector `not_here=Ingress` applied on kubernetesIngress provider 🚨
