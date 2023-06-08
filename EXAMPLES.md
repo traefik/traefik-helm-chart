@@ -213,6 +213,59 @@ extraObjects:
             number: 80
 ```
 
+Or a [global IP on a Gateway](https://cloud.google.com/kubernetes-engine/docs/how-to/deploying-gateways) with continuous HTTPS encryption.
+
+```yaml
+ports:
+  websecure:
+    appProtocol: HTTPS # Hint for Google L7 load balancer
+service:
+  type: ClusterIP
+extraObjects:
+- apiVersion: gateway.networking.k8s.io/v1beta1
+  kind: Gateway
+  metadata:
+    name: traefik
+    annotations:
+      networking.gke.io/certmap: "myCertificateMap"
+  spec:
+    gatewayClassName: gke-l7-global-external-managed
+    addresses:
+    - type: NamedAddress
+      value: "myGlobalIPName"
+    listeners:
+    - name: https
+      protocol: HTTPS
+      port: 443
+- apiVersion: gateway.networking.k8s.io/v1beta1
+  kind: HTTPRoute
+  metadata:
+    name: traefik
+  spec:
+    parentRefs:
+    - kind: Gateway
+      name: traefik
+    rules:
+    - backendRefs:
+      - name: traefik
+        port: 443
+- apiVersion: networking.gke.io/v1
+  kind: HealthCheckPolicy
+  metadata:
+    name: traefik
+  spec:
+    default:
+      config:
+        type: HTTP
+        httpHealthCheck:
+          port: 9000
+          requestPath: /ping
+    targetRef:
+      group: ""
+      kind: Service
+      name: traefik
+```
+
 # Install on Azure
 
 A [static IP on a resource group](https://learn.microsoft.com/en-us/azure/aks/static-ip) can be used:
