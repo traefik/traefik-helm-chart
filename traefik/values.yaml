@@ -834,6 +834,8 @@ serviceAccount:
   # If set, an existing service account is used
   # If not set, a service account is created automatically using the fullname template
   name: ""
+  # Allows auto mount of ServiceAccountToken on the serviceAccount created
+  automountServiceAccountToken: true
 
 # -- Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}

@@ -149,7 +149,7 @@ Kubernetes: `>=1.16.0-0`
 | service.single | bool | `true` |  |
 | service.spec | object | `{}` | Cannot contain type, selector or ports entries. |
 | service.type | string | `"LoadBalancer"` |  |
-| serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
+| serviceAccount | object | `{"automountServiceAccountToken":true,"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
