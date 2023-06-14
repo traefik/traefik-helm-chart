@@ -64,7 +64,7 @@ Kubernetes: `>=1.16.0-0`
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
 | image.tag | string | `""` | defaults to appVersion |
-| ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
+| ingressClass | object | `{"enabled":true,"isDefaultClass":true,"name":"traefik"}` | Create a default IngressClass for Traefik |
 | ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
 | ingressRoute.dashboard.enabled | bool | `true` | Create an IngressRoute for the dashboard |
 | ingressRoute.dashboard.entryPoints | list | `["traefik"]` | Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure). By default, it's using traefik entrypoint, which is not exposed. /!\ Do not expose your dashboard without any protection over the internet /!\ |
