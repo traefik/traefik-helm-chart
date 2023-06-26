@@ -1,0 +1,152 @@
+suite: Traefik Hub configuration
+templates:
+  - admission.yaml
+  - deployment.yaml
+  - rbac/clusterrole.yaml
+tests:
+  - it: should not use Traefik Hub by default
+    template: deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^docker.io/traefik:v[0-9.]+$"
+  - it: Enable pre-requisites on Container when Traefik Hub is set
+    set:
+      traefik-hub:
+        version: v2.0.5
+    template: deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^ghcr.io/traefik/traefik-hub:v[0-9.]+$"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            ic
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--hub.token=$(HUB_SECRET_TOKEN)"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content:
+            "--hub.admission.listenAddr=:7500"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_EXPERIMENTAL_INGRESS_CONTROLLER_MODE
+            value: "true"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: hub-agent-token
+                key: token
+  - it: Should be possible to change hub secret token ref
+    set:
+      traefik-hub:
+        version: v2.0.5
+        tokenSecretRef:
+          name: customSecret
+          key: customKey
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_SECRET_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: customSecret
+                key: customKey
+  - it: Enable pre-requisites on admission webhook when Traefik Hub is set
+    set:
+      traefik-hub:
+        version: v2.0.5
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            containerPort: 7500
+            name: admission
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            port: 7500
+            name: admission
+            protocol: TCP
+        template: admission.yaml
+        documentIndex: 0
+      - isKind:
+          of: Secret
+        template: admission.yaml
+        documentIndex: 1
+      - isNotNullOrEmpty:
+          path: data.cert
+        template: admission.yaml
+        documentIndex: 1
+      - isNotNullOrEmpty:
+          path: data.key
+        template: admission.yaml
+        documentIndex: 1
+      - isKind:
+          of: MutatingWebhookConfiguration
+        template: admission.yaml
+        documentIndex: 2
+      - isNotNullOrEmpty:
+          path: webhooks[0].clientConfig.caBundle
+        template: admission.yaml
+        documentIndex: 2
+      - hasDocuments:
+          count: 5
+        template: admission.yaml
+  - it: Enable pre-requisites on rbac when Traefik Hub is set
+    set:
+      traefik-hub:
+        version: v2.0.5
+    template: rbac/clusterrole.yaml
+    asserts:
+      - isKind:
+          of: ClusterRole
+      - contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - ingressclasses
+            verbs:
+              - list
+              - watch
+              - create
+      - contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+          resources:
+            - accesscontrolpolicies
+            - edgeingresses
+            - apis
+            - apiaccesses
+            - apicollections
+            - apigateways
+            - apiportals
+            - apiratelimits
+          verbs:
+            - list
+            - watch
+            - create
+            - update
+            - patch
+            - delete
+            - get

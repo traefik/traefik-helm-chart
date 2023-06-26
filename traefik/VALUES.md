@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 23.1.0](https://img.shields.io/badge/Version-23.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.1](https://img.shields.io/badge/AppVersion-v2.10.1-informational?style=flat-square)
+![Version: 23.1.0](https://img.shields.io/badge/Version-23.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.3](https://img.shields.io/badge/AppVersion-v2.10.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -154,8 +154,10 @@ Kubernetes: `>=1.16.0-0`
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
-| topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control  how Pods are spread across your cluster among failure-domains. |
+| topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains. |
 | tracing | object | `{}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
+| traefik-hub.tokenSecretRef | object | `{"key":"token","name":"hub-agent-token"}` | Reference a specific Secret for Hub Token. Optional. Default is Secret named `hub-agent-token`, using `token` for the key. |
+| traefik-hub.version | string | `nil` | Deploy Traefik Hub instead of Traefik Proxy. Optional. Current version: v2.0.5 |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy: RollingUpdate or OnDelete |

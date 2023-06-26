@@ -12,9 +12,17 @@ image:
 # -- Add additional label to all resources
 commonLabels: {}
 
-#
+traefik-hub:
+  # -- Deploy Traefik Hub instead of Traefik Proxy. Optional.
+  # Current version: v2.0.5
+  version: null
+  # -- Reference a specific Secret for Hub Token. Optional.
+  # Default is Secret named `hub-agent-token`, using `token` for the key.
+  tokenSecretRef:
+    name: hub-agent-token
+    key: token
+
 # Configure the deployment
-#
 deployment:
   # -- Enable deployment
   enabled: true
@@ -863,7 +871,7 @@ affinity: {}
 nodeSelector: {}
 # -- Tolerations allow the scheduler to schedule pods with matching taints.
 tolerations: []
-# -- You can use topology spread constraints to control 
+# -- You can use topology spread constraints to control
 # how Pods are spread across your cluster among failure-domains.
 topologySpreadConstraints: []
 # This example topologySpreadConstraints forces the scheduler to put traefik pods
