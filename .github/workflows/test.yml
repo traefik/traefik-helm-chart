@@ -27,8 +27,10 @@ jobs:
 
       - name: Track docs
         run: |
-          make docs
-          if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
-          echo "Traefik values have changed. Run make docs"
-          exit 1
+          if ! [ -z "$(git diff traefik/Chart.yaml | grep version:)" ]; then
+            make docs
+            if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
+            echo "Traefik values have changed. Run make docs"
+            exit 1
+            fi
           fi
