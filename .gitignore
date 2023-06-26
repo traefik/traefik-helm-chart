@@ -19,4 +19,9 @@ repo/
 # Unit test for helm
 __snapshot__
 
+# vim temporary files
+*.swp
+*.swo
+
+# IDE
 .idea
