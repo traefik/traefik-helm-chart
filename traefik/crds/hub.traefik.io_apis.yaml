@@ -1,0 +1,127 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: apis.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: API
+    listKind: APIList
+    plural: apis
+    singular: api
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .spec.pathPrefix
+      name: PathPrefix
+      type: string
+    - jsonPath: .spec.service.name
+      name: ServiceName
+      type: string
+    - jsonPath: .spec.service.port.number
+      name: ServicePort
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: API defines an API exposed within a portal.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: APISpec configures an API.
+            properties:
+              pathPrefix:
+                type: string
+              service:
+                description: APIService configures the service to exposed on the edge.
+                properties:
+                  name:
+                    type: string
+                  openApiSpec:
+                    description: OpenAPISpec defines the OpenAPI spec of an API.
+                    properties:
+                      path:
+                        type: string
+                      port:
+                        description: APIServiceBackendPort is the service port being
+                          referenced.
+                        properties:
+                          name:
+                            description: name is the name of the port on the Service.
+                              This must be an IANA_SVC_NAME (following RFC6335). This
+                              is a mutually exclusive setting with "Number".
+                            type: string
+                          number:
+                            description: number is the numerical port number (e.g.
+                              80) on the Service. This is a mutually exclusive setting
+                              with "Name".
+                            format: int32
+                            type: integer
+                        type: object
+                      protocol:
+                        type: string
+                      url:
+                        type: string
+                    type: object
+                  port:
+                    description: port of the referenced service. A port name or port
+                      number is required for an APIServiceBackendPort.
+                    properties:
+                      name:
+                        description: name is the name of the port on the Service.
+                          This must be an IANA_SVC_NAME (following RFC6335). This
+                          is a mutually exclusive setting with "Number".
+                        type: string
+                      number:
+                        description: number is the numerical port number (e.g. 80)
+                          on the Service. This is a mutually exclusive setting with
+                          "Name".
+                        format: int32
+                        type: integer
+                    type: object
+                required:
+                - name
+                - port
+                type: object
+            required:
+            - pathPrefix
+            - service
+            type: object
+          status:
+            description: The current status of this API.
+            properties:
+              hash:
+                description: Hash is a hash representing the API.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

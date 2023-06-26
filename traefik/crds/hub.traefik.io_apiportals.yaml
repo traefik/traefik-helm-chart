@@ -1,0 +1,128 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.6.2
+  creationTimestamp: null
+  name: apiportals.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: APIPortal
+    listKind: APIPortalList
+    plural: apiportals
+    singular: apiportal
+  scope: Cluster
+  versions:
+  - additionalPrinterColumns:
+    - jsonPath: .status.urls
+      name: URLs
+      type: string
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIPortal defines a portal that exposes APIs.
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: The desired behavior of this APIPortal.
+            properties:
+              apiGateway:
+                type: string
+              customDomains:
+                description: CustomDomains are the custom domains under which the
+                  portal will be exposed.
+                items:
+                  type: string
+                type: array
+              description:
+                type: string
+              title:
+                type: string
+              ui:
+                description: UISpec configures the UI customization.
+                properties:
+                  logoUrl:
+                    type: string
+                  service:
+                    description: UIService configures the service to expose on the
+                      edge.
+                    properties:
+                      name:
+                        type: string
+                      namespace:
+                        type: string
+                      port:
+                        description: port of the referenced service. A port name and
+                          port number is required for an UIServiceBackendPort.
+                        properties:
+                          name:
+                            description: name is the name of the port on the Service.
+                              This must be an IANA_SVC_NAME (following RFC6335). This
+                              is a mutually exclusive setting with "Number".
+                            type: string
+                          number:
+                            description: number is the numerical port number (e.g.
+                              80) on the Service. This is a mutually exclusive setting
+                              with "Name".
+                            format: int32
+                            type: integer
+                        type: object
+                    required:
+                    - name
+                    - port
+                    type: object
+                type: object
+            required:
+            - apiGateway
+            type: object
+          status:
+            description: The current status of this APIPortal.
+            properties:
+              customDomains:
+                description: CustomDomains are the custom domains for accessing the
+                  exposed APIPortal WebUI.
+                items:
+                  type: string
+                type: array
+              hash:
+                description: Hash is a hash representing the APIPortal.
+                type: string
+              hubDomain:
+                description: HubDomain is the hub generated domain of the APIPortal
+                  WebUI.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              urls:
+                description: URLs are the URLs for accessing the APIPortal WebUI.
+                type: string
+              version:
+                type: string
+            required:
+            - urls
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources: {}
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []
