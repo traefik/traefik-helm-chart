@@ -462,6 +462,10 @@ metrics:
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing: {}
+  #  openTelemetry: # traefik v3+ only
+  #    grpc: {}
+  #    insecure: true
+  #    address: localhost:4317
   # instana:
   #   localAgentHost: 127.0.0.1
   #   localAgentPort: 42699

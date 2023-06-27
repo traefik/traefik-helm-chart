@@ -8,6 +8,8 @@ microservices with ease.
 This chart bootstraps Traefik version 2 as a Kubernetes ingress controller,
 using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubernetes-crd/>.
 
+Notice if you use traefik v3, crds with namespace traefik.containo.us were removed, and only traefik.io is available.
+
 ### Philosophy
 
 The Traefik HelmChart is focused on Traefik deployment configuration.
@@ -75,6 +77,11 @@ With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Docume
 
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
+```
+
+for traefik v3, please use
+```bash
+kubectl apply --server-side --force-conflicts -k https://raw.githubusercontent.com/traefik/traefik/v3.0/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 ```
 
 ### Upgrading after 18.X+
