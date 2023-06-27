@@ -19,18 +19,14 @@
   "regexManagers": [
     {
       "datasourceTemplate": "docker",
-      "fileMatch": [
-        "(^|/)Chart\\.yaml$"
-      ],
+      "fileMatch": [ "Chart.yaml" ],
       "matchStrings": [
         "#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*[\"']?(?<currentValue>[\\w+\\.\\-]*)"
       ]
     },
     {
       "datasourceTemplate": "docker",
-      "fileMatch": [
-        "^Makefile$"
-      ],
+      "fileMatch": [ "Makefile" ],
       "matchStrings": [
         "^IMAGE_(.+)=(?<depName>.*?):(?<currentValue>[\\w+\\.\\-]*)$"
       ]
