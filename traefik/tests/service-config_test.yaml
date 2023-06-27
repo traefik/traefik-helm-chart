@@ -17,7 +17,7 @@ tests:
           value: NodePort
   - it: should have no annotations by default
     asserts:
-      - exists:
+      - isNullOrEmpty:
           path: metadata.annotations
   - it: should have customized annotations when specified via values
     set:
