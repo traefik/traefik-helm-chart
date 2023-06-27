@@ -19,7 +19,7 @@ tests:
           path: metadata.annotations.dns-hostname
           value: tcp.example.com
         documentIndex: 0
-      - exists:
+      - isNullOrEmpty:
           path: metadata.annotations
         documentIndex: 1
   - it: should have UDP only annotations when specified via values
@@ -35,7 +35,7 @@ tests:
           exposedPort: 80
           protocol: UDP
     asserts:
-      - exists:
+      - isNullOrEmpty:
           path: metadata.annotations
         documentIndex: 0
       - equal:

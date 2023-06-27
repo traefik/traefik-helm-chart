@@ -39,7 +39,7 @@ tests:
 
   - it: should have no resource limit by default
     asserts:
-      - exists:
+      - isNullOrEmpty:
           path: spec.template.spec.containers[0].resources
   - it: should have a custom resource limit when specified
     set:
