@@ -12,6 +12,9 @@
   "semanticCommits": "enabled",
   "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
   "rebaseWhen": "conflicted",
+  "labels": [
+    "📌 dependencies"
+  ],
   "enabledManagers": ["github-actions", "regex"],
   "regexManagers": [
     {
