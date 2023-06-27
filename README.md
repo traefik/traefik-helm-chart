@@ -76,12 +76,12 @@ New major version indicates that there is an incompatible breaking change.
 With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
 
 ```bash
-kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
+kubectl apply --server-side --force-conflicts -f https://github.com/traefik/traefik-helm-chart/traefik/crds/
 ```
 
 for traefik v3, please use
 ```bash
-kubectl apply --server-side --force-conflicts -k https://raw.githubusercontent.com/traefik/traefik/v3.0/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
+kubectl apply --server-side --force-conflicts -f https://raw.githubusercontent.com/traefik/traefik/v3.0/docs/content/reference/dynamic-configuration/kubernetes-crd-definition-v1.yml
 ```
 
 ### Upgrading after 18.X+
