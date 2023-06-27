@@ -1,21 +1,18 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "timezone": "Europe/Paris",
   "extends": [
-    "gitmoji",
-    ":semanticCommits"
+    ":semanticCommitTypeAll(chore)",
+    ":ignoreModulesAndTests",
+    "group:monorepos",
+    "group:recommended",
+    "replacements:all",
+    "workarounds:all"
   ],
   "semanticCommits": "enabled",
   "gitAuthor": "traefiker <30906710+traefiker@users.noreply.github.com>",
   "rebaseWhen": "conflicted",
-  "bumpVersion": "minor",
-  "packageRules": [
-    {
-      "matchManagers": ["kubernetes"],
-      "matchDatasources": ["kubernetes-api"],
-      "description": "disable kubernetes api updates",
-      "enabled": false
-    }
-  ],
+  "enabledManagers": ["github-actions", "regex"],
   "regexManagers": [
     {
       "datasourceTemplate": "docker",
@@ -27,8 +24,9 @@
     {
       "datasourceTemplate": "docker",
       "fileMatch": [ "Makefile" ],
+      "versioningTemplate": "docker",
       "matchStrings": [
-        "^IMAGE_(.+)=(?<depName>.*?):(?<currentValue>[\\w+\\.\\-]*)$"
+        "IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)"
       ]
     }
   ]
