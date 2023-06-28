@@ -1,13 +1,5 @@
 # Change Log
 
-## VIP
-
-* feat: ✨ better support for traefik v3 (beta2 and earlier no longer supported, use beta3+)
-* feat: add support for openTelemetry tracing for traefik v3
-* feat: add support for serverstransporttcps crd in traefik v3
-* fix: no longer listen on obsolete crds for traefik v3
-
-
 ## 23.1.0  ![AppVersion: v2.10.1](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.1&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2023-06-06
