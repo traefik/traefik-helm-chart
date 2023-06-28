@@ -38,7 +38,9 @@ rules:
 {{- if .Values.providers.kubernetesCRD.enabled }}
   - apiGroups:
       - traefik.io
+      {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
       - traefik.containo.us
+      {{- end }}
     resources:
       - ingressroutes
       - ingressroutetcps
@@ -49,6 +51,9 @@ rules:
       - tlsstores
       - traefikservices
       - serverstransports
+      {{- if eq ($.Values.experimental.v3.enabled | toString) "true" }}
+      - serverstransporttcps
+      {{- end }}
     verbs:
       - get
       - list

@@ -251,6 +251,33 @@ tests:
               - get
               - list
               - watch
+  - it: cluster rbac should be on only be traefik.io for v3
+    set:
+      experimental:
+        v3:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - traefik.io
+            resources:
+              - ingressroutes
+              - ingressroutetcps
+              - ingressrouteudps
+              - middlewares
+              - middlewaretcps
+              - tlsoptions
+              - tlsstores
+              - traefikservices
+              - serverstransports
+              - serverstransporttcps
+            verbs:
+              - get
+              - list
+              - watch
   - it: namespaced rbac should be on both traefik.io and containo.us API group
     set:
       rbac:
@@ -273,6 +300,35 @@ tests:
               - tlsstores
               - traefikservices
               - serverstransports
+            verbs:
+              - get
+              - list
+              - watch
+  - it: namespaced rbac should be on both traefik.io API group for v3
+    set:
+      rbac:
+        namespaced: true
+      experimental:
+        v3:
+          enabled: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - traefik.io
+            resources:
+              - ingressroutes
+              - ingressroutetcps
+              - ingressrouteudps
+              - middlewares
+              - middlewaretcps
+              - tlsoptions
+              - tlsstores
+              - traefikservices
+              - serverstransports
+              - serverstransporttcps
             verbs:
               - get
               - list
