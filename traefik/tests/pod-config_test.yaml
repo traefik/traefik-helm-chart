@@ -31,6 +31,7 @@ tests:
       podSecurityContext:
         readOnlyRootFilesystem: false
       securityContext:
+        allowPrivilegeEscalation: true
         runAsUser: 1000
     asserts:
       - equal:
@@ -38,6 +39,9 @@ tests:
           value: false
       - equal:
           path: spec.template.spec.securityContext.runAsNonRoot
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
           value: true
       - equal:
           path: spec.template.spec.containers[0].securityContext.runAsUser
