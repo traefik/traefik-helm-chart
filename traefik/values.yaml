@@ -563,7 +563,7 @@ ports:
     # NodePort.
     #
     # -- You SHOULD NOT expose the traefik port on production deployments.
-    # If you want to access it from outside of your cluster,
+    # If you want to access it from outside your cluster,
     # use `kubectl port-forward` or create a secure ingress
     expose: false
     # -- The exposed port for this service
@@ -571,7 +571,7 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
   web:
-    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
+    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
     port: 8000
     # hostPort: 8000
@@ -600,7 +600,7 @@ ports:
     #   trustedIPs: []
     #   insecure: false
   websecure:
-    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
+    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
     port: 8443
     # hostPort: 8443
@@ -666,7 +666,7 @@ ports:
     # NodePort.
     #
     # -- You may not want to expose the metrics port on production deployments.
-    # If you want to access it from outside of your cluster,
+    # If you want to access it from outside your cluster,
     # use `kubectl port-forward` or create a secure ingress
     expose: false
     # -- The exposed port for this service
@@ -880,14 +880,15 @@ topologySpreadConstraints: []
 priorityClassName: ""
 
 # -- Set the container security context
-# -- To run the container with ports below 1024 this will need to be adjust to run as root
+# -- To run the container with ports below 1024 this will need to be adjusted to run as root
 securityContext:
   capabilities:
     drop: [ALL]
   readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
 
 podSecurityContext:
-  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
+  # /!\ When setting fsGroup, Kubernetes will recursively change ownership and
   # permissions for the contents of each volume to match the fsGroup. This can
   # be an issue when storing sensitive content like TLS Certificates /!\
   # fsGroup: 65532
