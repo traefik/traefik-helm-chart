@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 23.1.0](https://img.shields.io/badge/Version-23.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.1](https://img.shields.io/badge/AppVersion-v2.10.1-informational?style=flat-square)
+![Version: 23.2.0](https://img.shields.io/badge/Version-23.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.4](https://img.shields.io/badge/AppVersion-v2.10.4-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -51,10 +51,11 @@ Kubernetes: `>=1.16.0-0`
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
-| env | list | `[]` | Environment variables to be passed to Traefik's binary |
+| env | list | `[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}]` | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.kubernetesGateway.gateway.enabled | bool | `true` | Enable traefik regular kubernetes gateway |
+| experimental.plugins | object | `{"enabled":false}` | Enable traefik version 3  enabled: false  |
 | experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
@@ -97,11 +98,11 @@ Kubernetes: `>=1.16.0-0`
 | podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
 | podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
-| ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside of your cluster, use `kubectl port-forward` or create a secure ingress |
+| ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.traefik.expose | bool | `false` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside of your cluster, use `kubectl port-forward` or create a secure ingress |
+| ports.traefik.expose | bool | `false` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `9000` | The exposed port for this service |
 | ports.traefik.port | int | `9000` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
@@ -137,7 +138,7 @@ Kubernetes: `>=1.16.0-0`
 | readinessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
-| securityContext | object | `{"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjust to run as root |
+| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjusted to run as root |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |

@@ -1,5 +1,129 @@
 # Change Log
 
+## 23.2.0  ![AppVersion: v2.10.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.4&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-07-13
+
+* release: :rocket: publish v23.2.0
+* feat: ✨ add support for traefik v3.0.0-beta3 and openTelemetry
+* feat: add pod_name as default in values.yaml
+* fix: ingressclass name should be customizable (#864)
+* chore(deps): update traefik docker tag to v2.10.4
+* fix: 🐛 traefik or metrics port can be disabled
+* feat: disable allowPrivilegeEscalation
+* fix: 🐛 update traefik.containo.us CRDs to v2.10
+* chore(tests): 🔧 use more accurate asserts on refactor'd isNull test
+* chore(deps): update docker.io/helmunittest/helm-unittest docker tag to v3.11.3
+* ⬆️ Upgrade traefik Docker tag to v2.10.3
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 345bbd8..947ba56 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -105,12 +105,14 @@ podDisruptionBudget:
+ ingressClass:
+   enabled: true
+   isDefaultClass: true
++  # name: my-custom-class
+ 
+ # Traefik experimental features
+ experimental:
+-  v3:
++  #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
++  #v3:
+     # -- Enable traefik version 3
+-    enabled: false
++  #  enabled: false 
+   plugins:
+     # -- Enable traefik experimental plugins
+     enabled: false
+@@ -461,6 +463,10 @@ metrics:
+ ## Tracing
+ # -- https://doc.traefik.io/traefik/observability/tracing/overview/
+ tracing: {}
++  #  openTelemetry: # traefik v3+ only
++  #    grpc: {}
++  #    insecure: true
++  #    address: localhost:4317
+   # instana:
+   #   localAgentHost: 127.0.0.1
+   #   localAgentPort: 42699
+@@ -517,7 +523,15 @@ additionalArguments: []
+ #  - "--log.level=DEBUG"
+ 
+ # -- Environment variables to be passed to Traefik's binary
+-env: []
++env:
++  - name: POD_NAME
++    valueFrom:
++      fieldRef:
++        fieldPath: metadata.name
++  - name: POD_NAMESPACE
++    valueFrom:
++      fieldRef:
++        fieldPath: metadata.namespace
+ # - name: SOME_VAR
+ #   value: some-var-value
+ # - name: SOME_VAR_FROM_CONFIG_MAP
+@@ -563,7 +577,7 @@ ports:
+     # NodePort.
+     #
+     # -- You SHOULD NOT expose the traefik port on production deployments.
+-    # If you want to access it from outside of your cluster,
++    # If you want to access it from outside your cluster,
+     # use `kubectl port-forward` or create a secure ingress
+     expose: false
+     # -- The exposed port for this service
+@@ -571,7 +585,7 @@ ports:
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
+   web:
+-    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
++    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+     port: 8000
+     # hostPort: 8000
+@@ -600,7 +614,7 @@ ports:
+     #   trustedIPs: []
+     #   insecure: false
+   websecure:
+-    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicity set an entrypoint it will only use this entrypoint.
++    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+     port: 8443
+     # hostPort: 8443
+@@ -666,7 +680,7 @@ ports:
+     # NodePort.
+     #
+     # -- You may not want to expose the metrics port on production deployments.
+-    # If you want to access it from outside of your cluster,
++    # If you want to access it from outside your cluster,
+     # use `kubectl port-forward` or create a secure ingress
+     expose: false
+     # -- The exposed port for this service
+@@ -880,14 +894,15 @@ topologySpreadConstraints: []
+ priorityClassName: ""
+ 
+ # -- Set the container security context
+-# -- To run the container with ports below 1024 this will need to be adjust to run as root
++# -- To run the container with ports below 1024 this will need to be adjusted to run as root
+ securityContext:
+   capabilities:
+     drop: [ALL]
+   readOnlyRootFilesystem: true
++  allowPrivilegeEscalation: false
+ 
+ podSecurityContext:
+-  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
++  # /!\ When setting fsGroup, Kubernetes will recursively change ownership and
+   # permissions for the contents of each volume to match the fsGroup. This can
+   # be an issue when storing sensitive content like TLS Certificates /!\
+   # fsGroup: 65532
+```
+
 ## 23.1.0  ![AppVersion: v2.10.1](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.1&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2023-06-06
