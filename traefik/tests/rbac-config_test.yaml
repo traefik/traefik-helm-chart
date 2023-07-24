@@ -304,7 +304,7 @@ tests:
               - get
               - list
               - watch
-  - it: namespaced rbac should be on both traefik.io API group for v3
+  - it: namespaced rbac should be only on traefik.io API group for v3
     set:
       rbac:
         namespaced: true
