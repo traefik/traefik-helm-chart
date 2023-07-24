@@ -73,7 +73,7 @@ New major version indicates that there is an incompatible breaking change.
 
 ### Upgrading CRDs
 
-🛂 **Warning**: Traefik v3 totally removes the crd support for traefik.containo.us CRDs. By default this helm installs the CRDs compatible with v2 also, but Traefik v3 will no longer monitor them. There is no support for deprecation errors, so your existing resources may silently fail to work after upgrade to Traefik v3. [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/)
+🛂 **Warning**: Traefik v3 totally removes the crd support for traefik.containo.us CRDs. By default this helm installs the CRDs compatible with v2 also, but Traefik v3 will no longer monitor them. There is no support for deprecation errors, so your existing resources may silently fail to work after upgrade to Traefik v3. See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) for more details.
 
 With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
 
