@@ -57,17 +57,23 @@
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
+        {{- $healthchecksPort := .Values.ports.web.port }}
+        {{- $healthchecksScheme := "HTTP" }}
+        {{- if .Values.ports.traefik }}
+          {{- $healthchecksPort = (default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort) }}
+          {{- $healthchecksScheme = (default "HTTP" .Values.ports.traefik.healthchecksScheme) }}
+        {{- end }}
         readinessProbe:
           httpGet:
             path: /ping
-            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-            scheme: {{ default "HTTP" .Values.ports.traefik.healthchecksScheme }}
+            port: {{ $healthchecksPort }}
+            scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
           httpGet:
             path: /ping
-            port: {{ default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort }}
-            scheme: {{ default "HTTP" .Values.ports.traefik.healthchecksScheme }}
+            port: {{ $healthchecksPort }}
+            scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
         lifecycle:
           {{- with .Values.deployment.lifecycle }}
@@ -521,66 +527,68 @@
           {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
-          {{- if $config.redirectTo }}
-          {{- $toPort := index $.Values.ports $config.redirectTo }}
+          {{- if $config }}
+            {{- if $config.redirectTo }}
+            {{- $toPort := index $.Values.ports $config.redirectTo }}
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
-          {{- end }}
-          {{- if $config.middlewares }}
+            {{- end }}
+            {{- if $config.middlewares }}
           - "--entrypoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"
-          {{- end }}
-          {{- if $config.tls }}
-          {{- if $config.tls.enabled }}
+            {{- end }}
+            {{- if $config.tls }}
+              {{- if $config.tls.enabled }}
           - "--entrypoints.{{ $entrypoint }}.http.tls=true"
-          {{- if $config.tls.options }}
+                {{- if $config.tls.options }}
           - "--entrypoints.{{ $entrypoint }}.http.tls.options={{ $config.tls.options }}"
-          {{- end }}
-          {{- if $config.tls.certResolver }}
+                {{- end }}
+                {{- if $config.tls.certResolver }}
           - "--entrypoints.{{ $entrypoint }}.http.tls.certResolver={{ $config.tls.certResolver }}"
-          {{- end }}
-          {{- if $config.tls.domains }}
-          {{- range $index, $domain := $config.tls.domains }}
-          {{- if $domain.main }}
+                {{- end }}
+                {{- if $config.tls.domains }}
+                  {{- range $index, $domain := $config.tls.domains }}
+                    {{- if $domain.main }}
           - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].main={{ $domain.main }}"
-          {{- end }}
-          {{- if $domain.sans }}
+                    {{- end }}
+                    {{- if $domain.sans }}
           - "--entrypoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," $domain.sans }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- if $config.http3 }}
-          {{- if $config.http3.enabled }}
-          {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+                {{- if $config.http3 }}
+                  {{- if $config.http3.enabled }}
+                    {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
           - "--experimental.http3=true"
-          {{- end }}
-          {{- if semverCompare ">=2.6.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
-          {{- if $config.http3.advertisedPort }}
+                    {{- end }}
+                    {{- if semverCompare ">=2.6.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
+                      {{- if $config.http3.advertisedPort }}
           - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
-          {{- else }}
+                      {{- else }}
           - "--entrypoints.{{ $entrypoint }}.http3"
-          {{- end }}
-          {{- else }}
+                      {{- end }}
+                    {{- else }}
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- if $config.forwardedHeaders }}
-          {{- if $config.forwardedHeaders.trustedIPs }}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+              {{- end }}
+            {{- end }}
+            {{- if $config.forwardedHeaders }}
+              {{- if $config.forwardedHeaders.trustedIPs }}
           - "--entrypoints.{{ $entrypoint }}.forwardedHeaders.trustedIPs={{ join "," $config.forwardedHeaders.trustedIPs }}"
-          {{- end }}
-          {{- if $config.forwardedHeaders.insecure }}
+              {{- end }}
+              {{- if $config.forwardedHeaders.insecure }}
           - "--entrypoints.{{ $entrypoint }}.forwardedHeaders.insecure"
-          {{- end }}
-          {{- end }}
-          {{- if $config.proxyProtocol }}
-          {{- if $config.proxyProtocol.trustedIPs }}
+              {{- end }}
+            {{- end }}
+            {{- if $config.proxyProtocol }}
+              {{- if $config.proxyProtocol.trustedIPs }}
           - "--entrypoints.{{ $entrypoint }}.proxyProtocol.trustedIPs={{ join "," $config.proxyProtocol.trustedIPs }}"
-          {{- end }}
-          {{- if $config.proxyProtocol.insecure }}
+              {{- end }}
+              {{- if $config.proxyProtocol.insecure }}
           - "--entrypoints.{{ $entrypoint }}.proxyProtocol.insecure"
-          {{- end }}
+              {{- end }}
+            {{- end }}
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}

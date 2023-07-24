@@ -4,21 +4,23 @@
 {{- $udpPorts := dict -}}
 {{- $exposedPorts := false -}}
 {{- range $name, $config := .Values.ports -}}
-  {{- if $config.http3 -}}
-  {{- if $config.http3.enabled -}}
-    {{- if (not $config.tls.enabled) -}}
-      {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
+  {{- if $config -}}
+    {{- if $config.http3 -}}
+    {{- if $config.http3.enabled -}}
+      {{- if (not $config.tls.enabled) -}}
+        {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
+      {{- end -}}
     {{- end -}}
-  {{- end -}}
-  {{- end -}}
-  {{- if eq (toString $config.protocol) "UDP" -}}
-    {{ $_ := set $udpPorts $name $config -}}
-  {{- end -}}
-  {{- if eq (toString (default "TCP" $config.protocol)) "TCP" -}}
-    {{ $_ := set $tcpPorts $name $config -}}
-  {{- end -}}
-  {{- if (eq $config.expose true) -}}
-    {{- $exposedPorts = true -}}
+    {{- end -}}
+    {{- if eq (toString $config.protocol) "UDP" -}}
+      {{ $_ := set $udpPorts $name $config -}}
+    {{- end -}}
+    {{- if eq (toString (default "TCP" $config.protocol)) "TCP" -}}
+      {{ $_ := set $tcpPorts $name $config -}}
+    {{- end -}}
+    {{- if (eq $config.expose true) -}}
+      {{- $exposedPorts = true -}}
+    {{- end -}}
   {{- end -}}
 {{- end -}}
 

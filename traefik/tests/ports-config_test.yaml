@@ -239,4 +239,39 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.web.address=:666/tcp"
         template: deployment.yaml
+  - it: should be possible to disable traefik & metrics port
+    set:
+      ports:
+        web:
+          port: 80
+        websecure:
+          port: 443
+          http3:
+            enabled: true
+            advertisedPort: 443
+        traefik: null
+        metrics: null
+    asserts:
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+        template: deployment.yaml
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "metrics"
+            containerPort: 9100
+            protocol: "TCP"
+        template: deployment.yaml
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "traefik"
+            containerPort: 9100
+            protocol: "TCP"
+        template: deployment.yaml
+      - containsDocument:
+          kind: Service
+          apiVersion: v1
+        template: service.yaml
 
