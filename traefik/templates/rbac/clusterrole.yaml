@@ -58,7 +58,7 @@ rules:
       - tlsstores
       - traefikservices
       - serverstransports
-      {{- if eq ($.Values.experimental.v3.enabled | toString) "true" }}
+      {{- if semverCompare ">=3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)  }}
       - serverstransporttcps
       {{- end }}
     verbs:
