@@ -5,6 +5,28 @@ capabilities:
   majorVersion: 1
   minorVersion: 16
 tests:
+  - it: should have env with specified values
+    set:
+      env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        - name: POD_TEST
+          value: powpow
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: POD_NAME
+      - equal:
+          path: spec.template.spec.containers[0].env[0].valueFrom.fieldRef.fieldPath
+          value: metadata.name
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: POD_TEST
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: powpow
   - it: should have envFrom with specified values
     set:
       envFrom:
