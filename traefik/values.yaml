@@ -518,7 +518,15 @@ additionalArguments: []
 #  - "--log.level=DEBUG"
 
 # -- Environment variables to be passed to Traefik's binary
-env: []
+env:
+  - name: POD_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+  - name: POD_NAMESPACE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.namespace
 # - name: SOME_VAR
 #   value: some-var-value
 # - name: SOME_VAR_FROM_CONFIG_MAP
