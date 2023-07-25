@@ -105,6 +105,7 @@ podDisruptionBudget:
 ingressClass:
   enabled: true
   isDefaultClass: true
+  # name: my-custom-class
 
 # Traefik experimental features
 experimental:

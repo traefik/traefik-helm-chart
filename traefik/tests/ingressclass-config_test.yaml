@@ -65,3 +65,18 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "You must use at least Kubernetes v1.16 with this Chart"
+  - it: should be possible to provide an IngressClass name
+    capabilities:
+      majorVersion: 1
+      minorVersion: 19
+    set:
+      ingressClass:
+        name: nondefaultname
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - equal:
+          path: metadata.name
+          value: nondefaultname
