@@ -253,9 +253,8 @@ tests:
               - watch
   - it: cluster rbac should be only on traefik.io for v3
     set:
-      experimental:
-        v3:
-          enabled: true
+      image:
+        tag: v3.0.0-beta3
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
@@ -308,9 +307,8 @@ tests:
     set:
       rbac:
         namespaced: true
-      experimental:
-        v3:
-          enabled: true
+      image:
+        tag: v3.0.0-beta3
     asserts:
       - template: rbac/role.yaml
         contains:

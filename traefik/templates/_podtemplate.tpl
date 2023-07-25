@@ -143,8 +143,8 @@
           {{- if $config }}
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- with $config.asDefault }}
-          {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
-            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
+          {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.0`." }}
           {{- end }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
           {{- end }}
@@ -299,8 +299,8 @@
           {{- end }}
 
           {{- with .Values.metrics.openTelemetry }}
-           {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
+           {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
            {{- end }}
           - "--metrics.openTelemetry=true"
           - "--metrics.openTelemetry.address={{ .address }}"
@@ -358,8 +358,8 @@
           {{- if .Values.tracing }}
 
           {{- if .Values.tracing.openTelemetry }}
-           {{- if eq ($.Values.experimental.v3.enabled | toString) "false" }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`." }}
+           {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
           {{- if .Values.tracing.openTelemetry.address }}

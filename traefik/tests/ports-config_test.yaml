@@ -151,9 +151,8 @@ tests:
   - it: should set entrypoint to default when configured
     template: deployment.yaml
     set:
-      experimental:
-        v3:
-          enabled: true
+      image:
+        tag: v3.0.0-beta3
       ports:
         web:
           asDefault: true
@@ -173,9 +172,8 @@ tests:
   - it: should throw and error when default entrypoint is enabled without traefik v3
     template: deployment.yaml
     set:
-      experimental:
-        v3:
-          enabled: false
+      image:
+        tag: v2.10.0
       ports:
         web:
           asDefault: true
@@ -183,7 +181,7 @@ tests:
           asDefault: false
     asserts:
       - failedTemplate:
-          errorMessage: "Default entrypoints are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`."
+          errorMessage: "Default entrypoints are only available on Traefik v3. Please update `image.tag` to `v3.0`."
 
   - it: should be possible to use a different containerPort
     set:

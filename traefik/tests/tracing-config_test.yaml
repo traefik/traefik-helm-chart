@@ -7,9 +7,8 @@ capabilities:
 tests:
   - it: should be possible to set specific parameters on openTelemetry
     set:
-      experimental:
-        v3:
-          enabled: true
+      image:
+        tag: v3.0.0-beta3
       tracing:
         openTelemetry:
           address: "localhost:4318"
@@ -38,13 +37,12 @@ tests:
           content: "--metrics.openTelemetry.headers.test=test"
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
-      experimental:
-        v3:
-          enabled: false
+      image:
+        tag: v3.0.0-beta3
       metrics:
         openTelemetry:
           address: "localhost:4318"
           addEntryPointsLabels: true
     asserts:
       - failedTemplate:
-          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `experimental.v3.enabled` to true and update `image.tag` to `v3.0`."
+          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`."

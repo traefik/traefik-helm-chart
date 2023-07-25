@@ -56,7 +56,6 @@ Kubernetes: `>=1.16.0-0`
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.kubernetesGateway.gateway.enabled | bool | `true` | Enable traefik regular kubernetes gateway |
 | experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
-| experimental.v3.enabled | bool | `false` | Enable traefik version 3 |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
