@@ -17,6 +17,7 @@ resources:
   - traefik.io_middlewares.yaml
   - traefik.io_middlewaretcps.yaml
   - traefik.io_serverstransports.yaml
+  - traefik.io_serverstransporttcps.yaml
   - traefik.io_tlsoptions.yaml
   - traefik.io_tlsstores.yaml
   - traefik.io_traefikservices.yaml

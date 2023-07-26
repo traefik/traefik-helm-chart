@@ -1,0 +1,48 @@
+suite: Traefik Tracing configuration
+templates:
+  - deployment.yaml
+capabilities:
+  majorVersion: 1
+  minorVersion: 16
+tests:
+  - it: should be possible to set specific parameters on openTelemetry
+    set:
+      image:
+        tag: v3.0.0-beta3
+      tracing:
+        openTelemetry:
+          address: "localhost:4318"
+          headers:
+            foo: bar
+            test: test
+          insecure: true
+          tls:
+            ca: path/to/ca.crt
+            cert: path/to/foo.cert
+            key: path/to/key.key
+            insecureSkipVerify: true
+          grpc: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry.address=localhost:4318"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry.headers.foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry.headers.test=test"
+  - it: should throw and error when open telemetry is enabled without traefik v3
+    set:
+      image:
+        tag: v2.10.1
+      metrics:
+        openTelemetry:
+          address: "localhost:4318"
+          addEntryPointsLabels: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."

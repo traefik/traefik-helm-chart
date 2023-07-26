@@ -8,6 +8,10 @@ microservices with ease.
 This chart bootstraps Traefik version 2 as a Kubernetes ingress controller,
 using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubernetes-crd/>.
 
+It's now possible to use this chart with Traefik v3 (current tested with beta3).
+Helm will auto detect which version is used based on image.tag. Set image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3".
+See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of this chart on CRDs.
+
 ### Philosophy
 
 The Traefik HelmChart is focused on Traefik deployment configuration.
@@ -70,6 +74,8 @@ helm upgrade traefik traefik/traefik
 New major version indicates that there is an incompatible breaking change.
 
 ### Upgrading CRDs
+
+🛂 **Warning**: Traefik v3 totally removes the crd support for traefik.containo.us CRDs. By default this helm installs the CRDs compatible with v2 also, but Traefik v3 will no longer monitor them. There is no support for deprecation errors, so your existing resources may silently fail to work after upgrade to Traefik v3. See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) for more details.
 
 With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
 

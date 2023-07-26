@@ -401,7 +401,7 @@ tests:
   - it: should use default entrypoint port without experimental flag when http3 enabled on v3
     set:
       image:
-        tag: v3.0.0-beta2
+        tag: v3.0.0-beta3
       ports:
         websecure:
           http3:

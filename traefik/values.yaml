@@ -109,9 +109,10 @@ ingressClass:
 
 # Traefik experimental features
 experimental:
-  v3:
+  #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
+  #v3:
     # -- Enable traefik version 3
-    enabled: false
+  #  enabled: false 
   plugins:
     # -- Enable traefik experimental plugins
     enabled: false
@@ -462,6 +463,10 @@ metrics:
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing: {}
+  #  openTelemetry: # traefik v3+ only
+  #    grpc: {}
+  #    insecure: true
+  #    address: localhost:4317
   # instana:
   #   localAgentHost: 127.0.0.1
   #   localAgentPort: 42699
