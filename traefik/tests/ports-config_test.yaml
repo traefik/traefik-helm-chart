@@ -181,7 +181,7 @@ tests:
           asDefault: false
     asserts:
       - failedTemplate:
-          errorMessage: "Default entrypoints are only available on Traefik v3. Please update `image.tag` to `v3.0`."
+          errorMessage: "Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`."
 
   - it: should be possible to use a different containerPort
     set:

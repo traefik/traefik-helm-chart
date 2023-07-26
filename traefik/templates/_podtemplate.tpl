@@ -144,7 +144,7 @@
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- with $config.asDefault }}
           {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
-            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.0`." }}
+            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
           {{- end }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
           {{- end }}
@@ -300,7 +300,7 @@
 
           {{- with .Values.metrics.openTelemetry }}
            {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--metrics.openTelemetry=true"
           - "--metrics.openTelemetry.address={{ .address }}"

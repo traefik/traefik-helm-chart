@@ -25,24 +25,24 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry=true"
+          content: "--tracing.openTelemetry=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.address=localhost:4318"
+          content: "--tracing.openTelemetry.address=localhost:4318"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.headers.foo=bar"
+          content: "--tracing.openTelemetry.headers.foo=bar"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.headers.test=test"
+          content: "--tracing.openTelemetry.headers.test=test"
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       image:
-        tag: v3.0.0-beta3
+        tag: v2.10.1
       metrics:
         openTelemetry:
           address: "localhost:4318"
           addEntryPointsLabels: true
     asserts:
       - failedTemplate:
-          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`."
+          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
