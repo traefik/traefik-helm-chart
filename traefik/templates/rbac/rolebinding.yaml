@@ -1,17 +1,24 @@
+{{- $ingressNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $CRDNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
+{{- $allNamespaces := uniq (concat $ingressNamespaces $CRDNamespaces) -}}
+
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
+{{- range $allNamespaces }}
+---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "traefik.fullname" . }}
-  namespace: {{ template "traefik.namespace" . }}
+  name: {{ template "traefik.fullname" $ }}
+  namespace: {{ . }}
   labels:
-    {{- include "traefik.labels" . | nindent 4 }}
+    {{- include "traefik.labels" $ | nindent 4 }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
-  name: {{ template "traefik.fullname" . }}
+  name: {{ template "traefik.fullname" $ }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "traefik.serviceAccountName" . }}
-    namespace: {{ template "traefik.namespace" . }}
+    name: {{ include "traefik.serviceAccountName" $ }}
+    namespace: {{ template "traefik.namespace" $ }}
+{{- end -}}
 {{- end -}}
