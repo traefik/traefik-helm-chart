@@ -175,6 +175,56 @@ tests:
           path: metadata.namespace
           value: NAMESPACE
         template: rbac/serviceaccount.yaml
+  - it: should use multiple namespaces if provided
+    set:
+      providers:
+        kubernetesCRD:
+          namespaces:
+            - default
+            - foo
+        kubernetesIngress:
+          namespaces:
+            - default
+            - bar
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 3
+        template: rbac/rolebinding.yaml
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/role.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: bar
+        template: rbac/role.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/role.yaml
+        documentIndex: 2
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/rolebinding.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: bar
+        template: rbac/rolebinding.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/rolebinding.yaml
+        documentIndex: 2
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
