@@ -58,7 +58,7 @@
           {{- toYaml . | nindent 10 }}
           {{- end }}
         {{- if (and (empty .Values.ports.traefik) (empty .Values.deployment.healthchecksPort)) }}
-          {{- fail "ERROR: When disabling traefik port, you need to specificy `deployment.healthchecksPort`" }}
+          {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
         {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
