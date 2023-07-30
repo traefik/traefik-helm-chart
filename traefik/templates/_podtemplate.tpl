@@ -374,6 +374,7 @@
           {{- if .Values.tracing.openTelemetry.path }}
           - "--tracing.openTelemetry.path={{ .Values.tracing.openTelemetry.path }}"
           {{- end }}
+          {{- if .Values.tracing.openTelemetry.tls }}
           {{- if .Values.tracing.openTelemetry.tls.ca }}
           - "--tracing.openTelemetry.tls.ca={{ .Values.tracing.openTelemetry.tls.ca }}"
           {{- end }}
@@ -385,6 +386,7 @@
           {{- end }}
           {{- if .Values.tracing.openTelemetry.tls.insecureSkipVerify }}
           - "--tracing.openTelemetry.tls.insecureSkipVerify={{ .Values.tracing.openTelemetry.tls.insecureSkipVerify }}"
+          {{- end }}
           {{- end }}
           {{- if .Values.tracing.openTelemetry.grpc }}
           - "--tracing.openTelemetry.grpc=true"
