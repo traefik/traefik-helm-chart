@@ -321,5 +321,5 @@ tests:
         traefik: null
     asserts:
       - failedTemplate:
-          errorMessage: "When disabling traefik port, you need to specificy `deployment.healthchecksPort`"
+          errorMessage: "When disabling traefik port, you need to specify `deployment.healthchecksPort`"
         template: deployment.yaml
