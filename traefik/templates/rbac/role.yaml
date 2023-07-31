@@ -1,11 +1,17 @@
-{{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
+{{- $ingressNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $CRDNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
+{{- $allNamespaces := uniq (concat $ingressNamespaces $CRDNamespaces) -}}
+
+{{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
+{{- range $allNamespaces }}
+---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{ template "traefik.fullname" . }}
-  namespace: {{ template "traefik.namespace" . }}
+  name: {{ template "traefik.fullname" $ }}
+  namespace: {{ . }}
   labels:
-    {{- include "traefik.labels" . | nindent 4 }}
+    {{- include "traefik.labels" $ | nindent 4 }}
 rules:
   - apiGroups:
       - ""
@@ -17,7 +23,7 @@ rules:
       - get
       - list
       - watch
-{{- if .Values.providers.kubernetesIngress.enabled }}
+{{- if (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -35,7 +41,7 @@ rules:
     verbs:
       - update
 {{- end -}}
-{{- if .Values.providers.kubernetesCRD.enabled }}
+{{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
   - apiGroups:
       - traefik.io
       {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)  }}
@@ -59,14 +65,15 @@ rules:
       - list
       - watch
 {{- end -}}
-{{- if .Values.podSecurityPolicy.enabled }}
+{{- if $.Values.podSecurityPolicy.enabled }}
   - apiGroups:
       - extensions
     resourceNames:
-      - {{ template "traefik.fullname" . }}
+      - {{ template "traefik.fullname" $ }}
     resources:
       - podsecuritypolicies
     verbs:
       - use
+{{- end -}}
 {{- end -}}
 {{- end -}}
