@@ -362,9 +362,7 @@
              {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
-          {{- if .Values.tracing.openTelemetry.address }}
-          - "--tracing.openTelemetry.address={{ .Values.tracing.openTelemetry.address }}"
-          {{- end }}
+          - "--tracing.openTelemetry.address={{ .Values.tracing.openTelemetry.address | required "tracing.openTelemetry.address is required." }}"
           {{- range $key, $value := .Values.tracing.openTelemetry.headers }}
           - "--tracing.openTelemetry.headers.{{ $key }}={{ $value }}"
           {{- end }}
