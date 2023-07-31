@@ -359,7 +359,7 @@
 
           {{- if .Values.tracing.openTelemetry }}
            {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
           {{- if .Values.tracing.openTelemetry.address }}
