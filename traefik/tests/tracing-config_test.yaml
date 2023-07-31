@@ -54,10 +54,12 @@ tests:
       image:
         tag: v3.0.0-beta3
       tracing:
-        openTelemetry: {}
+        openTelemetry:
+          # no address
+          insecure: true
     asserts:
     - failedTemplate:
-        errorMessage: "tracing.openTelemetry.address is required."
+        errorMessage: "When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       image:
