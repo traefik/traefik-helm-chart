@@ -57,7 +57,7 @@ tests:
         openTelemetry: {}
     asserts:
     - failedTemplate:
-        errorMessage: "tracing.openTelemetry.address is required"
+        errorMessage: "tracing.openTelemetry.address is required."
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       image:
