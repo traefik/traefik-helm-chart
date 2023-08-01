@@ -233,10 +233,11 @@ tests:
       additionalArguments:
         - --ping
         - --ping.entrypoint=web
+      deployment:
+        healthchecksPort: 9001
       ports:
         traefik:
           port: 9000
-          healthchecksPort: 9001
           exposedPort: 9000
     asserts:
       - equal:
@@ -259,11 +260,12 @@ tests:
       additionalArguments:
         - --ping
         - --ping.entrypoint=websecure
+      deployment:
+        healthchecksScheme: HTTPS
+        healthchecksPort: 8443
       ports:
         traefik:
           port: 9000
-          healthchecksPort: 8443
-          healthchecksScheme: HTTPS
           exposedPort: 9000
     asserts:
       - equal:

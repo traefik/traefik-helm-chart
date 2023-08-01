@@ -57,12 +57,11 @@
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-        {{- $healthchecksPort := .Values.ports.web.port }}
-        {{- $healthchecksScheme := "HTTP" }}
-        {{- if .Values.ports.traefik }}
-          {{- $healthchecksPort = (default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort) }}
-          {{- $healthchecksScheme = (default "HTTP" .Values.ports.traefik.healthchecksScheme) }}
+        {{- if (and (empty .Values.ports.traefik) (empty .Values.deployment.healthchecksPort)) }}
+          {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
+        {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
+        {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         readinessProbe:
           httpGet:
             path: /ping
