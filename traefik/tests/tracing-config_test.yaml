@@ -39,10 +39,9 @@ tests:
     set:
       image:
         tag: v2.10.1
-      metrics:
+      tracing:
         openTelemetry:
           address: "localhost:4318"
-          addEntryPointsLabels: true
     asserts:
       - failedTemplate:
           errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
