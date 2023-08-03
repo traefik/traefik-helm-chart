@@ -35,6 +35,31 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.openTelemetry.headers.test=test"
+  - it: Minimal config should work
+    set:
+      image:
+        tag: v3.0.0-beta3
+      tracing:
+        openTelemetry:
+          address: localhost:4318
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.openTelemetry.address=localhost:4318"
+  - it: Address is required
+    set:
+      image:
+        tag: v3.0.0-beta3
+      tracing:
+        openTelemetry:
+          # no address
+          insecure: true
+    asserts:
+    - failedTemplate:
+        errorMessage: "When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       image:
