@@ -220,23 +220,24 @@ tests:
       additionalVolumeMounts:
         - name: foo-logs
           mountPath: /var/log/traefik
-      asserts:
-        - equal:
-            path: spec.template.spec.containers[0].volumeMounts[3].name
-            value: foo-logs
-        - equal:
-            path: spec.template.spec.containers[0].volumeMounts[3].mountPath
-            value: /var/log/traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].name
+          value: foo-logs
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].mountPath
+          value: /var/log/traefik
 
   - it: should set custom probe port
     set:
       additionalArguments:
         - --ping
         - --ping.entrypoint=web
+      deployment:
+        healthchecksPort: 9001
       ports:
         traefik:
           port: 9000
-          healthchecksPort: 9001
           exposedPort: 9000
     asserts:
       - equal:
@@ -259,11 +260,12 @@ tests:
       additionalArguments:
         - --ping
         - --ping.entrypoint=websecure
+      deployment:
+        healthchecksScheme: HTTPS
+        healthchecksPort: 8443
       ports:
         traefik:
           port: 9000
-          healthchecksPort: 8443
-          healthchecksScheme: HTTPS
           exposedPort: 9000
     asserts:
       - equal:

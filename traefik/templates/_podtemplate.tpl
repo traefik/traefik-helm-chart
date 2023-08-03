@@ -57,12 +57,11 @@
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-        {{- $healthchecksPort := .Values.ports.web.port }}
-        {{- $healthchecksScheme := "HTTP" }}
-        {{- if .Values.ports.traefik }}
-          {{- $healthchecksPort = (default .Values.ports.traefik.port .Values.ports.traefik.healthchecksPort) }}
-          {{- $healthchecksScheme = (default "HTTP" .Values.ports.traefik.healthchecksScheme) }}
+        {{- if (and (empty .Values.ports.traefik) (empty .Values.deployment.healthchecksPort)) }}
+          {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
+        {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
+        {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         readinessProbe:
           httpGet:
             path: /ping
@@ -359,7 +358,7 @@
 
           {{- if .Values.tracing.openTelemetry }}
            {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please update `image.tag` to `v3.0`." }}
+             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
           - "--tracing.openTelemetry.address={{ required "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required." .Values.tracing.openTelemetry.address }}"
