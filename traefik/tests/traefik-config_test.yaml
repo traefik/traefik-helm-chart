@@ -220,13 +220,13 @@ tests:
       additionalVolumeMounts:
         - name: foo-logs
           mountPath: /var/log/traefik
-      asserts:
-        - equal:
-            path: spec.template.spec.containers[0].volumeMounts[3].name
-            value: foo-logs
-        - equal:
-            path: spec.template.spec.containers[0].volumeMounts[3].mountPath
-            value: /var/log/traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].name
+          value: foo-logs
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].mountPath
+          value: /var/log/traefik
 
   - it: should set custom probe port
     set:
