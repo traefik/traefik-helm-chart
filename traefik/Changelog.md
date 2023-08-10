@@ -1,8 +1,77 @@
 # Change Log
 
+## 24.0.0  ![AppVersion: v2.10.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.4&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2023-08-10
+
+* chore(release): 🚀 publish v24.0.0
+* fix: http3 support broken when advertisedPort set
+* fix: tracing.opentelemetry.tls is optional for all values
+* chore(deps): update docker.io/helmunittest/helm-unittest docker tag to v3.12.2
+* chore(tests): 🔧 fix typo on tracing test
+* fix: 💥 BREAKING CHANGE on healthchecks and traefik port
+* feat: multi namespace RBAC manifests
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 947ba56..aeec85c 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -28,6 +28,13 @@ deployment:
+   terminationGracePeriodSeconds: 60
+   # -- The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
+   minReadySeconds: 0
++  ## Override the liveness/readiness port. This is useful to integrate traefik
++  ## with an external Load Balancer that performs healthchecks.
++  ## Default: ports.traefik.port
++  # healthchecksPort: 9000
++  ## Override the liveness/readiness scheme. Useful for getting ping to
++  ## respond on websecure entryPoint.
++  # healthchecksScheme: HTTPS
+   # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
+   annotations: {}
+   # -- Additional deployment labels (e.g. for filtering deployment by custom labels)
+@@ -112,7 +119,7 @@ experimental:
+   #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
+   #v3:
+     # -- Enable traefik version 3
+-  #  enabled: false 
++  #  enabled: false
+   plugins:
+     # -- Enable traefik experimental plugins
+     enabled: false
+@@ -564,15 +571,6 @@ ports:
+     # only.
+     # hostIP: 192.168.100.10
+ 
+-    # Override the liveness/readiness port. This is useful to integrate traefik
+-    # with an external Load Balancer that performs healthchecks.
+-    # Default: ports.traefik.port
+-    # healthchecksPort: 9000
+-
+-    # Override the liveness/readiness scheme. Useful for getting ping to
+-    # respond on websecure entryPoint.
+-    # healthchecksScheme: HTTPS
+-
+     # Defines whether the port is exposed if service.type is LoadBalancer or
+     # NodePort.
+     #
+@@ -877,7 +875,7 @@ affinity: {}
+ nodeSelector: {}
+ # -- Tolerations allow the scheduler to schedule pods with matching taints.
+ tolerations: []
+-# -- You can use topology spread constraints to control 
++# -- You can use topology spread constraints to control
+ # how Pods are spread across your cluster among failure-domains.
+ topologySpreadConstraints: []
+ # This example topologySpreadConstraints forces the scheduler to put traefik pods
+```
+
 ## 23.2.0  ![AppVersion: v2.10.4](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.4&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2023-07-13
+**Release date:** 2023-07-27
 
 * release: :rocket: publish v23.2.0
 * feat: ✨ add support for traefik v3.0.0-beta3 and openTelemetry
