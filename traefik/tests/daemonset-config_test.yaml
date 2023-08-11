@@ -103,7 +103,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].lifecycle.postStart.httpGet.scheme
           value: HTTP
-  - it: should fail when hostNetwork and default maxUnavailable 0
+  - it: should fail when hostNetwork and default maxUnavailable 0 (int)
     set:
       deployment:
         kind: DaemonSet
@@ -115,6 +115,31 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+  - it: should fail when hostNetwork and maxUnavailable 0 (string)
+    set:
+      deployment:
+        kind: DaemonSet
+      updateStrategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxUnavailable: "0"
+      hostNetwork: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+  - it: should not fail when hostNetwork and maxUnavailable is a percentage
+    set:
+      deployment:
+        kind: DaemonSet
+      updateStrategy:
+        type: RollingUpdate
+        rollingUpdate:
+          maxUnavailable: "10%"
+      hostNetwork: true
+    asserts:
+      - equal:
+          path: spec.updateStrategy.rollingUpdate.maxUnavailable
+          value: "10%"
   - it: should have an OnDelete updateStrategy when set
     set:
       deployment:
