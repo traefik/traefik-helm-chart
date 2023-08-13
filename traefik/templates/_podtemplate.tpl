@@ -142,7 +142,7 @@
           {{- if $config }}
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- with $config.asDefault }}
-          {{- if semverCompare "<3.0.0-0" (include "imageVersion" .) }}
+          {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
             {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
           {{- end }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
