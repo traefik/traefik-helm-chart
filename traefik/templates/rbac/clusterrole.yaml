@@ -45,7 +45,7 @@ rules:
 {{- if .Values.providers.kubernetesCRD.enabled }}
   - apiGroups:
       - traefik.io
-      {{- if (include "isV2" .) }}
+      {{- if semverCompare "<3.0.0-0" (include "imageVersion" .) }}
       - traefik.containo.us
       {{- end }}
     resources:
@@ -58,7 +58,7 @@ rules:
       - tlsstores
       - traefikservices
       - serverstransports
-      {{- if (include "isV3" .)  }}
+      {{- if semverCompare ">=3.0.0-0" (include "imageVersion" .)  }}
       - serverstransporttcps
       {{- end }}
     verbs:

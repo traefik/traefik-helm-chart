@@ -126,14 +126,6 @@ Renders a complete tree, even values that contains template.
 {{- end -}}
 
 {{- define "imageVersion" -}}
-{{ (split "@" (default .Chart.AppVersion .Values.image.tag))._0 }}
-{{- end -}}
-
-{{- define "isV3" -}}
-{{ semverCompare ">=3.0.0-0" (include "imageVersion" .) }}
-{{- end -}}
-
-{{- define "isV2" -}}
-{{ semverCompare "<3.0.0-0" (include "imageVersion" .) }}
+{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 }}
 {{- end -}}
 
