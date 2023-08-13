@@ -594,7 +594,7 @@
                     {{- if semverCompare "<3.0.0-0" (include "imageVersion" $)}}
           - "--experimental.http3=true"
                     {{- end }}
-                    {{- if semverCompare ">=2.6.0-0" (tpl "imageVersion" .)}}
+                    {{- if semverCompare ">=2.6.0-0" (include "imageVersion" $)}}
           - "--entrypoints.{{ $entrypoint }}.http3"
                     {{- else }}
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
