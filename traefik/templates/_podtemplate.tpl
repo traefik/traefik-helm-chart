@@ -298,7 +298,7 @@
           {{- end }}
 
           {{- with .Values.metrics.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (include "imageVersion" .) }}
+           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
              {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--metrics.openTelemetry=true"
@@ -357,7 +357,7 @@
           {{- if .Values.tracing }}
 
           {{- if .Values.tracing.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (include "imageVersion" .) }}
+           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
              {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
@@ -591,7 +591,7 @@
                 {{- end }}
                 {{- if $config.http3 }}
                   {{- if $config.http3.enabled }}
-                    {{- if semverCompare "<3.0.0-0" (include "imageVersion" .)}}
+                    {{- if semverCompare "<3.0.0-0" (include "imageVersion" $)}}
           - "--experimental.http3=true"
                     {{- end }}
                     {{- if semverCompare ">=2.6.0-0" (tpl "imageVersion" .)}}
