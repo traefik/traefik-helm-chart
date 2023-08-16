@@ -142,7 +142,7 @@
           {{- if $config }}
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
           {{- with $config.asDefault }}
-          {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+          {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
             {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
           {{- end }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
@@ -298,7 +298,7 @@
           {{- end }}
 
           {{- with .Values.metrics.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
              {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--metrics.openTelemetry=true"
@@ -357,7 +357,7 @@
           {{- if .Values.tracing }}
 
           {{- if .Values.tracing.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
              {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
            {{- end }}
           - "--tracing.openTelemetry=true"
@@ -591,10 +591,10 @@
                 {{- end }}
                 {{- if $config.http3 }}
                   {{- if $config.http3.enabled }}
-                    {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
+                    {{- if semverCompare "<3.0.0-0" (include "imageVersion" $)}}
           - "--experimental.http3=true"
                     {{- end }}
-                    {{- if semverCompare ">=2.6.0-0" (default $.Chart.AppVersion $.Values.image.tag)}}
+                    {{- if semverCompare ">=2.6.0-0" (include "imageVersion" $)}}
           - "--entrypoints.{{ $entrypoint }}.http3"
                     {{- else }}
           - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"

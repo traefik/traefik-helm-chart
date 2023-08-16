@@ -44,7 +44,7 @@ rules:
 {{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
   - apiGroups:
       - traefik.io
-      {{- if semverCompare "<3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag)  }}
+      {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
       - traefik.containo.us
       {{- end }}
     resources:
@@ -57,7 +57,7 @@ rules:
       - tlsstores
       - traefikservices
       - serverstransports
-      {{- if semverCompare ">=3.0.0-0" (default $.Chart.AppVersion $.Values.image.tag) }}
+      {{- if semverCompare ">=3.0.0-0" (include "imageVersion" $) }}
       - serverstransporttcps
       {{- end }}
     verbs:

@@ -1,5 +1,5 @@
 {{- if .Values.ingressClass.enabled -}}
-  {{- if (semverCompare "<2.3.0" (.Chart.AppVersion)) -}}
+  {{- if (semverCompare "<2.3.0" (include "imageVersion" $)) -}}
     {{- fail "ERROR: IngressClass cannot be used with Traefik < 2.3.0" -}}
   {{- end -}}
   {{- if semverCompare ">=1.19.0-0" .Capabilities.KubeVersion.Version  -}}

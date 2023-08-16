@@ -124,3 +124,8 @@ Renders a complete tree, even values that contains template.
     {{- tpl (.value | toYaml) .context }}
   {{- end }}
 {{- end -}}
+
+{{- define "imageVersion" -}}
+{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 }}
+{{- end -}}
+
