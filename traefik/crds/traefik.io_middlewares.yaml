@@ -632,6 +632,45 @@ spec:
                       type: string
                     type: array
                 type: object
+              ipAllowList:
+                description: 'IPAllowList holds the IP allowlist middleware configuration. It was introduced by V3.
+                  This middleware accepts / refuses requests based on the client IP.
+                  More info: https://doc.traefik.io/traefik/v3.0/middlewares/http/ipallowlist/'
+                properties:
+                  ipStrategy:
+                    description: 'IPStrategy holds the IP strategy configuration used
+                      by Traefik to determine the client IP. More info: https://doc.traefik.io/traefik/v3.0/middlewares/http/ipallowlist/#ipstrategy'
+                    properties:
+                      depth:
+                        description: Depth tells Traefik to use the X-Forwarded-For
+                          header and take the IP located at the depth position (starting
+                          from the right).
+                        type: integer
+                      excludedIPs:
+                        description: ExcludedIPs configures Traefik to scan the X-Forwarded-For
+                          header and select the first IP not in the list.
+                        items:
+                          type: string
+                        type: array
+                    type: object
+                  sourceRange:
+                    description: SourceRange defines the set of allowed IPs (or ranges
+                      of allowed IPs by using CIDR notation).
+                    items:
+                      type: string
+                    type: array
+                type: object
+              grpcWeb:
+                description: 'GrpcWeb Converts gRPC Web requests to HTTP/2 gRPC requests before forwarding them to the backends.
+                  More info: https://doc.traefik.io/traefik/v3.0/middlewares/http/grpcweb/'
+                properties:
+                  allowOrigins:
+                    description: 'The allowOrigins contains the list of allowed origins. 
+                      A wildcard origin * can also be configured to match all requests. More info: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin'
+                    items:
+                      type: string
+                    type: array
+                type: object
               passTLSClientCert:
                 description: 'PassTLSClientCert holds the pass TLS client cert middleware
                   configuration. This middleware adds the selected data from the passed
