@@ -207,7 +207,7 @@ providers:
       # - "default"
 
   kubernetesIngress:
-    # -- Load Kubernetes IngressRoute provider
+    # -- Load Kubernetes Ingress provider
     enabled: true
     # -- Allows to reference ExternalName services in Ingress
     allowExternalNameServices: false
