@@ -159,7 +159,7 @@ ingressRoute:
     middlewares: []
     # -- TLS options (e.g. secret containing certificate)
     tls: {}
-  ping:
+  healthcheck:
     # -- Create an IngressRoute for the healthcheck probe
     enabled: true
     # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
