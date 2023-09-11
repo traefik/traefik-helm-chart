@@ -1,0 +1,25 @@
+{{- if .Values.service.internal -}}
+{{- if .Values.service.internal.ingress.enable -}}
+
+{{- $fullname := include "traefik.fullname" . }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullname }}
+  namespace: {{ template "traefik.namespace" . }}
+  {{- template "traefik.service-internal-ingress-metadata" . }}
+  annotations:
+  {{- with .Values.service.internal.ingress.annotations }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- template "traefik.service-internal-ingress-spec" . }}
+  {{- if .Values.service.internal.ingress.tls.enable }}
+  tls:
+  {{- template "traefik.service-internal-ingress-tls" . }}
+  {{- end }}
+  rules:
+  {{- template "traefik.service-internal-ingress-rules" . }}
+{{- end -}}
+{{- end -}}

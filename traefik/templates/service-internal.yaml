@@ -8,7 +8,7 @@
 {{- $tcpPorts := dict -}}
 {{- $udpPorts := dict -}}
 {{- $exposedPorts := false -}}
-{{- range $name, $config := .Values.ports -}}
+{{- range $name, $config := .Values.service.internal.ports -}}
   {{- if eq (toString $config.protocol) "UDP" -}}
     {{ $_ := set $udpPorts $name $config -}}
   {{- end -}}

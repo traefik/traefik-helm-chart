@@ -750,12 +750,30 @@ service:
   ## Same parameters as external Service
   # internal:
   #   type: ClusterIP
+  #   ports:
+  #     traefik:
+  #       host: ""
+  #       path: /
+  #       port: 9000
+  #       expose: true
+  #       exposedPort: 9000
+  #       protocol: TCP
   #   # labels: {}
   #   # annotations: {}
   #   # spec: {}
   #   # loadBalancerSourceRanges: []
   #   # externalIPs: []
   #   # ipFamilies: [ "IPv4","IPv6" ]
+  #   ingress:
+  #     enable: true
+  #     annotations: {}
+  #     tls:
+  #       enable: true
+  #       hosts: []
+  #       secretName: ""
+  #     # -- Additional entries here will be added to the ingress spec.
+  #     # -- Cannot contain tls, rules entries.
+  #     spec: {}
 
 autoscaling:
   # -- Create HorizontalPodAutoscaler object.
