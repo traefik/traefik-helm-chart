@@ -768,7 +768,7 @@ service:
   #     enable: true
   #     annotations: {}
   #     tls:
-  #       enable: true
+  #       enable: false
   #       hosts: []
   #       secretName: ""
   #     # -- Additional entries here will be added to the ingress spec.
