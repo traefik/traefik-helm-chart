@@ -73,7 +73,7 @@ tests:
           insecure: true
     asserts:
     - failedTemplate:
-        errorMessage: "When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
+        errorMessage: "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
   - it: should throw and error when open telemetry is enabled without traefik v3
     set:
       image:
@@ -83,7 +83,7 @@ tests:
           address: "localhost:4318"
     asserts:
       - failedTemplate:
-          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
   - it: should throw and error when open telemetry is enabled without traefik v3, even with sha set
     set:
       image:
@@ -93,4 +93,4 @@ tests:
           address: "localhost:4318"
     asserts:
       - failedTemplate:
-          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."

@@ -11,7 +11,7 @@ tests:
       - ./values/servicemonitor.yaml
     asserts:
       - failedTemplate:
-          errorMessage: "You have to deploy monitoring.coreos.com/v1 first"
+          errorMessage: "ERROR: You have to deploy monitoring.coreos.com/v1 first"
   - it: should succeed to provide ServiceMonitor without the API when disabling API Check
     values:
       - ./values/servicemonitor.yaml
