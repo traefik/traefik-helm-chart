@@ -489,7 +489,7 @@ tests:
           hostPort: 81
     asserts:
       - failedTemplate:
-          errorMessage: "All hostPort must match their respective containerPort when `hostNetwork` is enabled"
+          errorMessage: "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled"
   - it: should pass when user want to set hostport != containerport without hostNetwork
     set:
       hostNetwork: false

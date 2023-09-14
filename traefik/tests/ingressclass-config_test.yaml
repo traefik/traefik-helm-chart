@@ -57,14 +57,14 @@ tests:
       appVersion: v2.1.0
     asserts:
       - failedTemplate:
-          errorMessage: "IngressClass cannot be used with Traefik < 2.3.0"
+          errorMessage: "ERROR: IngressClass cannot be used with Traefik < 2.3.0"
   - it: should fail when asking to deploy IngressClass on Kubernetes < v1.16
     capabilities:
       majorVersion: 1
       minorVersion: 15
     asserts:
       - failedTemplate:
-          errorMessage: "You must use at least Kubernetes v1.16 with this Chart"
+          errorMessage: "ERROR: You must use at least Kubernetes v1.16 with this Chart"
   - it: should be possible to provide an IngressClass name
     capabilities:
       majorVersion: 1

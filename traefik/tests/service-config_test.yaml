@@ -265,9 +265,7 @@ tests:
             enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "You cannot enable http3 without enabling tls"
-          path: items[1].spec.ports[0].protocol
-          value: UDP
+          errorMessage: "ERROR: You cannot enable http3 without enabling tls"
   - it: should use helm managed namespace as default behavior UDP
     set:
       ports:

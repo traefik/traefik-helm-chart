@@ -26,7 +26,7 @@ tests:
         enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "maxReplicas is required on HPA"
+          errorMessage: "ERROR: maxReplicas is required on HPA"
   - it: should not contains metrics nor behavior when they are not set
     set:
       autoscaling:

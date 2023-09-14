@@ -34,7 +34,7 @@ tests:
           type: ClusterIP
     asserts:
       - failedTemplate:
-          errorMessage: "Cannot create an internal service when name contains more than 50 characters"
+          errorMessage: "ERROR: Cannot create an internal service when name contains more than 50 characters"
   - it: should have internal customized annotations when specified via values
     set:
       service:
