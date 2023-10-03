@@ -181,7 +181,7 @@ tests:
           asDefault: false
     asserts:
       - failedTemplate:
-          errorMessage: "Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          errorMessage: "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`."
 
   - it: should be possible to use a different containerPort
     set:
@@ -321,5 +321,5 @@ tests:
         traefik: null
     asserts:
       - failedTemplate:
-          errorMessage: "When disabling traefik port, you need to specify `deployment.healthchecksPort`"
+          errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
         template: deployment.yaml

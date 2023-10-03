@@ -468,4 +468,4 @@ tests:
           addEntryPointsLabels: true
     asserts:
       - failedTemplate:
-          errorMessage: "OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."

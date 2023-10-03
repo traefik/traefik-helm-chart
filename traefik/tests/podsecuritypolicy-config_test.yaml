@@ -20,7 +20,7 @@ tests:
         enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "PodSecurityPolicy has been removed in Kubernetes v1.25+"
+          errorMessage: "ERROR: PodSecurityPolicy has been removed in Kubernetes v1.25+"
         template: rbac/podsecuritypolicy.yaml
   - it: should have privileged set to false
     set:
