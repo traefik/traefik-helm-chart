@@ -1,0 +1,36 @@
+{{- if .Values.ingressRoute.healthcheck.enabled -}}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ template "traefik.fullname" . }}-healthcheck
+  namespace: {{ template "traefik.namespace" . }}
+  annotations:
+    {{- with .Values.ingressRoute.healthcheck.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- with .Values.ingressRoute.healthcheck.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  entryPoints:
+  {{- range .Values.ingressRoute.healthcheck.entryPoints }}
+  - {{ . }}
+  {{- end }}
+  routes:
+  - match: {{ .Values.ingressRoute.healthcheck.matchRule }}
+    kind: Rule
+    services:
+    - name: ping@internal
+      kind: TraefikService
+    {{- with .Values.ingressRoute.healthcheck.middlewares }}
+    middlewares:
+      {{- toYaml . | nindent 6 }}
+    {{- end -}}
+
+  {{- with .Values.ingressRoute.healthcheck.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}

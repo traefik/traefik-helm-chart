@@ -45,60 +45,60 @@ deployment:
   podLabels: {}
   # -- Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
-    # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
-    # - name: socat-proxy
-    #   image: alpine/socat:1.0.5
-    #   args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
-    #   volumeMounts:
-    #     - name: dsdsocket
-    #       mountPath: /socket
+  # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
+  # - name: socat-proxy
+  #   image: alpine/socat:1.0.5
+  #   args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
+  #   volumeMounts:
+  #     - name: dsdsocket
+  #       mountPath: /socket
   # -- Additional volumes available for use with initContainers and additionalContainers
   additionalVolumes: []
-    # - name: dsdsocket
-    #   hostPath:
-    #     path: /var/run/statsd-exporter
+  # - name: dsdsocket
+  #   hostPath:
+  #     path: /var/run/statsd-exporter
   # -- Additional initContainers (e.g. for setting file permission as shown below)
   initContainers: []
-    # The "volume-permissions" init container is required if you run into permission issues.
-    # Related issue: https://github.com/traefik/traefik-helm-chart/issues/396
-    # - name: volume-permissions
-    #   image: busybox:latest
-    #   command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
-    #   securityContext:
-    #     runAsNonRoot: true
-    #     runAsGroup: 65532
-    #     runAsUser: 65532
-    #   volumeMounts:
-    #     - name: data
-    #       mountPath: /data
+  # The "volume-permissions" init container is required if you run into permission issues.
+  # Related issue: https://github.com/traefik/traefik-helm-chart/issues/396
+  # - name: volume-permissions
+  #   image: busybox:latest
+  #   command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
+  #   securityContext:
+  #     runAsNonRoot: true
+  #     runAsGroup: 65532
+  #     runAsUser: 65532
+  #   volumeMounts:
+  #     - name: data
+  #       mountPath: /data
   # -- Use process namespace sharing
   shareProcessNamespace: false
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
   dnsConfig: {}
-    # nameservers:
-    #   - 192.0.2.1 # this is an example
-    # searches:
-    #   - ns1.svc.cluster-domain.example
-    #   - my.dns.search.suffix
-    # options:
-    #   - name: ndots
-    #     value: "2"
-    #   - name: edns0
+  # nameservers:
+  #   - 192.0.2.1 # this is an example
+  # searches:
+  #   - ns1.svc.cluster-domain.example
+  #   - my.dns.search.suffix
+  # options:
+  #   - name: ndots
+  #     value: "2"
+  #   - name: edns0
   # -- Additional imagePullSecrets
   imagePullSecrets: []
-    # - name: myRegistryKeySecretName
+  # - name: myRegistryKeySecretName
   # -- Pod lifecycle actions
   lifecycle: {}
-    # preStop:
-    #   exec:
-    #     command: ["/bin/sh", "-c", "sleep 40"]
-    # postStart:
-    #   httpGet:
-    #     path: /ping
-    #     port: 9000
-    #     host: localhost
-    #     scheme: HTTP
+  # preStop:
+  #   exec:
+  #     command: ["/bin/sh", "-c", "sleep 40"]
+  # postStart:
+  #   httpGet:
+  #     path: /ping
+  #     port: 9000
+  #     host: localhost
+  #     scheme: HTTP
 
 # -- Pod disruption budget
 podDisruptionBudget:
@@ -118,7 +118,7 @@ ingressClass:
 experimental:
   #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
   #v3:
-    # -- Enable traefik version 3
+  # -- Enable traefik version 3
   #  enabled: false
   plugins:
     # -- Enable traefik experimental plugins
@@ -129,16 +129,16 @@ experimental:
     gateway:
       # -- Enable traefik regular kubernetes gateway
       enabled: true
-    # certificate:
-    #   group: "core"
-    #   kind: "Secret"
-    #   name: "mysecret"
-    # -- By default, Gateway would be created to the Namespace you are deploying Traefik to.
-    # You may create that Gateway in another namespace, setting its name below:
-    # namespace: default
-    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
-    # annotations:
-    #   cert-manager.io/issuer: letsencrypt
+      # certificate:
+      #   group: "core"
+      #   kind: "Secret"
+      #   name: "mysecret"
+      # -- By default, Gateway would be created to the Namespace you are deploying Traefik to.
+      # You may create that Gateway in another namespace, setting its name below:
+      # namespace: default
+      # Additional gateway annotations (e.g. for cert-manager.io/issuer)
+      # annotations:
+      #   cert-manager.io/issuer: letsencrypt
 
 ## Create an IngressRoute for the dashboard
 ingressRoute:
@@ -154,6 +154,22 @@ ingressRoute:
     # -- Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
     # By default, it's using traefik entrypoint, which is not exposed.
     # /!\ Do not expose your dashboard without any protection over the internet /!\
+    entryPoints: ["traefik"]
+    # -- Additional ingressRoute middlewares (e.g. for authentication)
+    middlewares: []
+    # -- TLS options (e.g. secret containing certificate)
+    tls: {}
+  healthcheck:
+    # -- Create an IngressRoute for the healthcheck probe
+    enabled: false
+    # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+    annotations: {}
+    # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+    labels: {}
+    # -- The router match rule used for the healthcheck ingressRoute
+    matchRule: PathPrefix(`/ping`)
+    # -- Specify the allowed entrypoints to use for the healthcheck ingress route, (e.g. traefik, web, websecure).
+    # By default, it's using traefik entrypoint, which is not exposed.
     entryPoints: ["traefik"]
     # -- Additional ingressRoute middlewares (e.g. for authentication)
     middlewares: []
@@ -204,7 +220,7 @@ providers:
     # labelSelector: environment=production,method=traefik
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
-      # - "default"
+    # - "default"
 
   kubernetesIngress:
     # -- Load Kubernetes Ingress provider
@@ -217,7 +233,7 @@ providers:
     # labelSelector: environment=production,method=traefik
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
-      # - "default"
+    # - "default"
     # IP used for Kubernetes Ingress endpoints
     publishedService:
       enabled: false
@@ -243,9 +259,9 @@ volumes: []
 
 # -- Additional volumeMounts to add to the Traefik container
 additionalVolumeMounts: []
-  # -- For instance when using a logshipper for access logs
-  # - name: traefik-logs
-  #   mountPath: /var/log/traefik
+# -- For instance when using a logshipper for access logs
+# - name: traefik-logs
+#   mountPath: /var/log/traefik
 
 logs:
   general:
@@ -270,26 +286,26 @@ logs:
     ## Filtering
     # -- https://docs.traefik.io/observability/access-logs/#filtering
     filters: {}
-      # statuscodes: "200,300-302"
-      # retryattempts: true
-      # minduration: 10ms
+    # statuscodes: "200,300-302"
+    # retryattempts: true
+    # minduration: 10ms
     fields:
       general:
         # -- Available modes: keep, drop, redact.
         defaultmode: keep
         # -- Names of the fields to limit.
         names: {}
-          ## Examples:
-          # ClientUsername: drop
+        ## Examples:
+        # ClientUsername: drop
       headers:
         # -- Available modes: keep, drop, redact.
         defaultmode: drop
         # -- Names of the headers to limit.
         names: {}
-          ## Examples:
-          # User-Agent: redact
-          # Authorization: drop
-          # Content-Type: keep
+        ## Examples:
+        # User-Agent: redact
+        # Authorization: drop
+        # Content-Type: keep
 
 metrics:
   ## -- Prometheus is enabled by default.
@@ -308,118 +324,118 @@ metrics:
     ## When manualRouting is true, it disables the default internal router in
     ## order to allow creating a custom router for prometheus@internal service.
     # manualRouting: true
-#  datadog:
-#    ## Address instructs exporter to send metrics to datadog-agent at this address.
-#    address: "127.0.0.1:8125"
-#    ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
-#    # pushInterval: 30s
-#    ## The prefix to use for metrics collection. Default="traefik"
-#    # prefix: traefik
-#    ## Enable metrics on entry points. Default=true
-#    # addEntryPointsLabels: false
-#    ## Enable metrics on routers. Default=false
-#    # addRoutersLabels: true
-#    ## Enable metrics on services. Default=true
-#    # addServicesLabels: false
-#  influxdb:
-#    ## Address instructs exporter to send metrics to influxdb at this address.
-#    address: localhost:8089
-#    ## InfluxDB's address protocol (udp or http). Default="udp"
-#    protocol: udp
-#    ## InfluxDB database used when protocol is http. Default=""
-#    # database: ""
-#    ## InfluxDB retention policy used when protocol is http. Default=""
-#    # retentionPolicy: ""
-#    ## InfluxDB username (only with http). Default=""
-#    # username: ""
-#    ## InfluxDB password (only with http). Default=""
-#    # password: ""
-#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
-#    # pushInterval: 30s
-#    ## Additional labels (influxdb tags) on all metrics.
-#    # additionalLabels:
-#    #   env: production
-#    #   foo: bar
-#    ## Enable metrics on entry points. Default=true
-#    # addEntryPointsLabels: false
-#    ## Enable metrics on routers. Default=false
-#    # addRoutersLabels: true
-#    ## Enable metrics on services. Default=true
-#    # addServicesLabels: false
-#  influxdb2:
-#    ## Address instructs exporter to send metrics to influxdb v2 at this address.
-#    address: localhost:8086
-#    ## Token with which to connect to InfluxDB v2.
-#    token: xxx
-#    ## Organisation where metrics will be stored.
-#    org: ""
-#    ## Bucket where metrics will be stored.
-#    bucket: ""
-#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
-#    # pushInterval: 30s
-#    ## Additional labels (influxdb tags) on all metrics.
-#    # additionalLabels:
-#    #   env: production
-#    #   foo: bar
-#    ## Enable metrics on entry points. Default=true
-#    # addEntryPointsLabels: false
-#    ## Enable metrics on routers. Default=false
-#    # addRoutersLabels: true
-#    ## Enable metrics on services. Default=true
-#    # addServicesLabels: false
-#  statsd:
-#    ## Address instructs exporter to send metrics to statsd at this address.
-#    address: localhost:8125
-#    ## The interval used by the exporter to push metrics to influxdb. Default=10s
-#    # pushInterval: 30s
-#    ## The prefix to use for metrics collection. Default="traefik"
-#    # prefix: traefik
-#    ## Enable metrics on entry points. Default=true
-#    # addEntryPointsLabels: false
-#    ## Enable metrics on routers. Default=false
-#    # addRoutersLabels: true
-#    ## Enable metrics on services. Default=true
-#    # addServicesLabels: false
-#  openTelemetry:
-#    ## Address of the OpenTelemetry Collector to send metrics to.
-#    address: "localhost:4318"
-#    ## Enable metrics on entry points.
-#    addEntryPointsLabels: true
-#    ## Enable metrics on routers.
-#    addRoutersLabels: true
-#    ## Enable metrics on services.
-#    addServicesLabels: true
-#    ## Explicit boundaries for Histogram data points.
-#    explicitBoundaries:
-#      - "0.1"
-#      - "0.3"
-#      - "1.2"
-#      - "5.0"
-#    ## Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
-#    headers:
-#      foo: bar
-#      test: test
-#    ## Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
-#    insecure: true
-#    ## Interval at which metrics are sent to the OpenTelemetry Collector.
-#    pushInterval: 10s
-#    ## Allows to override the default URL path used for sending metrics. This option has no effect when using gRPC transport.
-#    path: /foo/v1/traces
-#    ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
-#    tls:
-#      ## The path to the certificate authority, it defaults to the system bundle.
-#      ca: path/to/ca.crt
-#      ## The path to the public certificate. When using this option, setting the key option is required.
-#      cert: path/to/foo.cert
-#      ## The path to the private key. When using this option, setting the cert option is required.
-#      key: path/to/key.key
-#      ## If set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-#      insecureSkipVerify: true
-#    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
-#    grpc: true
+  #  datadog:
+  #    ## Address instructs exporter to send metrics to datadog-agent at this address.
+  #    address: "127.0.0.1:8125"
+  #    ## The interval used by the exporter to push metrics to datadog-agent. Default=10s
+  #    # pushInterval: 30s
+  #    ## The prefix to use for metrics collection. Default="traefik"
+  #    # prefix: traefik
+  #    ## Enable metrics on entry points. Default=true
+  #    # addEntryPointsLabels: false
+  #    ## Enable metrics on routers. Default=false
+  #    # addRoutersLabels: true
+  #    ## Enable metrics on services. Default=true
+  #    # addServicesLabels: false
+  #  influxdb:
+  #    ## Address instructs exporter to send metrics to influxdb at this address.
+  #    address: localhost:8089
+  #    ## InfluxDB's address protocol (udp or http). Default="udp"
+  #    protocol: udp
+  #    ## InfluxDB database used when protocol is http. Default=""
+  #    # database: ""
+  #    ## InfluxDB retention policy used when protocol is http. Default=""
+  #    # retentionPolicy: ""
+  #    ## InfluxDB username (only with http). Default=""
+  #    # username: ""
+  #    ## InfluxDB password (only with http). Default=""
+  #    # password: ""
+  #    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+  #    # pushInterval: 30s
+  #    ## Additional labels (influxdb tags) on all metrics.
+  #    # additionalLabels:
+  #    #   env: production
+  #    #   foo: bar
+  #    ## Enable metrics on entry points. Default=true
+  #    # addEntryPointsLabels: false
+  #    ## Enable metrics on routers. Default=false
+  #    # addRoutersLabels: true
+  #    ## Enable metrics on services. Default=true
+  #    # addServicesLabels: false
+  #  influxdb2:
+  #    ## Address instructs exporter to send metrics to influxdb v2 at this address.
+  #    address: localhost:8086
+  #    ## Token with which to connect to InfluxDB v2.
+  #    token: xxx
+  #    ## Organisation where metrics will be stored.
+  #    org: ""
+  #    ## Bucket where metrics will be stored.
+  #    bucket: ""
+  #    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+  #    # pushInterval: 30s
+  #    ## Additional labels (influxdb tags) on all metrics.
+  #    # additionalLabels:
+  #    #   env: production
+  #    #   foo: bar
+  #    ## Enable metrics on entry points. Default=true
+  #    # addEntryPointsLabels: false
+  #    ## Enable metrics on routers. Default=false
+  #    # addRoutersLabels: true
+  #    ## Enable metrics on services. Default=true
+  #    # addServicesLabels: false
+  #  statsd:
+  #    ## Address instructs exporter to send metrics to statsd at this address.
+  #    address: localhost:8125
+  #    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+  #    # pushInterval: 30s
+  #    ## The prefix to use for metrics collection. Default="traefik"
+  #    # prefix: traefik
+  #    ## Enable metrics on entry points. Default=true
+  #    # addEntryPointsLabels: false
+  #    ## Enable metrics on routers. Default=false
+  #    # addRoutersLabels: true
+  #    ## Enable metrics on services. Default=true
+  #    # addServicesLabels: false
+  #  openTelemetry:
+  #    ## Address of the OpenTelemetry Collector to send metrics to.
+  #    address: "localhost:4318"
+  #    ## Enable metrics on entry points.
+  #    addEntryPointsLabels: true
+  #    ## Enable metrics on routers.
+  #    addRoutersLabels: true
+  #    ## Enable metrics on services.
+  #    addServicesLabels: true
+  #    ## Explicit boundaries for Histogram data points.
+  #    explicitBoundaries:
+  #      - "0.1"
+  #      - "0.3"
+  #      - "1.2"
+  #      - "5.0"
+  #    ## Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+  #    headers:
+  #      foo: bar
+  #      test: test
+  #    ## Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+  #    insecure: true
+  #    ## Interval at which metrics are sent to the OpenTelemetry Collector.
+  #    pushInterval: 10s
+  #    ## Allows to override the default URL path used for sending metrics. This option has no effect when using gRPC transport.
+  #    path: /foo/v1/traces
+  #    ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+  #    tls:
+  #      ## The path to the certificate authority, it defaults to the system bundle.
+  #      ca: path/to/ca.crt
+  #      ## The path to the public certificate. When using this option, setting the key option is required.
+  #      cert: path/to/foo.cert
+  #      ## The path to the private key. When using this option, setting the cert option is required.
+  #      key: path/to/key.key
+  #      ## If set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+  #      insecureSkipVerify: true
+  #    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
+  #    grpc: true
 
-## -- enable optional CRDs for Prometheus Operator
-##
+  ## -- enable optional CRDs for Prometheus Operator
+  ##
   ## Create a dedicated metrics service for use with ServiceMonitor
   #  service:
   #    enabled: false
@@ -470,55 +486,55 @@ metrics:
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing: {}
-  #  openTelemetry: # traefik v3+ only
-  #    grpc: {}
-  #    insecure: true
-  #    address: localhost:4317
-  # instana:
-  #   localAgentHost: 127.0.0.1
-  #   localAgentPort: 42699
-  #   logLevel: info
-  #   enableAutoProfile: true
-  # datadog:
-  #   localAgentHostPort: 127.0.0.1:8126
-  #   debug: false
-  #   globalTag: ""
-  #   prioritySampling: false
-  # jaeger:
-  #   samplingServerURL: http://localhost:5778/sampling
-  #   samplingType: const
-  #   samplingParam: 1.0
-  #   localAgentHostPort: 127.0.0.1:6831
-  #   gen128Bit: false
-  #   propagation: jaeger
-  #   traceContextHeaderName: uber-trace-id
-  #   disableAttemptReconnecting: true
-  #   collector:
-  #      endpoint: ""
-  #      user: ""
-  #      password: ""
-  # zipkin:
-  #   httpEndpoint: http://localhost:9411/api/v2/spans
-  #   sameSpan: false
-  #   id128Bit: true
-  #   sampleRate: 1.0
-  # haystack:
-  #   localAgentHost: 127.0.0.1
-  #   localAgentPort: 35000
-  #   globalTag: ""
-  #   traceIDHeaderName: ""
-  #   parentIDHeaderName: ""
-  #   spanIDHeaderName: ""
-  #   baggagePrefixHeaderName: ""
-  # elastic:
-  #   serverURL: http://localhost:8200
-  #   secretToken: ""
-  #   serviceEnvironment: ""
+#  openTelemetry: # traefik v3+ only
+#    grpc: {}
+#    insecure: true
+#    address: localhost:4317
+# instana:
+#   localAgentHost: 127.0.0.1
+#   localAgentPort: 42699
+#   logLevel: info
+#   enableAutoProfile: true
+# datadog:
+#   localAgentHostPort: 127.0.0.1:8126
+#   debug: false
+#   globalTag: ""
+#   prioritySampling: false
+# jaeger:
+#   samplingServerURL: http://localhost:5778/sampling
+#   samplingType: const
+#   samplingParam: 1.0
+#   localAgentHostPort: 127.0.0.1:6831
+#   gen128Bit: false
+#   propagation: jaeger
+#   traceContextHeaderName: uber-trace-id
+#   disableAttemptReconnecting: true
+#   collector:
+#      endpoint: ""
+#      user: ""
+#      password: ""
+# zipkin:
+#   httpEndpoint: http://localhost:9411/api/v2/spans
+#   sameSpan: false
+#   id128Bit: true
+#   sampleRate: 1.0
+# haystack:
+#   localAgentHost: 127.0.0.1
+#   localAgentPort: 35000
+#   globalTag: ""
+#   traceIDHeaderName: ""
+#   parentIDHeaderName: ""
+#   spanIDHeaderName: ""
+#   baggagePrefixHeaderName: ""
+# elastic:
+#   serverURL: http://localhost:8200
+#   secretToken: ""
+#   serviceEnvironment: ""
 
 # -- Global command arguments to be passed to all traefik's pods
 globalArguments:
-  - "--global.checknewversion"
-  - "--global.sendanonymoususage"
+- "--global.checknewversion"
+- "--global.sendanonymoususage"
 
 #
 # Configure Traefik static configuration
@@ -531,14 +547,14 @@ additionalArguments: []
 
 # -- Environment variables to be passed to Traefik's binary
 env:
-  - name: POD_NAME
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.name
-  - name: POD_NAMESPACE
-    valueFrom:
-      fieldRef:
-        fieldPath: metadata.namespace
+- name: POD_NAME
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.name
+- name: POD_NAMESPACE
+  valueFrom:
+    fieldRef:
+      fieldPath: metadata.namespace
 # - name: SOME_VAR
 #   value: some-var-value
 # - name: SOME_VAR_FROM_CONFIG_MAP
@@ -728,16 +744,16 @@ service:
   # -- Additional entries here will be added to the service spec.
   # -- Cannot contain type, selector or ports entries.
   spec: {}
-    # externalTrafficPolicy: Cluster
-    # loadBalancerIP: "1.2.3.4"
-    # clusterIP: "2.3.4.5"
+  # externalTrafficPolicy: Cluster
+  # loadBalancerIP: "1.2.3.4"
+  # clusterIP: "2.3.4.5"
   loadBalancerSourceRanges: []
-    # - 192.168.0.1/32
-    # - 172.16.0.0/16
+  # - 192.168.0.1/32
+  # - 172.16.0.0/16
   ## -- Class of the load balancer implementation
   # loadBalancerClass: service.k8s.aws/nlb
   externalIPs: []
-    # - 1.2.3.4
+  # - 1.2.3.4
   ## One of SingleStack, PreferDualStack, or RequireDualStack.
   # ipFamilyPolicy: SingleStack
   ## List of IP families (e.g. IPv4 and/or IPv6).
@@ -789,7 +805,7 @@ persistence:
   # It can be used to store TLS certificates, see `storage` in certResolvers
   enabled: false
   name: data
-#  existingClaim: ""
+  #  existingClaim: ""
   accessMode: ReadWriteOnce
   size: 128Mi
   # storageClass: ""
@@ -852,12 +868,12 @@ serviceAccountAnnotations: {}
 
 # -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
 resources: {}
-  # requests:
-  #   cpu: "100m"
-  #   memory: "50Mi"
-  # limits:
-  #   cpu: "300m"
-  #   memory: "150Mi"
+# requests:
+#   cpu: "100m"
+#   memory: "50Mi"
+# limits:
+#   cpu: "300m"
+#   memory: "150Mi"
 
 # -- This example pod anti-affinity forces the scheduler to put traefik pods
 # -- on nodes where no other traefik pods are scheduled.

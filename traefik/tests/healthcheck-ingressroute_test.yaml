@@ -1,30 +1,39 @@
-suite: Dashboard IngressRoute configuration
+suite: healthcheck IngressRoute configuration
 templates:
-- dashboard-ingressroute.yaml
+- healthcheck-ingressroute.yaml
 tests:
-- it: should allow disabling dashboard exposure using ingressRoute
+- it: should allow enabling healthcheck exposure using ingressRoute
   set:
     ingressRoute:
-      dashboard:
-        enabled: false
+      healthcheck:
+        enabled: true
   asserts:
   - hasDocuments:
-      count: 0
+      count: 1
 - it: should have the expected default route match rule
+  set:
+    ingressRoute:
+      healthcheck:
+        enabled: true
   asserts:
   - equal:
       path: spec.routes[0].match
-      value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+      value: PathPrefix(`/ping`)
 - it: should support overwriting the route match rule
   set:
     ingressRoute:
-      dashboard:
+      healthcheck:
+        enabled: true
         matchRule: Host(`traefik.example.com`)
   asserts:
   - equal:
       path: spec.routes[0].match
       value: Host(`traefik.example.com`)
 - it: should have traefik as default entryPoints
+  set:
+    ingressRoute:
+      healthcheck:
+        enabled: true
   asserts:
   - equal:
       path: spec.entryPoints
@@ -32,8 +41,9 @@ tests:
 - it: should support setting websecure as entryPoint
   set:
     ingressRoute:
-      dashboard:
+      healthcheck:
         entryPoints: ["websecure"]
+        enabled: true
   asserts:
   - equal:
       path: spec.entryPoints
@@ -41,7 +51,8 @@ tests:
 - it: should support adding specific label on IngressRoute
   set:
     ingressRoute:
-      dashboard:
+      healthcheck:
+        enabled: true
         labels:
           foo: bar
   asserts:
@@ -49,32 +60,42 @@ tests:
       path: metadata.labels.foo
       value: bar
 - it: should not have middlewares by default
+  set:
+    ingressRoute:
+      healthcheck:
+        enabled: true
   asserts:
   - isNull:
       path: spec.routes[0].middlewares
 - it: should support adding middlewares
   set:
     ingressRoute:
-      dashboard:
+      healthcheck:
+        enabled: true
         middlewares:
-        - name: traefik-dashboard-auth
+        - name: traefik-healthcheck-auth
           namespace: default
   asserts:
   - equal:
       path: spec.routes[0].middlewares
       value:
-      - name: traefik-dashboard-auth
+      - name: traefik-healthcheck-auth
         namespace: default
 - it: should not have tls options by default
+  set:
+    ingressRoute:
+      healthcheck:
+        enabled: true
   asserts:
   - isNull:
       path: spec.tls
 - it: should support adding tls options
   set:
     ingressRoute:
-      dashboard:
+      healthcheck:
+        enabled: true
         tls:
-          secretName: traefik-dashboard-auth
+          secretName: traefik-healthcheck-auth
           options:
             name: tls-options
             namespace: default
@@ -82,7 +103,7 @@ tests:
   - equal:
       path: spec.tls
       value:
-        secretName: traefik-dashboard-auth
+        secretName: traefik-healthcheck-auth
         options:
           name: tls-options
           namespace: default
