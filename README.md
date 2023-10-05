@@ -24,7 +24,7 @@ Accordingly, the encouraged approach to fulfill your needs:
 1. Override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
 2. Append your own configurations (`kubectl apply -f myconf.yaml`)
 
-If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/)
+If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/). In the [examples](EXAMPLES.md), one can see how to use this Chart as a dependancy.
 
 ## Installing
 

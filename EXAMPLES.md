@@ -384,7 +384,7 @@ Setup:
 * cert-manager installed in `cert-manager` namespace
 * A cloudflare account on a DNS Zone
 
-**Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token. 
+**Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token.
 See [cert-manager documentation](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
 for creating this token with needed rights:
 
@@ -440,7 +440,7 @@ spec:
 
 ```bash
 kubectl get certificate -n traefik
-``` 
+```
 
 If needed, logs of cert-manager pod can give you more information
 
@@ -453,7 +453,7 @@ tlsStore:
       secretName: wildcard-example-com-tls
 ```
 
-**Step 5**: Enjoy. All your `IngressRoute` use this certificate by default now. 
+**Step 5**: Enjoy. All your `IngressRoute` use this certificate by default now.
 
 They should use websecure entrypoint like this:
 
@@ -471,4 +471,60 @@ spec:
     services:
     - name: XXXX
       port: 80
+```
+
+# Use this Chart as a dependency of your own chart
+
+
+First, let's create a default Helm Chart, with Traefik as a dependency.
+```bash
+helm create foo
+cd foo
+echo "
+dependencies:
+  - name: traefik
+    version: "24.0.0"
+    repository: "https://traefik.github.io/charts"
+" >> Chart.yaml
+```
+
+Second, let's tune some values like enabling HPA:
+
+```bash
+cat <<-EOF >> values.yaml
+traefik:
+  autoscaling:
+    enabled: true
+    maxReplicas: 3
+EOF
+```
+
+Third, one can see if it works as expected:
+```bash
+helm dependency update
+helm dependency build
+helm template . | grep -A 14 -B 3 Horizontal
+```
+
+It should produce this output:
+
+```yaml
+---
+# Source: foo/charts/traefik/templates/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: release-name-traefik
+  namespace: flux-system
+  labels:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: release-name-flux-system
+    helm.sh/chart: traefik-24.0.0
+    app.kubernetes.io/managed-by: Helm
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: release-name-traefik
+  maxReplicas: 3
 ```

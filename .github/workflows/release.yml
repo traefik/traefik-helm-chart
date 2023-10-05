@@ -30,6 +30,7 @@ jobs:
       - name: Copy LICENSE and README.md for packaging
         run: |
           cp ./README.md ./traefik/README.md
+          cp ./EXAMPLES.md ./traefik/EXAMPLES.md
           cp ./LICENSE ./traefik/LICENSE
 
       - name: Generate default static install
