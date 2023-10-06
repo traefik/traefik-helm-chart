@@ -18,7 +18,11 @@ spec:
     - name: web
       port: {{ .Values.ports.web.port }}
       protocol: HTTP
-
+      {{- if .Values.experimental.kubernetesGateway.namespacePolicy }}
+      allowedRoutes:
+        namespaces:
+          from: {{ .Values.experimental.kubernetesGateway.namespacePolicy }}
+      {{- end }}
     {{- if .Values.experimental.kubernetesGateway.certificate }}
     - name: websecure
       port: {{ $.Values.ports.websecure.port }}
