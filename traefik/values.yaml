@@ -126,7 +126,7 @@ experimental:
   kubernetesGateway:
     # -- Enable traefik experimental GatewayClass CRD
     enabled: false
-#   namespacePolicy: All
+    # namespacePolicy: All
     gateway:
       # -- Enable traefik regular kubernetes gateway
       enabled: true

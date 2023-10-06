@@ -17,6 +17,16 @@ tests:
       - equal:
           path: metadata.namespace
           value: "NAMESPACE"
+  - it: should configure allowedRoutes within web listener
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+          namespacePolicy: All
+    asserts:
+      - equal:
+          path: spec.listeners[0].allowedRoutes.namespaces.from
+          value: "All"
   - it: should have one Gateway with the correct class and an http port as well as an https port
     set:
       experimental:
