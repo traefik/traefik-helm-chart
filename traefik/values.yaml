@@ -126,6 +126,8 @@ experimental:
   kubernetesGateway:
     # -- Enable traefik experimental GatewayClass CRD
     enabled: false
+    ## Routes are restricted to namespace of the gateway by default.
+    ## https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces
     # namespacePolicy: All
     gateway:
       # -- Enable traefik regular kubernetes gateway
