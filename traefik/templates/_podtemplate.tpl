@@ -563,10 +563,10 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
-            {{- $toPort := index $.Values.ports $config.redirectTo }}
+            {{- $toPort := index $.Values.ports $config.redirectTo.port }}
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
-          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.priority=10"
+          - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ $config.redirectTo.priority }}"
             {{- end }}
             {{- if $config.middlewares }}
           - "--entrypoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"

@@ -168,7 +168,9 @@ tests:
     set: 
       ports:
         web:
-          redirectTo: websecure
+          redirectTo:
+            port: websecure
+            priority: 10
         websecure:
           exposedPort: 443
     asserts:
