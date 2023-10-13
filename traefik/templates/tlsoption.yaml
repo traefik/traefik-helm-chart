@@ -8,7 +8,7 @@ metadata:
     {{- include "traefik.labels" $ | nindent 4 }}
     {{- with $config.labels }}
     {{- toYaml . | nindent 4 }}
-    {{- end }}    
+    {{- end }}
 spec:
   {{- with $config.alpnProtocols }}
   alpnProtocols:
