@@ -135,7 +135,7 @@
           {{- end }}
           {{- if .Values.providers.file.enabled }}
           - name: traefik-extra-config
-            mountPath: "/opt/traefik/extra-config"
+            mountPath: "/opt/traefik/extra-conf"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
@@ -570,7 +570,7 @@
           {{- end }}
           {{- with .Values.providers.file }}
           {{- if .enabled }}
-          - "--providers.file.filename=/opt/traefik/extra-config/config.yml"
+          - "--providers.file.directory=/opt/traefik/extra-conf"
           {{- if .watch }}
           - "--providers.file.watch=true"
           {{- end }}

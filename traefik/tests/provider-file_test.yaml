@@ -29,7 +29,7 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts
           content: 
             name: traefik-extra-config
-            mountPath: "/opt/traefik/extra-config"
+            mountPath: "/opt/traefik/extra-conf"
 
   - it: should add cli options with watch option
     set:
@@ -41,7 +41,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.file.filename=/opt/traefik/extra-config/config.yml"
+          content: "--providers.file.directory=/opt/traefik/extra-conf"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
@@ -60,7 +60,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.file.filename=/opt/traefik/extra-config/config.yml"
+          content: "--providers.file.directory=/opt/traefik/extra-conf"
       - template: deployment.yaml
         notContains:
           path: spec.template.spec.containers[0].args
