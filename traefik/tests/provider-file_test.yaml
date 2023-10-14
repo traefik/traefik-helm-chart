@@ -1,0 +1,106 @@
+suite: File provider
+templates:
+  - provider-file-cm.yaml
+  - deployment.yaml
+  - daemonset.yaml
+tests:
+  - it: should create a configMap and a volume
+    set:
+      providers:
+        file:
+          enabled: true
+    asserts:
+      - template: provider-file-cm.yaml
+        isKind: 
+          of: ConfigMap
+      - template: provider-file-cm.yaml
+        equal:
+          path: metadata.name
+          value: "RELEASE-NAME-traefik-file-provider"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.volumes
+          content: 
+            name: traefik-extra-config
+            configMap:
+              name: "RELEASE-NAME-traefik-file-provider"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content: 
+            name: traefik-extra-config
+            mountPath: "/opt/traefik/extra-config"
+
+  - it: should add cli options with watch option
+    set:
+      providers:
+        file:
+          enabled: true
+          watch: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.filename=/opt/traefik/extra-config/config.yml"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.watch=true"
+      - template: deployment.yaml
+        isNull:
+          path: metadata.annotations["checksum/provider-file"]
+    
+  - it: should add checksum annotations and no watch cli option
+    set:
+      providers:
+        file:
+          enabled: true
+          watch: false
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.filename=/opt/traefik/extra-config/config.yml"
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.watch=true"
+      - template: deployment.yaml
+        equal:
+          path: metadata.annotations["checksum/provider-file"]
+          value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
+
+  - it: should add content to configMap
+    set:
+      providers:
+        file:
+          enabled: true
+          watch: false
+          content: &x-providers-file-content |
+            middlewares:
+              Middleware00:
+                addPrefix:
+                  prefix: foobar
+    asserts:
+      - template: provider-file-cm.yaml
+        equal:
+          path: data["config.yml"]
+          value: *x-providers-file-content
+      - template: deployment.yaml
+        equal:
+          path: metadata.annotations["checksum/provider-file"]
+          value: "73dccd8325de4f1840f0d77f8576b4bd54e1a7b383b4807a88273a2dfc7878bc"
+
+  - it: should add checksum annotations for daemonset
+    set:
+      deployment:
+        kind: DaemonSet
+      providers:
+        file:
+          enabled: true
+          watch: false
+    asserts:
+      - template: daemonset.yaml
+        equal:
+          path: metadata.annotations["checksum/provider-file"]
+          value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
