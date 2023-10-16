@@ -43,6 +43,16 @@ Due to changes in CRD version support, the following versions of the chart are u
 | Chart v10.0.0 and above |                             | [x]                    | [x]                        |
 | Chart v22.0.0 and above |                             |                        | [x]                        |
 
+### CRDs Support of Traefik Proxy
+
+Due to changes in API Group of Traefik CRDs from `containo.us` to `traefik.io`, the following versions of the chart includes the following CRDs API Groups:
+
+|                         |  `containo.us`              | `traefik.io`           |
+|-------------------------|-----------------------------|------------------------|
+| Chart v22.0.0 and below |  [x]                        |                        |
+| Chart v23.0.0           |  [x]                        | [x]                    |
+| Chart v24.0.0 and above |                             | [x]                    |
+
 ### Deploying Traefik
 
 ```bash
