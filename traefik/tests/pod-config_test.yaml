@@ -620,6 +620,5 @@ tests:
           serviceMonitor:
             jobLabel: traefik
     asserts:
-      - notContains:
-          path: spec.template.annotations
-          value: "prometheus.io/scrape: "true""
+      - isNull:
+          path: spec.template.metadata.annotations.prometheus.io/scrape
