@@ -170,7 +170,6 @@ tests:
         web:
           redirectTo:
             port: websecure
-            priority: 10
         websecure:
           exposedPort: 443
     asserts:
@@ -180,6 +179,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+  - it: should have http redirections enabled, when enabled with redirectTo and priority
+    set: 
+      ports:
+        web:
+          redirectTo:
+            port: websecure
+            priority: 10
+        websecure:
+          exposedPort: 443
+    asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.web.http.redirections.entryPoint.priority=10"
