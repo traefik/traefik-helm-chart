@@ -613,3 +613,12 @@ tests:
       - equal:
           path: spec.template.spec.dnsConfig.options[1].name
           value: "edns0"
+  - it: should not have prometheus annotations
+    set:
+      metrics:
+        prometheus:
+          serviceMonitor:
+            jobLabel: traefik
+    asserts:
+      - isNull:
+          path: spec.template.metadata.annotations.prometheus.io/scrape
