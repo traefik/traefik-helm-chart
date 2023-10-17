@@ -5,7 +5,7 @@
       {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- if .Values.metrics }}
-      {{- if .Values.metrics.prometheus }}
+      {{- if and (.Values.metrics.prometheus) (not .Values.metrics.prometheus.serviceMonitor) }}
         prometheus.io/scrape: "true"
         prometheus.io/path: "/metrics"
         prometheus.io/port: {{ quote (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
