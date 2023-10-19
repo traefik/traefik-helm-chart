@@ -164,3 +164,31 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should have http redirections enabled, when enabled with redirectTo
+    set: 
+      ports:
+        web:
+          redirectTo:
+            port: websecure
+        websecure:
+          exposedPort: 443
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.http.redirections.entryPoint.to=:443"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+  - it: should have http redirections enabled, when enabled with redirectTo and priority
+    set: 
+      ports:
+        web:
+          redirectTo:
+            port: websecure
+            priority: 10
+        websecure:
+          exposedPort: 443
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.http.redirections.entryPoint.priority=10"
