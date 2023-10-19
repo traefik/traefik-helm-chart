@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 24.0.0
+version: 24.0.1
 # renovate: image=traefik
 appVersion: v2.10.5
 kubeVersion: ">=1.16.0-0"

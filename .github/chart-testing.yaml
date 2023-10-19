@@ -1,6 +1,6 @@
 remote: origin
 target-branch: master
-debug: true
+debug: false
 check-version-increment: true
 upgrade: true
 validate-chart-schema: true

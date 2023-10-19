@@ -28,12 +28,35 @@ jobs:
       - name: Test
         run: make test
 
-      - name: Track docs
+      - name: Test if it's a release PR
+        id: check
         run: |
-          if ! [ -z "$(git diff traefik/Chart.yaml | grep version:)" ]; then
-            make docs
-            if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
+          if ! [ -z "$(git show traefik/Chart.yaml | grep version:)" ]; then
+            echo "release=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Check docs
+        if: steps.check.outputs.release
+        run: |
+          make docs
+          if ! [ -z "$(git status | grep traefik/VALUES.md)" ]; then
             echo "Traefik values have changed. Run make docs"
             exit 1
-            fi
           fi
+
+      - name: Create kind cluster
+        if: steps.check.outputs.release
+        uses: helm/kind-action@v1.8.0
+
+      - name: Install LB on Kind
+        if: steps.check.outputs.release
+        run: |
+          kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.11/config/manifests/metallb-native.yaml
+          kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb --timeout=90s
+          kubectl apply -f hack/metallb-config.yaml
+
+
+      - name: Check install on Kind
+        if: steps.check.outputs.release
+        run: |
+          make test-install

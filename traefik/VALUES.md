@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 23.2.0](https://img.shields.io/badge/Version-23.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.4](https://img.shields.io/badge/AppVersion-v2.10.4-informational?style=flat-square)
+![Version: 24.0.1](https://img.shields.io/badge/Version-24.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.5](https://img.shields.io/badge/AppVersion-v2.10.5-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -54,8 +54,7 @@ Kubernetes: `>=1.16.0-0`
 | env | list | `[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}]` | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
-| experimental.kubernetesGateway.gateway.enabled | bool | `true` | Enable traefik regular kubernetes gateway |
-| experimental.plugins | object | `{"enabled":false}` | Enable traefik version 3  enabled: false  |
+| experimental.plugins | object | `{"enabled":false}` | Enable traefik version 3  enabled: false |
 | experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
@@ -72,6 +71,13 @@ Kubernetes: `>=1.16.0-0`
 | ingressRoute.dashboard.matchRule | string | `"PathPrefix(`/dashboard`) || PathPrefix(`/api`)"` | The router match rule used for the dashboard ingressRoute |
 | ingressRoute.dashboard.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
 | ingressRoute.dashboard.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
+| ingressRoute.healthcheck.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
+| ingressRoute.healthcheck.enabled | bool | `false` | Create an IngressRoute for the healthcheck probe |
+| ingressRoute.healthcheck.entryPoints | list | `["traefik"]` | Specify the allowed entrypoints to use for the healthcheck ingress route, (e.g. traefik, web, websecure). By default, it's using traefik entrypoint, which is not exposed. |
+| ingressRoute.healthcheck.labels | object | `{}` | Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels) |
+| ingressRoute.healthcheck.matchRule | string | `"PathPrefix(`/ping`)"` | The router match rule used for the healthcheck ingressRoute |
+| ingressRoute.healthcheck.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
+| ingressRoute.healthcheck.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
@@ -128,7 +134,7 @@ Kubernetes: `>=1.16.0-0`
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
-| providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
+| providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
 | rbac | object | `{"enabled":true,"namespaced":false}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
@@ -154,7 +160,7 @@ Kubernetes: `>=1.16.0-0`
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
-| topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control  how Pods are spread across your cluster among failure-domains. |
+| topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains. |
 | tracing | object | `{}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
