@@ -10,11 +10,13 @@ test: traefik/tests/__snapshot__
 	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_HELM_UNITTEST) /charts/hack/test.sh
 
 lint:
-	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/lint.sh
+	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
 
 docs:
-	docker run --rm -v "$(CURDIR):/helm-docs" jnorwood/helm-docs:latest
-	mv -f "$(CURDIR)/traefik/README.md" "$(CURDIR)/traefik/VALUES.md"
+	docker run --rm -v "$(CURDIR):/helm-docs" jnorwood/helm-docs:latest -o VALUES.md
+
+test-install:
+	docker run ${DOCKER_ARGS} --network=host --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -v $(HOME)/.kube:/root/.kube -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh install
 
 changelog:
 	@echo "== Updating Changelogs..."
