@@ -164,8 +164,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should fail when using previous syntax
+    set:
+      ports:
+        web:
+          redirectTo: websecure
+        websecure:
+          exposedPort: 443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Syntax of `ports.web.redirectTo` has changed to `ports.web.redirectTo.port`. Details in PR #934."
   - it: should have http redirections enabled, when enabled with redirectTo
-    set: 
+    set:
       ports:
         web:
           redirectTo:
@@ -180,7 +190,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.web.http.redirections.entryPoint.scheme=https"
   - it: should have http redirections enabled, when enabled with redirectTo and priority
-    set: 
+    set:
       ports:
         web:
           redirectTo:

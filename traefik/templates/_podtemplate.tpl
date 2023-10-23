@@ -563,12 +563,15 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
-            {{- $toPort := index $.Values.ports $config.redirectTo.port }}
+             {{- if eq (typeOf $config.redirectTo) "string" }}
+               {{- fail "ERROR: Syntax of `ports.web.redirectTo` has changed to `ports.web.redirectTo.port`. Details in PR #934." }}
+             {{- end }}
+             {{- $toPort := index $.Values.ports $config.redirectTo.port }}
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
-            {{- if $config.redirectTo.priority }}
+             {{- if $config.redirectTo.priority }}
           - "--entrypoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ $config.redirectTo.priority }}"
-            {{- end }}
+             {{- end }}
             {{- end }}
             {{- if $config.middlewares }}
           - "--entrypoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"
