@@ -28,14 +28,17 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat: :boom: rework and allow update of namespace policy for Gateway"
     - "feat: ✨ add healthcheck ingressRoute"
-    - "fix: 🐛 remove old CRDs using traefik.containo.us"
-    - "fix: add missing separator in crds"
-    - "fix: allow updateStrategy.rollingUpdate.maxUnavailable to be passed in as an int or string"
+    - "feat: :boom: support http redirections and http challenges with cert-manager"
+    - "feat: :boom: rework and allow update of namespace policy for Gateway"
+    - "fix: disable ClusterRole and ClusterRoleBinding when not needed"
     - "fix: detect correctly v3 version when using sha in `image.tag`"
+    - "fix: allow updateStrategy.rollingUpdate.maxUnavailable to be passed in as an int or string"
+    - "fix: add missing separator in crds"
+    - "fix: add Prometheus scraping annotations only if serviceMonitor not created"
     - "docs: Fix typo in the default values file"
-    - "chore(release) publish v25.0.0"
     - "chore: remove label whitespace at TLSOption"
+    - "chore(release): 🚀 publish v25.0.0"
     - "chore(deps): update traefik docker tag to v2.10.5"
     - "chore(deps): update docker.io/helmunittest/helm-unittest docker tag to v3.12.3"
+    - "chore(ci): 🔧 👷 add e2e test when releasing"
