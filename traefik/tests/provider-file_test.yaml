@@ -104,3 +104,24 @@ tests:
         equal:
           path: metadata.annotations["checksum/provider-file"]
           value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
+
+  - it: should not provide ConfigMap, add extra volume and extra CLI args by default
+    asserts:
+      - template: provider-file-cm.yaml
+        hasDocuments:
+          count: 0
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.volumes
+          content: 
+            name: traefik-extra-config
+            configMap:
+              name: "RELEASE-NAME-traefik-file-provider"
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.directory=/opt/traefik/extra-conf"
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.file.watch=true"
