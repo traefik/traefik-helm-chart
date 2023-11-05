@@ -408,3 +408,22 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.bufferingsize=100"
+  - it: should set custom startupProbe
+    set:
+      startupProbe:
+        exec:
+          command:
+            - mycommand
+            - foo
+        initialDelaySeconds: 5
+        periodSeconds: 5
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.exec.command
+          value: ["mycommand", "foo"]
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.initialDelaySeconds
+          value: 5
+      - equal:
+          path: spec.template.spec.containers[0].startupProbe.periodSeconds
+          value: 5
