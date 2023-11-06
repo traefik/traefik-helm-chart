@@ -26,6 +26,11 @@ spec:
     - name: websecure
       port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
+      {{- with .Values.experimental.kubernetesGateway.namespacePolicy }}
+      allowedRoutes:
+        namespaces:
+          from: {{ . }}
+      {{- end }}
       tls:
         certificateRefs:
           - name: {{ .Values.experimental.kubernetesGateway.certificate.name }}
