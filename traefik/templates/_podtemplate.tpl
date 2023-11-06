@@ -74,9 +74,9 @@
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
-        {{- if .Values.startupProbe}}
+        {{- with .Values.startupProbe}}
         startupProbe:
-          {{- toYaml .Values.startupProbe | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
         {{- end }}
         lifecycle:
           {{- with .Values.deployment.lifecycle }}

@@ -215,7 +215,7 @@ livenessProbe:
 #       - foo
 #   initialDelaySeconds: 5
 #   periodSeconds: 5`
-# startupProbe: {}
+startupProbe:
 
 providers:
   kubernetesCRD:
