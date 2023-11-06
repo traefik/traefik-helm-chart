@@ -32,7 +32,7 @@ metadata:
   {{- end }}
   annotations:
   {{- if and .Values.providers.file.enabled (not .Values.providers.file.watch) }}
-    checksum/provider-file: {{ include (print $.Template.BasePath "/provider-file-cm.yaml") . | sha256sum }}
+    checksum/traefik-dynamic-conf: {{ include (print $.Template.BasePath "/provider-file-cm.yaml") . | sha256sum }}
   {{- end }}
   {{- with .Values.deployment.annotations }}
   {{- toYaml . | nindent 4 }}

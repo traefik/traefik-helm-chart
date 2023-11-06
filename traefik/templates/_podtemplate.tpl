@@ -135,7 +135,7 @@
           {{- end }}
           {{- if .Values.providers.file.enabled }}
           - name: traefik-extra-config
-            mountPath: "/opt/traefik/extra-conf"
+            mountPath: "/etc/traefik/dynamic"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
@@ -570,7 +570,7 @@
           {{- end }}
           {{- with .Values.providers.file }}
           {{- if .enabled }}
-          - "--providers.file.directory=/opt/traefik/extra-conf"
+          - "--providers.file.directory=/etc/traefik/dynamic"
           {{- if .watch }}
           - "--providers.file.watch=true"
           {{- end }}

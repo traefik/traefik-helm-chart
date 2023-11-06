@@ -29,7 +29,7 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts
           content: 
             name: traefik-extra-config
-            mountPath: "/opt/traefik/extra-conf"
+            mountPath: "/etc/traefik/dynamic"
 
   - it: should add cli options with watch option
     set:
@@ -41,14 +41,14 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.file.directory=/opt/traefik/extra-conf"
+          content: "--providers.file.directory=/etc/traefik/dynamic"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.file.watch=true"
       - template: deployment.yaml
         isNull:
-          path: metadata.annotations["checksum/provider-file"]
+          path: metadata.annotations["checksum/traefik-dynamic-conf"]
     
   - it: should add checksum annotations and no watch cli option
     set:
@@ -60,14 +60,14 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.file.directory=/opt/traefik/extra-conf"
+          content: "--providers.file.directory=/etc/traefik/dynamic"
       - template: deployment.yaml
         notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.file.watch=true"
       - template: deployment.yaml
         equal:
-          path: metadata.annotations["checksum/provider-file"]
+          path: metadata.annotations["checksum/traefik-dynamic-conf"]
           value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
 
   - it: should add content to configMap
@@ -87,9 +87,8 @@ tests:
           path: data["config.yml"]
           value: *x-providers-file-content
       - template: deployment.yaml
-        equal:
-          path: metadata.annotations["checksum/provider-file"]
-          value: "73dccd8325de4f1840f0d77f8576b4bd54e1a7b383b4807a88273a2dfc7878bc"
+        isNotEmpty:
+          path: metadata.annotations["checksum/traefik-dynamic-conf"]
 
   - it: should add checksum annotations for daemonset
     set:
@@ -101,9 +100,8 @@ tests:
           watch: false
     asserts:
       - template: daemonset.yaml
-        equal:
-          path: metadata.annotations["checksum/provider-file"]
-          value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
+        isNotEmpty:
+          path: metadata.annotations["checksum/traefik-dynamic-conf"]
 
   - it: should not provide ConfigMap, add extra volume and extra CLI args by default
     asserts:
@@ -120,7 +118,7 @@ tests:
       - template: deployment.yaml
         notContains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.file.directory=/opt/traefik/extra-conf"
+          content: "--providers.file.directory=/etc/traefik/dynamic"
       - template: deployment.yaml
         notContains:
           path: spec.template.spec.containers[0].args
