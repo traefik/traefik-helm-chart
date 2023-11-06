@@ -206,6 +206,17 @@ livenessProbe:
   # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
 
+# -- Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
+# eg.
+# `startupProbe:
+#   exec:
+#     command:
+#       - mycommand
+#       - foo
+#   initialDelaySeconds: 5
+#   periodSeconds: 5`
+startupProbe:
+
 providers:
   kubernetesCRD:
     # -- Load Kubernetes IngressRoute provider
