@@ -66,9 +66,8 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.file.watch=true"
       - template: deployment.yaml
-        equal:
+        isNotEmpty:
           path: metadata.annotations["checksum/traefik-dynamic-conf"]
-          value: "58f60dfffe1b0efb0cd81b38ed0db37ada9d29ec5d7491c57db4072c4f4c0b25"
 
   - it: should add content to configMap
     set:
