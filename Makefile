@@ -1,6 +1,6 @@
 .PHONY: lint test
 
-IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.12.3-0.3.5
+IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.13.1-0.3.5
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.10.1
 
 traefik/tests/__snapshot__:
