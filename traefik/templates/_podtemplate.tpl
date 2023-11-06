@@ -100,14 +100,13 @@
           hostIP: {{ $config.hostIP }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
-        {{- if $config.http3 }}
-        {{- if and $config.http3.enabled $config.hostPort }}
-        {{- $http3Port := default $config.hostPort $config.http3.advertisedPort }}
+        {{- if ($config.http3).enabled }}
         - name: "{{ $name }}-http3"
           containerPort: {{ $config.port }}
-          hostPort: {{ $http3Port }}
-          protocol: UDP
+        {{- if $config.hostPort }}
+          hostPort: {{ default $config.hostPort $config.http3.advertisedPort }}
         {{- end }}
+          protocol: UDP
         {{- end }}
         {{- end }}
         {{- end }}
