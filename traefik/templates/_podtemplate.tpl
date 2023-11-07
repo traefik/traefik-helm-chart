@@ -133,6 +133,10 @@
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
+          {{- if .Values.providers.file.enabled }}
+          - name: traefik-extra-config
+            mountPath: "/etc/traefik/dynamic"
+          {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
           {{- end }}
@@ -564,6 +568,14 @@
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" $ }}"
           {{- end }}
           {{- end }}
+          {{- with .Values.providers.file }}
+          {{- if .enabled }}
+          - "--providers.file.directory=/etc/traefik/dynamic"
+          {{- if .watch }}
+          - "--providers.file.watch=true"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
@@ -727,6 +739,11 @@
         {{- if .Values.experimental.plugins.enabled }}
         - name: plugins
           emptyDir: {}
+        {{- end }}
+        {{- if .Values.providers.file.enabled }}
+        - name: traefik-extra-config
+          configMap:
+            name: {{ template "traefik.fullname" . }}-file-provider
         {{- end }}
       {{- if .Values.affinity }}
       affinity:
