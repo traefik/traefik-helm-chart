@@ -517,7 +517,7 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- if and .Values.experimental.plugins.enabled .Values.experimental.plugins.enabled}}
+          {{- if .Values.experimental.plugins.enabled }}
           {{- range $key, $value := .Values.experimental.plugins }}
           {{- if not (eq $key "enabled") }}
           {{- range $pluginkey, $pluginvalue := $value }}
