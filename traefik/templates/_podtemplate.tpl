@@ -517,6 +517,15 @@
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- if and .Values.experimental.plugins.enabled .Values.experimental.plugins.enabled}}
+          {{- range $key, $value := .Values.experimental.plugins }}
+          {{- if not (eq $key "enabled") }}
+          {{- range $pluginkey, $pluginvalue := $value }}
+          - "--experimental.plugins.{{ $key }}.{{ $pluginkey }}={{ $pluginvalue }}"
+          {{- end }}
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
           {{- if .Values.providers.kubernetesCRD.labelSelector }}
