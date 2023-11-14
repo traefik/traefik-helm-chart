@@ -217,7 +217,7 @@ tests:
         value: 443
     - equal:
         path: spec.ports[2].targetPort
-        value: 8443
+        value: websecure-http3
     - equal:
         path: spec.ports[2].protocol
         value: UDP
@@ -240,7 +240,7 @@ tests:
         value: 4443
     - equal:
         path: spec.ports[2].targetPort
-        value: 8443
+        value: websecure-http3
     - equal:
         path: spec.ports[2].protocol
         value: UDP

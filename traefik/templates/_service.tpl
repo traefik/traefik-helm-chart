@@ -55,7 +55,7 @@
   {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
   - port: {{ $http3Port }}
     name: "{{ $name }}-http3"
-    targetPort: {{ default $config.port $config.targetPort }}
+    targetPort: {{ $name }}-http3
     protocol: UDP
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}
