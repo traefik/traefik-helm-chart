@@ -515,7 +515,7 @@ metrics:
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing: {}
 #  openTelemetry: # traefik v3+ only
-#    grpc: {}
+#    grpc: true
 #    insecure: true
 #    address: localhost:4317
 # instana:
