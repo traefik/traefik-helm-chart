@@ -83,3 +83,36 @@ tests:
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/component"]
           value: metrics
+  - it: should use the release namespace by default if metrics.prometheus.serviceMonitor.namespace is not set
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    values:
+      - ./values/servicemonitor.yaml
+    release:
+      namespace: release-namespace
+    set:
+      metrics:
+        prometheus:
+          serviceMonitor:
+            namespace: ""
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.namespace
+          value: release-namespace
+  - it: should use the release namespace if specified
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    values:
+      - ./values/servicemonitor.yaml
+    release:
+      namespace: release-namespace
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.namespace
+          value: another-namespace
