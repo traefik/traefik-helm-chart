@@ -51,3 +51,36 @@ tests:
                 labels:
                   context: traefik
                   severity: warning
+  - it: should use the release namespace by default if metrics.prometheus.prometheusRule.namespace is not set
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    values:
+      - ./values/prometheusrules.yaml
+    release:
+      namespace: release-namespace
+    set:
+      metrics:
+        prometheus:
+          prometheusRule:
+            namespace: ""
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.namespace
+          value: release-namespace
+  - it: should use the release namespace if specified
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    values:
+      - ./values/prometheusrules.yaml
+    release:
+      namespace: release-namespace
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.namespace
+          value: another-namespace
