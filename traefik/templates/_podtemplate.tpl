@@ -128,7 +128,7 @@
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
-          {{- if .Values.experimental.plugins.enabled }}
+          {{- if gt (len .Values.experimental.plugins) 0 }}
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
@@ -517,14 +517,9 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- if .Values.experimental.plugins.enabled }}
-          {{- range $key, $value := .Values.experimental.plugins }}
-          {{- if not (eq $key "enabled") }}
-          {{- range $pluginkey, $pluginvalue := $value }}
-          - "--experimental.plugins.{{ $key }}.{{ $pluginkey }}={{ $pluginvalue }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
+          {{- range $pluginName, $plugin := .Values.experimental.plugins }}
+          - --experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}
+          - --experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
@@ -744,7 +739,7 @@
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
-        {{- if .Values.experimental.plugins.enabled }}
+        {{- if gt (len .Values.experimental.plugins) 0 }}
         - name: plugins
           emptyDir: {}
         {{- end }}
