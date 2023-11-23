@@ -74,6 +74,10 @@
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
+        {{- with .Values.startupProbe}}
+        startupProbe:
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
         lifecycle:
           {{- with .Values.deployment.lifecycle }}
           {{- toYaml . | nindent 10 }}
@@ -96,14 +100,13 @@
           hostIP: {{ $config.hostIP }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
-        {{- if $config.http3 }}
-        {{- if and $config.http3.enabled $config.hostPort }}
-        {{- $http3Port := default $config.hostPort $config.http3.advertisedPort }}
+        {{- if ($config.http3).enabled }}
         - name: "{{ $name }}-http3"
           containerPort: {{ $config.port }}
-          hostPort: {{ $http3Port }}
-          protocol: UDP
+        {{- if $config.hostPort }}
+          hostPort: {{ default $config.hostPort $config.http3.advertisedPort }}
         {{- end }}
+          protocol: UDP
         {{- end }}
         {{- end }}
         {{- end }}
@@ -128,6 +131,10 @@
           {{- if .Values.experimental.plugins.enabled }}
           - name: plugins
             mountPath: "/plugins-storage"
+          {{- end }}
+          {{- if .Values.providers.file.enabled }}
+          - name: traefik-extra-config
+            mountPath: "/etc/traefik/dynamic"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
             {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
@@ -560,6 +567,14 @@
           - "--providers.kubernetesingress.namespaces={{ template "providers.kubernetesIngress.namespaces" $ }}"
           {{- end }}
           {{- end }}
+          {{- with .Values.providers.file }}
+          {{- if .enabled }}
+          - "--providers.file.directory=/etc/traefik/dynamic"
+          {{- if .watch }}
+          - "--providers.file.watch=true"
+          {{- end }}
+          {{- end }}
+          {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
@@ -723,6 +738,11 @@
         {{- if .Values.experimental.plugins.enabled }}
         - name: plugins
           emptyDir: {}
+        {{- end }}
+        {{- if .Values.providers.file.enabled }}
+        - name: traefik-extra-config
+          configMap:
+            name: {{ template "traefik.fullname" . }}-file-provider
         {{- end }}
       {{- if .Values.affinity }}
       affinity:

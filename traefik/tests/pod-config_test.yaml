@@ -505,7 +505,7 @@ tests:
           of: Deployment
       - isAPIVersion:
           of: apps/v1
-  - it: should have only one http3 port when not using hostport
+  - it: should have two http3 port when not using hostport
     set:
       ports:
         websecure:
@@ -514,15 +514,17 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].ports
-          any: true
-          count: 1
           content:
             containerPort: 8443
-      - notContains:
+            name: websecure
+            protocol: TCP
+      - contains:
           path: spec.template.spec.containers[0].ports
           content:
+            containerPort: 8443
             name: websecure-http3
-  - it: should have two separate http3 port when using hostport
+            protocol: UDP
+  - it: should be possible to use hostport with http3
     set:
       ports:
         websecure:
