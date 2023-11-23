@@ -120,8 +120,8 @@ experimental:
   # v3:
   # -- Enable traefik version 3
 
-  plugins: {}
   # -- Enable traefik experimental plugins
+  plugins: {}
   # demo:
   #   moduleName: github.com/traefik/plugindemo
   #   version: v0.2.1
