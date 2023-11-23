@@ -9,9 +9,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ template "traefik.fullname" . }}
-  {{- with .Values.metrics.prometheus.serviceMonitor.namespace }}
-  namespace: {{ . }}
-  {{- end }}
+  namespace: {{ .Values.metrics.prometheus.serviceMonitor.namespace | default (include "traefik.namespace" .) }}
   labels:
     {{- if (.Values.metrics.prometheus.service).enabled }}
     {{- include "traefik.metricsservicelabels" . | nindent 4 }}

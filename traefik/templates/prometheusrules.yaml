@@ -9,9 +9,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
   name: {{ template "traefik.fullname" . }}
-  {{- if .Values.metrics.prometheus.prometheusRule.namespace }}
-  namespace: {{ .Values.metrics.prometheus.prometheusRule.namespace }}
-  {{- end }}
+  namespace: {{ .Values.metrics.prometheus.prometheusRule.namespace | default (include "traefik.namespace" .) }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
     {{- with .Values.metrics.prometheus.prometheusRule.additionalLabels }}
