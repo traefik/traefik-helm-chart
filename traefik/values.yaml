@@ -41,6 +41,8 @@ deployment:
   labels: {}
   # -- Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   podAnnotations: {}
+  # traefik/name: '{{ template "traefik.name" . }}'
+  
   # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
   podLabels: {}
   # -- Additional containers (e.g. for metric offloading sidecars)

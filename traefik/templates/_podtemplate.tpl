@@ -1,8 +1,8 @@
 {{- define "traefik.podTemplate" }}
     metadata:
       annotations:
-      {{- with .Values.deployment.podAnnotations }}
-      {{- toYaml . | nindent 8 }}
+      {{- if .Values.deployment.podAnnotations }}
+        {{- tpl (toYaml .Values.deployment.podAnnotations) . | nindent 8 }}
       {{- end }}
       {{- if .Values.metrics }}
       {{- if and (.Values.metrics.prometheus) (not .Values.metrics.prometheus.serviceMonitor) }}
