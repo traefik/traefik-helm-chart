@@ -54,8 +54,7 @@ Kubernetes: `>=1.16.0-0`
 | env | list | `[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}]` | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
-| experimental.plugins | object | `{"enabled":false}` | Enable traefik version 3  enabled: false |
-| experimental.plugins.enabled | bool | `false` | Enable traefik experimental plugins |
+| experimental.plugins | object | `{}` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
@@ -127,6 +126,9 @@ Kubernetes: `>=1.16.0-0`
 | ports.websecure.tls.enabled | bool | `true` |  |
 | ports.websecure.tls.options | string | `""` |  |
 | priorityClassName | string | `""` | Priority indicates the importance of a Pod relative to other Pods. |
+| providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |
+| providers.file.enabled | bool | `false` | Create a file provider |
+| providers.file.watch | bool | `true` | Allows Traefik to automatically watch for file changes |
 | providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
 | providers.kubernetesCRD.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
@@ -157,6 +159,7 @@ Kubernetes: `>=1.16.0-0`
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
+| startupProbe | string | `nil` | Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes eg. `startupProbe:   exec:     command:       - mycommand       - foo   initialDelaySeconds: 5   periodSeconds: 5` |
 | tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   customOptions:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
