@@ -119,10 +119,12 @@ experimental:
   # This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
   # v3:
   # -- Enable traefik version 3
-  #  enabled: false
-  plugins:
-    # -- Enable traefik experimental plugins
-    enabled: false
+
+  # -- Enable traefik experimental plugins
+  plugins: {}
+  # demo:
+  #   moduleName: github.com/traefik/plugindemo
+  #   version: v0.2.1
   kubernetesGateway:
     # -- Enable traefik experimental GatewayClass CRD
     enabled: false

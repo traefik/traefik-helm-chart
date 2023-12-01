@@ -17,6 +17,9 @@
     {{- fail "\n\n ERROR: latest tag should not be used" }}
   {{- end }}
 
+{{- if ne (typeOf .Values.experimental.plugins) "map[string]interface {}" }}
+  {{- fail (printf "ERROR: .Values.experimental.plugins should be a map (%s provided) !" (typeOf .Values.experimental.plugins)) }}
+{{- end }}
 ---
 apiVersion: apps/v1
 kind: Deployment

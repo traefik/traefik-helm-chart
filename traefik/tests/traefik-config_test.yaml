@@ -168,11 +168,13 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressClass=foo"
 
-  - it: should have a plugin storage if the experimental feature is enabled
+  - it: should have a plugin storage and args if the experimental feature is enabled
     set:
       experimental:
         plugins:
-          enabled: true
+          demo:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
     asserts:
       - equal:
           path: spec.template.spec.volumes[2]
@@ -184,6 +186,39 @@ tests:
           content:
             name: plugins
             mountPath: "/plugins-storage"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.version=v0.2.1"
+
+  - it: should fail gracefully when using old syntax
+    set:
+      experimental:
+        plugins:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: plugin enabled is missing moduleName/version keys !"
+
+  - it: should fail gracefully on missing plugins information
+    set:
+      experimental:
+        plugins:
+          demo:
+            moduleName: github.com/traefik/plugindemo
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: plugin demo is missing moduleName/version keys !"
+
+  - it: should fail gracefully on bad structure
+    set:
+      experimental:
+        plugins: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: .Values.experimental.plugins should be a map (bool provided) !"
 
   - it: should have tls configuration args when specified in values.yaml for port
     set:

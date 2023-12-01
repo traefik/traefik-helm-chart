@@ -128,7 +128,7 @@
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
-          {{- if .Values.experimental.plugins.enabled }}
+          {{- if gt (len .Values.experimental.plugins) 0 }}
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
@@ -517,6 +517,13 @@
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- range $pluginName, $plugin := .Values.experimental.plugins }}
+          {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
+            {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
+          {{- end }}
+          - --experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}
+          - --experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
           {{- if .Values.providers.kubernetesCRD.labelSelector }}
@@ -735,7 +742,7 @@
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
-        {{- if .Values.experimental.plugins.enabled }}
+        {{- if gt (len .Values.experimental.plugins) 0 }}
         - name: plugins
           emptyDir: {}
         {{- end }}
