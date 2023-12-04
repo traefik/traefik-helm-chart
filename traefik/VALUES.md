@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 25.0.0](https://img.shields.io/badge/Version-25.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.5](https://img.shields.io/badge/AppVersion-v2.10.5-informational?style=flat-square)
+![Version: 25.0.0](https://img.shields.io/badge/Version-25.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.10.6](https://img.shields.io/badge/AppVersion-v2.10.6-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -46,7 +46,7 @@ Kubernetes: `>=1.16.0-0`
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |
 | deployment.lifecycle | object | `{}` | Pod lifecycle actions |
 | deployment.minReadySeconds | int | `0` | The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available |
-| deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) |
+| deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
