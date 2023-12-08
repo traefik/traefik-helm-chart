@@ -15,14 +15,10 @@ sources:
   - https://github.com/traefik/traefik
   - https://github.com/traefik/traefik-helm-chart
 maintainers:
-  - name: emilevauge
-    email: emile@vauge.com
-  - name: dtomcej
-    email: daniel.tomcej@gmail.com
-  - name: ldez
-    email: ldez@traefik.io
   - name: mloiseleur
     email: michel.loiseleur@traefik.io
+  - name: mmatur
+    email: michael.matur@traefik.io
   - name: charlie-haley
     email: charlie.haley@traefik.io
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
