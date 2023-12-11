@@ -33,7 +33,7 @@ While encouraging contributions, the philosophy leads to avoid introducing:
 
 Once a year, [monocle](https://github.com/change-metrics/monocle) is used to gather statistics on this project.
 
-They were gathered with this config file:
+They are gathered with this config file:
 
 ```yaml
 ---
