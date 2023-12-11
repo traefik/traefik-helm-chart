@@ -47,21 +47,3 @@ workspaces:
             - traefik-helm-chart
         update_since: '2022-01-01'
 ```
-
-## Peers strength
-
-![Peers strength](./stats/peers-strenght.png)
-
-## PRs opened
-
-![Top contributors by number of changes created](./stats/changes-created.png)
-
-## Reviewed PRs
-
-![Top contributors by number of reviews](./stats/review-authors.png)
-
-
-
-
-
-
