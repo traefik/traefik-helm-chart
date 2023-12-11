@@ -17,10 +17,10 @@ sources:
 maintainers:
   - name: mloiseleur
     email: michel.loiseleur@traefik.io
-  - name: mmatur
-    email: michael.matur@traefik.io
   - name: charlie-haley
     email: charlie.haley@traefik.io
+  - name: darkweaver87
+    email: remi.buisson@traefik.io
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
