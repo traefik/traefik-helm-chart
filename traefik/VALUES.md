@@ -10,11 +10,9 @@ A Traefik based Kubernetes ingress controller
 
 | Name | Email | Url |
 | ---- | ------ | --- |
-| emilevauge | <emile@vauge.com> |  |
-| dtomcej | <daniel.tomcej@gmail.com> |  |
-| ldez | <ldez@traefik.io> |  |
 | mloiseleur | <michel.loiseleur@traefik.io> |  |
 | charlie-haley | <charlie.haley@traefik.io> |  |
+| darkweaver87 | <remi.buisson@traefik.io> |  |
 
 ## Source Code
 

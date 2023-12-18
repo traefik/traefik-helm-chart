@@ -13,10 +13,10 @@ Please read the [testing guidelines](./TESTING.md) to learn how testing is done 
 
 ## Guidelines
 
-According to the Traefik HelmChart [philosophy](./README.md#philosophy), 
+According to the Traefik HelmChart [philosophy](./README.md#philosophy),
 the guidelines for future evolutions are:
 
-* fix bugs
+- Fix bugs
 * improve security
 * improve HelmChart support
 * improve Kubernetes features support
@@ -24,7 +24,26 @@ the guidelines for future evolutions are:
 
 While encouraging contributions, the philosophy leads to avoid introducing:
 
-* specific use cases
-* third party CRD
-* dashboard exposition tuning
-* helm chart variables that shortcuts/expose static or dynamic Traefik configuration
+- Specific use cases
+- Third party CRD
+- Dashboard exposition tuning
+- Helm chart variables that shortcuts/expose static or dynamic Traefik configuration
+
+# Statistics
+
+Once a year, [monocle](https://github.com/change-metrics/monocle) is used to gather statistics on this project.
+
+They are gathered with this config file:
+
+```yaml
+---
+workspaces:
+  - name: monocle
+    crawlers:
+      - name: github-traefik
+        provider:
+          github_organization: traefik
+          github_repositories:
+            - traefik-helm-chart
+        update_since: '2022-01-01'
+```
