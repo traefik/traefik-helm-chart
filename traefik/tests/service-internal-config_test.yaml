@@ -184,3 +184,22 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
+  - it: should expose ports that are exposed internally only
+    set:
+      service:
+        internal:
+          enabled: true
+      ports:
+        internal:
+          expose: false
+          exposeInternal: true
+          port: 3000
+          protocol: TCP
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: internal
+            port: 3000
+            protocol: TCP
+            targetPort: internal
