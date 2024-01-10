@@ -796,7 +796,7 @@ service:
   #   - IPv4
   #   - IPv6
   ##
-  ## -- An additionnal and optional internal Service.
+  ## -- An additional and optional internal Service.
   ## Same parameters as external Service
   # internal:
   #   type: ClusterIP
