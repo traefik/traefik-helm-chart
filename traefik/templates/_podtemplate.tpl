@@ -521,8 +521,8 @@
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
             {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
           {{- end }}
-          - --experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}
-          - --experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}
+          - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
+          - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
