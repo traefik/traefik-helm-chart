@@ -35,7 +35,7 @@
 
 {{- define "traefik.service-internal-ports" }}
   {{- range $name, $config := . }}
-  {{- if $config.expose }}
+  {{- if (or $config.expose $config.exposeInternal) }}
   - port: {{ default $config.port $config.exposedPort }}
     name: {{ $name | quote }}
     targetPort: {{ default $name $config.targetPort }}
