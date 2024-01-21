@@ -172,6 +172,22 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.asDefault=true"
 
+  - it: should set entrypoint host when configured
+    template: deployment.yaml
+    set:
+      image:
+        tag: v3.0.0-beta3
+      ports:
+        web:
+          host: 127.0.0.1
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.address=127.0.0.1:8000/tcp"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.address=:8443/tcp"
+
   - it: should throw and error when default entrypoint is enabled without traefik v3
     template: deployment.yaml
     set:

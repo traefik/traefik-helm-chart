@@ -622,6 +622,11 @@ ports:
     # to set this value if you need traefik to listen on specific interface
     # only.
     # hostIP: 192.168.100.10
+    #
+    # -- Listen on a specific host. It is useful together with hostNetwork: true
+    # when you want to listen on a specific interface. If not set, Traefik will
+    # listen on all interfaces.
+    # host: 192.168.100.10
 
     # Defines whether the port is exposed if service.type is LoadBalancer or
     # NodePort.
