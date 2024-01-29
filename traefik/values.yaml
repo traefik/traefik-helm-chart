@@ -100,6 +100,8 @@ deployment:
   #     port: 9000
   #     host: localhost
   #     scheme: HTTP
+  # -- Set a runtimeClassName on pod
+  runtimeClassName:
 
 # -- Pod disruption budget
 podDisruptionBudget:
@@ -261,7 +263,8 @@ providers:
     # -- Allows Traefik to automatically watch for file changes
     watch: true
     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
-    content: ""
+    content:
+      ""
       # http:
       #   routers:
       #     router0:
@@ -564,8 +567,8 @@ tracing: {}
 
 # -- Global command arguments to be passed to all traefik's pods
 globalArguments:
-- "--global.checknewversion"
-- "--global.sendanonymoususage"
+  - "--global.checknewversion"
+  - "--global.sendanonymoususage"
 
 #
 # Configure Traefik static configuration
@@ -578,14 +581,14 @@ additionalArguments: []
 
 # -- Environment variables to be passed to Traefik's binary
 env:
-- name: POD_NAME
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.name
-- name: POD_NAMESPACE
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.namespace
+  - name: POD_NAME
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.name
+  - name: POD_NAMESPACE
+    valueFrom:
+      fieldRef:
+        fieldPath: metadata.namespace
 # - name: SOME_VAR
 #   value: some-var-value
 # - name: SOME_VAR_FROM_CONFIG_MAP
@@ -985,7 +988,6 @@ podSecurityContext:
 # In some cases, it can avoid the need for additional, extended or adhoc deployments.
 # See #595 for more details and traefik/tests/values/extra.yaml for example.
 extraObjects: []
-
 # This will override the default Release Namespace for Helm.
 # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 # namespaceOverride: traefik

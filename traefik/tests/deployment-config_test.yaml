@@ -69,26 +69,26 @@ tests:
           value: podAnnotations
   - it: should have podAnnotations with specified values
     set:
-      type: 'internal'
+      type: "internal"
       deployment:
         podAnnotations:
           traefik/powpow: podAnnotations
           traefik/name: '{{ template "traefik.name" . }}'
-          traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/type: '{{ .Values.type }}'
+          traefik/{{ template "traefik.name" . }}.logs: "log_processing_rules"
+          traefik/type: "{{ .Values.type }}"
     asserts:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
       - equal:
           path: spec.template.metadata.annotations.traefik/name
-          value: 'traefik'
+          value: "traefik"
       - equal:
           path: spec.template.metadata.annotations["traefik/traefik.logs"]
-          value: 'log_processing_rules'
+          value: "log_processing_rules"
       - equal:
           path: spec.template.metadata.annotations.traefik/type
-          value: 'internal'
+          value: "internal"
   - it: should have labels with specified values
     set:
       deployment:

@@ -288,20 +288,16 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--certificatesresolvers.myAcmeResolver.acme.email=email@example.com"
+          content: "--certificatesresolvers.myAcmeResolver.acme.email=email@example.com"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.provider=myProvider"
+          content: "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.provider=myProvider"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.resolvers=1.1.1.1,8.8.8.8"
+          content: "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.resolvers=1.1.1.1,8.8.8.8"
       - contains:
           path: spec.template.spec.containers[0].args
-          content:
-            "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
+          content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
   - it: should have prometheus annotations with specified values
     set:
       ports:
@@ -624,3 +620,18 @@ tests:
     asserts:
       - isNull:
           path: spec.template.metadata.annotations.prometheus.io/scrape
+  - it: should set runtimeClassName when configured
+    set:
+      deployment:
+        runtimeClassName: ArbitraryRuntimeClass
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].runtimeClassName
+          value: ArbitraryRuntimeClass
+  - it: should not set runtimeClassName when configured
+    set:
+      deployment:
+        runtimeClassName:
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].runtimeClassName
