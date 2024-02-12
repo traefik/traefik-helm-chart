@@ -761,7 +761,7 @@ ports:
 #     labels: {}
 #     sniStrict: true
 #     preferServerCipherSuites: true
-#   customOptions:
+#   custom-options:
 #     labels: {}
 #     curvePreferences:
 #       - CurveP521
