@@ -53,6 +53,9 @@
       - image: {{ template "traefik.image-name" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         name: {{ template "traefik.fullname" . }}
+        {{- with .Values.deployment.runtimeClassName }}
+        runtimeClassName: {{ . }}
+        {{- end }}        
         resources:
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
