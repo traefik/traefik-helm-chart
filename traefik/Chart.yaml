@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 26.0.0
+version: 26.1.0
 # renovate: image=traefik
 appVersion: v2.11.0
 kubeVersion: ">=1.16.0-0"
@@ -25,13 +25,15 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: 🐛 improve confusing suggested value on openTelemetry.grpc"
-    - "fix: 🐛 declare http3 udp port, with or without hostport"
-    - "feat: 💥 deployment.podannotations support interpolation with tpl"
-    - "feat: allow update of namespace policy for websecure listener"
-    - "feat: allow defining startupProbe"
-    - "feat: add file provider"
-    - "feat: :boom: unify plugin import between traefik and this chart"
-    - "chore(release): 🚀 publish v26"
-    - "chore(deps): update traefik docker tag to v2.10.6"
-    - "Release namespace for Prometheus Operator resources"
+    - "fix: 🐛 missing quote on experimental plugin args"
+    - "fix: update traefik v3 serverstransporttcps CRD"
+    - "feat: set runtimeClassName on pod spec"
+    - "feat: create v1 Gateway and GatewayClass Version for Traefik v3"
+    - "feat: allow exposure of ports on internal service only"
+    - "doc: fix invalid suggestion on TLSOption (#996)"
+    - "chore: 🔧 update maintainers"
+    - "chore: 🔧 promote jnoordsij to Traefik Helm Chart maintainer"
+    - "chore(release): publish v26.1.0"
+    - "chore(deps): update traefik docker tag to v2.11.0"
+    - "chore(deps): update traefik docker tag to v2.10.7"
+    - "chore(crds): update definitions for traefik v2.11"

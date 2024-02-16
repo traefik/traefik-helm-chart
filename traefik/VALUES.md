@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 26.0.0](https://img.shields.io/badge/Version-26.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.11.0](https://img.shields.io/badge/AppVersion-v2.11.0-informational?style=flat-square)
+![Version: 26.1.0](https://img.shields.io/badge/Version-26.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.11.0](https://img.shields.io/badge/AppVersion-v2.11.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -48,7 +48,7 @@ Kubernetes: `>=1.16.0-0`
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
-| deployment.runtimeClassName | string | null | Set a runtimeClassName for created pods |
+| deployment.runtimeClassName | string | `nil` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | `[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}]` | Environment variables to be passed to Traefik's binary |

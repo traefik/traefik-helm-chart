@@ -1,8 +1,106 @@
 # Change Log
 
+## 26.1.0  ![AppVersion: v2.11.0](https://img.shields.io/static/v1?label=AppVersion&message=v2.11.0&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-02-16
+
+* fix: 🐛 set runtimeClassName at pod level
+* fix: 🐛 missing quote on experimental plugin args
+* fix: update traefik v3 serverstransporttcps CRD
+* feat: set runtimeClassName on pod spec
+* feat: create v1 Gateway and GatewayClass Version for Traefik v3
+* feat: allow exposure of ports on internal service only
+* doc: fix invalid suggestion on TLSOption (#996)
+* chore: 🔧 update maintainers
+* chore: 🔧 promote jnoordsij to Traefik Helm Chart maintainer
+* chore(release): publish v26.1.0
+* chore(deps): update traefik docker tag to v2.11.0
+* chore(deps): update traefik docker tag to v2.10.7
+* chore(crds): update definitions for traefik v2.11
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f9dac91..dbd078f 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -100,6 +100,8 @@ deployment:
+   #     port: 9000
+   #     host: localhost
+   #     scheme: HTTP
++  # -- Set a runtimeClassName on pod
++  runtimeClassName:
+ 
+ # -- Pod disruption budget
+ podDisruptionBudget:
+@@ -629,6 +631,10 @@ ports:
+     exposedPort: 9000
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
++    # -- Defines whether the port is exposed on the internal service;
++    # note that ports exposed on the default service are exposed on the internal
++    # service by default as well.
++    exposeInternal: false
+   web:
+     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+@@ -644,6 +650,10 @@ ports:
+     # -- Use nodeport if set. This is useful if you have configured Traefik in a
+     # LoadBalancer.
+     # nodePort: 32080
++    # -- Defines whether the port is exposed on the internal service;
++    # note that ports exposed on the default service are exposed on the internal
++    # service by default as well.
++    exposeInternal: false
+     # Port Redirections
+     # Added in 2.2, you can make permanent redirects via entrypoints.
+     # https://docs.traefik.io/routing/entrypoints/#redirection
+@@ -674,6 +684,10 @@ ports:
+     ## -- The port protocol (TCP/UDP)
+     protocol: TCP
+     # nodePort: 32443
++    # -- Defines whether the port is exposed on the internal service;
++    # note that ports exposed on the default service are exposed on the internal
++    # service by default as well.
++    exposeInternal: false
+     ## -- Specify an application protocol. This may be used as a hint for a Layer 7 load balancer.
+     # appProtocol: https
+     #
+@@ -735,6 +749,10 @@ ports:
+     exposedPort: 9100
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
++    # -- Defines whether the port is exposed on the internal service;
++    # note that ports exposed on the default service are exposed on the internal
++    # service by default as well.
++    exposeInternal: false
+ 
+ # -- TLS Options are created as TLSOption CRDs
+ # https://doc.traefik.io/traefik/https/tls/#tls-options
+@@ -745,7 +763,7 @@ ports:
+ #     labels: {}
+ #     sniStrict: true
+ #     preferServerCipherSuites: true
+-#   customOptions:
++#   custom-options:
+ #     labels: {}
+ #     curvePreferences:
+ #       - CurveP521
+@@ -796,7 +814,7 @@ service:
+   #   - IPv4
+   #   - IPv6
+   ##
+-  ## -- An additionnal and optional internal Service.
++  ## -- An additional and optional internal Service.
+   ## Same parameters as external Service
+   # internal:
+   #   type: ClusterIP
+```
+
 ## 26.0.0  ![AppVersion: v2.10.6](https://img.shields.io/static/v1?label=AppVersion&message=v2.10.6&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2023-12-04
+**Release date:** 2023-12-05
 
 * fix: 🐛 improve confusing suggested value on openTelemetry.grpc
 * fix: 🐛 declare http3 udp port, with or without hostport
