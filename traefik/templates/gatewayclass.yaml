@@ -1,6 +1,10 @@
 {{- if .Values.experimental.kubernetesGateway.enabled }}
 ---
+{{- if semverCompare ">=3.0.0-rc1" (default $.Chart.AppVersion $.Values.image.tag)}}
+apiVersion: gateway.networking.k8s.io/v1
+{{- else }}
 apiVersion: gateway.networking.k8s.io/v1alpha2
+{{- end }}
 kind: GatewayClass
 metadata:
   name: traefik

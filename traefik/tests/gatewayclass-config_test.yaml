@@ -8,6 +8,20 @@ tests:
         kubernetesGateway:
           enabled: true
     asserts:
+      - containsDocument:
+          kind: GatewayClass
+          apiVersion: gateway.networking.k8s.io/v1alpha2
       - equal:
           path: spec.controllerName
           value: traefik.io/gateway-controller
+  - it: should set expected apiVersion with v3 version
+    set:
+      image:
+        tag: 3.0.0-rc1
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - containsDocument:
+          kind: GatewayClass
+          apiVersion: gateway.networking.k8s.io/v1
