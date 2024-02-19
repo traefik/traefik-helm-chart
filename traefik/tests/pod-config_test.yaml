@@ -626,7 +626,7 @@ tests:
         runtimeClassName: ArbitraryRuntimeClass
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].runtimeClassName
+          path: spec.template.spec.runtimeClassName
           value: ArbitraryRuntimeClass
   - it: should not set runtimeClassName when configured
     set:
