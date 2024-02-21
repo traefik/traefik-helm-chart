@@ -56,11 +56,11 @@ tests:
         enabled: true
     asserts:
       - equal:
-          path: rules[4].resources[0]
+          path: rules[5].resources[0]
           value: podsecuritypolicies
         template: rbac/clusterrole.yaml
       - equal:
-          path: rules[4].verbs[0]
+          path: rules[5].verbs[0]
           value: use
         template: rbac/clusterrole.yaml
   - it: should allow persistentVolumeClaim when persistence is enabled

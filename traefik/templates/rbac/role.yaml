@@ -26,8 +26,8 @@ rules:
       - ""
     resources:
       - secrets
-    {{- if gt (len .Values.traefik.rbac.accessibleSecrets) 0 }}
-    resourceNames: {{ .Values.traefik.rbac.accessibleSecrets }}
+    {{- if gt (len $.Values.rbac.accessibleSecrets) 0 }}
+    resourceNames: {{ $.Values.rbac.accessibleSecrets }}
     {{- end }}
     verbs:
       - get
