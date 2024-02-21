@@ -18,7 +18,17 @@ rules:
     resources:
       - services
       - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
       - secrets
+    {{- if gt (len .Values.traefik.rbac.accessibleSecrets) 0 }}
+    resourceNames: {{ .Values.traefik.rbac.accessibleSecrets }}
+    {{- end }}
     verbs:
       - get
       - list
