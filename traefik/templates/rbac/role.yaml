@@ -26,17 +26,12 @@ rules:
       - ""
     resources:
       - secrets
-    verbs:
-      - list
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
     {{- if gt (len $.Values.rbac.secretResourceNames) 0 }}
     resourceNames: {{ $.Values.rbac.secretResourceNames }}
     {{- end }}
     verbs:
       - get
+      - list
       - watch
 {{- if (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) }}
   - apiGroups:
