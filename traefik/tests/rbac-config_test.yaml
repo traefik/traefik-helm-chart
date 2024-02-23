@@ -488,7 +488,7 @@ tests:
               - list
               - watch
 
-  - it: ClusterRole should allow get, list, watch access to every secret if accessibleSecrets is empty
+  - it: ClusterRole should allow get, list, watch access to every secret if secretResourceNames is empty
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
@@ -503,10 +503,10 @@ tests:
               - list
               - watch
 
-  - it: ClusterRole should allow get, list, watch access only to secrets listed in accessibleSecrets if not empty
+  - it: ClusterRole should allow get, list, watch access only to secrets listed in secretResourceNames if not empty
     set:
       rbac:
-        accessibleSecrets: [traefik-tls-cert]
+        secretResourceNames: [traefik-tls-cert]
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
@@ -523,7 +523,7 @@ tests:
               - list
               - watch
 
-  - it: Role should allow get, list, watch access to every secret if accessibleSecrets is empty
+  - it: Role should allow get, list, watch access to every secret if secretResourceNames is empty
     set:
       rbac:
         namespaced: true
@@ -541,11 +541,11 @@ tests:
               - list
               - watch
 
-  - it: Role should allow get, list, watch access only to secrets listed in accessibleSecrets if not empty
+  - it: Role should allow get, list, watch access only to secrets listed in secretResourceNames if not empty
     set:
       rbac:
         namespaced: true
-        accessibleSecrets: [traefik-tls-cert]
+        secretResourceNames: [traefik-tls-cert]
     asserts:
       - template: rbac/role.yaml
         contains:

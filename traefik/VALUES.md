@@ -143,7 +143,7 @@ Kubernetes: `>=1.16.0-0`
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
-| rbac | object | `{"accessibleSecrets":[],"enabled":true,"namespaced":false}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
+| rbac | object | `{"enabled":true,"namespaced":false,"secretResourceNames":[]}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
