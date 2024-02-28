@@ -635,6 +635,10 @@ ports:
     # note that ports exposed on the default service are exposed on the internal
     # service by default as well.
     exposeInternal: false
+    # -- Defines whether the port should be exposed only on the default service;
+    # this can be useful if you want to define different entrypoints for external 
+    # and internal service but expose them on competing ports
+    onlyExternal: false
   web:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -654,6 +658,10 @@ ports:
     # note that ports exposed on the default service are exposed on the internal
     # service by default as well.
     exposeInternal: false
+    # -- Defines whether the port should be exposed only on the default service;
+    # this can be useful if you want to define different entrypoints for external 
+    # and internal service but expose them on competing ports
+    onlyExternal: false
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
@@ -688,6 +696,10 @@ ports:
     # note that ports exposed on the default service are exposed on the internal
     # service by default as well.
     exposeInternal: false
+    # -- Defines whether the port should be exposed only on the default service;
+    # this can be useful if you want to define different entrypoints for external 
+    # and internal service but expose them on competing ports
+    onlyExternal: false
     ## -- Specify an application protocol. This may be used as a hint for a Layer 7 load balancer.
     # appProtocol: https
     #

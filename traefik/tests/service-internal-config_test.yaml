@@ -203,3 +203,27 @@ tests:
             port: 3000
             protocol: TCP
             targetPort: internal
+  - it: should not expose ports that are exposed on default service only
+    set:
+      service:
+        internal:
+          enabled: true
+      ports:
+        web:
+          onlyExternal: true
+        websecure:
+          onlyExternal: true
+        internal:
+          expose: false
+          exposeInternal: true
+          port: 4000
+          exposedPort: 3000
+          protocol: TCP
+    asserts:
+      - equal:
+          path: spec.ports
+          value:
+            - name: internal
+              port: 3000
+              protocol: TCP
+              targetPort: internal
