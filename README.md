@@ -8,8 +8,9 @@ microservices with ease.
 This chart bootstraps Traefik version 2 as a Kubernetes ingress controller,
 using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubernetes-crd/>.
 
-It's now possible to use this chart with Traefik v3 (current tested with beta3).
-Helm will auto detect which version is used based on image.tag. Set image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3".
+It's possible to use this chart with Traefik v3 (current tested with v3.0.0-rc1). 
+This Chart is focused on stable release, so there are limitations and one will need to apply Traefik v3 CRDs first.
+Helm will auto detect which version is used based on image.tag. Set image.tag to a semver higher than 3.0, e.g. "v3.0.0-rc1".
 See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of this chart on CRDs.
 
 ### Philosophy
