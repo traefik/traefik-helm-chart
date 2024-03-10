@@ -247,6 +247,8 @@ providers:
     allowEmptyServices: false
     # ingressClass: traefik-internal
     # labelSelector: environment=production,method=traefik
+    ingressEndpoint:
+      # hostname: example.com
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
     # - "default"
