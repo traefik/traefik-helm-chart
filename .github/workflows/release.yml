@@ -54,7 +54,7 @@ jobs:
 
       - name: Tag release
         id: tag_version
-        uses: mathieudutour/github-tag-action@v6.1
+        uses: mathieudutour/github-tag-action@v6.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
