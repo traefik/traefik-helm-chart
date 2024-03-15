@@ -1,4 +1,5 @@
 {{- if and .Values.rbac.enabled (or .Values.providers.kubernetesIngress.enabled (not .Values.rbac.namespaced)) -}}
+{{- if not (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.disableIngressClassLookup (semverCompare ">=3.0.0-0" (include "imageVersion" $))) -}}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -106,6 +107,7 @@ rules:
       - tlsroutes/status
     verbs:
       - update
+{{- end -}}
 {{- end -}}
 {{- end -}}
 {{- end -}}

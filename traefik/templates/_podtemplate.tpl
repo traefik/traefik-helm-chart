@@ -562,6 +562,9 @@
           {{- if .Values.providers.kubernetesIngress.ingressClass }}
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
           {{- end }}
+          {{- if and .Values.providers.kubernetesIngress.disableIngressClassLookup (semverCompare ">=3.0.0-0" (include "imageVersion" $) ) }}
+          - "--providers.kubernetesingress.disableIngressClassLookup=true"
+          {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--providers.kubernetesgateway"

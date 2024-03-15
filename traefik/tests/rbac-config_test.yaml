@@ -487,3 +487,59 @@ tests:
               - get
               - list
               - watch
+  - it: cluster rbac should not be created when rbac is namespaced, disableIngressClassLookup is true and version is v3
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesIngress:
+          disableIngressClassLookup: true
+      image:
+        tag: v3.0.0-beta3
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/clusterrole.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/clusterrolebinding.yaml
+  - it: both cluster and namespace rbac should be created when rbac is namespaced, kubernetesIngress is enabled and version is v2
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
+      - isKind:
+          of: ClusterRole
+        template: rbac/clusterrole.yaml
+      - isKind:
+          of: ClusterRoleBinding
+        template: rbac/clusterrolebinding.yaml
+  - it: cluster rbac should be created when version is v3
+    set:
+      image:
+        tag: v3.0.0-beta3
+    asserts:
+      - isKind:
+          of: ClusterRole
+        template: rbac/clusterrole.yaml
+      - isKind:
+          of: ClusterRoleBinding
+        template: rbac/clusterrolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/rolebinding.yaml
