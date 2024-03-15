@@ -70,7 +70,8 @@ tests:
       ports:
         ssh:
           port: 22
-          expose: true
+          expose:
+            default: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].ports
@@ -96,7 +97,8 @@ tests:
       ports:
         ssh:
           port: 22
-          expose: true
+          expose:
+            default: true
           hostPort: 22
     asserts:
       - contains:
@@ -124,7 +126,8 @@ tests:
       ports:
         udp:
           port: 51
-          expose: true
+          expose:
+            default: true
           protocol: UDP
     asserts:
       - contains:
@@ -188,7 +191,8 @@ tests:
       ports:
         ssh:
           port: 2222
-          expose: true
+          expose:
+            default: true
           containerPort: 22
     asserts:
       - contains:
@@ -215,7 +219,8 @@ tests:
       ports:
         web:
           port: 666
-          expose: true
+          expose:
+            default: true
           containerPort: 666
     asserts:
       - contains:
@@ -286,12 +291,14 @@ tests:
           port: 8443
           tls:
             enabled: true
-          expose: true
+          expose:
+            default: true
         http-external:
           port: 8445
           tls:
             enabled: true
-          expose: true
+          expose:
+            default: true
     asserts:
       - containsDocument:
           kind: Deployment

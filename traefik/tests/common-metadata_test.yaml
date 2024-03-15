@@ -9,7 +9,6 @@ templates:
   - poddisruptionbudget.yaml
   - prometheusrules.yaml
   - pvc.yaml
-  - service-internal.yaml
   - servicemonitor.yaml
   - service.yaml
   - tlsoption.yaml

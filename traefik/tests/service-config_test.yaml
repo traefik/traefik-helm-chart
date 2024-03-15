@@ -87,12 +87,15 @@ tests:
     set:
       ports:
         web:
-          expose: false
+          expose:
+            default: false
         websecure:
-          expose: false
+          expose:
+            default: false
         tcp:
           port: 3000
-          expose: true
+          expose:
+            default: true
           exposedPort: 8080
           protocol: TCP
     documentIndex: 0
@@ -110,12 +113,15 @@ tests:
     set:
       ports:
         web:
-          expose: false
+          expose:
+            default: false
         websecure:
-          expose: false
+          expose:
+            default: false
         udp:
           port: 3000
-          expose: true
+          expose:
+            default: true
           exposedPort: 8080
           protocol: UDP
     documentIndex: 0
@@ -248,9 +254,11 @@ tests:
     set:
       ports:
         web:
-          expose: false
+          expose:
+            default: false
         websecure:
-          expose: false
+          expose:
+            default: false
     asserts:
     - failedTemplate:
         errorMessage: "You need to expose at least one port or set enabled=false to service"
@@ -314,12 +322,14 @@ tests:
         web:
           port: 8080
           exposedPort: 80
-          expose: true
+          expose:
+            default: true
           targetPort: 80
         websecure:
           port: 443
           exposedPort: 443
-          expose: true
+          expose:
+            default: true
           targetPort: 80
     documentIndex: 0
     asserts:
