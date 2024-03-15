@@ -1,44 +1,44 @@
 {{- define "traefik.service-metadata" }}
   labels:
-  {{- include "traefik.labels" . | nindent 4 -}}
-  {{- with .Values.service.labels }}
+  {{- include "traefik.labels" .root | nindent 4 -}}
+  {{- with .service.labels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
 {{- end }}
 
 {{- define "traefik.service-spec" -}}
-  {{- $type := default "LoadBalancer" .Values.service.type }}
+  {{- $type := default "LoadBalancer" .service.type }}
   type: {{ $type }}
-  {{- with .Values.service.loadBalancerClass }}
+  {{- with .service.loadBalancerClass }}
   loadBalancerClass: {{ . }}
   {{- end}}
-  {{- with .Values.service.spec }}
+  {{- with .service.spec }}
   {{- toYaml . | nindent 2 }}
   {{- end }}
   selector:
-    {{- include "traefik.labelselector" . | nindent 4 }}
+    {{- include "traefik.labelselector" .root | nindent 4 }}
   {{- if eq $type "LoadBalancer" }}
-  {{- with .Values.service.loadBalancerSourceRanges }}
+  {{- with .service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
   {{- toYaml . | nindent 2 }}
   {{- end -}}
   {{- end -}}
-  {{- with .Values.service.externalIPs }}
+  {{- with .service.externalIPs }}
   externalIPs:
   {{- toYaml . | nindent 2 }}
   {{- end -}}
-  {{- with .Values.service.ipFamilyPolicy }}
+  {{- with .service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ . }}
   {{- end }}
-  {{- with .Values.service.ipFamilies }}
+  {{- with .service.ipFamilies }}
   ipFamilies:
   {{- toYaml . | nindent 2 }}
   {{- end -}}
 {{- end }}
 
 {{- define "traefik.service-ports" }}
-  {{- range $name, $config := . }}
-  {{- if $config.expose }}
+  {{- range $name, $config := .ports }}
+  {{- if (index (default dict $config.expose) $.serviceName) }}
   - port: {{ default $config.port $config.exposedPort }}
     name: {{ $name | quote }}
     targetPort: {{ default $name $config.targetPort }}
