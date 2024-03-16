@@ -1,0 +1,167 @@
+suite: Custom Service configuration
+templates:
+  - service.yaml
+set:
+  ports:
+    web:
+      expose:
+        internal: true
+  service:
+    additionalServices:
+      internal:
+        enabled: true
+tests:
+  - it: should be possible to configure only a custom Service
+    set:
+      service:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
+  - it: should be possible to configure a custom LoadBalancer Service
+    set:
+      service:
+        additionalServices:
+          internal:
+            type: LoadBalancer
+    asserts:
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+        documentIndex: 1
+  - it: should fail when the name is too long
+    release:
+      name: yesthisnameiscontainingwaymorethan50charactersinit
+    set:
+      service:
+        internal:
+          type: ClusterIP
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot create a service whose full name contains more than 60 characters"
+  - it: should fail when no ports are exposed
+    set:
+      ports:
+        web:
+          expose:
+            internal: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "You need to expose at least one port or set enabled=false to service"
+  - it: should have customized annotations when specified via values
+    set:
+      service:
+        additionalServices:
+          internal:
+            annotations:
+              azure-load-balancer-internal: true
+    asserts:
+      - equal:
+          path: metadata.annotations.azure-load-balancer-internal
+          value: true
+        documentIndex: 1
+  - it: should have customized labels when specified via values
+    set:
+      service:
+        additionalServices:
+          internal:
+            labels:
+              custom-label: custom-value
+    asserts:
+      - equal:
+          path: metadata.labels.custom-label
+          value: custom-value
+        documentIndex: 1
+  - it: should have custom spec elements when specified via values
+    set:
+      service:
+        additionalServices:
+          internal:
+            spec:
+              externalTrafficPolicy: Cluster
+              loadBalancerIP: "1.2.3.4"
+              clusterIP: "2.3.4.5"
+              loadBalancerSourceRanges:
+                - 192.168.0.1/32
+                - 172.16.0.0/16
+              externalIPs:
+                - "1.2.3.4"
+    asserts:
+      - equal:
+          path: spec.ports[0].name
+          value: web
+        documentIndex: 1
+      - equal:
+          path: spec.ports[0].protocol
+          value: TCP
+        documentIndex: 1
+      - equal:
+          path: spec.externalTrafficPolicy
+          value: Cluster
+        documentIndex: 1
+      - equal:
+          path: spec.loadBalancerIP
+          value: "1.2.3.4"
+        documentIndex: 1
+      - equal:
+          path: spec.clusterIP
+          value: "2.3.4.5"
+        documentIndex: 1
+      - equal:
+          path: spec.loadBalancerSourceRanges[0]
+          value: 192.168.0.1/32
+        documentIndex: 1
+      - equal:
+          path: spec.loadBalancerSourceRanges[1]
+          value: 172.16.0.0/16
+        documentIndex: 1
+      - equal:
+          path: spec.externalIPs[0]
+          value: "1.2.3.4"
+        documentIndex: 1
+  - it: should use helm managed namespace as default behavior
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        documentIndex: 1
+  - it: should accept overridden namespace
+    set:
+      namespaceOverride: "traefik-ns-override"
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "traefik-ns-override"
+        documentIndex: 1
+  - it: should expose ports that are marked exposed for the service only
+    set:
+      ports:
+        internal:
+          expose:
+            default: false
+            internal: true
+          port: 3000
+          protocol: TCP
+        hidden:
+          expose:
+            default: true
+            internal: false
+          port: 3001
+          protocol: TCP
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: internal
+            port: 3000
+            protocol: TCP
+            targetPort: internal
+        documentIndex: 1
+      - notContains:
+          path: spec.ports
+          content:
+            name: hidden
+            port: 3001
+            protocol: TCP
+            targetPort: hidden
+        documentIndex: 1
