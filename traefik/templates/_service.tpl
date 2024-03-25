@@ -1,3 +1,16 @@
+{{- define "traefik.service-name" -}}
+{{- $fullname := printf "%s-%s" (include "traefik.fullname" .root) .name -}}
+{{- if eq .name "default" -}}
+{{- $fullname = include "traefik.fullname" .root -}}
+{{- end -}}
+
+{{- if ge (len $fullname) 60 -}} # 64 - 4 (udp-postfix) = 60
+  {{- fail "ERROR: Cannot create a service whose full name contains more than 60 characters" -}}
+{{- end -}}
+
+{{- $fullname -}}
+{{- end -}}
+
 {{- define "traefik.service-metadata" }}
   labels:
   {{- include "traefik.labels" .root | nindent 4 -}}

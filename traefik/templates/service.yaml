@@ -4,14 +4,7 @@
 {{- range $name, $service := $services -}}
 {{- if $service.enabled -}}
 
-{{- $fullname := printf "%s-%s" (include "traefik.fullname" $) $name }}
-{{- if eq $name "default" -}}
-{{- $fullname = include "traefik.fullname" $ }}
-{{- end -}}
-
-{{- if ge (len $fullname) 60 }} # 64 - 4 (udp-postfix) = 60
-  {{- fail "ERROR: Cannot create a service whose full name contains more than 60 characters" }}
-{{- end }}
+{{- $fullname := include "traefik.service-name" (dict "root" $ "name" $name) }}
 
 {{- $tcpPorts := dict -}}
 {{- $udpPorts := dict -}}
