@@ -99,7 +99,7 @@ extraObjects:
 
 To expose the dashboard without IngressRoute, it's more complicated and less
 secure. You'll need to create an internal Service exposing Traefik API with
-special _traefik_ entrypoint.
+special _traefik_ entrypoint. This can be achieved using [custom services](#add-custom-internal-services) as described below.
 
 You'll need to double check:
 1. Service selector with your setup.
@@ -471,6 +471,64 @@ spec:
     services:
     - name: XXXX
       port: 80
+```
+
+# Add custom (internal) services
+
+In some cases you might want to have more than one Traefik service within your cluster,
+e.g. a default (external) one and a service that is only exposed internally to pods within your cluster.
+
+The `service.additionalServices` allows you to add an arbitrary amount of services,
+provided as a name to service details mapping; for example you can use the following values:
+
+```yaml
+service:
+  additionalServices:
+    internal:
+      enabled: true
+      type: ClusterIP
+      labels:
+        traefik-service-label: internal
+```
+
+Ports can then be exposed on this service by using the port name to boolean mapping `expose` on the respective port;
+e.g. to expose the `traefik` API port on your internal service so pods within your cluster can use it, you can do:
+
+```yaml
+ports:
+  traefik:
+    expose:
+      default: false # keep this disabled!
+      internal: true
+```
+
+This will then provide the following additional service manifest:
+
+```yaml
+---
+# Source: traefik/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: traefik-internal
+  namespace: traefik
+  labels:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik-traefik
+    helm.sh/chart: traefik-26.1.0
+    app.kubernetes.io/managed-by: Helm
+    traefik-service-label: internal
+  annotations:
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: traefik
+    app.kubernetes.io/instance: traefik-traefik
+  ports:
+  - port: 9000
+    name: "traefik"
+    targetPort: traefik
+    protocol: TCP
 ```
 
 # Use this Chart as a dependency of your own chart
