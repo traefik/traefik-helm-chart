@@ -1,5 +1,28 @@
 # Change Log
 
+## 27.0.0 (unreleased)
+
+**Upgrade notes**
+
+Custom services and port exposure have been redesigned, requiring the following changes:
+- if you were overriding port exposure behavior using the `expose` or `exposeInternal` flags, you should replace them with a service name to boolean mapping, i.e. replace this:
+```yaml
+ports:
+   web:
+      expose: false
+      exposeInternal: true
+```
+with this:
+```yaml
+ports:
+   web:
+      expose:
+         default: false
+         internal: true
+```
+- if you were previously using the `service.internal` value,
+you should migrate the values to the `service.additionalServices.internal` value instead; this should yield the same results, but make sure to carefully check for any changes!
+
 ## 26.1.0  ![AppVersion: v2.11.0](https://img.shields.io/static/v1?label=AppVersion&message=v2.11.0&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-02-16
