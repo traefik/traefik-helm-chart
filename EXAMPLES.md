@@ -99,7 +99,7 @@ extraObjects:
 
 To expose the dashboard without IngressRoute, it's more complicated and less
 secure. You'll need to create an internal Service exposing Traefik API with
-special _traefik_ entrypoint. This can be achieved using [custom services](#add-custom-internal-services) as described below.
+special _traefik_ entrypoint. This internal Service can be created from an other tool, with the `extraObjects` section or using [custom services](#add-custom-internal-services).
 
 You'll need to double check:
 1. Service selector with your setup.
@@ -498,11 +498,13 @@ e.g. to expose the `traefik` API port on your internal service so pods within yo
 ports:
   traefik:
     expose:
-      default: false # keep this disabled!
+      # Sensitive data should not be exposed on the internet
+      # => Keep this disabled !
+      default: false
       internal: true
 ```
 
-This will then provide the following additional service manifest:
+This will then provide an additional Service manifest, looking like this:
 
 ```yaml
 ---
@@ -512,13 +514,7 @@ kind: Service
 metadata:
   name: traefik-internal
   namespace: traefik
-  labels:
-    app.kubernetes.io/name: traefik
-    app.kubernetes.io/instance: traefik-traefik
-    helm.sh/chart: traefik-26.1.0
-    app.kubernetes.io/managed-by: Helm
-    traefik-service-label: internal
-  annotations:
+[...]
 spec:
   type: ClusterIP
   selector:
