@@ -8,8 +8,7 @@ set:
         internal: true
   service:
     additionalServices:
-      internal:
-        enabled: true
+      internal: {}
 tests:
   - it: should be possible to configure only a custom Service
     set:
