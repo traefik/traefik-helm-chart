@@ -8,6 +8,7 @@ tests:
   - it: should be possible to set specific parameters on openTelemetry
     set:
       tracing:
+        addInternals: true
         openTelemetry:
           address: "localhost:4318"
           headers:
@@ -23,6 +24,9 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--tracing.addinternals"
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: "--tracing.openTelemetry=true"
       - contains:
           path: spec.template.spec.containers[0].args
@@ -33,12 +37,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.openTelemetry.headers.test=test"
-  - it: Minimal config should work
+  - it: Minimal config should work, without internals
     set:
       tracing:
         openTelemetry:
           address: localhost:4318
     asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.addinternals"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.openTelemetry=true"

@@ -31,6 +31,15 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
+  - it: should be possible to enable metrics for internal resources
+    set:
+      metrics:
+        addInternals: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.addinternals"
+
   - it: should have prometheus enabled by default on metrics entrypoint
     asserts:
       - contains:

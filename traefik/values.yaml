@@ -327,6 +327,8 @@ logs:
     # statuscodes: "200,300-302"
     # retryattempts: true
     # minduration: 10ms
+    # -- Enables accessLogs for internal resources. Default: false.
+    addInternals:
     fields:
       general:
         # -- Available modes: keep, drop, redact.
@@ -346,6 +348,9 @@ logs:
         # Content-Type: keep
 
 metrics:
+  ## -- Enable metrics for internal resources. Default: false
+  addInternals:
+
   ## -- Prometheus is enabled by default.
   ## -- It can be disabled by setting "prometheus: null"
   prometheus:
@@ -498,8 +503,11 @@ metrics:
 
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
-tracing: {}
-#  openTelemetry: # traefik v3+ only
+tracing:
+  # -- Enables tracing for internal resources. Default: false.
+  addInternals:
+## See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/
+#  openTelemetry:
 #    grpc: true
 #    insecure: true
 #    address: localhost:4317

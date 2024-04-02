@@ -167,6 +167,9 @@
           {{- end }}
 
           {{- if .Values.metrics }}
+          {{- if .Values.metrics.addInternals }}
+          - "--metrics.addinternals"
+          {{- end }}
           {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
            {{- with .address }}
@@ -329,35 +332,38 @@
            {{- end }}
           {{- end }}
 
-          {{- if .Values.tracing }}
+          {{- with .Values.tracing }}
+           {{- if .addInternals }}
+          - "--tracing.addinternals"
+           {{- end }}
 
-           {{- if .Values.tracing.openTelemetry }}
+           {{- with .openTelemetry }}
           - "--tracing.openTelemetry=true"
-          - "--tracing.openTelemetry.address={{ required "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required." .Values.tracing.openTelemetry.address }}"
-            {{- range $key, $value := .Values.tracing.openTelemetry.headers }}
+          - "--tracing.openTelemetry.address={{ required "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required." .address }}"
+            {{- range $key, $value := .headers }}
           - "--tracing.openTelemetry.headers.{{ $key }}={{ $value }}"
             {{- end }}
-            {{- with .Values.tracing.openTelemetry.insecure }}
+            {{- with .insecure }}
           - "--tracing.openTelemetry.insecure={{ . }}"
             {{- end }}
-            {{- with .Values.tracing.openTelemetry.path }}
+            {{- with .path }}
           - "--tracing.openTelemetry.path={{ . }}"
             {{- end }}
-            {{- if .Values.tracing.openTelemetry.tls }}
-             {{- if .Values.tracing.openTelemetry.tls.ca }}
-          - "--tracing.openTelemetry.tls.ca={{ .Values.tracing.openTelemetry.tls.ca }}"
+            {{- with .tls }}
+             {{- with .ca }}
+          - "--tracing.openTelemetry.tls.ca={{ . }}"
              {{- end }}
-             {{- if .Values.tracing.openTelemetry.tls.cert }}
-          - "--tracing.openTelemetry.tls.cert={{ .Values.tracing.openTelemetry.tls.cert }}"
+             {{- with .cert }}
+          - "--tracing.openTelemetry.tls.cert={{ . }}"
              {{- end }}
-             {{- if .Values.tracing.openTelemetry.tls.key }}
-          - "--tracing.openTelemetry.tls.key={{ .Values.tracing.openTelemetry.tls.key }}"
+             {{- with .key }}
+          - "--tracing.openTelemetry.tls.key={{ . }}"
              {{- end }}
-             {{- if .Values.tracing.openTelemetry.tls.insecureSkipVerify }}
-          - "--tracing.openTelemetry.tls.insecureSkipVerify={{ .Values.tracing.openTelemetry.tls.insecureSkipVerify }}"
+             {{- with .insecureSkipVerify }}
+          - "--tracing.openTelemetry.tls.insecureSkipVerify={{ . }}"
              {{- end }}
             {{- end }}
-            {{- if .Values.tracing.openTelemetry.grpc }}
+            {{- if .grpc }}
           - "--tracing.openTelemetry.grpc=true"
             {{- end }}
            {{- end }}
@@ -503,34 +509,37 @@
           {{- end }}
           {{- if .access.enabled }}
           - "--accesslog=true"
-          {{- if .access.format }}
-          - "--accesslog.format={{ .access.format }}"
-          {{- end }}
-          {{- if .access.filePath }}
-          - "--accesslog.filepath={{ .access.filePath }}"
-          {{- end }}
-          {{- if .access.bufferingSize }}
-          - "--accesslog.bufferingsize={{ .access.bufferingSize }}"
-          {{- end }}
-          {{- if .access.filters }}
-          {{- if .access.filters.statuscodes }}
-          - "--accesslog.filters.statuscodes={{ .access.filters.statuscodes }}"
-          {{- end }}
-          {{- if .access.filters.retryattempts }}
+           {{- with .access.format }}
+          - "--accesslog.format={{ . }}"
+           {{- end }}
+           {{- with .access.filePath }}
+          - "--accesslog.filepath={{ . }}"
+           {{- end }}
+           {{- if .access.addInternals }}
+          - "--accesslog.addinternals"
+           {{- end }}
+           {{- with .access.bufferingSize }}
+          - "--accesslog.bufferingsize={{ . }}"
+           {{- end }}
+           {{- with .access.filters }}
+            {{- with .statuscodes }}
+          - "--accesslog.filters.statuscodes={{ .statuscodes }}"
+            {{- end }}
+            {{- if .retryattempts }}
           - "--accesslog.filters.retryattempts"
-          {{- end }}
-          {{- if .access.filters.minduration }}
-          - "--accesslog.filters.minduration={{ .access.filters.minduration }}"
-          {{- end }}
-          {{- end }}
+            {{- end }}
+            {{- with .minduration }}
+          - "--accesslog.filters.minduration={{ . }}"
+            {{- end }}
+           {{- end }}
           - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
-          {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+           {{- range $fieldname, $fieldaction := .access.fields.general.names }}
           - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
-          {{- end }}
+           {{- end }}
           - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
-          {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+           {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
-          {{- end }}
+           {{- end }}
           {{- end }}
           {{- end }}
           {{- range $resolver, $config := $.Values.certResolvers }}

@@ -430,6 +430,7 @@ tests:
           format: json
           filePath: "/data/log"
           bufferingSize: 100
+          addInternals: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -443,6 +444,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.bufferingsize=100"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.addinternals"
   - it: should set custom startupProbe
     set:
       startupProbe:
