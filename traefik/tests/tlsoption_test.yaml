@@ -97,16 +97,6 @@ tests:
       - equal:
           path: spec.maxVersion
           value: maxVersion
-  - it: should set preferServerCipherSuites
-    set:
-      tlsOptions:
-        default:
-          labels:
-          preferServerCipherSuites: true
-    asserts:
-      - equal:
-          path: spec.preferServerCipherSuites
-          value: true
   - it: should set sniStrict
     set:
       tlsOptions:
