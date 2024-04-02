@@ -27,13 +27,13 @@ spec:
   {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $config.maxVersion }}
-  maxVersion: {{ $config.maxVersion }}
+  maxVersion: {{ . }}
   {{- end }}
   {{- with $config.minVersion }}
-  minVersion: {{ $config.minVersion }}
+  minVersion: {{ . }}
   {{- end }}
   {{- with $config.sniStrict }}
-  sniStrict: {{ $config.sniStrict }}
+  sniStrict: {{ . }}
   {{- end }}
 ---
 {{- end -}}
