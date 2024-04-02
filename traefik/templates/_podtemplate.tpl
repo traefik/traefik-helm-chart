@@ -625,14 +625,7 @@
                 {{- end }}
                 {{- if $config.http3 }}
                   {{- if $config.http3.enabled }}
-                    {{- if semverCompare "<3.0.0-0" (include "imageVersion" $)}}
-          - "--experimental.http3=true"
-                    {{- end }}
-                    {{- if semverCompare ">=2.6.0-0" (include "imageVersion" $)}}
           - "--entrypoints.{{ $entrypoint }}.http3"
-                    {{- else }}
-          - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
-                    {{- end }}
                     {{- if $config.http3.advertisedPort }}
           - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
                     {{- end }}

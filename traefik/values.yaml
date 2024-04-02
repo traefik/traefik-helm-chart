@@ -119,10 +119,6 @@ ingressClass:
 
 # Traefik experimental features
 experimental:
-  # This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
-  # v3:
-  # -- Enable traefik version 3
-
   # -- Enable traefik experimental plugins
   plugins: {}
   # demo:

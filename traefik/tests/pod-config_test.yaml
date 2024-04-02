@@ -376,12 +376,21 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.elastic=true"
-  - it: should not have the http3 experimental flag by default
+  - it: should have http3 enabled, when enabled with advertisedPort
+    set:
+      ports:
+        websecure:
+          http3:
+            advertisedPort: 443
+            enabled: true
     asserts:
-      - notContains:
+      - contains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-  - it: should have the http3 experimental flag and use default entrypoint port when http3 enabled
+          content: "--entrypoints.websecure.http3"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should be possible to enable http3 enabled without a custom advertisedPort
     set:
       ports:
         websecure:
@@ -390,59 +399,19 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3"
-  - it: should use default entrypoint port without experimental flag when http3 enabled on v3
-    set:
-      image:
-        tag: v3.0.0-beta3
-      ports:
-        websecure:
-          http3:
-            enabled: true
-    asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+
   - it: should not have http3 config flag by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.enableHTTP3=true"
+          content: "--entrypoints.websecure.http3"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3.advertisedPort=8443"
-  - it: should have http3 config flag enableHTTP3 when image tag < 2.6.0
-    set:
-      image:
-        tag: 2.5.6
-      ports:
-        websecure:
-          http3:
-            enabled: true
-          tls:
-            enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.enableHTTP3=true"
-  - it: should have http3 config flag advertisedPort when image tag >= 2.6.0
-    set:
-      ports:
-        websecure:
-          http3:
-            enabled: true
-          tls:
-            enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:
