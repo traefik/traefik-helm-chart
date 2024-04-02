@@ -191,45 +191,6 @@
            {{- end }}
           {{- end }}
 
-          {{- with .Values.metrics.influxdb }}
-          - "--metrics.influxdb=true"
-          - "--metrics.influxdb.address={{ .address }}"
-          - "--metrics.influxdb.protocol={{ .protocol }}"
-           {{- with .database }}
-          - "--metrics.influxdb.database={{ . }}"
-           {{- end }}
-           {{- with .retentionPolicy }}
-          - "--metrics.influxdb.retentionPolicy={{ . }}"
-           {{- end }}
-           {{- with .username }}
-          - "--metrics.influxdb.username={{ . }}"
-           {{- end }}
-           {{- with .password }}
-          - "--metrics.influxdb.password={{ . }}"
-           {{- end }}
-           {{- with .pushInterval }}
-          - "--metrics.influxdb.pushInterval={{ . }}"
-           {{- end }}
-           {{- range $name, $value := .additionalLabels }}
-          - "--metrics.influxdb.additionalLabels.{{ $name }}={{ $value }}"
-           {{- end }}
-           {{- if ne .addRoutersLabels nil }}
-            {{- with .addRoutersLabels | toString }}
-          - "--metrics.influxdb.addRoutersLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addEntryPointsLabels nil }}
-            {{- with .addEntryPointsLabels | toString }}
-          - "--metrics.influxdb.addEntryPointsLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addServicesLabels nil }}
-            {{- with .addServicesLabels | toString }}
-          - "--metrics.influxdb.addServicesLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-          {{- end }}
-
           {{- with .Values.metrics.influxdb2 }}
           - "--metrics.influxdb2=true"
           - "--metrics.influxdb2.address={{ .address }}"
