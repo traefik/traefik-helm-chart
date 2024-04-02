@@ -275,98 +275,147 @@
 
           {{- end }}
 
-          {{- with .Values.metrics.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
-           {{- end }}
-          - "--metrics.openTelemetry=true"
-          - "--metrics.openTelemetry.address={{ .address }}"
+          {{- with .Values.metrics.otlp }}
+          {{- if .enabled }}
+          - "--metrics.otlp=true"
            {{- if ne .addEntryPointsLabels nil }}
             {{- with .addEntryPointsLabels | toString }}
-          - "--metrics.openTelemetry.addEntryPointsLabels={{ . }}"
+          - "--metrics.otlp.addEntryPointsLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- if ne .addRoutersLabels nil }}
             {{- with .addRoutersLabels | toString }}
-          - "--metrics.openTelemetry.addRoutersLabels={{ . }}"
+          - "--metrics.otlp.addRoutersLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- if ne .addServicesLabels nil }}
             {{- with .addServicesLabels | toString }}
-          - "--metrics.openTelemetry.addServicesLabels={{ . }}"
+          - "--metrics.otlp.addServicesLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- with .explicitBoundaries }}
-          - "--metrics.openTelemetry.explicitBoundaries={{ join "," . }}"
-           {{- end }}
-           {{- with .headers }}
-            {{- range $name, $value := . }}
-          - "--metrics.openTelemetry.headers.{{ $name }}={{ $value }}"
-            {{- end }}
-           {{- end }}
-           {{- with .insecure }}
-          - "--metrics.openTelemetry.insecure={{ . }}"
+          - "--metrics.otlp.explicitBoundaries={{ join "," . }}"
            {{- end }}
            {{- with .pushInterval }}
-          - "--metrics.openTelemetry.pushInterval={{ . }}"
+          - "--metrics.otlp.pushInterval={{ . }}"
            {{- end }}
-           {{- with .path }}
-          - "--metrics.openTelemetry.path={{ . }}"
-           {{- end }}
-           {{- with .tls }}
-            {{- with .ca }}
-          - "--metrics.openTelemetry.tls.ca={{ . }}"
-            {{- end }}
-            {{- with .cert }}
-          - "--metrics.openTelemetry.tls.cert={{ . }}"
-            {{- end }}
-            {{- with .key }}
-          - "--metrics.openTelemetry.tls.key={{ . }}"
-            {{- end }}
-            {{- with .insecureSkipVerify }}
-          - "--metrics.openTelemetry.tls.insecureSkipVerify={{ . }}"
+           {{- with .http }}
+            {{- if .enabled }}
+          - "--metrics.otlp.http=true"
+             {{- with .endpoint }}
+          - "--metrics.otlp.http.endpoint={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--metrics.otlp.http.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--metrics.otlp.http.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--metrics.otlp.http.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--metrics.otlp.http.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--metrics.otlp.http.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
             {{- end }}
            {{- end }}
            {{- with .grpc }}
-          - "--metrics.openTelemetry.grpc={{ . }}"
+            {{ if .enabled }}
+          - "--metrics.otlp.grpc=true"
+             {{- with .endpoint }}
+          - "--metrics.otlp.grpc.endpoint={{ . }}"
+             {{- end }}
+             {{- with .insecure }}
+          - "--metrics.otlp.grpc.insecure={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--metrics.otlp.grpc.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--metrics.otlp.grpc.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--metrics.otlp.grpc.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--metrics.otlp.grpc.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--metrics.otlp.grpc.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
            {{- end }}
           {{- end }}
+          {{- end }}
 
-          {{- with .Values.tracing }}
-           {{- if .addInternals }}
+          {{- if .Values.tracing.addInternals }}
           - "--tracing.addinternals"
-           {{- end }}
+          {{- end }}
 
-           {{- with .openTelemetry }}
-          - "--tracing.openTelemetry=true"
-          - "--tracing.openTelemetry.address={{ required "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required." .address }}"
-            {{- range $key, $value := .headers }}
-          - "--tracing.openTelemetry.headers.{{ $key }}={{ $value }}"
-            {{- end }}
-            {{- with .insecure }}
-          - "--tracing.openTelemetry.insecure={{ . }}"
-            {{- end }}
-            {{- with .path }}
-          - "--tracing.openTelemetry.path={{ . }}"
-            {{- end }}
-            {{- with .tls }}
-             {{- with .ca }}
-          - "--tracing.openTelemetry.tls.ca={{ . }}"
+          {{- with .Values.tracing.otlp }}
+          {{- if .enabled }}
+          - "--tracing.otlp=true"
+           {{- with .http }}
+            {{- if .enabled }}
+          - "--tracing.otlp.http=true"
+             {{- with .endpoint }}
+          - "--tracing.otlp.http.endpoint={{ . }}"
              {{- end }}
-             {{- with .cert }}
-          - "--tracing.openTelemetry.tls.cert={{ . }}"
+             {{- range $name, $value := .headers }}
+          - "--tracing.otlp.http.headers.{{ $name }}={{ $value }}"
              {{- end }}
-             {{- with .key }}
-          - "--tracing.openTelemetry.tls.key={{ . }}"
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--tracing.otlp.http.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--tracing.otlp.http.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--tracing.otlp.http.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--tracing.otlp.http.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
              {{- end }}
-             {{- with .insecureSkipVerify }}
-          - "--tracing.openTelemetry.tls.insecureSkipVerify={{ . }}"
-             {{- end }}
-            {{- end }}
-            {{- if .grpc }}
-          - "--tracing.openTelemetry.grpc=true"
             {{- end }}
            {{- end }}
+           {{- with .grpc }}
+            {{ if .enabled }}
+          - "--tracing.otlp.grpc=true"
+             {{- with .endpoint }}
+          - "--tracing.otlp.grpc.endpoint={{ . }}"
+             {{- end }}
+             {{- with .insecure }}
+          - "--tracing.otlp.grpc.insecure={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--tracing.otlp.grpc.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--tracing.otlp.grpc.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--tracing.otlp.grpc.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--tracing.otlp.grpc.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--tracing.otlp.grpc.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
+           {{- end }}
+          {{- end }}
           {{- end }}
 
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
