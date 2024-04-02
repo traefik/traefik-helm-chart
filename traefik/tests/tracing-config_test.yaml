@@ -7,8 +7,6 @@ capabilities:
 tests:
   - it: should be possible to set specific parameters on openTelemetry
     set:
-      image:
-        tag: v3.0.0-beta3
       tracing:
         openTelemetry:
           address: "localhost:4318"
@@ -37,8 +35,6 @@ tests:
           content: "--tracing.openTelemetry.headers.test=test"
   - it: Minimal config should work
     set:
-      image:
-        tag: v3.0.0-beta3
       tracing:
         openTelemetry:
           address: localhost:4318
@@ -74,23 +70,3 @@ tests:
     asserts:
     - failedTemplate:
         errorMessage: "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
-  - it: should throw and error when open telemetry is enabled without traefik v3
-    set:
-      image:
-        tag: v2.10.1
-      tracing:
-        openTelemetry:
-          address: "localhost:4318"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
-  - it: should throw and error when open telemetry is enabled without traefik v3, even with sha set
-    set:
-      image:
-        tag: v2.10.1@sha256:a56dcbeb82281b0ac99297d226195215f747242daa5a2213de02d8a09a6d9cfd
-      tracing:
-        openTelemetry:
-          address: "localhost:4318"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
