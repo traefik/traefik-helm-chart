@@ -604,3 +604,16 @@ tests:
     asserts:
       - isNull:
           path: spec.template.spec.containers[0].runtimeClassName
+  - it: should set runtimeClassName when configured
+    set:
+      core:
+        defaultRuleSyntax: v2
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.defaultRuleSyntax=v2"
+  - it: should not set defaultRuleSyntax by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.defaultRuleSyntax=v2"

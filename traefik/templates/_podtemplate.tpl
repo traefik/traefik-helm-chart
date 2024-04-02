@@ -162,6 +162,10 @@
           - "--api.dashboard=true"
           - "--ping=true"
 
+          {{- with .Values.core.defaultRuleSyntax }}
+          - "--core.defaultRuleSyntax=v2"
+          {{- end }}
+
           {{- if .Values.metrics }}
           {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
