@@ -1,3 +1,7 @@
+{{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
+  {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
+{{- end }}
+
 {{- $services := .Values.service.additionalServices -}}
 {{- $services = set $services "default" (omit .Values.service "additionalServices") }}
 

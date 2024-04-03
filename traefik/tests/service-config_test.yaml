@@ -13,6 +13,13 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+  - it: should fail when trying to use this Chart with Traefik Proxy v2
+    set:
+      image:
+        tag: v2.11.0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3"
   - it: should fail when no ports are exposed
     set:
       ports:

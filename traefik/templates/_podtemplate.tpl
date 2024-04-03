@@ -149,15 +149,12 @@
           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
-          {{- if $config }}
+           {{- if $config }}
           - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
-          {{- with $config.asDefault }}
-          {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
-          {{- end }}
+            {{- with $config.asDefault }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
-          {{- end }}
-          {{- end }}
+            {{- end }}
+           {{- end }}
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
@@ -460,7 +457,7 @@
           {{- if .Values.providers.kubernetesIngress.ingressClass }}
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
           {{- end }}
-          {{- if and .Values.providers.kubernetesIngress.disableIngressClassLookup (semverCompare ">=3.0.0-0" (include "imageVersion" $) ) }}
+          {{- if .Values.providers.kubernetesIngress.disableIngressClassLookup }}
           - "--providers.kubernetesingress.disableIngressClassLookup=true"
           {{- end }}
           {{- end }}

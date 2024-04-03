@@ -172,20 +172,6 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.asDefault=true"
 
-  - it: should throw and error when default entrypoint is enabled without traefik v3
-    template: deployment.yaml
-    set:
-      image:
-        tag: v2.10.0
-      ports:
-        web:
-          asDefault: true
-        websecure:
-          asDefault: false
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`."
-
   - it: should be possible to use a different containerPort
     set:
       ports:

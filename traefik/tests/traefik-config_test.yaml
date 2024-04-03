@@ -466,17 +466,6 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.periodSeconds
           value: 5
-  - it: should not set disableIngressClassLookup if version is not v3 and disableIngressClassLookup is true
-    set:
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
   - it: should set disableIngressClassLookup if version is v3 and disableIngressClassLookup is true
     set:
       rbac:
