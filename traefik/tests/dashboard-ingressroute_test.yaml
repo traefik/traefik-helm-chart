@@ -86,3 +86,25 @@ tests:
         options:
           name: tls-options
           namespace: default
+- it: should not allow to create null annotations
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+  asserts:
+  - isNull:
+      path: metadata.annotations
+- it: should insert annotations correctly
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+        annotations:
+          foo: bar
+          fis: fas
+  asserts:
+  - equal:
+      path: metadata.annotations
+      value:
+        foo: bar
+        fis: fas

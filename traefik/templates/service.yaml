@@ -1,9 +1,15 @@
-{{- if .Values.service.enabled -}}
+{{- $services := .Values.service.additionalServices -}}
+{{- $services = set $services "default" (omit .Values.service "additionalServices") }}
+
+{{- range $name, $service := $services -}}
+{{- if ne $service.enabled false -}}
+
+{{- $fullname := include "traefik.service-name" (dict "root" $ "name" $name) }}
 
 {{- $tcpPorts := dict -}}
 {{- $udpPorts := dict -}}
 {{- $exposedPorts := false -}}
-{{- range $name, $config := .Values.ports -}}
+{{- range $portName, $config := $.Values.ports -}}
   {{- if $config -}}
     {{- if $config.http3 -}}
     {{- if $config.http3.enabled -}}
@@ -13,12 +19,12 @@
     {{- end -}}
     {{- end -}}
     {{- if eq (toString $config.protocol) "UDP" -}}
-      {{ $_ := set $udpPorts $name $config -}}
+      {{ $_ := set $udpPorts $portName $config -}}
     {{- end -}}
     {{- if eq (toString (default "TCP" $config.protocol)) "TCP" -}}
-      {{ $_ := set $tcpPorts $name $config -}}
+      {{ $_ := set $tcpPorts $portName $config -}}
     {{- end -}}
-    {{- if (eq $config.expose true) -}}
+    {{- if (index (default dict $config.expose) $name) -}}
       {{- $exposedPorts = true -}}
     {{- end -}}
   {{- end -}}
@@ -28,42 +34,44 @@
   {{- fail "You need to expose at least one port or set enabled=false to service" -}}
 {{- end -}}
 
-{{- if and $exposedPorts (or $tcpPorts .Values.service.single) }}
-apiVersion: v1
-kind: Service
-metadata:
-  name: {{ template "traefik.fullname" . }}
-  namespace: {{ template "traefik.namespace" . }}
-  {{- template "traefik.service-metadata" . }}
-  annotations:
-  {{- with (merge dict .Values.service.annotationsTCP .Values.service.annotations) }}
-  {{- toYaml . | nindent 4 }}
-  {{- end }}
-spec:
-  {{- template "traefik.service-spec" . }}
-  ports:
-  {{- template "traefik.service-ports" $tcpPorts }}
-{{- if .Values.service.single }}
-  {{- template "traefik.service-ports" $udpPorts }}
-{{- end }}
-{{- end }}
-
-{{- if and $exposedPorts (and $udpPorts (not .Values.service.single)) }}
+{{- if and $exposedPorts (or $tcpPorts $service.single) }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ template "traefik.fullname" . }}-udp
-  namespace: {{ template "traefik.namespace" . }}
-  {{- template "traefik.service-metadata" . }}
+  name: {{ $fullname }}
+  namespace: {{ template "traefik.namespace" $ }}
+  {{- template "traefik.service-metadata" (dict "root" $ "service" $service) }}
   annotations:
-  {{- with (merge dict .Values.service.annotationsUDP .Values.service.annotations) }}
+  {{- with (merge dict (default dict $service.annotationsTCP) (default dict $service.annotations)) }}
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- template "traefik.service-spec" . }}
+  {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
   ports:
-  {{- template "traefik.service-ports" $udpPorts }}
+  {{- template "traefik.service-ports" (dict "ports" $tcpPorts "serviceName" $name) }}
+{{- if $service.single }}
+  {{- template "traefik.service-ports" (dict "ports" $udpPorts "serviceName" $name) }}
+{{- end }}
 {{- end }}
 
+{{- if and $exposedPorts (and $udpPorts (not $service.single)) }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $fullname }}-udp
+  namespace: {{ template "traefik.namespace" $ }}
+  {{- template "traefik.service-metadata" (dict "root" $ "service" $service) }}
+  annotations:
+  {{- with (merge dict (default dict $service.annotationsUDP) (default dict $service.annotations)) }}
+  {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
+  ports:
+  {{- template "traefik.service-ports" (dict "ports" $udpPorts "serviceName" $name) }}
+{{- end }}
+
+{{- end -}}
 {{- end -}}

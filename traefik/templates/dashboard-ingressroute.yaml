@@ -4,10 +4,10 @@ kind: IngressRoute
 metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   namespace: {{ template "traefik.namespace" . }}
+{{- with .Values.ingressRoute.dashboard.annotations }}
   annotations:
-    {{- with .Values.ingressRoute.dashboard.annotations }}
     {{- toYaml . | nindent 4 }}
-    {{- end }}
+{{- end }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
     {{- with .Values.ingressRoute.dashboard.labels }}

@@ -250,6 +250,9 @@ providers:
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
     # - "default"
+    # Disable cluster IngressClass Lookup - Requires Traefik V3.
+    # When combined with rbac.namespaced: true, ClusterRole will not be created and ingresses must use kubernetes.io/ingress.class annotation instead of spec.ingressClassName.
+    disableIngressClassLookup: false
     # IP used for Kubernetes Ingress endpoints
     publishedService:
       enabled: false
@@ -626,22 +629,20 @@ ports:
     # -- You SHOULD NOT expose the traefik port on production deployments.
     # If you want to access it from outside your cluster,
     # use `kubectl port-forward` or create a secure ingress
-    expose: false
+    expose:
+      default: false
     # -- The exposed port for this service
     exposedPort: 9000
     # -- The port protocol (TCP/UDP)
     protocol: TCP
-    # -- Defines whether the port is exposed on the internal service;
-    # note that ports exposed on the default service are exposed on the internal
-    # service by default as well.
-    exposeInternal: false
   web:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
     port: 8000
     # hostPort: 8000
     # containerPort: 8000
-    expose: true
+    expose:
+      default: true
     exposedPort: 80
     ## -- Different target traefik port on the cluster, useful for IP type LB
     # targetPort: 80
@@ -650,10 +651,6 @@ ports:
     # -- Use nodeport if set. This is useful if you have configured Traefik in a
     # LoadBalancer.
     # nodePort: 32080
-    # -- Defines whether the port is exposed on the internal service;
-    # note that ports exposed on the default service are exposed on the internal
-    # service by default as well.
-    exposeInternal: false
     # Port Redirections
     # Added in 2.2, you can make permanent redirects via entrypoints.
     # https://docs.traefik.io/routing/entrypoints/#redirection
@@ -677,17 +674,14 @@ ports:
     port: 8443
     # hostPort: 8443
     # containerPort: 8443
-    expose: true
+    expose:
+      default: true
     exposedPort: 443
     ## -- Different target traefik port on the cluster, useful for IP type LB
     # targetPort: 80
     ## -- The port protocol (TCP/UDP)
     protocol: TCP
     # nodePort: 32443
-    # -- Defines whether the port is exposed on the internal service;
-    # note that ports exposed on the default service are exposed on the internal
-    # service by default as well.
-    exposeInternal: false
     ## -- Specify an application protocol. This may be used as a hint for a Layer 7 load balancer.
     # appProtocol: https
     #
@@ -744,15 +738,12 @@ ports:
     # -- You may not want to expose the metrics port on production deployments.
     # If you want to access it from outside your cluster,
     # use `kubectl port-forward` or create a secure ingress
-    expose: false
+    expose:
+      default: false
     # -- The exposed port for this service
     exposedPort: 9100
     # -- The port protocol (TCP/UDP)
     protocol: TCP
-    # -- Defines whether the port is exposed on the internal service;
-    # note that ports exposed on the default service are exposed on the internal
-    # service by default as well.
-    exposeInternal: false
 
 # -- TLS Options are created as TLSOption CRDs
 # https://doc.traefik.io/traefik/https/tls/#tls-options
@@ -814,6 +805,7 @@ service:
   #   - IPv4
   #   - IPv6
   ##
+  additionalServices: {}
   ## -- An additional and optional internal Service.
   ## Same parameters as external Service
   # internal:
@@ -899,7 +891,8 @@ hostNetwork: false
 rbac:
   enabled: true
   # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
-  # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
+  # If set to true, installs Role and RoleBinding instead of ClusterRole/ClusterRoleBinding. Providers will only watch target namespace.
+  # When combined with providers.kubernetesIngress.disableIngressClassLookup: true and Traefik V3, ClusterRole to watch IngressClass is also disabled.
   namespaced: false
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
