@@ -897,6 +897,8 @@ rbac:
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
   # aggregateTo: [ "admin" ]
+  # List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
+  secretResourceNames: []
 
 # -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 podSecurityPolicy:
