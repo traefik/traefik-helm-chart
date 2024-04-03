@@ -159,8 +159,10 @@
           - "--api.dashboard=true"
           - "--ping=true"
 
-          {{- with .Values.core.defaultRuleSyntax }}
-          - "--core.defaultRuleSyntax=v2"
+          {{- with .Values.core }}
+           {{- with .defaultRuleSyntax }}
+          - "--core.defaultRuleSyntax={{ . }}"
+           {{- end }}
           {{- end }}
 
           {{- if .Values.metrics }}
