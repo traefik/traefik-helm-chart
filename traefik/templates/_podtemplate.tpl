@@ -68,14 +68,18 @@
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         readinessProbe:
           httpGet:
-            host: {{ $healthchecksHost }}
+            {{- with $healthchecksHost }}
+            host: {{ . }}
+            {{- end }}
             path: /ping
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
           httpGet:
-            host: {{ $healthchecksHost }}
+            {{- with $healthchecksHost }}
+            host: {{ . }}
+            {{- end }}
             path: /ping
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}

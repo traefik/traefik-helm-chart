@@ -175,8 +175,6 @@ tests:
   - it: should set entrypoint host when hostIP is configured
     template: deployment.yaml
     set:
-      image:
-        tag: v3.0.0-beta3
       ports:
         web:
           hostIP: 127.0.0.1
@@ -194,8 +192,6 @@ tests:
   - it: should set probes host when hostIP is configured
     template: deployment.yaml
     set:
-      image:
-        tag: v3.0.0-beta3
       ports:
         traefik:
           hostIP: localhost
