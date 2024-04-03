@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 26.1.0](https://img.shields.io/badge/Version-26.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.11.0](https://img.shields.io/badge/AppVersion-v2.11.0-informational?style=flat-square)
+![Version: 26.1.0](https://img.shields.io/badge/Version-26.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0-rc3](https://img.shields.io/badge/AppVersion-v3.0.0--rc3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -34,6 +34,7 @@ Kubernetes: `>=1.16.0-0`
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. |
 | certResolvers | object | `{}` | Certificates resolvers configuration |
 | commonLabels | object | `{}` | Add additional label to all resources |
+| core.defaultRuleSyntax | string | `nil` | Can be used to use globally v2 router syntax See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
@@ -82,6 +83,7 @@ Kubernetes: `>=1.16.0-0`
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
 | livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
+| logs.access.addInternals | string | `nil` | Enables accessLogs for internal resources. Default: false. |
 | logs.access.enabled | bool | `false` | To enable access logs |
 | logs.access.fields.general.defaultmode | string | `"keep"` | Available modes: keep, drop, redact. |
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
@@ -89,6 +91,27 @@ Kubernetes: `>=1.16.0-0`
 | logs.access.fields.headers.names | object | `{}` | Names of the headers to limit. |
 | logs.access.filters | object | `{}` | https://docs.traefik.io/observability/access-logs/#filtering |
 | logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
+| metrics.addInternals | string | `nil` |  |
+| metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
+| metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
+| metrics.otlp.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
+| metrics.otlp.enabled | bool | `false` | Set to true in order to enable the OpenTelemetry metrics |
+| metrics.otlp.explicitBoundaries | string | `nil` | Explicit boundaries for Histogram data points. Default: [.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10] |
+| metrics.otlp.grpc.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using gRPC |
+| metrics.otlp.grpc.endpoint | string | `nil` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| metrics.otlp.grpc.insecure | string | `nil` | Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol. |
+| metrics.otlp.grpc.tls.ca | string | `nil` | The path to the certificate authority, it defaults to the system bundle. |
+| metrics.otlp.grpc.tls.cert | string | `nil` | The path to the public certificate. When using this option, setting the key option is required. |
+| metrics.otlp.grpc.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| metrics.otlp.grpc.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
+| metrics.otlp.http.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using HTTP. |
+| metrics.otlp.http.endpoint | string | `nil` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| metrics.otlp.http.headers | string | `nil` | Additional headers sent with metrics by the reporter to the OpenTelemetry Collector. |
+| metrics.otlp.http.tls.ca | string | `nil` | The path to the certificate authority, it defaults to the system bundle. |
+| metrics.otlp.http.tls.cert | string | `nil` | The path to the public certificate. When using this option, setting the key option is required. |
+| metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| metrics.otlp.http.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
+| metrics.otlp.pushInterval | string | `nil` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
@@ -103,23 +126,19 @@ Kubernetes: `>=1.16.0-0`
 | podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
 | podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
-| ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
-| ports.metrics.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.traefik.expose | bool | `false` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
-| ports.traefik.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `9000` | The exposed port for this service |
 | ports.traefik.port | int | `9000` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.web.expose | bool | `true` |  |
-| ports.web.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.port | int | `8000` |  |
 | ports.web.protocol | string | `"TCP"` |  |
-| ports.websecure.expose | bool | `true` |  |
-| ports.websecure.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace middlewares:   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
@@ -140,6 +159,7 @@ Kubernetes: `>=1.16.0-0`
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
+| providers.kubernetesIngress.disableIngressClassLookup | bool | `false` |  |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
@@ -151,6 +171,7 @@ Kubernetes: `>=1.16.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
 | securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjusted to run as root |
+| service.additionalServices | object | `{}` |  |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
@@ -164,15 +185,31 @@ Kubernetes: `>=1.16.0-0`
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | startupProbe | string | `nil` | Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes eg. `startupProbe:   exec:     command:       - mycommand       - foo   initialDelaySeconds: 5   periodSeconds: 5` |
-| tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true     preferServerCipherSuites: true   custom-options:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
+| tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true   custom-options:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
 | tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
 | topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains. |
-| tracing | object | `{}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
+| tracing | object | `{"addInternals":null,"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":null,"insecure":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}},"http":{"enabled":false,"endpoint":null,"headers":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}}}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
+| tracing.addInternals | string | `nil` | Enables tracing for internal resources. Default: false. |
+| tracing.otlp.enabled | bool | `false` | See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/ |
+| tracing.otlp.grpc.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using gRPC |
+| tracing.otlp.grpc.endpoint | string | `nil` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| tracing.otlp.grpc.insecure | string | `nil` | Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol. |
+| tracing.otlp.grpc.tls.ca | string | `nil` | The path to the certificate authority, it defaults to the system bundle. |
+| tracing.otlp.grpc.tls.cert | string | `nil` | The path to the public certificate. When using this option, setting the key option is required. |
+| tracing.otlp.grpc.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| tracing.otlp.grpc.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
+| tracing.otlp.http.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using HTTP. |
+| tracing.otlp.http.endpoint | string | `nil` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| tracing.otlp.http.headers | string | `nil` | Additional headers sent with metrics by the reporter to the OpenTelemetry Collector. |
+| tracing.otlp.http.tls.ca | string | `nil` | The path to the certificate authority, it defaults to the system bundle. |
+| tracing.otlp.http.tls.cert | string | `nil` | The path to the public certificate. When using this option, setting the key option is required. |
+| tracing.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| tracing.otlp.http.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy: RollingUpdate or OnDelete |
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.12.0](https://github.com/norwoodj/helm-docs/releases/v1.12.0)
+Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)
