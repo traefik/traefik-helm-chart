@@ -7,8 +7,8 @@ Traefik Proxy {{ .Values.image.tag | default .Chart.AppVersion }} has been deplo
 
 🚨 When enabling persistence for certificates, permissions on acme.json can be
 lost when Traefik restarts. You can ensure correct permissions with an
-initContainer. See https://github.com/traefik/traefik-helm-chart/issues/396 for
-more info. 🚨
+initContainer. See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md#use-traefik-native-lets-encrypt-integration-without-cert-manager
+for more info. 🚨
 
 {{- end }}
 {{- end }}
