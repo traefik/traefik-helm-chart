@@ -27,5 +27,6 @@ annotations:
   artifacthub.io/changes: |
     - "fix: remove null annotations on dashboard `IngressRoute`"
     - "fix(rbac): do not create clusterrole for namespace deployment on Traefik v3"
+    - "feat: restrict access to secrets"
     - "feat!: :boom: refactor custom services and port exposure"
-    - "chore(release): publish v27.0.0"
+    - "chore(release): 🚀 publish v27.0.0"
