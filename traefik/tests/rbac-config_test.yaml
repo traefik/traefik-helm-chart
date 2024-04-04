@@ -614,3 +614,152 @@ tests:
               - get
               - list
               - watch
+  - it: should provide expected cluster rbac when k8s gw api is enabled
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
+    set:
+      rbac:
+        namespaced: true
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
