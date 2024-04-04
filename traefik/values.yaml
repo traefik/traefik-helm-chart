@@ -32,6 +32,9 @@ deployment:
   ## with an external Load Balancer that performs healthchecks.
   ## Default: ports.traefik.port
   # healthchecksPort: 9000
+  ## Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
+  ## Default: ports.traefik.hostIP if set, otherwise Pod IP
+  # healthchecksHost: localhost
   ## Override the liveness/readiness scheme. Useful for getting ping to
   ## respond on websecure entryPoint.
   # healthchecksScheme: HTTPS
