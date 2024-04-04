@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 26.1.0](https://img.shields.io/badge/Version-26.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.11.0](https://img.shields.io/badge/AppVersion-v2.11.0-informational?style=flat-square)
+![Version: 27.0.0](https://img.shields.io/badge/Version-27.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v2.11.0](https://img.shields.io/badge/AppVersion-v2.11.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -103,23 +103,19 @@ Kubernetes: `>=1.16.0-0`
 | podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
 | podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
-| ports.metrics.expose | bool | `false` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
-| ports.metrics.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.traefik.expose | bool | `false` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
-| ports.traefik.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `9000` | The exposed port for this service |
 | ports.traefik.port | int | `9000` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
-| ports.web.expose | bool | `true` |  |
-| ports.web.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.port | int | `8000` |  |
 | ports.web.protocol | string | `"TCP"` |  |
-| ports.websecure.expose | bool | `true` |  |
-| ports.websecure.exposeInternal | bool | `false` | Defines whether the port is exposed on the internal service; note that ports exposed on the default service are exposed on the internal service by default as well. |
+| ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace middlewares:   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
@@ -140,6 +136,7 @@ Kubernetes: `>=1.16.0-0`
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
+| providers.kubernetesIngress.disableIngressClassLookup | bool | `false` |  |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
@@ -151,6 +148,7 @@ Kubernetes: `>=1.16.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
 | securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjusted to run as root |
+| service.additionalServices | object | `{}` |  |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
@@ -175,4 +173,4 @@ Kubernetes: `>=1.16.0-0`
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------
-Autogenerated from chart metadata using [helm-docs v1.12.0](https://github.com/norwoodj/helm-docs/releases/v1.12.0)
+Autogenerated from chart metadata using [helm-docs v1.13.1](https://github.com/norwoodj/helm-docs/releases/v1.13.1)
