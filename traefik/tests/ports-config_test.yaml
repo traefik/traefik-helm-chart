@@ -154,8 +154,6 @@ tests:
   - it: should set entrypoint to default when configured
     template: deployment.yaml
     set:
-      image:
-        tag: v3.0.0-beta3
       ports:
         web:
           asDefault: true
@@ -171,6 +169,40 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.asDefault=true"
+
+  - it: should set entrypoint host when hostIP is configured
+    template: deployment.yaml
+    set:
+      ports:
+        web:
+          hostIP: 127.0.0.1
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.web.address=127.0.0.1:8000/tcp"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.websecure.address=:8443/tcp"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.traefik.address=:9000/tcp"
+
+  - it: should set probes host when hostIP is configured
+    template: deployment.yaml
+    set:
+      ports:
+        traefik:
+          hostIP: localhost
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entrypoints.traefik.address=localhost:9000/tcp"
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.host
+          value: localhost
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.host
+          value: localhost
 
   - it: should be possible to use a different containerPort
     set:

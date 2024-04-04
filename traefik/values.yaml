@@ -32,6 +32,9 @@ deployment:
   ## with an external Load Balancer that performs healthchecks.
   ## Default: ports.traefik.port
   # healthchecksPort: 9000
+  ## Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
+  ## Default: ports.traefik.hostIP if set, otherwise Pod IP
+  # healthchecksHost: localhost
   ## Override the liveness/readiness scheme. Useful for getting ping to
   ## respond on websecure entryPoint.
   # healthchecksScheme: HTTPS
@@ -882,6 +885,8 @@ rbac:
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
   # aggregateTo: [ "admin" ]
+  # List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
+  secretResourceNames: []
 
 # -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 podSecurityPolicy:

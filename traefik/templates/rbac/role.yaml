@@ -18,7 +18,24 @@ rules:
     resources:
       - services
       - endpoints
+    verbs:
+      - get
+      - list
+      - watch
+  # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
+  - apiGroups:
+      - ""
+    resources:
       - secrets
+    verbs:
+      - list
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    {{- if gt (len $.Values.rbac.secretResourceNames) 0 }}
+    resourceNames: {{ $.Values.rbac.secretResourceNames }}
+    {{- end }}
     verbs:
       - get
       - list

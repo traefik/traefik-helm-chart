@@ -64,15 +64,22 @@
           {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
         {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
+        {{- $healthchecksHost := (default (.Values.ports.traefik).hostIP .Values.deployment.healthchecksHost) }}
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         readinessProbe:
           httpGet:
+            {{- with $healthchecksHost }}
+            host: {{ . }}
+            {{- end }}
             path: /ping
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.readinessProbe | nindent 10 }}
         livenessProbe:
           httpGet:
+            {{- with $healthchecksHost }}
+            host: {{ . }}
+            {{- end }}
             path: /ping
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
@@ -150,7 +157,7 @@
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
-          - "--entrypoints.{{$name}}.address=:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          - "--entrypoints.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
             {{- with $config.asDefault }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
             {{- end }}
