@@ -722,6 +722,18 @@
           {{- end }}
         {{- with .Values.env }}
         env:
+          {{- if ($.Values.resources.limits).cpu }}
+          - name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                resource: limits.cpu
+          {{- end }}
+          {{- if ($.Values.resources.limits).memory }}
+          - name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                resource: limits.memory
+          {{- end }}
           {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.envFrom }}
