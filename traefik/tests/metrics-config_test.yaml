@@ -23,6 +23,7 @@ tests:
             - --providers.kubernetescrd
             - --providers.kubernetesingress
             - --entrypoints.websecure.http.tls=true
+            - --log.level=INFO
 
   - it: "should support to set prometheus: null"
     set:

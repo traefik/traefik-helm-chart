@@ -90,7 +90,7 @@ Kubernetes: `>=1.16.0-0`
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Available modes: keep, drop, redact. |
 | logs.access.fields.headers.names | object | `{}` | Names of the headers to limit. |
 | logs.access.filters | object | `{}` | https://docs.traefik.io/observability/access-logs/#filtering |
-| logs.general.level | string | `"ERROR"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
+| logs.general.level | string | `"INFO"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
 | metrics.addInternals | string | `nil` |  |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
