@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 27.0.0
+version: 27.0.1
 # renovate: image=traefik
-appVersion: v2.11.0
+appVersion: v2.11.1
 kubeVersion: ">=1.16.0-0"
 keywords:
   - traefik
@@ -25,8 +25,4 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: remove null annotations on dashboard `IngressRoute`"
-    - "fix(rbac): do not create clusterrole for namespace deployment on Traefik v3"
-    - "feat: restrict access to secrets"
-    - "feat!: :boom: refactor custom services and port exposure"
-    - "chore(release): 🚀 publish v27.0.0"
+    - "feat: ✨ update Traefik Proxy to v2.11.1"
