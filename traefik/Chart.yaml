@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 27.0.1
+version: 27.0.2
 # renovate: image=traefik
-appVersion: v2.11.1
+appVersion: v2.11.2
 kubeVersion: ">=1.16.0-0"
 keywords:
   - traefik
@@ -25,4 +25,4 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat: ✨ update Traefik Proxy to v2.11.1"
+    - "feat: ✨ update Traefik Proxy to v2.11.2"
