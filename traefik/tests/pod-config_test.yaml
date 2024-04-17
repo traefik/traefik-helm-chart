@@ -5,6 +5,40 @@ capabilities:
   majorVersion: 1
   minorVersion: 16
 tests:
+  - it: should have set GOMAXPROCS with cpu limit
+    set:
+      resources:
+        limits:
+          cpu: "4"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: GOMAXPROCS
+      - equal:
+          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
+          value: limits.cpu
+  - it: should have set GOMEMLIMIT with cpu limit
+    set:
+      resources:
+        limits:
+          memory: "4"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: GOMEMLIMIT
+      - equal:
+          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
+          value: limits.memory
+  - it: should have not set GOMAXPROCS without cpu limit
+    asserts:
+      - notEqual:
+          path: spec.template.spec.containers[0].env[0].name
+          value: GOMAXPROCS
+  - it: should have not set GOMEMLIMIT without cpu limit
+    asserts:
+      - notEqual:
+          path: spec.template.spec.containers[0].env[0].name
+          value: GOMEMLIMIT
   - it: should have env with specified values
     set:
       env:
