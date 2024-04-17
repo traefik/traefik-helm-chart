@@ -1,0 +1,97 @@
+suite: Hub adminission controller configuration
+templates:
+  - hub-admission-controller.yaml
+set:
+  hub:
+    enabled: true
+tests:
+  - it: should not deploy anything when hub is not enabled
+    set:
+      hub:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not deploy anything when hub is not enabled
+    asserts:
+      - hasDocuments:
+          count: 5
+  - it: should render hub-agent-cert secret
+    documentIndex: 0
+    asserts:
+      - isKind:
+          of: Secret
+      - equal:
+          path: metadata.name
+          value: hub-agent-cert
+  - it: should render hub-edge-ingress webhook
+    documentIndex: 1
+    asserts:
+      - isKind:
+          of: MutatingWebhookConfiguration
+      - equal:
+          path: metadata.name
+          value: hub-edge-ingress
+  - it: should render hub-acp webhook
+    documentIndex: 2
+    asserts:
+      - isKind:
+          of: MutatingWebhookConfiguration
+      - equal:
+          path: metadata.name
+          value: hub-acp
+  - it: should render hub-api webhook
+    documentIndex: 3
+    asserts:
+      - isKind:
+          of: MutatingWebhookConfiguration
+      - equal:
+          path: metadata.name
+          value: hub-api
+  - it: should render admission service
+    documentIndex: 4
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: admission
+  - it: should issue a secret with a certificate
+    documentIndex: 0
+    asserts:
+      - matchRegex:
+          path: data["tls.crt"]
+          pattern: .*==
+  - it: should issue a webhook with a certificate
+    documentIndex: 1
+    asserts:
+      - matchRegex:
+          path: webhooks[0].clientConfig.caBundle
+          pattern: .*==
+  - it: should issue a webhook with a certificate
+    documentIndex: 2
+    asserts:
+      - matchRegex:
+          path: webhooks[0].clientConfig.caBundle
+          pattern: .*==
+  - it: should issue a webhook with a certificate
+    documentIndex: 3
+    asserts:
+      - matchRegex:
+          path: webhooks[0].clientConfig.caBundle
+          pattern: .*==
+  - it: should issue a service with good selectors
+    documentIndex: 4
+    asserts:
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+  - it: should set the namespace
+    release:
+      namespace: test
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: test
