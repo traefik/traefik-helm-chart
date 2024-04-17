@@ -5,92 +5,96 @@ capabilities:
   majorVersion: 1
   minorVersion: 16
 tests:
-  - it: should be possible to set specific parameters on openTelemetry
+  - it: should be possible to set specific parameters on otlp
     set:
-      image:
-        tag: v3.0.0-beta3
       tracing:
-        openTelemetry:
-          address: "localhost:4318"
-          headers:
-            foo: bar
-            test: test
-          insecure: true
-          tls:
-            ca: path/to/ca.crt
-            cert: path/to/foo.cert
-            key: path/to/key.key
-            insecureSkipVerify: true
-          grpc: true
+        addInternals: true
+        otlp:
+          enabled: true
+          http:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/traces"
+            headers:
+              foo: http
+              test: http
+            tls:
+              ca: path/to/ca.crt
+              cert: path/to/foo.cert
+              key: path/to/foo.key
+              insecureSkipVerify: true
+          grpc:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/traces"
+            insecure: true
+            headers:
+              foo: grpc
+              test: grpc
+            tls:
+              ca: gpath/to/ca.crt
+              cert: gpath/to/foo.cert
+              key: gpath/to/foo.key
+              insecureSkipVerify: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry=true"
+          content: "--tracing.addinternals"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry.address=localhost:4318"
+          content: "--tracing.otlp.http=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry.headers.foo=bar"
+          content: "--tracing.otlp.http.endpoint=http://localhost:4318/v1/traces"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry.headers.test=test"
-  - it: Minimal config should work
+          content: "--tracing.otlp.http.headers.foo=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.http.headers.test=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.http.tls.ca=path/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.http.tls.cert=path/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.http.tls.key=path/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.http.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.endpoint=http://localhost:4318/v1/traces"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.insecure=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.headers.foo=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.headers.test=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.tls.ca=gpath/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.tls.cert=gpath/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.tls.key=gpath/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.tls.insecureSkipVerify=true"
+  - it: Minimal config should work, without internals
     set:
-      image:
-        tag: v3.0.0-beta3
       tracing:
-        openTelemetry:
-          address: localhost:4318
+        otlp:
+          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry.address=localhost:4318"
-  - it: Should work with sha set
-    set:
-      image:
-        tag: v3.0.0-beta3@sha256:a56dcbeb82281b0ac99297d226195215f747242daa5a2213de02d8a09a6d9cfd
-      tracing:
-        openTelemetry:
-          address: localhost:4318
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.openTelemetry.address=localhost:4318"
-  - it: Address is required
-    set:
-      image:
-        tag: v3.0.0-beta3
-      tracing:
-        openTelemetry:
-          # no address
-          insecure: true
-    asserts:
-    - failedTemplate:
-        errorMessage: "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required."
-  - it: should throw and error when open telemetry is enabled without traefik v3
-    set:
-      image:
-        tag: v2.10.1
-      tracing:
-        openTelemetry:
-          address: "localhost:4318"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
-  - it: should throw and error when open telemetry is enabled without traefik v3, even with sha set
-    set:
-      image:
-        tag: v2.10.1@sha256:a56dcbeb82281b0ac99297d226195215f747242daa5a2213de02d8a09a6d9cfd
-      tracing:
-        openTelemetry:
-          address: "localhost:4318"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          content: "--tracing.otlp=true"

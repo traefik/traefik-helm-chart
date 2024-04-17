@@ -23,6 +23,7 @@ tests:
             - --providers.kubernetescrd
             - --providers.kubernetesingress
             - --entrypoints.websecure.http.tls=true
+            - --log.level=INFO
 
   - it: "should support to set prometheus: null"
     set:
@@ -31,6 +32,15 @@ tests:
     asserts:
       - hasDocuments:
           count: 1
+  - it: should be possible to enable metrics for internal resources
+    set:
+      metrics:
+        addInternals: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.addinternals"
+
   - it: should have prometheus enabled by default on metrics entrypoint
     asserts:
       - contains:
@@ -157,102 +167,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.datadog.prefix=foo"
-  - it: should be possible to enable influxdb without disabling prometheus
-    set:
-      metrics:
-        influxdb:
-          address: "localhost:8089"
-          protocol: udp
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus.entrypoint=metrics"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.address=localhost:8089"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.protocol=udp"
-  - it: should be possible to set specific parameters on influxdb
-    set:
-      metrics:
-        influxdb:
-          address: "localhost:8089"
-          protocol: udp
-          database: db
-          retentionPolicy: two_hours
-          username: john
-          password: doe
-          pushInterval: 30s
-          additionalLabels:
-            foo: bar
-            env: prod
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.database=db"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.retentionPolicy=two_hours"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.username=john"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.password=doe"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.pushInterval=30s"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.additionalLabels.foo=bar"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.additionalLabels.env=prod"
-  - it: should enable/disable labels on influxdb if set
-    set:
-      metrics:
-        influxdb:
-          address: "localhost:8089"
-          protocol: udp
-          addEntryPointsLabels: false
-          addServicesLabels: false
-          addRoutersLabels: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addEntryPointsLabels=false"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addServicesLabels=false"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addRoutersLabels=true"
-  - it: should explicitely enable all labels on influxdb if set
-    set:
-      metrics:
-        influxdb:
-          address: "localhost:8089"
-          protocol: udp
-          addEntryPointsLabels: true
-          addServicesLabels: true
-          addRoutersLabels: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addEntryPointsLabels=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addServicesLabels=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.influxdb.addRoutersLabels=true"
   - it: should be possible to set specific parameters on influxdb v2
     set:
       metrics:
@@ -386,86 +300,119 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.statsd.addRoutersLabels=true"
-  - it: should be possible to set specific parameters on openTelemetry
+  - it: should be possible to set otlp only with required values
     set:
-      image:
-        tag: v3.0.0-beta3
       metrics:
-        openTelemetry:
-          address: "localhost:4318"
-          addEntryPointsLabels: true
+        otlp:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp=true"
+  - it: should be possible to set specific parameters on otlp
+    set:
+      metrics:
+        otlp:
+          enabled: true
+          addEntryPointsLabels: false
           addRoutersLabels: true
-          addServicesLabels: true
+          addServicesLabels: false
           explicitBoundaries:
             - "0.1"
             - "0.3"
             - "1.2"
             - "5.0"
-          headers:
-            foo: bar
-            test: test
-          insecure: true
           pushInterval: 10s
-          path: /foo/v1/traces
-          tls:
-            ca: path/to/ca.crt
-            cert: path/to/foo.cert
-            key: path/to/key.key
-            insecureSkipVerify: true
-          grpc: true
+          http:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/metrics"
+            headers:
+              foo: http
+              test: http
+            tls:
+              ca: path/to/ca.crt
+              cert: path/to/foo.cert
+              key: path/to/foo.key
+              insecureSkipVerify: true
+          grpc:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/metrics"
+            insecure: true
+            headers:
+              foo: grpc
+              test: grpc
+            tls:
+              ca: gpath/to/ca.crt
+              cert: gpath/to/foo.cert
+              key: gpath/to/foo.key
+              insecureSkipVerify: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry=true"
+          content: "--metrics.otlp=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.address=localhost:4318"
+          content: "--metrics.otlp.addEntryPointsLabels=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addEntryPointsLabels=true"
+          content: "--metrics.otlp.addRoutersLabels=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addRoutersLabels=true"
+          content: "--metrics.otlp.addServicesLabels=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addServicesLabels=true"
+          content: "--metrics.otlp.explicitBoundaries=0.1,0.3,1.2,5.0"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.explicitBoundaries=0.1,0.3,1.2,5.0"
+          content: "--metrics.otlp.pushInterval=10s"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.headers.foo=bar"
+          content: "--metrics.otlp.http=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.headers.test=test"
-  - it: should be possible to disable labels on openTelemetry
-    set:
-      image:
-        tag: v3.0.0-beta3
-      metrics:
-        openTelemetry:
-          address: "localhost:4318"
-          addEntryPointsLabels: false
-          addRoutersLabels: false
-          addServicesLabels: false
-    asserts:
+          content: "--metrics.otlp.http.endpoint=http://localhost:4318/v1/metrics"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addEntryPointsLabels=false"
+          content: "--metrics.otlp.http.headers.foo=http"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addRoutersLabels=false"
+          content: "--metrics.otlp.http.headers.test=http"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.openTelemetry.addServicesLabels=false"
-  - it: should throw and error when open telemetry is enabled without traefik v3
-    set:
-      image:
-        tag: v2.10.0
-      metrics:
-        openTelemetry:
-          address: "localhost:4318"
-          addEntryPointsLabels: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`."
+          content: "--metrics.otlp.http.tls.ca=path/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.http.tls.cert=path/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.http.tls.key=path/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.http.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.insecure=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.headers.foo=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.headers.test=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.tls.ca=gpath/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.tls.cert=gpath/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.tls.key=gpath/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.tls.insecureSkipVerify=true"

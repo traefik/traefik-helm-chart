@@ -10,7 +10,7 @@ tests:
     asserts:
       - containsDocument:
           kind: Gateway
-          apiVersion: gateway.networking.k8s.io/v1alpha2
+          apiVersion: gateway.networking.k8s.io/v1
       - equal:
           path: spec.gatewayClassName
           value: "traefik"
@@ -47,14 +47,14 @@ tests:
   - it: should set expected apiVersion with v3 version
     set:
       image:
-        tag: 3.0.0-rc1
+        tag: 3.0.0-beta4
       experimental:
         kubernetesGateway:
           enabled: true
     asserts:
       - containsDocument:
           kind: Gateway
-          apiVersion: gateway.networking.k8s.io/v1
+          apiVersion: gateway.networking.k8s.io/v1alpha2
   - it: should have one Gateway with the correct class and an http port as well as an https port
     set:
       experimental:

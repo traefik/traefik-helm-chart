@@ -61,9 +61,6 @@ rules:
 {{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
   - apiGroups:
       - traefik.io
-      {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-      - traefik.containo.us
-      {{- end }}
     resources:
       - ingressroutes
       - ingressroutetcps
@@ -74,9 +71,7 @@ rules:
       - tlsstores
       - traefikservices
       - serverstransports
-      {{- if semverCompare ">=3.0.0-0" (include "imageVersion" $) }}
       - serverstransporttcps
-      {{- end }}
     verbs:
       - get
       - list
@@ -91,6 +86,38 @@ rules:
       - podsecuritypolicies
     verbs:
       - use
+{{- end -}}
+{{- if $.Values.experimental.kubernetesGateway.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses
+      - gateways
+      - httproutes
+      - referencegrants
+      - tcproutes
+      - tlsroutes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses/status
+      - gateways/status
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+    verbs:
+      - update
 {{- end -}}
 {{- end -}}
 {{- end -}}

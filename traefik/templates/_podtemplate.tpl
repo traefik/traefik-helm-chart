@@ -156,20 +156,26 @@
           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
-          {{- if $config }}
+           {{- if $config }}
           - "--entrypoints.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
-          {{- with $config.asDefault }}
-          {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-            {{- fail "ERROR: Default entrypoints are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
-          {{- end }}
+            {{- with $config.asDefault }}
           - "--entrypoints.{{$name}}.asDefault={{ . }}"
-          {{- end }}
-          {{- end }}
+            {{- end }}
+           {{- end }}
           {{- end }}
           - "--api.dashboard=true"
           - "--ping=true"
 
+          {{- with .Values.core }}
+           {{- with .defaultRuleSyntax }}
+          - "--core.defaultRuleSyntax={{ . }}"
+           {{- end }}
+          {{- end }}
+
           {{- if .Values.metrics }}
+          {{- if .Values.metrics.addInternals }}
+          - "--metrics.addinternals"
+          {{- end }}
           {{- with .Values.metrics.datadog }}
           - "--metrics.datadog=true"
            {{- with .address }}
@@ -194,45 +200,6 @@
            {{- if ne .addServicesLabels nil }}
             {{- with .addServicesLabels | toString }}
           - "--metrics.datadog.addServicesLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-          {{- end }}
-
-          {{- with .Values.metrics.influxdb }}
-          - "--metrics.influxdb=true"
-          - "--metrics.influxdb.address={{ .address }}"
-          - "--metrics.influxdb.protocol={{ .protocol }}"
-           {{- with .database }}
-          - "--metrics.influxdb.database={{ . }}"
-           {{- end }}
-           {{- with .retentionPolicy }}
-          - "--metrics.influxdb.retentionPolicy={{ . }}"
-           {{- end }}
-           {{- with .username }}
-          - "--metrics.influxdb.username={{ . }}"
-           {{- end }}
-           {{- with .password }}
-          - "--metrics.influxdb.password={{ . }}"
-           {{- end }}
-           {{- with .pushInterval }}
-          - "--metrics.influxdb.pushInterval={{ . }}"
-           {{- end }}
-           {{- range $name, $value := .additionalLabels }}
-          - "--metrics.influxdb.additionalLabels.{{ $name }}={{ $value }}"
-           {{- end }}
-           {{- if ne .addRoutersLabels nil }}
-            {{- with .addRoutersLabels | toString }}
-          - "--metrics.influxdb.addRoutersLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addEntryPointsLabels nil }}
-            {{- with .addEntryPointsLabels | toString }}
-          - "--metrics.influxdb.addEntryPointsLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addServicesLabels nil }}
-            {{- with .addServicesLabels | toString }}
-          - "--metrics.influxdb.addServicesLabels={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
@@ -314,219 +281,149 @@
 
           {{- end }}
 
-          {{- with .Values.metrics.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
-           {{- end }}
-          - "--metrics.openTelemetry=true"
-          - "--metrics.openTelemetry.address={{ .address }}"
+          {{- with .Values.metrics.otlp }}
+          {{- if .enabled }}
+          - "--metrics.otlp=true"
            {{- if ne .addEntryPointsLabels nil }}
             {{- with .addEntryPointsLabels | toString }}
-          - "--metrics.openTelemetry.addEntryPointsLabels={{ . }}"
+          - "--metrics.otlp.addEntryPointsLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- if ne .addRoutersLabels nil }}
             {{- with .addRoutersLabels | toString }}
-          - "--metrics.openTelemetry.addRoutersLabels={{ . }}"
+          - "--metrics.otlp.addRoutersLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- if ne .addServicesLabels nil }}
             {{- with .addServicesLabels | toString }}
-          - "--metrics.openTelemetry.addServicesLabels={{ . }}"
+          - "--metrics.otlp.addServicesLabels={{ . }}"
             {{- end }}
            {{- end }}
            {{- with .explicitBoundaries }}
-          - "--metrics.openTelemetry.explicitBoundaries={{ join "," . }}"
-           {{- end }}
-           {{- with .headers }}
-            {{- range $name, $value := . }}
-          - "--metrics.openTelemetry.headers.{{ $name }}={{ $value }}"
-            {{- end }}
-           {{- end }}
-           {{- with .insecure }}
-          - "--metrics.openTelemetry.insecure={{ . }}"
+          - "--metrics.otlp.explicitBoundaries={{ join "," . }}"
            {{- end }}
            {{- with .pushInterval }}
-          - "--metrics.openTelemetry.pushInterval={{ . }}"
+          - "--metrics.otlp.pushInterval={{ . }}"
            {{- end }}
-           {{- with .path }}
-          - "--metrics.openTelemetry.path={{ . }}"
-           {{- end }}
-           {{- with .tls }}
-            {{- with .ca }}
-          - "--metrics.openTelemetry.tls.ca={{ . }}"
-            {{- end }}
-            {{- with .cert }}
-          - "--metrics.openTelemetry.tls.cert={{ . }}"
-            {{- end }}
-            {{- with .key }}
-          - "--metrics.openTelemetry.tls.key={{ . }}"
-            {{- end }}
-            {{- with .insecureSkipVerify }}
-          - "--metrics.openTelemetry.tls.insecureSkipVerify={{ . }}"
+           {{- with .http }}
+            {{- if .enabled }}
+          - "--metrics.otlp.http=true"
+             {{- with .endpoint }}
+          - "--metrics.otlp.http.endpoint={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--metrics.otlp.http.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--metrics.otlp.http.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--metrics.otlp.http.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--metrics.otlp.http.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--metrics.otlp.http.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
             {{- end }}
            {{- end }}
            {{- with .grpc }}
-          - "--metrics.openTelemetry.grpc={{ . }}"
+            {{ if .enabled }}
+          - "--metrics.otlp.grpc=true"
+             {{- with .endpoint }}
+          - "--metrics.otlp.grpc.endpoint={{ . }}"
+             {{- end }}
+             {{- with .insecure }}
+          - "--metrics.otlp.grpc.insecure={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--metrics.otlp.grpc.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--metrics.otlp.grpc.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--metrics.otlp.grpc.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--metrics.otlp.grpc.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--metrics.otlp.grpc.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
            {{- end }}
           {{- end }}
+          {{- end }}
 
-          {{- if .Values.tracing }}
+          {{- if .Values.tracing.addInternals }}
+          - "--tracing.addinternals"
+          {{- end }}
 
-          {{- if .Values.tracing.openTelemetry }}
-           {{- if semverCompare "<3.0.0-0" (include "imageVersion" $) }}
-             {{- fail "ERROR: OpenTelemetry features are only available on Traefik v3. Please set `image.tag` to `v3.x`." }}
+          {{- with .Values.tracing.otlp }}
+          {{- if .enabled }}
+          - "--tracing.otlp=true"
+           {{- with .http }}
+            {{- if .enabled }}
+          - "--tracing.otlp.http=true"
+             {{- with .endpoint }}
+          - "--tracing.otlp.http.endpoint={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--tracing.otlp.http.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--tracing.otlp.http.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--tracing.otlp.http.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--tracing.otlp.http.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--tracing.otlp.http.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
            {{- end }}
-          - "--tracing.openTelemetry=true"
-          - "--tracing.openTelemetry.address={{ required "ERROR: When enabling openTelemetry on tracing, `tracing.openTelemetry.address` is required." .Values.tracing.openTelemetry.address }}"
-          {{- range $key, $value := .Values.tracing.openTelemetry.headers }}
-          - "--tracing.openTelemetry.headers.{{ $key }}={{ $value }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.insecure }}
-          - "--tracing.openTelemetry.insecure={{ .Values.tracing.openTelemetry.insecure }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.path }}
-          - "--tracing.openTelemetry.path={{ .Values.tracing.openTelemetry.path }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.tls }}
-          {{- if .Values.tracing.openTelemetry.tls.ca }}
-          - "--tracing.openTelemetry.tls.ca={{ .Values.tracing.openTelemetry.tls.ca }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.tls.cert }}
-          - "--tracing.openTelemetry.tls.cert={{ .Values.tracing.openTelemetry.tls.cert }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.tls.key }}
-          - "--tracing.openTelemetry.tls.key={{ .Values.tracing.openTelemetry.tls.key }}"
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.tls.insecureSkipVerify }}
-          - "--tracing.openTelemetry.tls.insecureSkipVerify={{ .Values.tracing.openTelemetry.tls.insecureSkipVerify }}"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.openTelemetry.grpc }}
-          - "--tracing.openTelemetry.grpc=true"
+           {{- with .grpc }}
+            {{ if .enabled }}
+          - "--tracing.otlp.grpc=true"
+             {{- with .endpoint }}
+          - "--tracing.otlp.grpc.endpoint={{ . }}"
+             {{- end }}
+             {{- with .insecure }}
+          - "--tracing.otlp.grpc.insecure={{ . }}"
+             {{- end }}
+             {{- range $name, $value := .headers }}
+          - "--tracing.otlp.grpc.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- with .tls }}
+              {{- with .ca }}
+          - "--tracing.otlp.grpc.tls.ca={{ . }}"
+              {{- end }}
+              {{- with .cert }}
+          - "--tracing.otlp.grpc.tls.cert={{ . }}"
+              {{- end }}
+              {{- with .key }}
+          - "--tracing.otlp.grpc.tls.key={{ . }}"
+              {{- end }}
+              {{- with .insecureSkipVerify }}
+          - "--tracing.otlp.grpc.tls.insecureSkipVerify={{ . }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
+           {{- end }}
           {{- end }}
           {{- end }}
 
-          {{- if .Values.tracing.instana }}
-          - "--tracing.instana=true"
-          {{- if .Values.tracing.instana.localAgentHost }}
-          - "--tracing.instana.localAgentHost={{ .Values.tracing.instana.localAgentHost }}"
-          {{- end }}
-          {{- if .Values.tracing.instana.localAgentPort }}
-          - "--tracing.instana.localAgentPort={{ .Values.tracing.instana.localAgentPort }}"
-          {{- end }}
-          {{- if .Values.tracing.instana.logLevel }}
-          - "--tracing.instana.logLevel={{ .Values.tracing.instana.logLevel }}"
-          {{- end }}
-          {{- if .Values.tracing.instana.enableAutoProfile }}
-          - "--tracing.instana.enableAutoProfile={{ .Values.tracing.instana.enableAutoProfile }}"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.datadog }}
-          - "--tracing.datadog=true"
-          {{- if .Values.tracing.datadog.localAgentHostPort }}
-          - "--tracing.datadog.localAgentHostPort={{ .Values.tracing.datadog.localAgentHostPort }}"
-          {{- end }}
-          {{- if .Values.tracing.datadog.debug }}
-          - "--tracing.datadog.debug=true"
-          {{- end }}
-          {{- if .Values.tracing.datadog.globalTag }}
-          - "--tracing.datadog.globalTag={{ .Values.tracing.datadog.globalTag }}"
-          {{- end }}
-          {{- if .Values.tracing.datadog.prioritySampling }}
-          - "--tracing.datadog.prioritySampling=true"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.jaeger }}
-          - "--tracing.jaeger=true"
-          {{- if .Values.tracing.jaeger.samplingServerURL }}
-          - "--tracing.jaeger.samplingServerURL={{ .Values.tracing.jaeger.samplingServerURL }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.samplingType }}
-          - "--tracing.jaeger.samplingType={{ .Values.tracing.jaeger.samplingType }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.samplingParam }}
-          - "--tracing.jaeger.samplingParam={{ .Values.tracing.jaeger.samplingParam }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.localAgentHostPort }}
-          - "--tracing.jaeger.localAgentHostPort={{ .Values.tracing.jaeger.localAgentHostPort }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.gen128Bit }}
-          - "--tracing.jaeger.gen128Bit={{ .Values.tracing.jaeger.gen128Bit }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.propagation }}
-          - "--tracing.jaeger.propagation={{ .Values.tracing.jaeger.propagation }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.traceContextHeaderName }}
-          - "--tracing.jaeger.traceContextHeaderName={{ .Values.tracing.jaeger.traceContextHeaderName }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.disableAttemptReconnecting }}
-          - "--tracing.jaeger.disableAttemptReconnecting={{ .Values.tracing.jaeger.disableAttemptReconnecting }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.collector }}
-          {{- if .Values.tracing.jaeger.collector.endpoint }}
-          - "--tracing.jaeger.collector.endpoint={{ .Values.tracing.jaeger.collector.endpoint }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.collector.user }}
-          - "--tracing.jaeger.collector.user={{ .Values.tracing.jaeger.collector.user }}"
-          {{- end }}
-          {{- if .Values.tracing.jaeger.collector.password }}
-          - "--tracing.jaeger.collector.password={{ .Values.tracing.jaeger.collector.password }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.zipkin }}
-          - "--tracing.zipkin=true"
-          {{- if .Values.tracing.zipkin.httpEndpoint }}
-          - "--tracing.zipkin.httpEndpoint={{ .Values.tracing.zipkin.httpEndpoint }}"
-          {{- end }}
-          {{- if .Values.tracing.zipkin.sameSpan }}
-          - "--tracing.zipkin.sameSpan={{ .Values.tracing.zipkin.sameSpan }}"
-          {{- end }}
-          {{- if .Values.tracing.zipkin.id128Bit }}
-          - "--tracing.zipkin.id128Bit={{ .Values.tracing.zipkin.id128Bit }}"
-          {{- end }}
-          {{- if .Values.tracing.zipkin.sampleRate }}
-          - "--tracing.zipkin.sampleRate={{ .Values.tracing.zipkin.sampleRate }}"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.haystack }}
-          - "--tracing.haystack=true"
-          {{- if .Values.tracing.haystack.localAgentHost }}
-          - "--tracing.haystack.localAgentHost={{ .Values.tracing.haystack.localAgentHost }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.localAgentPort }}
-          - "--tracing.haystack.localAgentPort={{ .Values.tracing.haystack.localAgentPort }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.globalTag }}
-          - "--tracing.haystack.globalTag={{ .Values.tracing.haystack.globalTag }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.traceIDHeaderName }}
-          - "--tracing.haystack.traceIDHeaderName={{ .Values.tracing.haystack.traceIDHeaderName }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.parentIDHeaderName }}
-          - "--tracing.haystack.parentIDHeaderName={{ .Values.tracing.haystack.parentIDHeaderName }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.spanIDHeaderName }}
-          - "--tracing.haystack.spanIDHeaderName={{ .Values.tracing.haystack.spanIDHeaderName }}"
-          {{- end }}
-          {{- if .Values.tracing.haystack.baggagePrefixHeaderName }}
-          - "--tracing.haystack.baggagePrefixHeaderName={{ .Values.tracing.haystack.baggagePrefixHeaderName }}"
-          {{- end }}
-          {{- end }}
-          {{- if .Values.tracing.elastic }}
-          - "--tracing.elastic=true"
-          {{- if .Values.tracing.elastic.serverURL }}
-          - "--tracing.elastic.serverURL={{ .Values.tracing.elastic.serverURL }}"
-          {{- end }}
-          {{- if .Values.tracing.elastic.secretToken }}
-          - "--tracing.elastic.secretToken={{ .Values.tracing.elastic.secretToken }}"
-          {{- end }}
-          {{- if .Values.tracing.elastic.serviceEnvironment }}
-          - "--tracing.elastic.serviceEnvironment={{ .Values.tracing.elastic.serviceEnvironment }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
             {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
@@ -569,7 +466,7 @@
           {{- if .Values.providers.kubernetesIngress.ingressClass }}
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
           {{- end }}
-          {{- if and .Values.providers.kubernetesIngress.disableIngressClassLookup (semverCompare ">=3.0.0-0" (include "imageVersion" $) ) }}
+          {{- if .Values.providers.kubernetesIngress.disableIngressClassLookup }}
           - "--providers.kubernetesingress.disableIngressClassLookup=true"
           {{- end }}
           {{- end }}
@@ -632,14 +529,7 @@
                 {{- end }}
                 {{- if $config.http3 }}
                   {{- if $config.http3.enabled }}
-                    {{- if semverCompare "<3.0.0-0" (include "imageVersion" $)}}
-          - "--experimental.http3=true"
-                    {{- end }}
-                    {{- if semverCompare ">=2.6.0-0" (include "imageVersion" $)}}
           - "--entrypoints.{{ $entrypoint }}.http3"
-                    {{- else }}
-          - "--entrypoints.{{ $entrypoint }}.enableHTTP3=true"
-                    {{- end }}
                     {{- if $config.http3.advertisedPort }}
           - "--entrypoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
                     {{- end }}
@@ -674,34 +564,37 @@
           {{- end }}
           {{- if .access.enabled }}
           - "--accesslog=true"
-          {{- if .access.format }}
-          - "--accesslog.format={{ .access.format }}"
-          {{- end }}
-          {{- if .access.filePath }}
-          - "--accesslog.filepath={{ .access.filePath }}"
-          {{- end }}
-          {{- if .access.bufferingSize }}
-          - "--accesslog.bufferingsize={{ .access.bufferingSize }}"
-          {{- end }}
-          {{- if .access.filters }}
-          {{- if .access.filters.statuscodes }}
-          - "--accesslog.filters.statuscodes={{ .access.filters.statuscodes }}"
-          {{- end }}
-          {{- if .access.filters.retryattempts }}
+           {{- with .access.format }}
+          - "--accesslog.format={{ . }}"
+           {{- end }}
+           {{- with .access.filePath }}
+          - "--accesslog.filepath={{ . }}"
+           {{- end }}
+           {{- if .access.addInternals }}
+          - "--accesslog.addinternals"
+           {{- end }}
+           {{- with .access.bufferingSize }}
+          - "--accesslog.bufferingsize={{ . }}"
+           {{- end }}
+           {{- with .access.filters }}
+            {{- with .statuscodes }}
+          - "--accesslog.filters.statuscodes={{ .statuscodes }}"
+            {{- end }}
+            {{- if .retryattempts }}
           - "--accesslog.filters.retryattempts"
-          {{- end }}
-          {{- if .access.filters.minduration }}
-          - "--accesslog.filters.minduration={{ .access.filters.minduration }}"
-          {{- end }}
-          {{- end }}
+            {{- end }}
+            {{- with .minduration }}
+          - "--accesslog.filters.minduration={{ . }}"
+            {{- end }}
+           {{- end }}
           - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
-          {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+           {{- range $fieldname, $fieldaction := .access.fields.general.names }}
           - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
-          {{- end }}
+           {{- end }}
           - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
-          {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+           {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
-          {{- end }}
+           {{- end }}
           {{- end }}
           {{- end }}
           {{- range $resolver, $config := $.Values.certResolvers }}

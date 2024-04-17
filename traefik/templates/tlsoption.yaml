@@ -25,18 +25,15 @@ spec:
   {{- with $config.curvePreferences }}
   curvePreferences:
   {{- toYaml . | nindent 4 }}
-  {{- end }}  
-  {{- if $config.maxVersion }}
-  maxVersion: {{ $config.maxVersion }}
   {{- end }}
-  {{- if $config.minVersion }}
-  minVersion: {{ $config.minVersion }}
+  {{- with $config.maxVersion }}
+  maxVersion: {{ . }}
   {{- end }}
-  {{- if $config.preferServerCipherSuites }}
-  preferServerCipherSuites: {{ $config.preferServerCipherSuites }}
+  {{- with $config.minVersion }}
+  minVersion: {{ . }}
   {{- end }}
-  {{- if $config.sniStrict }}
-  sniStrict: {{ $config.sniStrict }}
+  {{- with $config.sniStrict }}
+  sniStrict: {{ . }}
   {{- end }}
 ---
 {{- end -}}

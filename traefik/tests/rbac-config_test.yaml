@@ -143,7 +143,7 @@ tests:
           path: rules
           content:
             - apiGroups:
-                - traefik.containo.us
+                - traefik.io
               resources:
                 - ingressroutes
                 - ingressroutetcps
@@ -154,6 +154,7 @@ tests:
                 - tlsstores
                 - traefikservices
                 - serverstransports
+                - serverstransporttcps
               verbs:
                 - get
                 - list
@@ -383,7 +384,7 @@ tests:
           path: subjects[0].namespace
           value: "traefik-ns-override"
         template: rbac/rolebinding.yaml
-  - it: cluster rbac should be on both traefik.io and containo.us API group
+  - it: cluster rbac should be only on traefik.io API group
     set:
     asserts:
       - template: rbac/clusterrole.yaml
@@ -392,7 +393,6 @@ tests:
           content:
             apiGroups:
               - traefik.io
-              - traefik.containo.us
             resources:
               - ingressroutes
               - ingressroutetcps
@@ -403,6 +403,7 @@ tests:
               - tlsstores
               - traefikservices
               - serverstransports
+              - serverstransporttcps
             verbs:
               - get
               - list
@@ -433,7 +434,7 @@ tests:
               - get
               - list
               - watch
-  - it: namespaced rbac should be on both traefik.io and containo.us API group
+  - it: namespaced rbac should be only on traefik.io API group
     set:
       rbac:
         namespaced: true
@@ -444,7 +445,6 @@ tests:
           content:
             apiGroups:
               - traefik.io
-              - traefik.containo.us
             resources:
               - ingressroutes
               - ingressroutetcps
@@ -455,6 +455,7 @@ tests:
               - tlsstores
               - traefikservices
               - serverstransports
+              - serverstransporttcps
             verbs:
               - get
               - list
@@ -609,6 +610,155 @@ tests:
               - secrets
             resourceNames:
               - traefik-tls-cert
+            verbs:
+              - get
+              - list
+              - watch
+  - it: should provide expected cluster rbac when k8s gw api is enabled
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
+    set:
+      rbac:
+        namespaced: true
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
             verbs:
               - get
               - list

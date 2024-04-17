@@ -30,45 +30,7 @@ tests:
       - equal:
           path: metadata.annotations["ingressclass.kubernetes.io/is-default-class"]
           value: "false"
-  - it: should provide an IngressClass with only v1beta1 api on Kubernetes v1.18
-    capabilities:
-      majorVersion: 1
-      minorVersion: 18
-    asserts:
-      - isKind:
-          of: IngressClass
-      - isAPIVersion:
-          of: networking.k8s.io/v1beta1
-  - it: should workaround and provide an IngressClass with v1 with only Capability (#698)
-    capabilities:
-      majorVersion: 1
-      minorVersion: 21
-      patchVersion: 14-eks-6d3986b
-    asserts:
-      - isKind:
-          of: IngressClass
-      - isAPIVersion:
-          of: networking.k8s.io/v1
-  - it: should fail when asking to deploy IngressClass on Traefik < 2.3
-    set:
-      ingressClass:
-        enabled: true
-    chart:
-      appVersion: v2.1.0
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: IngressClass cannot be used with Traefik < 2.3.0"
-  - it: should fail when asking to deploy IngressClass on Kubernetes < v1.16
-    capabilities:
-      majorVersion: 1
-      minorVersion: 15
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: You must use at least Kubernetes v1.16 with this Chart"
   - it: should be possible to provide an IngressClass name
-    capabilities:
-      majorVersion: 1
-      minorVersion: 19
     set:
       ingressClass:
         name: nondefaultname

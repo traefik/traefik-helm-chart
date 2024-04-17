@@ -172,20 +172,6 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
-  - it: should have http3 enabled, when enabled with advertisedPort
-    set:
-      ports:
-        websecure:
-          http3:
-            advertisedPort: 443
-            enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=443"
   - it: should fail when using previous syntax
     set:
       ports:

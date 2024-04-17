@@ -356,66 +356,21 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.addRoutersLabels=true"
-  - it: should have Instana tracing enabled
+  - it: should have http3 enabled, when enabled with advertisedPort
     set:
-      tracing:
-        instana:
-          enabled: true
+      ports:
+        websecure:
+          http3:
+            advertisedPort: 443
+            enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.instana=true"
-  - it: should have datadog tracing enabled
-    set:
-      tracing:
-        datadog:
-          enabled: true
-    asserts:
+          content: "--entrypoints.websecure.http3"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.datadog=true"
-  - it: should have Jaeger tracing enabled
-    set:
-      tracing:
-        jaeger:
-          enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.jaeger=true"
-  - it: should have Zipkin tracing enabled
-    set:
-      tracing:
-        zipkin:
-          enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.zipkin=true"
-  - it: should have Haystack tracing enabled
-    set:
-      tracing:
-        haystack:
-          enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.haystack=true"
-  - it: should have Elastic tracing enabled
-    set:
-      tracing:
-        elastic:
-          enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--tracing.elastic=true"
-  - it: should not have the http3 experimental flag by default
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-  - it: should have the http3 experimental flag and use default entrypoint port when http3 enabled
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+  - it: should be possible to enable http3 enabled without a custom advertisedPort
     set:
       ports:
         websecure:
@@ -424,59 +379,19 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3"
-  - it: should use default entrypoint port without experimental flag when http3 enabled on v3
-    set:
-      image:
-        tag: v3.0.0-beta3
-      ports:
-        websecure:
-          http3:
-            enabled: true
-    asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--experimental.http3=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
+          content: "--entrypoints.websecure.http3.advertisedPort=443"
+
   - it: should not have http3 config flag by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.enableHTTP3=true"
+          content: "--entrypoints.websecure.http3"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entrypoints.websecure.http3.advertisedPort=8443"
-  - it: should have http3 config flag enableHTTP3 when image tag < 2.6.0
-    set:
-      image:
-        tag: 2.5.6
-      ports:
-        websecure:
-          http3:
-            enabled: true
-          tls:
-            enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.enableHTTP3=true"
-  - it: should have http3 config flag advertisedPort when image tag >= 2.6.0
-    set:
-      ports:
-        websecure:
-          http3:
-            enabled: true
-          tls:
-            enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:
@@ -669,3 +584,16 @@ tests:
     asserts:
       - isNull:
           path: spec.template.spec.containers[0].runtimeClassName
+  - it: should set runtimeClassName when configured
+    set:
+      core:
+        defaultRuleSyntax: v2
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.defaultRuleSyntax=v2"
+  - it: should not set defaultRuleSyntax by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.defaultRuleSyntax=v2"
