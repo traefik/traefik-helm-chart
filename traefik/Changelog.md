@@ -14,6 +14,7 @@ All CRDs using _API Group_ `traefik.containo.us` are not supported anymore in Tr
 CRDs needs to be upgraded: `kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/`
 
 After upgrade, CRDs with _API Group_ `traefik.containo.us` can be removed:
+
 ```shell
 kubectl delete crds \
   ingressroutes.traefik.containo.us \

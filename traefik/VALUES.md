@@ -22,7 +22,7 @@ A Traefik based Kubernetes ingress controller
 
 ## Requirements
 
-Kubernetes: `>=1.21.0-0`
+Kubernetes: `>=1.22.0-0`
 
 ## Values
 
