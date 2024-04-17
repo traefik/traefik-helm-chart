@@ -8,7 +8,7 @@ microservices with ease.
 This chart bootstraps Traefik version 2 as a Kubernetes ingress controller,
 using Custom Resources `IngressRoute`: <https://docs.traefik.io/providers/kubernetes-crd/>.
 
-It's possible to use this chart with Traefik v3 (current tested with v3.0.0-rc1). 
+It's possible to use this chart with Traefik v3 (current tested with v3.0.0-rc1).
 This Chart is focused on stable release, so there are limitations and one will need to apply Traefik v3 CRDs first.
 Helm will auto detect which version is used based on image.tag. Set image.tag to a semver higher than 3.0, e.g. "v3.0.0-rc1".
 See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of this chart on CRDs.
@@ -25,7 +25,9 @@ Accordingly, the encouraged approach to fulfill your needs:
 1. Override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
 2. Append your own configurations (`kubectl apply -f myconf.yaml`)
 
-If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/). In the [examples](EXAMPLES.md), one can see how to use this Chart as a dependency.
+[Examples](https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md) of common usage are provided.
+
+If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/).
 
 ## Installing
 
