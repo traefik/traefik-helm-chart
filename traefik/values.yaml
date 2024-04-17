@@ -1009,3 +1009,77 @@ extraObjects: []
 #
 ## -- This will override the default app.kubernetes.io/instance label for all Objects.
 # instanceLabelOverride: traefik
+
+## Hub configuration
+# https://doc.traefik.io/traefik-hub/
+hub:
+  # -- Set to true in order to enable hub API Gateway.
+  enabled: false
+  admission:
+    # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
+    listenaddr:
+    # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+    secretname:
+  # -- Enable API management mode. Default: "false"
+  apimanagement:
+  metrics:
+    opentelemetry:
+      # -- Set to true to enable Hub OpenTelemetry metrics exporter.
+      enabled: false
+      # Address (host:port) of the collector endpoint. Default: "localhost:4318".
+      address:
+      # Boundaries of latency metrics. Default: "0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000".
+      explicitboundaries:
+      # gRPC specific configuration for the OpenTelemetry collector. Default: "true".
+      grpc:
+      # Additional headers to send to the collector. Default: {}.
+      headers:
+      # Enable insecure schemes on metric endpoints. Default: "false".
+      insecure:
+      # Collector endpoint path. Default: "".
+      path:
+      # Interval between metric exports. Default: "10".
+      pushinterval:
+      tls:
+        # TLS CA. Default: "".
+        ca:
+        # TLS cert. Default: "false".
+        cert:
+        # TLS insecure skip verify. Default: "false".
+        insecureskipverify:
+        # TLS key. Default: "".
+        key:
+  # The URL at which to reach the Hub platform API. Default: "".
+  platformurl:
+  ratelimit:
+    redis:
+      # Default: "true".
+      cluster:
+      # Default: "0".
+      database:
+      # Default: "".
+      endpoints:
+      # Default: "".
+      password:
+      sentinel:
+        # Name of the master set. Default: "".
+        masterset:
+        # Default: "".
+        password:
+        # Default: "".
+        username:
+      # Default: "0".
+      timeout:
+      tls:
+        # TLS CA. Default: "".
+        ca:
+        # TLS cert. Default: "".
+        cert:
+        # TLS insecure skip verify. Default: "false".
+        insecureskipverify:
+        # TLS key. Default: ""
+        key:
+  # Enable export of errors logs to the platform. Default: "true".
+  sendlogs:
+  # The token to use for Hub platform API calls. Default: "".
+  token: ""

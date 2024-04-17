@@ -1,0 +1,157 @@
+suite: Deployment configuration
+templates:
+  - deployment.yaml
+set:
+  hub:
+    enabled: true
+    token: "token"
+tests:
+  - it: should contain the hub token
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.token=token"
+  - it: should be possible to set admission parameters (and ignore extra)
+    set:
+      hub:
+        admission:
+          listenaddr: "addr"
+          secretname: "secret"
+          test: "test"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.admission.listenaddr=addr"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.admission.secretname=secret"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.admission.test=test"
+  - it: should be possible to enable api management
+    set:
+      hub:
+        apimanagement: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement=true"
+  - it: should be possible to enable and configure opentelemetry parameters (and ignore extra)
+    set:
+      hub:
+        metrics:
+          opentelemetry:
+            enabled: true
+            address: "address"
+            explicitboundaries: "explicitboundaries"
+            grpc: "grpc"
+            insecure: "insecure"
+            path: "path"
+            pushinterval: "pushinterval"
+            tls:
+              ca: "ca"
+              cert: "cert"
+              insecureskipverify: "insecureskipverify"
+              key: "key"
+            test: "test"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.address=address"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.explicitboundaries=explicitboundaries"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.grpc=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.path=path"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.pushinterval=pushinterval"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.tls.cert=cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.tls.ca=ca"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.tls.insecureskipverify=insecureskipverify"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.tls.key=key"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.test=test"
+  - it: should be possible to specify platformurl
+    set:
+      hub:
+        platformurl: "platformurl"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.platformurl=platformurl"
+  - it: should be possible to specify ratelimit parameters (and ignore extra)
+    set:
+      hub:
+        ratelimit:
+          redis:
+            cluster: "cluster"
+            database: "database"
+            endpoints: "endpoints"
+            password: "password"
+            sentinel:
+              masterset: "masterset"
+              password: "password"
+              username: "username"
+            timeout: "timeout"
+            tls:
+              ca: "ca"
+              cert: "cert"
+              insecureskipverify: "insecureskipverify"
+              key: "key"
+            test: "test"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.cluster=cluster"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.database=database"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.endpoints=endpoints"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.password=password"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.timeout=timeout"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.tls.ca=ca"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.tls.cert=cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.tls.insecureskipverify=insecureskipverify"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.tls.key=key"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.test=test"
+  - it: should be possible to specify sendlogs
+    set:
+      hub:
+        sendlogs: "sendlogs"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.sendlogs=sendlogs"

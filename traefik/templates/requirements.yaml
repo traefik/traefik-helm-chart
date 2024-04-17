@@ -4,3 +4,11 @@
     {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
   {{- end }}
 {{- end }}
+
+{{- if and .Values.hub.enabled (ne "traefik-hub" .Values.image.repository) }}
+  {{- fail "ERROR: In order to use hub, please use traefik-hub image" -}}
+{{- end }}
+
+{{- if and .Values.hub.enabled (empty .Values.hub.token) }}
+  {{- fail "ERROR: In order to use hub, please provide ``hub.token`" -}}
+{{- end }}

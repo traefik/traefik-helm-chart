@@ -126,6 +126,5 @@ Renders a complete tree, even values that contains template.
 {{- end -}}
 
 {{- define "imageVersion" -}}
-{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 }}
+{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" }}
 {{- end -}}
-

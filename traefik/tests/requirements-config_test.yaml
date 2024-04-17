@@ -16,3 +16,45 @@ tests:
         tag: experimental-v3.0
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: In order to use hub, please use traefik-hub image"
+  - it: should fail when trying to use this Chart with Traefik API gateway v3, Hub enabled but without a token
+    set:
+      image:
+        registry: europe-west9-docker.pkg.dev/traefiklabs/traefik-hub
+        repository: traefik-hub
+        tag: latest-v3.0
+      hub:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: In order to use hub, please provide ``hub.token`"
+  - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
+    set:
+      image:
+        registry: europe-west9-docker.pkg.dev/traefiklabs/traefik-hub
+        repository: traefik-hub
+        tag: latest-v3.0
+      hub:
+        enabled: true
+        token: "token"
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
+    set:
+      image:
+        registry: europe-west9-docker.pkg.dev/traefiklabs/traefik-hub
+        repository: traefik-hub
+        tag: latest-v3.0
+      hub:
+        enabled: true
+        token: "token"
+    asserts:
+      - hasDocuments:
+          count: 0

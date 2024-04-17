@@ -209,4 +209,13 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.web.http.redirections.entryPoint.priority=10"
+          content: "--entrypoints.web.http.redirections.entryPoint.priority=10"
+  - it: should not contain any traefik hub configuration by default
+    set:
+      hub:
+        enabled: false
+        token: "token"
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.token=token"
