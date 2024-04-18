@@ -155,4 +155,4 @@ Thanks to all the people who have already contributed!
 
 <a href="https://github.com/traefik/traefik-helm-chart/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=traefik/traefik-helm-chart" />
-</a
+</a>
