@@ -1,5 +1,319 @@
 # Change Log
 
+## 28.0.0-rc1  ![AppVersion: v3.0.0-rc5](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0-rc5&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-04-17
+
+**Upgrade Notes**
+
+This is a major breaking upgrade. [Migration guide](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) have been applied on the chart.
+
+It needs a Kubernetes v1.22 or higher.
+All CRDs using _API Group_ `traefik.containo.us` are not supported anymore in Traefik Proxy v3
+
+CRDs needs to be upgraded: `kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/`
+
+After upgrade, CRDs with _API Group_ `traefik.containo.us` can be removed:
+
+```shell
+kubectl delete crds \
+  ingressroutes.traefik.containo.us \
+  ingressroutetcps.traefik.containo.us \
+  ingressrouteudps.traefik.containo.us \
+  middlewares.traefik.containo.us \
+  middlewaretcps.traefik.containo.us \
+  serverstransports.traefik.containo.us \
+  tlsoptions.traefik.containo.us \
+  tlsstores.traefik.containo.us \
+  traefikservices.traefik.containo.us
+```
+
+**Changes**
+
+* feat(podtemplate): set GOMEMLIMIT, GOMAXPROCS when limits are defined
+* feat: ✨ fail gracefully when required port number is not set
+* feat!: :boom: initial support of Traefik Proxy v3
+* docs: 📚️ improve EXAMPLES on acme resolver
+* chore(release): 🚀 publish v28 rc1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index cd9fb6e..c0d72d8 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -120,12 +120,13 @@ ingressClass:
+   isDefaultClass: true
+   # name: my-custom-class
+
++core:
++  # -- Can be used to use globally v2 router syntax
++  # See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes
++  defaultRuleSyntax:
++
+ # Traefik experimental features
+ experimental:
+-  # This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
+-  # v3:
+-  # -- Enable traefik version 3
+-
+   # -- Enable traefik experimental plugins
+   plugins: {}
+   # demo:
+@@ -309,7 +310,7 @@ logs:
+     # format: json
+     # By default, the level is set to ERROR.
+     # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+-    level: ERROR
++    level: INFO
+   access:
+     # -- To enable access logs
+     enabled: false
+@@ -328,6 +329,8 @@ logs:
+     # statuscodes: "200,300-302"
+     # retryattempts: true
+     # minduration: 10ms
++    # -- Enables accessLogs for internal resources. Default: false.
++    addInternals:
+     fields:
+       general:
+         # -- Available modes: keep, drop, redact.
+@@ -347,6 +350,9 @@ logs:
+         # Content-Type: keep
+
+ metrics:
++  ## -- Enable metrics for internal resources. Default: false
++  addInternals:
++
+   ## -- Prometheus is enabled by default.
+   ## -- It can be disabled by setting "prometheus: null"
+   prometheus:
+@@ -376,31 +382,6 @@ metrics:
+   #    # addRoutersLabels: true
+   #    ## Enable metrics on services. Default=true
+   #    # addServicesLabels: false
+-  #  influxdb:
+-  #    ## Address instructs exporter to send metrics to influxdb at this address.
+-  #    address: localhost:8089
+-  #    ## InfluxDB's address protocol (udp or http). Default="udp"
+-  #    protocol: udp
+-  #    ## InfluxDB database used when protocol is http. Default=""
+-  #    # database: ""
+-  #    ## InfluxDB retention policy used when protocol is http. Default=""
+-  #    # retentionPolicy: ""
+-  #    ## InfluxDB username (only with http). Default=""
+-  #    # username: ""
+-  #    ## InfluxDB password (only with http). Default=""
+-  #    # password: ""
+-  #    ## The interval used by the exporter to push metrics to influxdb. Default=10s
+-  #    # pushInterval: 30s
+-  #    ## Additional labels (influxdb tags) on all metrics.
+-  #    # additionalLabels:
+-  #    #   env: production
+-  #    #   foo: bar
+-  #    ## Enable metrics on entry points. Default=true
+-  #    # addEntryPointsLabels: false
+-  #    ## Enable metrics on routers. Default=false
+-  #    # addRoutersLabels: true
+-  #    ## Enable metrics on services. Default=true
+-  #    # addServicesLabels: false
+   #  influxdb2:
+   #    ## Address instructs exporter to send metrics to influxdb v2 at this address.
+   #    address: localhost:8086
+@@ -435,43 +416,53 @@ metrics:
+   #    # addRoutersLabels: true
+   #    ## Enable metrics on services. Default=true
+   #    # addServicesLabels: false
+-  #  openTelemetry:
+-  #    ## Address of the OpenTelemetry Collector to send metrics to.
+-  #    address: "localhost:4318"
+-  #    ## Enable metrics on entry points.
+-  #    addEntryPointsLabels: true
+-  #    ## Enable metrics on routers.
+-  #    addRoutersLabels: true
+-  #    ## Enable metrics on services.
+-  #    addServicesLabels: true
+-  #    ## Explicit boundaries for Histogram data points.
+-  #    explicitBoundaries:
+-  #      - "0.1"
+-  #      - "0.3"
+-  #      - "1.2"
+-  #      - "5.0"
+-  #    ## Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+-  #    headers:
+-  #      foo: bar
+-  #      test: test
+-  #    ## Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+-  #    insecure: true
+-  #    ## Interval at which metrics are sent to the OpenTelemetry Collector.
+-  #    pushInterval: 10s
+-  #    ## Allows to override the default URL path used for sending metrics. This option has no effect when using gRPC transport.
+-  #    path: /foo/v1/traces
+-  #    ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+-  #    tls:
+-  #      ## The path to the certificate authority, it defaults to the system bundle.
+-  #      ca: path/to/ca.crt
+-  #      ## The path to the public certificate. When using this option, setting the key option is required.
+-  #      cert: path/to/foo.cert
+-  #      ## The path to the private key. When using this option, setting the cert option is required.
+-  #      key: path/to/key.key
+-  #      ## If set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-  #      insecureSkipVerify: true
+-  #    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
+-  #    grpc: true
++  otlp:
++    # -- Set to true in order to enable the OpenTelemetry metrics
++    enabled: false
++    # -- Enable metrics on entry points. Default: true
++    addEntryPointsLabels:
++    # -- Enable metrics on routers. Default: false
++    addRoutersLabels:
++    # -- Enable metrics on services. Default: true
++    addServicesLabels:
++    # -- Explicit boundaries for Histogram data points. Default: [.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10]
++    explicitBoundaries:
++    # -- Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s
++    pushInterval:
++    http:
++      # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
++      enabled: false
++      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      endpoint:
++      # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
++      headers:
++      ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca:
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert:
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key:
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:
++    grpc:
++      # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
++      enabled: false
++      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      endpoint:
++      # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
++      insecure:
++      ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca:
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert:
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key:
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:
+
+   ## -- enable optional CRDs for Prometheus Operator
+   ##
+@@ -524,51 +515,46 @@ metrics:
+
+ ## Tracing
+ # -- https://doc.traefik.io/traefik/observability/tracing/overview/
+-tracing: {}
+-#  openTelemetry: # traefik v3+ only
+-#    grpc: true
+-#    insecure: true
+-#    address: localhost:4317
+-# instana:
+-#   localAgentHost: 127.0.0.1
+-#   localAgentPort: 42699
+-#   logLevel: info
+-#   enableAutoProfile: true
+-# datadog:
+-#   localAgentHostPort: 127.0.0.1:8126
+-#   debug: false
+-#   globalTag: ""
+-#   prioritySampling: false
+-# jaeger:
+-#   samplingServerURL: http://localhost:5778/sampling
+-#   samplingType: const
+-#   samplingParam: 1.0
+-#   localAgentHostPort: 127.0.0.1:6831
+-#   gen128Bit: false
+-#   propagation: jaeger
+-#   traceContextHeaderName: uber-trace-id
+-#   disableAttemptReconnecting: true
+-#   collector:
+-#      endpoint: ""
+-#      user: ""
+-#      password: ""
+-# zipkin:
+-#   httpEndpoint: http://localhost:9411/api/v2/spans
+-#   sameSpan: false
+-#   id128Bit: true
+-#   sampleRate: 1.0
+-# haystack:
+-#   localAgentHost: 127.0.0.1
+-#   localAgentPort: 35000
+-#   globalTag: ""
+-#   traceIDHeaderName: ""
+-#   parentIDHeaderName: ""
+-#   spanIDHeaderName: ""
+-#   baggagePrefixHeaderName: ""
+-# elastic:
+-#   serverURL: http://localhost:8200
+-#   secretToken: ""
+-#   serviceEnvironment: ""
++tracing:
++  # -- Enables tracing for internal resources. Default: false.
++  addInternals:
++  otlp:
++    # -- See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/
++    enabled: false
++    http:
++      # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
++      enabled: false
++      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      endpoint:
++      # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
++      headers:
++      ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca:
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert:
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key:
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:
++    grpc:
++      # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
++      enabled: false
++      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      endpoint:
++      # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
++      insecure:
++      ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca:
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert:
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key:
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:
+
+ # -- Global command arguments to be passed to all traefik's pods
+ globalArguments:
+@@ -756,7 +742,6 @@ ports:
+ #   default:
+ #     labels: {}
+ #     sniStrict: true
+-#     preferServerCipherSuites: true
+ #   custom-options:
+ #     labels: {}
+ #     curvePreferences:
+```
+
 ## 27.0.0  ![AppVersion: v2.11.0](https://img.shields.io/static/v1?label=AppVersion&message=v2.11.0&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-04-02
@@ -126,7 +440,7 @@ index dbd078f..363871d 100644
 -    # note that ports exposed on the default service are exposed on the internal
 -    # service by default as well.
 -    exposeInternal: false
- 
+
  # -- TLS Options are created as TLSOption CRDs
  # https://doc.traefik.io/traefik/https/tls/#tls-options
 @@ -814,6 +805,7 @@ service:
@@ -150,7 +464,7 @@ index dbd078f..363871d 100644
    # aggregateTo: [ "admin" ]
 +  # List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
 +  secretResourceNames: []
- 
+
  # -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
  podSecurityPolicy:
 ```
@@ -186,7 +500,7 @@ index f9dac91..dbd078f 100644
    #     scheme: HTTP
 +  # -- Set a runtimeClassName on pod
 +  runtimeClassName:
- 
+
  # -- Pod disruption budget
  podDisruptionBudget:
 @@ -629,6 +631,10 @@ ports:
@@ -230,7 +544,7 @@ index f9dac91..dbd078f 100644
 +    # note that ports exposed on the default service are exposed on the internal
 +    # service by default as well.
 +    exposeInternal: false
- 
+
  # -- TLS Options are created as TLSOption CRDs
  # https://doc.traefik.io/traefik/https/tls/#tls-options
 @@ -745,7 +763,7 @@ ports:
@@ -303,7 +617,7 @@ index 71e377e..f9dac91 100644
 @@ -206,6 +209,17 @@ livenessProbe:
    # -- The number of seconds to wait for a probe response before considering it as failed.
    timeoutSeconds: 2
- 
+
 +# -- Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
 +# eg.
 +# `startupProbe:
@@ -321,7 +635,7 @@ index 71e377e..f9dac91 100644
 @@ -241,6 +255,23 @@ providers:
        # By default this Traefik service
        # pathOverride: ""
- 
+
 +  file:
 +    # -- Create a file provider
 +    enabled: false
@@ -480,11 +794,11 @@ index aeec85c..71e377e 100644
 +  #     port: 9000
 +  #     host: localhost
 +  #     scheme: HTTP
- 
+
  # -- Pod disruption budget
  podDisruptionBudget:
 @@ -116,9 +116,9 @@ ingressClass:
- 
+
  # Traefik experimental features
  experimental:
 -  #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
@@ -529,7 +843,7 @@ index aeec85c..71e377e 100644
 +    middlewares: []
 +    # -- TLS options (e.g. secret containing certificate)
 +    tls: {}
- 
+
  updateStrategy:
    # -- Customize updateStrategy: RollingUpdate or OnDelete
 @@ -204,10 +220,10 @@ providers:
@@ -538,7 +852,7 @@ index aeec85c..71e377e 100644
      namespaces: []
 -      # - "default"
 +    # - "default"
- 
+
    kubernetesIngress:
 -    # -- Load Kubernetes IngressRoute provider
 +    # -- Load Kubernetes Ingress provider
@@ -555,7 +869,7 @@ index aeec85c..71e377e 100644
      publishedService:
        enabled: false
 @@ -243,9 +259,9 @@ volumes: []
- 
+
  # -- Additional volumeMounts to add to the Traefik container
  additionalVolumeMounts: []
 -  # -- For instance when using a logshipper for access logs
@@ -564,7 +878,7 @@ index aeec85c..71e377e 100644
 +# -- For instance when using a logshipper for access logs
 +# - name: traefik-logs
 +#   mountPath: /var/log/traefik
- 
+
  logs:
    general:
 @@ -270,26 +286,26 @@ logs:
@@ -600,7 +914,7 @@ index aeec85c..71e377e 100644
 +        # User-Agent: redact
 +        # Authorization: drop
 +        # Content-Type: keep
- 
+
  metrics:
    ## -- Prometheus is enabled by default.
 @@ -308,118 +324,118 @@ metrics:
@@ -926,18 +1240,18 @@ index aeec85c..71e377e 100644
 +#   serverURL: http://localhost:8200
 +#   secretToken: ""
 +#   serviceEnvironment: ""
- 
+
  # -- Global command arguments to be passed to all traefik's pods
  globalArguments:
 -  - "--global.checknewversion"
 -  - "--global.sendanonymoususage"
 +- "--global.checknewversion"
 +- "--global.sendanonymoususage"
- 
+
  #
  # Configure Traefik static configuration
 @@ -531,14 +547,14 @@ additionalArguments: []
- 
+
  # -- Environment variables to be passed to Traefik's binary
  env:
 -  - name: POD_NAME
@@ -1025,7 +1339,7 @@ index aeec85c..71e377e 100644
    size: 128Mi
    # storageClass: ""
 @@ -852,12 +871,12 @@ serviceAccountAnnotations: {}
- 
+
  # -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
  resources: {}
 -  # requests:
@@ -1040,7 +1354,7 @@ index aeec85c..71e377e 100644
 +# limits:
 +#   cpu: "300m"
 +#   memory: "150Mi"
- 
+
  # -- This example pod anti-affinity forces the scheduler to put traefik pods
  # -- on nodes where no other traefik pods are scheduled.
 ```
@@ -1082,7 +1396,7 @@ index 947ba56..aeec85c 100644
    #This value is no longer used, set the image.tag to a semver higher than 3.0, e.g. "v3.0.0-beta3"
    #v3:
      # -- Enable traefik version 3
--  #  enabled: false 
+-  #  enabled: false
 +  #  enabled: false
    plugins:
      # -- Enable traefik experimental plugins
@@ -1090,7 +1404,7 @@ index 947ba56..aeec85c 100644
 @@ -564,15 +571,6 @@ ports:
      # only.
      # hostIP: 192.168.100.10
- 
+
 -    # Override the liveness/readiness port. This is useful to integrate traefik
 -    # with an external Load Balancer that performs healthchecks.
 -    # Default: ports.traefik.port
@@ -1107,7 +1421,7 @@ index 947ba56..aeec85c 100644
  nodeSelector: {}
  # -- Tolerations allow the scheduler to schedule pods with matching taints.
  tolerations: []
--# -- You can use topology spread constraints to control 
+-# -- You can use topology spread constraints to control
 +# -- You can use topology spread constraints to control
  # how Pods are spread across your cluster among failure-domains.
  topologySpreadConstraints: []
@@ -1142,7 +1456,7 @@ index 345bbd8..947ba56 100644
    enabled: true
    isDefaultClass: true
 +  # name: my-custom-class
- 
+
  # Traefik experimental features
  experimental:
 -  v3:
@@ -1150,7 +1464,7 @@ index 345bbd8..947ba56 100644
 +  #v3:
      # -- Enable traefik version 3
 -    enabled: false
-+  #  enabled: false 
++  #  enabled: false
    plugins:
      # -- Enable traefik experimental plugins
      enabled: false
@@ -1167,7 +1481,7 @@ index 345bbd8..947ba56 100644
    #   localAgentPort: 42699
 @@ -517,7 +523,15 @@ additionalArguments: []
  #  - "--log.level=DEBUG"
- 
+
  # -- Environment variables to be passed to Traefik's binary
 -env: []
 +env:
@@ -1220,7 +1534,7 @@ index 345bbd8..947ba56 100644
      # -- The exposed port for this service
 @@ -880,14 +894,15 @@ topologySpreadConstraints: []
  priorityClassName: ""
- 
+
  # -- Set the container security context
 -# -- To run the container with ports below 1024 this will need to be adjust to run as root
 +# -- To run the container with ports below 1024 this will need to be adjusted to run as root
@@ -1229,7 +1543,7 @@ index 345bbd8..947ba56 100644
      drop: [ALL]
    readOnlyRootFilesystem: true
 +  allowPrivilegeEscalation: false
- 
+
  podSecurityContext:
 -  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
 +  # /!\ When setting fsGroup, Kubernetes will recursively change ownership and
@@ -1272,7 +1586,7 @@ index 71273cc..345bbd8 100644
    tag: ""
 +  # -- Traefik image pull policy
    pullPolicy: IfNotPresent
- 
+
 -#
 -# Configure integration with Traefik Hub
 -#
@@ -1295,7 +1609,7 @@ index 71273cc..345bbd8 100644
 -  #   key: "/path/to/key.pem"
 +# -- Add additional label to all resources
 +commonLabels: {}
- 
+
  #
  # Configure the deployment
  #
@@ -1383,7 +1697,7 @@ index 71273cc..345bbd8 100644
 @@ -107,7 +93,7 @@ deployment:
      #     host: localhost
      #     scheme: HTTP
- 
+
 -# Pod disruption budget
 +# -- Pod disruption budget
  podDisruptionBudget:
@@ -1392,13 +1706,13 @@ index 71273cc..345bbd8 100644
 @@ -115,93 +101,112 @@ podDisruptionBudget:
    # minAvailable: 0
    # minAvailable: 25%
- 
+
 -# Create a default IngressClass for Traefik
 +# -- Create a default IngressClass for Traefik
  ingressClass:
    enabled: true
    isDefaultClass: true
- 
+
 -# Enable experimental features
 +# Traefik experimental features
  experimental:
@@ -1425,7 +1739,7 @@ index 71273cc..345bbd8 100644
      # Additional gateway annotations (e.g. for cert-manager.io/issuer)
      # annotations:
      #   cert-manager.io/issuer: letsencrypt
- 
+
 -# Create an IngressRoute for the dashboard
 +## Create an IngressRoute for the dashboard
  ingressRoute:
@@ -1452,7 +1766,7 @@ index 71273cc..345bbd8 100644
 -    # TLS options (e.g. secret containing certificate)
 +    # -- TLS options (e.g. secret containing certificate)
      tls: {}
- 
+
 -# Customize updateStrategy of traefik pods
  updateStrategy:
 +  # -- Customize updateStrategy: RollingUpdate or OnDelete
@@ -1460,7 +1774,7 @@ index 71273cc..345bbd8 100644
    rollingUpdate:
      maxUnavailable: 0
      maxSurge: 1
- 
+
 -# Customize liveness and readiness probe values.
  readinessProbe:
 +  # -- The number of consecutive failures allowed before considering the probe as failed.
@@ -1485,7 +1799,7 @@ index 71273cc..345bbd8 100644
    successThreshold: 1
 +  # -- The number of seconds to wait for a probe response before considering it as failed.
    timeoutSeconds: 2
- 
+
 -#
 -# Configure providers
 -#
@@ -1504,7 +1818,7 @@ index 71273cc..345bbd8 100644
 +    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
      namespaces: []
        # - "default"
- 
+
    kubernetesIngress:
 +    # -- Load Kubernetes IngressRoute provider
      enabled: true
@@ -1520,7 +1834,7 @@ index 71273cc..345bbd8 100644
      # IP used for Kubernetes Ingress endpoints
 @@ -212,13 +217,13 @@ providers:
        # pathOverride: ""
- 
+
  #
 -# Add volumes to the traefik pod. The volume name will be passed to tpl.
 +# -- Add volumes to the traefik pod. The volume name will be passed to tpl.
@@ -1538,7 +1852,7 @@ index 71273cc..345bbd8 100644
 @@ -227,25 +232,22 @@ volumes: []
  #   mountPath: "/config"
  #   type: configMap
- 
+
 -# Additional volumeMounts to add to the Traefik container
 +# -- Additional volumeMounts to add to the Traefik container
  additionalVolumeMounts: []
@@ -1546,7 +1860,7 @@ index 71273cc..345bbd8 100644
 +  # -- For instance when using a logshipper for access logs
    # - name: traefik-logs
    #   mountPath: /var/log/traefik
- 
+
 -## Logs
 -## https://docs.traefik.io/observability/logs/
  logs:
@@ -1596,7 +1910,7 @@ index 71273cc..345bbd8 100644
            # User-Agent: redact
 @@ -278,10 +283,10 @@ logs:
            # Content-Type: keep
- 
+
  metrics:
 -  ## Prometheus is enabled by default.
 -  ## It can be disabled by setting "prometheus: null"
@@ -1611,7 +1925,7 @@ index 71273cc..345bbd8 100644
 @@ -404,11 +409,9 @@ metrics:
  #    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
  #    grpc: true
- 
+
 -##
 -##  enable optional CRDs for Prometheus Operator
 +## -- enable optional CRDs for Prometheus Operator
@@ -1624,7 +1938,7 @@ index 71273cc..345bbd8 100644
 @@ -455,6 +458,8 @@ metrics:
    #          summary: "Traefik Down"
    #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
- 
+
 +## Tracing
 +# -- https://doc.traefik.io/traefik/observability/tracing/overview/
  tracing: {}
@@ -1633,12 +1947,12 @@ index 71273cc..345bbd8 100644
 @@ -497,20 +502,21 @@ tracing: {}
    #   secretToken: ""
    #   serviceEnvironment: ""
- 
+
 +# -- Global command arguments to be passed to all traefik's pods
  globalArguments:
    - "--global.checknewversion"
    - "--global.sendanonymoususage"
- 
+
  #
  # Configure Traefik static configuration
 -# Additional arguments to be passed at Traefik's binary
@@ -1648,7 +1962,7 @@ index 71273cc..345bbd8 100644
  additionalArguments: []
  #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
  #  - "--log.level=DEBUG"
- 
+
 -# Environment variables to be passed to Traefik's binary
 +# -- Environment variables to be passed to Traefik's binary
  env: []
@@ -1657,14 +1971,14 @@ index 71273cc..345bbd8 100644
 @@ -525,22 +531,20 @@ env: []
  #       name: secret-name
  #       key: secret-key
- 
+
 +# -- Environment variables to be passed to Traefik's binary from configMaps or secrets
  envFrom: []
  # - configMapRef:
  #     name: config-map-name
  # - secretRef:
  #     name: secret-name
- 
+
 -# Configure ports
  ports:
 -  # The name of this one can't be changed as it is used for the readiness and
@@ -1791,7 +2105,7 @@ index 71273cc..345bbd8 100644
 -    # The port protocol (TCP/UDP)
 +    # -- The port protocol (TCP/UDP)
      protocol: TCP
- 
+
 -# TLS Options are created as TLSOption CRDs
 +# -- TLS Options are created as TLSOption CRDs
  # https://doc.traefik.io/traefik/https/tls/#tls-options
@@ -1800,7 +2114,7 @@ index 71273cc..345bbd8 100644
 @@ -684,7 +690,7 @@ ports:
  #       - CurveP384
  tlsOptions: {}
- 
+
 -# TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate
 +# -- TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate
  # https://doc.traefik.io/traefik/https/tls/#default-certificate
@@ -1809,7 +2123,7 @@ index 71273cc..345bbd8 100644
 @@ -693,24 +699,22 @@ tlsOptions: {}
  #       secretName: tls-cert
  tlsStore: {}
- 
+
 -# Options for the main traefik service, where the entrypoints traffic comes
 -# from.
  service:
@@ -1860,7 +2174,7 @@ index 71273cc..345bbd8 100644
 @@ -739,9 +745,8 @@ service:
    #   # externalIPs: []
    #   # ipFamilies: [ "IPv4","IPv6" ]
- 
+
 -## Create HorizontalPodAutoscaler object.
 -##
  autoscaling:
@@ -1871,7 +2185,7 @@ index 71273cc..345bbd8 100644
 @@ -766,10 +771,10 @@ autoscaling:
  #         value: 1
  #         periodSeconds: 60
- 
+
 -# Enable persistence using Persistent Volume Claims
 -# ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 -# It can be used to store TLS certificates, see `storage` in certResolvers
@@ -1889,7 +2203,7 @@ index 71273cc..345bbd8 100644
 -  # subPath: "" # only mount a subpath of the Volume into the pod
 +  # -- Only mount a subpath of the Volume into the pod
 +  # subPath: ""
- 
+
 +# -- Certificates resolvers configuration
  certResolvers: {}
  #   letsencrypt:
@@ -1897,14 +2211,14 @@ index 71273cc..345bbd8 100644
 @@ -802,13 +809,13 @@ certResolvers: {}
  #     # It has to match the path with a persistent volume
  #     storage: /data/acme.json
- 
+
 -# If hostNetwork is true, runs traefik in the host network namespace
 +# -- If hostNetwork is true, runs traefik in the host network namespace
  # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
  # and replicas>1, a pod anti-affinity is recommended and will be set if the
  # affinity is left as default.
  hostNetwork: false
- 
+
 -# Whether Role Based Access Control objects like roles and rolebindings should be created
 +# -- Whether Role Based Access Control objects like roles and rolebindings should be created
  rbac:
@@ -1913,23 +2227,23 @@ index 71273cc..345bbd8 100644
 @@ -818,19 +825,20 @@ rbac:
    # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
    # aggregateTo: [ "admin" ]
- 
+
 -# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 +# -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
  podSecurityPolicy:
    enabled: false
- 
+
 -# The service account the pods will use to interact with the Kubernetes API
 +# -- The service account the pods will use to interact with the Kubernetes API
  serviceAccount:
    # If set, an existing service account is used
    # If not set, a service account is created automatically using the fullname template
    name: ""
- 
+
 -# Additional serviceAccount annotations (e.g. for oidc authentication)
 +# -- Additional serviceAccount annotations (e.g. for oidc authentication)
  serviceAccountAnnotations: {}
- 
+
 +# -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
  resources: {}
    # requests:
@@ -1937,7 +2251,7 @@ index 71273cc..345bbd8 100644
 @@ -839,8 +847,8 @@ resources: {}
    #   cpu: "300m"
    #   memory: "150Mi"
- 
+
 -# This example pod anti-affinity forces the scheduler to put traefik pods
 -# on nodes where no other traefik pods are scheduled.
 +# -- This example pod anti-affinity forces the scheduler to put traefik pods
@@ -1948,12 +2262,12 @@ index 71273cc..345bbd8 100644
 @@ -851,11 +859,15 @@ affinity: {}
  #            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
  #        topologyKey: kubernetes.io/hostname
- 
+
 +# -- nodeSelector is the simplest recommended form of node selection constraint.
  nodeSelector: {}
 +# -- Tolerations allow the scheduler to schedule pods with matching taints.
  tolerations: []
-+# -- You can use topology spread constraints to control 
++# -- You can use topology spread constraints to control
 +# how Pods are spread across your cluster among failure-domains.
  topologySpreadConstraints: []
 -# # This example topologySpreadConstraints forces the scheduler to put traefik pods
@@ -1966,13 +2280,13 @@ index 71273cc..345bbd8 100644
 @@ -863,29 +875,33 @@ topologySpreadConstraints: []
  #    topologyKey: kubernetes.io/hostname
  #    whenUnsatisfiable: DoNotSchedule
- 
+
 -# Pods can have priority.
 -# Priority indicates the importance of a Pod relative to other Pods.
 +# -- Pods can have priority.
 +# -- Priority indicates the importance of a Pod relative to other Pods.
  priorityClassName: ""
- 
+
 -# Set the container security context
 -# To run the container with ports below 1024 this will need to be adjust to run as root
 +# -- Set the container security context
@@ -1981,7 +2295,7 @@ index 71273cc..345bbd8 100644
    capabilities:
      drop: [ALL]
    readOnlyRootFilesystem: true
- 
+
  podSecurityContext:
 -#  # /!\ When setting fsGroup, Kubernetes will recursively changes ownership and
 -#  # permissions for the contents of each volume to match the fsGroup. This can
@@ -1999,7 +2313,7 @@ index 71273cc..345bbd8 100644
    runAsNonRoot: true
 +  # -- The ID of the user for all containers in the pod to run as.
    runAsUser: 65532
- 
+
  #
 -# Extra objects to deploy (value evaluated as a template)
 +# -- Extra objects to deploy (value evaluated as a template)
@@ -2115,7 +2429,7 @@ index 4762b77..9ece303 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -654,12 +654,15 @@ ports:
- 
+
  # TLS Options are created as TLSOption CRDs
  # https://doc.traefik.io/traefik/https/tls/#tls-options
 +# When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
@@ -2194,7 +2508,7 @@ index cadc7a6..4762b77 100644
    runAsGroup: 65532
    runAsNonRoot: true
    runAsUser: 65532
- 
+
 -podSecurityContext:
 -  fsGroup: 65532
 -
@@ -2236,7 +2550,7 @@ index 780b04b..cadc7a6 100644
      middlewares: []
 +    # TLS options (e.g. secret containing certificate)
 +    tls: {}
- 
+
  # Customize updateStrategy of traefik pods
  updateStrategy:
 @@ -750,6 +752,7 @@ persistence:
@@ -2349,7 +2663,7 @@ index b77539d..42a27f9 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -107,6 +107,8 @@ ingressClass:
- 
+
  # Enable experimental features
  experimental:
 +  v3:
@@ -2399,7 +2713,7 @@ index b77539d..42a27f9 100644
 +#      insecureSkipVerify: true
 +#    ## This instructs the reporter to send metrics to the OpenTelemetry Collector using gRPC.
 +#    grpc: true
- 
+
  ##
  ##  enable optional CRDs for Prometheus Operator
 @@ -510,6 +548,8 @@ ports:
@@ -2447,7 +2761,7 @@ index 4f2fb2a..b77539d 100644
 +    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
 +    # annotations:
 +    #   cert-manager.io/issuer: letsencrypt
- 
+
  # Create an IngressRoute for the dashboard
  ingressRoute:
 @@ -219,7 +222,8 @@ logs:
@@ -2480,7 +2794,7 @@ index 15f1682..4f2fb2a 100644
 @@ -211,10 +211,10 @@ additionalVolumeMounts: []
    # - name: traefik-logs
    #   mountPath: /var/log/traefik
- 
+
 -# Logs
 -# https://docs.traefik.io/observability/logs/
 +## Logs
@@ -2536,7 +2850,7 @@ index 15f1682..4f2fb2a 100644
            # Authorization: drop
            # Content-Type: keep
 @@ -693,10 +694,7 @@ autoscaling:
- 
+
  # Enable persistence using Persistent Volume Claims
  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 -# After the pvc has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
@@ -2554,7 +2868,7 @@ index 15f1682..4f2fb2a 100644
 -#     # match the path to persistence
 +#     # It has to match the path with a persistent volume
  #     storage: /data/acme.json
- 
+
  # If hostNetwork is true, runs traefik in the host network namespace
 ```
 
@@ -2604,7 +2918,7 @@ index e49d02d..15f1682 100644
    # * add an internal (ClusterIP) Service, dedicated for Traefik Hub
 @@ -254,16 +254,96 @@ logs:
            # Content-Type: keep
- 
+
  metrics:
 -  # datadog:
 -  #   address: 127.0.0.1:8125
@@ -2841,7 +3155,7 @@ index 2ec3736..97a1b71 100644
      entryPoints: ["traefik"]
 +    # Additional ingressRoute middlewares (e.g. for authentication)
 +    middlewares: []
- 
+
  # Customize updateStrategy of traefik pods
  updateStrategy:
 ```
@@ -2864,7 +3178,7 @@ index 413aa88..2ec3736 100644
 @@ -134,9 +134,12 @@ ingressRoute:
      # /!\ Do not expose your dashboard without any protection over the internet /!\
      entryPoints: ["traefik"]
- 
+
 -rollingUpdate:
 -  maxUnavailable: 0
 -  maxSurge: 1
@@ -2874,7 +3188,7 @@ index 413aa88..2ec3736 100644
 +  rollingUpdate:
 +    maxUnavailable: 0
 +    maxSurge: 1
- 
+
  # Customize liveness and readiness probe values.
  readinessProbe:
 ```
@@ -2962,7 +3276,7 @@ index 69190f1..b24c1cb 100644
 @@ -100,11 +100,10 @@ podDisruptionBudget:
    # minAvailable: 0
    # minAvailable: 25%
- 
+
 -# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
 +# Create a default IngressClass for Traefik
  ingressClass:
@@ -2971,7 +3285,7 @@ index 69190f1..b24c1cb 100644
 -  isDefaultClass: false
 +  enabled: true
 +  isDefaultClass: true
- 
+
  # Enable experimental features
  experimental:
 ```
@@ -3030,7 +3344,7 @@ index 8033a87..69190f1 100644
 +  #   # loadBalancerSourceRanges: []
 +  #   # externalIPs: []
 +  #   # ipFamilies: [ "IPv4","IPv6" ]
- 
+
  ## Create HorizontalPodAutoscaler object.
  ##
 ```
@@ -3051,7 +3365,7 @@ index acce704..8033a87 100644
 @@ -5,6 +5,27 @@ image:
    tag: ""
    pullPolicy: IfNotPresent
- 
+
 +#
 +# Configure integration with Traefik Hub
 +#
@@ -3101,7 +3415,7 @@ index 807bd09..acce704 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -87,8 +87,6 @@ ingressClass:
- 
+
  # Enable experimental features
  experimental:
 -  http3:
@@ -3193,7 +3507,7 @@ index 6a90bc6..807bd09 100644
 -#            app.kubernetes.io/instance: '{{ .Release.Name }}'
 +#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
  #        topologyKey: kubernetes.io/hostname
- 
+
  nodeSelector: {}
 ```
 
@@ -3312,7 +3626,7 @@ index 7e335b5..9b5afc4 100644
 +  #        annotations:
 +  #          summary: "Traefik Down"
 +  #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
- 
+
  tracing: {}
    # instana:
 ```
@@ -3343,7 +3657,7 @@ index 03fdaed..7e335b5 100644
 -  token: ""
 -  # Toggle Pilot Dashboard
 -  # dashboard: false
- 
+
  # Enable experimental features
  experimental:
 ```
@@ -3379,7 +3693,7 @@ index 76aac93..03fdaed 100644
 +  # Enable user-facing roles
 +  # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
 +  # aggregateTo: [ "admin" ]
- 
+
  # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
  podSecurityPolicy:
 ```
@@ -3413,12 +3727,12 @@ index 781ac15..76aac93 100644
 +++ b/traefik/values.yaml
 @@ -555,7 +555,7 @@ rbac:
    enabled: true
- 
+
    # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
 -  # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
 +  # If set to true, installs Role and RoleBinding. Providers will only watch target namespace.
    namespaced: false
- 
+
  # Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
 ```
 
@@ -3443,7 +3757,7 @@ index fc2c371..781ac15 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -593,6 +593,15 @@ affinity: {}
- 
+
  nodeSelector: {}
  tolerations: []
 +topologySpreadConstraints: []
@@ -3455,7 +3769,7 @@ index fc2c371..781ac15 100644
 +#    maxSkew: 1
 +#    topologyKey: kubernetes.io/hostname
 +#    whenUnsatisfiable: DoNotSchedule
- 
+
  # Pods can have priority.
  # Priority indicates the importance of a Pod relative to other Pods.
 ```
@@ -3585,7 +3899,7 @@ index 4431c36..a4e4ff2 100644
 +
  nodeSelector: {}
  tolerations: []
- 
+
 ```
 
 ## 12.0.6  ![AppVersion: 2.9.1](https://img.shields.io/static/v1?label=AppVersion&message=2.9.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -3609,12 +3923,12 @@ index 3526729..4431c36 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -342,6 +342,7 @@ ports:
- 
+
      # Override the liveness/readiness port. This is useful to integrate traefik
      # with an external Load Balancer that performs healthchecks.
 +    # Default: ports.traefik.port
      # healthchecksPort: 9000
- 
+
      # Override the liveness/readiness scheme. Useful for getting ping to
 ```
 
@@ -3681,7 +3995,7 @@ index 2bd51f8..3526729 100644
 +#       - type: Pods
 +#         value: 1
 +#         periodSeconds: 60
- 
+
  # Enable persistence using Persistent Volume Claims
  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
 ```
@@ -3715,12 +4029,12 @@ index 844cadc..2bd51f8 100644
 +++ b/traefik/values.yaml
 @@ -126,20 +126,20 @@ ingressRoute:
      entryPoints: ["traefik"]
- 
+
  rollingUpdate:
 -  maxUnavailable: 1
 +  maxUnavailable: 0
    maxSurge: 1
- 
+
  # Customize liveness and readiness probe values.
  readinessProbe:
    failureThreshold: 1
@@ -3729,7 +4043,7 @@ index 844cadc..2bd51f8 100644
    periodSeconds: 10
    successThreshold: 1
    timeoutSeconds: 2
- 
+
  livenessProbe:
    failureThreshold: 3
 -  initialDelaySeconds: 10
@@ -3753,7 +4067,7 @@ index c926bd9..844cadc 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -598,3 +598,10 @@ securityContext:
- 
+
  podSecurityContext:
    fsGroup: 65532
 +
@@ -3818,7 +4132,7 @@ index c9feb76..3957448 100644
 +    # By default, it's using traefik entrypoint, which is not exposed.
 +    # /!\ Do not expose your dashboard without any protection over the internet /!\
 +    entryPoints: ["traefik"]
- 
+
  rollingUpdate:
    maxUnavailable: 1
 ```
@@ -3853,7 +4167,7 @@ index fed4a8a..c9feb76 100644
 @@ -340,6 +340,10 @@ ports:
      # with an external Load Balancer that performs healthchecks.
      # healthchecksPort: 9000
- 
+
 +    # Override the liveness/readiness scheme. Useful for getting ping to
 +    # respond on websecure entryPoint.
 +    # healthchecksScheme: HTTPS
@@ -3877,7 +4191,7 @@ index d1708cc..fed4a8a 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -247,12 +247,45 @@ metrics:
- 
+
  tracing: {}
    # instana:
 -  #   enabled: true
@@ -3920,7 +4234,7 @@ index d1708cc..fed4a8a 100644
 +  #   serverURL: http://localhost:8200
 +  #   secretToken: ""
 +  #   serviceEnvironment: ""
- 
+
  globalArguments:
    - "--global.checknewversion"
 ```
@@ -3953,7 +4267,7 @@ index 19a133c..d1708cc 100644
 +    #     port: 9000
 +    #     host: localhost
 +    #     scheme: HTTP
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -4019,7 +4333,7 @@ index d4011c3..d9c745e 100644
 @@ -373,6 +373,15 @@ ports:
  #       - CurveP384
  tlsOptions: {}
- 
+
 +# TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate
 +# https://doc.traefik.io/traefik/https/tls/#default-certificate
 +# Example:
@@ -4170,7 +4484,7 @@ index a16b107..e141e29 100644
 @@ -433,6 +433,27 @@ persistence:
    annotations: {}
    # subPath: "" # only mount a subpath of the Volume into the pod
- 
+
 +certResolvers: {}
 +#   letsencrypt:
 +#     # for challenge options cf. https://doc.traefik.io/traefik/https/acme/
@@ -4278,7 +4592,7 @@ index 15f1103..02ab704 100644
 @@ -110,6 +110,20 @@ rollingUpdate:
    maxUnavailable: 1
    maxSurge: 1
- 
+
 +# Customize liveness and readiness probe values.
 +readinessProbe:
 +  failureThreshold: 1
@@ -4293,7 +4607,7 @@ index 15f1103..02ab704 100644
 +  periodSeconds: 10
 +  successThreshold: 1
 +  timeoutSeconds: 2
- 
+
  #
  # Configure providers
 ```
@@ -4320,7 +4634,7 @@ index 4dccd1a..15f1103 100644
 +  #   debug: false
 +  #   globalTag: ""
 +  #   prioritySampling: false
- 
+
  globalArguments:
    - "--global.checknewversion"
 ```
@@ -4375,7 +4689,7 @@ index cd4d49b..1f9dbbe 100644
 +  #  addRoutersLabels: true
    # statsd:
    #   address: localhost:8125
- 
+
 ```
 
 ## 10.14.2  ![AppVersion: 2.6.1](https://img.shields.io/static/v1?label=AppVersion&message=2.6.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -4406,7 +4720,7 @@ index d49122f..cd4d49b 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -83,6 +83,8 @@ pilot:
- 
+
  # Enable experimental features
  experimental:
 +  http3:
@@ -4449,7 +4763,7 @@ index 32fce6f..d49122f 100644
 +  # ipFamilies:
 +  #   - IPv4
 +  #   - IPv6
- 
+
  ## Create HorizontalPodAutoscaler object.
  ##
 ```
@@ -4511,7 +4825,7 @@ index 8c72905..ab25456 100644
 +#         topologyKey: kubernetes.io/hostname
  nodeSelector: {}
  tolerations: []
- 
+
 ```
 
 ## 10.11.0  ![AppVersion: 2.6.0](https://img.shields.io/static/v1?label=AppVersion&message=2.6.0&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -4530,7 +4844,7 @@ index 7fe4a2c..8c72905 100644
 @@ -208,6 +208,10 @@ metrics:
    # statsd:
    #   address: localhost:8125
- 
+
 +tracing: {}
 +  # instana:
 +  #   enabled: true
@@ -4588,7 +4902,7 @@ index 79df205..8ae4bd8 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -123,6 +123,7 @@ providers:
- 
+
    kubernetesIngress:
      enabled: true
 +    allowExternalNameServices: false
@@ -4640,7 +4954,7 @@ index e0655c8..7e9186b 100644
    imagePullSecrets: []
 -   # - name: myRegistryKeySecretName
 +    # - name: myRegistryKeySecretName
- 
+
  # Pod disruption budget
  podDisruptionBudget:
    enabled: false
@@ -4648,7 +4962,7 @@ index e0655c8..7e9186b 100644
 +  # maxUnavailable: 33%
    # minAvailable: 0
 +  # minAvailable: 25%
- 
+
  # Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
  ingressClass:
 ```
@@ -4683,7 +4997,7 @@ index 3ec7105..e0655c8 100644
      # - 1.2.3.4
 +  # One of SingleStack, PreferDualStack, or RequireDualStack.
 +  # ipFamilyPolicy: SingleStack
- 
+
  ## Create HorizontalPodAutoscaler object.
  ##
 ```
@@ -4917,7 +5231,7 @@ index 04d336c..72a01ea 100644
    # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
 -  fallbackApiVersion:
 +  fallbackApiVersion: ""
- 
+
  # Activate Pilot integration
  pilot:
 ```
@@ -4959,7 +5273,7 @@ index f6e370a..04d336c 100644
 @@ -186,6 +186,17 @@ logs:
            # Authorization: drop
            # Content-Type: keep
- 
+
 +metrics:
 +  # datadog:
 +  #   address: 127.0.0.1:8125
@@ -4992,7 +5306,7 @@ index f6e370a..04d336c 100644
 +    exposedPort: 9100
 +    # The port protocol (TCP/UDP)
 +    protocol: TCP
- 
+
  # TLS Options are created as TLSOption CRDs
  # https://doc.traefik.io/traefik/https/tls/#tls-options
 ```
@@ -5017,7 +5331,7 @@ index 9bf90ea..f6e370a 100644
 +    # By default, Gateway would be created to the Namespace you are deploying Traefik to.
 +    # You may create that Gateway in another namespace, setting its name below:
 +    # namespace: default
- 
+
  # Create an IngressRoute for the dashboard
  ingressRoute:
 ```
@@ -5073,12 +5387,12 @@ index b30afac..9bf90ea 100644
 @@ -363,7 +363,7 @@ rbac:
    # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
    namespaced: false
- 
+
 -# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBindin or ClusterRoleBinding
 +# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
  podSecurityPolicy:
    enabled: false
- 
+
 ```
 
 ## 9.19.0  ![AppVersion: 2.4.8](https://img.shields.io/static/v1?label=AppVersion&message=2.4.8&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -5100,7 +5414,7 @@ index 0aa2d6b..b30afac 100644
    isDefaultClass: false
 +  # Use to force a networking.k8s.io API Version for certain CI/CD applications. E.g. "v1beta1"
 +  fallbackApiVersion:
- 
+
  # Activate Pilot integration
  pilot:
 ```
@@ -5145,7 +5459,7 @@ index 017f771..0aa2d6b 100644
    token: ""
 +  # Toggle Pilot Dashboard
 +  # dashboard: false
- 
+
  # Enable experimental features
  experimental:
 ```
@@ -5226,7 +5540,7 @@ index 56abb93..868a985 100644
 @@ -225,6 +227,10 @@ ports:
      # only.
      # hostIP: 192.168.100.10
- 
+
 +    # Override the liveness/readiness port. This is useful to integrate traefik
 +    # with an external Load Balancer that performs healthchecks.
 +    # healthchecksPort: 9000
@@ -5366,7 +5680,7 @@ index 50cab94..56485ad 100644
 +    # - group: "core"
 +    #   kind: "Secret"
 +    #   name: "mysecret"
- 
+
  # Create an IngressRoute for the dashboard
  ingressRoute:
 ```
@@ -5507,7 +5821,7 @@ index 37dd151..e6b85ca 100644
 @@ -111,6 +111,12 @@ volumes: []
  #   mountPath: "/config"
  #   type: configMap
- 
+
 +# Additional volumeMounts to add to the Traefik container
 +additionalVolumeMounts: []
 +  # For instance when using a logshipper for access logs
@@ -5546,7 +5860,7 @@ index 87f60c0..37dd151 100644
 +  # Additional imagePullSecrets
 +  imagePullSecrets: []
 +   # - name: myRegistryKeySecretName
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -5579,7 +5893,7 @@ index 4ca1f8f..87f60c0 100644
 +  # defaults to appVersion
 +  tag: ""
    pullPolicy: IfNotPresent
- 
+
  #
 ```
 
@@ -5625,7 +5939,7 @@ index eee3622..4ca1f8f 100644
 +#       - CurveP521
 +#       - CurveP384
 +tlsOptions: {}
- 
+
  # Options for the main traefik service, where the entrypoints traffic comes
  # from.
 ```
@@ -5646,12 +5960,12 @@ index b7153a1..eee3622 100644
 @@ -54,10 +54,16 @@ ingressClass:
    enabled: false
    isDefaultClass: false
- 
+
 +# Activate Pilot integration
  pilot:
    enabled: false
    token: ""
- 
+
 +# Enable experimental features
 +experimental:
 +  plugins:
@@ -5718,7 +6032,7 @@ index 5a8d8ea..9bac45e 100644
 +++ b/traefik/values.yaml
 @@ -76,7 +76,7 @@ providers:
        # pathOverride: ""
- 
+
  #
 -# Add volumes to the traefik pod.
 +# Add volumes to the traefik pod. The volume name will be passed to tpl.
@@ -5733,7 +6047,7 @@ index 5a8d8ea..9bac45e 100644
 +# - name: '{{ printf "%s-configs" .Release.Name }}'
  #   mountPath: "/config"
  #   type: configMap
- 
+
 ```
 
 ## 9.5.0  ![AppVersion: 2.3.1](https://img.shields.io/static/v1?label=AppVersion&message=2.3.1&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -5752,7 +6066,7 @@ index 8c4d866..5a8d8ea 100644
 @@ -281,6 +281,10 @@ rbac:
    # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
    namespaced: false
- 
+
 +# Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBindin or ClusterRoleBinding
 +podSecurityPolicy:
 +  enabled: false
@@ -5782,7 +6096,7 @@ index 3df75a4..8c4d866 100644
 -  tag: 2.3.0
 +  tag: 2.3.1
    pullPolicy: IfNotPresent
- 
+
  #
 ```
 
@@ -5844,12 +6158,12 @@ index fba955d..a6175ff 100644
 -  tag: 2.2.8
 +  tag: 2.3.0
    pullPolicy: IfNotPresent
- 
+
  #
 @@ -36,6 +36,16 @@ podDisruptionBudget:
    # maxUnavailable: 1
    # minAvailable: 0
- 
+
 +# Use ingressClass. Ignored if Traefik version < 2.3 / kubernetes < 1.18.x
 +ingressClass:
 +  # true is not unit-testable yet, pending https://github.com/rancher/helm-unittest/pull/12
@@ -5943,7 +6257,7 @@ index e161a14..7b74a39 100644
 +      # Published Kubernetes Service to copy status from. Format: namespace/servicename
 +      # By default this Traefik service
 +      # pathOverride: ""
- 
+
  #
  # Add volumes to the traefik pod.
 ```
@@ -6009,7 +6323,7 @@ index 6f79580..67276f7 100644
 @@ -73,6 +73,48 @@ volumes: []
  #   mountPath: "/config"
  #   type: configMap
- 
+
 +# Logs
 +# https://docs.traefik.io/observability/logs/
 +logs:
@@ -6086,7 +6400,7 @@ index 10b3949..6f79580 100644
    name: traefik
    tag: 2.2.8
 +  pullPolicy: IfNotPresent
- 
+
  #
  # Configure the deployment
 ```
@@ -6110,7 +6424,7 @@ index 80ddaaa..10b3949 100644
      #       mountPath: /data
 +  # Custom pod DNS policy. Apply if `hostNetwork: true`
 +  # dnsPolicy: ClusterFirstWithHostNet
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -6138,7 +6452,7 @@ index 936ab92..80ddaaa 100644
 +    # to set this value if you need traefik to listen on specific interface
 +    # only.
 +    # hostIP: 192.168.100.10
- 
+
      # Defines whether the port is exposed if service.type is LoadBalancer or
      # NodePort.
 ```
@@ -6162,7 +6476,7 @@ index 42ee893..936ab92 100644
    name: traefik
 -  tag: 2.2.5
 +  tag: 2.2.8
- 
+
  #
  # Configure the deployment
 ```
@@ -6186,7 +6500,7 @@ index a7fb668..42ee893 100644
    name: traefik
 -  tag: 2.2.1
 +  tag: 2.2.5
- 
+
  #
  # Configure the deployment
 ```
@@ -6218,7 +6532,7 @@ index 62e3a77..a7fb668 100644
 +    #   volumeMounts:
 +    #     - name: data
 +    #       mountPath: /data
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -6242,7 +6556,7 @@ index 85df29c..62e3a77 100644
    # Additional containers (e.g. for metric offloading sidecars)
 -  additionalContainers: {}
 +  additionalContainers: []
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -6266,7 +6580,7 @@ index 6a9dfd8..85df29c 100644
    podAnnotations: {}
 +  # Additional containers (e.g. for metric offloading sidecars)
 +  additionalContainers: {}
- 
+
  # Pod disruption budget
  podDisruptionBudget:
 ```
@@ -6294,7 +6608,7 @@ index 05f9eab..6a9dfd8 100644
 @@ -196,7 +196,7 @@ rbac:
    # If set to true, installs namespace-specific Role and RoleBinding and requires provider configuration be set to that same namespace
    namespaced: false
- 
+
 -# The service account the pods will use to interact with the Kubernates API
 +# The service account the pods will use to interact with the Kubernetes API
  serviceAccount:
@@ -6318,7 +6632,7 @@ index 102ae00..05f9eab 100644
 @@ -34,6 +34,16 @@ rollingUpdate:
    maxUnavailable: 1
    maxSurge: 1
- 
+
 +
 +#
 +# Configure providers
@@ -6400,7 +6714,7 @@ index 9a9b668..b2f4fc3 100644
 +    # The port protocol (TCP/UDP)
 +    protocol: TCP
      # nodePort: 32443
- 
+
  # Options for the main traefik service, where the entrypoints traffic comes
 ```
 
@@ -6424,7 +6738,7 @@ index e812b98..9a9b668 100644
 -  maxUnavailable: 1
 +  # maxUnavailable: 1
    # minAvailable: 0
- 
+
  # Create an IngressRoute for the dashboard
 ```
 
@@ -6444,7 +6758,7 @@ index 5f44e5c..e812b98 100644
 @@ -15,6 +15,12 @@ deployment:
    # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
    podAnnotations: {}
- 
+
 +# Pod disruption budget
 +podDisruptionBudget:
 +  enabled: false
@@ -6472,7 +6786,7 @@ index 96bba18..5f44e5c 100644
 @@ -165,6 +165,20 @@ persistence:
  # affinity is left as default.
  hostNetwork: false
- 
+
 +# Whether Role Based Access Control objects like roles and rolebindings should be created
 +rbac:
 +  enabled: true
@@ -6489,7 +6803,7 @@ index 96bba18..5f44e5c 100644
 +
  # Additional serviceAccount annotations (e.g. for oidc authentication)
  serviceAccountAnnotations: {}
- 
+
 ```
 
 ## 8.2.1  ![AppVersion: 2.2.1](https://img.shields.io/static/v1?label=AppVersion&message=2.2.1&color=success&logo=) ![Helm: v2](https://img.shields.io/static/v1?label=Helm&message=v2&color=inactive&logo=helm) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -6515,7 +6829,7 @@ index e35bdf9..96bba18 100644
 -#  - "--providers.kubernetesingress"
 +#  - "--providers.kubernetesingress.ingressclass=traefik-internal"
  #  - "--log.level=DEBUG"
- 
+
  # Environment variables to be passed to Traefik's binary
 ```
 
@@ -6549,7 +6863,7 @@ index abe2334..e35bdf9 100644
  #  - "--providers.kubernetesingress"
 -#  - "--logs.level=DEBUG"
 +#  - "--log.level=DEBUG"
- 
+
  # Environment variables to be passed to Traefik's binary
  env: []
 ```
@@ -6573,7 +6887,7 @@ index 57cc7e1..abe2334 100644
    name: traefik
 -  tag: 2.2.0
 +  tag: 2.2.1
- 
+
  #
  # Configure the deployment
 ```
@@ -6600,7 +6914,7 @@ index d639f72..57cc7e1 100644
  additionalArguments: []
  #  - "--providers.kubernetesingress"
 +#  - "--logs.level=DEBUG"
- 
+
  # Environment variables to be passed to Traefik's binary
  env: []
 ```
@@ -6688,7 +7002,7 @@ index 7f8092e..d55a40a 100644
 @@ -71,6 +71,12 @@ env: []
  #       name: secret-name
  #       key: secret-key
- 
+
 +envFrom: []
 +# - configMapRef:
 +#     name: config-map-name
@@ -6718,7 +7032,7 @@ index 152339b..7f8092e 100644
    path: /data
    annotations: {}
 +  # subPath: "" # only mount a subpath of the Volume into the pod
- 
+
  # If hostNetwork is true, runs traefik in the host network namespace
  # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
 ```
@@ -6742,7 +7056,7 @@ index 5d294b7..152339b 100644
      annotations: {}
 +    # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
 +    labels: {}
- 
+
  rollingUpdate:
    maxUnavailable: 1
 ```
@@ -6783,7 +7097,7 @@ index e61a9fd..5d294b7 100644
 -    # Addtional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
 +    # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
      annotations: {}
- 
+
  rollingUpdate:
 ```
 
@@ -6806,7 +7120,7 @@ index 15d1c25..e61a9fd 100644
      enabled: true
 +    # Addtional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
 +    annotations: {}
- 
+
  rollingUpdate:
    maxUnavailable: 1
 ```
@@ -6837,7 +7151,7 @@ index 6d6d13f..15d1c25 100644
      # - 172.16.0.0/16
 +  externalIPs: []
 +    # - 1.2.3.4
- 
+
  ## Create HorizontalPodAutoscaler object.
  ##
 ```
@@ -6858,7 +7172,7 @@ index 1ac720d..6d6d13f 100644
 @@ -52,18 +52,20 @@ globalArguments:
  additionalArguments: []
  #  - "--providers.kubernetesingress"
- 
+
 -# Secret to be set as environment variables to be passed to Traefik's binary
 -secretEnv: []
 -  # - name: SOME_VAR
@@ -6883,7 +7197,7 @@ index 1ac720d..6d6d13f 100644
 +#     secretKeyRef:
 +#       name: secret-name
 +#       key: secret-key
- 
+
  # Configure ports
  ports:
 ```
@@ -6904,7 +7218,7 @@ index 85abe42..1ac720d 100644
 @@ -151,6 +151,9 @@ persistence:
  # affinity is left as default.
  hostNetwork: false
- 
+
 +# Additional serviceAccount annotations (e.g. for oidc authentication)
 +serviceAccountAnnotations: {}
 +
@@ -6929,7 +7243,7 @@ index 2f5d132..85abe42 100644
 @@ -115,6 +115,22 @@ service:
      # - 192.168.0.1/32
      # - 172.16.0.0/16
- 
+
 +## Create HorizontalPodAutoscaler object.
 +##
 +autoscaling:
@@ -6970,7 +7284,7 @@ index ebd2fde..2f5d132 100644
    name: traefik
 -  tag: 2.1.8
 +  tag: 2.2.0
- 
+
  #
  # Configure the deployment
 ```
@@ -6994,7 +7308,7 @@ index 65c7665..ebd2fde 100644
    name: traefik
 -  tag: 2.1.4
 +  tag: 2.1.8
- 
+
  #
  # Configure the deployment
 ```
@@ -7018,7 +7332,7 @@ index 89c7ac1..65c7665 100644
    name: traefik
 -  tag: 2.1.3
 +  tag: 2.1.4
- 
+
  #
  # Configure the deployment
 ```
@@ -7044,7 +7358,7 @@ index 8d66111..89c7ac1 100644
 +  annotations: {}
    # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
    podAnnotations: {}
- 
+
 ```
 
 ## 6.0.2  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -7069,14 +7383,14 @@ index 490b2b6..8d66111 100644
 +++ b/traefik/values.yaml
 @@ -51,13 +51,13 @@ additionalArguments: []
  #  - "--providers.kubernetesingress"
- 
+
  # Secret to be set as environment variables to be passed to Traefik's binary
 -secretEnv: {}
 +secretEnv: []
    # - name: SOME_VAR
    #   secretName: my-secret-name
    #   secretKey: my-secret-key
- 
+
  # Environment variables to be passed to Traefik's binary
 -env: {}
 +env: []
@@ -7091,7 +7405,7 @@ index 490b2b6..8d66111 100644
 +  loadBalancerSourceRanges: []
      # - 192.168.0.1/32
      # - 172.16.0.0/16
- 
+
 ```
 
 ## 6.0.0  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -7110,7 +7424,7 @@ index 7aebefe..490b2b6 100644
 @@ -18,15 +18,10 @@ ingressRoute:
    dashboard:
      enabled: true
- 
+
 -additional:
 -  checkNewVersion: true
 -  sendAnonymousUsage: true
@@ -7118,7 +7432,7 @@ index 7aebefe..490b2b6 100644
  rollingUpdate:
    maxUnavailable: 1
    maxSurge: 1
- 
+
 -
  #
  # Add volumes to the traefik pod.
@@ -7126,7 +7440,7 @@ index 7aebefe..490b2b6 100644
 @@ -43,9 +38,14 @@ volumes: []
  #   mountPath: "/config"
  #   type: configMap
- 
+
 +globalArguments:
 +  - "--global.checknewversion"
 +  - "--global.sendanonymoususage"
@@ -7142,7 +7456,7 @@ index 7aebefe..490b2b6 100644
 @@ -63,7 +63,7 @@ env: {}
    # - name: SOME_OTHER_VAR
    #   value: some-other-var-value
- 
+
 -#
 +# Configure ports
  ports:
@@ -7154,13 +7468,13 @@ index 7aebefe..490b2b6 100644
      exposedPort: 443
 -  # nodePort: 32443
 +    # nodePort: 32443
- 
+
  # Options for the main traefik service, where the entrypoints traffic comes
  # from.
 @@ -113,9 +113,6 @@ service:
      # - 192.168.0.1/32
      # - 172.16.0.0/16
- 
+
 -logs:
 -  loglevel: WARN
 -
@@ -7191,7 +7505,7 @@ index 38bb263..7aebefe 100644
    replicas: 1
    # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
    podAnnotations: {}
- 
+
 +# Create an IngressRoute for the dashboard
 +ingressRoute:
 +  dashboard:
@@ -7226,7 +7540,7 @@ index ecb2833..38bb263 100644
 @@ -123,6 +123,12 @@ persistence:
    path: /data
    annotations: {}
- 
+
 +# If hostNetwork is true, runs traefik in the host network namespace
 +# To prevent unschedulabel pods due to port collisions, if hostNetwork=true
 +# and replicas>1, a pod anti-affinity is recommended and will be set if the
@@ -7318,7 +7632,7 @@ index 7f31548..ec1d619 100644
 +## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress,--global.checknewversion=true}"`
  additionalArguments: []
  #  - "--providers.kubernetesingress"
- 
+
 ```
 
 ## 5.3.2  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -7365,7 +7679,7 @@ index ccea845..7f31548 100644
 @@ -44,12 +44,18 @@ volumes: []
  additionalArguments: []
  #  - "--providers.kubernetesingress"
- 
+
 +# Secret to be set as environment variables to be passed to Traefik's binary
 +secretEnv: {}
 +  # - name: SOME_VAR
@@ -7382,7 +7696,7 @@ index ccea845..7f31548 100644
 +  #   value: some-var-value
 +  # - name: SOME_OTHER_VAR
 +  #   value: some-other-var-value
- 
+
  #
  ports:
 ```
@@ -7407,7 +7721,7 @@ index 78bbee0..ccea845 100644
 +  loadBalancerSourceRanges: {}
 +    # - 192.168.0.1/32
 +    # - 172.16.0.0/16
- 
+
  logs:
    loglevel: WARN
 ```
@@ -7428,7 +7742,7 @@ index a442fca..78bbee0 100644
 @@ -92,15 +92,6 @@ service:
      # loadBalancerIP: "1.2.3.4"
      # clusterIP: "2.3.4.5"
- 
+
 -dashboard:
 -  # Enable the dashboard on Traefik
 -  enable: true
@@ -7440,7 +7754,7 @@ index a442fca..78bbee0 100644
 -
  logs:
    loglevel: WARN
- 
+
 ```
 
 ## 4.1.3  ![AppVersion: 2.1.3](https://img.shields.io/static/v1?label=AppVersion&message=2.1.3&color=success&logo=) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
@@ -7461,7 +7775,7 @@ index 8b2f4db..a442fca 100644
    # storageClass: ""
    path: /data
 +  annotations: {}
- 
+
  resources: {}
    # requests:
 ```
@@ -7480,7 +7794,7 @@ index 2a2554f..8b2f4db 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -103,7 +103,20 @@ dashboard:
- 
+
  logs:
    loglevel: WARN
 -#
@@ -7519,7 +7833,7 @@ index 5401832..2a2554f 100644
 @@ -20,6 +20,23 @@ rollingUpdate:
    maxUnavailable: 1
    maxSurge: 1
- 
+
 +
 +#
 +# Add volumes to the traefik pod.
@@ -7561,7 +7875,7 @@ index 5eab74b..5401832 100644
    replicas: 1
 +  # Additional pod annotations (e.g. for mesh injection or prometheus scraping)
 +  podAnnotations: {}
- 
+
  additional:
    checkNewVersion: true
 ```
@@ -7601,13 +7915,13 @@ index bcc42f8..5eab74b 100644
    name: traefik
 -  tag: 2.1.1
 +  tag: 2.1.3
- 
+
  #
  # Configure the deployment
 @@ -10,6 +10,10 @@ deployment:
    # Number of pods of the deployment
    replicas: 1
- 
+
 +additional:
 +  checkNewVersion: true
 +  sendAnonymousUsage: true
@@ -7655,7 +7969,7 @@ index 4462359..bcc42f8 100644
 @@ -21,6 +21,13 @@ rollingUpdate:
  additionalArguments: []
  #  - "--providers.kubernetesingress"
- 
+
 +# Environment variables to be passed to Traefik's binary
 +env: {}
 +#  - name: SOME_VAR
@@ -7700,7 +8014,7 @@ index b1fe42a..4462359 100644
      expose: true
      exposedPort: 443
 +  # nodePort: 32443
- 
+
  # Options for the main traefik service, where the entrypoints traffic comes
  # from.
 ```
