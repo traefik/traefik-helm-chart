@@ -31,6 +31,7 @@ kubectl delete crds \
 **Changes**
 
 * feat(podtemplate): set GOMEMLIMIT, GOMAXPROCS when limits are defined
+* feat: ✨ fail gracefully when required port number is not set
 * feat!: :boom: initial support of Traefik Proxy v3
 * docs: 📚️ improve EXAMPLES on acme resolver
 * chore(release): 🚀 publish v28 rc1

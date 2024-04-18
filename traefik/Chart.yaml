@@ -26,6 +26,7 @@ icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets
 annotations:
   artifacthub.io/changes: |
     - "feat(podtemplate): set GOMEMLIMIT, GOMAXPROCS when limits are defined"
+    - "feat: ✨ fail gracefully when required port number is not set"
     - "feat!: :boom: initial support of Traefik Proxy v3"
     - "docs: 📚️ improve EXAMPLES on acme resolver"
     - "chore(release): 🚀 publish v28 rc1"
