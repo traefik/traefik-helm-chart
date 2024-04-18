@@ -364,3 +364,13 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
         template: deployment.yaml
+  - it: should failed when no port nor exposed port are defined
+    set:
+      ports:
+        ssh:
+          expose:
+            default: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot create ssh port on Service without .port or .exposedPort"
+
