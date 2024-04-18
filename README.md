@@ -9,6 +9,7 @@ Starting with v28.x, this chart now bootstraps Traefik Proxy version 3 as a Kube
 using Custom Resources `IngressRoute`: <https://doc.traefik.io/traefik/v3.0/routing/providers/kubernetes-crd/>.
 
 It's possible to use this chart with Traefik Proxy v2 using v27.x
+This chart support policy is aligned with [upstream support policy](https://doc.traefik.io/traefik/deprecation/releases/) of Traefik Proxy.
 
 See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of this chart on CRDs.
 
@@ -154,4 +155,4 @@ Thanks to all the people who have already contributed!
 
 <a href="https://github.com/traefik/traefik-helm-chart/graphs/contributors">
   <img src="https://contributors-img.web.app/image?repo=traefik/traefik-helm-chart" />
-</a>
+</a

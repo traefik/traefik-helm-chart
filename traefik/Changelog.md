@@ -8,7 +8,7 @@
 
 This is a major breaking upgrade. [Migration guide](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) have been applied on the chart.
 
-It needs a Kubernetes v21 or higher.
+It needs a Kubernetes v1.22 or higher.
 All CRDs using _API Group_ `traefik.containo.us` are not supported anymore in Traefik Proxy v3
 
 CRDs needs to be upgraded: `kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/`
