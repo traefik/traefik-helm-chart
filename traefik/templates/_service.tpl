@@ -52,7 +52,11 @@
 {{- define "traefik.service-ports" }}
   {{- range $name, $config := .ports }}
   {{- if (index (default dict $config.expose) $.serviceName) }}
-  - port: {{ default $config.port $config.exposedPort }}
+  {{- $port := default $config.port $config.exposedPort }}
+  {{- if empty $port }}
+    {{- fail (print "ERROR: Cannot create " (trim $name) " port on Service without .port or .exposedPort") }}
+  {{- end }}
+  - port: {{ $port }}
     name: {{ $name | quote }}
     targetPort: {{ default $name $config.targetPort }}
     protocol: {{ default "TCP" $config.protocol }}
