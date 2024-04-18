@@ -66,7 +66,6 @@
     {{- if $config.appProtocol }}
     appProtocol: {{ $config.appProtocol }}
     {{- end }}
-  {{- end }}
   {{- if $config.http3 }}
   {{- if $config.http3.enabled }}
   {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
@@ -80,6 +79,7 @@
     {{- if $config.appProtocol }}
     appProtocol: {{ $config.appProtocol }}
     {{- end }}
+  {{- end }}
   {{- end }}
   {{- end }}
   {{- end }}
