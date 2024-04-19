@@ -38,6 +38,12 @@ deployment:
   ## Override the liveness/readiness scheme. Useful for getting ping to
   ## respond on websecure entryPoint.
   # healthchecksScheme: HTTPS
+  ## Override the readiness path.
+  ## Default: /ping
+  # readinessPath: /ping
+  # Override the liveness path.
+  # Default: /ping
+  # livenessPath: /ping
   # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
   # -- Additional deployment labels (e.g. for filtering deployment by custom labels)

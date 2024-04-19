@@ -66,12 +66,14 @@
         {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
         {{- $healthchecksHost := (default (.Values.ports.traefik).hostIP .Values.deployment.healthchecksHost) }}
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
+        {{- $readinessPath := (default "/ping" .Values.deployment.readinessPath) }}
+        {{- $livenessPath := (default "/ping" .Values.deployment.livenessPath) }}
         readinessProbe:
           httpGet:
             {{- with $healthchecksHost }}
             host: {{ . }}
             {{- end }}
-            path: /ping
+            path: {{ $readinessPath }}
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.readinessProbe | nindent 10 }}
@@ -80,7 +82,7 @@
             {{- with $healthchecksHost }}
             host: {{ . }}
             {{- end }}
-            path: /ping
+            path: {{ $livenessPath }}
             port: {{ $healthchecksPort }}
             scheme: {{ $healthchecksScheme }}
           {{- toYaml .Values.livenessProbe | nindent 10 }}
