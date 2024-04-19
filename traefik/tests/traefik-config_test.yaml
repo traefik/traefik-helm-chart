@@ -318,6 +318,20 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping.entrypoint=websecure"
+  - it: should set custom probe paths
+    set:
+      additionalArguments:
+        - --ping
+      deployment:
+        readinessPath: /ready
+        livenessPath: /alive
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /alive
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /ready
   - it: should enable tls on websecure entrypoints by default
     asserts:
       - contains:
