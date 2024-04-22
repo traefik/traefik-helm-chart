@@ -422,6 +422,53 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.proxyProtocol.insecure"
+  - it: should have multiple transport configuration args when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          transport:
+            respondingTimeouts:
+              readTimeout: 60
+              writeTimeout: 0
+              idleTimeout: 180
+            lifeCycle:
+              requestAcceptGraceTimeout: 0
+              graceTimeOut: 10
+            keepAliveMaxRequests: 0
+            keepAliveMaxTime: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=60"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.respondingTimeouts.writeTimeout=0"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.respondingTimeouts.idleTimeout=180"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.lifeCycle.requestAcceptGraceTimeout=0"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.lifeCycle.graceTimeOut=10"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.keepAliveMaxRequests=0"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.keepAliveMaxTime=0"
+  - it: should have a single transport configuration arg when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          transport:
+            respondingTimeouts:
+              readTimeout: 42s
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=42s"
   - it: should be possible to configure access logs
     set:
       logs:

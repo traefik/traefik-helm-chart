@@ -553,6 +553,33 @@
           - "--entryPoints.{{ $entrypoint }}.proxyProtocol.insecure"
               {{- end }}
             {{- end }}
+            {{- with $config.transport }}
+              {{- with .respondingTimeouts }}
+                {{- if (toString .readTimeout) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.readTimeout={{ .readTimeout }}"
+                {{- end }}
+                {{- if (toString .writeTimeout) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.writeTimeout={{ .writeTimeout }}"
+                {{- end }}
+                {{- if (toString .idleTimeout) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.idleTimeout={{ .idleTimeout }}"
+                {{- end }}
+              {{- end }}
+              {{- with .lifeCycle }}
+                {{- if (toString .requestAcceptGraceTimeout) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.requestAcceptGraceTimeout={{ .requestAcceptGraceTimeout }}"
+                {{- end }}
+                {{- if (toString .graceTimeOut) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.graceTimeOut={{ .graceTimeOut }}"
+                {{- end }}
+              {{- end }}
+              {{- if (toString .keepAliveMaxRequests) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxRequests={{ .keepAliveMaxRequests }}"
+              {{- end }}
+              {{- if (toString .keepAliveMaxTime) }}
+          - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxTime={{ .keepAliveMaxTime }}"
+              {{- end }}
+            {{- end }}
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
