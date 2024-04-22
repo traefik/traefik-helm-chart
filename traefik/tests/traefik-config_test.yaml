@@ -236,19 +236,19 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls=true"
+          content: "--entryPoints.websecure.http.tls=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls.options=foo"
+          content: "--entryPoints.websecure.http.tls.options=foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls.certResolver=certResolverFoo"
+          content: "--entryPoints.websecure.http.tls.certResolver=certResolverFoo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls.domains[0].main=sub.domain.tld"
+          content: "--entryPoints.websecure.http.tls.domains[0].main=sub.domain.tld"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls.domains[0].sans=alt1.domain.tld,alt2.domain.tld"
+          content: "--entryPoints.websecure.http.tls.domains[0].sans=alt1.domain.tld,alt2.domain.tld"
 
   - it: should have additional volumeMounts
     set:
@@ -322,7 +322,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls=true"
+          content: "--entryPoints.websecure.http.tls=true"
   - it: should be possible to disable tls on websecure entrypoint
     set:
       ports:
@@ -332,7 +332,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.tls=true"
+          content: "--entryPoints.websecure.http.tls=true"
   - it: should allow to set namespace on providers by default, without rbac.namespaced
     set:
       rbac:
@@ -383,28 +383,28 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.7"
+          content: "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.7"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.8"
+          content: "--entryPoints.websecure.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.8"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.forwardedHeaders.insecure"
+          content: "--entryPoints.websecure.forwardedHeaders.insecure"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.proxyProtocol.insecure"
+          content: "--entryPoints.websecure.proxyProtocol.insecure"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.9"
+          content: "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,192.168.1.9"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.10"
+          content: "--entryPoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,192.168.1.10"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.forwardedHeaders.insecure"
+          content: "--entryPoints.web.forwardedHeaders.insecure"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.proxyProtocol.insecure"
+          content: "--entryPoints.web.proxyProtocol.insecure"
   - it: should have forwardedHeaders and proxyProtocol insecure configuration args when specified in values.yaml for port
     set:
       ports:
@@ -418,10 +418,10 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.forwardedHeaders.insecure"
+          content: "--entryPoints.websecure.forwardedHeaders.insecure"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.proxyProtocol.insecure"
+          content: "--entryPoints.websecure.proxyProtocol.insecure"
   - it: should be possible to configure access logs
     set:
       logs:
