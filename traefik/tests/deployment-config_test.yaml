@@ -193,10 +193,10 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.http.redirections.entryPoint.to=:443"
+          content: "--entryPoints.web.http.redirections.entryPoint.to=:443"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+          content: "--entryPoints.web.http.redirections.entryPoint.scheme=https"
   - it: should have http redirections enabled, when enabled with redirectTo and priority
     set:
       ports:
@@ -209,4 +209,4 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.http.redirections.entryPoint.priority=10"
+          content: "--entryPoints.web.http.redirections.entryPoint.priority=10"

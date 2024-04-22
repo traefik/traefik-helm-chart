@@ -22,7 +22,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.address=:8000/tcp"
+          content: "--entryPoints.web.address=:8000/tcp"
         template: deployment.yaml
   - it: should have port 8443 of pod published to 443 of service by default, and defined as entrypoint "websecure"
     asserts:
@@ -43,7 +43,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.address=:8443/tcp"
+          content: "--entryPoints.websecure.address=:8443/tcp"
         template: deployment.yaml
   - it: should have port 9000 of pod exposed for probes but NOT published to the service by default
     asserts:
@@ -63,7 +63,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.traefik.address=:9000/tcp"
+          content: "--entryPoints.traefik.address=:9000/tcp"
         template: deployment.yaml
   - it: should have a custom port when specified via values
     set:
@@ -90,7 +90,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.ssh.address=:22/tcp"
+          content: "--entryPoints.ssh.address=:22/tcp"
         template: deployment.yaml
   - it: should have a hostPort when specified via values
     set:
@@ -119,7 +119,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.ssh.address=:22/tcp"
+          content: "--entryPoints.ssh.address=:22/tcp"
         template: deployment.yaml
   - it: should have a UDP custom port when specified via values
     set:
@@ -148,7 +148,7 @@ tests:
         documentIndex: 0
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.udp.address=:51/udp"
+          content: "--entryPoints.udp.address=:51/udp"
         template: deployment.yaml
 
   - it: should set entrypoint to default when configured
@@ -162,13 +162,13 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.asDefault=true"
+          content: "--entryPoints.web.asDefault=true"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.asDefault=false"
+          content: "--entryPoints.websecure.asDefault=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.asDefault=true"
+          content: "--entryPoints.websecure.asDefault=true"
 
   - it: should set entrypoint host when hostIP is configured
     template: deployment.yaml
@@ -179,13 +179,13 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.address=127.0.0.1:8000/tcp"
+          content: "--entryPoints.web.address=127.0.0.1:8000/tcp"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.address=:8443/tcp"
+          content: "--entryPoints.websecure.address=:8443/tcp"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.traefik.address=:9000/tcp"
+          content: "--entryPoints.traefik.address=:9000/tcp"
 
   - it: should set probes host when hostIP is configured
     template: deployment.yaml
@@ -196,7 +196,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.traefik.address=localhost:9000/tcp"
+          content: "--entryPoints.traefik.address=localhost:9000/tcp"
       - equal:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.host
           value: localhost
@@ -230,7 +230,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.ssh.address=:2222/tcp"
+          content: "--entryPoints.ssh.address=:2222/tcp"
         template: deployment.yaml
   - it: should be possible to use same custom containerPort and keep default exposedPort
     set:
@@ -258,7 +258,7 @@ tests:
         template: service.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.address=:666/tcp"
+          content: "--entryPoints.web.address=:666/tcp"
         template: deployment.yaml
   - it: should be possible to disable traefik & metrics port
     set:
@@ -357,4 +357,3 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot create ssh port on Service without .port or .exposedPort"
-

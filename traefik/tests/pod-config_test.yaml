@@ -366,10 +366,10 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
+          content: "--entryPoints.websecure.http3"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=443"
+          content: "--entryPoints.websecure.http3.advertisedPort=443"
   - it: should be possible to enable http3 enabled without a custom advertisedPort
     set:
       ports:
@@ -379,19 +379,19 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
+          content: "--entryPoints.websecure.http3"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=443"
+          content: "--entryPoints.websecure.http3.advertisedPort=443"
 
   - it: should not have http3 config flag by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3"
+          content: "--entryPoints.websecure.http3"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http3.advertisedPort=8443"
+          content: "--entryPoints.websecure.http3.advertisedPort=8443"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:
@@ -402,7 +402,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.websecure.http.middlewares=auth@file,strip@kubernetes-crd"
+          content: "--entryPoints.websecure.http.middlewares=auth@file,strip@kubernetes-crd"
   - it: should apply middleware on entrypoint
     set:
       ports:
@@ -412,7 +412,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.http.middlewares=auth@file"
+          content: "--entryPoints.web.http.middlewares=auth@file"
   - it: should not complain when there are no middlewares on entrypoint
     set:
       ports:
@@ -421,7 +421,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entrypoints.web.http.middlewares="
+          content: "--entryPoints.web.http.middlewares="
   - it: should fail when user want to use hostnetwork with hostport != containerport
     set:
       hostNetwork: true

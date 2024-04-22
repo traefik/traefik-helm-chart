@@ -12,17 +12,17 @@ tests:
           value:
             - --global.checknewversion
             - --global.sendanonymoususage
-            - --entrypoints.metrics.address=:9100/tcp
-            - --entrypoints.traefik.address=:9000/tcp
-            - --entrypoints.web.address=:8000/tcp
-            - --entrypoints.websecure.address=:8443/tcp
+            - --entryPoints.metrics.address=:9100/tcp
+            - --entryPoints.traefik.address=:9000/tcp
+            - --entryPoints.web.address=:8000/tcp
+            - --entryPoints.websecure.address=:8443/tcp
             - --api.dashboard=true
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
             - --providers.kubernetescrd
             - --providers.kubernetesingress
-            - --entrypoints.websecure.http.tls=true
+            - --entryPoints.websecure.http.tls=true
             - --log.level=INFO
 
   - it: "should support to set prometheus: null"
