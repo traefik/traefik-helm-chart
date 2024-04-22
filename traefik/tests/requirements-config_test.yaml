@@ -9,4 +9,9 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3"
-
+  - it: should pass when trying to use this Chart with Traefik Proxy v3 experimental
+    set:
+      image:
+        tag: experimental-v3.0
+    asserts:
+      - notFailedTemplate: {}
