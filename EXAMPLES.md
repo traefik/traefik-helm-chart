@@ -610,3 +610,15 @@ spec:
     name: release-name-traefik
   maxReplicas: 3
 ```
+
+# Use latest build of Traefik v3 from master
+
+An experimental build of Traefik Proxy is available on a specific repository.
+
+It can be used with those _values_:
+
+```yaml
+image:
+  repository: traefik/traefik
+  tag: experimental-v3.0
+```

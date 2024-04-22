@@ -12,6 +12,7 @@ tests:
   - it: should pass when trying to use this Chart with Traefik Proxy v3 experimental
     set:
       image:
+        repository: traefik/traefik
         tag: experimental-v3.0
     asserts:
       - notFailedTemplate: {}
