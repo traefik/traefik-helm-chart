@@ -43,17 +43,20 @@ tests:
           opentelemetry:
             enabled: true
             address: "address"
-            explicitboundaries: "explicitboundaries"
-            grpc: "grpc"
-            insecure: "insecure"
+            explicitBoundaries: "0.1,0.3,1.2,5.0"
+            grpc: true
+            headers:
+              foo: bar
+              foo2: bar2
+            insecure: true
             path: "path"
-            pushinterval: "pushinterval"
+            pushInterval: "2m"
             tls:
               ca: "ca"
               cert: "cert"
-              insecureskipverify: "insecureskipverify"
+              insecureSkipVerify: true
               key: "key"
-            test: "test"
+            test: "dontexist"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -63,16 +66,22 @@ tests:
           content: "--hub.metrics.opentelemetry.address=address"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.metrics.opentelemetry.explicitboundaries=explicitboundaries"
+          content: "--hub.metrics.opentelemetry.explicitBoundaries=0.1,0.3,1.2,5.0"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.metrics.opentelemetry.grpc=grpc"
+          content: "--hub.metrics.opentelemetry.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.headers.foo=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.metrics.opentelemetry.headers.foo2=bar2"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.metrics.opentelemetry.path=path"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.metrics.opentelemetry.pushinterval=pushinterval"
+          content: "--hub.metrics.opentelemetry.pushInterval=2m"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.metrics.opentelemetry.tls.cert=cert"
@@ -81,7 +90,7 @@ tests:
           content: "--hub.metrics.opentelemetry.tls.ca=ca"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.metrics.opentelemetry.tls.insecureskipverify=insecureskipverify"
+          content: "--hub.metrics.opentelemetry.tls.insecureSkipVerify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.metrics.opentelemetry.tls.key=key"
@@ -101,37 +110,50 @@ tests:
       hub:
         ratelimit:
           redis:
-            cluster: "cluster"
+            cluster: true
             database: "database"
-            endpoints: "endpoints"
-            password: "password"
+            endpoints: "localhost:7000"
+            username: "user"
+            password: "pass"
             sentinel:
-              masterset: "masterset"
-              password: "password"
-              username: "username"
-            timeout: "timeout"
+              masterset: "master"
+              username: "usern"
+              password: "passw"
+            timeout: "30s"
             tls:
               ca: "ca"
               cert: "cert"
-              insecureskipverify: "insecureskipverify"
+              insecureSkipVerify: true
               key: "key"
             test: "test"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.cluster=cluster"
+          content: "--hub.ratelimit.redis.cluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.ratelimit.redis.database=database"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.endpoints=endpoints"
+          content: "--hub.ratelimit.redis.endpoints=localhost:7000"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.password=password"
+          content: "--hub.ratelimit.redis.username=user"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.timeout=timeout"
+          content: "--hub.ratelimit.redis.password=pass"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.sentinel.masterset=master"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.sentinel.username=usern"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.sentinel.password=passw"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.ratelimit.redis.timeout=30s"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.ratelimit.redis.tls.ca=ca"
@@ -140,7 +162,7 @@ tests:
           content: "--hub.ratelimit.redis.tls.cert=cert"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.tls.insecureskipverify=insecureskipverify"
+          content: "--hub.ratelimit.redis.tls.insecureSkipVerify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.ratelimit.redis.tls.key=key"
