@@ -648,15 +648,28 @@ ports:
     #   (Optional)
     #   priority: 10
     #
-    # Trust forwarded  headers information (X-Forwarded-*).
+    # -- Trust forwarded headers information (X-Forwarded-*).
     # forwardedHeaders:
     #   trustedIPs: []
     #   insecure: false
     #
-    # Enable the Proxy Protocol header parsing for the entry point
+    # -- Enable the Proxy Protocol header parsing for the entry point
     # proxyProtocol:
     #   trustedIPs: []
     #   insecure: false
+    #
+    # -- Set transport settings for the entrypoint; see also
+    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
+    # transport:
+    #   respondingTimeouts:
+    #     readTimeout: 60
+    #     writeTimeout: 0
+    #     idleTimeout: 180
+    #   lifeCycle:
+    #     requestAcceptGraceTimeout: 0
+    #     graceTimeOut: 10
+    #   keepAliveMaxRequests: 0
+    #   keepAliveMaxTime: 0
   websecure:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -684,15 +697,28 @@ ports:
       enabled: false
     # advertisedPort: 4443
     #
-    ## -- Trust forwarded  headers information (X-Forwarded-*).
+    # -- Trust forwarded headers information (X-Forwarded-*).
     # forwardedHeaders:
     #   trustedIPs: []
     #   insecure: false
     #
-    ## -- Enable the Proxy Protocol header parsing for the entry point
+    # -- Enable the Proxy Protocol header parsing for the entry point
     # proxyProtocol:
     #   trustedIPs: []
     #   insecure: false
+    #
+    # -- Set transport settings for the entrypoint; see also
+    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
+    # transport:
+    #   respondingTimeouts:
+    #     readTimeout: 60
+    #     writeTimeout: 0
+    #     idleTimeout: 180
+    #   lifeCycle:
+    #     requestAcceptGraceTimeout: 0
+    #     graceTimeOut: 10
+    #   keepAliveMaxRequests: 0
+    #   keepAliveMaxTime: 0
     #
     ## Set TLS at the entrypoint
     ## https://doc.traefik.io/traefik/routing/entrypoints/#tls
