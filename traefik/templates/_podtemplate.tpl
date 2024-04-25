@@ -642,68 +642,69 @@
           - {{ . | quote }}
           {{- end }}
           {{- end }}
-          {{- if .Values.hub.enabled -}}
-           {{ with .Values.hub.token }}
+          {{- with .Values.hub }}
+           {{- if .enabled -}}
+            {{ with .token }}
           - "--hub.token={{ . }}"
+            {{- end -}}
+            {{- with .admission.listenaddr }}
+          - "--hub.admission.listenaddr={{ . }}"
+            {{- end }}
+            {{- with .admission.secretname }}
+          - "--hub.admission.secretname={{ . }}"
+            {{- end }}
+           {{- end }}
+           {{ with .apimanagement }}
+          - "--hub.apimanagement={{ . }}"
            {{- end -}}
-           {{- range $field, $value := .Values.hub.admission }}
-            {{- if has $field (list "listenaddr" "secretname") -}}
-             {{ with $value }}
-          - "--hub.admission.{{ $field }}={{  $value }}"
+           {{ if .metrics.opentelemetry.enabled }}
+          - "--hub.metrics.opentelemetry"
+            {{- range $field, $value := .metrics.opentelemetry }}
+             {{- if has $field (list "address" "explicitBoundaries" "grpc" "insecure" "path" "pushInterval") -}}
+              {{ with $value }}
+          - "--hub.metrics.opentelemetry.{{ $field }}={{ $value }}"
+              {{- end -}}
+             {{- end }}
+            {{- end }}
+            {{- range $name, $value := .metrics.opentelemetry.headers }}
+          - "--hub.metrics.opentelemetry.headers.{{ $name }}={{ $value }}"
+            {{- end }}
+            {{- range $field, $value := .metrics.opentelemetry.tls }}
+             {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
+              {{ with $value }}
+          - "--hub.metrics.opentelemetry.tls.{{ $field }}={{ $value }}"
+              {{- end }}
              {{- end }}
             {{- end }}
            {{- end }}
-          {{- end }}
-          {{ with .Values.hub.apimanagement }}
-          - "--hub.apimanagement={{ . }}"
-          {{- end -}}
-          {{ if .Values.hub.metrics.opentelemetry.enabled }}
-          - "--hub.metrics.opentelemetry"
-           {{- range $field, $value := .Values.hub.metrics.opentelemetry }}
-            {{- if has $field (list "address" "explicitBoundaries" "grpc" "insecure" "path" "pushInterval") -}}
+           {{ with .platformurl }}
+          - "--hub.platformurl={{ . }}"
+           {{- end -}}
+           {{- range $field, $value := .ratelimit.redis }}
+            {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
              {{ with $value }}
-          - "--hub.metrics.opentelemetry.{{ $field }}={{ $value }}"
-             {{- end -}}
+          - "--hub.ratelimit.redis.{{ $field }}={{ $value }}"
+             {{- end }}
             {{- end }}
            {{- end }}
-           {{- range $name, $value := .Values.hub.metrics.opentelemetry.headers }}
-          - "--hub.metrics.opentelemetry.headers.{{ $name }}={{ $value }}"
+           {{- range $field, $value := .ratelimit.redis.sentinel }}
+            {{- if has $field (list "masterset" "password" "username") -}}
+             {{ with $value }}
+          - "--hub.ratelimit.redis.sentinel.{{ $field }}={{ $value }}"
+             {{- end }}
+            {{- end }}
            {{- end }}
-           {{- range $field, $value := .Values.hub.metrics.opentelemetry.tls }}
+           {{- range $field, $value := .ratelimit.redis.tls }}
             {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
              {{ with $value }}
-          - "--hub.metrics.opentelemetry.tls.{{ $field }}={{ $value }}"
+          - "--hub.ratelimit.redis.tls.{{ $field }}={{ $value }}"
              {{- end }}
             {{- end }}
            {{- end }}
-          {{- end }}
-          {{ with .Values.hub.platformurl }}
-          - "--hub.platformurl={{ . }}"
-          {{- end -}}
-          {{- range $field, $value := .Values.hub.ratelimit.redis }}
-           {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
-            {{ with $value }}
-          - "--hub.ratelimit.redis.{{ $field }}={{ $value }}"
-            {{- end }}
-           {{- end }}
-          {{- end }}
-          {{- range $field, $value := .Values.hub.ratelimit.redis.sentinel }}
-           {{- if has $field (list "masterset" "password" "username") -}}
-            {{ with $value }}
-          - "--hub.ratelimit.redis.sentinel.{{ $field }}={{ $value }}"
-            {{- end }}
-           {{- end }}
-          {{- end }}
-          {{- range $field, $value := .Values.hub.ratelimit.redis.tls }}
-           {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
-            {{ with $value }}
-          - "--hub.ratelimit.redis.tls.{{ $field }}={{ $value }}"
-            {{- end }}
-           {{- end }}
-          {{- end }}
-          {{ with .Values.hub.sendlogs }}
+           {{- with .sendlogs }}
           - "--hub.sendlogs={{ . }}"
-          {{- end -}}
+           {{- end }}
+          {{- end }}
         {{- with .Values.env }}
         env:
           {{- if ($.Values.resources.limits).cpu }}
