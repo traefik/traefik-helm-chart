@@ -1,4 +1,4 @@
-suite: Hub adminission controller configuration
+suite: Traefik Hub admission controller configuration
 templates:
   - hub-admission-controller.yaml
 set:
