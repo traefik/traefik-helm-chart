@@ -1010,21 +1010,22 @@ extraObjects: []
 ## -- This will override the default app.kubernetes.io/instance label for all Objects.
 # instanceLabelOverride: traefik
 
-## Hub configuration
-# -- https://doc.traefik.io/traefik-hub/
+# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
-  # -- Set to true in order to enable hub API Gateway.
+  # -- Set to true in order to enable Traefik Hub support.
   enabled: false
+  # The license token to use with this Traefik Hub instance. Default: "".
+  token: ""
   admission:
     # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
     listenaddr:
     # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
     secretname:
-  # -- Enable API management mode. Default: "false"
+  # -- Set to true in order to enable API Management.
   apimanagement:
   metrics:
     opentelemetry:
-      # -- Set to true to enable Hub OpenTelemetry metrics exporter.
+      # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
       enabled: false
       # -- Address (host:port) of the collector endpoint. Default: "localhost:4318".
       address:
@@ -1081,5 +1082,3 @@ hub:
         insecureSkipVerify:
   # Enable export of errors logs to the platform. Default: true.
   sendlogs:
-  # The license token to use with this Traefik Hub instance. Default: "".
-  token: ""
