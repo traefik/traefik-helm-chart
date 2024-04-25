@@ -5,10 +5,10 @@
   {{- end }}
 {{- end }}
 
-{{- if and .Values.hub.enabled (ne "traefik-hub" .Values.image.repository) }}
-  {{- fail "ERROR: In order to use hub, please use traefik-hub image" -}}
+{{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
+  {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
 
 {{- if and .Values.hub.enabled (empty .Values.hub.token) }}
-  {{- fail "ERROR: In order to use hub, please provide ``hub.token`" -}}
+  {{- fail "ERROR: `hub.token` is required when enabling Traefik Hub" -}}
 {{- end }}

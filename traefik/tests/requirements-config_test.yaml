@@ -22,23 +22,23 @@ tests:
         enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: In order to use hub, please use traefik-hub image"
+          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
   - it: should fail when trying to use this Chart with Traefik API gateway v3, Hub enabled but without a token
     set:
       image:
-        registry: europe-west9-docker.pkg.dev/traefiklabs/traefik-hub
-        repository: traefik-hub
+        registry: ghcr.io
+        repository: traefik/traefik-hub
         tag: latest-v3.0
       hub:
         enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: In order to use hub, please provide ``hub.token`"
+          errorMessage: "ERROR: `hub.token` is required when enabling Traefik Hub"
   - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
     set:
       image:
-        registry: europe-west9-docker.pkg.dev/traefiklabs/traefik-hub
-        repository: traefik-hub
+        registry: ghcr.io
+        repository: traefik/traefik-hub
         tag: latest-v3.0
       hub:
         enabled: true
