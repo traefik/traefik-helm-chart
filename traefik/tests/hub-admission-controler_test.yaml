@@ -3,12 +3,12 @@ templates:
   - hub-admission-controller.yaml
 set:
   hub:
-    enabled: true
+    token: xxx
 tests:
   - it: should not deploy anything when hub is not enabled
     set:
       hub:
-        enabled: false
+        token: null
     asserts:
       - hasDocuments:
           count: 0

@@ -8,7 +8,3 @@
 {{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
-
-{{- if and .Values.hub.enabled (empty .Values.hub.token) }}
-  {{- fail "ERROR: `hub.token` is required when enabling Traefik Hub" -}}
-{{- end }}

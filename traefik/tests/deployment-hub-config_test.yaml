@@ -3,14 +3,13 @@ templates:
   - deployment.yaml
 set:
   hub:
-    enabled: true
-    token: "token"
+    token: "xxx"
 tests:
   - it: should contain the hub token
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.token=token"
+          content: "--hub.token=xxx"
   - it: should be possible to set admission parameters (and ignore extra)
     set:
       hub:
@@ -28,6 +27,11 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.admission.test=test"
+  - it: api management should not be enabled by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement=true"
   - it: should be possible to enable api management
     set:
       hub:

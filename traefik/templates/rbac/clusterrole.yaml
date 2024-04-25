@@ -117,7 +117,7 @@ rules:
 {{- end -}}
 {{- end -}}
 {{- end -}}
-{{- if .Values.hub.enabled }}
+{{- if .Values.hub.token }}
   - apiGroups:
       - hub.traefik.io
     resources:

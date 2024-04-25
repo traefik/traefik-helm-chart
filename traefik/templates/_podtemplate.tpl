@@ -643,7 +643,6 @@
           {{- end }}
           {{- end }}
           {{- with .Values.hub }}
-           {{- if .enabled -}}
             {{ with .token }}
           - "--hub.token={{ . }}"
             {{- end -}}
@@ -703,7 +702,6 @@
             {{- with .sendlogs }}
           - "--hub.sendlogs={{ . }}"
             {{- end }}
-           {{- end }}
           {{- end }}
         {{- with .Values.env }}
         env:

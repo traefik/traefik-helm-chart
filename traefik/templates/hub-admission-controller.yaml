@@ -1,4 +1,4 @@
-{{- if .Values.hub.enabled -}}
+{{- if .Values.hub.token -}}
 {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
 ---
 apiVersion: v1

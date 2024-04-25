@@ -1012,9 +1012,7 @@ extraObjects: []
 
 # -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
-  # -- Set to true in order to enable Traefik Hub support.
-  enabled: false
-  # The license token to use with this Traefik Hub instance. Default: "".
+  # Set a license token to enable Traefik Hub support. Default: "".
   token: ""
   admission:
     # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
