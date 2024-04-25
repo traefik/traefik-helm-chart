@@ -119,26 +119,15 @@ rules:
 {{- end -}}
 {{- if .Values.hub.enabled }}
   - apiGroups:
-      - networking.k8s.io
-      - hub.traefik.io
-    resources:
-      - ingressclasses
-    verbs:
-      - list
-      - watch
-      - create
-  - apiGroups:
       - hub.traefik.io
     resources:
       - accesscontrolpolicies
-      - edgeingresses
-      - apis
-      - apiversions
       - apiaccesses
-      - apicollections
-      - apigateways
       - apiportals
       - apiratelimits
+      - apis
+      - apiversions
+      - edgeingresses
     verbs:
       - list
       - watch

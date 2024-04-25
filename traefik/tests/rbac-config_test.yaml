@@ -785,30 +785,15 @@ tests:
           path: rules
           content:
             apiGroups:
-              - networking.k8s.io
-              - hub.traefik.io
-            resources:
-              - ingressclasses
-            verbs:
-              - list
-              - watch
-              - create
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
               - hub.traefik.io
             resources:
               - accesscontrolpolicies
-              - edgeingresses
-              - apis
-              - apiversions
               - apiaccesses
-              - apicollections
-              - apigateways
               - apiportals
               - apiratelimits
+              - apis
+              - apiversions
+              - edgeingresses
             verbs:
               - list
               - watch
