@@ -555,28 +555,28 @@
             {{- end }}
             {{- with $config.transport }}
               {{- with .respondingTimeouts }}
-                {{- if (toString .readTimeout) }}
+                {{- if and (ne .readTimeout nil) (toString .readTimeout) }}
           - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.readTimeout={{ .readTimeout }}"
                 {{- end }}
-                {{- if (toString .writeTimeout) }}
+                {{- if and (ne .writeTimeout nil) (toString .writeTimeout) }}
           - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.writeTimeout={{ .writeTimeout }}"
                 {{- end }}
-                {{- if (toString .idleTimeout) }}
+                {{- if and (ne .idleTimeout nil) (toString .idleTimeout) }}
           - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.idleTimeout={{ .idleTimeout }}"
                 {{- end }}
               {{- end }}
               {{- with .lifeCycle }}
-                {{- if (toString .requestAcceptGraceTimeout) }}
+                {{- if and (ne .requestAcceptGraceTimeout nil) (toString .requestAcceptGraceTimeout) }}
           - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.requestAcceptGraceTimeout={{ .requestAcceptGraceTimeout }}"
                 {{- end }}
-                {{- if (toString .graceTimeOut) }}
+                {{- if and (ne .graceTimeOut nil) (toString .graceTimeOut) }}
           - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.graceTimeOut={{ .graceTimeOut }}"
                 {{- end }}
               {{- end }}
-              {{- if (toString .keepAliveMaxRequests) }}
+              {{- if and (ne .keepAliveMaxRequests nil) (toString .keepAliveMaxRequests) }}
           - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxRequests={{ .keepAliveMaxRequests }}"
               {{- end }}
-              {{- if (toString .keepAliveMaxTime) }}
+              {{- if and (ne .keepAliveMaxTime nil) (toString .keepAliveMaxTime) }}
           - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxTime={{ .keepAliveMaxTime }}"
               {{- end }}
             {{- end }}

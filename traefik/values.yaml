@@ -660,16 +660,16 @@ ports:
     #
     # -- Set transport settings for the entrypoint; see also
     # https://doc.traefik.io/traefik/routing/entrypoints/#transport
-    # transport:
-    #   respondingTimeouts:
-    #     readTimeout: 60
-    #     writeTimeout: 0
-    #     idleTimeout: 180
-    #   lifeCycle:
-    #     requestAcceptGraceTimeout: 0
-    #     graceTimeOut: 10
-    #   keepAliveMaxRequests: 0
-    #   keepAliveMaxTime: 0
+    transport:
+      respondingTimeouts:
+        readTimeout:
+        writeTimeout:
+        idleTimeout:
+      lifeCycle:
+        requestAcceptGraceTimeout:
+        graceTimeOut:
+      keepAliveMaxRequests:
+      keepAliveMaxTime:
   websecure:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -709,16 +709,16 @@ ports:
     #
     # -- Set transport settings for the entrypoint; see also
     # https://doc.traefik.io/traefik/routing/entrypoints/#transport
-    # transport:
-    #   respondingTimeouts:
-    #     readTimeout: 60
-    #     writeTimeout: 0
-    #     idleTimeout: 180
-    #   lifeCycle:
-    #     requestAcceptGraceTimeout: 0
-    #     graceTimeOut: 10
-    #   keepAliveMaxRequests: 0
-    #   keepAliveMaxTime: 0
+    transport:
+      respondingTimeouts:
+        readTimeout:
+        writeTimeout:
+        idleTimeout:
+      lifeCycle:
+        requestAcceptGraceTimeout:
+        graceTimeOut:
+      keepAliveMaxRequests:
+      keepAliveMaxTime:
     #
     ## Set TLS at the entrypoint
     ## https://doc.traefik.io/traefik/routing/entrypoints/#tls
