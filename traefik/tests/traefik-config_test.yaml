@@ -279,11 +279,17 @@ tests:
           path: spec.template.spec.containers[0].livenessProbe.httpGet.port
           value: 9001
       - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: "/ping"
+      - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.port
           value: 9001
       - equal:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.scheme
           value: "HTTP"
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: "/ping"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping"
@@ -318,6 +324,20 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping.entrypoint=websecure"
+  - it: should set custom probe paths
+    set:
+      additionalArguments:
+        - --ping
+      deployment:
+        readinessPath: /ready
+        livenessPath: /alive
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.path
+          value: /alive
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.path
+          value: /ready
   - it: should enable tls on websecure entrypoints by default
     asserts:
       - contains:
