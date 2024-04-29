@@ -478,6 +478,8 @@ tests:
           filePath: "/data/log"
           bufferingSize: 100
           addInternals: true
+          filters:
+            statuscodes: "200,300-302"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -494,6 +496,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.addinternals"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.filters.statuscodes=200,300-302"
   - it: should set custom startupProbe
     set:
       startupProbe:

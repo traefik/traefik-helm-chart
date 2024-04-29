@@ -605,7 +605,7 @@
            {{- end }}
            {{- with .access.filters }}
             {{- with .statuscodes }}
-          - "--accesslog.filters.statuscodes={{ .statuscodes }}"
+          - "--accesslog.filters.statuscodes={{ . }}"
             {{- end }}
             {{- if .retryattempts }}
           - "--accesslog.filters.retryattempts"
