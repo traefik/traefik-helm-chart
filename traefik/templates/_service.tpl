@@ -66,9 +66,7 @@
     {{- if $config.appProtocol }}
     appProtocol: {{ $config.appProtocol }}
     {{- end }}
-  {{- end }}
-  {{- if $config.http3 }}
-  {{- if $config.http3.enabled }}
+  {{- if ($config.http3).enabled }}
   {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
   - port: {{ $http3Port }}
     name: "{{ $name }}-http3"

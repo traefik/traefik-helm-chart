@@ -164,3 +164,29 @@ tests:
             protocol: TCP
             targetPort: hidden
         documentIndex: 1
+  - it: should not expose http3 ports for ports that aren't exposed
+    set:
+      ports:
+        websecure:
+          expose:
+            default: true
+            internal: false
+          http3:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure-http3
+            port: 443
+            protocol: UDP
+            targetPort: websecure-http3
+        documentIndex: 0
+      - notContains:
+          path: spec.ports
+          content:
+            name: websecure-http3
+            port: 443
+            protocol: UDP
+            targetPort: websecure-http3
+        documentIndex: 1
