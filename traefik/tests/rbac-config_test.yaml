@@ -150,11 +150,11 @@ tests:
                 - ingressrouteudps
                 - middlewares
                 - middlewaretcps
+                - serverstransports
+                - serverstransporttcps
                 - tlsoptions
                 - tlsstores
                 - traefikservices
-                - serverstransports
-                - serverstransporttcps
               verbs:
                 - get
                 - list
@@ -399,11 +399,11 @@ tests:
               - ingressrouteudps
               - middlewares
               - middlewaretcps
+              - serverstransports
+              - serverstransporttcps
               - tlsoptions
               - tlsstores
               - traefikservices
-              - serverstransports
-              - serverstransporttcps
             verbs:
               - get
               - list
@@ -425,11 +425,11 @@ tests:
               - ingressrouteudps
               - middlewares
               - middlewaretcps
+              - serverstransports
+              - serverstransporttcps
               - tlsoptions
               - tlsstores
               - traefikservices
-              - serverstransports
-              - serverstransporttcps
             verbs:
               - get
               - list
@@ -687,6 +687,18 @@ tests:
               - get
               - list
               - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
 
   - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
     set:
@@ -763,3 +775,143 @@ tests:
               - get
               - list
               - watch
+  - it: should contain additional RBACS for hub
+    set:
+      hub:
+        token: xxx
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - accesscontrolpolicies
+              - apiaccesses
+              - apiportals
+              - apiratelimits
+              - apis
+              - apiversions
+              - edgeingresses
+            verbs:
+              - list
+              - watch
+              - create
+              - update
+              - patch
+              - delete
+              - get
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+              - pods
+            verbs:
+              - list
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+              - namespaces
+              - pods
+              - nodes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - events
+            verbs:
+              - create
+              - patch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - coordination.k8s.io
+            resources:
+              - leases
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - patch
+              - delete
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - update
+              - create
+              - delete
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - apps
+            resources:
+              - deployments
+              - statefulsets
+              - replicasets
+              - daemonsets
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - patch
+              - delete

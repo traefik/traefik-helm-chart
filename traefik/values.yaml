@@ -1009,3 +1009,75 @@ extraObjects: []
 #
 ## -- This will override the default app.kubernetes.io/instance label for all Objects.
 # instanceLabelOverride: traefik
+
+# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+hub:
+  # Name of Secret with key 'token' set to a valid license token.
+  # It enables API Gateway.
+  token:
+  admission:
+    # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
+    listenAddr:
+    # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+    secretName:
+  # -- Set to true in order to enable API Management. Requires a valid license token.
+  apimanagement:
+  metrics:
+    opentelemetry:
+      # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
+      enabled:
+      # -- Address (host:port) of the collector endpoint. Default: "localhost:4318".
+      address:
+      # -- Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 "
+      explicitBoundaries:
+      # -- Enables gRPC for the OpenTelemetry collector. Default: false.
+      grpc:
+      # -- Additional headers to send to the collector. Default: {}.
+      headers:
+      # -- Enable insecure schemes on metric endpoints. Default: false.
+      insecure:
+      # -- Collector endpoint path. Default: "".
+      path:
+      # -- Interval between metric exports. Default: "10s".
+      pushInterval:
+      tls:
+        # -- Path to the certificate authority used for the secured connection.
+        ca:
+        # -- Path to the public certificate used for the secure connection.
+        cert:
+        # -- Path to the private key used for the secure connection.
+        key:
+        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
+        insecureSkipVerify:
+  ratelimit:
+    redis:
+      # -- Enable Redis Cluster. Default: true.
+      cluster:
+      # -- Database used to store information. Default: "0".
+      database:
+      # -- Endpoints of the Redis instances to connect to. Default: "".
+      endpoints:
+      # -- The username to use when connecting to Redis endpoints. Default: "".
+      username:
+      # -- The password to use when connecting to Redis endpoints. Default: "".
+      password:
+      sentinel:
+        # -- Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "".
+        masterset:
+        # -- Username to use for sentinel authentication (can be different from endpoint username). Default: "".
+        username:
+        # -- Password to use for sentinel authentication (can be different from endpoint password). Default: "".
+        password:
+      # -- Timeout applied on connection with redis. Default: "0s".
+      timeout:
+      tls:
+        # -- Path to the certificate authority used for the secured connection.
+        ca:
+        # -- Path to the public certificate used for the secure connection.
+        cert:
+        # -- Path to the private key used for the secure connection.
+        key:
+        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
+        insecureSkipVerify:
+  # Enable export of errors logs to the platform. Default: true.
+  sendlogs:

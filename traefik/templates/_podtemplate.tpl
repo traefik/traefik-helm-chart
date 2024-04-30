@@ -97,7 +97,7 @@
         ports:
         {{- $hostNetwork := .Values.hostNetwork }}
         {{- range $name, $config := .Values.ports }}
-        {{- if $config }}
+         {{- if $config }}
           {{- if and $hostNetwork (and $config.hostPort $config.port) }}
             {{- if ne ($config.hostPort | int) ($config.port | int) }}
               {{- fail "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled" }}
@@ -112,15 +112,21 @@
           hostIP: {{ $config.hostIP }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol | quote }}
-        {{- if ($config.http3).enabled }}
+          {{- if ($config.http3).enabled }}
         - name: "{{ $name }}-http3"
           containerPort: {{ $config.port }}
-        {{- if $config.hostPort }}
+           {{- if $config.hostPort }}
           hostPort: {{ default $config.hostPort $config.http3.advertisedPort }}
-        {{- end }}
+           {{- end }}
           protocol: UDP
+          {{- end }}
+         {{- end }}
         {{- end }}
-        {{- end }}
+        {{- if .Values.hub.token }}
+         {{- $listenAddr := default ":9943" .Values.hub.admission.listenAddr }}
+        - name: admission
+          containerPort: {{ last (mustRegexSplit ":" $listenAddr 2) }}
+          protocol: TCP
         {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
@@ -333,7 +339,7 @@
             {{- end }}
            {{- end }}
            {{- with .grpc }}
-            {{ if .enabled }}
+            {{- if .enabled }}
           - "--metrics.otlp.grpc=true"
              {{- with .endpoint }}
           - "--metrics.otlp.grpc.endpoint={{ . }}"
@@ -396,7 +402,7 @@
             {{- end }}
            {{- end }}
            {{- with .grpc }}
-            {{ if .enabled }}
+            {{- if .enabled }}
           - "--tracing.otlp.grpc=true"
              {{- with .endpoint }}
           - "--tracing.otlp.grpc.endpoint={{ . }}"
@@ -425,7 +431,6 @@
            {{- end }}
           {{- end }}
           {{- end }}
-
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
             {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
@@ -642,7 +647,69 @@
           - {{ . | quote }}
           {{- end }}
           {{- end }}
-        {{- with .Values.env }}
+          {{- with .Values.hub }}
+           {{- if .token }}
+          - "--hub.token=$(HUB_TOKEN)"
+            {{- if and (not .apimanagement) ($.Values.hub.admission.listenAddr) }}
+               {{- fail "ERROR: Cannot configure admission without hub.apimanagement" }}
+            {{- end }}
+            {{- if .apimanagement }}
+              {{- $listenAddr := default ":9943" $.Values.hub.admission.listenAddr }}
+          - "--hub.apimanagement"
+          - "--hub.admission.listenAddr={{ $listenAddr }}"
+              {{- with .admission.secretName }}
+          - "--hub.admission.secretName={{ . }}"
+              {{- end }}
+            {{- end -}}
+            {{- if .metrics.opentelemetry.enabled }}
+          - "--hub.metrics.opentelemetry"
+             {{- range $field, $value := .metrics.opentelemetry }}
+              {{- if has $field (list "address" "explicitBoundaries" "grpc" "insecure" "path" "pushInterval") -}}
+               {{- with $value }}
+          - "--hub.metrics.opentelemetry.{{ $field }}={{ $value }}"
+               {{- end -}}
+              {{- end }}
+             {{- end }}
+             {{- range $name, $value := .metrics.opentelemetry.headers }}
+          - "--hub.metrics.opentelemetry.headers.{{ $name }}={{ $value }}"
+             {{- end }}
+             {{- range $field, $value := .metrics.opentelemetry.tls }}
+              {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
+               {{- with $value }}
+          - "--hub.metrics.opentelemetry.tls.{{ $field }}={{ $value }}"
+               {{- end }}
+              {{- end }}
+             {{- end }}
+            {{- end }}
+            {{- with .platformUrl }}
+          - "--hub.platformUrl={{ . }}"
+            {{- end -}}
+            {{- range $field, $value := .ratelimit.redis }}
+             {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
+              {{- with $value }}
+          - "--hub.ratelimit.redis.{{ $field }}={{ $value }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
+            {{- range $field, $value := .ratelimit.redis.sentinel }}
+             {{- if has $field (list "masterset" "password" "username") -}}
+              {{- with $value }}
+          - "--hub.ratelimit.redis.sentinel.{{ $field }}={{ $value }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
+            {{- range $field, $value := .ratelimit.redis.tls }}
+             {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
+              {{- with $value }}
+          - "--hub.ratelimit.redis.tls.{{ $field }}={{ $value }}"
+              {{- end }}
+             {{- end }}
+            {{- end }}
+            {{- with .sendlogs }}
+          - "--hub.sendlogs={{ . }}"
+            {{- end }}
+          {{- end }}
+         {{- end }}
         env:
           {{- if ($.Values.resources.limits).cpu }}
           - name: GOMAXPROCS
@@ -656,6 +723,14 @@
               resourceFieldRef:
                 resource: limits.memory
           {{- end }}
+          {{- with .Values.hub.token }}
+          - name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: {{ . }}
+                key: token
+          {{- end }}
+        {{- with .Values.env }}
           {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.envFrom }}

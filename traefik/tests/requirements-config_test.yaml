@@ -16,3 +16,20 @@ tests:
         tag: experimental-v3.0
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
+  - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: latest-v3.0
+      hub:
+        token: "xxx"
+    asserts:
+      - notFailedTemplate: {}

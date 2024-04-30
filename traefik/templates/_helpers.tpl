@@ -126,6 +126,21 @@ Renders a complete tree, even values that contains template.
 {{- end -}}
 
 {{- define "imageVersion" -}}
-{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 }}
+{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" }}
 {{- end -}}
 
+{{/* Generate/load self-signed certificate for admission webhooks */}}
+{{- define "traefik-hub.webhook_cert" -}}
+{{- $cert := lookup "v1" "Secret" .Release.Namespace "hub-agent-cert" -}}
+{{- if $cert -}}
+{{/* reusing value of existing cert */}}
+Cert: {{ index $cert.data "tls.crt" }}
+Key: {{ index $cert.data "tls.key" }}
+{{- else -}}
+{{/* generate a new one */}}
+{{- $altNames := list ( printf "admission.%s.svc" .Release.Namespace ) -}}
+{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" .Release.Namespace ) (list) $altNames 3650 -}}
+Cert: {{ $cert.Cert | b64enc }}
+Key: {{ $cert.Key | b64enc }}
+{{- end -}}
+{{- end -}}

@@ -4,3 +4,7 @@
     {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
   {{- end }}
 {{- end }}
+
+{{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
+  {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
+{{- end }}
