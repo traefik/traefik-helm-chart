@@ -50,7 +50,7 @@
 {{- end }}
 
 {{- define "traefik.service-ports" }}
-  {{- range $name, $config := .ports }}
+ {{- range $name, $config := .ports }}
   {{- if (index (default dict $config.expose) $.serviceName) }}
   {{- $port := default $config.port $config.exposedPort }}
   {{- if empty $port }}
@@ -78,7 +78,7 @@
     {{- if $config.appProtocol }}
     appProtocol: {{ $config.appProtocol }}
     {{- end }}
+   {{- end }}
   {{- end }}
-  {{- end }}
-  {{- end }}
+ {{- end }}
 {{- end }}

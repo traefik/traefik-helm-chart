@@ -1012,19 +1012,20 @@ extraObjects: []
 
 # -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
-  # Set a license token to enable Traefik Hub support. Default: "".
-  token: ""
+  # Name of Secret with key 'token' set to a valid license token.
+  # It enables API Gateway.
+  token:
   admission:
     # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
-    listenaddr:
+    listenAddr:
     # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
-    secretname:
-  # -- Set to true in order to enable API Management.
+    secretName:
+  # -- Set to true in order to enable API Management. Requires a valid license token.
   apimanagement:
   metrics:
     opentelemetry:
       # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
-      enabled: false
+      enabled:
       # -- Address (host:port) of the collector endpoint. Default: "localhost:4318".
       address:
       # -- Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 "
@@ -1046,7 +1047,7 @@ hub:
         cert:
         # -- Path to the private key used for the secure connection.
         key:
-        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: "false".
+        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
         insecureSkipVerify:
   ratelimit:
     redis:
@@ -1076,7 +1077,7 @@ hub:
         cert:
         # -- Path to the private key used for the secure connection.
         key:
-        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: "false".
+        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
         insecureSkipVerify:
   # Enable export of errors logs to the platform. Default: true.
   sendlogs:

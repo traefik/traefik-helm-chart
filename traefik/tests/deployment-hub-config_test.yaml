@@ -5,25 +5,39 @@ set:
   hub:
     token: "xxx"
 tests:
-  - it: should contain the hub token
+  - it: should set minimal required parameters when enabling hub with only the token
     asserts:
       - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: xxx
+      - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.token=xxx"
+          content: "--hub.admission.listenAddr=:9943"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "admission"
+            containerPort: 9943
+            protocol: "TCP"
   - it: should be possible to set admission parameters (and ignore extra)
     set:
       hub:
         admission:
-          listenaddr: "addr"
-          secretname: "secret"
+          listenAddr: "10.0.0.1:7500"
+          secretName: "secret"
           test: "test"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.admission.listenaddr=addr"
+          content: "--hub.admission.listenAddr=10.0.0.1:7500"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.admission.secretname=secret"
+          content: "--hub.admission.secretName=secret"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.admission.test=test"
@@ -101,14 +115,14 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.metrics.opentelemetry.test=test"
-  - it: should be possible to specify platformurl
+  - it: should be possible to specify platformUrl
     set:
       hub:
-        platformurl: "platformurl"
+        platformUrl: "fooUrl"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.platformurl=platformurl"
+          content: "--hub.platformUrl=fooUrl"
   - it: should be possible to specify ratelimit parameters (and ignore extra)
     set:
       hub:
