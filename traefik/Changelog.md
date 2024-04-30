@@ -1,5 +1,12 @@
 # Change Log
 
+## 28.1.0-beta.1  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-04-30
+
+* feat: :rocket: add initial support for Traefik Hub Api Gateway
+* chore(release): 🚀 publish v28.1.0-beta.1
+
 ## 28.0.0  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-04-30

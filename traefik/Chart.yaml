@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 28.0.0
+version: 28.1.0-beta.1
 # renovate: image=traefik
 appVersion: v3.0.0
 kubeVersion: ">=1.22.0-0"
@@ -25,10 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "style: 🎨 consistent capitalization on `--entryPoints` CLI flag"
-    - "fix: 🐛 only expose http3 port on service when TCP variant is exposed"
-    - "fix: 🐛 logs filters on status codes"
-    - "feat: ✨ add support of `experimental-v3.0` unstable version"
-    - "feat: ability to override liveness and readiness probe paths"
-    - "feat(ports): add transport options"
-    - "chore(release): publish v28.0.0"
+    - "feat: :rocket: add initial support for traefik-hub api gateway"
+    - "chore(release): 🚀 v28.1.0-beta.1"
