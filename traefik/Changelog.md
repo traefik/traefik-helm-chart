@@ -1,5 +1,102 @@
 # Change Log
 
+## 28.0.0  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-04-30
+
+* style: 🎨 consistent capitalization on `--entryPoints` CLI flag
+* fix: 🐛 only expose http3 port on service when TCP variant is exposed
+* fix: 🐛 logs filters on status codes
+* feat: ✨ add support of `experimental-v3.0` unstable version
+* feat: ability to override liveness and readiness probe paths
+* feat(ports): add transport options
+* chore(release): publish v28.0.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c0d72d8..2bff10d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -38,6 +38,12 @@ deployment:
+   ## Override the liveness/readiness scheme. Useful for getting ping to
+   ## respond on websecure entryPoint.
+   # healthchecksScheme: HTTPS
++  ## Override the readiness path.
++  ## Default: /ping
++  # readinessPath: /ping
++  # Override the liveness path.
++  # Default: /ping
++  # livenessPath: /ping
+   # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
+   annotations: {}
+   # -- Additional deployment labels (e.g. for filtering deployment by custom labels)
+@@ -648,15 +654,28 @@ ports:
+     #   (Optional)
+     #   priority: 10
+     #
+-    # Trust forwarded  headers information (X-Forwarded-*).
++    # -- Trust forwarded headers information (X-Forwarded-*).
+     # forwardedHeaders:
+     #   trustedIPs: []
+     #   insecure: false
+     #
+-    # Enable the Proxy Protocol header parsing for the entry point
++    # -- Enable the Proxy Protocol header parsing for the entry point
+     # proxyProtocol:
+     #   trustedIPs: []
+     #   insecure: false
++    #
++    # -- Set transport settings for the entrypoint; see also
++    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
++    transport:
++      respondingTimeouts:
++        readTimeout:
++        writeTimeout:
++        idleTimeout:
++      lifeCycle:
++        requestAcceptGraceTimeout:
++        graceTimeOut:
++      keepAliveMaxRequests:
++      keepAliveMaxTime:
+   websecure:
+     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+@@ -684,16 +703,29 @@ ports:
+       enabled: false
+     # advertisedPort: 4443
+     #
+-    ## -- Trust forwarded  headers information (X-Forwarded-*).
++    # -- Trust forwarded headers information (X-Forwarded-*).
+     # forwardedHeaders:
+     #   trustedIPs: []
+     #   insecure: false
+     #
+-    ## -- Enable the Proxy Protocol header parsing for the entry point
++    # -- Enable the Proxy Protocol header parsing for the entry point
+     # proxyProtocol:
+     #   trustedIPs: []
+     #   insecure: false
+     #
++    # -- Set transport settings for the entrypoint; see also
++    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
++    transport:
++      respondingTimeouts:
++        readTimeout:
++        writeTimeout:
++        idleTimeout:
++      lifeCycle:
++        requestAcceptGraceTimeout:
++        graceTimeOut:
++      keepAliveMaxRequests:
++      keepAliveMaxTime:
++    #
+     ## Set TLS at the entrypoint
+     ## https://doc.traefik.io/traefik/routing/entrypoints/#tls
+     tls:
+```
+
 ## 28.0.0-rc1  ![AppVersion: v3.0.0-rc5](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0-rc5&color=success&logo=) ![Kubernetes: >=1.16.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.16.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-04-17
