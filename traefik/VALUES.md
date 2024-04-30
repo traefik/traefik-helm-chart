@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.0.0](https://img.shields.io/badge/Version-28.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
+![Version: 28.1.0-beta.1](https://img.shields.io/badge/Version-28.1.0--beta.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -59,6 +59,35 @@ Kubernetes: `>=1.22.0-0`
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
+| hub | object | `{"admission":{"listenAddr":null,"secretName":null},"apimanagement":null,"metrics":{"opentelemetry":{"address":null,"enabled":null,"explicitBoundaries":null,"grpc":null,"headers":null,"insecure":null,"path":null,"pushInterval":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}},"ratelimit":{"redis":{"cluster":null,"database":null,"endpoints":null,"password":null,"sentinel":{"masterset":null,"password":null,"username":null},"timeout":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null},"username":null}},"sendlogs":null,"token":null}` | Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/ |
+| hub.admission.listenAddr | string | `nil` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
+| hub.admission.secretName | string | `nil` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
+| hub.apimanagement | string | `nil` | Set to true in order to enable API Management. Requires a valid license token. |
+| hub.metrics.opentelemetry.address | string | `nil` | Address (host:port) of the collector endpoint. Default: "localhost:4318". |
+| hub.metrics.opentelemetry.enabled | string | `nil` | Set to true to enable OpenTelemetry metrics exporter of Traefik Hub. |
+| hub.metrics.opentelemetry.explicitBoundaries | string | `nil` | Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 " |
+| hub.metrics.opentelemetry.grpc | string | `nil` | Enables gRPC for the OpenTelemetry collector. Default: false. |
+| hub.metrics.opentelemetry.headers | string | `nil` | Additional headers to send to the collector. Default: {}. |
+| hub.metrics.opentelemetry.insecure | string | `nil` | Enable insecure schemes on metric endpoints. Default: false. |
+| hub.metrics.opentelemetry.path | string | `nil` | Collector endpoint path. Default: "". |
+| hub.metrics.opentelemetry.pushInterval | string | `nil` | Interval between metric exports. Default: "10s". |
+| hub.metrics.opentelemetry.tls.ca | string | `nil` | Path to the certificate authority used for the secured connection. |
+| hub.metrics.opentelemetry.tls.cert | string | `nil` | Path to the public certificate used for the secure connection. |
+| hub.metrics.opentelemetry.tls.insecureSkipVerify | string | `nil` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
+| hub.metrics.opentelemetry.tls.key | string | `nil` | Path to the private key used for the secure connection. |
+| hub.ratelimit.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
+| hub.ratelimit.redis.database | string | `nil` | Database used to store information. Default: "0". |
+| hub.ratelimit.redis.endpoints | string | `nil` | Endpoints of the Redis instances to connect to. Default: "". |
+| hub.ratelimit.redis.password | string | `nil` | The password to use when connecting to Redis endpoints. Default: "". |
+| hub.ratelimit.redis.sentinel.masterset | string | `nil` | Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "". |
+| hub.ratelimit.redis.sentinel.password | string | `nil` | Password to use for sentinel authentication (can be different from endpoint password). Default: "". |
+| hub.ratelimit.redis.sentinel.username | string | `nil` | Username to use for sentinel authentication (can be different from endpoint username). Default: "". |
+| hub.ratelimit.redis.timeout | string | `nil` | Timeout applied on connection with redis. Default: "0s". |
+| hub.ratelimit.redis.tls.ca | string | `nil` | Path to the certificate authority used for the secured connection. |
+| hub.ratelimit.redis.tls.cert | string | `nil` | Path to the public certificate used for the secure connection. |
+| hub.ratelimit.redis.tls.insecureSkipVerify | string | `nil` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
+| hub.ratelimit.redis.tls.key | string | `nil` | Path to the private key used for the secure connection. |
+| hub.ratelimit.redis.username | string | `nil` | The username to use when connecting to Redis endpoints. Default: "". |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
