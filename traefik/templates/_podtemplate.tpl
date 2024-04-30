@@ -649,14 +649,17 @@
           {{- end }}
           {{- with .Values.hub }}
            {{- if .token }}
-            {{- $listenAddr := default ":9943" $.Values.hub.admission.listenAddr }}
           - "--hub.token=$(HUB_TOKEN)"
-          - "--hub.admission.listenAddr={{ $listenAddr }}"
-            {{- with .admission.secretName }}
-          - "--hub.admission.secretName={{ . }}"
+            {{- if and (not .apimanagement) ($.Values.hub.admission.listenAddr) }}
+               {{- fail "ERROR: Cannot configure admission without hub.apimanagement" }}
             {{- end }}
-            {{- with .apimanagement }}
-          - "--hub.apimanagement={{ . }}"
+            {{- if .apimanagement }}
+              {{- $listenAddr := default ":9943" $.Values.hub.admission.listenAddr }}
+          - "--hub.apimanagement"
+          - "--hub.admission.listenAddr={{ $listenAddr }}"
+              {{- with .admission.secretName }}
+          - "--hub.admission.secretName={{ . }}"
+              {{- end }}
             {{- end -}}
             {{- if .metrics.opentelemetry.enabled }}
           - "--hub.metrics.opentelemetry"

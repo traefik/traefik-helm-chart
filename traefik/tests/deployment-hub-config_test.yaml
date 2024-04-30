@@ -5,7 +5,7 @@ set:
   hub:
     token: "xxx"
 tests:
-  - it: should set minimal required parameters when enabling hub with only the token
+  - it: should set minimal required parameters when enabling Traefik Hub API Gateway
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -17,6 +17,25 @@ tests:
                 name: xxx
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--hub.token=$(HUB_TOKEN)"
+  - it: should set minimal required parameters when enabling Traefik Hub API Management
+    set:
+      hub:
+        apimanagement: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: xxx
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement"
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: "--hub.admission.listenAddr=:9943"
       - contains:
           path: spec.template.spec.containers[0].ports
@@ -24,9 +43,19 @@ tests:
             name: "admission"
             containerPort: 9943
             protocol: "TCP"
+  - it: should fail when trying to set admission parameters without apimanagement
+    set:
+      hub:
+        admission:
+          listenAddr: "10.0.0.1:7500"
+          secretName: "secret"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot configure admission without hub.apimanagement"
   - it: should be possible to set admission parameters (and ignore extra)
     set:
       hub:
+        apimanagement: true
         admission:
           listenAddr: "10.0.0.1:7500"
           secretName: "secret"
@@ -45,15 +74,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.apimanagement=true"
-  - it: should be possible to enable api management
-    set:
-      hub:
-        apimanagement: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.apimanagement=true"
+          content: "--hub.apimanagement"
   - it: should be possible to enable and configure opentelemetry parameters (and ignore extra)
     set:
       hub:
