@@ -1015,13 +1015,15 @@ hub:
   # Name of Secret with key 'token' set to a valid license token.
   # It enables API Gateway.
   token:
-  admission:
-    # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
-    listenAddr:
-    # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
-    secretName:
-  # -- Set to true in order to enable API Management. Requires a valid license token.
   apimanagement:
+    # -- Set to true in order to enable API Management. Requires a valid license token.
+    enabled:
+    admission:
+      # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
+      listenAddr:
+      # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+      secretName:
+
   metrics:
     opentelemetry:
       # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
