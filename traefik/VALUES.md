@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.0.0-rc.1](https://img.shields.io/badge/Version-28.0.0--rc.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0-rc5](https://img.shields.io/badge/AppVersion-v3.0.0--rc5-informational?style=flat-square)
+![Version: 28.0.0](https://img.shields.io/badge/Version-28.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -138,6 +138,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.port | int | `8000` |  |
 | ports.web.protocol | string | `"TCP"` |  |
+| ports.web.transport | object | `{"keepAliveMaxRequests":null,"keepAliveMaxTime":null,"lifeCycle":{"graceTimeOut":null,"requestAcceptGraceTimeout":null},"respondingTimeouts":{"idleTimeout":null,"readTimeout":null,"writeTimeout":null}}` | Set transport settings for the entrypoint; see also https://doc.traefik.io/traefik/routing/entrypoints/#transport |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
@@ -148,6 +149,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.tls.domains | list | `[]` |  |
 | ports.websecure.tls.enabled | bool | `true` |  |
 | ports.websecure.tls.options | string | `""` |  |
+| ports.websecure.transport | object | `{"keepAliveMaxRequests":null,"keepAliveMaxTime":null,"lifeCycle":{"graceTimeOut":null,"requestAcceptGraceTimeout":null},"respondingTimeouts":{"idleTimeout":null,"readTimeout":null,"writeTimeout":null}}` | Set transport settings for the entrypoint; see also https://doc.traefik.io/traefik/routing/entrypoints/#transport |
 | priorityClassName | string | `""` | Priority indicates the importance of a Pod relative to other Pods. |
 | providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
