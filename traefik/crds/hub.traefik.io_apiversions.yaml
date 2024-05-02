@@ -114,6 +114,26 @@ spec:
                       type: object
                     maxItems: 100
                     type: array
+                  override:
+                    description: Override holds data used to override OpenAPI specification.
+                    properties:
+                      servers:
+                        items:
+                          properties:
+                            url:
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be a valid URL
+                                rule: isURL(self)
+                          required:
+                          - url
+                          type: object
+                        maxItems: 100
+                        minItems: 1
+                        type: array
+                    required:
+                    - servers
+                    type: object
                   path:
                     description: Path specifies the endpoint path within the Kubernetes
                       Service where the OpenAPI specification can be obtained. The
