@@ -1,0 +1,32 @@
+suite: API Portal configuration with Traefik Hub enabled
+templates:
+  - hub-apiportal.yaml
+set:
+  hub:
+    token: "xxx"
+    apimanagement:
+      enabled: true
+tests:
+  - it: should provide a single service by default
+    asserts:
+      - hasDocuments:
+          count: 1
+  - it: should not provide api portal service when apimanagement is not enabled
+    set:
+      hub:
+        apimanagement:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should expose the required apiportal port on a ClusterIP service
+    asserts:
+      - notExists:
+          path: spec.type
+      - contains:
+          path: spec.ports
+          content:
+            name: apiportal
+            port: 9903
+            protocol: TCP
+            targetPort: apiportal

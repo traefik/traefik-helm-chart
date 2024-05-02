@@ -123,10 +123,15 @@
          {{- end }}
         {{- end }}
         {{- if .Values.hub.token }}
-         {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
+          {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
         - name: admission
           containerPort: {{ last (mustRegexSplit ":" $listenAddr 2) }}
           protocol: TCP
+          {{- if .Values.hub.apimanagement.enabled }}
+        - name: apiportal
+          containerPort: 9903
+          protocol: TCP
+          {{- end }}
         {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
