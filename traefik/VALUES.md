@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.1.0-beta.1](https://img.shields.io/badge/Version-28.1.0--beta.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
+![Version: 28.1.0-beta.2](https://img.shields.io/badge/Version-28.1.0--beta.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -59,10 +59,10 @@ Kubernetes: `>=1.22.0-0`
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
-| hub | object | `{"admission":{"listenAddr":null,"secretName":null},"apimanagement":null,"metrics":{"opentelemetry":{"address":null,"enabled":null,"explicitBoundaries":null,"grpc":null,"headers":null,"insecure":null,"path":null,"pushInterval":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}},"ratelimit":{"redis":{"cluster":null,"database":null,"endpoints":null,"password":null,"sentinel":{"masterset":null,"password":null,"username":null},"timeout":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null},"username":null}},"sendlogs":null,"token":null}` | Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/ |
-| hub.admission.listenAddr | string | `nil` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
-| hub.admission.secretName | string | `nil` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
-| hub.apimanagement | string | `nil` | Set to true in order to enable API Management. Requires a valid license token. |
+| hub | object | `{"apimanagement":{"admission":{"listenAddr":null,"secretName":null},"enabled":null},"metrics":{"opentelemetry":{"address":null,"enabled":null,"explicitBoundaries":null,"grpc":null,"headers":null,"insecure":null,"path":null,"pushInterval":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}},"ratelimit":{"redis":{"cluster":null,"database":null,"endpoints":null,"password":null,"sentinel":{"masterset":null,"password":null,"username":null},"timeout":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null},"username":null}},"sendlogs":null,"token":null}` | Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/ |
+| hub.apimanagement.admission.listenAddr | string | `nil` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
+| hub.apimanagement.admission.secretName | string | `nil` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
+| hub.apimanagement.enabled | string | `nil` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.metrics.opentelemetry.address | string | `nil` | Address (host:port) of the collector endpoint. Default: "localhost:4318". |
 | hub.metrics.opentelemetry.enabled | string | `nil` | Set to true to enable OpenTelemetry metrics exporter of Traefik Hub. |
 | hub.metrics.opentelemetry.explicitBoundaries | string | `nil` | Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 " |
