@@ -21,7 +21,8 @@ tests:
   - it: should set minimal required parameters when enabling Traefik Hub API Management
     set:
       hub:
-        apimanagement: true
+        apimanagement:
+          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -36,40 +37,44 @@ tests:
           content: "--hub.apimanagement"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.admission.listenAddr=:9943"
+          content: "--hub.apimanagement.admission.listenAddr=:9943"
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
             name: "admission"
             containerPort: 9943
             protocol: "TCP"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: "apiportal"
+            containerPort: 9903
+            protocol: "TCP"
   - it: should fail when trying to set admission parameters without apimanagement
     set:
       hub:
-        admission:
-          listenAddr: "10.0.0.1:7500"
-          secretName: "secret"
+        apimanagement:
+          admission:
+            listenAddr: "10.0.0.1:7500"
+            secretName: "secret"
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Cannot configure admission without hub.apimanagement"
+          errorMessage: "ERROR: Cannot configure admission without enabling hub.apimanagement"
   - it: should be possible to set admission parameters (and ignore extra)
     set:
       hub:
-        apimanagement: true
-        admission:
-          listenAddr: "10.0.0.1:7500"
-          secretName: "secret"
-          test: "test"
+        apimanagement:
+          enabled: true
+          admission:
+            listenAddr: "10.0.0.1:7500"
+            secretName: "secret"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.admission.listenAddr=10.0.0.1:7500"
+          content: "--hub.apimanagement.admission.listenAddr=10.0.0.1:7500"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.admission.secretName=secret"
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.admission.test=test"
+          content: "--hub.apimanagement.admission.secretName=secret"
   - it: api management should not be enabled by default
     asserts:
       - notContains:

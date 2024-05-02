@@ -123,10 +123,15 @@
          {{- end }}
         {{- end }}
         {{- if .Values.hub.token }}
-         {{- $listenAddr := default ":9943" .Values.hub.admission.listenAddr }}
+          {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
         - name: admission
           containerPort: {{ last (mustRegexSplit ":" $listenAddr 2) }}
           protocol: TCP
+          {{- if .Values.hub.apimanagement.enabled }}
+        - name: apiportal
+          containerPort: 9903
+          protocol: TCP
+          {{- end }}
         {{- end }}
         {{- with .Values.securityContext }}
         securityContext:
@@ -650,17 +655,19 @@
           {{- with .Values.hub }}
            {{- if .token }}
           - "--hub.token=$(HUB_TOKEN)"
-            {{- if and (not .apimanagement) ($.Values.hub.admission.listenAddr) }}
-               {{- fail "ERROR: Cannot configure admission without hub.apimanagement" }}
+            {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
+               {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
             {{- end }}
-            {{- if .apimanagement }}
-              {{- $listenAddr := default ":9943" $.Values.hub.admission.listenAddr }}
+            {{- with .apimanagement }}
+             {{- if .enabled }}
+              {{- $listenAddr := default ":9943" .admission.listenAddr }}
           - "--hub.apimanagement"
-          - "--hub.admission.listenAddr={{ $listenAddr }}"
+          - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
               {{- with .admission.secretName }}
-          - "--hub.admission.secretName={{ . }}"
+          - "--hub.apimanagement.admission.secretName={{ . }}"
               {{- end }}
-            {{- end -}}
+             {{- end }}
+            {{- end }}
             {{- if .metrics.opentelemetry.enabled }}
           - "--hub.metrics.opentelemetry"
              {{- range $field, $value := .metrics.opentelemetry }}
