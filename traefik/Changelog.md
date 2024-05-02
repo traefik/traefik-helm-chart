@@ -1,5 +1,43 @@
 # Change Log
 
+## 28.1.0-beta.2  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-05-02
+
+* fix: 🐛 refine Traefik Hub support
+* chore(release): 🚀 publish v28.1.0-beta.2
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ce0a7a3..70297f6 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1015,13 +1015,15 @@ hub:
+   # Name of Secret with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token:
+-  admission:
+-    # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
+-    listenAddr:
+-    # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+-    secretName:
+-  # -- Set to true in order to enable API Management. Requires a valid license token.
+   apimanagement:
++    # -- Set to true in order to enable API Management. Requires a valid license token.
++    enabled:
++    admission:
++      # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
++      listenAddr:
++      # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
++      secretName:
++
+   metrics:
+     opentelemetry:
+       # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
+```
+
 ## 28.1.0-beta.1  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-04-30
