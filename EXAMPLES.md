@@ -295,11 +295,15 @@ ports:
       enabled: true
 ```
 
-# Use ProxyProtocol on Digital Ocean
+# Use PROXY protocol on Digital Ocean
 
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
 
 ```yaml
+.DOTrustedIPs: &DOTrustedIPs
+  - 127.0.0.1/32
+  - 10.120.0.0/16
+
 service:
   enabled: true
   type: LoadBalancer
@@ -310,13 +314,17 @@ service:
     # This is the default and should stay as cluster to keep the DO health checks working.
     externalTrafficPolicy: Cluster
 
-additionalArguments:
-  # Tell Traefik to only trust incoming headers from the Digital Ocean Load Balancers.
-  - "--entryPoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,10.120.0.0/16"
-  - "--entryPoints.websecure.proxyProtocol.trustedIPs=127.0.0.1/32,10.120.0.0/16"
-  # Also whitelist the source of headers to trust,  the private IPs on the load balancers displayed on the networking page of DO.
-  - "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
-  - "--entryPoints.websecure.forwardedHeaders.trustedIPs=127.0.0.1/32,10.120.0.0/16"
+ports:
+  web:
+    forwardedHeaders:
+      trustedIPs: *DOTrustedIPs
+    proxyProtocol:
+      trustedIPs: *DOTrustedIPs
+  websecure:
+    forwardedHeaders:
+      trustedIPs: *DOTrustedIPs
+    proxyProtocol:
+      trustedIPs: *DOTrustedIPs
 ```
 
 # Enable plugin storage
