@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 28.1.0-beta.2
+version: 28.1.0-beta.3
 # renovate: image=traefik
 appVersion: v3.0.0
 kubeVersion: ">=1.22.0-0"
@@ -25,5 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: 🐛 refine Traefik Hub support"
-    - "chore(release): 🚀 publish v28.1.0-beta.2"
+    - "chore: 🔧 update Traefik Hub CRD to v1.3.2"
+    - "chore(release): 🚀 publish v28.1.0-beta.3"
