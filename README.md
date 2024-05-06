@@ -75,32 +75,26 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
 
+:information_source: With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
+
+:warning: Please read carefully release notes of this chart before upgrading CRDs.
+
 ```bash
 # Update repository
 helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
+# Update CRDs (Traefik Proxy v3 CRDs)
+kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
 ```
 
 New major version indicates that there is an incompatible breaking change.
 
-### Upgrading CRDs
-
-With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions). Please read carefully release notes of this chart before upgrading CRDs.
-
-#### Upgrade from 27.X to 28.X+
-
-🛂 **Warning**: Traefik v3 totally removes the crd support for traefik.containo.us CRDs. Existing resources may silently fail to work after upgrade to Traefik v3.
-
-See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) for more details.
-
-```bash
-kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
-```
-
 #### Upgrade up to 27.X
+
+When upgrading on Traefik Proxy v2 version, the command to upgrade to the latest Traefik Proxy v2 CRD is:
 
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v27
