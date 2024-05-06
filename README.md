@@ -94,7 +94,7 @@ New major version indicates that there is an incompatible breaking change.
 
 #### Upgrade up to 27.X
 
-When upgrading on Traefik Proxy v2 version, the command to upgrade to the latest Traefik Proxy v2 CRD is:
+When upgrading on Traefik Proxy v2 version, one need to stay at Traefik Helm Chart v27.x. The command to upgrade to the latest Traefik Proxy v2 CRD is:
 
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v27
