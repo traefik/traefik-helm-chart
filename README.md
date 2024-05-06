@@ -75,7 +75,7 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
 
-:information_source: With Helm v3, CRDs created by this chart can not be updated, cf the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
+:information_source: With Helm v3, CRDs created by this chart can not be updated, cf. the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
 
 :warning: Please read carefully release notes of this chart before upgrading CRDs.
 
