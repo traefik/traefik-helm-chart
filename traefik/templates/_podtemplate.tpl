@@ -320,7 +320,6 @@
            {{- end }}
            {{- with .http }}
             {{- if .enabled }}
-          - "--metrics.otlp.http=true"
              {{- with .endpoint }}
           - "--metrics.otlp.http.endpoint={{ . }}"
              {{- end }}
@@ -345,7 +344,6 @@
            {{- end }}
            {{- with .grpc }}
             {{- if .enabled }}
-          - "--metrics.otlp.grpc=true"
              {{- with .endpoint }}
           - "--metrics.otlp.grpc.endpoint={{ . }}"
              {{- end }}

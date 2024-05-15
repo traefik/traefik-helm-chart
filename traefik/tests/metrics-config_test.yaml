@@ -367,9 +367,6 @@ tests:
           content: "--metrics.otlp.pushInterval=10s"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.otlp.http=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.http.endpoint=http://localhost:4318/v1/metrics"
       - contains:
           path: spec.template.spec.containers[0].args
@@ -389,9 +386,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.http.tls.insecureSkipVerify=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.otlp.grpc=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
