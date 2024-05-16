@@ -668,26 +668,6 @@
               {{- end }}
              {{- end }}
             {{- end }}
-            {{- if .metrics.opentelemetry.enabled }}
-          - "--hub.metrics.opentelemetry"
-             {{- range $field, $value := .metrics.opentelemetry }}
-              {{- if has $field (list "address" "explicitBoundaries" "grpc" "insecure" "path" "pushInterval") -}}
-               {{- with $value }}
-          - "--hub.metrics.opentelemetry.{{ $field }}={{ $value }}"
-               {{- end -}}
-              {{- end }}
-             {{- end }}
-             {{- range $name, $value := .metrics.opentelemetry.headers }}
-          - "--hub.metrics.opentelemetry.headers.{{ $name }}={{ $value }}"
-             {{- end }}
-             {{- range $field, $value := .metrics.opentelemetry.tls }}
-              {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
-               {{- with $value }}
-          - "--hub.metrics.opentelemetry.tls.{{ $field }}={{ $value }}"
-               {{- end }}
-              {{- end }}
-             {{- end }}
-            {{- end }}
             {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
             {{- end -}}
