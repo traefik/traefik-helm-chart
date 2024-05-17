@@ -1,4 +1,5 @@
 {{- if .Values.hub.token -}}
+{{- if .Values.hub.apimanagement.enabled }}
 {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
 ---
 apiVersion: v1
@@ -248,4 +249,5 @@ spec:
       targetPort: admission
   selector:
   {{- include "traefik.labelselector" . | nindent 4 }}
+{{- end -}}
 {{- end -}}

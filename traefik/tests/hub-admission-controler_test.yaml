@@ -4,6 +4,8 @@ templates:
 set:
   hub:
     token: xxx
+    apimanagement:
+      enabled: true
 tests:
   - it: should not deploy anything when hub is not enabled
     set:
@@ -16,6 +18,14 @@ tests:
     asserts:
       - hasDocuments:
           count: 5
+  - it: should not deploy anything when api management is disabled
+    set:
+      hub:
+        apimanagement:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: should render hub-agent-cert secret
     documentIndex: 0
     asserts:
