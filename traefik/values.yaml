@@ -1024,33 +1024,6 @@ hub:
       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
       secretName:
 
-  metrics:
-    opentelemetry:
-      # -- Set to true to enable OpenTelemetry metrics exporter of Traefik Hub.
-      enabled:
-      # -- Address (host:port) of the collector endpoint. Default: "localhost:4318".
-      address:
-      # -- Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 "
-      explicitBoundaries:
-      # -- Enables gRPC for the OpenTelemetry collector. Default: false.
-      grpc:
-      # -- Additional headers to send to the collector. Default: {}.
-      headers:
-      # -- Enable insecure schemes on metric endpoints. Default: false.
-      insecure:
-      # -- Collector endpoint path. Default: "".
-      path:
-      # -- Interval between metric exports. Default: "10s".
-      pushInterval:
-      tls:
-        # -- Path to the certificate authority used for the secured connection.
-        ca:
-        # -- Path to the public certificate used for the secure connection.
-        cert:
-        # -- Path to the private key used for the secure connection.
-        key:
-        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
-        insecureSkipVerify:
   ratelimit:
     redis:
       # -- Enable Redis Cluster. Default: true.
