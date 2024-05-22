@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: accesscontrolpolicies.hub.traefik.io
 spec:
   group: hub.traefik.io
@@ -20,14 +20,19 @@ spec:
         description: AccessControlPolicy defines an access control policy.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -54,10 +59,9 @@ spec:
                         description: Header is the name of a header.
                         type: string
                       headerAuthScheme:
-                        description: HeaderAuthScheme sets an optional auth scheme
-                          when Header is set to "Authorization". If set, this scheme
-                          is removed from the token, and all requests not including
-                          it are dropped.
+                        description: |-
+                          HeaderAuthScheme sets an optional auth scheme when Header is set to "Authorization".
+                          If set, this scheme is removed from the token, and all requests not including it are dropped.
                         type: string
                       query:
                         description: Query is the name of a query parameter.
@@ -165,15 +169,15 @@ spec:
                               Server certificate.
                             type: string
                           insecureSkipVerify:
-                            description: InsecureSkipVerify skips the Authorization
-                              Server certificate validation. For testing purposes
-                              only, do not use in production.
+                            description: |-
+                              InsecureSkipVerify skips the Authorization Server certificate validation.
+                              For testing purposes only, do not use in production.
                             type: boolean
                         type: object
                       tokenTypeHint:
-                        description: TokenTypeHint is a hint to pass to the Authorization
-                          Server. See https://tools.ietf.org/html/rfc7662#section-2.1
-                          for more information.
+                        description: |-
+                          TokenTypeHint is a hint to pass to the Authorization Server.
+                          See https://tools.ietf.org/html/rfc7662#section-2.1 for more information.
                         type: string
                       url:
                         description: URL of the Authorization Server.
@@ -186,9 +190,9 @@ spec:
                       type: string
                     type: object
                   tokenSource:
-                    description: 'TokenSource describes how to extract tokens from
-                      HTTP requests. If multiple sources are set, the order is the
-                      following: header > query > cookie.'
+                    description: |-
+                      TokenSource describes how to extract tokens from HTTP requests.
+                      If multiple sources are set, the order is the following: header > query > cookie.
                     properties:
                       cookie:
                         description: Cookie is the name of a cookie.
@@ -197,10 +201,9 @@ spec:
                         description: Header is the name of a header.
                         type: string
                       headerAuthScheme:
-                        description: HeaderAuthScheme sets an optional auth scheme
-                          when Header is set to "Authorization". If set, this scheme
-                          is removed from the token, and all requests not including
-                          it are dropped.
+                        description: |-
+                          HeaderAuthScheme sets an optional auth scheme when Header is set to "Authorization".
+                          If set, this scheme is removed from the token, and all requests not including it are dropped.
                         type: string
                       query:
                         description: Query is the name of a query parameter.
@@ -241,8 +244,9 @@ spec:
                       type: string
                     type: array
                   secret:
-                    description: SecretReference represents a Secret Reference. It
-                      has enough information to retrieve secret in any namespace
+                    description: |-
+                      SecretReference represents a Secret Reference. It has enough information to retrieve secret
+                      in any namespace
                     properties:
                       name:
                         description: name is unique within a namespace to reference
@@ -306,8 +310,9 @@ spec:
                   redirectUrl:
                     type: string
                   secret:
-                    description: SecretReference represents a Secret Reference. It
-                      has enough information to retrieve secret in any namespace
+                    description: |-
+                      SecretReference represents a Secret Reference. It has enough information to retrieve secret
+                      in any namespace
                     properties:
                       name:
                         description: name is unique within a namespace to reference

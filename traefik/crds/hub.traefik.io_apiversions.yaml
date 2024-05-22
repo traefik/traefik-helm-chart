@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.13.0
+    controller-gen.kubebuilder.io/version: v0.14.0
   name: apiversions.hub.traefik.io
 spec:
   group: hub.traefik.io
@@ -15,9 +15,6 @@ spec:
   scope: Namespaced
   versions:
   - additionalPrinterColumns:
-    - jsonPath: .spec.apiName
-      name: APIName
-      type: string
     - jsonPath: .spec.title
       name: Title
       type: string
@@ -30,14 +27,19 @@ spec:
         description: APIVersion defines a version of an API.
         properties:
           apiVersion:
-            description: 'APIVersion defines the versioned schema of this representation
-              of an object. Servers should convert recognized schemas to the latest
-              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
             type: string
           kind:
-            description: 'Kind is a string value representing the REST resource this
-              object represents. Servers may infer this from the endpoint the client
-              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
             type: string
           metadata:
             type: object
@@ -51,9 +53,9 @@ spec:
                     description: OperationSets defines the sets of operations to be
                       referenced for granular filtering in APIAccesses.
                     items:
-                      description: OperationSet gives a name to a set of matching
-                        OpenAPI operations. This set of operations can then be referenced
-                        for granular filtering in APIAccesses.
+                      description: |-
+                        OperationSet gives a name to a set of matching OpenAPI operations.
+                        This set of operations can then be referenced for granular filtering in APIAccesses.
                       properties:
                         matchers:
                           description: Matchers defines a list of alternative rules
@@ -135,14 +137,11 @@ spec:
                     - servers
                     type: object
                   path:
-                    description: Path specifies the endpoint path within the Kubernetes
-                      Service where the OpenAPI specification can be obtained. The
-                      Service queried is determined by the associated Ingress, IngressRoute,
-                      or HTTPRoute resource to which the API is attached. It's important
-                      to note that this option is incompatible if the Ingress or IngressRoute
-                      specifies multiple backend services. The Path must be accessible
-                      via a GET request method and should serve a YAML or JSON document
-                      containing the OpenAPI specification.
+                    description: |-
+                      Path specifies the endpoint path within the Kubernetes Service where the OpenAPI specification can be obtained.
+                      The Service queried is determined by the associated Ingress, IngressRoute, or HTTPRoute resource to which the API is attached.
+                      It's important to note that this option is incompatible if the Ingress or IngressRoute specifies multiple backend services.
+                      The Path must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
                     maxLength: 255
                     type: string
                     x-kubernetes-validations:
@@ -151,10 +150,9 @@ spec:
                     - message: cannot contains '../'
                       rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
                   url:
-                    description: URL is a Traefik Hub agent accessible URL for obtaining
-                      the OpenAPI specification. The URL must be accessible via a
-                      GET request method and should serve a YAML or JSON document
-                      containing the OpenAPI specification.
+                    description: |-
+                      URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
+                      The URL must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
                     type: string
                     x-kubernetes-validations:
                     - message: must be a valid URL
@@ -164,8 +162,9 @@ spec:
                 - message: path or url must be defined
                   rule: has(self.path) || has(self.url)
               release:
-                description: 'Release is the version number of the API. This value
-                  must follow the SemVer format: https://semver.org/'
+                description: |-
+                  Release is the version number of the API.
+                  This value must follow the SemVer format: https://semver.org/
                 maxLength: 100
                 type: string
                 x-kubernetes-validations:
