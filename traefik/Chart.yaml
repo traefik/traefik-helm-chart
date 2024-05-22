@@ -25,7 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "chore: 🔧 update Traefik Hub CRD to v1.3.2"
-    - "chore(release): 🚀 publish v28.1.0-beta.3"
-    - "fix: 🐛 refine Traefik Hub support"
-    - "chore(release): 🚀 publish v28.1.0-beta.2"
+    - "fix(Traefik Hub): do not deploy mutating webhook when enabling only API Gateway"
+    - "feat(Traefik Hub): use Traefik Proxy otlp config"
+    - "chore: 🔧 update Traefik Hub CRD to v1.3.3"
