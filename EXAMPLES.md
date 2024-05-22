@@ -278,6 +278,64 @@ service:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: myResourceGroup
 ```
 
+Here is a more complete example, using also native Let's encrypt feature of Traefik Proxy with Azure DNS:
+
+```yaml
+persistence:
+  enabled: true
+  size: 128Mi
+certResolvers:
+  letsencrypt:
+    email: "{{ letsencrypt_email }}"
+    #caServer: https://acme-v02.api.letsencrypt.org/directory # Production server
+    caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Staging server
+    dnsChallenge:
+      provider: azuredns
+    storage: /data/acme.json
+env:
+  - name: AZURE_CLIENT_ID
+    value: "{{ azure_dns_challenge_application_id }}"
+  - name: AZURE_CLIENT_SECRET
+    valueFrom:
+      secretKeyRef:
+        name: azuredns-secret
+        key: client-secret
+  - name: AZURE_SUBSCRIPTION_ID
+    value: "{{ azure_subscription_id }}"
+  - name: AZURE_TENANT_ID
+    value: "{{ azure_tenant_id }}"
+  - name: AZURE_RESOURCE_GROUP
+    value: "{{ azure_resource_group }}"
+deployment:
+  initContainers:
+    - name: volume-permissions
+      image: busybox:latest
+      command: ["sh", "-c", "ls -la /; touch /data/acme.json; chmod -v 600 /data/acme.json"]
+      volumeMounts:
+      - mountPath: /data
+        name: data
+podSecurityContext:
+  fsGroup: 65532
+  fsGroupChangePolicy: "OnRootMismatch"
+service:
+  spec:
+    type: LoadBalancer
+  annotations:
+    service.beta.kubernetes.io/azure-load-balancer-resource-group: "{{ azure_node_resource_group }}"
+    service.beta.kubernetes.io/azure-pip-name: "{{ azure_resource_group }}"
+    service.beta.kubernetes.io/azure-dns-label-name: "{{ azure_resource_group }}"
+    service.beta.kubernetes.io/azure-allowed-ip-ranges: "{{ ip_range | join(',') }}"
+extraObjects:
+  - apiVersion: v1
+    kind: Secret
+    metadata:
+      name: azuredns-secret
+      namespace: traefik
+    type: Opaque
+    stringData:
+      client-secret: "{{ azure_dns_challenge_application_secret }}"
+```
+
 # Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
@@ -356,6 +414,26 @@ By default, Kubernetes recursively changes ownership and permissions for the con
 => An initContainer can be used to avoid an issue on this sensitive file.
 See [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more details.
 
+Once the provider is ready, it can be used in an `IngressRoute`:
+
+```yaml
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: [...]
+spec:
+  entryPoints: [...]
+  routes: [...]
+  tls:
+    certResolver: letsencrypt
+```
+
+See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
+
+## Example with CloudFlare
+
+This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.
+
 **Step 1**: Create `Secret` with CloudFlare token:
 
 ```yaml
@@ -366,7 +444,7 @@ metadata:
   name: cloudflare
 type: Opaque
 stringData:
-  token: TTT
+  token: {{ SET_A_VALID_TOKEN_HERE }}
 ```
 
 **Step 2**:
@@ -394,25 +472,10 @@ deployment:
       volumeMounts:
       - mountPath: /data
         name: data
+podSecurityContext:
+  fsGroup: 65532
+  fsGroupChangePolicy: "OnRootMismatch"
 ```
-
-and after, in an `IngressRoute`:
-
-```yaml
-apiVersion: traefik.containo.us/v1alpha1
-kind: IngressRoute
-metadata:
-  name: [...]
-spec:
-  entryPoints: [...]
-  routes: [...]
-  tls:
-    certResolver: letsencrypt
-```
-
-This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.
-
-See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 
@@ -617,6 +680,22 @@ spec:
     kind: Deployment
     name: release-name-traefik
   maxReplicas: 3
+```
+
+# Configure TLS
+
+The [TLS options](https://doc.traefik.io/traefik/https/tls/#tls-options) allow one to configure some parameters of the TLS connection.
+
+```yaml
+tlsOptions:
+  default:
+    labels: {}
+    sniStrict: true
+  custom-options:
+    labels: {}
+    curvePreferences:
+      - CurveP521
+      - CurveP384
 ```
 
 # Use latest build of Traefik v3 from master
