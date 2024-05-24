@@ -883,6 +883,7 @@ tests:
               - update
               - create
               - delete
+              - deletecollection
       - template: rbac/clusterrole.yaml
         contains:
           path: rules

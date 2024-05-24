@@ -193,6 +193,7 @@ rules:
       - update
       - create
       - delete
+      - deletecollection
   - apiGroups:
       - apps
     resources:
