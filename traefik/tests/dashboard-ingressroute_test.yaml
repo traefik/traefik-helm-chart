@@ -12,9 +12,9 @@ tests:
       count: 0
 - it: should have the expected default route match rule
   asserts:
-    - equal:
-        path: spec.routes[0].match
-        value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - equal:
+      path: spec.routes[0].match
+      value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
 - it: should support overwriting the route match rule
   set:
     ingressRoute:
