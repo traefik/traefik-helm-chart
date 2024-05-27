@@ -127,7 +127,6 @@ rules:
       - apiratelimits
       - apis
       - apiversions
-      - edgeingresses
     verbs:
       - list
       - watch
@@ -146,8 +145,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - services
-      - endpoints
       - namespaces
       - pods
       - nodes
@@ -197,10 +194,7 @@ rules:
   - apiGroups:
       - apps
     resources:
-      - deployments
-      - statefulsets
       - replicasets
-      - daemonsets
     verbs:
       - get
       - list
@@ -214,8 +208,4 @@ rules:
       - get
       - list
       - watch
-      - create
-      - update
-      - patch
-      - delete
 {{- end -}}
