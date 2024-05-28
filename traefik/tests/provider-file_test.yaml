@@ -11,7 +11,7 @@ tests:
           enabled: true
     asserts:
       - template: provider-file-cm.yaml
-        isKind: 
+        isKind:
           of: ConfigMap
       - template: provider-file-cm.yaml
         equal:
@@ -20,14 +20,14 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.volumes
-          content: 
+          content:
             name: traefik-extra-config
             configMap:
               name: "RELEASE-NAME-traefik-file-provider"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].volumeMounts
-          content: 
+          content:
             name: traefik-extra-config
             mountPath: "/etc/traefik/dynamic"
 
@@ -49,7 +49,7 @@ tests:
       - template: deployment.yaml
         isNull:
           path: metadata.annotations["checksum/traefik-dynamic-conf"]
-    
+
   - it: should add checksum annotations and no watch cli option
     set:
       providers:
@@ -75,7 +75,7 @@ tests:
         file:
           enabled: true
           watch: false
-          content: &x-providers-file-content |
+          content: &x-providers-file-content |-
             middlewares:
               Middleware00:
                 addPrefix:
@@ -110,7 +110,7 @@ tests:
       - template: deployment.yaml
         notContains:
           path: spec.template.spec.volumes
-          content: 
+          content:
             name: traefik-extra-config
             configMap:
               name: "RELEASE-NAME-traefik-file-provider"
