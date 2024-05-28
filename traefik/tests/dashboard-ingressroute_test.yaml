@@ -86,14 +86,28 @@ tests:
         options:
           name: tls-options
           namespace: default
-- it: should not allow to create null annotations
+- it: should use the release name as the default ingress class annotation
   set:
     ingressRoute:
       dashboard:
         enabled: true
   asserts:
-  - isNull:
+  - equal:
       path: metadata.annotations
+      value:
+        kubernetes.io/ingress.class: RELEASE-NAME-traefik
+- it: should use the ingress class name for the annotation
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+    ingressClass:
+      name: test-class
+  asserts:
+  - equal:
+      path: metadata.annotations
+      value:
+        kubernetes.io/ingress.class: test-class
 - it: should insert annotations correctly
   set:
     ingressRoute:
@@ -106,5 +120,6 @@ tests:
   - equal:
       path: metadata.annotations
       value:
+        kubernetes.io/ingress.class: RELEASE-NAME-traefik
         foo: bar
         fis: fas
