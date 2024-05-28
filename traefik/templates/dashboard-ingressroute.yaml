@@ -4,10 +4,13 @@ kind: IngressRoute
 metadata:
   name: {{ template "traefik.fullname" . }}-dashboard
   namespace: {{ template "traefik.namespace" . }}
-{{- with .Values.ingressRoute.dashboard.annotations }}
   annotations:
+    {{- if and .Values.ingressClass.enabled (or .Values.providers.kubernetesCRD.enabled .Values.providers.kubernetesIngress.enabled) }}
+    kubernetes.io/ingress.class: {{ .Values.ingressClass.name | default (include "traefik.fullname" .) }}
+    {{- end }}
+    {{- with .Values.ingressRoute.dashboard.annotations }}
     {{- toYaml . | nindent 4 }}
-{{- end }}
+    {{- end }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
     {{- with .Values.ingressRoute.dashboard.labels }}

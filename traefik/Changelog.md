@@ -1,5 +1,70 @@
 # Change Log
 
+## 28.1.0 ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+* fix(Traefik Hub): do not deploy mutating webhook when enabling only API Gateway
+* feat(Traefik Hub): use Traefik Proxy otlp config
+* chore: 🔧 update Traefik Hub CRD to v1.3.3
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 70297f6..2fd9282 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1010,3 +1010,49 @@
+ ## -- This will override the default app.kubernetes.io/instance label for all Objects.
+ # instanceLabelOverride: traefik
+ 
++# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
++hub:
++  # Name of Secret with key 'token' set to a valid license token.
++  # It enables API Gateway.
++  token:
++  apimanagement:
++    # -- Set to true in order to enable API Management. Requires a valid license token.
++    enabled:
++    admission:
++      # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
++      listenAddr:
++      # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
++      secretName:
++
++  ratelimit:
++    redis:
++      # -- Enable Redis Cluster. Default: true.
++      cluster:
++      # -- Database used to store information. Default: "0".
++      database:
++      # -- Endpoints of the Redis instances to connect to. Default: "".
++      endpoints:
++      # -- The username to use when connecting to Redis endpoints. Default: "".
++      username:
++      # -- The password to use when connecting to Redis endpoints. Default: "".
++      password:
++      sentinel:
++        # -- Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "".
++        masterset:
++        # -- Username to use for sentinel authentication (can be different from endpoint username). Default: "".
++        username:
++        # -- Password to use for sentinel authentication (can be different from endpoint password). Default: "".
++        password:
++      # -- Timeout applied on connection with redis. Default: "0s".
++      timeout:
++      tls:
++        # -- Path to the certificate authority used for the secured connection.
++        ca:
++        # -- Path to the public certificate used for the secure connection.
++        cert:
++        # -- Path to the private key used for the secure connection.
++        key:
++        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
++        insecureSkipVerify:
++  # Enable export of errors logs to the platform. Default: true.
++  sendlogs:
+```
+
 ## 28.1.0-beta.3  ![AppVersion: v3.0.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-05-03

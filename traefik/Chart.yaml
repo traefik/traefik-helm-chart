@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 28.1.0-beta.3
+version: 28.1.0
 # renovate: image=traefik
-appVersion: v3.0.0
+appVersion: v3.0.1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -25,5 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "chore: 🔧 update Traefik Hub CRD to v1.3.2"
-    - "chore(release): 🚀 publish v28.1.0-beta.3"
+    - "fix(Traefik Hub): do not deploy mutating webhook when enabling only API Gateway"
+    - "feat(Traefik Hub): use Traefik Proxy otlp config"
+    - "chore: 🔧 update Traefik Hub CRD to v1.3.3"
