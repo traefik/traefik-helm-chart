@@ -119,5 +119,90 @@ rules:
     verbs:
       - update
 {{- end -}}
+{{- if $.Values.hub.token }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+      - apiaccesses
+      - apiportals
+      - apiratelimits
+      - apis
+      - apiversions
+    verbs:
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - get
+      - watch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - delete
+      - deletecollection
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+{{- end -}}
 {{- end -}}
 {{- end -}}
