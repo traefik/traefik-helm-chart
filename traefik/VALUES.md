@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.1.0](https://img.shields.io/badge/Version-28.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
+![Version: 28.2.0](https://img.shields.io/badge/Version-28.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.1](https://img.shields.io/badge/AppVersion-v3.0.1-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -76,7 +76,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.ratelimit.redis.tls.key | string | `nil` | Path to the private key used for the secure connection. |
 | hub.ratelimit.redis.username | string | `nil` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
-| hub.token | string | `nil` | Name of Secret with key 'token' set to a valid license token. It enables API Gateway. |
+| hub.token | string | `nil` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
