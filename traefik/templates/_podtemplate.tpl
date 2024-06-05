@@ -22,6 +22,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
+      automountServiceAccountToken: true
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ .Values.hostNetwork }}
       {{- with .Values.deployment.dnsPolicy }}
