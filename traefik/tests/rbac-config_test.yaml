@@ -29,6 +29,10 @@ tests:
           value: RELEASE-NAME-traefik
         template: rbac/serviceaccount.yaml
       - equal:
+          path: automountServiceAccountToken
+          value: false
+        template: rbac/serviceaccount.yaml
+      - equal:
           path: spec.template.spec.serviceAccountName
           value: RELEASE-NAME-traefik
         template: deployment.yaml
