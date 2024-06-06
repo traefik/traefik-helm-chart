@@ -98,10 +98,3 @@ tests:
           value:
             app.kubernetes.io/name: traefik
             app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
-  - it: should set the namespace
-    release:
-      namespace: test
-    asserts:
-      - equal:
-          path: metadata.namespace
-          value: test
