@@ -19,7 +19,6 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: hub-edge-ingress
-  namespace: {{ template "traefik.namespace" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
@@ -51,7 +50,6 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: hub-acp
-  namespace: {{ template "traefik.namespace" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
@@ -82,7 +80,6 @@ apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
   name: hub-api
-  namespace: {{ template "traefik.namespace" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
