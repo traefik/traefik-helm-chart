@@ -704,12 +704,14 @@
             valueFrom:
               resourceFieldRef:
                 resource: limits.cpu
+                divisor: '1'
           {{- end }}
           {{- if ($.Values.resources.limits).memory }}
           - name: GOMEMLIMIT
             valueFrom:
               resourceFieldRef:
                 resource: limits.memory
+                divisor: '1'
           {{- end }}
           {{- with .Values.hub.token }}
           - name: HUB_TOKEN

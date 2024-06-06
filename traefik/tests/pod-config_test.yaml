@@ -17,6 +17,9 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
           value: limits.cpu
+      - equal:
+          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.divisor
+          value: "1"
   - it: should have set GOMEMLIMIT with cpu limit
     set:
       resources:
@@ -29,6 +32,9 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
           value: limits.memory
+      - equal:
+          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.divisor
+          value: "1"
   - it: should have not set GOMAXPROCS without cpu limit
     asserts:
       - notEqual:
