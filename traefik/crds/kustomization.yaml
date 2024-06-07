@@ -8,7 +8,6 @@ resources:
   - hub.traefik.io_apiratelimits.yaml
   - hub.traefik.io_apis.yaml
   - hub.traefik.io_apiversions.yaml
-  - hub.traefik.io_edgeingresses.yaml
   - traefik.io_ingressroutes.yaml
   - traefik.io_ingressroutetcps.yaml
   - traefik.io_ingressrouteudps.yaml
