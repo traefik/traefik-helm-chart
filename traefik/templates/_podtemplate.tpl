@@ -517,6 +517,9 @@
              {{- if $config.redirectTo.priority }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ $config.redirectTo.priority }}"
              {{- end }}
+             {{- if $config.redirectTo.permanent }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent=true"
+             {{- end }}
             {{- end }}
             {{- if $config.middlewares }}
           - "--entryPoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"

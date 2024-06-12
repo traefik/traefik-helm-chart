@@ -209,3 +209,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.redirections.entryPoint.priority=10"
+  - it: should have permanent http redirections enabled, when enabled with redirectTo and permanent
+    set:
+      ports:
+        web:
+          redirectTo:
+            port: websecure
+            permanent: true
+        websecure:
+          exposedPort: 443
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.permanent=true"

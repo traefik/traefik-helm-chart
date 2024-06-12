@@ -602,6 +602,7 @@ ports:
     #   port: websecure
     #   (Optional)
     #   priority: 10
+    #   permanent: true
     #
     # -- Trust forwarded headers information (X-Forwarded-*).
     # forwardedHeaders:
