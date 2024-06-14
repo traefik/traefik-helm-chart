@@ -1,5 +1,35 @@
 # Change Log
 
+## 28.3.0  ![AppVersion: v3.0.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-06-14
+
+* fix: 🐛 namespaced rbac when kubernetesIngress provider is disabled
+* fix: 🐛  add divisor: '1' to GOMAXPROCS and GOMEMLIMIT
+* fix(security): 🐛 🔒️ mount service account token on pod level
+* fix(Traefik Hub): remove obsolete CRD
+* fix(Traefik Hub): remove namespace in mutating webhook
+* feat: allow setting permanent on redirectTo
+* chore(release): publish v28.3.0
+* chore(deps): update traefik docker tag to v3.0.2
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c558c78..e440dcf 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -602,6 +602,7 @@ ports:
+     #   port: websecure
+     #   (Optional)
+     #   priority: 10
++    #   permanent: true
+     #
+     # -- Trust forwarded headers information (X-Forwarded-*).
+     # forwardedHeaders:
+```
+
 ## 28.2.0  ![AppVersion: v3.0.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-05-28
