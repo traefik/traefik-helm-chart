@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 28.2.0
+version: 28.3.0
 # renovate: image=traefik
 appVersion: v3.0.2
 kubeVersion: ">=1.22.0-0"
@@ -25,8 +25,11 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(IngressClass): provides annotation on IngressRoutes when it's enabled"
-    - "feat: ✨ simplify values and provide more examples"
-    - "feat: add deletecollection right on secrets"
-    - "chore(release): 🚀 publish v28.2.0"
-    - "chore(deps): update traefik docker tag to v3.0.1"
+    - "fix: 🐛 namespaced rbac when kubernetesIngress provider is disabled"
+    - "fix: 🐛  add divisor: '1' to GOMAXPROCS and GOMEMLIMIT"
+    - "fix(security): 🐛 🔒️ mount service account token on pod level"
+    - "fix(Traefik Hub): remove obsolete CRD"
+    - "fix(Traefik Hub): remove namespace in mutating webhook"
+    - "feat: allow setting permanent on redirectTo"
+    - "chore(release): publish v28.3.0"
+    - "chore(deps): update traefik docker tag to v3.0.2"
