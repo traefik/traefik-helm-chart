@@ -40,6 +40,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
 | deployment.dnsConfig | object | `{}` | Custom pod DNS policy. Apply if `hostNetwork: true` dnsPolicy: ClusterFirstWithHostNet |
 | deployment.enabled | bool | `true` | Enable deployment |
+| deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
 | deployment.imagePullSecrets | list | `[]` | Additional imagePullSecrets |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |

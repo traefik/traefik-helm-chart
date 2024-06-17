@@ -91,6 +91,12 @@ deployment:
   #   - name: ndots
   #     value: "2"
   #   - name: edns0
+  # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+  hostAliases: []
+  #  - ip: "127.0.0.1" # this is an example
+  #    hostnames:
+  #    - "foo.local"
+  #    - "bar.local"
   # -- Additional imagePullSecrets
   imagePullSecrets: []
   # - name: myRegistryKeySecretName
