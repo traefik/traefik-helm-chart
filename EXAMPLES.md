@@ -12,7 +12,7 @@ deployment:
 ## Extending /etc/hosts records
 
 In some specific cases, you'll need to add extra records to the `/etc/hosts` file for the Traefik containers.
-You could configure it using [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/):
+You can configure it using [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/):
 
 ```yaml
 deployment:
