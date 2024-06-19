@@ -37,8 +37,8 @@ rules:
       - ""
     resources:
       - secrets
-    {{- if gt (len .Values.rbac.secretResourceNames) 0 }}
-    resourceNames: {{ .Values.rbac.secretResourceNames }}
+    {{- with .Values.rbac.secretResourceNames }}
+    resourceNames: {{ toYaml . |nindent 6 }}
     {{- end }}
     verbs:
       - get
