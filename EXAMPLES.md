@@ -24,7 +24,7 @@ deployment:
 ```
 ## Extending DNS config
 
-In order to configure additional DNS servers for your traefik pod, you could use `dnsConfig` option: 
+In order to configure additional DNS servers for your traefik pod, you can use `dnsConfig` option: 
 
 ```yaml
 deployment:
