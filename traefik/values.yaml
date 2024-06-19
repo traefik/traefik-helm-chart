@@ -81,25 +81,12 @@ deployment:
   shareProcessNamespace: false
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
+  # -- Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core)
   dnsConfig: {}
-  # nameservers:
-  #   - 192.0.2.1 # this is an example
-  # searches:
-  #   - ns1.svc.cluster-domain.example
-  #   - my.dns.search.suffix
-  # options:
-  #   - name: ndots
-  #     value: "2"
-  #   - name: edns0
   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
   hostAliases: []
-  #  - ip: "127.0.0.1" # this is an example
-  #    hostnames:
-  #    - "foo.local"
-  #    - "bar.local"
-  # -- Additional imagePullSecrets
+  # -- Pull secret for fetching traefik container image
   imagePullSecrets: []
-  # - name: myRegistryKeySecretName
   # -- Pod lifecycle actions
   lifecycle: {}
   # preStop:

@@ -7,6 +7,39 @@ deployment:
   kind: DaemonSet
 ```
 
+# Configure traefik Pod parameters
+
+## Extending /etc/hosts records
+
+In some specific cases, you'll need to add extra records to the `/etc/hosts` file for the Traefik containers.
+You could configure it using [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/):
+
+```yaml
+deployment:
+  hostAliases:
+  - ip: "127.0.0.1" # this is an example
+    hostnames:
+     - "foo.local"
+     - "bar.local"
+```
+## Extending DNS config
+
+In order to configure additional DNS servers for your traefik pod, you could use `dnsConfig` option: 
+
+```yaml
+deployment:
+  dnsConfig:
+    nameservers:
+      - 192.0.2.1 # this is an example
+    searches:
+      - ns1.svc.cluster-domain.example
+      - my.dns.search.suffix
+    options:
+      - name: ndots
+        value: "2"
+      - name: edns0
+```
+
 # Install in a dedicated namespace, with limited RBAC
 
 Default install is using Cluster-wide RBAC but it can be restricted to target namespace.
