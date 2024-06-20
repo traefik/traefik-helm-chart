@@ -43,6 +43,9 @@
           {{- toYaml .options | nindent 10 }}
         {{- end }}
       {{- end }}
+      {{- with .Values.deployment.hostAliases }}
+      hostAliases: {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
       {{- toYaml . | nindent 6 }}
