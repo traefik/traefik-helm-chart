@@ -694,9 +694,19 @@ tests:
               - ""
             resources:
               - services
-              - endpoints
             verbs:
               - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
               - list
               - watch
       - template: rbac/clusterrole.yaml
@@ -782,10 +792,21 @@ tests:
               - ""
             resources:
               - services
-              - endpoints
             verbs:
               - get
               - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
               - watch
       - template: rbac/role.yaml
         contains:
@@ -1055,3 +1076,64 @@ tests:
               - get
               - list
               - watch
+  - it: should provide expected namespace'd RBACS for version < v3.1
+    set:
+      image:
+        tag: v3.0.1
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+  - it: should provide expected RBACS for version < v3.1
+    set:
+      image:
+        tag: v3.0.1
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+
