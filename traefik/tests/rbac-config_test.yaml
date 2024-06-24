@@ -639,6 +639,8 @@ tests:
               - list
               - watch
   - it: should provide expected cluster rbac when k8s gw api is enabled
+    chart:
+      appVersion: v3.1.0
     set:
       experimental:
         kubernetesGateway:
@@ -735,6 +737,8 @@ tests:
               - watch
 
   - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
+    chart:
+      appVersion: v3.1.0
     set:
       rbac:
         namespaced: true
@@ -806,7 +810,6 @@ tests:
               - endpointslices
             verbs:
               - list
-              - get
               - watch
       - template: rbac/role.yaml
         contains:
@@ -821,6 +824,8 @@ tests:
               - list
               - watch
   - it: should contain additional RBACS for hub
+    chart:
+      appVersion: v3.1.0
     set:
       hub:
         token: xxx
@@ -891,8 +896,8 @@ tests:
             resources:
               - endpointslices
             verbs:
-              - list
               - get
+              - list
               - watch
       - template: rbac/clusterrole.yaml
         contains:
@@ -952,6 +957,8 @@ tests:
               - list
               - watch
   - it: should provide namespace'd RBACS for hub
+    chart:
+      appVersion: v3.1.0
     set:
       hub:
         token: xxx
@@ -1016,8 +1023,8 @@ tests:
             resources:
               - endpointslices
             verbs:
-              - list
               - get
+              - list
               - watch
       - template: rbac/role.yaml
         contains:
@@ -1080,6 +1087,8 @@ tests:
     set:
       image:
         tag: v3.0.1
+      rbac:
+        namespaced: true
     asserts:
       - template: rbac/role.yaml
         contains:

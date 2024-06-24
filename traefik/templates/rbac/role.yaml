@@ -13,6 +13,7 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
+  {{- if (semverCompare "<v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -22,6 +23,26 @@ rules:
       - get
       - list
       - watch
+  {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+    {{- if $.Values.hub.token }}
+      - get
+    {{- end }}
+      - list
+      - watch
+  {{- end }}
   # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
   - apiGroups:
       - ""
@@ -154,14 +175,6 @@ rules:
     verbs:
       - create
       - patch
-  - apiGroups:
-      - discovery.k8s.io
-    resources:
-      - endpointslices
-    verbs:
-      - list
-      - get
-      - watch
   - apiGroups:
       - coordination.k8s.io
     resources:
