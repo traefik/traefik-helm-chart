@@ -94,6 +94,6 @@ jobs:
           tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
           path: ./traefik
           registry: ghcr.io
-          registry_username: ${{ secrets.GHCR_USERNAME }}
-          registry_password: ${{ secrets.GHCR_PASSWORD }}
+          registry_username: traefiker
+          registry_password: ${{ secrets.CHART_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
