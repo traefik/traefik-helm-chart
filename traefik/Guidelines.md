@@ -4,7 +4,7 @@ This document outlines the guidelines for developing, managing and extending the
 
 This Helm Chart is documented using field description from comments with [helm-docs](https://github.com/norwoodj/helm-docs).
 
-Optionallity
+Optionality
 All non-critical features (Features not mandatory to starting Traefik) in the helm chart must be optional. All non-critical features should be disabled (commented out) in the values.yaml file. All optional non-critical features should be disabled (commented out) in the values.yaml file, and have a comment # (Optional) in the line above. This allows minimal configuration, and ease of extension.
 
 ## Feature Example
@@ -50,9 +50,9 @@ The non-critical feature defaults should be populated so that they can be enable
 #     # volume: 1Gi
 ```
 
-The volume option is clearly optional, and non-critical. It is commented out (apart from the storage section comment block), and is also preceeded by a comment of # (Optional) in the preceeding line. This facilitates configuration, when the storage section is uncommented, the optional features are still disabled by default.
+The volume option is clearly optional, and non-critical. It is commented out (apart from the storage section comment block), and is also preceded by a comment of # (Optional) in the preceding line. This facilitates configuration, when the storage section is uncommented, the optional features are still disabled by default.
 
-Similar to non-critical feaures, these options need to be tested for existance before use in the template.
+Similar to non-critical features, these options need to be tested for existence before use in the template.
 
 Note
 There can be optional values in critical features. These should just be added as an uncommented non-critical feature:
@@ -89,4 +89,4 @@ There should be an empty commented line between each primary key in the values.y
 
 ## Values YAML Design
 
-The values.yaml file is designed to be user-friendly. It does not have to resemble the templated configuration if it is not conducive. Similarly, value names to not have to correspond to fields in the tempate if it is not condusive.
+The values.yaml file is designed to be user-friendly. It does not have to resemble the templated configuration if it is not conducive. Similarly, value names to not have to correspond to fields in the template if it is not conducive.
