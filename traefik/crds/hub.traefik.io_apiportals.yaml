@@ -81,9 +81,41 @@ spec:
                     description: ClientID is the OIDC ClientID for accessing the exposed
                       APIPortal WebUI.
                     type: string
+                  companyClaim:
+                    description: CompanyClaim is the name of the JWT claim containing
+                      the user company.
+                    type: string
+                  emailClaim:
+                    description: EmailClaim is the name of the JWT claim containing
+                      the user email.
+                    type: string
+                  externalIdClaim:
+                    description: ExternalIDClaim is the name of the JWT claim containing
+                      the user external ID.
+                    type: string
+                  firstnameClaim:
+                    description: FirstnameClaim is the name of the JWT claim containing
+                      the user firstname.
+                    type: string
+                  generic:
+                    description: Generic indicates whether or not the APIPortal authentication
+                      relies on Generic OIDC.
+                    type: boolean
+                  groupsClaim:
+                    description: GroupsClaim is the name of the JWT claim containing
+                      the user groups.
+                    type: string
                   issuer:
                     description: Issuer is the OIDC issuer for accessing the exposed
                       APIPortal WebUI.
+                    type: string
+                  lastnameClaim:
+                    description: LastnameClaim is the name of the JWT claim containing
+                      the user lastname.
+                    type: string
+                  scopes:
+                    description: Scopes is the OIDC scopes for getting user attributes
+                      during the authentication to the exposed APIPortal WebUI.
                     type: string
                   secretName:
                     description: SecretName is the name of the secret containing the
