@@ -46,7 +46,7 @@ tests:
             internal: false
     asserts:
       - failedTemplate:
-          errorMessage: "You need to expose at least one port or set enabled=false to service"
+          errorMessage: "ERROR: Cannot create Service RELEASE-NAME-traefik-internal without ports"
   - it: should have customized annotations when specified via values
     set:
       service:

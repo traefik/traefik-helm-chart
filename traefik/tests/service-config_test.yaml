@@ -24,7 +24,7 @@ tests:
             default: false
     asserts:
       - failedTemplate:
-          errorMessage: "You need to expose at least one port or set enabled=false to service"
+          errorMessage: "ERROR: Cannot create Service RELEASE-NAME-traefik without ports"
   - it: should be a type LoadBalancer by default
     asserts:
       - equal:
@@ -273,19 +273,6 @@ tests:
     - equal:
         path: spec.ports[2].protocol
         value: UDP
-  - it: should fail when there is no exposed port
-    set:
-      ports:
-        web:
-          expose:
-            default: false
-        websecure:
-          expose:
-            default: false
-    asserts:
-    - failedTemplate:
-        errorMessage: "You need to expose at least one port or set enabled=false to service"
-        documentIndex: 1
   - it: should not be possible to use http3 without enabling tls
     set:
       ports:

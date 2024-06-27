@@ -11,12 +11,10 @@
 {{- $exposedPorts := false -}}
 {{- range $portName, $config := $.Values.ports -}}
   {{- if $config -}}
-    {{- if $config.http3 -}}
-    {{- if $config.http3.enabled -}}
+    {{- if ($config.http3).enabled -}}
       {{- if (not $config.tls.enabled) -}}
         {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
       {{- end -}}
-    {{- end -}}
     {{- end -}}
     {{- if eq (toString $config.protocol) "UDP" -}}
       {{ $_ := set $udpPorts $portName $config -}}
@@ -31,7 +29,7 @@
 {{- end -}}
 
 {{- if (eq $exposedPorts false) -}}
-  {{- fail "You need to expose at least one port or set enabled=false to service" -}}
+  {{- fail (printf "ERROR: Cannot create Service %s without ports" $fullname) -}}
 {{- end -}}
 
 {{- if and $exposedPorts (or $tcpPorts $service.single) }}
