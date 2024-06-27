@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.1.0-beta.3](https://img.shields.io/badge/Version-28.1.0--beta.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.0](https://img.shields.io/badge/AppVersion-v3.0.0-informational?style=flat-square)
+![Version: 28.3.0](https://img.shields.io/badge/Version-28.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.3](https://img.shields.io/badge/AppVersion-v3.0.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -28,19 +28,20 @@ Kubernetes: `>=1.22.0-0`
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary All available options available on https://docs.traefik.io/reference/static-configuration/cli/ # Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
+| additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
-| autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. |
-| certResolvers | object | `{}` | Certificates resolvers configuration |
+| autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
+| certResolvers | object | `{}` | Certificates resolvers configuration. Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers See EXAMPLES.md for more details. |
 | commonLabels | object | `{}` | Add additional label to all resources |
 | core.defaultRuleSyntax | string | `nil` | Can be used to use globally v2 router syntax See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
-| deployment.dnsConfig | object | `{}` | Custom pod DNS policy. Apply if `hostNetwork: true` dnsPolicy: ClusterFirstWithHostNet |
+| deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
 | deployment.enabled | bool | `true` | Enable deployment |
-| deployment.imagePullSecrets | list | `[]` | Additional imagePullSecrets |
+| deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
+| deployment.imagePullSecrets | list | `[]` | Pull secret for fetching traefik container image |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |
@@ -52,29 +53,16 @@ Kubernetes: `>=1.22.0-0`
 | deployment.runtimeClassName | string | `nil` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
-| env | list | `[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}]` | Environment variables to be passed to Traefik's binary |
+| env | list | See _values.yaml_ | Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.plugins | object | `{}` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
-| hub | object | `{"apimanagement":{"admission":{"listenAddr":null,"secretName":null},"enabled":null},"metrics":{"opentelemetry":{"address":null,"enabled":null,"explicitBoundaries":null,"grpc":null,"headers":null,"insecure":null,"path":null,"pushInterval":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}},"ratelimit":{"redis":{"cluster":null,"database":null,"endpoints":null,"password":null,"sentinel":{"masterset":null,"password":null,"username":null},"timeout":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null},"username":null}},"sendlogs":null,"token":null}` | Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/ |
 | hub.apimanagement.admission.listenAddr | string | `nil` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.secretName | string | `nil` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | string | `nil` | Set to true in order to enable API Management. Requires a valid license token. |
-| hub.metrics.opentelemetry.address | string | `nil` | Address (host:port) of the collector endpoint. Default: "localhost:4318". |
-| hub.metrics.opentelemetry.enabled | string | `nil` | Set to true to enable OpenTelemetry metrics exporter of Traefik Hub. |
-| hub.metrics.opentelemetry.explicitBoundaries | string | `nil` | Boundaries of latency metrics. Default: " 0.005000, 0.010000, 0.025000, 0.050000, 0.100000, 0.250000, 0.500000, 1.000000, 2.500000, 5.000000, 10.000000 " |
-| hub.metrics.opentelemetry.grpc | string | `nil` | Enables gRPC for the OpenTelemetry collector. Default: false. |
-| hub.metrics.opentelemetry.headers | string | `nil` | Additional headers to send to the collector. Default: {}. |
-| hub.metrics.opentelemetry.insecure | string | `nil` | Enable insecure schemes on metric endpoints. Default: false. |
-| hub.metrics.opentelemetry.path | string | `nil` | Collector endpoint path. Default: "". |
-| hub.metrics.opentelemetry.pushInterval | string | `nil` | Interval between metric exports. Default: "10s". |
-| hub.metrics.opentelemetry.tls.ca | string | `nil` | Path to the certificate authority used for the secured connection. |
-| hub.metrics.opentelemetry.tls.cert | string | `nil` | Path to the public certificate used for the secure connection. |
-| hub.metrics.opentelemetry.tls.insecureSkipVerify | string | `nil` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
-| hub.metrics.opentelemetry.tls.key | string | `nil` | Path to the private key used for the secure connection. |
 | hub.ratelimit.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.ratelimit.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.ratelimit.redis.endpoints | string | `nil` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -88,10 +76,12 @@ Kubernetes: `>=1.22.0-0`
 | hub.ratelimit.redis.tls.insecureSkipVerify | string | `nil` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
 | hub.ratelimit.redis.tls.key | string | `nil` | Path to the private key used for the secure connection. |
 | hub.ratelimit.redis.username | string | `nil` | The username to use when connecting to Redis endpoints. Default: "". |
+| hub.sendlogs | string | `nil` |  |
+| hub.token | string | `nil` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
-| image.tag | string | `""` | defaults to appVersion |
+| image.tag | string | `nil` | defaults to appVersion |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
 | ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
 | ingressRoute.dashboard.enabled | bool | `true` | Create an IngressRoute for the dashboard |
@@ -107,18 +97,22 @@ Kubernetes: `>=1.22.0-0`
 | ingressRoute.healthcheck.matchRule | string | `"PathPrefix(`/ping`)"` | The router match rule used for the healthcheck ingressRoute |
 | ingressRoute.healthcheck.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
 | ingressRoute.healthcheck.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
+| instanceLabelOverride | string | `nil` |  |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
 | livenessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.addInternals | string | `nil` | Enables accessLogs for internal resources. Default: false. |
+| logs.access.bufferingSize | string | `nil` | Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize) |
 | logs.access.enabled | bool | `false` | To enable access logs |
 | logs.access.fields.general.defaultmode | string | `"keep"` | Available modes: keep, drop, redact. |
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
+| logs.access.fields.headers | object | `{"defaultmode":"drop","names":{}}` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers) |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Available modes: keep, drop, redact. |
-| logs.access.fields.headers.names | object | `{}` | Names of the headers to limit. |
-| logs.access.filters | object | `{}` | https://docs.traefik.io/observability/access-logs/#filtering |
+| logs.access.filters | object | `{}` | Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering) |
+| logs.access.format | string | `nil` | Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format) |
+| logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) @default common |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
 | metrics.addInternals | string | `nil` |  |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
@@ -142,6 +136,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.http.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `nil` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
+| namespaceOverride | string | `nil` | This field override the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules` |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.annotations | object | `{}` |  |
@@ -149,11 +144,8 @@ Kubernetes: `>=1.22.0-0`
 | persistence.name | string | `"data"` |  |
 | persistence.path | string | `"/data"` |  |
 | persistence.size | string | `"128Mi"` |  |
-| podDisruptionBudget | object | `{"enabled":false}` | Pod disruption budget |
-| podSecurityContext.fsGroupChangePolicy | string | `"OnRootMismatch"` | Specifies the policy for changing ownership and permissions of volume contents to match the fsGroup. |
-| podSecurityContext.runAsGroup | int | `65532` | The ID of the group for all containers in the pod to run as. |
-| podSecurityContext.runAsNonRoot | bool | `true` | Specifies whether the containers should run as a non-root user. |
-| podSecurityContext.runAsUser | int | `65532` | The ID of the user for all containers in the pod to run as. |
+| podDisruptionBudget | object | `{"enabled":null,"maxUnavailable":null,"minAvailable":null}` | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
+| podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
@@ -179,8 +171,8 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.tls.enabled | bool | `true` |  |
 | ports.websecure.tls.options | string | `""` |  |
 | ports.websecure.transport | object | `{"keepAliveMaxRequests":null,"keepAliveMaxTime":null,"lifeCycle":{"graceTimeOut":null,"requestAcceptGraceTimeout":null},"respondingTimeouts":{"idleTimeout":null,"readTimeout":null,"writeTimeout":null}}` | Set transport settings for the entrypoint; see also https://doc.traefik.io/traefik/routing/entrypoints/#transport |
-| priorityClassName | string | `""` | Priority indicates the importance of a Pod relative to other Pods. |
-| providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |
+| priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
+| providers.file.content | string | `nil` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
 | providers.file.watch | bool | `true` | Allows Traefik to automatically watch for file changes |
 | providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
@@ -200,8 +192,8 @@ Kubernetes: `>=1.22.0-0`
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
 | readinessProbe.successThreshold | int | `1` | The minimum consecutive successes required to consider the probe successful. |
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
-| resources | object | `{}` | The resources parameter defines CPU and memory requirements and limits for Traefik's containers. |
-| securityContext | object | `{"allowPrivilegeEscalation":false,"capabilities":{"drop":["ALL"]},"readOnlyRootFilesystem":true}` | To run the container with ports below 1024 this will need to be adjusted to run as root |
+| resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container. |
+| securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
 | service.additionalServices | object | `{}` |  |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
@@ -215,9 +207,9 @@ Kubernetes: `>=1.22.0-0`
 | service.type | string | `"LoadBalancer"` |  |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
-| startupProbe | string | `nil` | Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes eg. `startupProbe:   exec:     command:       - mycommand       - foo   initialDelaySeconds: 5   periodSeconds: 5` |
-| tlsOptions | object | `{}` | TLS Options are created as TLSOption CRDs https://doc.traefik.io/traefik/https/tls/#tls-options When using `labelSelector`, you'll need to set labels on tlsOption accordingly. Example: tlsOptions:   default:     labels: {}     sniStrict: true   custom-options:     labels: {}     curvePreferences:       - CurveP521       - CurveP384 |
-| tlsStore | object | `{}` | TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate https://doc.traefik.io/traefik/https/tls/#default-certificate Example: tlsStore:   default:     defaultCertificate:       secretName: tls-cert |
+| startupProbe | string | `nil` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |
+| tlsOptions | object | `{}` | TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options) When using `labelSelector`, you'll need to set labels on tlsOption accordingly. See EXAMPLE.md for details. |
+| tlsStore | object | `{}` | TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details. |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
 | topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains. |
 | tracing | object | `{"addInternals":null,"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":null,"insecure":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}},"http":{"enabled":false,"endpoint":null,"headers":null,"tls":{"ca":null,"cert":null,"insecureSkipVerify":null,"key":null}}}}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |

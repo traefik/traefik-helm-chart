@@ -22,6 +22,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "traefik.serviceAccountName" . }}
+      automountServiceAccountToken: true
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ .Values.hostNetwork }}
       {{- with .Values.deployment.dnsPolicy }}
@@ -41,6 +42,9 @@
         options:
           {{- toYaml .options | nindent 10 }}
         {{- end }}
+      {{- end }}
+      {{- with .Values.deployment.hostAliases }}
+      hostAliases: {{- toYaml . | nindent 8 }}
       {{- end }}
       {{- with .Values.deployment.initContainers }}
       initContainers:
@@ -516,6 +520,9 @@
              {{- if $config.redirectTo.priority }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ $config.redirectTo.priority }}"
              {{- end }}
+             {{- if $config.redirectTo.permanent }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent=true"
+             {{- end }}
             {{- end }}
             {{- if $config.middlewares }}
           - "--entryPoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"
@@ -703,12 +710,14 @@
             valueFrom:
               resourceFieldRef:
                 resource: limits.cpu
+                divisor: '1'
           {{- end }}
           {{- if ($.Values.resources.limits).memory }}
           - name: GOMEMLIMIT
             valueFrom:
               resourceFieldRef:
                 resource: limits.memory
+                divisor: '1'
           {{- end }}
           {{- with .Values.hub.token }}
           - name: HUB_TOKEN

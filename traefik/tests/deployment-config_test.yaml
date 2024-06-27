@@ -2,11 +2,26 @@ suite: Deployment configuration
 templates:
   - deployment.yaml
 tests:
-  - it: should have 1 replica by default
+  - it: should provide expected defaults
     asserts:
       - equal:
           path: spec.replicas
           value: 1
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.strategy.rollingUpdate.maxUnavailable
+          value: 0
+      - equal:
+          path: spec.strategy.rollingUpdate.maxSurge
+          value: 1
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
   - it: should have the specified amount of replicas when specified via values
     set:
       deployment:
@@ -22,17 +37,6 @@ tests:
     asserts:
       - equal:
           path: spec.revisionHistoryLimit
-          value: 1
-  - it: should have a rollingUpdate strategy with default values
-    asserts:
-      - equal:
-          path: spec.strategy.type
-          value: RollingUpdate
-      - equal:
-          path: spec.strategy.rollingUpdate.maxUnavailable
-          value: 0
-      - equal:
-          path: spec.strategy.rollingUpdate.maxSurge
           value: 1
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
@@ -160,11 +164,6 @@ tests:
       - equal:
           path: spec.strategy.type
           value: OnDelete
-  - it: should use helm managed namespace as default behavior
-    asserts:
-      - equal:
-          path: metadata.namespace
-          value: NAMESPACE
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
@@ -210,3 +209,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.redirections.entryPoint.priority=10"
+  - it: should have permanent http redirections enabled, when enabled with redirectTo and permanent
+    set:
+      ports:
+        web:
+          redirectTo:
+            port: websecure
+            permanent: true
+        websecure:
+          exposedPort: 443
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.permanent=true"

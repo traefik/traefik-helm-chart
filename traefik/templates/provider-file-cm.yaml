@@ -7,6 +7,6 @@ metadata:
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 data:
-  config.yml: |
-    {{ .Values.providers.file.content | nindent 4 }}
+  config.yml:
+    {{ toYaml .Values.providers.file.content | nindent 4 }}
 {{- end -}}

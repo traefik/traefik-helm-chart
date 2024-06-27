@@ -1,20 +1,20 @@
 # Default values for Traefik
+# This is a YAML-formatted file.
+# Declare variables to be passed into templates
+
 image:
   # -- Traefik image host registry
   registry: docker.io
   # -- Traefik image repository
   repository: traefik
   # -- defaults to appVersion
-  tag: ""
+  tag:
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
 
 # -- Add additional label to all resources
 commonLabels: {}
 
-#
-# Configure the deployment
-#
 deployment:
   # -- Enable deployment
   enabled: true
@@ -74,10 +74,6 @@ deployment:
   # - name: volume-permissions
   #   image: busybox:latest
   #   command: ["sh", "-c", "touch /data/acme.json; chmod -v 600 /data/acme.json"]
-  #   securityContext:
-  #     runAsNonRoot: true
-  #     runAsGroup: 65532
-  #     runAsUser: 65532
   #   volumeMounts:
   #     - name: data
   #       mountPath: /data
@@ -85,19 +81,12 @@ deployment:
   shareProcessNamespace: false
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   # dnsPolicy: ClusterFirstWithHostNet
+  # -- Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core)
   dnsConfig: {}
-  # nameservers:
-  #   - 192.0.2.1 # this is an example
-  # searches:
-  #   - ns1.svc.cluster-domain.example
-  #   - my.dns.search.suffix
-  # options:
-  #   - name: ndots
-  #     value: "2"
-  #   - name: edns0
-  # -- Additional imagePullSecrets
+  # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+  hostAliases: []
+  # -- Pull secret for fetching traefik container image
   imagePullSecrets: []
-  # - name: myRegistryKeySecretName
   # -- Pod lifecycle actions
   lifecycle: {}
   # preStop:
@@ -112,13 +101,11 @@ deployment:
   # -- Set a runtimeClassName on pod
   runtimeClassName:
 
-# -- Pod disruption budget
+# -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
 podDisruptionBudget:
-  enabled: false
-  # maxUnavailable: 1
-  # maxUnavailable: 33%
-  # minAvailable: 0
-  # minAvailable: 25%
+  enabled:
+  maxUnavailable:
+  minAvailable:
 
 # -- Create a default IngressClass for Traefik
 ingressClass:
@@ -155,7 +142,6 @@ experimental:
     # annotations:
     #   cert-manager.io/issuer: letsencrypt
 
-## Create an IngressRoute for the dashboard
 ingressRoute:
   dashboard:
     # -- Create an IngressRoute for the dashboard
@@ -221,15 +207,7 @@ livenessProbe:
   # -- The number of seconds to wait for a probe response before considering it as failed.
   timeoutSeconds: 2
 
-# -- Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
-# eg.
-# `startupProbe:
-#   exec:
-#     command:
-#       - mycommand
-#       - foo
-#   initialDelaySeconds: 5
-#   periodSeconds: 5`
+# -- Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
 startupProbe:
 
 providers:
@@ -276,18 +254,8 @@ providers:
     # -- Allows Traefik to automatically watch for file changes
     watch: true
     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
-    content: ""
-      # http:
-      #   routers:
-      #     router0:
-      #       entryPoints:
-      #       - web
-      #       middlewares:
-      #       - my-basic-auth
-      #       service: service-foo
-      #       rule: Path(`/foo`)
+    content:
 
-#
 # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
 # This can be used to mount a cert pair or a configmap that holds a config.toml file.
 # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
@@ -311,26 +279,21 @@ additionalVolumeMounts: []
 
 logs:
   general:
-    # -- By default, the logs use a text format (common), but you can
-    # also ask for the json format in the format option
-    # format: json
+    # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+    # @default common
+    format:
     # By default, the level is set to ERROR.
     # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
     level: INFO
   access:
     # -- To enable access logs
     enabled: false
-    ## By default, logs are written using the Common Log Format (CLF) on stdout.
-    ## To write logs in JSON, use json in the format option.
-    ## If the given format is unsupported, the default (CLF) is used instead.
-    # format: json
+    # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
+    format:
     # filePath: "/var/log/traefik/access.log
-    ## To write the logs in an asynchronous fashion, specify a bufferingSize option.
-    ## This option represents the number of log lines Traefik will keep in memory before writing
-    ## them to the selected output. In some cases, this option can greatly help performances.
-    # bufferingSize: 100
-    ## Filtering
-    # -- https://docs.traefik.io/observability/access-logs/#filtering
+    # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+    bufferingSize:
+    # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
     filters: {}
     # statuscodes: "200,300-302"
     # retryattempts: true
@@ -345,15 +308,11 @@ logs:
         names: {}
         ## Examples:
         # ClientUsername: drop
+      # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
       headers:
         # -- Available modes: keep, drop, redact.
         defaultmode: drop
-        # -- Names of the headers to limit.
         names: {}
-        ## Examples:
-        # User-Agent: redact
-        # Authorization: drop
-        # Content-Type: keep
 
 metrics:
   ## -- Enable metrics for internal resources. Default: false
@@ -567,16 +526,15 @@ globalArguments:
 - "--global.checknewversion"
 - "--global.sendanonymoususage"
 
-#
-# Configure Traefik static configuration
 # -- Additional arguments to be passed at Traefik's binary
-# All available options available on https://docs.traefik.io/reference/static-configuration/cli/
-## Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
+# See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
+# Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
 additionalArguments: []
 #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
 #  - "--log.level=DEBUG"
 
 # -- Environment variables to be passed to Traefik's binary
+# @default -- See _values.yaml_
 env:
 - name: POD_NAME
   valueFrom:
@@ -586,25 +544,9 @@ env:
   valueFrom:
     fieldRef:
       fieldPath: metadata.namespace
-# - name: SOME_VAR
-#   value: some-var-value
-# - name: SOME_VAR_FROM_CONFIG_MAP
-#   valueFrom:
-#     configMapRef:
-#       name: configmap-name
-#       key: config-key
-# - name: SOME_SECRET
-#   valueFrom:
-#     secretKeyRef:
-#       name: secret-name
-#       key: secret-key
 
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []
-# - configMapRef:
-#     name: config-map-name
-# - secretRef:
-#     name: secret-name
 
 ports:
   traefik:
@@ -653,6 +595,7 @@ ports:
     #   port: websecure
     #   (Optional)
     #   priority: 10
+    #   permanent: true
     #
     # -- Trust forwarded headers information (X-Forwarded-*).
     # forwardedHeaders:
@@ -766,28 +709,12 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
 
-# -- TLS Options are created as TLSOption CRDs
-# https://doc.traefik.io/traefik/https/tls/#tls-options
+# -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options)
 # When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
-# Example:
-# tlsOptions:
-#   default:
-#     labels: {}
-#     sniStrict: true
-#   custom-options:
-#     labels: {}
-#     curvePreferences:
-#       - CurveP521
-#       - CurveP384
+# See EXAMPLE.md for details.
 tlsOptions: {}
 
-# -- TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate
-# https://doc.traefik.io/traefik/https/tls/#default-certificate
-# Example:
-# tlsStore:
-#   default:
-#     defaultCertificate:
-#       secretName: tls-cert
+# -- TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details.
 tlsStore: {}
 
 service:
@@ -839,29 +766,8 @@ service:
 
 autoscaling:
   # -- Create HorizontalPodAutoscaler object.
+  # See EXAMPLES.md for more details.
   enabled: false
-#   minReplicas: 1
-#   maxReplicas: 10
-#   metrics:
-#   - type: Resource
-#     resource:
-#       name: cpu
-#       target:
-#         type: Utilization
-#         averageUtilization: 60
-#   - type: Resource
-#     resource:
-#       name: memory
-#       target:
-#         type: Utilization
-#         averageUtilization: 60
-#   behavior:
-#     scaleDown:
-#       stabilizationWindowSeconds: 300
-#       policies:
-#       - type: Pods
-#         value: 1
-#         periodSeconds: 60
 
 persistence:
   # -- Enable persistence using Persistent Volume Claims
@@ -879,27 +785,10 @@ persistence:
   # -- Only mount a subpath of the Volume into the pod
   # subPath: ""
 
-# -- Certificates resolvers configuration
+# -- Certificates resolvers configuration.
+# Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers
+# See EXAMPLES.md for more details.
 certResolvers: {}
-#   letsencrypt:
-#     # for challenge options cf. https://doc.traefik.io/traefik/https/acme/
-#     email: email@example.com
-#     dnsChallenge:
-#       # also add the provider's required configuration under env
-#       # or expand then from secrets/configmaps with envfrom
-#       # cf. https://doc.traefik.io/traefik/https/acme/#providers
-#       provider: digitalocean
-#       # add futher options for the dns challenge as needed
-#       # cf. https://doc.traefik.io/traefik/https/acme/#dnschallenge
-#       delayBeforeCheck: 30
-#       resolvers:
-#         - 1.1.1.1
-#         - 8.8.8.8
-#     tlsChallenge: true
-#     httpChallenge:
-#       entryPoint: "web"
-#     # It has to match the path with a persistent volume
-#     storage: /data/acme.json
 
 # -- If hostNetwork is true, runs traefik in the host network namespace
 # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
@@ -933,14 +822,8 @@ serviceAccount:
 # -- Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}
 
-# -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
+# -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container.
 resources: {}
-# requests:
-#   cpu: "100m"
-#   memory: "50Mi"
-# limits:
-#   cpu: "300m"
-#   memory: "150Mi"
 
 # -- This example pod anti-affinity forces the scheduler to put traefik pods
 # -- on nodes where no other traefik pods are scheduled.
@@ -970,30 +853,22 @@ topologySpreadConstraints: []
 #    topologyKey: kubernetes.io/hostname
 #    whenUnsatisfiable: DoNotSchedule
 
-# -- Pods can have priority.
-# -- Priority indicates the importance of a Pod relative to other Pods.
+# -- [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
 priorityClassName: ""
 
-# -- Set the container security context
-# -- To run the container with ports below 1024 this will need to be adjusted to run as root
+# -- [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1)
+# @default -- See _values.yaml_
 securityContext:
+  allowPrivilegeEscalation: false
   capabilities:
     drop: [ALL]
   readOnlyRootFilesystem: true
-  allowPrivilegeEscalation: false
 
+# -- [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context)
+# @default -- See _values.yaml_
 podSecurityContext:
-  # /!\ When setting fsGroup, Kubernetes will recursively change ownership and
-  # permissions for the contents of each volume to match the fsGroup. This can
-  # be an issue when storing sensitive content like TLS Certificates /!\
-  # fsGroup: 65532
-  # -- Specifies the policy for changing ownership and permissions of volume contents to match the fsGroup.
-  fsGroupChangePolicy: "OnRootMismatch"
-  # -- The ID of the group for all containers in the pod to run as.
   runAsGroup: 65532
-  # -- Specifies whether the containers should run as a non-root user.
   runAsNonRoot: true
-  # -- The ID of the user for all containers in the pod to run as.
   runAsUser: 65532
 
 #
@@ -1003,16 +878,16 @@ podSecurityContext:
 # See #595 for more details and traefik/tests/values/extra.yaml for example.
 extraObjects: []
 
-# This will override the default Release Namespace for Helm.
+# -- This field override the default Release Namespace for Helm.
 # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
-# namespaceOverride: traefik
-#
-## -- This will override the default app.kubernetes.io/instance label for all Objects.
-# instanceLabelOverride: traefik
+namespaceOverride:
 
-# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+## -- This field override the default app.kubernetes.io/instance label for all Objects.
+instanceLabelOverride:
+
+# Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
-  # Name of Secret with key 'token' set to a valid license token.
+  # -- Name of `Secret` with key 'token' set to a valid license token.
   # It enables API Gateway.
   token:
   apimanagement:

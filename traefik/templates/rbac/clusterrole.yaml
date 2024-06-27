@@ -1,5 +1,5 @@
-{{- if and .Values.rbac.enabled (or .Values.providers.kubernetesIngress.enabled (not .Values.rbac.namespaced)) -}}
-{{- if not (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.disableIngressClassLookup) -}}
+{{- if and .Values.rbac.enabled (or .Values.providers.kubernetesIngress.enabled (not .Values.rbac.namespaced)) }}
+{{- if not (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.disableIngressClassLookup) }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -24,6 +24,7 @@ rules:
       - list
       - watch
 {{- if not .Values.rbac.namespaced }}
+  {{- if (semverCompare "<v3.1.0" (.Values.image.tag | default .Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -34,12 +35,32 @@ rules:
       - get
       - list
       - watch
+  {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+    {{- if $.Values.hub.token }}
+      - get
+    {{- end }}
+      - list
+      - watch
+  {{- end }}
   - apiGroups:
       - ""
     resources:
       - secrets
-    {{- if gt (len .Values.rbac.secretResourceNames) 0 }}
-    resourceNames: {{ .Values.rbac.secretResourceNames }}
+    {{- with .Values.rbac.secretResourceNames }}
+    resourceNames: {{ toYaml . |nindent 6 }}
     {{- end }}
     verbs:
       - get
@@ -116,8 +137,6 @@ rules:
       - update
 {{- end -}}
 {{- end -}}
-{{- end -}}
-{{- end -}}
 {{- if .Values.hub.token }}
   - apiGroups:
       - hub.traefik.io
@@ -128,7 +147,6 @@ rules:
       - apiratelimits
       - apis
       - apiversions
-      - edgeingresses
     verbs:
       - list
       - watch
@@ -147,8 +165,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - services
-      - endpoints
       - namespaces
       - pods
       - nodes
@@ -163,14 +179,6 @@ rules:
     verbs:
       - create
       - patch
-  - apiGroups:
-      - discovery.k8s.io
-    resources:
-      - endpointslices
-    verbs:
-      - list
-      - get
-      - watch
   - apiGroups:
       - coordination.k8s.io
     resources:
@@ -194,13 +202,11 @@ rules:
       - update
       - create
       - delete
+      - deletecollection
   - apiGroups:
       - apps
     resources:
-      - deployments
-      - statefulsets
       - replicasets
-      - daemonsets
     verbs:
       - get
       - list
@@ -214,8 +220,6 @@ rules:
       - get
       - list
       - watch
-      - create
-      - update
-      - patch
-      - delete
-{{- end -}}
+{{- end }}
+{{- end }}
+{{- end }}

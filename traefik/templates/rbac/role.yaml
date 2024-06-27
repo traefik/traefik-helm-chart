@@ -13,6 +13,7 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
+  {{- if (semverCompare "<v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -23,6 +24,26 @@ rules:
       - get
       - list
       - watch
+  {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      - services
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+    {{- if $.Values.hub.token }}
+      - get
+    {{- end }}
+      - list
+      - watch
+  {{- end }}
   # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
   - apiGroups:
       - ""
@@ -119,6 +140,83 @@ rules:
       - tlsroutes/status
     verbs:
       - update
+{{- end -}}
+{{- if $.Values.hub.token }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+      - apiaccesses
+      - apiportals
+      - apiratelimits
+      - apis
+      - apiversions
+    verbs:
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+      - get
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+      - pods
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+      - update
+      - create
+      - delete
+      - deletecollection
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
 {{- end -}}
 {{- end -}}
 {{- end -}}

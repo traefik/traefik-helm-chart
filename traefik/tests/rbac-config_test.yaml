@@ -29,6 +29,10 @@ tests:
           value: RELEASE-NAME-traefik
         template: rbac/serviceaccount.yaml
       - equal:
+          path: automountServiceAccountToken
+          value: false
+        template: rbac/serviceaccount.yaml
+      - equal:
           path: spec.template.spec.serviceAccountName
           value: RELEASE-NAME-traefik
         template: deployment.yaml
@@ -577,6 +581,26 @@ tests:
               - get
               - list
               - watch
+  - it: ClusterRole should allow get, list, watch access only to multiple secrets listed in secretResourceNames if not empty
+    set:
+      rbac:
+        secretResourceNames: [traefik-tls-cert, some-other-cert]
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            resourceNames:
+              - traefik-tls-cert
+              - some-other-cert
+            verbs:
+              - get
+              - list
+              - watch
   - it: Role should allow get, list, watch access to every secret if secretResourceNames is empty
     set:
       rbac:
@@ -615,6 +639,8 @@ tests:
               - list
               - watch
   - it: should provide expected cluster rbac when k8s gw api is enabled
+    chart:
+      appVersion: v3.1.0
     set:
       experimental:
         kubernetesGateway:
@@ -669,11 +695,21 @@ tests:
             apiGroups:
               - ""
             resources:
-              - endpoints
               - nodes
               - services
             verbs:
               - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
               - list
               - watch
       - template: rbac/clusterrole.yaml
@@ -702,6 +738,8 @@ tests:
               - watch
 
   - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
+    chart:
+      appVersion: v3.1.0
     set:
       rbac:
         namespaced: true
@@ -758,11 +796,21 @@ tests:
             apiGroups:
               - ""
             resources:
-              - endpoints
               - nodes
               - services
             verbs:
               - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
               - list
               - watch
       - template: rbac/role.yaml
@@ -778,6 +826,8 @@ tests:
               - list
               - watch
   - it: should contain additional RBACS for hub
+    chart:
+      appVersion: v3.1.0
     set:
       hub:
         token: xxx
@@ -795,7 +845,6 @@ tests:
               - apiratelimits
               - apis
               - apiversions
-              - edgeingresses
             verbs:
               - list
               - watch
@@ -822,8 +871,6 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
-              - endpoints
               - namespaces
               - pods
               - nodes
@@ -851,8 +898,8 @@ tests:
             resources:
               - endpointslices
             verbs:
-              - list
               - get
+              - list
               - watch
       - template: rbac/clusterrole.yaml
         contains:
@@ -885,6 +932,7 @@ tests:
               - update
               - create
               - delete
+              - deletecollection
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
@@ -892,10 +940,7 @@ tests:
             apiGroups:
               - apps
             resources:
-              - deployments
-              - statefulsets
               - replicasets
-              - daemonsets
             verbs:
               - get
               - list
@@ -913,7 +958,193 @@ tests:
               - get
               - list
               - watch
+  - it: should provide namespace'd RBACS for hub
+    chart:
+      appVersion: v3.1.0
+    set:
+      hub:
+        token: xxx
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesIngress:
+          enabled: false
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - accesscontrolpolicies
+              - apiaccesses
+              - apiportals
+              - apiratelimits
+              - apis
+              - apiversions
+            verbs:
+              - list
+              - watch
               - create
               - update
               - patch
               - delete
+              - get
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+              - pods
+              - nodes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - events
+            verbs:
+              - create
+              - patch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - coordination.k8s.io
+            resources:
+              - leases
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - patch
+              - delete
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - update
+              - create
+              - delete
+              - deletecollection
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - apps
+            resources:
+              - replicasets
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+  - it: should provide expected namespace'd RBACS for version < v3.1
+    set:
+      image:
+        tag: v3.0.1
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+  - it: should provide expected RBACS for version < v3.1
+    set:
+      image:
+        tag: v3.0.1
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - services
+              - endpoints
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+
