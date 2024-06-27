@@ -1099,8 +1099,8 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
               - endpoints
+              - services
             verbs:
               - get
               - list
@@ -1129,8 +1129,8 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
               - endpoints
+              - services
             verbs:
               - get
               - list
