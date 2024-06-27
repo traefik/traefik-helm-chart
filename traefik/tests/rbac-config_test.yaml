@@ -695,6 +695,7 @@ tests:
             apiGroups:
               - ""
             resources:
+              - nodes
               - services
             verbs:
               - get
@@ -795,6 +796,7 @@ tests:
             apiGroups:
               - ""
             resources:
+              - nodes
               - services
             verbs:
               - get
@@ -1097,8 +1099,8 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
               - endpoints
+              - services
             verbs:
               - get
               - list
@@ -1127,8 +1129,8 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
               - endpoints
+              - services
             verbs:
               - get
               - list

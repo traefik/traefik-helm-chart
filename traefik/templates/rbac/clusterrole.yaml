@@ -28,8 +28,8 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - services
       - endpoints
+      - services
     verbs:
       - get
       - list
@@ -38,6 +38,7 @@ rules:
   - apiGroups:
       - ""
     resources:
+      - nodes
       - services
     verbs:
       - get
