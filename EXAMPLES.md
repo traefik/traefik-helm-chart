@@ -423,7 +423,7 @@ ports:
 This chart follows common security practices: it runs as non root with a readonly root filesystem.
 When enabling a plugin which needs storage, you have to add it to the deployment.
 
-Here is a simple example with crowdsec. You may want to replace with your plugin or see complete exemple on crowdsec [here](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/exemples/kubernetes/README.md).
+Here is a simple example with crowdsec. You may want to replace with your plugin or see complete exemple on crowdsec [here](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/examples/kubernetes/README.md).
 
 ```yaml
 deployment:
