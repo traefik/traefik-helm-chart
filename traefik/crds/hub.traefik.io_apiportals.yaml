@@ -89,10 +89,6 @@ spec:
                     description: EmailClaim is the name of the JWT claim containing
                       the user email.
                     type: string
-                  externalIdClaim:
-                    description: ExternalIDClaim is the name of the JWT claim containing
-                      the user external ID.
-                    type: string
                   firstnameClaim:
                     description: FirstnameClaim is the name of the JWT claim containing
                       the user firstname.
@@ -120,6 +116,16 @@ spec:
                   secretName:
                     description: SecretName is the name of the secret containing the
                       OIDC ClientSecret for accessing the exposed APIPortal WebUI.
+                    type: string
+                  syncedAttributes:
+                    description: SyncedAttributes configure the user attributes to
+                      sync.
+                    items:
+                      type: string
+                    type: array
+                  userIdClaim:
+                    description: UserIDClaim is the name of the JWT claim containing
+                      the user ID.
                     type: string
                 type: object
               syncedAt:
