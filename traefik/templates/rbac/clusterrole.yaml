@@ -38,7 +38,7 @@ rules:
       - list
       - watch
 {{- if not .Values.rbac.namespaced }}
-  {{- if (semverCompare "<v3.1.0" (.Values.image.tag | default .Chart.AppVersion)) }}
+  {{- if (semverCompare "<v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -130,7 +130,7 @@ rules:
       - ""
     resources:
       - services
-{{- if (semverCompare "<v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
       - endpoints
 {{- end }}
       - secrets
@@ -138,7 +138,7 @@ rules:
       - get
       - list
       - watch
-{{- if (semverCompare ">=v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare ">=v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
   - apiGroups:
       - discovery.k8s.io
     resources:
@@ -153,7 +153,7 @@ rules:
       - gatewayclasses
       - gateways
       - httproutes
-{{- if (semverCompare ">=v3.0.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare ">=3.0.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
       - referencegrants
 {{- end }}
       - tcproutes
