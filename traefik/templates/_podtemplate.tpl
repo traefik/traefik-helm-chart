@@ -492,7 +492,7 @@
           - "--providers.kubernetesingress.nativeLBByDefault=true"
            {{- end }}
           {{- end }}
-          {{- if or .Values.experimental.kubernetesGateway.enabled (and .Values.providers.kubernetesGateway.enabled (semverCompare "<v3.1.0-rc3" ($.Values.image.tag | default $.Chart.AppVersion)))}}
+          {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--experimental.kubernetesgateway"
           {{- end }}
           {{- with .Values.providers.kubernetesCRD }}

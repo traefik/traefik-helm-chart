@@ -42,11 +42,11 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Before traefik v3.1, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
-  - it: should not fail when using kubernetesGateway on traefik > 3.1 without experimental flag
+          errorMessage: "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
+  - it: should not fail when using kubernetesGateway on traefik > 3.1.0-rc3 without experimental flag
     set:
       image:
-        tag: v3.1.0-rc2
+        tag: v3.1.0-rc3
       providers:
         kubernetesGateway:
           enabled: true
@@ -56,6 +56,9 @@ tests:
     set:
       image:
         tag: v3.1.0-rc2
+      experimental:
+        kubernetesGateway:
+          enabled: true
       providers:
         kubernetesGateway:
           enabled: true
@@ -68,6 +71,9 @@ tests:
     set:
       image:
         tag: v3.1.0-rc2
+      experimental:
+        kubernetesGateway:
+          enabled: true
       providers:
         kubernetesGateway:
           enabled: true

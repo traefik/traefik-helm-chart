@@ -323,17 +323,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.kubernetesgateway"
-  - it: should have experimental flag when < 3.1.0
-    set:
-      image:
-        tag: v3.1.0-rc2
-      providers:
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.kubernetesgateway"
   - it: shouldn't have experimental flag when >= 3.1.0
     set:
       image:

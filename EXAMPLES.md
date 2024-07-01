@@ -810,6 +810,9 @@ You can now use the new stable kubernetes gateway API provider setting the follo
 ```yaml
 image:
   tag: v3.1.0-rc2
+experimental:
+  kubernetesGateway:
+    enabled: true
 providers:
   kubernetesGateway:
     enabled: true
