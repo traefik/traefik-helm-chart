@@ -796,7 +796,6 @@ tests:
             apiGroups:
               - ""
             resources:
-              - nodes
               - services
             verbs:
               - get
@@ -1147,4 +1146,3 @@ tests:
               - list
               - get
               - watch
-
