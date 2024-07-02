@@ -369,6 +369,22 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
+# Use an IngressClass
+
+Default install comes with an `IngressClass` resource that can be enabled on providers.
+
+Here's how one can enable it on CRD & Ingress Kubernetes provider:
+
+```yaml
+ingressClass:
+  name: traefik
+providers:
+  kubernetesCRD:
+    ingressClass: traefik
+  kubernetesIngress:
+    ingressClass: traefik
+```
+
 # Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
