@@ -25,6 +25,8 @@ tests:
     set:
       experimental.kubernetesGateway.enabled: true
       experimental.kubernetesGateway.gateway.enabled: true
+      ingressRoute.dashboard.enabled: true
+      ingressRoute.healthcheck.enabled: true
       autoscaling.enabled: true
       autoscaling.maxReplicas: 10
       podDisruptionBudget.enabled: true
