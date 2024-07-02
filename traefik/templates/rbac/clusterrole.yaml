@@ -1,4 +1,5 @@
 {{- if and .Values.rbac.enabled (or .Values.providers.kubernetesIngress.enabled (not .Values.rbac.namespaced)) }}
+{{- if not (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.disableIngressClassLookup) }}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -10,17 +11,6 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
     {{- end }}
 rules:
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-{{- if not .Values.rbac.namespaced }}
-      - services
-{{- end }}
-    verbs:
-      - get
-      - list
-      - watch
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -45,6 +35,15 @@ rules:
       - list
       - watch
   {{- else }}
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+      - services
+    verbs:
+      - get
+      - list
+      - watch
   - apiGroups:
       - discovery.k8s.io
     resources:
@@ -221,5 +220,28 @@ rules:
       - get
       - list
       - watch
+{{- end }}
+{{- else }}
+{{- if semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion) }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ template "traefik.clusterRoleName" . }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- range .Values.rbac.aggregateTo }}
+    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
+    {{- end }}
+rules:
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+{{- end }}
 {{- end }}
 {{- end }}
