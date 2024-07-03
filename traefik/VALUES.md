@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 28.3.0](https://img.shields.io/badge/Version-28.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.3](https://img.shields.io/badge/AppVersion-v3.0.3-informational?style=flat-square)
+![Version: 28.3.0](https://img.shields.io/badge/Version-28.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.0.4](https://img.shields.io/badge/AppVersion-v3.0.4-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -179,11 +179,13 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesCRD.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
 | providers.kubernetesCRD.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
+| providers.kubernetesCRD.ingressClass | string | `nil` | When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled. |
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
 | providers.kubernetesIngress.disableIngressClassLookup | bool | `false` |  |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
+| providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `false` |  |
 | rbac | object | `{"enabled":true,"namespaced":false,"secretResourceNames":[]}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
