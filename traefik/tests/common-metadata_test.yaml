@@ -30,7 +30,9 @@ tests:
       autoscaling.enabled: true
       autoscaling.maxReplicas: 10
       podDisruptionBudget.enabled: true
+      metrics.prometheus.prometheusRule.enabled: true
       metrics.prometheus.prometheusRule.namespace: test
+      metrics.prometheus.serviceMonitor.enabled: true
       metrics.prometheus.serviceMonitor.namespace: test
       metrics.prometheus.service.enabled: true
       service.internal.a: {}
