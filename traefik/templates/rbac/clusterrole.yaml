@@ -37,6 +37,29 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.providers.kubernetesGateway.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses/status
+    verbs:
+      - update
+{{- end }}
 {{- if not .Values.rbac.namespaced }}
   {{- if (semverCompare "<v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion)) }}
   - apiGroups:
@@ -122,13 +145,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - namespaces
-    verbs:
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
       - services
 {{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
       - endpoints
@@ -150,7 +166,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gatewayclasses
       - gateways
       - httproutes
       - referencegrants
@@ -163,7 +178,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gatewayclasses/status
       - gateways/status
       - httproutes/status
       - tcproutes/status

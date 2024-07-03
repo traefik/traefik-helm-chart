@@ -752,9 +752,41 @@ tests:
           path: rules
           content:
             apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
               - gateways/status
               - httproutes/status
               - tcproutes/status
@@ -768,7 +800,6 @@ tests:
             apiGroups:
               - gateway.networking.k8s.io
             resources:
-              - gatewayclasses
               - gateways
               - httproutes
               - referencegrants
@@ -816,9 +847,29 @@ tests:
           path: rules
           content:
             apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
               - gateways/status
               - httproutes/status
               - tcproutes/status
@@ -833,6 +884,17 @@ tests:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
               - gateways
               - httproutes
               - referencegrants
@@ -889,6 +951,39 @@ tests:
         kubernetesGateway:
           enabled: true
     asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+            verbs:
+              - get
+              - list
+              - watch
       - template: rbac/role.yaml
         contains:
           path: rules
@@ -944,6 +1039,39 @@ tests:
         kubernetesGateway:
           enabled: true
     asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+            verbs:
+              - get
+              - list
+              - watch
       - template: rbac/role.yaml
         contains:
           path: rules
