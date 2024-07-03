@@ -1190,9 +1190,6 @@ tests:
       rbac:
         enabled: true
         namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
