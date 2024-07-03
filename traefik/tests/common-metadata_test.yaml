@@ -24,7 +24,6 @@ tests:
   - it: "should contains labels metadata"
     set:
       providers.kubernetesGateway.enabled: true
-      providers.kubernetesGateway.gateway.enabled: true
       ingressRoute.dashboard.enabled: true
       ingressRoute.healthcheck.enabled: true
       autoscaling.enabled: true

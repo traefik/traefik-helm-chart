@@ -25,6 +25,7 @@ tests:
       providers:
         kubernetesGateway:
           enabled: true
+      gateway:
           namespacePolicy: All
     asserts:
       - equal:
@@ -35,11 +36,12 @@ tests:
       providers:
         kubernetesGateway:
           enabled: true
-          namespacePolicy: All
-          certificate:
-            group: "core"
-            kind: "Secret"
-            name: "mysecret"
+      gateway:
+        namespacePolicy: All
+        certificate:
+          group: "core"
+          kind: "Secret"
+          name: "mysecret"
     asserts:
       - equal:
           path: spec.listeners[1].allowedRoutes.namespaces.from
@@ -54,16 +56,17 @@ tests:
     asserts:
       - containsDocument:
           kind: Gateway
-          apiVersion: gateway.networking.k8s.io/v1alpha2
+          apiVersion: gateway.networking.k8s.io/v1
   - it: should have one Gateway with the correct class and an http port as well as an https port
     set:
       providers:
         kubernetesGateway:
           enabled: true
-          certificate:
-            name: "my-name"
-            group: "my-group"
-            kind: "my-kind"
+      gateway:
+        certificate:
+          name: "my-name"
+          group: "my-group"
+          kind: "my-kind"
     asserts:
       - equal:
           path: spec.gatewayClassName
@@ -86,16 +89,6 @@ tests:
       - equal:
           path: spec.listeners[1].tls.certificateRefs[0].kind
           value: "my-kind"
-  - it: should install Gateway in custom namespace
-    set:
-      providers:
-        kubernetesGateway:
-          enabled: true
-          namespace: "default"
-    asserts:
-      - equal:
-          path: metadata.namespace
-          value: "default"
   - it: should install Gateway in default namespace
     set:
       providers:
@@ -120,8 +113,9 @@ tests:
       providers:
         kubernetesGateway:
           enabled: true
-          annotations:
-            cert-manager.io/issuer: letsencrypt
+      gateway:
+        annotations:
+          cert-manager.io/issuer: letsencrypt
     asserts:
       - equal:
           path: metadata.annotations
