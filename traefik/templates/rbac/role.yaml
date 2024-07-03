@@ -1,6 +1,7 @@
-{{- $ingressNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
-{{- $CRDNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
-{{- $allNamespaces := uniq (concat $ingressNamespaces $CRDNamespaces) -}}
+{{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
+{{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesGateway.namespaces -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -108,14 +109,7 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if $.Values.providers.kubernetesGateway.enabled }}
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-    verbs:
-      - list
-      - watch
+{{- if (and (has . $gatewayNamespaces) $.Values.providers.kubernetesGateway.enabled) }}
   - apiGroups:
       - ""
     resources:

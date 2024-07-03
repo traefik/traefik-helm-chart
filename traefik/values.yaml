@@ -259,6 +259,12 @@ providers:
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API
     enabled: false
+    # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+    # This option currently enables support for TCPRoute and TLSRoute.
+    experimentalChannel: false
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+    namespaces: []
+    # - "default"
 
   file:
     # -- Create a file provider

@@ -500,8 +500,16 @@
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
           {{- end }}
           {{- end }}
-          {{- if .Values.providers.kubernetesGateway.enabled }}
+          {{- with .Values.providers.kubernetesGateway }}
+          {{- if .enabled }}
           - "--providers.kubernetesgateway"
+          {{- end }}
+          {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
+          - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
+          {{- end }}
+          {{- if .experimentalChannel }}
+          - "--providers.kubernetesgateway.experimentalchannel=true"
+          {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
           {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}

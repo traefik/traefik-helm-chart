@@ -107,11 +107,14 @@ Users can provide an override for an explicit service they want bound via `.Valu
 {{/*
 Construct a comma-separated list of whitelisted namespaces
 */}}
-{{- define "providers.kubernetesIngress.namespaces" -}}
-{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
-{{- end -}}
 {{- define "providers.kubernetesCRD.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesCRD.namespaces) }}
+{{- end -}}
+{{- define "providers.kubernetesGateway.namespaces" -}}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesGateway.namespaces) }}
+{{- end -}}
+{{- define "providers.kubernetesIngress.namespaces" -}}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
 
 {{/*
