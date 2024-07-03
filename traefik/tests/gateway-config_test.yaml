@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should have one Gateway with the correct class and an http port
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -22,7 +22,7 @@ tests:
           value: "NAMESPACE"
   - it: should configure namespacePolicy within web listener
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
           namespacePolicy: All
@@ -32,7 +32,7 @@ tests:
           value: "All"
   - it: should configure namespacePolicy within websecure listener
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
           namespacePolicy: All
@@ -48,7 +48,7 @@ tests:
     set:
       image:
         tag: 3.0.0-beta4
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -57,7 +57,7 @@ tests:
           apiVersion: gateway.networking.k8s.io/v1alpha2
   - it: should have one Gateway with the correct class and an http port as well as an https port
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
           certificate:
@@ -88,7 +88,7 @@ tests:
           value: "my-kind"
   - it: should install Gateway in custom namespace
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
           namespace: "default"
@@ -98,7 +98,7 @@ tests:
           value: "default"
   - it: should install Gateway in default namespace
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -107,7 +107,7 @@ tests:
           value: "NAMESPACE"
   - it: should install Gateway in namespaceOverride
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
       namespaceOverride: "traefik-ns-override"
@@ -117,7 +117,7 @@ tests:
           value: "traefik-ns-override"
   - it: should have one Gateway with the correct annotations
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
           annotations:

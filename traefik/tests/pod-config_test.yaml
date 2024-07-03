@@ -301,7 +301,7 @@ tests:
             operator: "Destructor"
   - it: should have all k8s provider enabled when gateway provider is enabled
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:

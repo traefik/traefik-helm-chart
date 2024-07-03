@@ -128,19 +128,6 @@ experimental:
   kubernetesGateway:
     # -- Enable traefik experimental GatewayClass CRD
     enabled: false
-    ## Routes are restricted to namespace of the gateway by default.
-    ## https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces
-    # namespacePolicy: All
-    # certificate:
-    #   group: "core"
-    #   kind: "Secret"
-    #   name: "mysecret"
-    # -- By default, Gateway would be created to the Namespace you are deploying Traefik to.
-    # You may create that Gateway in another namespace, setting its name below:
-    # namespace: default
-    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
-    # annotations:
-    #   cert-manager.io/issuer: letsencrypt
 
 ingressRoute:
   dashboard:
@@ -252,6 +239,23 @@ providers:
       # pathOverride: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault:
+
+  kubernetesGateway:
+    # -- Enable traefik GatewayClass CRD
+    enabled: false
+    ## Routes are restricted to namespace of the gateway by default.
+    ## https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces
+    # namespacePolicy: All
+    # certificate:
+    #   group: "core"
+    #   kind: "Secret"
+    #   name: "mysecret"
+    # -- By default, Gateway would be created to the Namespace you are deploying Traefik to.
+    # You may create that Gateway in another namespace, setting its name below:
+    # namespace: default
+    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
+    # annotations:
+    #   cert-manager.io/issuer: letsencrypt
 
   file:
     # -- Create a file provider

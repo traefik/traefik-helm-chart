@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should have one GatewayClass with controllerName value traefik.io/gateway-controller
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -18,7 +18,7 @@ tests:
     set:
       image:
         tag: 3.0.0-beta4
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:

@@ -118,7 +118,7 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if .Values.experimental.kubernetesGateway.enabled }}
+{{- if .Values.providers.kubernetesGateway.enabled }}
   - apiGroups:
       - ""
     resources:
@@ -127,12 +127,35 @@ rules:
       - list
       - watch
   - apiGroups:
+      - ""
+    resources:
+      - services
+{{- if (semverCompare "<v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+      - endpoints
+{{- end }}
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+{{- if (semverCompare ">=v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - list
+      - watch
+{{- end }}
+  - apiGroups:
       - gateway.networking.k8s.io
     resources:
       - gatewayclasses
       - gateways
       - httproutes
+{{- if (semverCompare ">=v3.0.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
       - referencegrants
+{{- end }}
       - tcproutes
       - tlsroutes
     verbs:

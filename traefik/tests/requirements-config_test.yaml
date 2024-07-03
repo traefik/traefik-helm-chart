@@ -33,3 +33,46 @@ tests:
         token: "xxx"
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesGateway without experimental flag on traefik < 3.1
+    set:
+      image:
+        tag: v3.0.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Before traefik v3.1, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
+  - it: should not fail when using kubernetesGateway on traefik > 3.1 without experimental flag
+    set:
+      image:
+        tag: v3.1.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using kubernetesGateway without kubernetesCRD
+    set:
+      image:
+        tag: v3.1.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: When enabling kubernetesGateway, make sure to enable both kubernetesCRD and kubernetesIngress"
+  - it: should fail when using kubernetesGateway without kubernetesCRD
+    set:
+      image:
+        tag: v3.1.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+        kubernetesIngress:
+          enabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: When enabling kubernetesGateway, make sure to enable both kubernetesCRD and kubernetesIngress"

@@ -23,8 +23,8 @@ templates:
 tests:
   - it: "should contains labels metadata"
     set:
-      experimental.kubernetesGateway.enabled: true
-      experimental.kubernetesGateway.gateway.enabled: true
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gateway.enabled: true
       ingressRoute.dashboard.enabled: true
       ingressRoute.healthcheck.enabled: true
       autoscaling.enabled: true
