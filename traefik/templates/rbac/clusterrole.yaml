@@ -1,5 +1,9 @@
-{{- if and .Values.rbac.enabled (or .Values.providers.kubernetesIngress.enabled (not .Values.rbac.namespaced)) }}
-{{- if not (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.disableIngressClassLookup) }}
+{{- if .Values.rbac.enabled }}
+{{- if or
+       (semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion))
+       (not .Values.rbac.namespaced)
+       (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.enabled (not .Values.providers.kubernetesIngress.disableIngressClassLookup))
+}}
 ---
 kind: ClusterRole
 apiVersion: rbac.authorization.k8s.io/v1
@@ -11,6 +15,16 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
     {{- end }}
 rules:
+  {{- if semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion) }}
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
   - apiGroups:
       - extensions
       - networking.k8s.io
