@@ -809,10 +809,7 @@ You can now use the new stable kubernetes gateway API provider setting the follo
 
 ```yaml
 image:
-  tag: v3.1.0-rc2
-experimental:
-  kubernetesGateway:
-    enabled: true
+  tag: v3.1.0-rc3
 providers:
   kubernetesGateway:
     enabled: true
@@ -856,7 +853,7 @@ spec:
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: http-whoami
+  name: whoami
 spec:
   parentRefs:
     - name: traefik-gateway
@@ -866,10 +863,12 @@ spec:
     - matches:
         - path:
             type: Exact
-            value: /whoami
+            value: /
 
       backendRefs:
         - name: whoami
           port: 80
           weight: 1
 ```
+
+Once it's applied, whoami should be accessible on http://whoami.docker.localhost/
