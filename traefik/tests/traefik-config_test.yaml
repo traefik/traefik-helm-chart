@@ -167,6 +167,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressClass=foo"
+  - it: should be possible to set nativeLBByDefault
+    set:
+      providers:
+        kubernetesIngress:
+          nativeLBByDefault: true
+        kubernetesCRD:
+          nativeLBByDefault: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.nativeLBByDefault=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.nativeLBByDefault=true"
+  - it: should not set nativeLBByDefault by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.nativeLBByDefault=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.nativeLBByDefault=true"
 
   - it: should have a plugin storage and args if the experimental feature is enabled
     set:
