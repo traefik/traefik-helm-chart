@@ -143,9 +143,7 @@ rules:
       - gatewayclasses
       - gateways
       - httproutes
-{{- if (semverCompare ">=v3.0.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
       - referencegrants
-{{- end }}
       - tcproutes
       - tlsroutes
     verbs:
