@@ -805,7 +805,7 @@ metrics:
 
 # Use kubernetes Gateway API
 
-You can now use the new stable kubernetes gateway API provider setting the following _values_:
+One can use the new stable kubernetes gateway API provider setting the following _values_:
 
 ```yaml
 image:
@@ -815,7 +815,9 @@ providers:
     enabled: true
 ```
 
-Now you can deploy a whoami service with a HTTPRoute pointing to it:
+<details>
+
+<summary>With those values, a whoami service can be exposed with a HTTPRoute</summary>
 
 ```yaml
 ---
@@ -872,3 +874,5 @@ spec:
 ```
 
 Once it's applied, whoami should be accessible on http://whoami.docker.localhost/
+
+</details>
