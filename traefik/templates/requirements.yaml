@@ -12,7 +12,3 @@
 {{- if and .Values.providers.kubernetesGateway.enabled (and (semverCompare "<3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
   {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
-
-{{- if and .Values.providers.kubernetesGateway.enabled (or (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngress.enabled)) }}
-  {{- fail "ERROR: When enabling kubernetesGateway, make sure to enable both kubernetesCRD and kubernetesIngress" -}}
-{{- end }}
