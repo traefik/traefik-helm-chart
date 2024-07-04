@@ -501,18 +501,18 @@
           {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesGateway }}
-          {{- if .enabled }}
+           {{- if .enabled }}
           - "--providers.kubernetesgateway"
-          {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
+            {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
-          {{- end }}
-          {{- if .experimentalChannel }}
+            {{- end }}
+            {{- if .experimentalChannel }}
           - "--providers.kubernetesgateway.experimentalchannel=true"
-          {{- end }}
-          {{- if .labelselector }}
-          - "--providers.kubernetesgateway.labelselector={{.labelselector}}"
-          {{- end }}
-          {{- end }}
+            {{- end }}
+            {{- with .labelselector }}
+          - "--providers.kubernetesgateway.labelselector={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
           {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
