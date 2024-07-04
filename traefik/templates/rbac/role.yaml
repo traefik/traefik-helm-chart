@@ -1,6 +1,7 @@
-{{- $ingressNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
-{{- $CRDNamespaces := default (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
-{{- $allNamespaces := uniq (concat $ingressNamespaces $CRDNamespaces) -}}
+{{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
+{{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesGateway.namespaces -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -13,7 +14,7 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
-  {{- if (semverCompare "<v3.1.0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+  {{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -108,14 +109,28 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if $.Values.experimental.kubernetesGateway.enabled }}
+{{- if (and (has . $gatewayNamespaces) $.Values.providers.kubernetesGateway.enabled) }}
   - apiGroups:
       - ""
     resources:
-      - namespaces
+      - services
+{{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+      - endpoints
+{{- end }}
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+{{- if (semverCompare ">=v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
     verbs:
       - list
       - watch
+{{- end }}
   - apiGroups:
       - gateway.networking.k8s.io
     resources:

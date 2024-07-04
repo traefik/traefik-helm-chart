@@ -4,7 +4,7 @@ templates:
 tests:
   - it: should have one Gateway with the correct class and an http port
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -22,9 +22,10 @@ tests:
           value: "NAMESPACE"
   - it: should configure namespacePolicy within web listener
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
+      gateway:
           namespacePolicy: All
     asserts:
       - equal:
@@ -32,12 +33,13 @@ tests:
           value: "All"
   - it: should configure namespacePolicy within websecure listener
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
-          namespacePolicy: All
-          certificate:
-            group: "core"
+      gateway:
+        namespacePolicy: All
+        certificateRefs:
+          - group: "core"
             kind: "Secret"
             name: "mysecret"
     asserts:
@@ -48,20 +50,21 @@ tests:
     set:
       image:
         tag: 3.0.0-beta4
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
       - containsDocument:
           kind: Gateway
-          apiVersion: gateway.networking.k8s.io/v1alpha2
+          apiVersion: gateway.networking.k8s.io/v1
   - it: should have one Gateway with the correct class and an http port as well as an https port
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
-          certificate:
-            name: "my-name"
+      gateway:
+        certificateRefs:
+          - name: "my-name"
             group: "my-group"
             kind: "my-kind"
     asserts:
@@ -86,19 +89,9 @@ tests:
       - equal:
           path: spec.listeners[1].tls.certificateRefs[0].kind
           value: "my-kind"
-  - it: should install Gateway in custom namespace
-    set:
-      experimental:
-        kubernetesGateway:
-          enabled: true
-          namespace: "default"
-    asserts:
-      - equal:
-          path: metadata.namespace
-          value: "default"
   - it: should install Gateway in default namespace
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -107,7 +100,7 @@ tests:
           value: "NAMESPACE"
   - it: should install Gateway in namespaceOverride
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
       namespaceOverride: "traefik-ns-override"
@@ -117,13 +110,48 @@ tests:
           value: "traefik-ns-override"
   - it: should have one Gateway with the correct annotations
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
-          annotations:
-            cert-manager.io/issuer: letsencrypt
+      gateway:
+        annotations:
+          cert-manager.io/issuer: letsencrypt
     asserts:
       - equal:
           path: metadata.annotations
           value:
             cert-manager.io/issuer: letsencrypt
+  - it: should not deploy a gateway if gateway creation is disabled
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        enabled: false
+    asserts:
+      - template: gateway.yaml
+        hasDocuments:
+          count: 0
+  - it: should not deploy a gateway if gatewayClass creation is disabled
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        enabled: false
+    asserts:
+      - template: gateway.yaml
+        hasDocuments:
+          count: 0
+  - it: should be possible to customize gatewayClass name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gatewayClass:
+        name: test
+    asserts:
+      - template: gateway.yaml
+        equal:
+          path: spec.gatewayClassName
+          value: test

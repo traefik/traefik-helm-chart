@@ -8,3 +8,7 @@
 {{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
+
+{{- if and .Values.providers.kubernetesGateway.enabled (and (semverCompare "<3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
+  {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
+{{- end }}

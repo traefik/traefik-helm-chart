@@ -573,3 +573,42 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.disableIngressClassLookup=true"
+  - it: kubernetesGateway should watched default namespace when rbacs are namespaced
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.namespaces=NAMESPACE"
+  - it: kubernetesGateway should watched specified namespaces when rbacs are namespaced
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesGateway:
+          enabled: true
+          namespaces:
+            - "foo"
+            - "bar"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.namespaces=foo,bar"
+  - it: kubernetesGateway should add specified configuration
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          experimentalChannel: true
+          labelselector: "app=traefik"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.experimentalchannel=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.labelselector=app=traefik"

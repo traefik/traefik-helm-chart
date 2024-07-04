@@ -33,3 +33,22 @@ tests:
         token: "xxx"
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesGateway without experimental flag on traefik < 3.1
+    set:
+      image:
+        tag: v3.0.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
+  - it: should not fail when using kubernetesGateway on traefik > 3.1.0-rc3 without experimental flag
+    set:
+      image:
+        tag: v3.1.0-rc3
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}

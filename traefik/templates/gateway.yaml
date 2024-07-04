@@ -1,44 +1,38 @@
-{{- if .Values.experimental.kubernetesGateway.enabled }}
+{{- if and .Values.gateway.enabled .Values.providers.kubernetesGateway.enabled }}
 ---
-{{- if semverCompare ">=3.0.0-rc1" (default $.Chart.AppVersion $.Values.image.tag)}}
 apiVersion: gateway.networking.k8s.io/v1
-{{- else }}
-apiVersion: gateway.networking.k8s.io/v1alpha2
-{{- end }}
 kind: Gateway
 metadata:
-  name: traefik-gateway
-  namespace: {{ default (include "traefik.namespace" .) .Values.experimental.kubernetesGateway.namespace }}
+  name: {{ default .Values.gateway.name "traefik-gateway" }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
-  {{- with .Values.experimental.kubernetesGateway.annotations }}
+  {{- with .Values.gateway.annotations }}
   annotations:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  gatewayClassName: traefik
+  gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   listeners:
     - name: web
       port: {{ .Values.ports.web.port }}
       protocol: HTTP
-      {{- with .Values.experimental.kubernetesGateway.namespacePolicy }}
+      {{- with .Values.gateway.namespacePolicy }}
       allowedRoutes:
         namespaces:
           from: {{ . }}
       {{- end }}
-    {{- if .Values.experimental.kubernetesGateway.certificate }}
+    {{- if .Values.gateway.certificateRefs }}
     - name: websecure
       port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
-      {{- with .Values.experimental.kubernetesGateway.namespacePolicy }}
+      {{- with .Values.gateway.namespacePolicy }}
       allowedRoutes:
         namespaces:
           from: {{ . }}
       {{- end }}
       tls:
         certificateRefs:
-          - name: {{ .Values.experimental.kubernetesGateway.certificate.name }}
-            group: {{ .Values.experimental.kubernetesGateway.certificate.group }}
-            kind: {{ .Values.experimental.kubernetesGateway.certificate.kind }}
+          {{- toYaml .Values.gateway.certificateRefs | nindent 10 }}
     {{- end }}
 {{- end }}

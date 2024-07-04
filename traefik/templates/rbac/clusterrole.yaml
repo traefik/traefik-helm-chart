@@ -37,8 +37,31 @@ rules:
       - get
       - list
       - watch
+{{- if .Values.providers.kubernetesGateway.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      - gatewayclasses/status
+    verbs:
+      - update
+{{- end }}
 {{- if not .Values.rbac.namespaced }}
-  {{- if (semverCompare "<v3.1.0" (.Values.image.tag | default .Chart.AppVersion)) }}
+  {{- if (semverCompare "<v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion)) }}
   - apiGroups:
       - ""
     resources:
@@ -118,18 +141,31 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if .Values.experimental.kubernetesGateway.enabled }}
+{{- if .Values.providers.kubernetesGateway.enabled }}
   - apiGroups:
       - ""
     resources:
-      - namespaces
+      - services
+{{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+      - endpoints
+{{- end }}
+      - secrets
+    verbs:
+      - get
+      - list
+      - watch
+{{- if (semverCompare ">=v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
     verbs:
       - list
       - watch
+{{- end }}
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gatewayclasses
       - gateways
       - httproutes
       - referencegrants
@@ -142,7 +178,6 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gatewayclasses/status
       - gateways/status
       - httproutes/status
       - tcproutes/status

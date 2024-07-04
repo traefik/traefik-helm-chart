@@ -301,7 +301,7 @@ tests:
             operator: "Destructor"
   - it: should have all k8s provider enabled when gateway provider is enabled
     set:
-      experimental:
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
@@ -314,6 +314,26 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway"
+  - it: should have experimental flag when set
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.kubernetesgateway"
+  - it: shouldn't have experimental flag when >= 3.1.0
+    set:
+      image:
+        tag: v3.1.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.kubernetesgateway"
   - it: should have the certificate resolver options applied
     set:
       certResolvers:

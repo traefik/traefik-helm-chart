@@ -128,19 +128,28 @@ experimental:
   kubernetesGateway:
     # -- Enable traefik experimental GatewayClass CRD
     enabled: false
-    ## Routes are restricted to namespace of the gateway by default.
-    ## https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces
-    # namespacePolicy: All
-    # certificate:
-    #   group: "core"
-    #   kind: "Secret"
-    #   name: "mysecret"
-    # -- By default, Gateway would be created to the Namespace you are deploying Traefik to.
-    # You may create that Gateway in another namespace, setting its name below:
-    # namespace: default
-    # Additional gateway annotations (e.g. for cert-manager.io/issuer)
-    # annotations:
-    #   cert-manager.io/issuer: letsencrypt
+
+gateway:
+  # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+  enabled: true
+  # -- Set a custom name to gateway
+  name:
+  # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces)
+  namespacePolicy:
+  # -- See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
+  certificateRefs:
+  # -- By default, Gateway is created in the same `Namespace` than Traefik.
+  namespace:
+  # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
+  annotations:
+
+gatewayClass:
+  # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
+  enabled: true
+  # -- Set a custom name to GatewayClass
+  name:
+  # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+  labels:
 
 ingressRoute:
   dashboard:
@@ -252,6 +261,17 @@ providers:
       # pathOverride: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault:
+
+  kubernetesGateway:
+    # -- Enable Traefik Gateway provider for Gateway API
+    enabled: false
+    # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+    # This option currently enables support for TCPRoute and TLSRoute.
+    experimentalChannel: false
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+    namespaces: []
+    # -- A label selector can be defined to filter on specific GatewayClass objects only.
+    labelselector:
 
   file:
     # -- Create a file provider
