@@ -802,3 +802,72 @@ metrics:
             summary: "Traefik Down"
             description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 ```
+
+# Use kubernetes Gateway API
+
+You can now use the new stable kubernetes gateway API provider setting the following _values_:
+
+```yaml
+image:
+  repository: traefik/traefik
+  tag: v3.1.0-rc2
+providers:
+  kubernetesGateway:
+    enabled: true
+```
+
+Now you can deploy a whoami service with a HTTPRoute pointing to it:
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  selector:
+    app: whoami
+  ports:
+    - protocol: TCP
+      port: 80
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: http-whoami
+spec:
+  parentRefs:
+    - name: traefik-gateway
+  hostnames:
+    - whoami.docker.localhost
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /whoami
+
+      backendRefs:
+        - name: whoami
+          port: 80
+          weight: 1
+```
