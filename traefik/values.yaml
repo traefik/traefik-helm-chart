@@ -225,7 +225,8 @@ providers:
     # labelSelector: environment=production,method=traefik
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
-    # - "default"
+    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+    nativeLBByDefault:
 
   kubernetesIngress:
     # -- Load Kubernetes Ingress provider
@@ -249,6 +250,8 @@ providers:
       # Published Kubernetes Service to copy status from. Format: namespace/servicename
       # By default this Traefik service
       # pathOverride: ""
+    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+    nativeLBByDefault:
 
   file:
     # -- Create a file provider
