@@ -38,10 +38,10 @@ tests:
           enabled: true
       gateway:
         namespacePolicy: All
-        certificate:
-          group: "core"
-          kind: "Secret"
-          name: "mysecret"
+        certificateRefs:
+          - group: "core"
+            kind: "Secret"
+            name: "mysecret"
     asserts:
       - equal:
           path: spec.listeners[1].allowedRoutes.namespaces.from
@@ -63,10 +63,10 @@ tests:
         kubernetesGateway:
           enabled: true
       gateway:
-        certificate:
-          name: "my-name"
-          group: "my-group"
-          kind: "my-kind"
+        certificateRefs:
+          - name: "my-name"
+            group: "my-group"
+            kind: "my-kind"
     asserts:
       - equal:
           path: spec.gatewayClassName

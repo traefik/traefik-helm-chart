@@ -137,7 +137,7 @@ gateway:
   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces)
   namespacePolicy:
   # -- See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
-  certificateRef:
+  certificateRefs:
   # -- By default, Gateway is created in the same `Namespace` than Traefik.
   namespace:
   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)

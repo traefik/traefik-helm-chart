@@ -22,7 +22,7 @@ spec:
         namespaces:
           from: {{ . }}
       {{- end }}
-    {{- if .Values.gateway.certificate }}
+    {{- if .Values.gateway.certificateRefs }}
     - name: websecure
       port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
@@ -33,8 +33,6 @@ spec:
       {{- end }}
       tls:
         certificateRefs:
-          - name: {{ .Values.gateway.certificate.name }}
-            group: {{ .Values.gateway.certificate.group }}
-            kind: {{ .Values.gateway.certificate.kind }}
+          {{- toYaml .Values.gateway.certificateRefs | nindent 10 }}
     {{- end }}
 {{- end }}
