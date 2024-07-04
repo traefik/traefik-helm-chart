@@ -758,3 +758,47 @@ image:
   repository: traefik/traefik
   tag: experimental-v3.0
 ```
+
+# Use Prometheus Operator
+
+An optional support of this operator is included in this Chart. See documentation of this operator for more details.
+
+It can be used with those _values_:
+
+```yaml
+metrics:
+  prometheus:
+    service:
+      enabled: true
+    disableAPICheck: false
+    serviceMonitor:
+      enabled: true
+      metricRelabelings:
+        - sourceLabels: [__name__]
+          separator: ;
+          regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+          replacement: $1
+          action: drop
+      relabelings:
+        - sourceLabels: [__meta_kubernetes_pod_node_name]
+          separator: ;
+          regex: ^(.*)$
+          targetLabel: nodename
+          replacement: $1
+          action: replace
+      jobLabel: traefik
+      interval: 30s
+      honorLabels: true
+    prometheusRule:
+      enabled: true
+      rules:
+        - alert: TraefikDown
+          expr: up{job="traefik"} == 0
+          for: 5m
+          labels:
+            context: traefik
+            severity: warning
+          annotations:
+            summary: "Traefik Down"
+            description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
+```

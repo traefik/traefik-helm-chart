@@ -1,5 +1,5 @@
 {{- if .Values.metrics.prometheus }}
-{{- if .Values.metrics.prometheus.serviceMonitor }}
+{{- if (.Values.metrics.prometheus.serviceMonitor).enabled }}
   {{- if (not (.Capabilities.APIVersions.Has "monitoring.coreos.com/v1")) }}
     {{- if (not (.Values.metrics.prometheus.disableAPICheck)) }}
       {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}

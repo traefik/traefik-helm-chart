@@ -339,6 +339,34 @@ metrics:
     ## When manualRouting is true, it disables the default internal router in
     ## order to allow creating a custom router for prometheus@internal service.
     # manualRouting: true
+    service:
+      # -- Create a dedicated metrics service to use with ServiceMonitor
+      enabled:
+      labels:
+      annotations:
+    # -- When set to true, it won't check if Prometheus Operator CRDs are deployed
+    disableAPICheck:
+    serviceMonitor:
+      # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
+      enabled: false
+      metricRelabelings:
+      relabelings:
+      jobLabel:
+      interval:
+      honorLabels:
+      scrapeTimeout:
+      honorTimestamps:
+      enableHttp2:
+      followRedirects:
+      additionalLabels:
+      namespace:
+      namespaceSelector:
+    prometheusRule:
+      # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
+      enabled: false
+      additionalLabels:
+      namespace:
+
   #  datadog:
   #    ## Address instructs exporter to send metrics to datadog-agent at this address.
   #    address: "127.0.0.1:8125"
@@ -433,55 +461,6 @@ metrics:
         key:
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:
-
-  ## -- enable optional CRDs for Prometheus Operator
-  ##
-  ## Create a dedicated metrics service for use with ServiceMonitor
-  #  service:
-  #    enabled: false
-  #    labels: {}
-  #    annotations: {}
-  ## When set to true, it won't check if Prometheus Operator CRDs are deployed
-  #  disableAPICheck: false
-  #  serviceMonitor:
-  #    metricRelabelings: []
-  #      - sourceLabels: [__name__]
-  #        separator: ;
-  #        regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
-  #        replacement: $1
-  #        action: drop
-  #    relabelings: []
-  #      - sourceLabels: [__meta_kubernetes_pod_node_name]
-  #        separator: ;
-  #        regex: ^(.*)$
-  #        targetLabel: nodename
-  #        replacement: $1
-  #        action: replace
-  #    jobLabel: traefik
-  #    interval: 30s
-  #    honorLabels: true
-  #    # (Optional)
-  #    # scrapeTimeout: 5s
-  #    # honorTimestamps: true
-  #    # enableHttp2: true
-  #    # followRedirects: true
-  #    # additionalLabels:
-  #    #   foo: bar
-  #    # namespace: "another-namespace"
-  #    # namespaceSelector: {}
-  #  prometheusRule:
-  #    additionalLabels: {}
-  #    namespace: "another-namespace"
-  #    rules:
-  #      - alert: TraefikDown
-  #        expr: up{job="traefik"} == 0
-  #        for: 5m
-  #        labels:
-  #          context: traefik
-  #          severity: warning
-  #        annotations:
-  #          summary: "Traefik Down"
-  #          description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/

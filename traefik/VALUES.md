@@ -84,7 +84,7 @@ Kubernetes: `>=1.22.0-0`
 | image.tag | string | `nil` | defaults to appVersion |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true}` | Create a default IngressClass for Traefik |
 | ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
-| ingressRoute.dashboard.enabled | bool | `true` | Create an IngressRoute for the dashboard |
+| ingressRoute.dashboard.enabled | bool | `false` | Create an IngressRoute for the dashboard |
 | ingressRoute.dashboard.entryPoints | list | `["traefik"]` | Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure). By default, it's using traefik entrypoint, which is not exposed. /!\ Do not expose your dashboard without any protection over the internet /!\ |
 | ingressRoute.dashboard.labels | object | `{}` | Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels) |
 | ingressRoute.dashboard.matchRule | string | `"PathPrefix(`/dashboard`) || PathPrefix(`/api`)"` | The router match rule used for the dashboard ingressRoute |
@@ -135,7 +135,27 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.http.tls.key | string | `nil` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `nil` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
+| metrics.prometheus.disableAPICheck | string | `nil` | When set to true, it won't check if Prometheus Operator CRDs are deployed |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
+| metrics.prometheus.prometheusRule.additionalLabels | string | `nil` |  |
+| metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
+| metrics.prometheus.prometheusRule.namespace | string | `nil` |  |
+| metrics.prometheus.service.annotations | string | `nil` |  |
+| metrics.prometheus.service.enabled | string | `nil` | Create a dedicated metrics service to use with ServiceMonitor |
+| metrics.prometheus.service.labels | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.additionalLabels | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.enableHttp2 | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
+| metrics.prometheus.serviceMonitor.followRedirects | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.honorLabels | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.honorTimestamps | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.interval | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.jobLabel | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.metricRelabelings | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.namespace | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.namespaceSelector | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.relabelings | string | `nil` |  |
+| metrics.prometheus.serviceMonitor.scrapeTimeout | string | `nil` |  |
 | namespaceOverride | string | `nil` | This field override the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules` |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
