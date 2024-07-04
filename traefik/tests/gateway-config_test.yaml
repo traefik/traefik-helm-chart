@@ -121,3 +121,37 @@ tests:
           path: metadata.annotations
           value:
             cert-manager.io/issuer: letsencrypt
+  - it: should not deploy a gateway if gateway creation is disabled
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        enabled: false
+    asserts:
+      - template: gateway.yaml
+        hasDocuments:
+          count: 0
+  - it: should not deploy a gateway if gatewayClass creation is disabled
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        enabled: false
+    asserts:
+      - template: gateway.yaml
+        hasDocuments:
+          count: 0
+  - it: should be possible to customize gatewayClass name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gatewayClass:
+        name: test
+    asserts:
+      - template: gateway.yaml
+        equal:
+          path: spec.gatewayClassName
+          value: test

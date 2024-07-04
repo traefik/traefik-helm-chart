@@ -604,7 +604,11 @@ tests:
         kubernetesGateway:
           enabled: true
           experimentalChannel: true
+          labelselector: "app=traefik"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.experimentalchannel=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.labelselector=app=traefik"

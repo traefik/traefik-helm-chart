@@ -59,6 +59,9 @@ Kubernetes: `>=1.22.0-0`
 | experimental.plugins | object | `{}` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | gateway.annotations | object | `{}` | By default, Gateway would be created to the Namespace you are deploying Traefik to. You may create that Gateway in another namespace, setting its name below: namespace: default Additional gateway annotations (e.g. for cert-manager.io/issuer) annotations:   cert-manager.io/issuer: letsencrypt |
+| gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
+| gatewayClass.enabled | bool | `true` | When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass |
+| gatewayClass.labels | object | `{}` | Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels) |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulabel pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.apimanagement.admission.listenAddr | string | `nil` | WebHook admission server listen address. Default: "0.0.0.0:9943". |

@@ -130,6 +130,9 @@ experimental:
     enabled: false
 
 gateway:
+  # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+  enabled: true
+  # name: my-custom-gateway
   ## Routes are restricted to namespace of the gateway by default.
   ## https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces
   # namespacePolicy: All
@@ -144,6 +147,13 @@ gateway:
   # annotations:
   #   cert-manager.io/issuer: letsencrypt
   annotations: {}
+
+gatewayClass:
+  # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
+  enabled: true
+  # name: my-custom-class
+  # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+  labels: {}
 
 ingressRoute:
   dashboard:
@@ -265,6 +275,8 @@ providers:
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
     # - "default"
+    # A label selector can be defined to filter on specific GatewayClass objects only.
+    # labelselector: "app=traefik"
 
   file:
     # -- Create a file provider

@@ -1,9 +1,9 @@
-{{- if .Values.providers.kubernetesGateway.enabled }}
+{{- if and .Values.gateway.enabled .Values.providers.kubernetesGateway.enabled }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: traefik-gateway
+  name: {{ default .Values.gateway.name "traefik-gateway" }}
   namespace: {{ template "traefik.namespace" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
@@ -12,7 +12,7 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  gatewayClassName: traefik
+  gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   listeners:
     - name: web
       port: {{ .Values.ports.web.port }}

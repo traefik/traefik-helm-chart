@@ -25,3 +25,39 @@ tests:
       - containsDocument:
           kind: GatewayClass
           apiVersion: gateway.networking.k8s.io/v1
+  - it: should not deploy a gatewayClass if gatewayClass creation is disabled
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gatewayClass:
+        enabled: false
+    asserts:
+      - template: gatewayclass.yaml
+        hasDocuments:
+          count: 0
+  - it: should be possible to customize gatewayClass name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gatewayClass:
+        name: test
+    asserts:
+      - template: gatewayclass.yaml
+        equal:
+          path: metadata.name
+          value: test
+  - it: should be possible to customize gatewayClass labels
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gatewayClass:
+        labels:
+          test: test
+    asserts:
+      - template: gatewayclass.yaml
+        equal:
+          path: metadata.labels.test
+          value: test

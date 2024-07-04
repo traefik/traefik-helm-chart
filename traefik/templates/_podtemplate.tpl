@@ -509,6 +509,9 @@
           {{- if .experimentalChannel }}
           - "--providers.kubernetesgateway.experimentalchannel=true"
           {{- end }}
+          {{- if .labelselector }}
+          - "--providers.kubernetesgateway.labelselector={{.labelselector}}"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
