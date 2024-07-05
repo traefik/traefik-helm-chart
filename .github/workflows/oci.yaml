@@ -7,10 +7,7 @@ on:
       - master
 
 jobs:
-  test:
-    uses: "traefik/traefik-helm-chart/.github/workflows/test.yml@master"
   release:
-    needs: test
     runs-on: ubuntu-latest
     steps:
 
@@ -28,7 +25,7 @@ jobs:
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
-          name: traefik
+          name: charts
           repository:  traefik
           tag: v29.0.0
           path: ./traefik
