@@ -37,7 +37,7 @@ rules:
       - get
       - list
       - watch
-{{- if .Values.providers.kubernetesGateway.enabled }}
+{{- if (.Values.providers.kubernetesGateway).enabled }}
   - apiGroups:
       - ""
     resources:
