@@ -2,7 +2,20 @@
 
 ## 29.0.0  ![AppVersion: v3.0.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** 2024-07-04
+**Upgrade Notes**
+
+This is a major breaking upgrade. [Migration guide](https://doc.traefik.io/traefik/v3.1/migration/v3/#v30-to-v31) from v3.0 to v3.1rc has been applied on this chart.
+
+It comes with those breaking changes:
+
+- Far better support on Gateway API v1.1: Gateway, GatewayClass, CRDs & RBAC (#1107)
+- Many changes on CRDs & RBAC (#1072 & #1108)
+- Refactor on Prometheus Operator support. Values has changed (#1114)
+- Dashboard `IngressRoute` is now disabled by default (#1111)
+
+CRDs needs to be upgraded: `kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/`
+
+**Release date:** 2024-07-05
 
 * fix: 🐛 improve error message on additional service without ports
 * fix:  allow multiples values in the `secretResourceNames` slice
@@ -37,7 +50,7 @@ index e440dcf..c8bfd5b 100644
 +  tag:
    # -- Traefik image pull policy
    pullPolicy: IfNotPresent
- 
+
 @@ -81,19 +81,12 @@ deployment:
    shareProcessNamespace: false
    # -- Custom pod DNS policy. Apply if `hostNetwork: true`
@@ -101,7 +114,7 @@ index e440dcf..c8bfd5b 100644
 +  name:
 +  # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
 +  labels:
- 
+
  ingressRoute:
    dashboard:
      # -- Create an IngressRoute for the dashboard
@@ -123,7 +136,7 @@ index e440dcf..c8bfd5b 100644
 -    # - "default"
 +    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
 +    nativeLBByDefault:
- 
+
    kubernetesIngress:
      # -- Load Kubernetes Ingress provider
 @@ -240,7 +244,8 @@ providers:
@@ -153,7 +166,7 @@ index e440dcf..c8bfd5b 100644
 +    namespaces: []
 +    # -- A label selector can be defined to filter on specific GatewayClass objects only.
 +    labelselector:
- 
+
    file:
      # -- Create a file provider
 @@ -341,6 +359,34 @@ metrics:
@@ -194,7 +207,7 @@ index e440dcf..c8bfd5b 100644
 @@ -436,55 +482,6 @@ metrics:
          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
          insecureSkipVerify:
- 
+
 -  ## -- enable optional CRDs for Prometheus Operator
 -  ##
 -  ## Create a dedicated metrics service for use with ServiceMonitor
@@ -307,7 +320,7 @@ index 2fd9282..c558c78 100644
 @@ -12,9 +15,6 @@ image:
  # -- Add additional label to all resources
  commonLabels: {}
- 
+
 -#
 -# Configure the deployment
 -#
@@ -328,7 +341,7 @@ index 2fd9282..c558c78 100644
 @@ -112,13 +108,11 @@ deployment:
    # -- Set a runtimeClassName on pod
    runtimeClassName:
- 
+
 -# -- Pod disruption budget
 +# -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
  podDisruptionBudget:
@@ -340,13 +353,13 @@ index 2fd9282..c558c78 100644
 +  enabled:
 +  maxUnavailable:
 +  minAvailable:
- 
+
  # -- Create a default IngressClass for Traefik
  ingressClass:
 @@ -155,7 +149,6 @@ experimental:
      # annotations:
      #   cert-manager.io/issuer: letsencrypt
- 
+
 -## Create an IngressRoute for the dashboard
  ingressRoute:
    dashboard:
@@ -354,7 +367,7 @@ index 2fd9282..c558c78 100644
 @@ -221,15 +214,7 @@ livenessProbe:
    # -- The number of seconds to wait for a probe response before considering it as failed.
    timeoutSeconds: 2
- 
+
 -# -- Define Startup Probe for container: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes
 -# eg.
 -# `startupProbe:
@@ -366,7 +379,7 @@ index 2fd9282..c558c78 100644
 -#   periodSeconds: 5`
 +# -- Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
  startupProbe:
- 
+
  providers:
 @@ -276,18 +261,8 @@ providers:
      # -- Allows Traefik to automatically watch for file changes
@@ -383,13 +396,13 @@ index 2fd9282..c558c78 100644
 -      #       service: service-foo
 -      #       rule: Path(`/foo`)
 +    content:
- 
+
 -#
  # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
  # This can be used to mount a cert pair or a configmap that holds a config.toml file.
  # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
 @@ -311,26 +286,21 @@ additionalVolumeMounts: []
- 
+
  logs:
    general:
 -    # -- By default, the logs use a text format (common), but you can
@@ -437,13 +450,13 @@ index 2fd9282..c558c78 100644
 -        # User-Agent: redact
 -        # Authorization: drop
 -        # Content-Type: keep
- 
+
  metrics:
    ## -- Enable metrics for internal resources. Default: false
 @@ -567,16 +533,15 @@ globalArguments:
  - "--global.checknewversion"
  - "--global.sendanonymoususage"
- 
+
 -#
 -# Configure Traefik static configuration
  # -- Additional arguments to be passed at Traefik's binary
@@ -454,7 +467,7 @@ index 2fd9282..c558c78 100644
  additionalArguments: []
  #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
  #  - "--log.level=DEBUG"
- 
+
  # -- Environment variables to be passed to Traefik's binary
 +# @default -- See _values.yaml_
  env:
@@ -476,20 +489,20 @@ index 2fd9282..c558c78 100644
 -#     secretKeyRef:
 -#       name: secret-name
 -#       key: secret-key
- 
+
  # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
  envFrom: []
 -# - configMapRef:
 -#     name: config-map-name
 -# - secretRef:
 -#     name: secret-name
- 
+
  ports:
    traefik:
 @@ -766,28 +715,12 @@ ports:
      # -- The port protocol (TCP/UDP)
      protocol: TCP
- 
+
 -# -- TLS Options are created as TLSOption CRDs
 -# https://doc.traefik.io/traefik/https/tls/#tls-options
 +# -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options)
@@ -506,7 +519,7 @@ index 2fd9282..c558c78 100644
 -#       - CurveP384
 +# See EXAMPLE.md for details.
  tlsOptions: {}
- 
+
 -# -- TLS Store are created as TLSStore CRDs. This is useful if you want to set a default certificate
 -# https://doc.traefik.io/traefik/https/tls/#default-certificate
 -# Example:
@@ -516,10 +529,10 @@ index 2fd9282..c558c78 100644
 -#       secretName: tls-cert
 +# -- TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details.
  tlsStore: {}
- 
+
  service:
 @@ -839,29 +772,8 @@ service:
- 
+
  autoscaling:
    # -- Create HorizontalPodAutoscaler object.
 +  # See EXAMPLES.md for more details.
@@ -546,13 +559,13 @@ index 2fd9282..c558c78 100644
 -#       - type: Pods
 -#         value: 1
 -#         periodSeconds: 60
- 
+
  persistence:
    # -- Enable persistence using Persistent Volume Claims
 @@ -879,27 +791,10 @@ persistence:
    # -- Only mount a subpath of the Volume into the pod
    # subPath: ""
- 
+
 -# -- Certificates resolvers configuration
 +# -- Certificates resolvers configuration.
 +# Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers
@@ -577,13 +590,13 @@ index 2fd9282..c558c78 100644
 -#       entryPoint: "web"
 -#     # It has to match the path with a persistent volume
 -#     storage: /data/acme.json
- 
+
  # -- If hostNetwork is true, runs traefik in the host network namespace
  # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
 @@ -933,14 +828,8 @@ serviceAccount:
  # -- Additional serviceAccount annotations (e.g. for oidc authentication)
  serviceAccountAnnotations: {}
- 
+
 -# -- The resources parameter defines CPU and memory requirements and limits for Traefik's containers.
 +# -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container.
  resources: {}
@@ -593,18 +606,18 @@ index 2fd9282..c558c78 100644
 -# limits:
 -#   cpu: "300m"
 -#   memory: "150Mi"
- 
+
  # -- This example pod anti-affinity forces the scheduler to put traefik pods
  # -- on nodes where no other traefik pods are scheduled.
 @@ -970,30 +859,22 @@ topologySpreadConstraints: []
  #    topologyKey: kubernetes.io/hostname
  #    whenUnsatisfiable: DoNotSchedule
- 
+
 -# -- Pods can have priority.
 -# -- Priority indicates the importance of a Pod relative to other Pods.
 +# -- [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/)
  priorityClassName: ""
- 
+
 -# -- Set the container security context
 -# -- To run the container with ports below 1024 this will need to be adjusted to run as root
 +# -- [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1)
@@ -615,7 +628,7 @@ index 2fd9282..c558c78 100644
      drop: [ALL]
    readOnlyRootFilesystem: true
 -  allowPrivilegeEscalation: false
- 
+
 +# -- [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context)
 +# @default -- See _values.yaml_
  podSecurityContext:
@@ -631,12 +644,12 @@ index 2fd9282..c558c78 100644
    runAsNonRoot: true
 -  # -- The ID of the user for all containers in the pod to run as.
    runAsUser: 65532
- 
+
  #
 @@ -1003,16 +884,16 @@ podSecurityContext:
  # See #595 for more details and traefik/tests/values/extra.yaml for example.
  extraObjects: []
- 
+
 -# This will override the default Release Namespace for Helm.
 +# -- This field override the default Release Namespace for Helm.
  # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
@@ -648,7 +661,7 @@ index 2fd9282..c558c78 100644
 +
 +## -- This field override the default app.kubernetes.io/instance label for all Objects.
 +instanceLabelOverride:
- 
+
 -# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 +# Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
  hub:
@@ -675,7 +688,7 @@ index 70297f6..2fd9282 100644
 @@ -1010,3 +1010,49 @@
  ## -- This will override the default app.kubernetes.io/instance label for all Objects.
  # instanceLabelOverride: traefik
- 
+
 +# -- Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 +hub:
 +  # Name of Secret with key 'token' set to a valid license token.
