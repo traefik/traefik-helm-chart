@@ -1,4 +1,4 @@
-{{- if and .Values.gateway.enabled .Values.providers.kubernetesGateway.enabled }}
+{{- if and (.Values.gateway).enabled (.Values.providers.kubernetesGateway).enabled }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
