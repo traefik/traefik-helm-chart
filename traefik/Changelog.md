@@ -6,6 +6,8 @@
 
 This is a major breaking upgrade. [Migration guide](https://doc.traefik.io/traefik/v3.1/migration/v3/#v30-to-v31) from v3.0 to v3.1rc has been applied on this chart.
 
+This release supports both Traefik Proxy v3.0.x and v3.1rc.
+
 It comes with those breaking changes:
 
 - Far better support on Gateway API v1.1: Gateway, GatewayClass, CRDs & RBAC (#1107)
