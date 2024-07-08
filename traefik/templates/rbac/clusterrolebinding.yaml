@@ -1,6 +1,7 @@
+{{- $version := include "imageVersion" $ }}
 {{- if .Values.rbac.enabled }}
 {{- if or
-       (semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion))
+       (semverCompare ">=v3.1.0-0" $version)
        (not .Values.rbac.namespaced)
        (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.enabled (not .Values.providers.kubernetesIngress.disableIngressClassLookup))
 }}

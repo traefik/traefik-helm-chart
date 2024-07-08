@@ -1,3 +1,4 @@
+{{- $version := include "imageVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.kubernetesGateway).namespaces) -}}
@@ -14,7 +15,7 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
-  {{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+  {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
@@ -114,7 +115,7 @@ rules:
       - ""
     resources:
       - services
-{{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare "<v3.1.0-0" $version) }}
       - endpoints
 {{- end }}
       - secrets
@@ -122,7 +123,7 @@ rules:
       - get
       - list
       - watch
-{{- if (semverCompare ">=v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare ">=v3.1.0-0" $version) }}
   - apiGroups:
       - discovery.k8s.io
     resources:

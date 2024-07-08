@@ -1495,3 +1495,37 @@ tests:
               - get
               - list
               - watch
+  - it: should not provide nodes RBACS for version < v3.1 if rbac are namespaced (experimental tag)
+    set:
+      image:
+        tag: experimental-v3.0
+      rbac:
+        enabled: true
+        namespaced: true
+      providers:
+        kubernetesIngress:
+          disableIngressClassLookup: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        hasDocuments:
+          count: 0
+  - it: should provide nodes RBACS for version >= v3.1 even if rbac are namespaced (experimental tag)
+    set:
+      image:
+        tag: experimental-v3.1
+      rbac:
+        enabled: true
+        namespaced: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - nodes
+            verbs:
+              - get
+              - list
+              - watch

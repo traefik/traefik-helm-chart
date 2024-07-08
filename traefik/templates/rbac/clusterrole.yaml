@@ -1,6 +1,7 @@
+{{- $version := include "imageVersion" $ }}
 {{- if .Values.rbac.enabled }}
 {{- if or
-       (semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion))
+       (semverCompare ">=v3.1.0-0" $version)
        (not .Values.rbac.namespaced)
        (and .Values.rbac.namespaced .Values.providers.kubernetesIngress.enabled (not .Values.providers.kubernetesIngress.disableIngressClassLookup))
 }}
@@ -15,7 +16,7 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
     {{- end }}
 rules:
-  {{- if semverCompare ">=v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion) }}
+  {{- if semverCompare ">=v3.1.0-0" $version }}
   - apiGroups:
       - ""
     resources:
@@ -61,7 +62,7 @@ rules:
       - update
 {{- end }}
 {{- if not .Values.rbac.namespaced }}
-  {{- if (semverCompare "<v3.1.0-0" (.Values.image.tag | default .Chart.AppVersion)) }}
+  {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
@@ -146,7 +147,7 @@ rules:
       - ""
     resources:
       - services
-{{- if (semverCompare "<v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare "<v3.1.0-0" $version) }}
       - endpoints
 {{- end }}
       - secrets
@@ -154,7 +155,7 @@ rules:
       - get
       - list
       - watch
-{{- if (semverCompare ">=v3.1.0-0" ($.Values.image.tag | default $.Chart.AppVersion)) }}
+{{- if (semverCompare ">=v3.1.0-0" $version) }}
   - apiGroups:
       - discovery.k8s.io
     resources:
