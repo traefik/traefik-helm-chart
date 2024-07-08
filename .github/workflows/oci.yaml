@@ -25,7 +25,7 @@ jobs:
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
-          name: charts
+          name: traefik
           repository:  traefik
           tag: v29.0.0
           path: ./traefik
