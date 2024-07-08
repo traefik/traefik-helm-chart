@@ -72,6 +72,16 @@ rules:
       - get
       - list
       - watch
+    {{- if $.Values.hub.token }}
+  - apiGroups:
+      - discovery.k8s.io
+    resources:
+      - endpointslices
+    verbs:
+      - get
+      - list
+      - watch
+    {{- end }}
   {{- else }}
   - apiGroups:
       - ""
@@ -87,9 +97,6 @@ rules:
     resources:
       - endpointslices
     verbs:
-    {{- if $.Values.hub.token }}
-      - get
-    {{- end }}
       - list
       - watch
   {{- end }}

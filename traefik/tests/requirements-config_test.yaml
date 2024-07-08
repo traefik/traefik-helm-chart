@@ -52,3 +52,12 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should not fail when using traefik-hub with namespaced RBACs
+    set:
+      hub:
+        token: xxx
+      rbac:
+        namespaced: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Currently traefik-hub doesn't support namespaced RBACs"
