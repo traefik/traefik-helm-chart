@@ -90,10 +90,10 @@ jobs:
         uses: appany/helm-oci-chart-releaser@v0.4.2
         with:
           name: traefik
-          repository:  traefik
+          repository: traefik/helm
           tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
           path: ./traefik
           registry: ghcr.io
           registry_username: traefiker
-          registry_password: ${{ secrets.CHART_TOKEN }}
+          registry_password: ${{ secrets.GHCR_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
