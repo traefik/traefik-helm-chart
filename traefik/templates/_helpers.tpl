@@ -129,7 +129,11 @@ Renders a complete tree, even values that contains template.
 {{- end -}}
 
 {{- define "imageVersion" -}}
+{{- if $.Values.hub.token -}}
+v3.0.1
+{{- else -}}
 {{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" | replace "experimental-" "" }}
+{{- end -}}
 {{- end -}}
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
