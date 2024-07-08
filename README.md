@@ -62,6 +62,12 @@ Due to changes in API Group of Traefik CRDs from `containo.us` to `traefik.io`, 
 helm install traefik traefik/traefik
 ```
 
+or:
+
+```bash
+helm install traefik oci://ghcr.io/traefik/helm/traefik --version v29.0.0
+```
+
 You can customize the install with a `values` file. There are some [EXAMPLES](./EXAMPLES.md) provided.
 Complete documentation on all available parameters is in the [default file](./traefik/values.yaml).
 
