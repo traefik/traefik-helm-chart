@@ -28,7 +28,7 @@ jobs:
           name: traefik-helm-chart
           repository: traefik
           tag: v29.0.0
-          path: ./traefik
+          #path: ./traefik
           registry: ghcr.io
           registry_username: traefiker
           registry_password: ${{ secrets.GHCR_TOKEN }}
