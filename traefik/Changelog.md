@@ -1,5 +1,14 @@
 # Change Log
 
+## 29.0.1  ![AppVersion: v3.0.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-07-09
+
+* fix: semverCompare failing on some legitimate tags
+* fix: RBACs for hub and disabled namespaced RBACs
+* chore(release): 🚀 publish v29.0.1
+* chore(deps): update jnorwood/helm-docs docker tag to v1.14.0
+
 ## 29.0.0  ![AppVersion: v3.0.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Upgrade Notes**

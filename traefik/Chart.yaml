@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 29.0.0
+version: 29.0.1
 # renovate: image=traefik
 appVersion: v3.0.4
 kubeVersion: ">=1.22.0-0"
@@ -25,20 +25,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: 🐛 improve error message on additional service without ports"
-    - "fix:  allow multiples values in the `secretResourceNames` slice"
-    - "fix(rbac)!: nodes API permissions for Traefik v3.1+"
-    - "fix(dashboard): Only set ingressClass annotation when kubernetesCRD provider is listening for it"
-    - "fix!: prometheus operator settings"
-    - "feat: ✨ update CRDs & RBAC for Traefik Proxy"
-    - "feat: ✨ migrate to endpointslices rbac"
-    - "feat: allow to set hostAliases for traefik pod"
-    - "feat(providers): add nativeLBByDefault support"
-    - "feat(providers)!: improve kubernetesGateway and Gateway API support"
-    - "feat(dashboard)!: dashboard `IngressRoute` should be disabled by default"
-    - "docs: fix typos and broken link"
-    - "chore: update CRDs to v1.5.0"
-    - "chore: update CRDs to v1.4.0"
-    - "chore(release): publish v29.0.0"
-    - "chore(deps): update traefik docker tag to v3.0.4"
-    - "chore(deps): update traefik docker tag to v3.0.3"
+    - "fix: semverCompare failing on some legitimate tags"
+    - "fix: RBACs for hub and disabled namespaced RBACs"
+    - "chore(release): 🚀 publish v29.0.1"
+    - "chore(deps): update jnorwood/helm-docs docker tag to v1.14.0"
