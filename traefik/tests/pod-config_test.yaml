@@ -623,3 +623,56 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--core.defaultRuleSyntax=v2"
+  - it: should fail when providing bad log format
+    set:
+      logs:
+        general:
+          format: "test"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: .Values.logs.general.format must be either common or json"
+  - it: should set log filePath when configured
+    set:
+      logs:
+        general:
+          filePath: "/var/log/traefik.log"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.filePath=/var/log/traefik.log"
+  - it: should set log noColor when configured
+    set:
+      logs:
+        general:
+          noColor: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.noColor=true"
+  - it: should set log noColor when configured to false as it's default
+    set:
+      logs:
+        general:
+          noColor: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.noColor=false"
+  - it: should not set log noColor when configured and log format is not common
+    set:
+      logs:
+        general:
+          format: json
+          noColor: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.noColor=true"
+  - it: should fail when setting unknown log level
+    set:
+      logs:
+        general:
+          level: test
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: .Values.logs.level must be DEBUG, PANIC, FATAL, ERROR, WARN, and INFO"
