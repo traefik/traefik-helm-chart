@@ -621,10 +621,22 @@
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
+            {{- if and .general.format (not (has .general.format (list "common" "json"))) }}
+              {{- fail "ERROR: .Values.logs.general.format must be either common or json"  }}
+            {{- end }}
             {{- if .general.format }}
           - "--log.format={{ .general.format }}"
             {{- end }}
-            {{- if ne .general.level "ERROR" }}
+            {{- if .general.filePath }}
+          - "--log.filePath={{ .general.filePath }}"
+            {{- end }}
+            {{- if and (or (eq .general.format "common") (not .general.format)) (eq .general.noColor true) }}
+          - "--log.noColor={{ .general.noColor }}"
+            {{- end }}
+            {{- if and .general.level (not (has (.general.level | upper) (list "DEBUG" "PANIC" "FATAL" "ERROR" "WARN" "INFO"))) }}
+              {{- fail "ERROR: .Values.logs.level must be DEBUG, PANIC, FATAL, ERROR, WARN, and INFO"  }}
+            {{- end }}
+            {{- if .general.level }}
           - "--log.level={{ .general.level | upper }}"
             {{- end }}
             {{- if .access.enabled }}

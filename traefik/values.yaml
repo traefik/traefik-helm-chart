@@ -307,9 +307,12 @@ logs:
     # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
     # @default common
     format:
-    # By default, the level is set to ERROR.
+    # By default, the level is set to INFO.
     # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
     level: INFO
+    #
+    # filePath: "/var/log/traefik/traefik.log
+    # noColor: true
   access:
     # -- To enable access logs
     enabled: false
