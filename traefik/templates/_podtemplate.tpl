@@ -621,46 +621,46 @@
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
-          {{- if .general.format }}
+            {{- if .general.format }}
           - "--log.format={{ .general.format }}"
-          {{- end }}
-          {{- if ne .general.level "ERROR" }}
+            {{- end }}
+            {{- if ne .general.level "ERROR" }}
           - "--log.level={{ .general.level | upper }}"
-          {{- end }}
-          {{- if .access.enabled }}
+            {{- end }}
+            {{- if .access.enabled }}
           - "--accesslog=true"
-           {{- with .access.format }}
+              {{- with .access.format }}
           - "--accesslog.format={{ . }}"
-           {{- end }}
-           {{- with .access.filePath }}
+              {{- end }}
+              {{- with .access.filePath }}
           - "--accesslog.filepath={{ . }}"
-           {{- end }}
-           {{- if .access.addInternals }}
+              {{- end }}
+              {{- if .access.addInternals }}
           - "--accesslog.addinternals"
-           {{- end }}
-           {{- with .access.bufferingSize }}
+              {{- end }}
+              {{- with .access.bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
-           {{- end }}
-           {{- with .access.filters }}
-            {{- with .statuscodes }}
+              {{- end }}
+              {{- with .access.filters }}
+                {{- with .statuscodes }}
           - "--accesslog.filters.statuscodes={{ . }}"
-            {{- end }}
-            {{- if .retryattempts }}
+                {{- end }}
+                {{- if .retryattempts }}
           - "--accesslog.filters.retryattempts"
-            {{- end }}
-            {{- with .minduration }}
+                {{- end }}
+                {{- with .minduration }}
           - "--accesslog.filters.minduration={{ . }}"
-            {{- end }}
-           {{- end }}
+                {{- end }}
+              {{- end }}
           - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
-           {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+              {{- range $fieldname, $fieldaction := .access.fields.general.names }}
           - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
-           {{- end }}
+              {{- end }}
           - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
-           {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+              {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
-           {{- end }}
-          {{- end }}
+              {{- end }}
+            {{- end }}
           {{- end }}
           {{- range $resolver, $config := $.Values.certResolvers }}
           {{- range $option, $setting := $config }}
