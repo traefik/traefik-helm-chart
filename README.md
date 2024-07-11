@@ -65,7 +65,7 @@ helm install traefik traefik/traefik
 or:
 
 ```bash
-helm install traefik oci://ghcr.io/traefik/helm/traefik --version v29.0.0
+helm install traefik oci://ghcr.io/traefik/helm/traefik
 ```
 
 You can customize the install with a `values` file. There are some [EXAMPLES](./EXAMPLES.md) provided.
