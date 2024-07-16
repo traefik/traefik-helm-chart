@@ -3,7 +3,7 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
-  name: {{ default .Values.gateway.name "traefik-gateway" }}
+  name: {{ default "traefik-gateway" .Values.gateway.name }}
   namespace: {{ template "traefik.namespace" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
