@@ -105,7 +105,7 @@ rules:
     resources:
       - secrets
     {{- with .Values.rbac.secretResourceNames }}
-    resourceNames: {{ toYaml . |nindent 6 }}
+    resourceNames: {{ toYaml . | nindent 6 }}
     {{- end }}
     verbs:
       - get
