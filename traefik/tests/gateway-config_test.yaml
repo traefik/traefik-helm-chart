@@ -155,3 +155,15 @@ tests:
         equal:
           path: spec.gatewayClassName
           value: test
+  - it: should be possible to customize gateway name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        name: test
+    asserts:
+      - template: gateway.yaml
+        equal:
+          path: metadata.name
+          value: test
