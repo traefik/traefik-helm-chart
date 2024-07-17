@@ -1,0 +1,43 @@
+{{ range $name, $config := .Values.ingressRoute }}
+{{ if $config.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ template "traefik.fullname" $ }}-$name
+  namespace: {{ template "traefik.namespace" $ }}
+  annotations:
+    {{- if and $.Values.ingressClass.enabled $.Values.providers.kubernetesCRD.enabled $.Values.providers.kubernetesCRD.ingressClass }}
+    kubernetes.io/ingress.class: {{ $.Values.providers.kubernetesCRD.ingressClass }}
+    {{- end }}
+    {{- with $config.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  labels:
+    {{- include "traefik.labels" $ | nindent 4 }}
+    {{- with $config.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  entryPoints:
+  {{- range $config.entryPoints }}
+  - {{ . }}
+  {{- end }}
+  routes:
+  - match: {{ $config.matchRule }}
+    kind: Rule
+    {{- with $config.services }}
+    services:
+      {{- toYaml . | nindent 6 }}
+    {{- end -}}
+    {{- with $config.middlewares }}
+    middlewares:
+      {{- toYaml . | nindent 6 }}
+    {{- end -}}
+
+  {{- with $config.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end -}}
+{{ end }}
