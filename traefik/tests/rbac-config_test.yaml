@@ -740,9 +740,9 @@ tests:
               - watch
 
   - it: should provide expected cluster rbac when k8s gw api is enabled
-    image:
-      tag: v3.0.0
     set:
+      image:
+        tag: v3.0.0
       providers:
         kubernetesGateway:
           enabled: true
@@ -942,9 +942,9 @@ tests:
               - watch
 
   - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
-    image:
-      tag: v3.0.0
     set:
+      image:
+        tag: v3.0.0
       rbac:
         namespaced: true
       providers:
