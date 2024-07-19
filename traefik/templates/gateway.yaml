@@ -1,4 +1,7 @@
 {{- if and (.Values.gateway).enabled (.Values.providers.kubernetesGateway).enabled }}
+  {{- if not .Values.gateway.listeners }}
+    {{- fail "ERROR: gateway must have at least one listener or should be disabled" }}
+  {{- end }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -14,29 +17,33 @@ metadata:
 spec:
   gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   listeners:
-    {{ with .Values.ports.web }}
-    - name: web
+    {{- range $name, $config := .Values.gateway.listeners }}
+    - name: {{ $name }}
       port: {{ .port }}
-      protocol: HTTP
-      {{- with $.Values.gateway.namespacePolicy }}
+      {{- if not (has .protocol (list "HTTP" "HTTPS" "TCP" "TLS" "UDP")) }}
+        {{- fail "ERROR: protocol must be set to HTTP, HTTPS, TCP, TLS or UDP" }}
+      {{- end }}
+      protocol: {{ .protocol }}
+      {{- with .hostname }}
+      hostname: {{ . }}
+      {{- end }}
+      {{- with .namespacePolicy }}
       allowedRoutes:
         namespaces:
           from: {{ . }}
       {{- end }}
-    {{- end }}
-    {{ with .Values.ports.websecure }}
-     {{- if $.Values.gateway.certificateRefs }}
-    - name: websecure
-      port: {{ $.Values.ports.websecure.port }}
-      protocol: HTTPS
-        {{- with $.Values.gateway.namespacePolicy }}
-      allowedRoutes:
-        namespaces:
-          from: {{ . }}
-        {{- end }}
+      {{ if or .certificateRefs .mode }}
       tls:
+        {{ with .mode }}
+        {{- if not (has . (list "Passthrough" "Terminate")) }}
+          {{- fail "ERROR: mode must be set to Passthrough or Terminate" }}
+        {{- end }}
+        mode: {{ . }}
+        {{- end }}
+        {{ with .certificateRefs }}
         certificateRefs:
-          {{- toYaml $.Values.gateway.certificateRefs | nindent 10 }}
+          {{- toYaml . | nindent 10 }}
+        {{- end }}
       {{- end }}
     {{- end }}
 {{- end }}
