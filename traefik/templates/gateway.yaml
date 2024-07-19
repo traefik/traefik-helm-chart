@@ -14,25 +14,29 @@ metadata:
 spec:
   gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   listeners:
+    {{ with .Values.ports.web }}
     - name: web
-      port: {{ .Values.ports.web.port }}
+      port: {{ .port }}
       protocol: HTTP
-      {{- with .Values.gateway.namespacePolicy }}
+      {{- with $.Values.gateway.namespacePolicy }}
       allowedRoutes:
         namespaces:
           from: {{ . }}
       {{- end }}
-    {{- if .Values.gateway.certificateRefs }}
+    {{- end }}
+    {{ with .Values.ports.websecure }}
+     {{- if $.Values.gateway.certificateRefs }}
     - name: websecure
       port: {{ $.Values.ports.websecure.port }}
       protocol: HTTPS
-      {{- with .Values.gateway.namespacePolicy }}
+        {{- with $.Values.gateway.namespacePolicy }}
       allowedRoutes:
         namespaces:
           from: {{ . }}
-      {{- end }}
+        {{- end }}
       tls:
         certificateRefs:
-          {{- toYaml .Values.gateway.certificateRefs | nindent 10 }}
+          {{- toYaml $.Values.gateway.certificateRefs | nindent 10 }}
+      {{- end }}
     {{- end }}
 {{- end }}
