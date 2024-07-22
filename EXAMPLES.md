@@ -24,7 +24,7 @@ deployment:
 ```
 ## Extending DNS config
 
-In order to configure additional DNS servers for your traefik pod, you can use `dnsConfig` option: 
+In order to configure additional DNS servers for your traefik pod, you can use `dnsConfig` option:
 
 ```yaml
 deployment:
@@ -78,15 +78,29 @@ autoscaling:
 
 # Access Traefik dashboard without exposing it
 
-This HelmChart does not expose the Traefik dashboard by default, for security concerns.
-Thus, there are multiple ways to expose the dashboard.
-For instance, the dashboard access could be achieved through a port-forward :
+This Chart does not expose the Traefik local dashboard by default. It's explained in upstream [documentation](https://doc.traefik.io/traefik/operations/api/) why:
+
+> Enabling the API in production is not recommended, because it will expose all configuration elements, including sensitive data.
+
+It says also:
+
+> In production, it should be at least secured by authentication and authorizations.
+
+Thus, there are multiple ways to expose the dashboard. For instance, after enabling the creation of dashboard `IngressRoute` in the values:
+
+```yaml
+ingressRoute:
+  dashboard:
+    enabled: true
+```
+
+The traefik admin port can be forwarded locally:
 
 ```bash
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
 ```
 
-Accessible with the url: http://127.0.0.1:9000/dashboard/
+This command makes the dashboard accessible on the url: http://127.0.0.1:9000/dashboard/
 
 # Publish and protect Traefik Dashboard with basic Auth
 
