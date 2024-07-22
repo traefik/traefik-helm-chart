@@ -194,7 +194,7 @@ rules:
       - update
 {{- end -}}
 {{- end -}}
-{{- if .Values.hub.token }}
+{{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
   - apiGroups:
       - hub.traefik.io
     resources:

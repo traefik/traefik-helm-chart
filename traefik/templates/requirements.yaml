@@ -13,6 +13,8 @@
   {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
 
-{{- if and .Values.hub.token (and .Values.rbac.enabled .Values.rbac.namespaced) }}
-  {{- fail "ERROR: Currently traefik-hub doesn't support namespaced RBACs" -}}
+{{- if .Values.hub.token }}
+  {{- if and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced) }}
+    {{- fail "ERROR: Currently traefik-hub doesn't support namespaced RBACs" -}}
+  {{- end }}
 {{- end }}
