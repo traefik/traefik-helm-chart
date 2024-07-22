@@ -15,6 +15,6 @@
 
 {{- if .Values.hub.token }}
   {{- if and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced) }}
-    {{- fail "ERROR: Currently traefik-hub doesn't support namespaced RBACs" -}}
+    {{- fail "ERROR: Currently Traefik Hub doesn't support namespaced RBACs" -}}
   {{- end }}
 {{- end }}
