@@ -1,6 +1,6 @@
 
 
-Traefik Proxy {{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace !
+{{ .Release.Name }} with {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace !
 
 {{- if .Values.persistence }}
 {{- if and .Values.persistence.enabled (empty .Values.deployment.initContainer)}}
