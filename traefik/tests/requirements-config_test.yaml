@@ -62,4 +62,4 @@ tests:
         namespaced: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Currently traefik-hub doesn't support namespaced RBACs"
+          errorMessage: "ERROR: Currently Traefik Hub doesn't support namespaced RBACs"
