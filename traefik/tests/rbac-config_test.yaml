@@ -1005,7 +1005,6 @@ tests:
             apiGroups:
               - gateway.networking.k8s.io
             resources:
-              - gatewayclasses
               - gateways
               - httproutes
               - referencegrants
@@ -1022,13 +1021,25 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
               - endpoints
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
               - secrets
             verbs:
               - get
               - list
               - watch
+
   - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced >=v3.1.0
     set:
       image:
@@ -1093,7 +1104,6 @@ tests:
             apiGroups:
               - gateway.networking.k8s.io
             resources:
-              - gatewayclasses
               - gateways
               - httproutes
               - referencegrants
@@ -1111,6 +1121,17 @@ tests:
               - ""
             resources:
               - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
               - secrets
             verbs:
               - get

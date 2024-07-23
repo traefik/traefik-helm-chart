@@ -109,30 +109,8 @@ rules:
 {{- end -}}
 {{- if (and (has . $gatewayNamespaces) ($.Values.providers.kubernetesGateway).enabled) }}
   - apiGroups:
-      - ""
-    resources:
-      - services
-{{- if (semverCompare "<v3.1.0-0" $version) }}
-      - endpoints
-{{- end }}
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-{{- if (semverCompare ">=v3.1.0-0" $version) }}
-  - apiGroups:
-      - discovery.k8s.io
-    resources:
-      - endpointslices
-    verbs:
-      - list
-      - watch
-{{- end }}
-  - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      - gatewayclasses
       - gateways
       - httproutes
       - referencegrants
