@@ -26,22 +26,22 @@ tests:
         kubernetesGateway:
           enabled: true
       gateway:
-          namespacePolicy: All
+        listeners:
+          web:
+            namespacePolicy: All
     asserts:
       - equal:
           path: spec.listeners[0].allowedRoutes.namespaces.from
           value: "All"
-  - it: should configure namespacePolicy within websecure listener
+  - it: should configure namespacePolicy and certificateRefs within websecure listener
     set:
       providers:
         kubernetesGateway:
           enabled: true
       gateway:
-        namespacePolicy: All
-        certificateRefs:
-          - group: "core"
-            kind: "Secret"
-            name: "mysecret"
+        listeners:
+          websecure:
+            namespacePolicy: All
     asserts:
       - equal:
           path: spec.listeners[1].allowedRoutes.namespaces.from
@@ -63,10 +63,12 @@ tests:
         kubernetesGateway:
           enabled: true
       gateway:
-        certificateRefs:
-          - name: "my-name"
-            group: "my-group"
-            kind: "my-kind"
+        listeners:
+          websecure:
+            certificateRefs:
+              - name: "my-name"
+                group: "my-group"
+                kind: "my-kind"
     asserts:
       - equal:
           path: spec.gatewayClassName
@@ -129,8 +131,7 @@ tests:
       gateway:
         enabled: false
     asserts:
-      - template: gateway.yaml
-        hasDocuments:
+      - hasDocuments:
           count: 0
   - it: should not deploy a gateway if gatewayClass creation is disabled
     set:
@@ -140,8 +141,7 @@ tests:
       gateway:
         enabled: false
     asserts:
-      - template: gateway.yaml
-        hasDocuments:
+      - hasDocuments:
           count: 0
   - it: should be possible to customize gatewayClass name
     set:
@@ -151,8 +151,7 @@ tests:
       gatewayClass:
         name: test
     asserts:
-      - template: gateway.yaml
-        equal:
+      - equal:
           path: spec.gatewayClassName
           value: test
   - it: should be possible to customize gateway name
@@ -163,7 +162,67 @@ tests:
       gateway:
         name: test
     asserts:
-      - template: gateway.yaml
-        equal:
+      - equal:
           path: metadata.name
           value: test
+  - it: should be possible to set tls mode
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          websecure:
+            mode: Terminate
+    asserts:
+      - equal:
+          path: spec.listeners[1].tls.mode
+          value: Terminate
+  - it: should be possible to set protocol
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          web:
+            protocol: TCP
+    asserts:
+      - equal:
+          path: spec.listeners[0].protocol
+          value: TCP
+  - it: should be possible to set hostname
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          web:
+            hostname: test.docker.localhost
+    asserts:
+      - equal:
+          path: spec.listeners[0].hostname
+          value: test.docker.localhost
+  - it: should fail when no listeners are defined
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: gateway must have at least one listener or should be disabled"
+  - it: should fail when listener port is not declared in ports
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          web:
+            port: 8001
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: port 8001 is not declared in ports"
