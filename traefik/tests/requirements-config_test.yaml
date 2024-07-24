@@ -52,12 +52,14 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should not fail when using traefik-hub with namespaced RBACs
+  - it: should fail when using traefik-hub API management with namespaced RBACs
     set:
       hub:
         token: xxx
+        apimanagement:
+          enabled: true
       rbac:
         namespaced: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Currently traefik-hub doesn't support namespaced RBACs"
+          errorMessage: "ERROR: Currently Traefik Hub doesn't support namespaced RBACs"

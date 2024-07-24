@@ -1146,6 +1146,8 @@ tests:
     set:
       hub:
         token: xxx
+        apimanagement:
+          enabled: true
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
