@@ -891,7 +891,7 @@ Once it's applied, whoami should be accessible on http://whoami.docker.localhost
 
 </details>
 
-# Use kubernetes Gateway API with Let's encrypt and cert-manager
+# Use Kubernetes Gateway API with cert-manager
 
 One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
 
@@ -933,7 +933,7 @@ cert-manager jetstack/cert-manager \
 
 <details>
 
-<summary>With those values, a whoami service can be exposed with a HTTPRoute using HTTPS</summary>
+<summary>With those values, a whoami service can be exposed with a HTTPRoute on both HTTP and HTTPS</summary>
 
 ```yaml
 ---
