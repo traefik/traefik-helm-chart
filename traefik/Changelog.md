@@ -1,5 +1,112 @@
 # Change Log
 
+## 30.0.0  ![AppVersion: v3.1.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-07-24
+
+* fix: 🐛 ingressroute default name
+* fix: namespaced RBACs hub api gateway
+* fix: can't set gateway name
+* fix(Gateway API): provide expected roles when using namespaced RBAC
+* fix(Gateway API)!: revamp Gateway implementation
+* feat: ✨ display release name and image full path in installation notes
+* feat: use single ingressRoute template
+* feat: handle log filePath and noColor
+* chore(release): 🚀 publish v30.0.0
+* chore(deps): update traefik docker tag to v3.1.0
+
+**Upgrade Notes**
+
+There is a breaking upgrade on how to configure Gateway with _values_. 
+This release supports Traefik Proxy v3.0 **and** v3.1.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c8bfd5b..83b6d98 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -134,14 +134,36 @@ gateway:
+   enabled: true
+   # -- Set a custom name to gateway
+   name:
+-  # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/references/spec/#gateway.networking.k8s.io/v1beta1.FromNamespaces)
+-  namespacePolicy:
+-  # -- See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
+-  certificateRefs:
+   # -- By default, Gateway is created in the same `Namespace` than Traefik.
+   namespace:
+   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
+   annotations:
++  # -- Define listeners
++  listeners:
++    web:
++      # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
++      # The port must match a port declared in ports section.
++      port: 8000
++      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
++      hostname:
++      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
++      protocol: HTTP
++      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
++      namespacePolicy:
++    websecure:
++      # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
++      # The port must match a port declared in ports section.
++      port: 8443
++      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
++      hostname:
++      # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
++      protocol: HTTPS
++      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces)
++      namespacePolicy:
++      # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
++      certificateRefs:
++      # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType).
++      mode:
+ 
+ gatewayClass:
+   # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
+@@ -161,6 +183,10 @@ ingressRoute:
+     labels: {}
+     # -- The router match rule used for the dashboard ingressRoute
+     matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
++    # -- The internal service used for the dashboard ingressRoute
++    services:
++      - name: api@internal
++        kind: TraefikService
+     # -- Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure).
+     # By default, it's using traefik entrypoint, which is not exposed.
+     # /!\ Do not expose your dashboard without any protection over the internet /!\
+@@ -178,6 +204,10 @@ ingressRoute:
+     labels: {}
+     # -- The router match rule used for the healthcheck ingressRoute
+     matchRule: PathPrefix(`/ping`)
++    # -- The internal service used for the healthcheck ingressRoute
++    services:
++      - name: ping@internal
++        kind: TraefikService
+     # -- Specify the allowed entrypoints to use for the healthcheck ingress route, (e.g. traefik, web, websecure).
+     # By default, it's using traefik entrypoint, which is not exposed.
+     entryPoints: ["traefik"]
+@@ -307,9 +337,12 @@ logs:
+     # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+     # @default common
+     format:
+-    # By default, the level is set to ERROR.
++    # By default, the level is set to INFO.
+     # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+     level: INFO
++    #
++    # filePath: "/var/log/traefik/traefik.log
++    # noColor: true
+   access:
+     # -- To enable access logs
+     enabled: false
+```
+
+
 ## 29.0.1  ![AppVersion: v3.0.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.0.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-07-09
