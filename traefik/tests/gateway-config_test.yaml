@@ -238,3 +238,15 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: gateway must have at least one listener or should be disabled"
+  - it: should fail when listener port is not declared in ports
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          web:
+            port: 8001
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: port 8001 is not declared in ports"

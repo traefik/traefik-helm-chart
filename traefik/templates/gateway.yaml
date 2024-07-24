@@ -19,6 +19,15 @@ spec:
   listeners:
     {{- range $name, $config := .Values.gateway.listeners }}
     - name: {{ $name }}
+      {{ $found := false }}
+      {{- range $portName, $portConfig := $.Values.ports -}}
+        {{- if eq $portConfig.port $config.port -}}
+          {{ $found = true }}
+        {{- end -}}
+      {{- end -}}
+      {{ if not $found }}
+        {{- fail (printf "ERROR: port %0.f is not declared in ports" .port ) }}
+      {{- end -}}
       port: {{ .port }}
       {{- if not (has .protocol (list "HTTP" "HTTPS" "TCP" "TLS" "UDP")) }}
         {{- fail "ERROR: protocol must be set to HTTP, HTTPS, TCP, TLS or UDP" }}

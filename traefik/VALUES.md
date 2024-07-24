@@ -65,12 +65,12 @@ Kubernetes: `>=1.22.0-0`
 | gateway.listeners.web.hostname | string | `nil` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname) |
 | gateway.listeners.web.mode | string | `nil` | TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType). |
 | gateway.listeners.web.namespacePolicy | string | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces |
-| gateway.listeners.web.port | int | `8000` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. |
+| gateway.listeners.web.port | int | `8000` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. The port must match a port declared in ports section. |
 | gateway.listeners.websecure.certificateRefs | string | `nil` | Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig) |
 | gateway.listeners.websecure.hostname | string | `nil` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname) |
 | gateway.listeners.websecure.mode | string | `nil` | TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType). |
 | gateway.listeners.websecure.namespacePolicy | string | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces) |
-| gateway.listeners.websecure.port | int | `8443` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. |
+| gateway.listeners.websecure.port | int | `8443` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. The port must match a port declared in ports section. |
 | gateway.name | string | `nil` | Set a custom name to gateway |
 | gateway.namespace | string | `nil` | By default, Gateway is created in the same `Namespace` than Traefik. |
 | gatewayClass.enabled | bool | `true` | When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass |
