@@ -925,7 +925,7 @@ cert-manager jetstack/cert-manager \
 
 <details>
 
-<summary>With those values, a whoami service can be exposed with a HTTPRoute on both HTTP and HTTPS</summary>
+<summary>With those values, a whoami service can be exposed with HTTPRoute on both HTTP and HTTPS</summary>
 
 ```yaml
 ---
@@ -933,7 +933,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: whoami
-  namespace: traefik
 spec:
   replicas: 2
   selector:
@@ -953,7 +952,6 @@ apiVersion: v1
 kind: Service
 metadata:
   name: whoami
-  namespace: traefik
 spec:
   selector:
     app: whoami
@@ -966,7 +964,6 @@ apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
   name: whoami
-  namespace: traefik
 spec:
   parentRefs:
     - name: traefik-gateway
@@ -988,7 +985,6 @@ apiVersion: cert-manager.io/v1
 kind: Issuer
 metadata:
   name: selfsigned-issuer
-  namespace: traefik
 spec:
   selfSigned: {}
 ```
