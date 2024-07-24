@@ -10,6 +10,9 @@ tests:
   asserts:
   - hasDocuments:
       count: 1
+  - equal:
+      path: metadata.name
+      value: RELEASE-NAME-healthcheck
 - it: should have the expected default route match rule
   set:
     ingressRoute:

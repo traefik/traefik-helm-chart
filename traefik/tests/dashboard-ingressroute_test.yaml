@@ -14,11 +14,14 @@ tests:
   asserts:
   - hasDocuments:
       count: 0
-- it: should have the expected default route match rule
+- it: should have the expected default
   asserts:
   - equal:
       path: spec.routes[0].match
       value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  - equal:
+      path: metadata.name
+      value: RELEASE-NAME-dashboard
 - it: should support overwriting the route match rule
   set:
     ingressRoute:
