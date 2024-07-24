@@ -178,18 +178,6 @@ tests:
       - equal:
           path: spec.listeners[1].tls.mode
           value: Terminate
-  - it: should fail when setting bad tls mode
-    set:
-      providers:
-        kubernetesGateway:
-          enabled: true
-      gateway:
-        listeners:
-          websecure:
-            mode: test
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: mode must be set to Passthrough or Terminate"
   - it: should be possible to set protocol
     set:
       providers:
@@ -203,18 +191,6 @@ tests:
       - equal:
           path: spec.listeners[0].protocol
           value: TCP
-  - it: should fail when setting bad protocol
-    set:
-      providers:
-        kubernetesGateway:
-          enabled: true
-      gateway:
-        listeners:
-          web:
-            protocol: test
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: protocol must be set to HTTP, HTTPS, TCP, TLS or UDP"
   - it: should be possible to set hostname
     set:
       providers:

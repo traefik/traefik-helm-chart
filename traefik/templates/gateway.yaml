@@ -29,9 +29,6 @@ spec:
         {{- fail (printf "ERROR: port %0.f is not declared in ports" .port ) }}
       {{- end -}}
       port: {{ .port }}
-      {{- if not (has .protocol (list "HTTP" "HTTPS" "TCP" "TLS" "UDP")) }}
-        {{- fail "ERROR: protocol must be set to HTTP, HTTPS, TCP, TLS or UDP" }}
-      {{- end }}
       protocol: {{ .protocol }}
       {{- with .hostname }}
       hostname: {{ . }}
@@ -44,9 +41,6 @@ spec:
       {{ if or .certificateRefs .mode }}
       tls:
         {{ with .mode }}
-        {{- if not (has . (list "Passthrough" "Terminate")) }}
-          {{- fail "ERROR: mode must be set to Passthrough or Terminate" }}
-        {{- end }}
         mode: {{ . }}
         {{- end }}
         {{ with .certificateRefs }}
