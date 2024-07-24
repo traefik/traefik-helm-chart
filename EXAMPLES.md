@@ -896,17 +896,9 @@ Once it's applied, whoami should be accessible on http://whoami.docker.localhost
 One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
 
 ```yaml
-image:
-  tag: v3.1.0
-
-ingressRoute:
-  dashboard:
-    enabled: true
-
 providers:
   kubernetesGateway:
     enabled: true
-
 gateway:
   enabled: true
   annotations:
