@@ -1373,6 +1373,23 @@ tests:
       - template: rbac/clusterrole.yaml
         hasDocuments:
           count: 0
+  - it: should provide cluster-wide RBACS for version < v3.1 when rbac are namespaced and gateway is enabled
+    set:
+      image:
+        tag: v3.0.1
+      rbac:
+        enabled: true
+        namespaced: true
+      providers:
+        kubernetesIngress:
+          disableIngressClassLookup: true
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        hasDocuments:
+          count: 1
+
   - it: should provide nodes RBACS for version >= v3.1 even if rbac are namespaced
     set:
       image:
