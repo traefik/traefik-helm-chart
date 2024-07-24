@@ -31,9 +31,7 @@ rules:
     resources:
       - services
     verbs:
-      {{- if $.Values.hub.token }}
       - get
-      {{- end }}
       - list
       - watch
   - apiGroups:
