@@ -890,3 +890,117 @@ spec:
 Once it's applied, whoami should be accessible on http://whoami.docker.localhost/
 
 </details>
+
+# Use kubernetes Gateway API with Let's encrypt and cert-manager
+
+One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
+
+```yaml
+image:
+  tag: v3.1.0
+
+ingressRoute:
+  dashboard:
+    enabled: true
+
+providers:
+  kubernetesGateway:
+    enabled: true
+
+gateway:
+  enabled: true
+  annotations:
+    cert-manager.io/issuer: selfsigned-issuer
+  listeners:
+    websecure:
+      hostname: whoami.docker.localhost
+      certificateRefs:
+        - name: whoami-tls
+```
+
+Install cert-manager:
+
+```bash
+helm repo add jetstack https://charts.jetstack.io --force-update
+helm upgrade --install \
+cert-manager jetstack/cert-manager \
+--namespace cert-manager \
+--create-namespace \
+--version v1.15.1 \
+--set crds.enabled=true \
+--set "extraArgs={--enable-gateway-api}"
+```
+
+<details>
+
+<summary>With those values, a whoami service can be exposed with a HTTPRoute using HTTPS</summary>
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+  namespace: traefik
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+  namespace: traefik
+spec:
+  selector:
+    app: whoami
+  ports:
+    - protocol: TCP
+      port: 80
+
+---
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: whoami
+  namespace: traefik
+spec:
+  parentRefs:
+    - name: traefik-gateway
+  hostnames:
+    - whoami.docker.localhost
+  rules:
+    - matches:
+        - path:
+            type: Exact
+            value: /
+
+      backendRefs:
+        - name: whoami
+          port: 80
+          weight: 1
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned-issuer
+  namespace: traefik
+spec:
+  selfSigned: {}
+```
+
+Once it's applied, whoami should be accessible on https://whoami.docker.localhost/
+
+</details>
