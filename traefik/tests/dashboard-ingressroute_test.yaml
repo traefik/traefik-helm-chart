@@ -1,6 +1,6 @@
 suite: Dashboard IngressRoute configuration
 templates:
-- dashboard-ingressroute.yaml
+- ingressroute.yaml
 set:
   ingressRoute:
     dashboard:

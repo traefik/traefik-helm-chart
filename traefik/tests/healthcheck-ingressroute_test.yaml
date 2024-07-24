@@ -1,6 +1,6 @@
 suite: healthcheck IngressRoute configuration
 templates:
-- healthcheck-ingressroute.yaml
+- ingressroute.yaml
 tests:
 - it: should allow enabling healthcheck exposure using ingressRoute
   set:

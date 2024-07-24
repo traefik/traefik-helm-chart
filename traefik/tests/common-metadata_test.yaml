@@ -1,6 +1,6 @@
 suite: Resources contains metadata
 templates:
-  - dashboard-ingressroute.yaml
+  - ingressroute.yaml
   - deployment.yaml
   - gatewayclass.yaml
   - gateway.yaml
