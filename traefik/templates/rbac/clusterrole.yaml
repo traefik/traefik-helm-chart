@@ -195,7 +195,33 @@ rules:
       - update
 {{- end -}}
 {{- end -}}
-{{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
+{{- if .Values.hub.token }}
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    verbs:
+      - list
+      - get
+  {{- if .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - list
   - apiGroups:
       - hub.traefik.io
     resources:
@@ -218,13 +244,6 @@ rules:
     resources:
       - namespaces
       - pods
-    verbs:
-      - list
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-      - pods
       - nodes
     verbs:
       - get
@@ -237,18 +256,6 @@ rules:
     verbs:
       - create
       - patch
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
   - apiGroups:
       - ""
     resources:
@@ -278,6 +285,7 @@ rules:
       - get
       - list
       - watch
+  {{- end -}}
 {{- end }}
 {{- end }}
 {{- end }}

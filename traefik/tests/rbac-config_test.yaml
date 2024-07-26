@@ -1160,8 +1160,42 @@ tests:
               - get
               - list
               - watch
+  - it: should contain additional RBACS for hub API gateway
+    image:
+      tag: v3.1.0
+    set:
+      hub:
+        token: xxx
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - get
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - coordination.k8s.io
+            resources:
+              - leases
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - patch
+              - delete
 
-  - it: should contain additional RBACS for hub
+  - it: should contain additional RBACS for hub API management
     image:
       tag: v3.1.0
     set:
@@ -1199,6 +1233,16 @@ tests:
               - ""
             resources:
               - namespaces
+            verbs:
+              - list
+              - get
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
               - pods
             verbs:
               - list
