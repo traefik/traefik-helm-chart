@@ -1176,8 +1176,8 @@ tests:
             resources:
               - namespaces
             verbs:
-              - list
               - get
+              - list
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
@@ -1233,29 +1233,7 @@ tests:
               - ""
             resources:
               - namespaces
-            verbs:
-              - list
-              - get
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
               - pods
-            verbs:
-              - list
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - namespaces
-              - pods
-              - nodes
             verbs:
               - get
               - list
@@ -1335,6 +1313,7 @@ tests:
               - extensions
               - networking.k8s.io
             resources:
+              - ingressclasses
               - ingresses
             verbs:
               - get
