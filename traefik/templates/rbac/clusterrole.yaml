@@ -262,6 +262,12 @@ rules:
       - get
       - list
       - watch
+  - apiGroups:
+      - ""
+    resources:
+      - nodes
+    verbs:
+      - watch
   {{- end -}}
 {{- end }}
 {{- end }}

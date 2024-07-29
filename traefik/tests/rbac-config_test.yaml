@@ -1319,6 +1319,16 @@ tests:
               - get
               - list
               - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - nodes
+            verbs:
+              - watch
 
   - it: should provide expected namespace'd RBACS for version < v3.1
     set:
