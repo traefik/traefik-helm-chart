@@ -216,6 +216,15 @@ rules:
 {{- /* not .Values.rbac.namespace */}}
 {{- end }}
 {{- if .Values.hub.token }}
+   {{- if or (semverCompare ">=v3.1.0-0" $version) .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - ""
+    resources:
+      - endpoints
+    verbs:
+      - list
+      - watch
+   {{- end }}
   - apiGroups:
       - ""
     resources:

@@ -1330,6 +1330,17 @@ tests:
             verbs:
               - list
               - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - endpoints
+            verbs:
+              - list
+              - watch
 
   - it: should not contain additional RBACS for hub > 3.3.1 API management
     set:
@@ -1348,6 +1359,36 @@ tests:
               - ""
             resources:
               - nodes
+            verbs:
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - endpoints
+            verbs:
+              - list
+              - watch
+
+  - it: should not contain additional RBACS for hub <= 3.3.1 API gateway
+    set:
+      image:
+        tag: v3.3.1
+      hub:
+        token: xxx
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - endpoints
             verbs:
               - list
               - watch
