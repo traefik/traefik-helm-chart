@@ -130,11 +130,15 @@ Renders a complete tree, even values that contains template.
 
 {{- define "imageVersion" -}}
 {{/*
-Traefik hub is based on v3.0 of traefik proxy, so this is a hack to avoid to much complexity in RBAC management which are
+Traefik hub is based on v3.1 (v3.0 before v3.3.1) of traefik proxy, so this is a hack to avoid to much complexity in RBAC management which are
 based on semverCompare
 */}}
 {{- if $.Values.hub.token -}}
+{{ if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag)) (semverCompare "<=v3.3.1-0" $.Values.image.tag) -}}
 v3.0
+{{- else -}}
+v3.1
+{{- end -}}
 {{- else -}}
 {{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" | replace "experimental-" "" }}
 {{- end -}}

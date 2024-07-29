@@ -262,6 +262,7 @@ rules:
       - get
       - list
       - watch
+    {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
@@ -269,6 +270,7 @@ rules:
     verbs:
       - list
       - watch
+    {{- end -}}
   {{- end -}}
 {{- end }}
 {{- end }}

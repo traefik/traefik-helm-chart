@@ -1161,9 +1161,9 @@ tests:
               - list
               - watch
   - it: should contain additional RBACS for hub API gateway
-    image:
-      tag: v3.1.0
     set:
+      image:
+        tag: v3.1.0
       hub:
         token: xxx
     asserts:
@@ -1196,9 +1196,9 @@ tests:
               - delete
 
   - it: should contain additional RBACS for hub API management
-    image:
-      tag: v3.1.0
     set:
+      image:
+        tag: v3.1.0
       hub:
         token: xxx
         apimanagement:
@@ -1321,6 +1321,27 @@ tests:
               - watch
       - template: rbac/clusterrole.yaml
         contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - nodes
+            verbs:
+              - list
+              - watch
+
+  - it: should not contain additional RBACS for hub > 3.3.1 API management
+    set:
+      image:
+        tag: v3.3.2
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
           path: rules
           content:
             apiGroups:
