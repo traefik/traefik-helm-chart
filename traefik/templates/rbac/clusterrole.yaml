@@ -267,6 +267,7 @@ rules:
     resources:
       - nodes
     verbs:
+      - list
       - watch
   {{- end -}}
 {{- end }}

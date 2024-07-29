@@ -1328,6 +1328,7 @@ tests:
             resources:
               - nodes
             verbs:
+              - list
               - watch
 
   - it: should provide expected namespace'd RBACS for version < v3.1
