@@ -32,14 +32,14 @@ rules:
       - networking.k8s.io
     resources:
       - ingressclasses
-{{- if not .Values.rbac.namespaced }}
+  {{- if not .Values.rbac.namespaced }}
       - ingresses
-{{- end }}
+  {{- end }}
     verbs:
       - get
       - list
       - watch
-{{- if (.Values.providers.kubernetesGateway).enabled }}
+  {{- if (.Values.providers.kubernetesGateway).enabled }}
   - apiGroups:
       - ""
     resources:
@@ -61,8 +61,8 @@ rules:
       - gatewayclasses/status
     verbs:
       - update
-{{- end }}
-{{- if not .Values.rbac.namespaced }}
+  {{- end }}
+ {{- if not .Values.rbac.namespaced }}
   {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
@@ -87,7 +87,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - nodes
       - services
     verbs:
       - get
@@ -112,7 +111,13 @@ rules:
       - get
       - list
       - watch
-{{- if .Values.providers.kubernetesIngress.enabled }}
+    {{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
+      - update
+      - create
+      - delete
+      - deletecollection
+    {{- end }}
+  {{- if .Values.providers.kubernetesIngress.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -120,8 +125,8 @@ rules:
       - ingresses/status
     verbs:
       - update
-{{- end -}}
-{{- if .Values.providers.kubernetesCRD.enabled }}
+  {{- end -}}
+  {{- if .Values.providers.kubernetesCRD.enabled }}
   - apiGroups:
       - traefik.io
     resources:
@@ -139,8 +144,8 @@ rules:
       - get
       - list
       - watch
-{{- end -}}
-{{- if .Values.podSecurityPolicy.enabled }}
+  {{- end -}}
+  {{- if .Values.podSecurityPolicy.enabled }}
   - apiGroups:
       - policy
     resourceNames:
@@ -149,21 +154,21 @@ rules:
       - podsecuritypolicies
     verbs:
       - use
-{{- end -}}
-{{- if .Values.providers.kubernetesGateway.enabled }}
+  {{- end -}}
+  {{- if .Values.providers.kubernetesGateway.enabled }}
   - apiGroups:
       - ""
     resources:
       - services
-{{- if (semverCompare "<v3.1.0-0" $version) }}
+    {{- if (semverCompare "<v3.1.0-0" $version) }}
       - endpoints
-{{- end }}
+    {{- end }}
       - secrets
     verbs:
       - get
       - list
       - watch
-{{- if (semverCompare ">=v3.1.0-0" $version) }}
+    {{- if (semverCompare ">=v3.1.0-0" $version) }}
   - apiGroups:
       - discovery.k8s.io
     resources:
@@ -171,7 +176,7 @@ rules:
     verbs:
       - list
       - watch
-{{- end }}
+    {{- end }}
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
@@ -193,9 +198,38 @@ rules:
       - tlsroutes/status
     verbs:
       - update
-{{- end -}}
-{{- end -}}
-{{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
+  {{- end }}
+  {{- if .Values.hub.token }}
+  - apiGroups:
+      - coordination.k8s.io
+    resources:
+      - leases
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  {{- end }}
+{{- /* not .Values.rbac.namespace */}}
+{{- end }}
+{{- if .Values.hub.token }}
+  - apiGroups:
+      - ""
+    resources:
+      - namespaces
+    {{- if .Values.hub.apimanagement.enabled }}
+      - pods
+    {{- end }}
+    verbs:
+      - get
+      - list
+    {{- if .Values.hub.apimanagement.enabled }}
+      - watch
+    {{- end }}
+  {{- if .Values.hub.apimanagement.enabled }}
   - apiGroups:
       - hub.traefik.io
     resources:
@@ -216,51 +250,10 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - namespaces
-      - pods
-    verbs:
-      - list
-  - apiGroups:
-      - ""
-    resources:
-      - namespaces
-      - pods
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - ""
-    resources:
       - events
     verbs:
       - create
       - patch
-  - apiGroups:
-      - coordination.k8s.io
-    resources:
-      - leases
-    verbs:
-      - get
-      - list
-      - watch
-      - create
-      - update
-      - patch
-      - delete
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-      - update
-      - create
-      - delete
-      - deletecollection
   - apiGroups:
       - apps
     resources:
@@ -270,14 +263,13 @@ rules:
       - list
       - watch
   - apiGroups:
-      - extensions
-      - networking.k8s.io
+      - ""
     resources:
-      - ingresses
+      - nodes
     verbs:
-      - get
       - list
       - watch
+  {{- end -}}
 {{- end }}
 {{- end }}
 {{- end }}
