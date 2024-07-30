@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 30.0.1
+version: 30.0.2
 # renovate: image=traefik
 appVersion: v3.1.0
 kubeVersion: ">=1.22.0-0"
@@ -25,13 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: 🐛 ingressroute default name"
-    - "fix: namespaced RBACs hub api gateway"
-    - "fix: can't set gateway name"
-    - "fix(Gateway API): provide expected roles when using namespaced RBAC"
-    - "fix(Gateway API)!: revamp Gateway implementation"
-    - "feat: ✨ display release name and image full path in installation notes"
-    - "feat: use single ingressRoute template"
-    - "feat: handle log filePath and noColor"
-    - "chore(release): 🚀 publish v30.0.0"
-    - "chore(deps): update traefik docker tag to v3.1.0"
+    - "fix(Traefik Hub): missing RBACs for Traefik Hub"
+    - "chore(release): 🚀 publish v30.0.2"

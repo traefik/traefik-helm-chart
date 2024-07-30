@@ -1,5 +1,12 @@
 # Change Log
 
+## 30.0.2  ![AppVersion: v3.1.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-07-30
+
+* fix(Traefik Hub): missing RBACs for Traefik Hub
+* chore(release): 🚀 publish v30.0.2
+
 ## 30.0.1  ![AppVersion: v3.1.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-07-29
@@ -25,7 +32,7 @@
 
 **Upgrade Notes**
 
-There is a breaking upgrade on how to configure Gateway with _values_. 
+There is a breaking upgrade on how to configure Gateway with _values_.
 This release supports Traefik Proxy v3.0 **and** v3.1.
 
 ### Default value changes
