@@ -1,0 +1,41 @@
+name: 🧑‍🔬 E2E tests
+on:
+  workflow_call:
+  pull_request:
+    paths:
+      - traefik/templates/rbac/**
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+env:
+  API_TOKEN: ${{ secrets.API_TOKEN }}
+  PLATFORM_URL: ${{ secrets.PLATFORM_URL }}
+  ADMIN_TOKEN: ${{ secrets.ADMIN_TOKEN }}
+  EXTERNAL_TOKEN: ${{ secrets.EXTERNAL_TOKEN }}
+  DOCKER_NON_INTERACTIVE: true
+  LOG_LEVEL: info
+jobs:
+  if: ${{ !github.event.pull_request.draft }}
+  run-walkthrough:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout traefik-helm-chart
+        uses: actions/checkout@v4
+        with:
+          path: ${{ github.workspace }}/traefik-helm-chart
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          repository: traefik/hub
+          path: ${{ github.workspace }}/hub
+      - name: set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: ${{ github.workspace }}/hub/tests/go.mod
+          cache-dependency-path: ${{ github.workspace }}/hub/tests/go.sum
+      - name: update tests
+        run: |
+          sed -i -r "s|\"traefik/traefik\"|\"${{ github.workspace }}/traefik-helm-chart/traefik/\"|g" tests/*/*.go
+      - name: run tests
+        working-directory: ${{ github.workspace }}/hub/tests
+        run: make test-walkthrough
