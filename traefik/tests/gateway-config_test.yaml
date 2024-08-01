@@ -215,7 +215,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: port 8001 is not declared in ports"
-  - it: should provider listeners by default
+  - it: should provide listeners by default
     set:
       providers:
         kubernetesGateway:
