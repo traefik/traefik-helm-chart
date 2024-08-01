@@ -33,19 +33,6 @@ tests:
       - equal:
           path: spec.listeners[0].allowedRoutes.namespaces.from
           value: "All"
-  - it: should configure namespacePolicy and certificateRefs within websecure listener
-    set:
-      providers:
-        kubernetesGateway:
-          enabled: true
-      gateway:
-        listeners:
-          websecure:
-            namespacePolicy: All
-    asserts:
-      - equal:
-          path: spec.listeners[1].allowedRoutes.namespaces.from
-          value: "All"
   - it: should set expected apiVersion with v3 version
     set:
       image:
@@ -65,6 +52,7 @@ tests:
       gateway:
         listeners:
           websecure:
+            port: 8443
             certificateRefs:
               - name: "my-name"
                 group: "my-group"
@@ -173,6 +161,7 @@ tests:
       gateway:
         listeners:
           websecure:
+            port: 8443
             mode: Terminate
     asserts:
       - equal:
@@ -226,3 +215,40 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: port 8001 is not declared in ports"
+  - it: should provide listeners by default
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.listeners
+          value:
+            - name: web
+              port: 8000
+              protocol: HTTP
+  - it: should fail when no certificateRefs is specified with HTTPS
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          websecure:
+            port: 8443
+            protocol: HTTPS
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: certificateRefs needs to be specified using HTTPS"
+  - it: should fail when no port is specified
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          websecure:
+            protocol: HTTPS
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: port needs to be specified"

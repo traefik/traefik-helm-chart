@@ -822,8 +822,6 @@ metrics:
 One can use the new stable kubernetes gateway API provider setting the following _values_:
 
 ```yaml
-image:
-  tag: v3.1.0-rc3
 providers:
   kubernetesGateway:
     enabled: true
@@ -906,6 +904,8 @@ gateway:
   listeners:
     websecure:
       hostname: whoami.docker.localhost
+      port: 8443
+      protocol: HTTPS
       certificateRefs:
         - name: whoami-tls
 ```
