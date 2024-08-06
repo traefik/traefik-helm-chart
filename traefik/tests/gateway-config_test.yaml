@@ -180,7 +180,7 @@ tests:
       - equal:
           path: spec.listeners[0].protocol
           value: TCP
-  - it: should be possible to set hostname
+  - it: should be possible to set hostname with wildcard
     set:
       providers:
         kubernetesGateway:
@@ -188,11 +188,11 @@ tests:
       gateway:
         listeners:
           web:
-            hostname: test.docker.localhost
+            hostname: "*.docker.localhost"
     asserts:
       - equal:
           path: spec.listeners[0].hostname
-          value: test.docker.localhost
+          value: "*.docker.localhost"
   - it: should fail when no listeners are defined
     set:
       providers:
