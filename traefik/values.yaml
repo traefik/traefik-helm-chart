@@ -281,10 +281,6 @@ providers:
     # labelSelector: environment=production,method=traefik
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
     namespaces: []
-    # - "default"
-    # Disable cluster IngressClass Lookup - Requires Traefik V3.
-    # When combined with rbac.namespaced: true, ClusterRole will not be created and ingresses must use kubernetes.io/ingress.class annotation instead of spec.ingressClassName.
-    disableIngressClassLookup: false
     # IP used for Kubernetes Ingress endpoints
     publishedService:
       enabled: false
@@ -838,9 +834,12 @@ hostNetwork: false
 # -- Whether Role Based Access Control objects like roles and rolebindings should be created
 rbac:
   enabled: true
-  # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
-  # If set to true, installs Role and RoleBinding instead of ClusterRole/ClusterRoleBinding. Providers will only watch target namespace.
-  # When combined with providers.kubernetesIngress.disableIngressClassLookup: true and Traefik V3, ClusterRole to watch IngressClass is also disabled.
+  # When set to true:
+  # 1. Use `Role` and `RoleBinding` instead of `ClusterRole` and `ClusterRoleBinding`.
+  # 2. Set `disableIngressClassLookup` on Kubernetes Ingress providers with Traefik Proxy v3 until v3.1.1
+  # 3. Set `disableClusterScopeResources` on Kubernetes Ingress and CRD providers with Traefik Proxy v3.1.2+
+  # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
+  # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
   namespaced: false
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles

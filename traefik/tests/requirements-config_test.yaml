@@ -63,3 +63,27 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Currently Traefik Hub doesn't support namespaced RBACs"
+  - it: should not be possible to namespace rbac without one of the required providers
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesCRD:
+          enabled: false
+        kubernetesIngress:
+          enabled: false
+      image:
+        tag: v3.1.2
+    asserts:
+      - failedTemplate:
+        errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider"
+  - it: should fail when enabling Kubernete Gateway provider with namespaced RBACs
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced."

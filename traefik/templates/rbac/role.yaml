@@ -1,8 +1,7 @@
 {{- $version := include "imageVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
-{{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.kubernetesGateway).namespaces) -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces)) -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -106,30 +105,6 @@ rules:
       - podsecuritypolicies
     verbs:
       - use
-{{- end -}}
-{{- if (and (has . $gatewayNamespaces) ($.Values.providers.kubernetesGateway).enabled) }}
-  - apiGroups:
-      - gateway.networking.k8s.io
-    resources:
-      - gateways
-      - httproutes
-      - referencegrants
-      - tcproutes
-      - tlsroutes
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - gateway.networking.k8s.io
-    resources:
-      - gatewayclasses/status
-      - gateways/status
-      - httproutes/status
-      - tcproutes/status
-      - tlsroutes/status
-    verbs:
-      - update
 {{- end -}}
 {{- if $.Values.hub.token }}
   - apiGroups:

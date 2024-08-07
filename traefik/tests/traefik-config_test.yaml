@@ -573,21 +573,47 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: kubernetesGateway should watched default namespace when rbacs are namespaced
+  - it: should set disableClusterScopeResources when version > v3.1.2+ on both providers
+    set:
+      rbac:
+        namespaced: true
+      image:
+        tag: v3.1.2
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.disableClusterScopeResources=true"
+  - it: should set disableClusterScopeResources when version > v3.1.2+ only on crd enabled provider
     set:
       rbac:
         namespaced: true
       providers:
-        kubernetesGateway:
-          enabled: true
+        kubernetesIngress:
+          enabled: false
+      image:
+        tag: v3.1.2
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesgateway.namespaces=NAMESPACE"
-  - it: kubernetesGateway should watched specified namespaces when rbacs are namespaced
+          content: "--providers.kubernetescrd.disableClusterScopeResources=true"
+  - it: should set disableClusterScopeResources when version > v3.1.2+ only on ingress enabled provider
     set:
       rbac:
         namespaced: true
+      providers:
+        kubernetesCRD:
+          enabled: false
+      image:
+        tag: v3.1.2
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
+  - it: kubernetesGateway should be able to watch specified namespaces
+    set:
       providers:
         kubernetesGateway:
           enabled: true

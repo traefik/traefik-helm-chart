@@ -1,4 +1,4 @@
-suite: Resources contains metadata
+suite: resources contains metadata
 templates:
   - ingressroute.yaml
   - deployment.yaml
@@ -16,31 +16,28 @@ templates:
   - rbac/clusterrole.yaml
   - rbac/clusterrolebinding.yaml
   - rbac/podsecuritypolicy.yaml
-  - rbac/role.yaml
-  - rbac/rolebinding.yaml
   - rbac/serviceaccount.yaml
 
 tests:
-  - it: "should contains labels metadata"
+  - it: "should contains labels metadata with cluster rbac"
     set:
-      providers.kubernetesGateway.enabled: true
-      ingressRoute.dashboard.enabled: true
-      ingressRoute.healthcheck.enabled: true
       autoscaling.enabled: true
       autoscaling.maxReplicas: 10
+      ingressRoute.dashboard.enabled: true
+      ingressRoute.healthcheck.enabled: true
+      persistence.enabled: true
       podDisruptionBudget.enabled: true
+      podSecurityPolicy.enabled: true
+      providers.kubernetesGateway.enabled: true
       metrics.prometheus.prometheusRule.enabled: true
       metrics.prometheus.prometheusRule.namespace: test
       metrics.prometheus.serviceMonitor.enabled: true
       metrics.prometheus.serviceMonitor.namespace: test
       metrics.prometheus.service.enabled: true
-      service.internal.a: {}
-      persistence.enabled: true
-      tlsStore.a: {}
-      tlsOptions.a: {}
-      podSecurityPolicy.enabled: true
       rbac.enabled: true
-      rbac.namespaced: true
+      service.internal.a: {}
+      tlsOptions.a: {}
+      tlsStore.a: {}
       commonLabels:
         globalLabel: isConfigured
     capabilities:

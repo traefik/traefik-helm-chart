@@ -1,4 +1,5 @@
 {{- define "traefik.podTemplate" }}
+  {{- $version := include "imageVersion" $ }}
     metadata:
       annotations:
       {{- if .Values.deployment.podAnnotations }}
@@ -464,6 +465,9 @@
            {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
           - "--providers.kubernetescrd.allowEmptyServices=true"
            {{- end }}
+           {{- if and .Values.rbac.namespaced (semverCompare ">=3.1.2-0" $version) }}
+          - "--providers.kubernetescrd.disableClusterScopeResources=true"
+           {{- end }}
            {{- if .Values.providers.kubernetesCRD.nativeLBByDefault }}
           - "--providers.kubernetescrd.nativeLBByDefault=true"
            {{- end }}
@@ -485,8 +489,12 @@
            {{- if .Values.providers.kubernetesIngress.ingressClass }}
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
            {{- end }}
-           {{- if .Values.providers.kubernetesIngress.disableIngressClassLookup }}
+           {{- if .Values.rbac.namespaced }}
+            {{- if semverCompare "<3.1.2-0" $version }}
           - "--providers.kubernetesingress.disableIngressClassLookup=true"
+            {{- else }}
+          - "--providers.kubernetesingress.disableClusterScopeResources=true"
+            {{- end }}
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.nativeLBByDefault }}
           - "--providers.kubernetesingress.nativeLBByDefault=true"
