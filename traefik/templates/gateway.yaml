@@ -34,7 +34,7 @@ spec:
       port: {{ .port }}
       protocol: {{ .protocol }}
       {{- with .hostname }}
-      hostname: {{ . }}
+      hostname: {{ . | toYaml }}
       {{- end }}
       {{- with .namespacePolicy }}
       allowedRoutes:
