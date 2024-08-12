@@ -2,15 +2,8 @@
 kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  - gateway.networking.k8s.io_backendtlspolicies.yaml
-  - gateway.networking.k8s.io_gatewayclasses.yaml
-  - gateway.networking.k8s.io_gateways.yaml
-  - gateway.networking.k8s.io_grpcroutes.yaml
-  - gateway.networking.k8s.io_httproutes.yaml
-  - gateway.networking.k8s.io_referencegrants.yaml
-  - gateway.networking.k8s.io_tcproutes.yaml
-  - gateway.networking.k8s.io_tlsroutes.yaml
-  - gateway.networking.k8s.io_udproutes.yaml
+  # curl -o gateway-standard-install-v1.1.0.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.1.0/standard-install.yaml
+  - gateway-standard-install-v1.1.0.yaml
   - hub.traefik.io_accesscontrolpolicies.yaml
   - hub.traefik.io_apiaccesses.yaml
   - hub.traefik.io_apiportals.yaml
