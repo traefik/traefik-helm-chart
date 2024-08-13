@@ -68,26 +68,11 @@ tests:
       - isKind:
           of: RoleBinding
         template: rbac/rolebinding.yaml
-      - notContains:
-          path: rules
-          content:
-            - apiGroups:
-                - extensions
-                - networking.k8s.io
-              resources:
-                - ingresses
-              verbs:
-                - get
-                - list
-                - watch
+      - hasDocuments:
+          count: 0
         template: rbac/clusterrole.yaml
-      - matchRegex:
-          path: metadata.name
-          pattern: ^.*-NAMESPACE$
-        template: rbac/clusterrole.yaml
-      - matchRegex:
-          path: metadata.name
-          pattern: ^.*-NAMESPACE$
+      - hasDocuments:
+          count: 0
         template: rbac/clusterrolebinding.yaml
   - it: should not create cluster scoped RBAC related objects when namespaced and not using ingressclass and version <3.1
     set:
@@ -288,69 +273,13 @@ tests:
           value: default
         template: rbac/rolebinding.yaml
         documentIndex: 2
-  - it: should use multiple namespaces if provided to kubernetesGateway
-    set:
-      providers:
-        kubernetesIngress:
-          enabled: false
-        kubernetesCRD:
-          enabled: false
-        kubernetesGateway:
-          enabled: true
-          namespaces:
-            - default
-            - foobar
-      rbac:
-        namespaced: true
-    asserts:
-      - hasDocuments:
-          count: 3
-        template: rbac/role.yaml
-      - hasDocuments:
-          count: 3
-        template: rbac/rolebinding.yaml
-      - equal:
-          path: metadata.namespace
-          value: NAMESPACE
-        template: rbac/role.yaml
-        documentIndex: 0
-      - equal:
-          path: metadata.namespace
-          value: default
-        template: rbac/role.yaml
-        documentIndex: 1
-      - equal:
-          path: metadata.namespace
-          value: foobar
-        template: rbac/role.yaml
-        documentIndex: 2
-      - equal:
-          path: metadata.namespace
-          value: NAMESPACE
-        template: rbac/rolebinding.yaml
-        documentIndex: 0
-      - equal:
-          path: metadata.namespace
-          value: default
-        template: rbac/rolebinding.yaml
-        documentIndex: 1
-      - equal:
-          path: metadata.namespace
-          value: foobar
-        template: rbac/rolebinding.yaml
-        documentIndex: 2
-  - it: should use multiple namespaces if provided to all of 3 providers
+  - it: should use multiple namespaces if provided to all namespaced providers
     set:
       providers:
         kubernetesCRD:
           namespaces:
             - default
             - foo
-        kubernetesGateway:
-          enabled: true
-          namespaces:
-            - default
-            - foobar
         kubernetesIngress:
           namespaces:
             - default
@@ -359,10 +288,10 @@ tests:
         namespaced: true
     asserts:
       - hasDocuments:
-          count: 5
+          count: 4
         template: rbac/role.yaml
       - hasDocuments:
-          count: 5
+          count: 4
         template: rbac/rolebinding.yaml
       - equal:
           path: metadata.namespace
@@ -386,11 +315,6 @@ tests:
         documentIndex: 3
       - equal:
           path: metadata.namespace
-          value: foobar
-        template: rbac/role.yaml
-        documentIndex: 4
-      - equal:
-          path: metadata.namespace
           value: NAMESPACE
         template: rbac/rolebinding.yaml
         documentIndex: 0
@@ -409,11 +333,6 @@ tests:
           value: foo
         template: rbac/rolebinding.yaml
         documentIndex: 3
-      - equal:
-          path: metadata.namespace
-          value: foobar
-        template: rbac/rolebinding.yaml
-        documentIndex: 4
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
@@ -428,20 +347,9 @@ tests:
           path: metadata.namespace
           value: "traefik-ns-override"
         template: rbac/serviceaccount.yaml
-  - it: should use helm managed namespace for clusterrolebinding sa
-    set:
-      rbac:
-        namespaced: true
-    asserts:
-      - equal:
-          path: subjects[0].namespace
-          value: NAMESPACE
-        template: rbac/clusterrolebinding.yaml
   - it: should accept overridden namespace for clusterrolebinding sa
     set:
       namespaceOverride: "traefik-ns-override"
-      rbac:
-        namespaced: true
     asserts:
       - equal:
           path: subjects[0].namespace
@@ -570,67 +478,6 @@ tests:
               - get
               - list
               - watch
-  - it: cluster rbac should not be created when rbac is namespaced, disableIngressClassLookup is true and version is < v3.1
-    set:
-      image:
-        tag: v3.0.0-beta3
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-    asserts:
-      - isKind:
-          of: Role
-        template: rbac/role.yaml
-      - isKind:
-          of: RoleBinding
-        template: rbac/rolebinding.yaml
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrole.yaml
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrolebinding.yaml
-  - it: cluster rbac should be created when rbac is namespaced, disableIngressClassLookup is true and version is >= v3.1
-    set:
-      image:
-        tag: v3.1.0-rc2
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-    asserts:
-      - isKind:
-          of: Role
-        template: rbac/role.yaml
-      - isKind:
-          of: RoleBinding
-        template: rbac/rolebinding.yaml
-      - isKind:
-          of: ClusterRole
-        template: rbac/clusterrole.yaml
-      - isKind:
-          of: ClusterRoleBinding
-        template: rbac/clusterrolebinding.yaml
-  - it: both cluster and namespace rbac should be created when rbac is namespaced, kubernetesIngress is enabled
-    set:
-      rbac:
-        namespaced: true
-    asserts:
-      - isKind:
-          of: Role
-        template: rbac/role.yaml
-      - isKind:
-          of: RoleBinding
-        template: rbac/rolebinding.yaml
-      - isKind:
-          of: ClusterRole
-        template: rbac/clusterrole.yaml
-      - isKind:
-          of: ClusterRoleBinding
-        template: rbac/clusterrolebinding.yaml
   - it: cluster rbac should be created when version is v3
     set:
       image:
@@ -752,41 +599,9 @@ tests:
           path: rules
           content:
             apiGroups:
-              - ""
-            resources:
-              - namespaces
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses/status
-            verbs:
-              - update
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
               - gateways/status
               - httproutes/status
               - tcproutes/status
@@ -800,6 +615,7 @@ tests:
             apiGroups:
               - gateway.networking.k8s.io
             resources:
+              - gatewayclasses
               - gateways
               - httproutes
               - referencegrants
@@ -817,19 +633,9 @@ tests:
               - ""
             resources:
               - namespaces
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - services
               - endpoints
               - secrets
+              - services
             verbs:
               - get
               - list
@@ -847,29 +653,9 @@ tests:
           path: rules
           content:
             apiGroups:
-              - ""
-            resources:
-              - namespaces
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses/status
-            verbs:
-              - update
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
               - gateways/status
               - httproutes/status
               - tcproutes/status
@@ -884,17 +670,6 @@ tests:
               - gateway.networking.k8s.io
             resources:
               - gatewayclasses
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
               - gateways
               - httproutes
               - referencegrants
@@ -923,8 +698,9 @@ tests:
             apiGroups:
               - ""
             resources:
-              - services
+              - namespaces
               - secrets
+              - services
             verbs:
               - get
               - list
@@ -941,225 +717,6 @@ tests:
               - list
               - watch
 
-  - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced
-    set:
-      image:
-        tag: v3.0.0
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - namespaces
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses/status
-            verbs:
-              - update
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses/status
-              - gateways/status
-              - httproutes/status
-              - tcproutes/status
-              - tlsroutes/status
-            verbs:
-              - update
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gateways
-              - httproutes
-              - referencegrants
-              - tcproutes
-              - tlsroutes
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - endpoints
-              - services
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - secrets
-            verbs:
-              - get
-              - list
-              - watch
-
-  - it: should provide expected role rbac when k8s gw api is enabled with rbac namespaced >=v3.1.0
-    set:
-      image:
-        tag: v3.1.0-rc2
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - namespaces
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses/status
-            verbs:
-              - update
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gatewayclasses/status
-              - gateways/status
-              - httproutes/status
-              - tcproutes/status
-              - tlsroutes/status
-            verbs:
-              - update
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - gateway.networking.k8s.io
-            resources:
-              - gateways
-              - httproutes
-              - referencegrants
-              - tcproutes
-              - tlsroutes
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - services
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - secrets
-            verbs:
-              - get
-              - list
-              - watch
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - discovery.k8s.io
-            resources:
-              - endpointslices
-            verbs:
-              - list
-              - watch
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - nodes
-            verbs:
-              - get
-              - list
-              - watch
   - it: should contain additional RBACS for hub API gateway
     set:
       image:
@@ -1454,89 +1011,4 @@ tests:
             verbs:
               - list
               - get
-              - watch
-  - it: should not provide nodes RBACS for version < v3.1 if rbac are namespaced
-    set:
-      image:
-        tag: v3.0.1
-      rbac:
-        enabled: true
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        hasDocuments:
-          count: 0
-  - it: should provide cluster-wide RBACS for version < v3.1 when rbac are namespaced and gateway is enabled
-    set:
-      image:
-        tag: v3.0.1
-      rbac:
-        enabled: true
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        hasDocuments:
-          count: 1
-
-  - it: should provide nodes RBACS for version >= v3.1 even if rbac are namespaced
-    set:
-      image:
-        tag: v3.1.0
-      rbac:
-        enabled: true
-        namespaced: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - nodes
-            verbs:
-              - get
-              - list
-              - watch
-  - it: should not provide nodes RBACS for version < v3.1 if rbac are namespaced (experimental tag)
-    set:
-      image:
-        tag: experimental-v3.0
-      rbac:
-        enabled: true
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        hasDocuments:
-          count: 0
-  - it: should provide nodes RBACS for version >= v3.1 even if rbac are namespaced (experimental tag)
-    set:
-      image:
-        tag: experimental-v3.1
-      rbac:
-        enabled: true
-        namespaced: true
-    asserts:
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - nodes
-            verbs:
-              - get
-              - list
               - watch

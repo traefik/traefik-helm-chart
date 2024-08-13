@@ -18,3 +18,12 @@
     {{- fail "ERROR: Currently Traefik Hub doesn't support namespaced RBACs" -}}
   {{- end }}
 {{- end }}
+
+{{- if .Values.rbac.namespaced }}
+  {{- if .Values.providers.kubernetesGateway.enabled }}
+    {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
+  {{- end }}
+  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) }}
+    {{- fail "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider." }}
+  {{- end }}
+{{- end }}
