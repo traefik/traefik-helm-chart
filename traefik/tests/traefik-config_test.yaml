@@ -222,7 +222,7 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: plugin enabled is missing moduleName/version keys !"
+          errorPattern: "Invalid type"
 
   - it: should fail gracefully on missing plugins information
     set:
@@ -233,14 +233,6 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: plugin demo is missing moduleName/version keys !"
-
-  - it: should fail gracefully on bad structure
-    set:
-      experimental:
-        plugins: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: .Values.experimental.plugins should be a map (bool provided) !"
 
   - it: should have tls configuration args when specified in values.yaml for port
     set:

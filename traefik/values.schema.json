@@ -33,7 +33,10 @@
         "core": {
             "properties": {
                 "defaultRuleSyntax": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -92,7 +95,10 @@
                     "type": "integer"
                 },
                 "runtimeClassName": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "shareProcessNamespace": {
                     "type": "boolean"
@@ -153,7 +159,10 @@
         "gateway": {
             "properties": {
                 "annotations": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"
@@ -163,10 +172,16 @@
                         "web": {
                             "properties": {
                                 "hostname": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "namespacePolicy": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "port": {
                                     "type": "integer"
@@ -181,10 +196,16 @@
                     "type": "object"
                 },
                 "name": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "namespace": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -195,10 +216,16 @@
                     "type": "boolean"
                 },
                 "labels": {
-                    "type": "null"
+                    "type": [
+                        "object",
+                        "null"
+                    ]
                 },
                 "name": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -219,16 +246,25 @@
                         "admission": {
                             "properties": {
                                 "listenAddr": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "secretName": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "type": "object"
                         },
                         "enabled": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         }
                     },
                     "type": "object"
@@ -238,53 +274,92 @@
                         "redis": {
                             "properties": {
                                 "cluster": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "database": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "endpoints": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "password": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "sentinel": {
                                     "properties": {
                                         "masterset": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "password": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "username": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
                                 },
                                 "timeout": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
-                                            "type": "null"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
                                 },
                                 "username": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "type": "object"
@@ -293,10 +368,16 @@
                     "type": "object"
                 },
                 "sendlogs": {
-                    "type": "null"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "token": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -313,7 +394,10 @@
                     "type": "string"
                 },
                 "tag": {
-                    "type": "null"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -427,7 +511,10 @@
             "type": "object"
         },
         "instanceLabelOverride": {
-            "type": "null"
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "livenessProbe": {
             "properties": {
@@ -454,10 +541,16 @@
                 "access": {
                     "properties": {
                         "addInternals": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "bufferingSize": {
-                            "type": "null"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "enabled": {
                             "type": "boolean"
@@ -496,7 +589,10 @@
                             "type": "object"
                         },
                         "format": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     },
                     "type": "object"
@@ -504,9 +600,22 @@
                 "general": {
                     "properties": {
                         "format": {
-                            "type": "null"
+                            "default": "common",
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "level": {
+                            "default": "INFO",
+                            "enum": [
+                                "INFO",
+                                "WARN",
+                                "ERROR",
+                                "FATAL",
+                                "PANIC",
+                                "DEBUG"
+                            ],
                             "type": "string"
                         }
                     },
@@ -518,24 +627,39 @@
         "metrics": {
             "properties": {
                 "addInternals": {
-                    "type": "null"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "otlp": {
                     "properties": {
                         "addEntryPointsLabels": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "addRoutersLabels": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "addServicesLabels": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "enabled": {
                             "type": "boolean"
                         },
                         "explicitBoundaries": {
-                            "type": "null"
+                            "type": [
+                                "array",
+                                "null"
+                            ]
                         },
                         "grpc": {
                             "properties": {
@@ -543,24 +667,42 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "insecure": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
-                                            "type": "null"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -574,24 +716,42 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "headers": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
-                                            "type": "null"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -600,7 +760,10 @@
                             "type": "object"
                         },
                         "pushInterval": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     },
                     "type": "object"
@@ -608,7 +771,10 @@
                 "prometheus": {
                     "properties": {
                         "disableAPICheck": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "entryPoint": {
                             "type": "string"
@@ -616,13 +782,19 @@
                         "prometheusRule": {
                             "properties": {
                                 "additionalLabels": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "enabled": {
                                     "type": "boolean"
                                 },
                                 "namespace": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "type": "object"
@@ -630,13 +802,22 @@
                         "service": {
                             "properties": {
                                 "annotations": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "enabled": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "labels": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 }
                             },
                             "type": "object"
@@ -644,43 +825,79 @@
                         "serviceMonitor": {
                             "properties": {
                                 "additionalLabels": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "enableHttp2": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "enabled": {
                                     "type": "boolean"
                                 },
                                 "followRedirects": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "honorLabels": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "honorTimestamps": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "interval": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "jobLabel": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "metricRelabelings": {
-                                    "type": "null"
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ]
                                 },
                                 "namespace": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "namespaceSelector": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "relabelings": {
-                                    "type": "null"
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ]
                                 },
                                 "scrapeTimeout": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "type": "object"
@@ -692,7 +909,10 @@
             "type": "object"
         },
         "namespaceOverride": {
-            "type": "null"
+            "type": [
+                "string",
+                "null"
+            ]
         },
         "nodeSelector": {
             "properties": {},
@@ -725,13 +945,26 @@
         "podDisruptionBudget": {
             "properties": {
                 "enabled": {
-                    "type": "null"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "maxUnavailable": {
-                    "type": "null"
+                    "minimum": 0,
+                    "type": [
+                        "string",
+                        "integer",
+                        "null"
+                    ]
                 },
                 "minAvailable": {
-                    "type": "null"
+                    "minimum": 0,
+                    "type": [
+                        "string",
+                        "integer",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
@@ -826,18 +1059,34 @@
                         "transport": {
                             "properties": {
                                 "keepAliveMaxRequests": {
-                                    "type": "null"
+                                    "minimum": 0,
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "keepAliveMaxTime": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "lifeCycle": {
                                     "properties": {
                                         "graceTimeOut": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "requestAcceptGraceTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -845,13 +1094,25 @@
                                 "respondingTimeouts": {
                                     "properties": {
                                         "idleTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "readTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "writeTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -912,18 +1173,34 @@
                         "transport": {
                             "properties": {
                                 "keepAliveMaxRequests": {
-                                    "type": "null"
+                                    "minimum": 0,
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "keepAliveMaxTime": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "lifeCycle": {
                                     "properties": {
                                         "graceTimeOut": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "requestAcceptGraceTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -931,13 +1208,25 @@
                                 "respondingTimeouts": {
                                     "properties": {
                                         "idleTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "readTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "writeTimeout": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -959,7 +1248,10 @@
                 "file": {
                     "properties": {
                         "content": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "enabled": {
                             "type": "boolean"
@@ -985,13 +1277,19 @@
                             "type": "boolean"
                         },
                         "ingressClass": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "namespaces": {
                             "type": "array"
                         },
                         "nativeLBByDefault": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         }
                     },
                     "type": "object"
@@ -1005,7 +1303,10 @@
                             "type": "boolean"
                         },
                         "labelselector": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "namespaces": {
                             "type": "array"
@@ -1025,13 +1326,19 @@
                             "type": "boolean"
                         },
                         "ingressClass": {
-                            "type": "null"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "namespaces": {
                             "type": "array"
                         },
                         "nativeLBByDefault": {
-                            "type": "null"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "publishedService": {
                             "properties": {
@@ -1164,7 +1471,10 @@
             "type": "object"
         },
         "startupProbe": {
-            "type": "null"
+            "type": [
+                "object",
+                "null"
+            ]
         },
         "tlsOptions": {
             "properties": {},
@@ -1183,7 +1493,10 @@
         "tracing": {
             "properties": {
                 "addInternals": {
-                    "type": "null"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "otlp": {
                     "properties": {
@@ -1196,24 +1509,42 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "insecure": {
-                                    "type": "null"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
-                                            "type": "null"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -1227,24 +1558,42 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": "null"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "headers": {
-                                    "type": "null"
+                                    "type": [
+                                        "object",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
-                                            "type": "null"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
-                                            "type": "null"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     },
                                     "type": "object"
@@ -1263,10 +1612,18 @@
                 "rollingUpdate": {
                     "properties": {
                         "maxSurge": {
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "string",
+                                "null"
+                            ]
                         },
                         "maxUnavailable": {
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "string",
+                                "null"
+                            ]
                         }
                     },
                     "type": "object"

@@ -155,8 +155,8 @@ tests:
   - it: should be possible to specify sendlogs
     set:
       hub:
-        sendlogs: "sendlogs"
+        sendlogs: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.sendlogs=sendlogs"
+          content: "--hub.sendlogs=true"
