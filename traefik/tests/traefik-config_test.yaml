@@ -219,10 +219,11 @@ tests:
     set:
       experimental:
         plugins:
-          enabled: true
+          test:
+            foo: bar
     asserts:
       - failedTemplate:
-          errorPattern: "Invalid type"
+          errorMessage: "ERROR: plugin test is missing moduleName/version keys !"
 
   - it: should fail gracefully on missing plugins information
     set:

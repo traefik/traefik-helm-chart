@@ -641,9 +641,6 @@
             {{- if and (or (eq .general.format "common") (not .general.format)) (eq .general.noColor true) }}
           - "--log.noColor={{ .general.noColor }}"
             {{- end }}
-            {{- if and .general.level (not (has (.general.level | upper) (list "DEBUG" "PANIC" "FATAL" "ERROR" "WARN" "INFO"))) }}
-              {{- fail "ERROR: .Values.logs.level must be DEBUG, PANIC, FATAL, ERROR, WARN, and INFO"  }}
-            {{- end }}
             {{- with .general.level }}
           - "--log.level={{ . | upper }}"
             {{- end }}
