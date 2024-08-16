@@ -1,5 +1,90 @@
 # Change Log
 
+## 30.1.0  ![AppVersion: v3.1.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-08-14
+
+* fix: disable default HTTPS listener for gateway
+* fix(Gateway API): wildcard support in hostname
+* fix(Gateway API): use Standard channel by default
+* feat: ✨ rework namespaced RBAC with `disableClusterScopeResources`
+* chore(release): 🚀 publish v30.1.0
+* chore(deps): update traefik docker tag to v3.1.2
+* chore(deps): update traefik docker tag to v3.1.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 83b6d98..78eeacf 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -150,20 +150,22 @@ gateway:
+       protocol: HTTP
+       # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+       namespacePolicy:
+-    websecure:
+-      # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+-      # The port must match a port declared in ports section.
+-      port: 8443
+-      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
+-      hostname:
+-      # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
+-      protocol: HTTPS
+-      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces)
+-      namespacePolicy:
+-      # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
+-      certificateRefs:
+-      # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType).
+-      mode:
++    # websecure listener is disabled by default because certificateRefs needs to be added,
++    # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
++    # websecure:
++    #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
++    #   # The port must match a port declared in ports section.
++    #   port: 8443
++    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
++    #   hostname:
++    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
++    #   protocol: HTTPS
++    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces)
++    #   namespacePolicy:
++    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
++    #   certificateRefs:
++    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType).
++    #   mode:
+ 
+ gatewayClass:
+   # -- When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass
+@@ -279,10 +281,6 @@ providers:
+     # labelSelector: environment=production,method=traefik
+     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+     namespaces: []
+-    # - "default"
+-    # Disable cluster IngressClass Lookup - Requires Traefik V3.
+-    # When combined with rbac.namespaced: true, ClusterRole will not be created and ingresses must use kubernetes.io/ingress.class annotation instead of spec.ingressClassName.
+-    disableIngressClassLookup: false
+     # IP used for Kubernetes Ingress endpoints
+     publishedService:
+       enabled: false
+@@ -836,9 +834,12 @@ hostNetwork: false
+ # -- Whether Role Based Access Control objects like roles and rolebindings should be created
+ rbac:
+   enabled: true
+-  # If set to false, installs ClusterRole and ClusterRoleBinding so Traefik can be used across namespaces.
+-  # If set to true, installs Role and RoleBinding instead of ClusterRole/ClusterRoleBinding. Providers will only watch target namespace.
+-  # When combined with providers.kubernetesIngress.disableIngressClassLookup: true and Traefik V3, ClusterRole to watch IngressClass is also disabled.
++  # When set to true:
++  # 1. Use `Role` and `RoleBinding` instead of `ClusterRole` and `ClusterRoleBinding`.
++  # 2. Set `disableIngressClassLookup` on Kubernetes Ingress providers with Traefik Proxy v3 until v3.1.1
++  # 3. Set `disableClusterScopeResources` on Kubernetes Ingress and CRD providers with Traefik Proxy v3.1.2+
++  # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
++  # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
+   namespaced: false
+   # Enable user-facing roles
+   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+```
+
 ## 30.0.2  ![AppVersion: v3.1.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-07-30

@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 30.0.2
+version: 30.1.0
 # renovate: image=traefik
 appVersion: v3.1.2
 kubeVersion: ">=1.22.0-0"
@@ -25,5 +25,10 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Traefik Hub): missing RBACs for Traefik Hub"
-    - "chore(release): 🚀 publish v30.0.2"
+    - "fix: disable default HTTPS listener for gateway"
+    - "fix(Gateway API): wildcard support in hostname"
+    - "fix(Gateway API): use Standard channel by default"
+    - "feat: ✨ rework namespaced RBAC with `disableClusterScopeResources`"
+    - "chore(release): 🚀 publish v30.1.0"
+    - "chore(deps): update traefik docker tag to v3.1.2"
+    - "chore(deps): update traefik docker tag to v3.1.1"
