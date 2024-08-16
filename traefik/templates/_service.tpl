@@ -66,11 +66,11 @@
     {{- if $config.appProtocol }}
     appProtocol: {{ $config.appProtocol }}
     {{- end }}
-  {{- if ($config.http3).enabled }}
+  {{- if and ($config.http3).enabled ($config.single) }}
   {{- $http3Port := default $config.exposedPort $config.http3.advertisedPort }}
   - port: {{ $http3Port }}
     name: "{{ $name }}-http3"
-    targetPort: {{ $name }}-http3
+    targetPort: "{{ $name }}-http3"
     protocol: UDP
     {{- if $config.nodePort }}
     nodePort: {{ $config.nodePort }}

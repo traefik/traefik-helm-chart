@@ -416,6 +416,17 @@ ports:
       enabled: true
 ```
 
+You can also create two `Service`, one for TCP and one for UDP:
+
+```yaml
+ports:
+  websecure:
+    http3:
+      enabled: true
+service:
+  single: false
+```
+
 # Use PROXY protocol on Digital Ocean
 
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
