@@ -260,7 +260,7 @@ providers:
     # -- Allows to reference ExternalName services in IngressRoute
     allowExternalNameServices: false
     # -- Allows to return 503 when there is no endpoints available
-    allowEmptyServices: false
+    allowEmptyServices: true
     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
     ingressClass:
     # labelSelector: environment=production,method=traefik
@@ -275,7 +275,7 @@ providers:
     # -- Allows to reference ExternalName services in Ingress
     allowExternalNameServices: false
     # -- Allows to return 503 when there is no endpoints available
-    allowEmptyServices: false
+    allowEmptyServices: true
     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
     ingressClass:
     # labelSelector: environment=production,method=traefik
