@@ -14,6 +14,12 @@
   "rebaseWhen": "conflicted",
   "labels": ["📌 dependencies"],
   "enabledManagers": ["github-actions", "custom.regex"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["traefik"],
+      "extends": [":semanticCommitTypeAll(feat)"]
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
