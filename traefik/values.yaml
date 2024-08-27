@@ -381,7 +381,7 @@ metrics:
     ## Enable metrics on routers. Default: false
     addRoutersLabels:  # @schema type:[boolean, null]
     ## Enable metrics on services. Default: true
-    addServicesLabels: # @schema type:[boolean, null]
+    addServicesLabels:  # @schema type:[boolean, null]
     ## Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
     buckets: ""
     ## When manualRouting is true, it disables the default internal router in
@@ -498,7 +498,7 @@ metrics:
       # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
       endpoint: ""
       # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
-      insecure:  false
+      insecure: false
       ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
       tls:
         # -- The path to the certificate authority, it defaults to the system bundle.
@@ -506,7 +506,7 @@ metrics:
         # -- The path to the public certificate. When using this option, setting the key option is required.
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
-        key: "" 
+        key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
 
