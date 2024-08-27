@@ -630,7 +630,7 @@ tests:
           format: "test"
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: .Values.logs.general.format must be either common or json"
+          errorPattern: "test"
   - it: should set log filePath when configured
     set:
       logs:

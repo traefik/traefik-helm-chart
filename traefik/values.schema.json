@@ -31,12 +31,10 @@
             "type": "object"
         },
         "core": {
+            "additionalProperties": false,
             "properties": {
                 "defaultRuleSyntax": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 }
             },
             "type": "object"
@@ -60,6 +58,27 @@
                 "enabled": {
                     "type": "boolean"
                 },
+                "healthchecksHost": {
+                    "type": "string"
+                },
+                "healthchecksPort": {
+                    "minimum": 0,
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
+                },
+                "healthchecksScheme": {
+                    "enum": [
+                        "HTTP",
+                        "HTTPS",
+                        null
+                    ],
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "hostAliases": {
                     "type": "array"
                 },
@@ -80,6 +99,9 @@
                     "properties": {},
                     "type": "object"
                 },
+                "livenessPath": {
+                    "type": "string"
+                },
                 "minReadySeconds": {
                     "type": "integer"
                 },
@@ -91,14 +113,14 @@
                     "properties": {},
                     "type": "object"
                 },
+                "readinessPath": {
+                    "type": "string"
+                },
                 "replicas": {
                     "type": "integer"
                 },
                 "runtimeClassName": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 },
                 "shareProcessNamespace": {
                     "type": "boolean"
@@ -159,10 +181,8 @@
         "gateway": {
             "properties": {
                 "annotations": {
-                    "type": [
-                        "object",
-                        "null"
-                    ]
+                    "properties": {},
+                    "type": "object"
                 },
                 "enabled": {
                     "type": "boolean"
@@ -172,10 +192,7 @@
                         "web": {
                             "properties": {
                                 "hostname": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "namespacePolicy": {
                                     "type": [
@@ -196,36 +213,26 @@
                     "type": "object"
                 },
                 "name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 },
                 "namespace": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 }
             },
             "type": "object"
         },
         "gatewayClass": {
+            "additionalProperties": false,
             "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
                 "labels": {
-                    "type": [
-                        "object",
-                        "null"
-                    ]
+                    "properties": {},
+                    "type": "object"
                 },
                 "name": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 }
             },
             "type": "object"
@@ -246,25 +253,16 @@
                         "admission": {
                             "properties": {
                                 "listenAddr": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "secretName": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
                         },
                         "enabled": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
+                            "type": "boolean"
                         }
                     },
                     "type": "object"
@@ -286,80 +284,47 @@
                                     ]
                                 },
                                 "endpoints": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "password": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "sentinel": {
                                     "properties": {
                                         "masterset": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "password": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "username": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
                                 },
                                 "timeout": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "cert": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "insecureSkipVerify": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ]
+                                            "type": "boolean"
                                         },
                                         "key": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
                                 },
                                 "username": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
@@ -374,15 +339,13 @@
                     ]
                 },
                 "token": {
-                    "type": [
-                        "string",
-                        "null"
-                    ]
+                    "type": "string"
                 }
             },
             "type": "object"
         },
         "image": {
+            "additionalProperties": false,
             "properties": {
                 "pullPolicy": {
                     "type": "string"
@@ -403,12 +366,16 @@
             "type": "object"
         },
         "ingressClass": {
+            "additionalProperties": false,
             "properties": {
                 "enabled": {
                     "type": "boolean"
                 },
                 "isDefaultClass": {
                     "type": "boolean"
+                },
+                "name": {
+                    "type": "string"
                 }
             },
             "type": "object"
@@ -511,12 +478,10 @@
             "type": "object"
         },
         "instanceLabelOverride": {
-            "type": [
-                "string",
-                "null"
-            ]
+            "type": "string"
         },
         "livenessProbe": {
+            "additionalProperties": false,
             "properties": {
                 "failureThreshold": {
                     "type": "integer"
@@ -541,10 +506,7 @@
                 "access": {
                     "properties": {
                         "addInternals": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
+                            "type": "boolean"
                         },
                         "bufferingSize": {
                             "type": [
@@ -560,6 +522,11 @@
                                 "general": {
                                     "properties": {
                                         "defaultmode": {
+                                            "enum": [
+                                                "keep",
+                                                "drop",
+                                                "redact"
+                                            ],
                                             "type": "string"
                                         },
                                         "names": {
@@ -572,6 +539,11 @@
                                 "headers": {
                                     "properties": {
                                         "defaultmode": {
+                                            "enum": [
+                                                "keep",
+                                                "drop",
+                                                "redact"
+                                            ],
                                             "type": "string"
                                         },
                                         "names": {
@@ -589,6 +561,12 @@
                             "type": "object"
                         },
                         "format": {
+                            "default": "CLF",
+                            "enum": [
+                                "CLF",
+                                "json",
+                                null
+                            ],
                             "type": [
                                 "string",
                                 "null"
@@ -601,6 +579,11 @@
                     "properties": {
                         "format": {
                             "default": "common",
+                            "enum": [
+                                "common",
+                                "json",
+                                null
+                            ],
                             "type": [
                                 "string",
                                 "null"
@@ -627,10 +610,7 @@
         "metrics": {
             "properties": {
                 "addInternals": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ]
+                    "type": "boolean"
                 },
                 "otlp": {
                     "properties": {
@@ -656,10 +636,7 @@
                             "type": "boolean"
                         },
                         "explicitBoundaries": {
-                            "type": [
-                                "array",
-                                "null"
-                            ]
+                            "type": "array"
                         },
                         "grpc": {
                             "properties": {
@@ -667,42 +644,24 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "insecure": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "cert": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "insecureSkipVerify": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ]
+                                            "type": "boolean"
                                         },
                                         "key": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -716,30 +675,19 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "headers": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "cert": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "insecureSkipVerify": {
                                             "type": [
@@ -748,10 +696,7 @@
                                             ]
                                         },
                                         "key": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -760,16 +705,34 @@
                             "type": "object"
                         },
                         "pushInterval": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
+                            "type": "string"
                         }
                     },
                     "type": "object"
                 },
                 "prometheus": {
                     "properties": {
+                        "addEntryPointsLabels": {
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "addRoutersLabels": {
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "addServicesLabels": {
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "buckets": {
+                            "type": "string"
+                        },
                         "disableAPICheck": {
                             "type": [
                                 "boolean",
@@ -779,22 +742,20 @@
                         "entryPoint": {
                             "type": "string"
                         },
+                        "manualRouting": {
+                            "type": "boolean"
+                        },
                         "prometheusRule": {
                             "properties": {
                                 "additionalLabels": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "enabled": {
                                     "type": "boolean"
                                 },
                                 "namespace": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
@@ -802,22 +763,15 @@
                         "service": {
                             "properties": {
                                 "annotations": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "enabled": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "labels": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 }
                             },
                             "type": "object"
@@ -825,79 +779,45 @@
                         "serviceMonitor": {
                             "properties": {
                                 "additionalLabels": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "enableHttp2": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "enabled": {
                                     "type": "boolean"
                                 },
                                 "followRedirects": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "honorLabels": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "honorTimestamps": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "interval": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "jobLabel": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "metricRelabelings": {
-                                    "type": [
-                                        "array",
-                                        "null"
-                                    ]
+                                    "type": "array"
                                 },
                                 "namespace": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "namespaceSelector": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "relabelings": {
-                                    "type": [
-                                        "array",
-                                        "null"
-                                    ]
+                                    "type": "array"
                                 },
                                 "scrapeTimeout": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
@@ -909,10 +829,7 @@
             "type": "object"
         },
         "namespaceOverride": {
-            "type": [
-                "string",
-                "null"
-            ]
+            "type": "string"
         },
         "nodeSelector": {
             "properties": {},
@@ -930,6 +847,9 @@
                 "enabled": {
                     "type": "boolean"
                 },
+                "existingClaim": {
+                    "type": "string"
+                },
                 "name": {
                     "type": "string"
                 },
@@ -938,17 +858,24 @@
                 },
                 "size": {
                     "type": "string"
+                },
+                "storageClass": {
+                    "type": "string"
+                },
+                "subPath": {
+                    "type": "string"
+                },
+                "volumeName": {
+                    "type": "string"
                 }
             },
             "type": "object"
         },
         "podDisruptionBudget": {
+            "additionalProperties": false,
             "properties": {
                 "enabled": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ]
+                    "type": "boolean"
                 },
                 "maxUnavailable": {
                     "minimum": 0,
@@ -1244,14 +1171,12 @@
             "type": "string"
         },
         "providers": {
+            "additionalProperties": false,
             "properties": {
                 "file": {
                     "properties": {
                         "content": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
+                            "type": "string"
                         },
                         "enabled": {
                             "type": "boolean"
@@ -1277,19 +1202,13 @@
                             "type": "boolean"
                         },
                         "ingressClass": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
+                            "type": "string"
                         },
                         "namespaces": {
                             "type": "array"
                         },
                         "nativeLBByDefault": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
+                            "type": "boolean"
                         }
                     },
                     "type": "object"
@@ -1303,10 +1222,7 @@
                             "type": "boolean"
                         },
                         "labelselector": {
-                            "type": [
-                                "string",
-                                "null"
-                            ]
+                            "type": "string"
                         },
                         "namespaces": {
                             "type": "array"
@@ -1335,10 +1251,7 @@
                             "type": "array"
                         },
                         "nativeLBByDefault": {
-                            "type": [
-                                "boolean",
-                                "null"
-                            ]
+                            "type": "boolean"
                         },
                         "publishedService": {
                             "properties": {
@@ -1355,7 +1268,11 @@
             "type": "object"
         },
         "rbac": {
+            "additionalProperties": false,
             "properties": {
+                "aggregateTo": {
+                    "type": "array"
+                },
                 "enabled": {
                     "type": "boolean"
                 },
@@ -1369,6 +1286,7 @@
             "type": "object"
         },
         "readinessProbe": {
+            "additionalProperties": false,
             "properties": {
                 "failureThreshold": {
                     "type": "integer"
@@ -1459,6 +1377,7 @@
             "type": "object"
         },
         "serviceAccount": {
+            "additionalProperties": false,
             "properties": {
                 "name": {
                     "type": "string"
@@ -1471,10 +1390,8 @@
             "type": "object"
         },
         "startupProbe": {
-            "type": [
-                "object",
-                "null"
-            ]
+            "properties": {},
+            "type": "object"
         },
         "tlsOptions": {
             "properties": {},
@@ -1491,12 +1408,10 @@
             "type": "array"
         },
         "tracing": {
+            "additionalProperties": false,
             "properties": {
                 "addInternals": {
-                    "type": [
-                        "boolean",
-                        "null"
-                    ]
+                    "type": "boolean"
                 },
                 "otlp": {
                     "properties": {
@@ -1509,42 +1424,24 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "insecure": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
+                                    "type": "boolean"
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "cert": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "insecureSkipVerify": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ]
+                                            "type": "boolean"
                                         },
                                         "key": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1558,42 +1455,25 @@
                                     "type": "boolean"
                                 },
                                 "endpoint": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
+                                    "type": "string"
                                 },
                                 "headers": {
-                                    "type": [
-                                        "object",
-                                        "null"
-                                    ]
+                                    "properties": {},
+                                    "type": "object"
                                 },
                                 "tls": {
                                     "properties": {
                                         "ca": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "cert": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         },
                                         "insecureSkipVerify": {
-                                            "type": [
-                                                "boolean",
-                                                "null"
-                                            ]
+                                            "type": "boolean"
                                         },
                                         "key": {
-                                            "type": [
-                                                "string",
-                                                "null"
-                                            ]
+                                            "type": "string"
                                         }
                                     },
                                     "type": "object"
@@ -1608,6 +1488,7 @@
             "type": "object"
         },
         "updateStrategy": {
+            "additionalProperties": false,
             "properties": {
                 "rollingUpdate": {
                     "properties": {
