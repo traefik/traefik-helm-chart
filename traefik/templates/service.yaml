@@ -15,6 +15,14 @@
       {{- if (not $config.tls.enabled) -}}
         {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
       {{- end -}}
+      {{ $udpConfig := deepCopy $config -}}
+      {{ $_ := set $udpConfig "protocol" "UDP" -}}
+      {{ $_ := set $udpConfig "exposedPort" (default $config.exposedPort $config.http3.advertisedPort) -}}
+      {{- if (not $service.single) }}
+        {{ $_ := set $udpPorts (printf "%s-http3" $portName) $udpConfig -}}
+      {{- else }}
+        {{ $_ := set $tcpPorts (printf "%s-http3" $portName) $udpConfig -}}
+      {{- end }}
     {{- end -}}
     {{- if eq (toString $config.protocol) "UDP" -}}
       {{ $_ := set $udpPorts $portName $config -}}
