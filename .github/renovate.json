@@ -2,7 +2,7 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "timezone": "Europe/Paris",
   "extends": [
-    ":semanticCommitTypeAll(feat)",
+    ":semanticCommitTypeAll(build)",
     ":ignoreModulesAndTests",
     "group:monorepos",
     "group:recommended",
@@ -14,6 +14,12 @@
   "rebaseWhen": "conflicted",
   "labels": ["📌 dependencies"],
   "enabledManagers": ["github-actions", "custom.regex"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["traefik"],
+      "extends": [":semanticCommitTypeAll(feat)"]
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
