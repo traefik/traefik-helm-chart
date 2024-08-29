@@ -28,20 +28,20 @@ deployment:
   terminationGracePeriodSeconds: 60
   # -- The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
   minReadySeconds: 0
-  ## Override the liveness/readiness port. This is useful to integrate traefik
+  ## -- Override the liveness/readiness port. This is useful to integrate traefik
   ## with an external Load Balancer that performs healthchecks.
   ## Default: ports.traefik.port
   healthchecksPort:  # @schema type:[integer, null];minimum:0
-  ## Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
+  ## -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
   ## Default: ports.traefik.hostIP if set, otherwise Pod IP
   healthchecksHost: ""
-  ## Override the liveness/readiness scheme. Useful for getting ping to
+  ## -- Override the liveness/readiness scheme. Useful for getting ping to
   ## respond on websecure entryPoint.
   healthchecksScheme:   # @schema enum:[HTTP, HTTPS, null]; type:[string, null]; default: HTTP
-  ## Override the readiness path.
+  ## -- Override the readiness path.
   ## Default: /ping
   readinessPath: ""
-  # Override the liveness path.
+  # -- Override the liveness path.
   # Default: /ping
   livenessPath: ""
   # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
@@ -337,9 +337,10 @@ logs:
     # By default, the level is set to INFO.
     # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
     level: "INFO"  # @schema enum:[INFO,WARN,ERROR,FATAL,PANIC,DEBUG]; default: "INFO"
-    #
-    # filePath: "/var/log/traefik/traefik.log
-    # noColor: true
+    # -- To write the logs into a log file, use the filePath option.
+    filePath: ""
+    # When set to true and format is common, it disables the colorized output.
+    noColor: false
   access:
     # -- To enable access logs
     enabled: false
