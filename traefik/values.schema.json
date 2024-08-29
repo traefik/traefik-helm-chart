@@ -55,6 +55,9 @@
                     "properties": {},
                     "type": "object"
                 },
+                "dnsPolicy": {
+                    "type": "string"
+                },
                 "enabled": {
                     "type": "boolean"
                 },
@@ -118,6 +121,13 @@
                 },
                 "replicas": {
                     "type": "integer"
+                },
+                "revisionHistoryLimit": {
+                    "minimum": 0,
+                    "type": [
+                        "integer",
+                        "null"
+                    ]
                 },
                 "runtimeClassName": {
                     "type": "string"
@@ -571,6 +581,15 @@
                                 "string",
                                 "null"
                             ]
+                        },
+                        "minduration": {
+                            "type": "string"
+                        },
+                        "retryattempts": {
+                            "type": "boolean"
+                        },
+                        "statuscodes": {
+                            "type": "string"
                         }
                     },
                     "type": "object"

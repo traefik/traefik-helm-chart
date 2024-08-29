@@ -39,6 +39,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
 | deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
+| deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
 | deployment.healthchecksHost | string | `""` |  |
 | deployment.healthchecksPort | string | `nil` |  |
@@ -49,12 +50,13 @@ Kubernetes: `>=1.22.0-0`
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |
 | deployment.lifecycle | object | `{}` | Pod lifecycle actions |
-| deployment.livenessPath | string | `""` |  |
+| deployment.livenessPath | string | `""` | Override the liveness path. Default: /ping |
 | deployment.minReadySeconds | int | `0` | The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available |
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
 | deployment.readinessPath | string | `""` |  |
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
+| deployment.revisionHistoryLimit | string | `nil` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
@@ -130,8 +132,13 @@ Kubernetes: `>=1.22.0-0`
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Set default mode for fields.headers |
 | logs.access.filters | object | `{}` | Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering) |
 | logs.access.format | string | `nil` | Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format) |
+| logs.access.minduration | string | `""` |  |
+| logs.access.retryattempts | bool | `false` |  |
+| logs.access.statuscodes | string | `""` |  |
+| logs.general.filePath | string | `""` | To write the logs into a log file, use the filePath option. |
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
+| logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
 | metrics.addInternals | bool | `false` |  |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |

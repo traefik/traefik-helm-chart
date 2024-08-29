@@ -23,7 +23,7 @@ deployment:
   # -- Number of pods of the deployment (only applies when kind == Deployment)
   replicas: 1
   # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
-  # revisionHistoryLimit: 1
+  revisionHistoryLimit:  # @schema type:[integer, null];minimum:0
   # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
   terminationGracePeriodSeconds: 60
   # -- The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
@@ -80,7 +80,7 @@ deployment:
   # -- Use process namespace sharing
   shareProcessNamespace: false
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
-  # dnsPolicy: ClusterFirstWithHostNet
+  dnsPolicy: ""
   # -- Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core)
   dnsConfig: {}
   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
@@ -339,7 +339,7 @@ logs:
     level: "INFO"  # @schema enum:[INFO,WARN,ERROR,FATAL,PANIC,DEBUG]; default: "INFO"
     # -- To write the logs into a log file, use the filePath option.
     filePath: ""
-    # When set to true and format is common, it disables the colorized output.
+    # -- When set to true and format is common, it disables the colorized output.
     noColor: false
   access:
     # -- To enable access logs
@@ -351,9 +351,9 @@ logs:
     bufferingSize:  # @schema type:[integer, null]
     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
     filters: {}
-    # statuscodes: "200,300-302"
-    # retryattempts: true
-    # minduration: 10ms
+    statuscodes: ""
+    retryattempts: false
+    minduration: ""
     # -- Enables accessLogs for internal resources. Default: false.
     addInternals: false
     fields:
