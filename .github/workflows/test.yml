@@ -27,6 +27,7 @@ jobs:
         uses: losisin/helm-values-schema-json-action@v1
         with:
           input: traefik/values.yaml
+          output: traefik/values.schema.json
           fail-on-diff: true
 
       - name: Lint
