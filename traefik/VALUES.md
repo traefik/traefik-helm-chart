@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 30.1.0](https://img.shields.io/badge/Version-30.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.1.2](https://img.shields.io/badge/AppVersion-v3.1.2-informational?style=flat-square)
+![Version: 31.0.0](https://img.shields.io/badge/Version-31.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.1.2](https://img.shields.io/badge/AppVersion-v3.1.2-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -209,7 +209,7 @@ Kubernetes: `>=1.22.0-0`
 | providers.file.enabled | bool | `false` | Create a file provider |
 | providers.file.watch | bool | `true` | Allows Traefik to automatically watch for file changes |
 | providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
-| providers.kubernetesCRD.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
+| providers.kubernetesCRD.allowEmptyServices | bool | `true` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
 | providers.kubernetesCRD.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
 | providers.kubernetesCRD.ingressClass | string | `nil` | When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled. |
@@ -219,7 +219,7 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesGateway.experimentalChannel | bool | `false` | Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute. |
 | providers.kubernetesGateway.labelselector | string | `nil` | A label selector can be defined to filter on specific GatewayClass objects only. |
 | providers.kubernetesGateway.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. |
-| providers.kubernetesIngress.allowEmptyServices | bool | `false` | Allows to return 503 when there is no endpoints available |
+| providers.kubernetesIngress.allowEmptyServices | bool | `true` | Allows to return 503 when there is no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |

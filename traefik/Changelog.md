@@ -1,5 +1,42 @@
 # Change Log
 
+## 31.0.0  ![AppVersion: v3.1.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-09-03
+
+* fix(Traefik Hub): update CRDs to v1.5.0
+* fix(HTTP3): split udp and tcp Service when service.single is false
+* fix!: 🐛 set allowEmptyServices to true by default
+* feat(Traefik Hub): update CRDs to v1.7.0
+* chore(release): 🚀 publish v31.0.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 78eeacf..2232d9e 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -260,7 +260,7 @@ providers:
+     # -- Allows to reference ExternalName services in IngressRoute
+     allowExternalNameServices: false
+     # -- Allows to return 503 when there is no endpoints available
+-    allowEmptyServices: false
++    allowEmptyServices: true
+     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
+     ingressClass:
+     # labelSelector: environment=production,method=traefik
+@@ -275,7 +275,7 @@ providers:
+     # -- Allows to reference ExternalName services in Ingress
+     allowExternalNameServices: false
+     # -- Allows to return 503 when there is no endpoints available
+-    allowEmptyServices: false
++    allowEmptyServices: true
+     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+     ingressClass:
+     # labelSelector: environment=production,method=traefik
+```
+
 ## 30.1.0  ![AppVersion: v3.1.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-08-14
