@@ -93,6 +93,33 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.traefik/type
           value: 'internal'
+  - it: should error when annotations themselves contain a template
+    set:
+      deployment:
+        podAnnotations:
+          vault.hashicorp.com/agent-inject-template-test: |
+            {{- with secret 'kv/data/path/to/secret' -}}
+            {{ index .Data.data "secret" }}
+            {{- end }}
+    asserts:
+      - failedTemplate:
+          errorPattern: "[cannot parse template]+"
+  - it: should not error when templated annotations have templating disabled
+    set:
+      deployment:
+        podAnnotations:
+          vault.hashicorp.com/agent-inject-template-test: |
+            {{- with secret 'kv/data/path/to/secret' -}}
+            {{ index .Data.data "secret" }}
+            {{- end }}
+        templateAnnotations: false
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["vault.hashicorp.com/agent-inject-template-test"]
+          value: |
+            {{- with secret 'kv/data/path/to/secret' -}}
+            {{ index .Data.data "secret" }}
+            {{- end }}
   - it: should have labels with specified values
     set:
       deployment:
