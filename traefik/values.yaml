@@ -51,7 +51,7 @@ deployment:
   # -- Additional pod annotations (e.g. for mesh injection or prometheus scraping)
   # It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}'
   podAnnotations: {}
-  # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
+  # -- Whether or not to run tpl function for annotations
   templateAnnotations: true
   # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
   podLabels: {}
