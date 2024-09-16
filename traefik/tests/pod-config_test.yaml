@@ -630,7 +630,7 @@ tests:
           format: "test"
     asserts:
       - failedTemplate:
-          errorPattern: "test"
+          errorPattern: "format"
   - it: should set log filePath when configured
     set:
       logs:
@@ -675,4 +675,4 @@ tests:
           level: test
     asserts:
       - failedTemplate:
-          errorPattern: "test"
+          errorPattern: "level"
