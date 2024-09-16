@@ -11,6 +11,7 @@
 ### More
 
 - [ ] Yes, I updated the tests accordingly
+- [ ] Yes, I updated the schema accordingly
 - [ ] Yes, I ran `make test` and all the tests passed
 
 <!--
