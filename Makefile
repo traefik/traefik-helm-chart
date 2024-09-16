@@ -20,6 +20,12 @@ docs:
 test-install:
 	docker run ${DOCKER_ARGS} --network=host --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -v $(HOME)/.kube:/root/.kube -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh install
 
+
+# Requires to install schema generation plugin beforehand
+# $ helm plugin install https://github.com/losisin/helm-values-schema-json.git
+schema:
+	helm schema
+
 changelog:
 	@echo "== Updating Changelogs..."
 	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG)
