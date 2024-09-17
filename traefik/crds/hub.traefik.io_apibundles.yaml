@@ -4,20 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: apiaccesses.hub.traefik.io
+  name: apibundles.hub.traefik.io
 spec:
   group: hub.traefik.io
   names:
-    kind: APIAccess
-    listKind: APIAccessList
-    plural: apiaccesses
-    singular: apiaccess
+    kind: APIBundle
+    listKind: APIBundleList
+    plural: apibundles
+    singular: apibundle
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: APIAccess defines who can access to a set of APIs.
+        description: APIBundle defines a set of APIs.
         properties:
           apiVersion:
             description: |-
@@ -37,41 +37,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: The desired behavior of this APIAccess.
+            description: The desired behavior of this APIBundle.
             properties:
-              apiBundles:
-                description: |-
-                  APIBundles defines a set of APIBundle that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same APIBundles.
-                items:
-                  description: APIBundleReference references an APIBundle.
-                  properties:
-                    name:
-                      description: Name of the APIBundle.
-                      maxLength: 253
-                      type: string
-                  required:
-                  - name
-                  type: object
-                maxItems: 100
-                type: array
-                x-kubernetes-validations:
-                - message: duplicated apiBundles
-                  rule: self.all(x, self.exists_one(y, x.name == y.name))
-              apiPlan:
-                description: APIPlan defines which APIPlan will be used.
-                properties:
-                  name:
-                    description: Name of the APIPlan.
-                    maxLength: 253
-                    type: string
-                required:
-                - name
-                type: object
               apiSelector:
                 description: |-
                   APISelector selects the APIs that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same set of APIs.
+                  Multiple APIBundles can select the same set of APIs.
                   This field is optional and follows standard label selector semantics.
                   An empty APISelector matches any API.
                 properties:
@@ -119,7 +90,7 @@ spec:
               apis:
                 description: |-
                   APIs defines a set of APIs that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same APIs.
+                  Multiple APIBundles can select the same APIs.
                   When combined with APISelector, this set of APIs is appended to the matching APIs.
                 items:
                   description: APIReference references an API.
@@ -136,46 +107,12 @@ spec:
                 x-kubernetes-validations:
                 - message: duplicated apis
                   rule: self.all(x, self.exists_one(y, x.name == y.name))
-              everyone:
-                description: Everyone indicates that all users will have access to
-                  the selected APIs.
-                type: boolean
-              groups:
-                description: Groups are the consumer groups that will gain access
-                  to the selected APIs.
-                items:
-                  type: string
-                type: array
-              operationFilter:
-                description: |-
-                  OperationFilter specifies the allowed operations on APIs and APIVersions.
-                  If not set, all operations are available.
-                  An empty OperationFilter prohibits all operations.
-                properties:
-                  include:
-                    description: Include defines the names of OperationSets that will
-                      be accessible.
-                    items:
-                      type: string
-                    maxItems: 100
-                    type: array
-                type: object
-              weight:
-                description: Weight specifies the evaluation order of the plan.
-                type: integer
-                x-kubernetes-validations:
-                - message: must be a positive number
-                  rule: self >= 0
             type: object
-            x-kubernetes-validations:
-            - message: groups and everyone are mutually exclusive
-              rule: '(has(self.everyone) && has(self.groups)) ? !(self.everyone &&
-                self.groups.size() > 0) : true'
           status:
-            description: The current status of this APIAccess.
+            description: The current status of this APIBundle.
             properties:
               hash:
-                description: Hash is a hash representing the APIAccess.
+                description: Hash is a hash representing the APIBundle.
                 type: string
               syncedAt:
                 format: date-time
