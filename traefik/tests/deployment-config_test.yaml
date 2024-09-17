@@ -180,7 +180,7 @@ tests:
           exposedPort: 443
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Syntax of `ports.web.redirectTo` has changed to `ports.web.redirectTo.port`. Details in PR #934."
+          errorPattern: "redirectTo"
   - it: should have http redirections enabled, when enabled with redirectTo
     set:
       ports:

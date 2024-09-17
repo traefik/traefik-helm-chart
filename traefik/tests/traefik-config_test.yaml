@@ -445,11 +445,9 @@ tests:
       ports:
         websecure:
           forwardedHeaders:
-            insecure: True
-              - 127.0.0.1/32
-              - 192.168.1.7
+            insecure: true
           proxyProtocol:
-            insecure: True
+            insecure: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -631,3 +629,12 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.labelselector=app=traefik"
+  - it: should be possible to allow ACME bypass
+    set:
+      ports:
+        websecure:
+          allowACMEByPass: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.name.allowACMEByPass=true"

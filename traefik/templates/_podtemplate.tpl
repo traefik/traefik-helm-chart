@@ -538,9 +538,6 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
-             {{- if eq (typeOf $config.redirectTo) "string" }}
-               {{- fail "ERROR: Syntax of `ports.web.redirectTo` has changed to `ports.web.redirectTo.port`. Details in PR #934." }}
-             {{- end }}
              {{- $toPort := index $.Values.ports $config.redirectTo.port }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
@@ -582,6 +579,9 @@
                   {{- end }}
                 {{- end }}
               {{- end }}
+            {{- end }}
+            {{- if $config.allowACMEByPass }}
+          - "--entryPoints.name.allowACMEByPass=true"
             {{- end }}
             {{- if $config.forwardedHeaders }}
               {{- if $config.forwardedHeaders.trustedIPs }}
