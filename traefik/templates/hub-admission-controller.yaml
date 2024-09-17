@@ -140,9 +140,9 @@ webhooks:
     clientConfig:
       service:
         name: admission
-        namespace: { { template "traefik.namespace" . } }
+        namespace: {{ template "traefik.namespace" . }}
         path: /api-bundle
-      caBundle: { { $cert.Cert } }
+      caBundle: {{ $cert.Cert }}
     sideEffects: None
     admissionReviewVersions:
       - v1
