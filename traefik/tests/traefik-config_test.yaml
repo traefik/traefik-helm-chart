@@ -638,3 +638,13 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.name.allowACMEByPass=true"
+  - it: should fail when setting ACME bypass with Proxy v3.1.0
+    set:
+      image:
+        tag: v3.1.0
+      ports:
+        websecure:
+          allowACMEByPass: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+"
