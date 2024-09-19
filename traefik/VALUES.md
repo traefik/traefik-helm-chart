@@ -81,19 +81,19 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.secretName | string | `""` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
-| hub.ratelimit.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
-| hub.ratelimit.redis.database | string | `nil` | Database used to store information. Default: "0". |
-| hub.ratelimit.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
-| hub.ratelimit.redis.password | string | `""` | The password to use when connecting to Redis endpoints. Default: "". |
-| hub.ratelimit.redis.sentinel.masterset | string | `""` | Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "". |
-| hub.ratelimit.redis.sentinel.password | string | `""` | Password to use for sentinel authentication (can be different from endpoint password). Default: "". |
-| hub.ratelimit.redis.sentinel.username | string | `""` | Username to use for sentinel authentication (can be different from endpoint username). Default: "". |
-| hub.ratelimit.redis.timeout | string | `""` | Timeout applied on connection with redis. Default: "0s". |
-| hub.ratelimit.redis.tls.ca | string | `""` | Path to the certificate authority used for the secured connection. |
-| hub.ratelimit.redis.tls.cert | string | `""` | Path to the public certificate used for the secure connection. |
-| hub.ratelimit.redis.tls.insecureSkipVerify | bool | `false` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
-| hub.ratelimit.redis.tls.key | string | `""` | Path to the private key used for the secure connection. |
-| hub.ratelimit.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
+| hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
+| hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
+| hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
+| hub.redis.password | string | `""` | The password to use when connecting to Redis endpoints. Default: "". |
+| hub.redis.sentinel.masterset | string | `""` | Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "". |
+| hub.redis.sentinel.password | string | `""` | Password to use for sentinel authentication (can be different from endpoint password). Default: "". |
+| hub.redis.sentinel.username | string | `""` | Username to use for sentinel authentication (can be different from endpoint username). Default: "". |
+| hub.redis.timeout | string | `""` | Timeout applied on connection with redis. Default: "0s". |
+| hub.redis.tls.ca | string | `""` | Path to the certificate authority used for the secured connection. |
+| hub.redis.tls.cert | string | `""` | Path to the public certificate used for the secure connection. |
+| hub.redis.tls.insecureSkipVerify | bool | `false` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
+| hub.redis.tls.key | string | `""` | Path to the private key used for the secure connection. |
+| hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
