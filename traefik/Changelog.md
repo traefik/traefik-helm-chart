@@ -1,5 +1,13 @@
 # Change Log
 
+## 31.1.1  ![AppVersion: v3.1.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-09-20
+
+* fix: 🐛 updateStrategy behavior
+* feat(deps): update traefik docker tag to v3.1.4
+* chore(release): 🚀 publish v31.1.1
+
 ## 31.1.0  ![AppVersion: v3.1.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-09-18
