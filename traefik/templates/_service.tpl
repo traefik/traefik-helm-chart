@@ -40,6 +40,9 @@
   externalIPs:
   {{- toYaml . | nindent 2 }}
   {{- end -}}
+  {{- with .service.loadBalancerIP }}
+  loadBalancerIP: {{ . }}
+  {{- end }}
   {{- with .service.ipFamilyPolicy }}
   ipFamilyPolicy: {{ . }}
   {{- end }}
