@@ -150,6 +150,8 @@ tests:
       - equal:
           path: spec.updateStrategy.type
           value: OnDelete
+      - notExists:
+          path: spec.updateStrategy.rollingUpdate
   - it: should use helm managed namespace as default behavior
     set:
       deployment:

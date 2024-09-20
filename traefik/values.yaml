@@ -219,7 +219,7 @@ ingressRoute:
     tls: {}
 
 updateStrategy:  # @schema additionalProperties: false
-  # -- Customize updateStrategy: RollingUpdate or OnDelete
+  # -- Customize updateStrategy of Deployment or DaemonSet
   type: RollingUpdate
   rollingUpdate:
     maxUnavailable: 0  # @schema type:[integer, string, null]

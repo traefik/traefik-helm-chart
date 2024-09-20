@@ -43,7 +43,6 @@ tests:
       updateStrategy:
         rollingUpdate:
           maxUnavailable: 4
-          vegetaForce: 9000
     asserts:
       - equal:
           path: spec.strategy.type
@@ -54,9 +53,6 @@ tests:
       - equal:
           path: spec.strategy.rollingUpdate.maxSurge
           value: 1
-      - equal:
-          path: spec.strategy.rollingUpdate.vegetaForce
-          value: 9000
   - it: should have annotations with specified values
     set:
       deployment:
@@ -156,14 +152,16 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey
           value: kubernetes.io/hostname
-  - it: should have an OnDelete strategy when set
+  - it: should have Recreate strategy when set
     set:
       updateStrategy:
-        type: OnDelete
+        type: Recreate
     asserts:
       - equal:
           path: spec.strategy.type
-          value: OnDelete
+          value: Recreate
+      - notExists:
+          path: spec.strategy.rollingUpdate
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
