@@ -277,67 +277,62 @@
                     },
                     "type": "object"
                 },
-                "ratelimit": {
+                "redis": {
                     "properties": {
-                        "redis": {
+                        "cluster": {
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "database": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "endpoints": {
+                            "type": "string"
+                        },
+                        "password": {
+                            "type": "string"
+                        },
+                        "sentinel": {
                             "properties": {
-                                "cluster": {
-                                    "type": [
-                                        "boolean",
-                                        "null"
-                                    ]
-                                },
-                                "database": {
-                                    "type": [
-                                        "string",
-                                        "null"
-                                    ]
-                                },
-                                "endpoints": {
+                                "masterset": {
                                     "type": "string"
                                 },
                                 "password": {
                                     "type": "string"
-                                },
-                                "sentinel": {
-                                    "properties": {
-                                        "masterset": {
-                                            "type": "string"
-                                        },
-                                        "password": {
-                                            "type": "string"
-                                        },
-                                        "username": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
-                                },
-                                "timeout": {
-                                    "type": "string"
-                                },
-                                "tls": {
-                                    "properties": {
-                                        "ca": {
-                                            "type": "string"
-                                        },
-                                        "cert": {
-                                            "type": "string"
-                                        },
-                                        "insecureSkipVerify": {
-                                            "type": "boolean"
-                                        },
-                                        "key": {
-                                            "type": "string"
-                                        }
-                                    },
-                                    "type": "object"
                                 },
                                 "username": {
                                     "type": "string"
                                 }
                             },
                             "type": "object"
+                        },
+                        "timeout": {
+                            "type": "string"
+                        },
+                        "tls": {
+                            "properties": {
+                                "ca": {
+                                    "type": "string"
+                                },
+                                "cert": {
+                                    "type": "string"
+                                },
+                                "insecureSkipVerify": {
+                                    "type": "boolean"
+                                },
+                                "key": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "username": {
+                            "type": "string"
                         }
                     },
                     "type": "object"

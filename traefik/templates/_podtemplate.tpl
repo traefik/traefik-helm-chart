@@ -717,24 +717,24 @@
             {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
             {{- end -}}
-            {{- range $field, $value := .ratelimit.redis }}
+            {{- range $field, $value := .redis }}
              {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
               {{- with $value }}
-          - "--hub.ratelimit.redis.{{ $field }}={{ $value }}"
+          - "--hub.redis.{{ $field }}={{ $value }}"
               {{- end }}
              {{- end }}
             {{- end }}
-            {{- range $field, $value := .ratelimit.redis.sentinel }}
+            {{- range $field, $value := .redis.sentinel }}
              {{- if has $field (list "masterset" "password" "username") -}}
               {{- with $value }}
-          - "--hub.ratelimit.redis.sentinel.{{ $field }}={{ $value }}"
+          - "--hub.redis.sentinel.{{ $field }}={{ $value }}"
               {{- end }}
              {{- end }}
             {{- end }}
-            {{- range $field, $value := .ratelimit.redis.tls }}
+            {{- range $field, $value := .redis.tls }}
              {{- if has $field (list "ca" "cert" "insecureSkipVerify" "key") -}}
               {{- with $value }}
-          - "--hub.ratelimit.redis.tls.{{ $field }}={{ $value }}"
+          - "--hub.redis.tls.{{ $field }}={{ $value }}"
               {{- end }}
              {{- end }}
             {{- end }}
