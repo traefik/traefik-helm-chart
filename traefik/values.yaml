@@ -219,11 +219,13 @@ ingressRoute:
     tls: {}
 
 updateStrategy:  # @schema additionalProperties: false
-  # -- Customize updateStrategy: RollingUpdate or OnDelete
+  # -- Customize updateStrategy of Deployment or DaemonSet
   type: RollingUpdate
   rollingUpdate:
     maxUnavailable: 0  # @schema type:[integer, string, null]
     maxSurge: 1        # @schema type:[integer, string, null]
+
+
 
 readinessProbe:  # @schema additionalProperties: false
   # -- The number of consecutive failures allowed before considering the probe as failed.

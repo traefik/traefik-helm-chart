@@ -44,7 +44,15 @@ spec:
   selector:
     matchLabels:
       {{- include "traefik.labelselector" . | nindent 6 }}
-  strategy: {{ toYaml .Values.updateStrategy | nindent 4 }}
+  {{- with .Values.updateStrategy }}
+  strategy:
+    type: {{ .type }}
+    {{- if (eq .type "RollingUpdate") }}
+    rollingUpdate:
+      maxUnavailable: {{ .rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .rollingUpdate.maxSurge }}
+    {{- end }}
+  {{- end }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   template: {{ template "traefik.podTemplate" . }}
 {{- end -}}
