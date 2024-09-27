@@ -25,5 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "chore(release): :rocket: publish 32.0.0"
-    - "Replace `CLF` with `common` in `values.yaml`"
+    - chore(release): :rocket: publish 32.0.0
+    - fix: replace `CLF` with `common` in `values.yaml`
+    - feat(Traefik Hub): add APIPlans and APIBundles CRDs
