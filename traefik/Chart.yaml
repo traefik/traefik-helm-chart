@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 32.0.0-rc1
+version: 32.0.0
 # renovate: image=traefik
 appVersion: v3.1.4
 kubeVersion: ">=1.22.0-0"
@@ -25,5 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(Traefik Hub): add APIPlans and APIBundles CRDs"
-    - "chore(release): 🚀 publish 32.0.0-rc1"
+    - "chore(release): p:rocket: publish 32.0.0"
+    - "Replace `CLF` with `common` in `values.yaml`"

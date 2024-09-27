@@ -1,5 +1,95 @@
 # Change Log
 
+## 32.0.0  ![AppVersion: v3.1.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-09-27
+
+* chore(release): p:rocket: publish 32.0.0
+* fix: replace `CLF` with `common` in `values.yaml`
+* feat(Traefik Hub): add APIPlans and APIBundles CRDs
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 51dec67..f36a9dd 100644
+index d5173dc..f36a9dd 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -345,7 +345,7 @@ logs:
+     # -- To enable access logs
+     enabled: false
+     # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
+-    format:  # @schema enum:["CLF", "json", null]; type:[string, null]; default: "CLF"
++    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+     # filePath: "/var/log/traefik/access.log
+     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+     bufferingSize:  # @schema type:[integer, null]
+@@ -911,35 +911,34 @@ hub:
+       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+       secretName: ""
+ 
+-  ratelimit:
+-    redis:
+-      # -- Enable Redis Cluster. Default: true.
+-      cluster:    # @schema type:[boolean, null]
+-      # -- Database used to store information. Default: "0".
+-      database:   # @schema type:[string, null]
+-      # -- Endpoints of the Redis instances to connect to. Default: "".
+-      endpoints: ""
+-      # -- The username to use when connecting to Redis endpoints. Default: "".
++  redis:
++    # -- Enable Redis Cluster. Default: true.
++    cluster:    # @schema type:[boolean, null]
++    # -- Database used to store information. Default: "0".
++    database:   # @schema type:[string, null]
++    # -- Endpoints of the Redis instances to connect to. Default: "".
++    endpoints: ""
++    # -- The username to use when connecting to Redis endpoints. Default: "".
++    username: ""
++    # -- The password to use when connecting to Redis endpoints. Default: "".
++    password: ""
++    sentinel:
++      # -- Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "".
++      masterset: ""
++      # -- Username to use for sentinel authentication (can be different from endpoint username). Default: "".
+       username: ""
+-      # -- The password to use when connecting to Redis endpoints. Default: "".
++      # -- Password to use for sentinel authentication (can be different from endpoint password). Default: "".
+       password: ""
+-      sentinel:
+-        # -- Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "".
+-        masterset: ""
+-        # -- Username to use for sentinel authentication (can be different from endpoint username). Default: "".
+-        username: ""
+-        # -- Password to use for sentinel authentication (can be different from endpoint password). Default: "".
+-        password: ""
+-      # -- Timeout applied on connection with redis. Default: "0s".
+-      timeout: ""
+-      tls:
+-        # -- Path to the certificate authority used for the secured connection.
+-        ca: ""
+-        # -- Path to the public certificate used for the secure connection.
+-        cert: ""
+-        # -- Path to the private key used for the secure connection.
+-        key: ""
+-        # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
+-        insecureSkipVerify: false
++    # -- Timeout applied on connection with redis. Default: "0s".
++    timeout: ""
++    tls:
++      # -- Path to the certificate authority used for the secured connection.
++      ca: ""
++      # -- Path to the public certificate used for the secure connection.
++      cert: ""
++      # -- Path to the private key used for the secure connection.
++      key: ""
++      # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
++      insecureSkipVerify: false
+   # Enable export of errors logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
+```
+
 ## 32.0.0-rc1  ![AppVersion: v3.1.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-09-20
