@@ -566,9 +566,9 @@
                             "type": "object"
                         },
                         "format": {
-                            "default": "CLF",
+                            "default": "common",
                             "enum": [
-                                "CLF",
+                                "common",
                                 "json",
                                 null
                             ],
