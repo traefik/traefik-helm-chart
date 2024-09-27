@@ -25,5 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "chore(release): p:rocket: publish 32.0.0"
+    - "chore(release): :rocket: publish 32.0.0"
     - "Replace `CLF` with `common` in `values.yaml`"
