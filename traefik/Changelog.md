@@ -4,7 +4,7 @@
 
 **Release date:** 2024-09-27
 
-* chore(release): p:rocket: publish 32.0.0
+* chore(release): :rocket: publish 32.0.0
 * fix: replace `CLF` with `common` in `values.yaml`
 * feat(Traefik Hub): add APIPlans and APIBundles CRDs
 
