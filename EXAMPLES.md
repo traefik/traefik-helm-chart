@@ -491,7 +491,7 @@ See [#396](https://github.com/traefik/traefik-helm-chart/issues/396) for more de
 Once the provider is ready, it can be used in an `IngressRoute`:
 
 ```yaml
-apiVersion: traefik.containo.us/v1alpha1
+apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: [...]
@@ -501,6 +501,8 @@ spec:
   tls:
     certResolver: letsencrypt
 ```
+
+:information_source: Change `apiVersion` to `traefik.containo.us/v1alpha1` for charts prior to v28.0.0
 
 See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
 
