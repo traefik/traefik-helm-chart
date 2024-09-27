@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 31.0.0
+version: 32.0.0
 # renovate: image=traefik
-appVersion: v3.1.2
+appVersion: v3.1.4
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -25,8 +25,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Traefik Hub): update CRDs to v1.5.0"
-    - "fix(HTTP3): split udp and tcp Service when service.single is false"
-    - "fix!: 🐛 set allowEmptyServices to true by default"
-    - "feat(Traefik Hub): update CRDs to v1.7.0"
-    - "chore(release): 🚀 publish v31.0.0"
+    - chore(release): :rocket: publish 32.0.0
+    - fix: replace `CLF` with `common` in `values.yaml`
+    - feat(Traefik Hub): add APIPlans and APIBundles CRDs

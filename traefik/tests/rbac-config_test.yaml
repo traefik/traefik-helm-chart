@@ -774,6 +774,8 @@ tests:
               - apiratelimits
               - apis
               - apiversions
+              - apibundles
+              - apiplans
             verbs:
               - list
               - watch

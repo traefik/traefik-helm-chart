@@ -91,72 +91,71 @@ tests:
   - it: should be possible to specify ratelimit parameters (and ignore extra)
     set:
       hub:
-        ratelimit:
-          redis:
-            cluster: true
-            database: "database"
-            endpoints: "localhost:7000"
-            username: "user"
-            password: "pass"
-            sentinel:
-              masterset: "master"
-              username: "usern"
-              password: "passw"
-            timeout: "30s"
-            tls:
-              ca: "ca"
-              cert: "cert"
-              insecureSkipVerify: true
-              key: "key"
-            test: "test"
+        redis:
+          cluster: true
+          database: "database"
+          endpoints: "localhost:7000"
+          username: "user"
+          password: "pass"
+          sentinel:
+            masterset: "master"
+            username: "usern"
+            password: "passw"
+          timeout: "30s"
+          tls:
+            ca: "ca"
+            cert: "cert"
+            insecureSkipVerify: true
+            key: "key"
+          test: "test"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.cluster=true"
+          content: "--hub.redis.cluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.database=database"
+          content: "--hub.redis.database=database"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.endpoints=localhost:7000"
+          content: "--hub.redis.endpoints=localhost:7000"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.username=user"
+          content: "--hub.redis.username=user"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.password=pass"
+          content: "--hub.redis.password=pass"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.sentinel.masterset=master"
+          content: "--hub.redis.sentinel.masterset=master"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.sentinel.username=usern"
+          content: "--hub.redis.sentinel.username=usern"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.sentinel.password=passw"
+          content: "--hub.redis.sentinel.password=passw"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.timeout=30s"
+          content: "--hub.redis.timeout=30s"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.tls.ca=ca"
+          content: "--hub.redis.tls.ca=ca"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.tls.cert=cert"
+          content: "--hub.redis.tls.cert=cert"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.tls.insecureSkipVerify=true"
+          content: "--hub.redis.tls.insecureSkipVerify=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.tls.key=key"
+          content: "--hub.redis.tls.key=key"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.ratelimit.redis.test=test"
+          content: "--hub.redis.test=test"
   - it: should be possible to specify sendlogs
     set:
       hub:
-        sendlogs: "sendlogs"
+        sendlogs: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.sendlogs=sendlogs"
+          content: "--hub.sendlogs=true"
