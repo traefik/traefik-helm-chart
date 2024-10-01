@@ -6,9 +6,7 @@
         {{- if .Values.deployment.templateAnnotations }}
           {{- tpl (toYaml .Values.deployment.podAnnotations) . | nindent 8 }}
         {{- else }}
-          {{- with .Values.deployment.podAnnotations }}
-          {{- toYaml . | nindent 8 }}
-          {{- end }}
+          {{- toYaml .Values.deployment.podAnnotations | nindent 8 }}
         {{- end }}
       {{- end }}
       {{- if .Values.metrics }}
