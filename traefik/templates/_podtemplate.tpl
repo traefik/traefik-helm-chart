@@ -490,8 +490,11 @@
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
            {{- end }}
            {{- if .Values.rbac.namespaced }}
-            {{- if semverCompare "<3.1.2-0" $version }}
+            {{- if semverCompare "<3.1.5-0" $version }}
           - "--providers.kubernetesingress.disableIngressClassLookup=true"
+              {{- if semverCompare ">=3.1.2-0" $version }}
+          - "--providers.kubernetesingress.disableClusterScopeResources=true"
+              {{- end }}
             {{- else }}
           - "--providers.kubernetesingress.disableClusterScopeResources=true"
             {{- end }}
