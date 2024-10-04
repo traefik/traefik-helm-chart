@@ -643,7 +643,7 @@ tests:
   - it: should provide expected role rbac when k8s gw api is enabled >=v3.1.0
     set:
       image:
-        tag: v3.1.0-rc2
+        tag: v3.1.0-rc3
       providers:
         kubernetesGateway:
           enabled: true
@@ -717,6 +717,49 @@ tests:
               - list
               - watch
 
+  - it: should provide expected role rbac when k8s gw api is enabled >=v3.2.0
+    set:
+      image:
+        tag: v3.2.0-rc1
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies/status
+              - gatewayclasses/status
+              - gateways/status
+              - grpcroutes/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies
+              - gatewayclasses
+              - gateways
+              - grpcroutes
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
   - it: should contain additional RBACS for hub API gateway
     set:
       image:

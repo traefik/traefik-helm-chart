@@ -149,8 +149,14 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies
+      {{- end }}
       - gatewayclasses
       - gateways
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - grpcroutes
+      {{- end }}
       - httproutes
       - referencegrants
       - tcproutes
@@ -162,8 +168,14 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies/status
+      {{- end }}
       - gatewayclasses/status
       - gateways/status
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - grpcroutes/status
+      {{- end }}
       - httproutes/status
       - tcproutes/status
       - tlsroutes/status
