@@ -1,5 +1,35 @@
 # Change Log
 
+## 32.1.0  ![AppVersion: v3.1.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-10-04
+
+* fix: :bug: set disableIngressClassLookup until 3.1.4
+* feat(deps): update traefik docker tag to v3.1.5
+* feat(Traefik Proxy): update rbac following v3.2 migration guide
+* chore(release): 🚀 publish v32.1.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f36a9dd..73371f3 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -809,9 +809,9 @@ hostNetwork: false
+ rbac:  # @schema additionalProperties: false
+   enabled: true
+   # When set to true:
+-  # 1. Use `Role` and `RoleBinding` instead of `ClusterRole` and `ClusterRoleBinding`.
+-  # 2. Set `disableIngressClassLookup` on Kubernetes Ingress providers with Traefik Proxy v3 until v3.1.1
+-  # 3. Set `disableClusterScopeResources` on Kubernetes Ingress and CRD providers with Traefik Proxy v3.1.2+
++  # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
++  # 2. It adds `disableIngressClassLookup` on Kubernetes Ingress with Traefik Proxy v3 until v3.1.4
++  # 3. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers with Traefik Proxy v3.1.2+
+   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
+   # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
+   namespaced: false
+
 ## 32.0.0  ![AppVersion: v3.1.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-09-27

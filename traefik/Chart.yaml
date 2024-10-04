@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 32.0.0
+version: 32.1.0
 # renovate: image=traefik
-appVersion: v3.1.4
+appVersion: v3.1.5
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -25,6 +25,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - chore(release): :rocket: publish 32.0.0
-    - fix: replace `CLF` with `common` in `values.yaml`
-    - feat(Traefik Hub): add APIPlans and APIBundles CRDs
+    - "fix: :bug: set disableIngressClassLookup until 3.1.4"
+    - "feat(deps): update traefik docker tag to v3.1.5"
+    - "feat(Traefik Proxy): update rbac following v3.2 migration guide"
+    - "chore(release): 🚀 publish v32.1.0"

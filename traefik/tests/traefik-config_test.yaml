@@ -564,6 +564,33 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.disableIngressClassLookup=true"
+  - it: should not set disableIngressClassLookup if version is >= v3.1.5+ and rbac are namespaced
+    set:
+      rbac:
+        namespaced: true
+      image:
+        tag: v3.1.5
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
+
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
+  - it: should set disableIngressClassLookup if version is < v3.1.5+ and rbac are namespaced
+    set:
+      rbac:
+        namespaced: true
+      image:
+        tag: v3.1.4
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
   - it: should set disableClusterScopeResources when version > v3.1.2+ on both providers
     set:
       rbac:
