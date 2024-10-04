@@ -149,8 +149,10 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      - backendtlspolicies
       - gatewayclasses
       - gateways
+      - grpcroutes
       - httproutes
       - referencegrants
       - tcproutes
@@ -162,8 +164,10 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
+      - backendtlspolicies/status
       - gatewayclasses/status
       - gateways/status
+      - grpcroutes/status
       - httproutes/status
       - tcproutes/status
       - tlsroutes/status
