@@ -11,30 +11,28 @@ tests:
         limits:
           cpu: "4"
     asserts:
-      - equal:
-          path: spec.template.spec.containers[0].env[0].name
-          value: GOMAXPROCS
-      - equal:
-          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
-          value: limits.cpu
-      - equal:
-          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.divisor
-          value: "1"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMAXPROCS
+            valueFrom:
+              resourceFieldRef:
+                resource: limits.cpu
+                divisor: "1"
   - it: should have set GOMEMLIMIT with cpu limit
     set:
       resources:
         limits:
           memory: "4"
     asserts:
-      - equal:
-          path: spec.template.spec.containers[0].env[0].name
-          value: GOMEMLIMIT
-      - equal:
-          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.resource
-          value: limits.memory
-      - equal:
-          path: spec.template.spec.containers[0].env[0].valueFrom.resourceFieldRef.divisor
-          value: "1"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            valueFrom:
+              resourceFieldRef:
+                resource: limits.memory
+                divisor: "1"
   - it: should have not set GOMAXPROCS without cpu limit
     asserts:
       - notEqual:
@@ -45,28 +43,24 @@ tests:
       - notEqual:
           path: spec.template.spec.containers[0].env[0].name
           value: GOMEMLIMIT
-  - it: should have env with specified values
+  - it: should have expected env + additional env with specified values
     set:
       env:
-        - name: POD_NAME
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.name
         - name: POD_TEST
           value: powpow
     asserts:
-      - equal:
-          path: spec.template.spec.containers[0].env[0].name
-          value: POD_NAME
-      - equal:
-          path: spec.template.spec.containers[0].env[0].valueFrom.fieldRef.fieldPath
-          value: metadata.name
-      - equal:
-          path: spec.template.spec.containers[0].env[1].name
-          value: POD_TEST
-      - equal:
-          path: spec.template.spec.containers[0].env[1].value
-          value: powpow
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_TEST
+            value: powpow
   - it: should have envFrom with specified values
     set:
       envFrom:

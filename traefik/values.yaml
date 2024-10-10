@@ -566,17 +566,9 @@ additionalArguments: []
 #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
 #  - "--log.level=DEBUG"
 
-# -- Environment variables to be passed to Traefik's binary
+# -- Additional Environment variables to be passed to Traefik's binary
 # @default -- See _values.yaml_
-env:
-- name: POD_NAME
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.name
-- name: POD_NAMESPACE
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.namespace
+env: []
 
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []

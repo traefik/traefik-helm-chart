@@ -142,27 +142,6 @@
             "type": "object"
         },
         "env": {
-            "items": {
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "valueFrom": {
-                        "properties": {
-                            "fieldRef": {
-                                "properties": {
-                                    "fieldPath": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
             "type": "array"
         },
         "envFrom": {
