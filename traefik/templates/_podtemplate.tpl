@@ -685,16 +685,11 @@
               {{- end }}
             {{- end }}
           {{- end }}
-          {{- range $resolver, $config := $.Values.certResolvers }}
-          {{- range $option, $setting := $config }}
-          {{- if kindIs "map" $setting }}
-          {{- range $field, $value := $setting }}
-          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}.{{ $field }}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}"
-          {{- end }}
-          {{- else }}
-          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}={{ $setting }}"
-          {{- end }}
-          {{- end }}
+          {{- $resolvers := trim (include "traefik.yaml2properties" ($.Values.certificatesResolvers)) }}
+          {{- with $resolvers }}
+           {{- range (regexSplit "\n" . -1) }}
+          - "--certificatesresolvers.{{ . }}"
+           {{- end }}
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
