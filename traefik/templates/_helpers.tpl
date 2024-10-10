@@ -169,16 +169,12 @@ Key: {{ $cert.Key | b64enc }}
     {{- if kindIs "map" $value }}
     {{- $newTop := printf "%s.%s" $top $key }}
 {{- include "traefik.yaml2properties" (dict $newTop $value) }}
-    {{- else if kindIs "slice" $value }}
-{{ $top }}.{{ $key }}={{ join "," $value }}
     {{- else }}
-{{ $top }}.{{ $key }}={{ $value }}
+{{ $top }}.{{ $key }}={{ join "," $value }}
     {{- end }}
   {{- end }}
-  {{- else if kindIs "slice" $value }}
-{{ $key }}={{ join "," $value }}
   {{- else }}
-{{ $key }}={{ $value }}
+{{ $key }}={{ join "," $value }}
   {{- end }}
 {{- end }}
 {{- end }}
