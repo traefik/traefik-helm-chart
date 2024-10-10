@@ -160,12 +160,6 @@ Key: {{ $cert.Key | b64enc }}
 {{- end -}}
 {{- end -}}
 
-
-{{- define "traefik.joinListWithComma" -}}
-{{- $local := dict "first" true -}}
-{{- range $k, $v := . -}}{{- if not $local.first -}},{{ end -}}{{ $v -}}{{- $_ := set $local "first" false -}}{{- end -}}
-{{- end -}}
-
 {{- define "traefik.yaml2properties" }}
 {{- $yaml := . -}}
 {{- range $key, $value := $yaml }}
@@ -176,13 +170,13 @@ Key: {{ $cert.Key | b64enc }}
     {{- $newTop := printf "%s.%s" $top $key }}
 {{- include "traefik.yaml2properties" (dict $newTop $value) }}
     {{- else if kindIs "slice" $value }}
-{{ $top }}.{{ $key }}={{ include "traefik.joinListWithComma" $value }}
+{{ $top }}.{{ $key }}={{ join "," $value }}
     {{- else }}
 {{ $top }}.{{ $key }}={{ $value }}
     {{- end }}
   {{- end }}
   {{- else if kindIs "slice" $value }}
-{{ $key }}={{ include "traefik.joinListWithComma" $value }}
+{{ $key }}={{ join "," $value }}
   {{- else }}
 {{ $key }}={{ $value }}
   {{- end }}
