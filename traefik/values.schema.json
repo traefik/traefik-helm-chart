@@ -22,7 +22,7 @@
             },
             "type": "object"
         },
-        "certificateResolvers": {
+        "certificatesResolvers": {
             "properties": {},
             "type": "object"
         },
