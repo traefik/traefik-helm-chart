@@ -556,7 +556,7 @@ podSecurityContext:
 ```
 
 >[!NOTE]
-> With Traefik Hub, certificates can be stored on Kubernetes in `Secret` with distributedAcme.
+> With [Traefik Hub](https://traefik.io/traefik-hub/), certificates can be stored as a `Secret` on Kubernetes with `distributedAcme` resolver.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 

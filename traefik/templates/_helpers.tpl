@@ -160,21 +160,18 @@ Key: {{ $cert.Key | b64enc }}
 {{- end -}}
 {{- end -}}
 
-{{- define "traefik.yaml2properties" }}
-{{- $yaml := . -}}
-{{- range $key, $value := $yaml }}
-  {{- if kindIs "map" $value -}}
-{{ $top:=$key }}
-  {{- range $key, $value := $value }}
-    {{- if kindIs "map" $value }}
-    {{- $newTop := printf "%s.%s" $top $key }}
-{{- include "traefik.yaml2properties" (dict $newTop $value) }}
-    {{- else }}
-{{ $top }}.{{ $key }}={{ join "," $value }}
-    {{- end }}
-  {{- end }}
-  {{- else }}
-{{ $key }}={{ join "," $value }}
-  {{- end }}
-{{- end }}
-{{- end }}
+{{- define "traefik.yaml2CommandLineArgsRec" -}}
+    {{- $path := .path -}}
+    {{- range $key, $value := .content -}}
+        {{- if kindIs "map" $value }}
+            {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
+        {{- else }}
+--{{ join "." (list $path $key)}}={{ join "," $value }}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- define "traefik.yaml2CommandLineArgs" -}}
+    {{- $args := regexSplit "\n" ((include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content)) | trim) -1 -}}
+    {{- ternary ($args | toYaml) "" (ne ($args | toJson) "[\"\"]") -}}
+{{- end -}}
