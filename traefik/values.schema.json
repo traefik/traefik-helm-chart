@@ -1384,6 +1384,9 @@
                             "properties": {
                                 "enabled": {
                                     "type": "boolean"
+                                },
+                                "pathOverride": {
+                                    "type": "string"
                                 }
                             },
                             "type": "object"
