@@ -685,11 +685,7 @@
               {{- end }}
             {{- end }}
           {{- end }}
-          {{- $resolvers := trim (include "traefik.yaml2properties" ($.Values.certificatesResolvers)) }}
-          {{- with $resolvers }}
-           {{- range (regexSplit "\n" . -1) }}
-          - "--certificatesresolvers.{{ . }}"
-           {{- end }}
+{{ include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | indent 10 }}
           {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
