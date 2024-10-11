@@ -179,6 +179,28 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "redirectTo"
+  - it: should set default values for args
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value:
+            - --global.checknewversion
+            - --global.sendanonymoususage
+            - --entryPoints.metrics.address=:9100/tcp
+            - --entryPoints.traefik.address=:9000/tcp
+            - --entryPoints.web.address=:8000/tcp
+            - --entryPoints.websecure.address=:8443/tcp
+            - --api.dashboard=true
+            - --ping=true
+            - --metrics.prometheus=true
+            - --metrics.prometheus.entrypoint=metrics
+            - --providers.kubernetescrd
+            - --providers.kubernetescrd.allowEmptyServices=true
+            - --providers.kubernetesingress
+            - --providers.kubernetesingress.allowEmptyServices=true
+            - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik
+            - --entryPoints.websecure.http.tls=true
+            - --log.level=INFO
   - it: should have http redirections enabled, when enabled with redirectTo
     set:
       ports:

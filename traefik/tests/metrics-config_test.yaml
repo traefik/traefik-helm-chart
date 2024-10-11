@@ -5,17 +5,6 @@ capabilities:
   majorVersion: 1
   minorVersion: 16
 tests:
-  - it: should set default values for args
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--entryPoints.metrics.address=:9100/tcp"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus.entrypoint=metrics"
   - it: "should support to set prometheus: null"
     set:
       metrics:
