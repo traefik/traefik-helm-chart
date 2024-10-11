@@ -176,6 +176,10 @@
                 "enabled": {
                     "type": "boolean"
                 },
+                "infrastructure": {
+                    "properties": {},
+                    "type": "object"
+                },
                 "listeners": {
                     "properties": {
                         "web": {
