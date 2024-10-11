@@ -606,7 +606,7 @@ ports:
       default: true
     exposedPort: 80
     ## -- Different target traefik port on the cluster, useful for IP type LB
-    targetPort:  # @schema type:[integer, null]; minimum:0
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
     # The port protocol (TCP/UDP)
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
@@ -645,7 +645,7 @@ ports:
       default: true
     exposedPort: 443
     ## -- Different target traefik port on the cluster, useful for IP type LB
-    targetPort:  # @schema type:[integer, null]; minimum:0
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
     ## -- The port protocol (TCP/UDP)
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)

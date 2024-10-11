@@ -1031,6 +1031,7 @@
                         "targetPort": {
                             "minimum": 0,
                             "type": [
+                                "string",
                                 "integer",
                                 "null"
                             ]
@@ -1194,6 +1195,7 @@
                         "targetPort": {
                             "minimum": 0,
                             "type": [
+                                "string",
                                 "integer",
                                 "null"
                             ]
