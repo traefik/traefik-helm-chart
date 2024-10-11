@@ -760,6 +760,21 @@ tests:
               - get
               - list
               - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+              - secrets
+              - services
+              - configmaps
+            verbs:
+              - get
+              - list
+              - watch
   - it: should contain additional RBACS for hub API gateway
     set:
       image:
