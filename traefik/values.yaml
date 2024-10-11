@@ -860,7 +860,7 @@ topologySpreadConstraints: []
 # on nodes where no other traefik pods are scheduled.
 #  - labelSelector:
 #      matchLabels:
-#        app: '{{ template "traefik.name" . }}'
+#        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
 #    maxSkew: 1
 #    topologyKey: kubernetes.io/hostname
 #    whenUnsatisfiable: DoNotSchedule
