@@ -685,7 +685,7 @@
               {{- end }}
             {{- end }}
           {{- end }}
-          {{ include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | indent 10 }}
+          {{- include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | nindent 10 }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
