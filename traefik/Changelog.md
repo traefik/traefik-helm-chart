@@ -1,5 +1,32 @@
 # Change Log
 
+## 32.1.1  ![AppVersion: v3.1.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-10-11
+
+* fix(schema): 🐛 targetPort can also be a string
+* feat(deps): update traefik docker tag to v3.1.6
+* chore(release): 🚀 publish v32.1.1
+* Update topology spread constraints comments
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 73371f3..d6731c3 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -860,7 +860,7 @@ topologySpreadConstraints: []
+ # on nodes where no other traefik pods are scheduled.
+ #  - labelSelector:
+ #      matchLabels:
+-#        app: '{{ template "traefik.name" . }}'
++#        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+ #    maxSkew: 1
+ #    topologyKey: kubernetes.io/hostname
+ #    whenUnsatisfiable: DoNotSchedule
+```
+
 ## 32.1.0  ![AppVersion: v3.1.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-10-04

@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+      - v*
 
 env:
   tag_prefix: v
