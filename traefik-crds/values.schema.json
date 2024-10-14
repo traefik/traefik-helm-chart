@@ -5,13 +5,17 @@
     "description": "The Cloud Native Application Proxy",
     "properties": {
         "gateway_api": {
+            "default": false,
             "type": [
-                "boolean"
+                "boolean",
+                "string"
             ]
         },
         "hub": {
+            "default": false,
             "type": [
-                "boolean"
+                "boolean",
+                "string"
             ]
         },
         "traefik": {
