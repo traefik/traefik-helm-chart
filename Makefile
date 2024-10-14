@@ -7,6 +7,7 @@ IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.16.1-0.6.1
 
 traefik/tests/__snapshot__:
 	@mkdir traefik/tests/__snapshot__
+	@mkdir traefik-crds/tests/__snapshot__
 
 test: traefik/tests/__snapshot__
 	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_HELM_UNITTEST) /charts/hack/test.sh
