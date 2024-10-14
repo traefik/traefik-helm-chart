@@ -23,11 +23,18 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Check if values schema is up-to-date
+      - name: Check traefik if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v1
         with:
           input: traefik/values.yaml
           output: traefik/values.schema.json
+          fail-on-diff: true
+
+      - name: Check traefik-crds if values schema is up-to-date
+        uses: losisin/helm-values-schema-json-action@v1
+        with:
+          input: traefik-crds/values.yaml
+          output: traefik-crds/values.schema.json
           fail-on-diff: true
 
       - name: Lint
