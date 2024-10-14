@@ -970,6 +970,6 @@ traefik-crds:
   # -- Set all the following to false if you want to manage CRDs your-self
   traefik: true
   hub: |
-    {{- tpl "ne .Values.hub.token \"\"' . }}
+    {{- tpl "and .Values.hub.token .Values.hub.apimanagement.enabled"' . }}
   gateway_api: |
-    {{- tpl "ne .Values.providers.kubernetesGateway.enabled \"\" . }}
+    {{- tpl ".Values.providers.kubernetesGateway.enabled" . }}
