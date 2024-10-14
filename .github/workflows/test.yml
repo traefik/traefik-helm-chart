@@ -28,6 +28,10 @@ jobs:
         with:
           input: traefik/values.yaml
           output: traefik/values.schema.json
+          id: "https://traefik.io/traefik-helm-chart.schema.json"
+          title: "Traefik Proxy Helm Chart"
+          description: "The Cloud Native Application Proxy"
+          additional-properties: true
           fail-on-diff: true
 
       - name: Check traefik-crds if values schema is up-to-date
@@ -35,6 +39,10 @@ jobs:
         with:
           input: traefik-crds/values.yaml
           output: traefik-crds/values.schema.json
+          id: "https://traefik.io/traefik-crds-helm-chart.schema.json"
+          title: "Traefik CRDs Helm Chart"
+          description: "The Cloud Native Application Proxy"
+          additional-properties: false
           fail-on-diff: true
 
       - name: Lint
