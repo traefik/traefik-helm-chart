@@ -1607,20 +1607,6 @@
             },
             "type": "object"
         },
-        "traefik-crds": {
-            "properties": {
-                "gateway_api": {
-                    "type": "string"
-                },
-                "hub": {
-                    "type": "string"
-                },
-                "traefik": {
-                    "type": "boolean"
-                }
-            },
-            "type": "object"
-        },
         "updateStrategy": {
             "additionalProperties": false,
             "properties": {
