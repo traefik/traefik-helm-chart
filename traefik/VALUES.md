@@ -138,7 +138,7 @@ Kubernetes: `>=1.22.0-0`
 | logs.access.statuscodes | string | `""` |  |
 | logs.general.filePath | string | `""` | To write the logs into a log file, use the filePath option. |
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
-| logs.general.level | string | `"INFO"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO. |
+| logs.general.level | string | `"INFO"` | Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, TRACE and INFO. |
 | logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
 | metrics.addInternals | bool | `false` |  |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
