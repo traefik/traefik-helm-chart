@@ -592,13 +592,13 @@
                         "level": {
                             "default": "INFO",
                             "enum": [
+                                "TRACE",
+                                "DEBUG",
                                 "INFO",
                                 "WARN",
                                 "ERROR",
                                 "FATAL",
-                                "PANIC",
-                                "DEBUG",
-                                "TRACE"
+                                "PANIC"
                             ],
                             "type": "string"
                         },
