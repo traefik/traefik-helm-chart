@@ -597,7 +597,8 @@
                                 "ERROR",
                                 "FATAL",
                                 "PANIC",
-                                "DEBUG"
+                                "DEBUG",
+                                "TRACE"
                             ],
                             "type": "string"
                         },
