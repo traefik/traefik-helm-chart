@@ -29,5 +29,5 @@ annotations:
     - "chore(release): 🚀 publish v33.2.1"
 dependencies:
   - name: traefik-crds
-    version: "0.0.1"
-    repository: "file://../traefik-crds"
+    version: 0.0.1
+    repository: https://traefik.github.io/charts
