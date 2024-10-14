@@ -1,42 +1,18 @@
 {{- if .Values.traefik -}}
-{{- $files := .Files }}
-{{- range tuple
-"crds-files/traefik/traefik.io_ingressroutes.yaml"
-"crds-files/traefik/traefik.io_ingressroutetcps.yaml"
-"crds-files/traefik/traefik.io_ingressrouteudps.yaml"
-"crds-files/traefik/traefik.io_middlewares.yaml"
-"crds-files/traefik/traefik.io_middlewaretcps.yaml"
-"crds-files/traefik/traefik.io_serverstransports.yaml"
-"crds-files/traefik/traefik.io_serverstransporttcps.yaml"
-"crds-files/traefik/traefik.io_tlsoptions.yaml"
-"crds-files/traefik/traefik.io_tlsstores.yaml"
-"crds-files/traefik/traefik.io_traefikservices.yaml"
- }}
-{{ $files.Get . }}
+{{- range $path, $bytes := .Files.Glob "crds-files/traefik/*.yaml" }}
+{{ $.Files.Get $path }}
 {{- end }}
 {{- end }}
 
+
 {{- if .Values.hub -}}
-{{- $files := .Files }}
-{{- range tuple
-"crds-files/hub/hub.traefik.io_accesscontrolpolicies.yaml"
-"crds-files/hub/hub.traefik.io_apiaccesses.yaml"
-"crds-files/hub/hub.traefik.io_apibundles.yaml"
-"crds-files/hub/hub.traefik.io_apiplans.yaml"
-"crds-files/hub/hub.traefik.io_apiportals.yaml"
-"crds-files/hub/hub.traefik.io_apiratelimits.yaml"
-"crds-files/hub/hub.traefik.io_apis.yaml"
-"crds-files/hub/hub.traefik.io_apiversions.yaml"
- }}
-{{ $files.Get . }}
+{{- range $path, $bytes := .Files.Glob "crds-files/hub/*.yaml" }}
+{{ $.Files.Get $path }}
 {{- end }}
 {{- end }}
 
 {{- if .Values.gateway_api -}}
-{{- $files := .Files }}
-{{- range tuple
-"crds-files/gateway/gateway-standard-install-v1.1.0.yaml"
- }}
-{{ $files.Get . }}
+{{- range $path, $bytes := .Files.Glob "crds-files/gateway_api/*.yaml" }}
+{{ $.Files.Get $path }}
 {{- end }}
 {{- end }}
