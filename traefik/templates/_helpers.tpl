@@ -172,6 +172,7 @@ Key: {{ $cert.Key | b64enc }}
 {{- end -}}
 
 {{- define "traefik.yaml2CommandLineArgs" -}}
-    {{- $args := regexSplit "\n" ((include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content)) | trim) -1 -}}
-    {{- ternary ($args | toYaml) "" (ne ($args | toJson) "[\"\"]") -}}
+    {{- range ((regexSplit "\n" ((include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content)) | trim) -1) | compact) -}}
+      {{ printf "- \"%s\"\n" . }}
+    {{- end -}}
 {{- end -}}
