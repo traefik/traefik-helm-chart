@@ -16,6 +16,10 @@ metadata:
   {{- end }}
 spec:
   gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
+  {{- with .Values.gateway.infrastructure }}
+  infrastructure:
+    {{ toYaml . | nindent 4 }}
+  {{- end }}
   listeners:
     {{- range $name, $config := .Values.gateway.listeners }}
     - name: {{ $name }}

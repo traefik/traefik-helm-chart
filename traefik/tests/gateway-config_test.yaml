@@ -265,3 +265,32 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: port needs to be specified"
+  - it: should be possible to configure infrastructure level on the Gateway
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        infrastructure:
+          labels:
+            foo: bar
+            tip: top
+          annotations:
+            afoo: abar
+          parametersRef:
+            group: traefik.io
+            kind: TraefikProxy
+            name: custom-config
+    asserts:
+      - isSubset:
+          path: spec.infrastructure
+          content:
+            labels:
+              foo: bar
+              tip: top
+            annotations:
+              afoo: abar
+            parametersRef:
+              group: traefik.io
+              kind: TraefikProxy
+              name: custom-config

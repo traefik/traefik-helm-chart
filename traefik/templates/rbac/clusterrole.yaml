@@ -133,6 +133,9 @@ rules:
     {{- end }}
       - secrets
       - services
+    {{- if semverCompare ">=v3.2.0-0" $version }}
+      - configmaps
+    {{- end }}
     verbs:
       - get
       - list
