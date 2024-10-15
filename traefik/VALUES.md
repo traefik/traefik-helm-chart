@@ -131,11 +131,11 @@ Kubernetes: `>=1.22.0-0`
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
 | logs.access.fields.headers | object | `{"defaultmode":"drop","names":{}}` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers) |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | Set default mode for fields.headers |
-| logs.access.filters | object | `{}` | Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering) |
+| logs.access.filters | object | `{"minduration":"","retryattempts":false,"statuscodes":""}` | Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering) |
+| logs.access.filters.minduration | string | `""` | Set minDuration, to keep access logs when requests take longer than the specified duration |
+| logs.access.filters.retryattempts | bool | `false` | Set retryAttempts, to keep the access logs when at least one retry has happened |
+| logs.access.filters.statuscodes | string | `""` | Set statusCodes, to limit the access logs to requests with a status codes in the specified range |
 | logs.access.format | string | `nil` | Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format) |
-| logs.access.minduration | string | `""` |  |
-| logs.access.retryattempts | bool | `false` |  |
-| logs.access.statuscodes | string | `""` |  |
 | logs.general.filePath | string | `""` | To write the logs into a log file, use the filePath option. |
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC. |
