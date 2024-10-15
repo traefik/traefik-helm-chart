@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 32.1.0](https://img.shields.io/badge/Version-32.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.1.5](https://img.shields.io/badge/AppVersion-v3.1.5-informational?style=flat-square)
+![Version: 32.1.0](https://img.shields.io/badge/Version-32.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.1.6](https://img.shields.io/badge/AppVersion-v3.1.6-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -60,13 +60,14 @@ Kubernetes: `>=1.22.0-0`
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
-| env | list | See _values.yaml_ | Environment variables to be passed to Traefik's binary |
+| env | list | See _values.yaml_ | Additional Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.plugins | object | `{}` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
 | gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
+| gateway.infrastructure | object | `{}` | [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) |
 | gateway.listeners | object | `{"web":{"hostname":"","namespacePolicy":null,"port":8000,"protocol":"HTTP"}}` | Define listeners |
 | gateway.listeners.web.hostname | string | `""` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname) |
 | gateway.listeners.web.namespacePolicy | string | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces |

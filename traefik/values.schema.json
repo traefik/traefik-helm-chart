@@ -142,27 +142,6 @@
             "type": "object"
         },
         "env": {
-            "items": {
-                "properties": {
-                    "name": {
-                        "type": "string"
-                    },
-                    "valueFrom": {
-                        "properties": {
-                            "fieldRef": {
-                                "properties": {
-                                    "fieldPath": {
-                                        "type": "string"
-                                    }
-                                },
-                                "type": "object"
-                            }
-                        },
-                        "type": "object"
-                    }
-                },
-                "type": "object"
-            },
             "type": "array"
         },
         "envFrom": {
@@ -196,6 +175,10 @@
                 },
                 "enabled": {
                     "type": "boolean"
+                },
+                "infrastructure": {
+                    "properties": {},
+                    "type": "object"
                 },
                 "listeners": {
                     "properties": {
@@ -1052,6 +1035,7 @@
                         "targetPort": {
                             "minimum": 0,
                             "type": [
+                                "string",
                                 "integer",
                                 "null"
                             ]
@@ -1215,6 +1199,7 @@
                         "targetPort": {
                             "minimum": 0,
                             "type": [
+                                "string",
                                 "integer",
                                 "null"
                             ]

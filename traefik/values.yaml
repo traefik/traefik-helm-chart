@@ -138,6 +138,8 @@ gateway:
   namespace: ""
   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
   annotations: {}
+  # -- [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels)
+  infrastructure: {}
   # -- Define listeners
   listeners:
     web:
@@ -566,17 +568,9 @@ additionalArguments: []
 #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
 #  - "--log.level=DEBUG"
 
-# -- Environment variables to be passed to Traefik's binary
+# -- Additional Environment variables to be passed to Traefik's binary
 # @default -- See _values.yaml_
-env:
-- name: POD_NAME
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.name
-- name: POD_NAMESPACE
-  valueFrom:
-    fieldRef:
-      fieldPath: metadata.namespace
+env: []
 
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []
@@ -614,7 +608,7 @@ ports:
       default: true
     exposedPort: 80
     ## -- Different target traefik port on the cluster, useful for IP type LB
-    targetPort:  # @schema type:[integer, null]; minimum:0
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
     # The port protocol (TCP/UDP)
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
@@ -653,7 +647,7 @@ ports:
       default: true
     exposedPort: 443
     ## -- Different target traefik port on the cluster, useful for IP type LB
-    targetPort:  # @schema type:[integer, null]; minimum:0
+    targetPort:  # @schema type:[string, integer, null]; minimum:0
     ## -- The port protocol (TCP/UDP)
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
@@ -860,7 +854,7 @@ topologySpreadConstraints: []
 # on nodes where no other traefik pods are scheduled.
 #  - labelSelector:
 #      matchLabels:
-#        app: '{{ template "traefik.name" . }}'
+#        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
 #    maxSkew: 1
 #    topologyKey: kubernetes.io/hostname
 #    whenUnsatisfiable: DoNotSchedule
