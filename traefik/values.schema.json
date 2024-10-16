@@ -545,6 +545,7 @@
                             "type": "object"
                         },
                         "filters": {
+                            "additionalProperties": false,
                             "properties": {
                                 "minduration": {
                                     "type": "string"
