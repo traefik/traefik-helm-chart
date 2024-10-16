@@ -545,7 +545,18 @@
                             "type": "object"
                         },
                         "filters": {
-                            "properties": {},
+                            "additionalProperties": false,
+                            "properties": {
+                                "minduration": {
+                                    "type": "string"
+                                },
+                                "retryattempts": {
+                                    "type": "boolean"
+                                },
+                                "statuscodes": {
+                                    "type": "string"
+                                }
+                            },
                             "type": "object"
                         },
                         "format": {
@@ -559,15 +570,6 @@
                                 "string",
                                 "null"
                             ]
-                        },
-                        "minduration": {
-                            "type": "string"
-                        },
-                        "retryattempts": {
-                            "type": "boolean"
-                        },
-                        "statuscodes": {
-                            "type": "string"
                         }
                     },
                     "type": "object"
