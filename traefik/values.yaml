@@ -337,8 +337,8 @@ logs:
     # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
     format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
     # By default, the level is set to INFO.
-    # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
-    level: "INFO"  # @schema enum:[INFO,WARN,ERROR,FATAL,PANIC,DEBUG]; default: "INFO"
+    # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+    level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
     # -- To write the logs into a log file, use the filePath option.
     filePath: ""
     # -- When set to true and format is common, it disables the colorized output.
