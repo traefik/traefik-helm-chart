@@ -159,3 +159,20 @@ Cert: {{ $cert.Cert | b64enc }}
 Key: {{ $cert.Key | b64enc }}
 {{- end -}}
 {{- end -}}
+
+{{- define "traefik.yaml2CommandLineArgsRec" -}}
+    {{- $path := .path -}}
+    {{- range $key, $value := .content -}}
+        {{- if kindIs "map" $value }}
+            {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
+        {{- else }}
+--{{ join "." (list $path $key)}}={{ join "," $value }}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+{{- define "traefik.yaml2CommandLineArgs" -}}
+    {{- range ((regexSplit "\n" ((include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content)) | trim) -1) | compact) -}}
+      {{ printf "- \"%s\"\n" . }}
+    {{- end -}}
+{{- end -}}

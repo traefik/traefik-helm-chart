@@ -87,3 +87,18 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced."
+  - it: should fail when trying to use certResolvers
+    set:
+      certResolvers:
+        myAcmeResolver:
+          email: email@example.com
+          dnsChallenge:
+            provider: myProvider
+            resolvers:
+              - 1.1.1.1
+              - 8.8.8.8
+          tlsChallenge: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: certResolvers setting has been removed. See v33.0.0 Changelog."
+

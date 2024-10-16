@@ -685,17 +685,7 @@
               {{- end }}
             {{- end }}
           {{- end }}
-          {{- range $resolver, $config := $.Values.certResolvers }}
-          {{- range $option, $setting := $config }}
-          {{- if kindIs "map" $setting }}
-          {{- range $field, $value := $setting }}
-          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}.{{ $field }}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}"
-          {{- end }}
-          {{- else }}
-          - "--certificatesresolvers.{{ $resolver }}.acme.{{ $option }}={{ $setting }}"
-          {{- end }}
-          {{- end }}
-          {{- end }}
+          {{- include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | nindent 10 }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}

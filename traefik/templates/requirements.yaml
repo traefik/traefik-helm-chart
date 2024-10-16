@@ -5,6 +5,10 @@
   {{- end }}
 {{- end }}
 
+{{- if .Values.certResolvers }}
+  {{- fail "ERROR: certResolvers setting has been removed. See v33.0.0 Changelog." }}
+{{- end }}
+
 {{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}

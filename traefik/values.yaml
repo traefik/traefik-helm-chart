@@ -774,8 +774,8 @@ autoscaling:
 
 persistence:
   # -- Enable persistence using Persistent Volume Claims
-  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
-  # It can be used to store TLS certificates, see `storage` in certResolvers
+  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/.
+  # It can be used to store TLS certificates along with `certificatesResolvers.<name>.acme.storage`  option
   enabled: false
   name: data
   existingClaim: ""
@@ -791,7 +791,7 @@ persistence:
 # -- Certificates resolvers configuration.
 # Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers
 # See EXAMPLES.md for more details.
-certResolvers: {}
+certificatesResolvers: {}
 
 # -- If hostNetwork is true, runs traefik in the host network namespace
 # To prevent unschedulabel pods due to port collisions, if hostNetwork=true

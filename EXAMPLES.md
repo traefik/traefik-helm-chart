@@ -331,14 +331,15 @@ Here is a more complete example, using also native Let's encrypt feature of Trae
 persistence:
   enabled: true
   size: 128Mi
-certResolvers:
+certificatesResolvers:
   letsencrypt:
-    email: "{{ letsencrypt_email }}"
-    #caServer: https://acme-v02.api.letsencrypt.org/directory # Production server
-    caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Staging server
-    dnsChallenge:
-      provider: azuredns
-    storage: /data/acme.json
+    acme:
+      email: "{{ letsencrypt_email }}"
+      #caServer: https://acme-v02.api.letsencrypt.org/directory # Production server
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Staging server
+      dnsChallenge:
+        provider: azuredns
+      storage: /data/acme.json
 env:
   - name: AZURE_CLIENT_ID
     value: "{{ azure_dns_challenge_application_id }}"
@@ -529,11 +530,12 @@ stringData:
 persistence:
   enabled: true
   storageClass: xxx
-certResolvers:
+certificatesResolvers:
   letsencrypt:
-    dnsChallenge:
-      provider: cloudflare
-    storage: /data/acme.json
+    acme:
+      dnsChallenge:
+        provider: cloudflare
+      storage: /data/acme.json
 env:
   - name: CF_DNS_API_TOKEN
     valueFrom:
@@ -552,6 +554,9 @@ podSecurityContext:
   fsGroup: 65532
   fsGroupChangePolicy: "OnRootMismatch"
 ```
+
+>[!NOTE]
+> With [Traefik Hub](https://traefik.io/traefik-hub/), certificates can be stored as a `Secret` on Kubernetes with `distributedAcme` resolver.
 
 # Provide default certificate with cert-manager and CloudFlare DNS
 

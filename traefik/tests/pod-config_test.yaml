@@ -330,15 +330,16 @@ tests:
           content: "--experimental.kubernetesgateway"
   - it: should have the certificate resolver options applied
     set:
-      certResolvers:
+      certificatesResolvers:
         myAcmeResolver:
-          email: email@example.com
-          dnsChallenge:
-            provider: myProvider
-            resolvers:
-              - 1.1.1.1
-              - 8.8.8.8
-          tlsChallenge: true
+          acme:
+            email: email@example.com
+            dnsChallenge:
+              provider: myProvider
+              resolvers:
+                - 1.1.1.1
+                - 8.8.8.8
+            tlsChallenge: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -352,6 +353,38 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
+
+  - it: should have the distributed acme resolver options applied
+    set:
+      certificatesResolvers:
+        my-resolver:
+          distributedAcme:
+            email: email@example.com
+            storage:
+              kubernetes: true
+            httpChallenge:
+              entrypoint: "web"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.my-resolver.distributedAcme.email=email@example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.my-resolver.distributedAcme.storage.kubernetes=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.my-resolver.distributedAcme.httpChallenge.entrypoint=web"
+
+  - it: should have the tailscale resolver options applied
+    set:
+      certificatesResolvers:
+        my-resolver:
+          tailscale: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.my-resolver.tailscale=true"
+
   - it: should have prometheus annotations with specified values
     set:
       ports:
