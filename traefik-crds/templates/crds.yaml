@@ -1,0 +1,18 @@
+{{- if .Values.traefik -}}
+{{- range $path, $bytes := .Files.Glob "crds-files/traefik/*.yaml" }}
+{{ $.Files.Get $path }}
+{{- end }}
+{{- end }}
+
+
+{{- if .Values.hub -}}
+{{- range $path, $bytes := .Files.Glob "crds-files/hub/*.yaml" }}
+{{ $.Files.Get $path }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.gateway_api -}}
+{{- range $path, $bytes := .Files.Glob "crds-files/gateway_api/*.yaml" }}
+{{ $.Files.Get $path }}
+{{- end }}
+{{- end }}

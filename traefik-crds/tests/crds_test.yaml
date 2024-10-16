@@ -1,0 +1,53 @@
+suite: CRDs
+templates:
+  - crds.yaml
+tests:
+  - it: shouldn't have any crds by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: should have all Traefik crds
+    set:
+      traefik: true
+    asserts:
+      - hasDocuments:
+          count: 10
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: traefik.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(IngressRoute|IngressRouteTCP|IngressRouteUDP|Middleware|MiddlewareTCP|ServersTransport|ServersTransportTCP|TLSOption|TLSStore|TraefikService)$
+
+  - it: should have all Traefik Hub crds
+    set:
+      hub: true
+    asserts:
+      - hasDocuments:
+          count: 8
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: hub.traefik.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(AccessControlPolicy|APIAccess|APIBundle|APIPlan|APIPortal|APIRateLimit|API|APIVersion)$
+
+  - it: should have all Gateway API crds
+    set:
+      gateway_api: true
+    asserts:
+      - hasDocuments:
+          count: 5
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: gateway.networking.k8s.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
