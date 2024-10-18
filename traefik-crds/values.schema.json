@@ -1,0 +1,29 @@
+{
+    "$id": "https://traefik.io/traefik-crds-helm-chart.schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "additionalProperties": false,
+    "description": "The Cloud Native Application Proxy",
+    "properties": {
+        "gateway_api": {
+            "default": false,
+            "type": [
+                "boolean",
+                "string"
+            ]
+        },
+        "hub": {
+            "default": false,
+            "type": [
+                "boolean",
+                "string"
+            ]
+        },
+        "traefik": {
+            "type": [
+                "boolean"
+            ]
+        }
+    },
+    "title": "Traefik CRDs Helm Chart",
+    "type": "object"
+}
