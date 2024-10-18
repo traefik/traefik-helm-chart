@@ -48,9 +48,9 @@ jobs:
       - name: Check if tag exists
         id: tag_exists
         run: |
-          TAG_EXISTS=true
-          if ! [ $(git tag -l "${{ env.traefik_tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}") ]; then
-              TAG_EXISTS=false
+          TAG_EXISTS=false
+          if git tag -l | grep "${{ env.tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}" > /dev/null ; then
+              TAG_EXISTS=true
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
 
@@ -60,7 +60,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
-          tag_prefix: ${{ env.traefik_tag_prefix }}
+          tag_prefix: ${{ env.tag_prefix }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Create release
@@ -128,9 +128,9 @@ jobs:
       - name: Check if tag exists
         id: tag_exists
         run: |
-          TAG_EXISTS=true
-          if ! [ $(git tag -l "${{ env.traefik-crds_tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}") ]; then
-              TAG_EXISTS=false
+          TAG_EXISTS=false
+          if git tag -l | grep "${{ env.crds_tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}" > /dev/null ; then
+              TAG_EXISTS=true
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
 
@@ -140,7 +140,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
-          tag_prefix: ${{ env.traefik-crds_tag_prefix }}
+          tag_prefix: ${{ env.crds_tag_prefix }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Create release
