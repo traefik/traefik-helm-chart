@@ -73,6 +73,12 @@ jobs:
           artifacts: "traefik.yaml"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      # avoid helm-gh-pages to push both charts
+      - name: Delete traefik-crds chart
+        run: |
+          rm -rf traefik-crds
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Publish Helm chart
         uses: stefanprodan/helm-gh-pages@master
         with:
@@ -150,6 +156,12 @@ jobs:
           name: ${{ steps.tag_version.outputs.new_tag }}
           body: ${{ steps.tag_version.outputs.changelog }}
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      # avoid helm-gh-pages to push both charts
+      - name: Delete traefik chart
+        run: | 
+          rm -rf traefik
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
