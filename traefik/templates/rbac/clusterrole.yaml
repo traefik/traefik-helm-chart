@@ -69,7 +69,7 @@ rules:
       - get
       - list
       - watch
-    {{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
+    {{- if and .Values.hub.token }}
       - update
       - create
       - delete
