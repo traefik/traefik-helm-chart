@@ -798,6 +798,22 @@ tests:
           path: rules
           content:
             apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - update
+              - create
+              - delete
+              - deletecollection
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
               - coordination.k8s.io
             resources:
               - leases
