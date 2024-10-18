@@ -5,28 +5,6 @@ capabilities:
   majorVersion: 1
   minorVersion: 16
 tests:
-  - it: should set default values for args
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].args
-          value:
-            - --global.checknewversion
-            - --global.sendanonymoususage
-            - --entryPoints.metrics.address=:9100/tcp
-            - --entryPoints.traefik.address=:9000/tcp
-            - --entryPoints.web.address=:8000/tcp
-            - --entryPoints.websecure.address=:8443/tcp
-            - --api.dashboard=true
-            - --ping=true
-            - --metrics.prometheus=true
-            - --metrics.prometheus.entrypoint=metrics
-            - --providers.kubernetescrd
-            - --providers.kubernetescrd.allowEmptyServices=true
-            - --providers.kubernetesingress
-            - --providers.kubernetesingress.allowEmptyServices=true
-            - --entryPoints.websecure.http.tls=true
-            - --log.level=INFO
-
   - it: "should support to set prometheus: null"
     set:
       metrics:

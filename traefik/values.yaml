@@ -285,10 +285,11 @@ providers:  # @schema additionalProperties: false
     namespaces: []
     # IP used for Kubernetes Ingress endpoints
     publishedService:
-      enabled: false
-      # Published Kubernetes Service to copy status from. Format: namespace/servicename
-      # By default this Traefik service
-      # pathOverride: ""
+      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice)
+      enabled: true
+      # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
+      # Default to Service deployed with this Chart.
+      pathOverride: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
 
