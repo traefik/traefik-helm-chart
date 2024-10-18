@@ -6,14 +6,14 @@ on:
       - master
 
 env:
-  traefik_tag_prefix: traefik_v
-  traefik-crds_tag_prefix: traefik-crds_v
+  tag_prefix: v
+  crds_tag_prefix: crds_v
 
 jobs:
   test:
     uses: "traefik/traefik-helm-chart/.github/workflows/test.yml@master"
 
-  release-traefik:
+  traefik:
     needs: test
     runs-on: ubuntu-latest
     steps:
@@ -100,7 +100,7 @@ jobs:
           registry_password: ${{ secrets.GHCR_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-  release-traefik-crds:
+  traefik-crds:
     needs: test
     runs-on: ubuntu-latest
     steps:
