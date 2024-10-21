@@ -54,6 +54,13 @@ jobs:
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
 
+      - name: Get Previous tag
+        id: previous_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          prefix: v
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Tag release
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
@@ -63,12 +70,30 @@ jobs:
           tag_prefix: ${{ env.tag_prefix }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      - name: Render changelog configuration
+        env:
+          REGEXP: "?!crds"
+        run: |
+          export DATE=$(date +%F); cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: ${{ steps.previous_tag.outputs.tag }}
+          toTag: ${{ steps.tag_version.outputs.new_tag }}
+          configuration: "/tmp/changelog.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.changelog }}
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
           artifacts: "traefik.yaml"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
@@ -140,6 +165,13 @@ jobs:
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
 
+      - name: Get Previous tag
+        id: previous_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+        with:
+          prefix: crds_v
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Tag release
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.2
@@ -149,18 +181,36 @@ jobs:
           tag_prefix: ${{ env.crds_tag_prefix }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      - name: Render changelog configuration
+        env:
+          REGEXP: "?!crds"
+        run: |
+          export DATE=$(date +%F); cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: ${{ steps.previous_tag.outputs.tag }}
+          toTag: ${{ steps.tag_version.outputs.new_tag }}
+          configuration: "/tmp/changelog.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }}
-          body: ${{ steps.tag_version.outputs.changelog }}
+          body: ${{ steps.changelog.outputs.changelog }}
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       # avoid helm-gh-pages to push both charts
       - name: Delete traefik chart
-        run: | 
+        run: |
           rm -rf traefik
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
