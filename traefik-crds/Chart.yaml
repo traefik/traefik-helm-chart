@@ -21,3 +21,4 @@ maintainers:
     email: remi.buisson@traefik.io
   - name: jnoordsij
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
+annotations: {}
