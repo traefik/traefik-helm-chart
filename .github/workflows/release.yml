@@ -43,7 +43,7 @@ jobs:
       - name: Get chart version
         id: chart_version
         run: |
-          echo "CHART_VERSION=$(cat traefik/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
+          echo "CHART_VERSION=$(cat traefik/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: tag_exists
@@ -129,7 +129,7 @@ jobs:
       - name: Get chart version
         id: chart_version
         run: |
-          echo "CHART_VERSION=$(cat traefik-crds/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}')" >> $GITHUB_OUTPUT
+          echo "CHART_VERSION=$(cat traefik-crds/Chart.yaml | awk -F"[ ',]+" '/version:/{print $2}' | head -n 1)" >> $GITHUB_OUTPUT
 
       - name: Check if tag exists
         id: tag_exists
