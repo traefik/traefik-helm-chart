@@ -2,7 +2,7 @@
   "template": "## [#{{TO_TAG}}](#{{RELEASE_DIFF}}) (${DATE})\n#{{CHANGELOG}}",
   "categories": [
     {
-      "title": "## :boom: Breaking changes",
+      "title": "## :boom: BREAKING CHANGES",
       "rules": [
         {
           "pattern": ".*\\((${REGEXP}).*\\)!:.*",
@@ -32,7 +32,7 @@
       ]
     },
     {
-      "title": "## :package: Other",
+      "title": "## :package: Others",
       "rules": [
         {
           "pattern": "(chore|release)\\((${REGEXP}).*\\):.*",

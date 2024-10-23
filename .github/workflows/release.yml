@@ -98,7 +98,7 @@ jobs:
           artifacts: "traefik.yaml"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-      # avoid helm-gh-pages to push both charts
+      # avoid to push both charts
       - name: Delete traefik-crds chart
         run: |
           rm -rf traefik-crds
@@ -208,7 +208,7 @@ jobs:
           prerelease: ${{ contains(steps.chart_version.outputs.CHART_VERSION, '-') }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-      # avoid helm-gh-pages to push both charts
+      # avoid to push both charts
       - name: Delete traefik chart
         run: |
           rm -rf traefik
