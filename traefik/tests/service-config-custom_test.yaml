@@ -190,3 +190,35 @@ tests:
             protocol: UDP
             targetPort: websecure-http3
         documentIndex: 1
+  - it: should not provide udp Service when exposing traefik port on internal service with http3 on websecure
+    set:
+      ports:
+        web:
+          expose:
+            internal: false
+        websecure:
+          http3:
+            enabled: true
+        traefik:
+          expose:
+            internal: true
+      service:
+        additionalServices:
+          internal: {}
+    asserts:
+      - hasDocuments:
+          count: 2
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - containsDocument:
+          kind: Service
+          apiVersion: v1
+          name: RELEASE-NAME-traefik
+        documentIndex: 0
+      - containsDocument:
+          kind: Service
+          apiVersion: v1
+          name: RELEASE-NAME-traefik-internal
+        documentIndex: 1
+

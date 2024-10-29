@@ -155,6 +155,8 @@ tests:
         udp:
           port: 3000
           protocol: UDP
+          expose:
+            default: true
     asserts:
       - isNull:
           path: spec.ipFamilyPolicy
@@ -171,6 +173,8 @@ tests:
         udp:
           port: 3000
           protocol: UDP
+          expose:
+            default: true
     asserts:
       - equal:
           path: spec.ipFamilyPolicy
@@ -188,6 +192,8 @@ tests:
         udp:
           port: 3000
           protocol: UDP
+          expose:
+            default: true
     asserts:
       - isNull:
           path: spec.ipFamilies
