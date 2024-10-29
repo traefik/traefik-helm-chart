@@ -4,6 +4,11 @@
     "additionalProperties": false,
     "description": "The Cloud Native Application Proxy",
     "properties": {
+        "deleteOnUninstall": {
+            "type": [
+                "boolean"
+            ]
+        },
         "gateway_api": {
             "default": false,
             "type": [

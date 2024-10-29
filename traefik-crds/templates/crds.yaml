@@ -1,18 +1,11 @@
 {{- if .Values.traefik -}}
-{{- range $path, $bytes := .Files.Glob "crds-files/traefik/*.yaml" }}
-{{ $.Files.Get $path }}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/traefik/*.yaml") }}
 {{- end }}
-{{- end }}
-
 
 {{- if .Values.hub -}}
-{{- range $path, $bytes := .Files.Glob "crds-files/hub/*.yaml" }}
-{{ $.Files.Get $path }}
-{{- end }}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/hub/*.yaml") }}
 {{- end }}
 
 {{- if .Values.gateway_api -}}
-{{- range $path, $bytes := .Files.Glob "crds-files/gateway_api/*.yaml" }}
-{{ $.Files.Get $path }}
-{{- end }}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gateway_api/*.yaml") }}
 {{- end }}
