@@ -35,6 +35,17 @@
       "fileMatch": ["Makefile"],
       "versioningTemplate": "docker",
       "matchStrings": ["IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)"]
+    },
+    {
+      "customType": "regex",
+      "datasourceTemplate": "docker",
+      "depNameTemplate": "traefik",
+      "fileMatch": ["VALUES.md"],
+      "versioningTemplate": "docker",
+      "matchStrings": [
+        "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
+        "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
+      ]
     }
   ]
 }
