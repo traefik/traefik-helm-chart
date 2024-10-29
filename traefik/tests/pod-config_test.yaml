@@ -293,7 +293,7 @@ tests:
           content:
             key: "RSA"
             operator: "Destructor"
-  - it: should have all k8s provider enabled when gateway provider is enabled
+  - it: When gateway provider is enabled, k8s providers & default statusAddress should be set
     set:
       providers:
         kubernetesGateway:
@@ -308,6 +308,12 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.name=RELEASE-NAME-traefik"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.namespace=NAMESPACE"
   - it: should have experimental flag when set
     set:
       experimental:
