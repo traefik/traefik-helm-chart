@@ -106,11 +106,11 @@ When upgrading on Traefik Proxy v2 version, one need to stay at Traefik Helm Cha
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v27
 ```
 
-### Upgrading after 18.X+
+#### Upgrading after 18.X+
 
 It's detailed in [release notes](https://github.com/traefik/traefik-helm-chart/releases).
 
-### Upgrading from 17.x to 18.x
+#### Upgrading from 17.x to 18.x
 
 Since v18.x, this chart by default merges TCP and UDP ports into a single (LoadBalancer) `Service`.
 Load balancers with mixed protocols are available since v1.20 and in
@@ -130,7 +130,7 @@ If you were previously using HTTP/3, you should update your values as follows:
   - Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
   - Remove `experimental.http3.enabled=true` entry
 
-### Upgrading from 16.x to 17.x
+#### Upgrading from 16.x to 17.x
 
 Since v17.x, this chart provides unified labels following
 [Kubernetes recommendation](https://kubernetes.io/docs/concepts/overview/working-with-objects/common-labels/).
