@@ -1,5 +1,219 @@
 # Change Log
 
+## 33.0.0  ![AppVersion: v3.2.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-10-30
+
+* fix: 🐛 http3 with internal service
+* fix: use correct children indentation for logs.access.filters
+* fix(schema): :bug: targetPort can also be a string
+* fix(certificateResolvers)!: :boom: :bug: use same syntax in Chart and in Traefik
+* fix(Traefik)!: :boom: set 8080 as default port for `traefik` entrypoint
+* fix(Traefik Hub): RBAC for distributedAcme
+* fix(Kubernetes Ingress)!: :boom: :sparkles: enable publishedService by default
+* fix(Gateway API): :bug: add missing required RBAC for v3.2 with experimental Channel
+* fix(Env Variables)!: allow extending env without overwrite
+* feat(deps): update traefik docker tag to v3.2.0
+* feat(deps): update traefik docker tag to v3.1.6
+* feat(Traefik): ✨ support Gateway API statusAddress
+* feat(Traefik Proxy): CRDs for v3.2+
+* feat(Gateway API): :sparkles: standard install CRD v1.2.0
+* feat(Gateway API): :sparkles: add infrastructure in the values
+* chore: allow TRACE log level
+* chore(release): 🚀 publish v33.0.0
+* Update topology spread constraints comments
+
+**Upgrade Notes**
+
+There are multiple breaking changes in this release:
+
+1. The default port of `traefik` entrypoint has changed from `9000` to `8080`, just like the Traefik Proxy default port
+  * You _may_ have to update probes accordingly (or set this port back to 9000)
+2. `publishedService` is enabled by default on Ingress provider
+  * You _can_ disable it, if needed
+3. The `POD_NAME` and `POD_NAMESPACE` environment variables are now set by default, without values.
+  * It is no longer necessary to add them in values and so, it can be removed from user values.
+4. In _values_, **certResolvers** specific syntax has been reworked to align with Traefik Proxy syntax.
+  * PR [#1214](https://github.com/traefik/traefik-helm-chart/pull/1214) contains a complete before / after example on how to update _values_
+5. Traefik Proxy 3.2 supports Gateway API v1.2
+  * The CRDs of this version comes with Gateway API CRD v1.2 of standard channel.
+  * The CRDs needs to be updated, as documented in the README.
+  * It is recommended to check that other software using Gateway API on your cluster are compatible
+
+:information_source: A separate helm chart, just for CRDs, is being considered for a future release. See PR [#1123](https://github.com/traefik/traefik-helm-chart/pull/1223)
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 73371f3..be89b00 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -95,7 +95,7 @@ deployment:
+   # postStart:
+   #   httpGet:
+   #     path: /ping
+-  #     port: 9000
++  #     port: 8080
+   #     host: localhost
+   #     scheme: HTTP
+   # -- Set a runtimeClassName on pod
+@@ -138,6 +138,8 @@ gateway:
+   namespace: ""
+   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
+   annotations: {}
++  # -- [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels)
++  infrastructure: {}
+   # -- Define listeners
+   listeners:
+     web:
+@@ -283,10 +285,11 @@ providers:  # @schema additionalProperties: false
+     namespaces: []
+     # IP used for Kubernetes Ingress endpoints
+     publishedService:
+-      enabled: false
+-      # Published Kubernetes Service to copy status from. Format: namespace/servicename
+-      # By default this Traefik service
+-      # pathOverride: ""
++      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice)
++      enabled: true
++      # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
++      # Default to Service deployed with this Chart.
++      pathOverride: ""
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+ 
+@@ -300,6 +303,15 @@ providers:  # @schema additionalProperties: false
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelselector: ""
++    statusAddress:
++      # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
++      ip: ""
++      # -- This Hostname will get copied to the Gateway status.addresses.
++      hostname: ""
++      # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
++      service:
++        name: "{{ (include \"traefik.fullname\" .) }}"
++        namespace: "{{ .Release.Namespace }}"
+ 
+   file:
+     # -- Create a file provider
+@@ -335,8 +347,8 @@ logs:
+     # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+     format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+     # By default, the level is set to INFO.
+-    # -- Alternative logging levels are DEBUG, PANIC, FATAL, ERROR, WARN, and INFO.
+-    level: "INFO"  # @schema enum:[INFO,WARN,ERROR,FATAL,PANIC,DEBUG]; default: "INFO"
++    # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
++    level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
+     # -- To write the logs into a log file, use the filePath option.
+     filePath: ""
+     # -- When set to true and format is common, it disables the colorized output.
+@@ -350,10 +362,13 @@ logs:
+     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+     bufferingSize:  # @schema type:[integer, null]
+     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
+-    filters: {}
+-    statuscodes: ""
+-    retryattempts: false
+-    minduration: ""
++    filters:  # @schema additionalProperties: false
++      # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
++      statuscodes: ""
++      # -- Set retryAttempts, to keep the access logs when at least one retry has happened
++      retryattempts: false
++      # -- Set minDuration, to keep access logs when requests take longer than the specified duration
++      minduration: ""
+     # -- Enables accessLogs for internal resources. Default: false.
+     addInternals: false
+     fields:
+@@ -566,24 +581,16 @@ additionalArguments: []
+ #  - "--providers.kubernetesingress.ingressclass=traefik-internal"
+ #  - "--log.level=DEBUG"
+ 
+-# -- Environment variables to be passed to Traefik's binary
++# -- Additional Environment variables to be passed to Traefik's binary
+ # @default -- See _values.yaml_
+-env:
+-- name: POD_NAME
+-  valueFrom:
+-    fieldRef:
+-      fieldPath: metadata.name
+-- name: POD_NAMESPACE
+-  valueFrom:
+-    fieldRef:
+-      fieldPath: metadata.namespace
++env: []
+ 
+ # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
+ envFrom: []
+ 
+ ports:
+   traefik:
+-    port: 9000
++    port: 8080
+     # -- Use hostPort if set.
+     hostPort:  # @schema type:[integer, null]; minimum:0
+     # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+@@ -601,7 +608,7 @@ ports:
+     expose:
+       default: false
+     # -- The exposed port for this service
+-    exposedPort: 9000
++    exposedPort: 8080
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
+   web:
+@@ -614,7 +621,7 @@ ports:
+       default: true
+     exposedPort: 80
+     ## -- Different target traefik port on the cluster, useful for IP type LB
+-    targetPort:  # @schema type:[integer, null]; minimum:0
++    targetPort:  # @schema type:[string, integer, null]; minimum:0
+     # The port protocol (TCP/UDP)
+     protocol: TCP
+     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+@@ -653,7 +660,7 @@ ports:
+       default: true
+     exposedPort: 443
+     ## -- Different target traefik port on the cluster, useful for IP type LB
+-    targetPort:  # @schema type:[integer, null]; minimum:0
++    targetPort:  # @schema type:[string, integer, null]; minimum:0
+     ## -- The port protocol (TCP/UDP)
+     protocol: TCP
+     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+@@ -780,8 +787,8 @@ autoscaling:
+ 
+ persistence:
+   # -- Enable persistence using Persistent Volume Claims
+-  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
+-  # It can be used to store TLS certificates, see `storage` in certResolvers
++  # ref: http://kubernetes.io/docs/user-guide/persistent-volumes/.
++  # It can be used to store TLS certificates along with `certificatesResolvers.<name>.acme.storage`  option
+   enabled: false
+   name: data
+   existingClaim: ""
+@@ -797,7 +804,7 @@ persistence:
+ # -- Certificates resolvers configuration.
+ # Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers
+ # See EXAMPLES.md for more details.
+-certResolvers: {}
++certificatesResolvers: {}
+ 
+ # -- If hostNetwork is true, runs traefik in the host network namespace
+ # To prevent unschedulabel pods due to port collisions, if hostNetwork=true
+@@ -860,7 +867,7 @@ topologySpreadConstraints: []
+ # on nodes where no other traefik pods are scheduled.
+ #  - labelSelector:
+ #      matchLabels:
+-#        app: '{{ template "traefik.name" . }}'
++#        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+ #    maxSkew: 1
+ #    topologyKey: kubernetes.io/hostname
+ #    whenUnsatisfiable: DoNotSchedule
+```
+
 ## 32.1.0  ![AppVersion: v3.1.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.1.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-10-04
