@@ -27,20 +27,20 @@
 
 There are multiple breaking changes in this release:
 
-1. Default port of `traefik` entrypoint is changed from 9000 to 8080, like Traefik Proxy default
+1. The default port of `traefik` entrypoint has changed from `9000` to `8080`, just like the Traefik Proxy default port
   * You _may_ have to update probes accordingly (or set this port back to 9000)
-2. publishedService is enabled by default on Ingress provider
+2. `publishedService` is enabled by default on Ingress provider
   * You _can_ disable it, if needed
-3. `POD_NAME` and `POD_NAMESPACE` environnement variables are now set by default, without values.
+3. The `POD_NAME` and `POD_NAMESPACE` environment variables are now set by default, without values.
   * It is no longer necessary to add them in values and so, it can be removed from user values.
 4. In _values_, **certResolvers** specific syntax has been reworked to align with Traefik Proxy syntax.
   * PR [#1214](https://github.com/traefik/traefik-helm-chart/pull/1214) contains a complete before / after example on how to update _values_
 5. Traefik Proxy 3.2 supports Gateway API v1.2
-  * The crds of this version comes with Gateway API CRD v1.2 of standard channel.
-  * CRDs needs to be updated, as documented in the README.
+  * The CRDs of this version comes with Gateway API CRD v1.2 of standard channel.
+  * The CRDs needs to be updated, as documented in the README.
   * It is recommended to check that other software using Gateway API on your cluster are compatible
 
-:information_source: A separate helm chart, just for CRDs, is actually considered for future release. See PR [#1123](https://github.com/traefik/traefik-helm-chart/pull/1223)
+:information_source: A separate helm chart, just for CRDs, is being considered for a future release. See PR [#1123](https://github.com/traefik/traefik-helm-chart/pull/1223)
 
 ### Default value changes
 
