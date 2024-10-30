@@ -95,7 +95,7 @@ deployment:
   # postStart:
   #   httpGet:
   #     path: /ping
-  #     port: 9000
+  #     port: 8080
   #     host: localhost
   #     scheme: HTTP
   # -- Set a runtimeClassName on pod
@@ -590,7 +590,7 @@ envFrom: []
 
 ports:
   traefik:
-    port: 9000
+    port: 8080
     # -- Use hostPort if set.
     hostPort:  # @schema type:[integer, null]; minimum:0
     # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
@@ -608,7 +608,7 @@ ports:
     expose:
       default: false
     # -- The exposed port for this service
-    exposedPort: 9000
+    exposedPort: 8080
     # -- The port protocol (TCP/UDP)
     protocol: TCP
   web:
