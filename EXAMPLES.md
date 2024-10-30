@@ -97,10 +97,10 @@ ingressRoute:
 The traefik admin port can be forwarded locally:
 
 ```bash
-kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 9000:9000
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 8080:8080
 ```
 
-This command makes the dashboard accessible on the url: http://127.0.0.1:9000/dashboard/
+This command makes the dashboard accessible on the url: http://127.0.0.1:8080/dashboard/
 
 # Publish and protect Traefik Dashboard with basic Auth
 
@@ -173,7 +173,7 @@ extraObjects:
       ports:
       - port: 8080
         name: traefik
-        targetPort: 9000
+        targetPort: 8080
         protocol: TCP
 
   - apiVersion: v1
@@ -305,7 +305,7 @@ extraObjects:
       config:
         type: HTTP
         httpHealthCheck:
-          port: 9000
+          port: 8080
           requestPath: /ping
     targetRef:
       group: ""
@@ -701,7 +701,7 @@ spec:
     app.kubernetes.io/name: traefik
     app.kubernetes.io/instance: traefik-traefik
   ports:
-  - port: 9000
+  - port: 8080
     name: "traefik"
     targetPort: traefik
     protocol: TCP
