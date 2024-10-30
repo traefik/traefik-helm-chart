@@ -9,13 +9,25 @@ Render CRDs file.
         {{- range $doc := regexSplit "\n---\n" ($scope.Files.Get $path) -1 }}
             {{- $crd :=  $doc | fromYaml -}}
             {{ with $crd }}
-                {{- set $crd.metadata.annotations "app.kubernetes.io/managed-by" "Helm" -}}
-                {{- set $crd.metadata.annotations "meta.helm.sh/release-name" .Release.Name -}}
+                {{- $labelsAndAnnotations :=
+                (dict "metadata" (dict
+                    "annotations" (dict
+                            "app.kubernetes.io/managed-by" "Helm"
+                            "meta.helm.sh/release-name" $scope.Release.Name
+                            "meta.helm.sh/release-namespace" $scope.Release.Namespace
+                    )
+                    "labels" (dict
+                        "app.kubernetes.io/managed-by" "Helm"
+                    )
+                ))
+                -}}
                 {{- if not $scope.Values.deleteOnUninstall -}}
-                    {{- $_ := set $crd.metadata.annotations "helm.sh/resource-policy" "keep" -}}
+                    {{- $_ := set $labelsAndAnnotations.metadata.annotations "helm.sh/resource-policy" "keep" -}}
                 {{- end }}
+                {{- $newCrd := merge $crd $labelsAndAnnotations }}
 ---
-{{ $crd | toYaml }}
+# source: {{ $path }}
+{{ $newCrd | toYaml }}
             {{- end }}
         {{- end }}
     {{- end }}

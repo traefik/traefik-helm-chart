@@ -2,10 +2,10 @@
 {{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/traefik/*.yaml") }}
 {{- end }}
 
-{{- if .Values.hub -}}
+{{- if eq (.Values.hub | toString) "true" -}}
 {{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/hub/*.yaml") }}
 {{- end }}
 
-{{- if .Values.gateway_api -}}
+{{- if eq (.Values.gateway_api | toString) "true" -}}
 {{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gateway_api/*.yaml") }}
 {{- end }}
