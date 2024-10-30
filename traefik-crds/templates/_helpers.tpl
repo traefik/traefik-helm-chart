@@ -9,6 +9,8 @@ Render CRDs file.
         {{- range $doc := regexSplit "\n---\n" ($scope.Files.Get $path) -1 }}
             {{- $crd :=  $doc | fromYaml -}}
             {{ with $crd }}
+                {{- set $crd.metadata.annotations "app.kubernetes.io/managed-by" "Helm" -}}
+                {{- set $crd.metadata.annotations "meta.helm.sh/release-name" .Release.Name -}}
                 {{- if not $scope.Values.deleteOnUninstall -}}
                     {{- $_ := set $crd.metadata.annotations "helm.sh/resource-policy" "keep" -}}
                 {{- end }}

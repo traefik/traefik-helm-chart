@@ -12,15 +12,21 @@
         "gateway_api": {
             "default": false,
             "type": [
-                "boolean",
-                "string"
+                "string",
+                "boolean"
+            ]
+        },
+        "global": {
+            "additionalProperties": true,
+            "type": [
+                "object"
             ]
         },
         "hub": {
             "default": false,
             "type": [
-                "boolean",
-                "string"
+                "string",
+                "boolean"
             ]
         },
         "traefik": {

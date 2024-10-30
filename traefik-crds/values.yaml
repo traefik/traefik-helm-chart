@@ -1,4 +1,5 @@
+global: # @schema type:[object]; additionalProperties: true
 traefik: false  # @schema type:[boolean]
-gateway_api: false  # @schema type:[boolean, string]; default: false
-hub: false  # @schema type:[boolean, string]; default: false
+gateway_api: false  # @schema type:[string, boolean]; default: false
+hub: false  # @schema type:[string, boolean]; default: false
 deleteOnUninstall: false  # @schema type:[boolean]
