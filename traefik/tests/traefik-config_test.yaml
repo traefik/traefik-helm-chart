@@ -101,7 +101,30 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
-
+  - it: should be possible to set statusAddress fields
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          statusAddress:
+            ip: 1.2.3.4
+            hostname: example.net
+            service:
+              name: foo
+              namespace: default
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.ip=1.2.3.4"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.hostname=example.net"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.name=foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.namespace=default"
   - it: should allow cross namespace services when specified in configuration
     set:
       providers:

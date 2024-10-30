@@ -1353,6 +1353,28 @@
                         },
                         "namespaces": {
                             "type": "array"
+                        },
+                        "statusAddress": {
+                            "properties": {
+                                "hostname": {
+                                    "type": "string"
+                                },
+                                "ip": {
+                                    "type": "string"
+                                },
+                                "service": {
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "namespace": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
                         }
                     },
                     "type": "object"

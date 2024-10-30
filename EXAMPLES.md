@@ -907,6 +907,8 @@ Once it's applied, whoami should be accessible on http://whoami.docker.localhost
 
 </details>
 
+:information_source: In this example, `Deployment` and `HTTPRoute` should be deployed in the same namespace as the Traefik Gateway: Chart namespace.
+
 # Use Kubernetes Gateway API with cert-manager
 
 One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:

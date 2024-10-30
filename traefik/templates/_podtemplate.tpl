@@ -514,6 +514,18 @@
           {{- with .Values.providers.kubernetesGateway }}
            {{- if .enabled }}
           - "--providers.kubernetesgateway"
+            {{- with .statusAddress }}
+             {{- with .ip }}
+          - "--providers.kubernetesgateway.statusaddress.ip={{ . }}"
+             {{- end }}
+             {{- with .hostname }}
+          - "--providers.kubernetesgateway.statusaddress.hostname={{ . }}"
+             {{- end }}
+             {{- with .service }}
+          - "--providers.kubernetesgateway.statusaddress.service.name={{ tpl .name $ }}"
+          - "--providers.kubernetesgateway.statusaddress.service.namespace={{ tpl .namespace $ }}"
+             {{- end }}
+            {{- end }}
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
             {{- end }}
