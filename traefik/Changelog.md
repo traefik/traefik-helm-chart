@@ -35,10 +35,12 @@ There are multiple breaking changes in this release:
   * It is no longer necessary to add them in values and so, it can be removed from user values.
 4. In _values_, **certResolvers** specific syntax has been reworked to align with Traefik Proxy syntax.
   * PR [#1214](https://github.com/traefik/traefik-helm-chart/pull/1214) contains a complete before / after example on how to update _values_
-5. Traefik Proxy 3.2 supports Gateway API v1.2
-  * The CRDs of this version comes with Gateway API CRD v1.2 of standard channel.
-  * The CRDs needs to be updated, as documented in the README.
+5. Traefik Proxy 3.2 supports Gateway API v1.2 (standard channel)
   * It is recommended to check that other software using Gateway API on your cluster are compatible
+  * There is a breaking change on CRD upgrade in this version, it _may_ do not work out of the box
+  * See [release notes](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.2.0) of gateway API v1.2 on how to upgrade their CRDs and avoid issues about invalid values on v1alpha2 version
+
+The CRDs needs to be updated, as documented in the README.
 
 :information_source: A separate helm chart, just for CRDs, is being considered for a future release. See PR [#1123](https://github.com/traefik/traefik-helm-chart/pull/1223)
 
