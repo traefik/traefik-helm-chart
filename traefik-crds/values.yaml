@@ -1,4 +1,4 @@
-global: # @schema type:[object, null]; additionalProperties: true
+global:  # @schema type:[object, null]; additionalProperties: true
 traefik: false  # @schema type:[boolean]
 gateway_api: false  # @schema type:[string, boolean]; default: false
 hub: false  # @schema type:[string, boolean]; default: false
