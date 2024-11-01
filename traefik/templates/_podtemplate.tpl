@@ -599,7 +599,7 @@
               {{- if (semverCompare "<3.1.3-0" $version) }}
                 {{- fail "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+" -}}
               {{- end }}
-          - "--entryPoints.name.allowACMEByPass=true"
+          - "--entryPoints.{{ $entrypoint }}.allowACMEByPass=true"
             {{- end }}
             {{- if $config.forwardedHeaders }}
               {{- if $config.forwardedHeaders.trustedIPs }}
