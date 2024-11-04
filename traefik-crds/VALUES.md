@@ -30,6 +30,7 @@ Kubernetes: `>=1.22.0-0`
 |-----|------|---------|-------------|
 | deleteOnUninstall | bool | `false` |  |
 | gateway_api | bool | `false` |  |
+| global | string | `nil` |  |
 | hub | bool | `false` |  |
 | traefik | bool | `false` |  |
 
