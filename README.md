@@ -81,8 +81,6 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
 
-:information_source: With Helm v3, CRDs created by this chart can not be updated, cf. the [Helm Documentation on CRDs](https://helm.sh/docs/chart_best_practices/custom_resource_definitions).
-
 :warning: Please read carefully release notes of this chart before upgrading CRDs.
 
 ```bash
@@ -90,13 +88,42 @@ One can check what has changed in the [Changelog](./traefik/Changelog.md).
 helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
-# Update CRDs (Traefik Proxy v3 CRDs)
-kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik-crds/
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
 ```
 
+If you opt-out CRDs management system, you can still apply it manually:
+
+```bash
+# Update CRDs (Traefik Proxy v3 CRDs)
+kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik-crds/
+```
+
 New major version indicates that there is an incompatible breaking change.
+
+### Upgrade to 34.X
+
+Starting from this release, the new traefik helm CRD management which works around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations) system is enabled by default:
+
+```bash
+# Update repository
+helm repo update
+# See current Chart & Traefik version
+helm search repo traefik/traefik
+# Change CRDs ownership
+kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik"}]'
+# If you use gateway API, you might also want to change Gateway API ownership
+ kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik"}]'
+# Upgrade Traefik
+helm upgrade traefik traefik/traefik
+```
+
+If you still want to manage CRDs your self, it can be opt-out:
+
+```bash
+# Upgrade Traefik and skip all CRDs installation
+helm upgrade traefik traefik/traefik --set traefik-crds.traefik=false --set traefik-crds.hub=false --set traefik-crds.gateway_api=false 
+```
 
 ### Upgrade up to 27.X
 
