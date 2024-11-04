@@ -687,7 +687,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.name.allowACMEByPass=true"
+          content: "--entryPoints.websecure.allowACMEByPass=true"
   - it: should fail when setting ACME bypass with Proxy v3.1.0
     set:
       image:
