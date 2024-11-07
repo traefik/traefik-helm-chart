@@ -105,6 +105,17 @@ rules:
       - update
   {{- end -}}
   {{- if .Values.providers.kubernetesCRD.enabled }}
+   {{- if not .Values.providers.kubernetesIngress.enabled }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingressclasses
+    verbs:
+      - get
+      - list
+      - watch
+   {{- end }}
   - apiGroups:
       - traefik.io
     resources:
