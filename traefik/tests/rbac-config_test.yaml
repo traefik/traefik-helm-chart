@@ -124,6 +124,25 @@ tests:
               verbs:
                 - update
         template: rbac/clusterrole.yaml
+  - it: ClusterRole should be able to read ingressclass when only kubernetesCRD is enabled
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: false
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+            verbs:
+              - get
+              - list
+              - watch
+        template: rbac/clusterrole.yaml
   - it: ClusterRole should not be able to read CRDs when kubernetesCRD is disabled
     set:
       providers:
