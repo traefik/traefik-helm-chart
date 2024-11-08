@@ -460,12 +460,22 @@ ports:
       trustedIPs: *DOTrustedIPs
 ```
 
-# Enable plugin storage
+# Using plugins
 
-This chart follows common security practices: it runs as non root with a readonly root filesystem.
-When enabling a plugin which needs storage, you have to add it to the deployment.
+This chart follows common security practices: it runs as non-root with a readonly root filesystem.
+When enabling a plugin, this Chart provides by default an `emptyDir` for plugin storage.
 
-Here is a simple example with crowdsec. You may want to replace with your plugin or see complete exemple on crowdsec [here](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/examples/kubernetes/README.md).
+Here is an example with [crowdsec](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/examples/kubernetes/README.md) plugin:
+
+```yaml
+experimental:
+  plugins:
+    demo:
+      moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+      version: v1.3.5
+```
+
+When persistence is needed, this `emptyDir` can be replaced with a PVC:
 
 ```yaml
 deployment:
@@ -476,7 +486,7 @@ additionalVolumeMounts:
   mountPath: /plugins-storage
 additionalArguments:
 - "--experimental.plugins.bouncer.moduleName=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-- "--experimental.plugins.bouncer.version=v1.1.9"
+- "--experimental.plugins.bouncer.version=v1.3.5"
 ```
 
 # Use Traefik native Let's Encrypt integration, without cert-manager
