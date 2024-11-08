@@ -5,9 +5,7 @@
     "description": "The Cloud Native Application Proxy",
     "properties": {
         "deleteOnUninstall": {
-            "type": [
-                "boolean"
-            ]
+            "type": "boolean"
         },
         "gateway_api": {
             "default": false,
@@ -31,9 +29,7 @@
             ]
         },
         "traefik": {
-            "type": [
-                "boolean"
-            ]
+            "type": "boolean"
         }
     },
     "title": "Traefik CRDs Helm Chart",
