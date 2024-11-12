@@ -156,7 +156,7 @@
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
-          {{- if gt (len .Values.experimental.plugins) 0 }}
+          {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
@@ -812,7 +812,7 @@
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
-        {{- if gt (len .Values.experimental.plugins) 0 }}
+        {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
         - name: plugins
           emptyDir: {}
         {{- end }}

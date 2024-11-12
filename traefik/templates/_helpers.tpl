@@ -176,3 +176,13 @@ Key: {{ $cert.Key | b64enc }}
       {{ printf "- \"%s\"\n" . }}
     {{- end -}}
 {{- end -}}
+
+{{- define "traefik.hasPluginsVolume" -}}
+    {{- $found := false -}}
+    {{- range . -}}
+       {{- if eq .name "plugins" -}}
+           {{ $found = true }}
+       {{- end -}}
+    {{- end -}}
+    {{- $found -}}
+{{- end -}}
