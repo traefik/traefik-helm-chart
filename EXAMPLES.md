@@ -475,18 +475,28 @@ experimental:
       version: v1.3.5
 ```
 
-When persistence is needed, this `emptyDir` can be replaced with a PVC:
+When persistence is needed, this `emptyDir` can be replaced with a PVC by adding:
 
 ```yaml
 deployment:
   additionalVolumes:
   - name: plugins
+    persistentVolumeClaim:
+      claimName: my-plugins-vol
 additionalVolumeMounts:
 - name: plugins
   mountPath: /plugins-storage
-additionalArguments:
-- "--experimental.plugins.bouncer.moduleName=github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin"
-- "--experimental.plugins.bouncer.version=v1.3.5"
+extraObjects:
+  - kind: PersistentVolumeClaim
+    apiVersion: v1
+    metadata:
+      name: my-plugins-vol
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 1Gi
 ```
 
 # Use Traefik native Let's Encrypt integration, without cert-manager

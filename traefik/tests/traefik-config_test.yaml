@@ -238,6 +238,41 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.plugins.demo.version=v0.2.1"
 
+  - it: should be possible to configure a customized plugin storage
+    set:
+      experimental:
+        plugins:
+          demo:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+      deployment:
+        additionalVolumes:
+          - name: plugins
+            hostPath:
+              path: /data/
+              type: Directory
+      additionalVolumeMounts:
+        - name: plugins
+          mountPath: /plugins-storage
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[2]
+          value:
+            hostPath:
+              path: /data/
+              type: Directory
+            name: plugins
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: plugins
+            mountPath: "/plugins-storage"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.version=v0.2.1"
   - it: should fail gracefully when using old syntax
     set:
       experimental:
