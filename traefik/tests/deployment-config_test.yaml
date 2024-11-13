@@ -194,7 +194,6 @@ tests:
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
-            - --experimental.abortonpluginfailure=false
             - --providers.kubernetescrd
             - --providers.kubernetescrd.allowEmptyServices=true
             - --providers.kubernetesingress
@@ -202,6 +201,16 @@ tests:
             - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik
             - --entryPoints.websecure.http.tls=true
             - --log.level=INFO
+  - it: should have abortOnPluginFailure, when enabled
+    chart:
+      appVersion: 3.3.0
+    set:
+      experimental:
+        abortOnPluginFailure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.abortonpluginfailure=true"
   - it: should have http redirections enabled, when enabled with redirectTo
     set:
       ports:
