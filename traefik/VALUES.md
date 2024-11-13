@@ -62,6 +62,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
 | env | list | See _values.yaml_ | Additional Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
+| experimental.abortOnPluginFailure | bool | `false` | Defines whether all plugins must be loaded successfully for Traefik to start |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.plugins | object | `{}` | Enable traefik experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |

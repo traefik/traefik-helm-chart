@@ -194,6 +194,7 @@ tests:
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
+            - --experimental.abortonpluginfailure=false
             - --providers.kubernetescrd
             - --providers.kubernetescrd.allowEmptyServices=true
             - --providers.kubernetesingress
