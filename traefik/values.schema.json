@@ -1533,6 +1533,9 @@
             "properties": {
                 "name": {
                     "type": "string"
+                },
+		"automountServiceAccountToken": {
+                    "type": "boolean"
                 }
             },
             "type": "object"

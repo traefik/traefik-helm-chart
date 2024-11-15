@@ -838,6 +838,10 @@ serviceAccount:  # @schema additionalProperties: false
   # If not set, a service account is created automatically using the fullname template
   name: ""
 
+  # Automounting the service account is disabled by default on the service account itself
+  # setting this to false disables automounting of the service account in the PodSpec in the Deployment
+  automountServiceAccountToken: true
+
 # -- Additional serviceAccount annotations (e.g. for oidc authentication)
 serviceAccountAnnotations: {}
 
