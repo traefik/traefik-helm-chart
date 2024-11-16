@@ -464,6 +464,8 @@
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
           - "--providers.kubernetescrd.allowEmptyServices=true"
+           {{- else }}
+          - "--providers.kubernetescrd.allowEmptyServices=false"
            {{- end }}
            {{- if and .Values.rbac.namespaced (semverCompare ">=3.1.2-0" $version) }}
           - "--providers.kubernetescrd.disableClusterScopeResources=true"
@@ -479,6 +481,8 @@
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.allowEmptyServices }}
           - "--providers.kubernetesingress.allowEmptyServices=true"
+           {{- else }}
+          - "--providers.kubernetesingress.allowEmptyServices=false"
            {{- end }}
            {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
