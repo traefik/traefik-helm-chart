@@ -462,10 +462,10 @@
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
            {{- end }}
-           {{- if .Values.providers.kubernetesCRD.allowEmptyServices }}
-          - "--providers.kubernetescrd.allowEmptyServices=true"
-           {{- else }}
-          - "--providers.kubernetescrd.allowEmptyServices=false"
+           {{- if ne .Values.providers.kubernetesCRD.allowEmptyServices nil }}
+            {{- with .Values.providers.kubernetesCRD.allowEmptyServices | toString }}
+          - "--providers.kubernetescrd.allowEmptyServices={{ . }}"
+            {{- end }}
            {{- end }}
            {{- if and .Values.rbac.namespaced (semverCompare ">=3.1.2-0" $version) }}
           - "--providers.kubernetescrd.disableClusterScopeResources=true"
@@ -479,10 +479,10 @@
            {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
            {{- end }}
-           {{- if .Values.providers.kubernetesIngress.allowEmptyServices }}
-          - "--providers.kubernetesingress.allowEmptyServices=true"
-           {{- else }}
-          - "--providers.kubernetesingress.allowEmptyServices=false"
+           {{- if ne .Values.providers.kubernetesIngress.allowEmptyServices nil }}
+            {{- with .Values.providers.kubernetesIngress.allowEmptyServices | toString }}
+          - "--providers.kubernetesingress.allowEmptyServices={{ . }}"
+            {{- end }}
            {{- end }}
            {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
