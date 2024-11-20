@@ -134,11 +134,13 @@ Traefik hub is based on v3.1 (v3.0 before v3.3.1) of traefik proxy, so this is a
 based on semverCompare
 */}}
 {{- if $.Values.hub.token -}}
-{{ if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag)) (semverCompare "<v3.3.2-0" $.Values.image.tag) -}}
+ {{- if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag)) (semverCompare "<v3.3.2-0" $.Values.image.tag) -}}
 v3.0
-{{- else -}}
+ {{- else if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag)) (semverCompare "<3.7.0-0" $.Values.image.tag) -}}
 v3.1
-{{- end -}}
+ {{- else -}}
+v3.2
+ {{- end -}}
 {{- else -}}
 {{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" | replace "experimental-" "" }}
 {{- end -}}
