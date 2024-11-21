@@ -448,7 +448,7 @@
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
           {{- end }}
-          {{- if and (semverCompare ">=3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+          {{- if and (semverCompare ">=3.2.1-0" $version) (.Values.experimental.abortOnPluginFailure)}}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
