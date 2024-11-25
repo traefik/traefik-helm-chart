@@ -643,7 +643,7 @@ tests:
     asserts:
       - isNull:
           path: spec.template.spec.containers[0].runtimeClassName
-  - it: should set runtimeClassName when configured
+  - it: should set defaultRuleSyntax when configured
     set:
       core:
         defaultRuleSyntax: v2
@@ -709,3 +709,39 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "level"
+  - it: should set allowEmptyServices for kubernetesCRD
+    set:
+      providers:
+        kubernetesCRD:
+          allowEmptyServices: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowEmptyServices=true"
+  - it: should unset allowEmptyServices for kubernetesCRD
+    set:
+      providers:
+        kubernetesCRD:
+          allowEmptyServices: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.allowEmptyServices=false"
+  - it: should set allowEmptyServices for kubernetesIngress
+    set:
+      providers:
+        kubernetesIngress:
+          allowEmptyServices: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.allowEmptyServices=true"
+  - it: should unset allowEmptyServices for kubernetesIngress
+    set:
+      providers:
+        kubernetesIngress:
+          allowEmptyServices: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.allowEmptyServices=false"
