@@ -4,22 +4,22 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.14.0
-  name: apiaccesses.hub.traefik.io
+  name: managedsubscriptions.hub.traefik.io
 spec:
   group: hub.traefik.io
   names:
-    kind: APIAccess
-    listKind: APIAccessList
-    plural: apiaccesses
-    singular: apiaccess
+    kind: ManagedSubscription
+    listKind: ManagedSubscriptionList
+    plural: managedsubscriptions
+    singular: managedsubscription
   scope: Namespaced
   versions:
-  - deprecated: true
-    deprecationWarning: APIAccess is deprecated in favor of APICatalogItems and ManagedSubscription
-    name: v1alpha1
+  - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: APIAccess defines who can access to a set of APIs.
+        description: |-
+          ManagedSubscription defines a Subscription managed by the API manager as the result of a pre-negotiation with its
+          API consumers. This subscription grant consuming access to a set of APIs to a set of Applications.
         properties:
           apiVersion:
             description: |-
@@ -39,12 +39,12 @@ spec:
           metadata:
             type: object
           spec:
-            description: The desired behavior of this APIAccess.
+            description: The desired behavior of this ManagedSubscription.
             properties:
               apiBundles:
                 description: |-
-                  APIBundles defines a set of APIBundle that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same APIBundles.
+                  APIBundles defines a set of APIBundle that will be accessible.
+                  Multiple ManagedSubscriptions can select the same APIBundles.
                 items:
                   description: APIBundleReference references an APIBundle.
                   properties:
@@ -72,8 +72,8 @@ spec:
                 type: object
               apiSelector:
                 description: |-
-                  APISelector selects the APIs that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same set of APIs.
+                  APISelector selects the APIs that will be accessible.
+                  Multiple ManagedSubscriptions can select the same set of APIs.
                   This field is optional and follows standard label selector semantics.
                   An empty APISelector matches any API.
                 properties:
@@ -120,8 +120,8 @@ spec:
                 x-kubernetes-map-type: atomic
               apis:
                 description: |-
-                  APIs defines a set of APIs that will be accessible to the configured audience.
-                  Multiple APIAccesses can select the same APIs.
+                  APIs defines a set of APIs that will be accessible.
+                  Multiple ManagedSubscriptions can select the same APIs.
                   When combined with APISelector, this set of APIs is appended to the matching APIs.
                 items:
                   description: APIReference references an API.
@@ -138,16 +138,29 @@ spec:
                 x-kubernetes-validations:
                 - message: duplicated apis
                   rule: self.all(x, self.exists_one(y, x.name == y.name))
-              everyone:
-                description: Everyone indicates that all users will have access to
-                  the selected APIs.
-                type: boolean
-              groups:
-                description: Groups are the consumer groups that will gain access
-                  to the selected APIs.
+              applications:
+                description: |-
+                  Applications references the Applications that will gain access to the specified APIs.
+                  Multiple ManagedSubscriptions can select the same AppID.
                 items:
-                  type: string
+                  description: ApplicationReference references an Application.
+                  properties:
+                    appId:
+                      description: |-
+                        AppID is the public identifier of the application.
+                        In the case of OIDC, it corresponds to the clientId.
+                      maxLength: 253
+                      type: string
+                  required:
+                  - appId
+                  type: object
+                maxItems: 100
+                minItems: 1
                 type: array
+              claims:
+                description: Claims specifies an expression that validate claims in
+                  order to authorize the request.
+                type: string
               operationFilter:
                 description: |-
                   OperationFilter specifies the allowed operations on APIs and APIVersions.
@@ -163,21 +176,22 @@ spec:
                     type: array
                 type: object
               weight:
-                description: Weight specifies the evaluation order of the plan.
+                description: |-
+                  Weight specifies the evaluation order of the APIPlan.
+                  When multiple ManagedSubscriptions targets the same API and Application with different APIPlan,
+                  the APIPlan with the highest weight will be enforced. If weights are equal, alphabetical order is used.
                 type: integer
                 x-kubernetes-validations:
                 - message: must be a positive number
                   rule: self >= 0
+            required:
+            - applications
             type: object
-            x-kubernetes-validations:
-            - message: groups and everyone are mutually exclusive
-              rule: '(has(self.everyone) && has(self.groups)) ? !(self.everyone &&
-                self.groups.size() > 0) : true'
           status:
-            description: The current status of this APIAccess.
+            description: The current status of this ManagedSubscription.
             properties:
               hash:
-                description: Hash is a hash representing the APIAccess.
+                description: Hash is a hash representing the ManagedSubscription.
                 type: string
               syncedAt:
                 format: date-time
