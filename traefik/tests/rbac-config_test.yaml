@@ -869,6 +869,8 @@ tests:
               - apiversions
               - apibundles
               - apiplans
+              - apicatalogitems
+              - managedsubscriptions
             verbs:
               - list
               - watch
