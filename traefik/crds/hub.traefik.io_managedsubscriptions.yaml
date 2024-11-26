@@ -157,6 +157,10 @@ spec:
                 maxItems: 100
                 minItems: 1
                 type: array
+              claims:
+                description: Claims specifies an expression that validate claims in
+                  order to authorize the request.
+                type: string
               operationFilter:
                 description: |-
                   OperationFilter specifies the allowed operations on APIs and APIVersions.

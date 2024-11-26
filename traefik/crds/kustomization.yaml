@@ -14,6 +14,7 @@ resources:
   - hub.traefik.io_apiversions.yaml
   - hub.traefik.io_apiplans.yaml
   - hub.traefik.io_apibundles.yaml
+  - hub.traefik.io_aiservices.yaml
   - traefik.io_ingressroutes.yaml
   - traefik.io_ingressroutetcps.yaml
   - traefik.io_ingressrouteudps.yaml

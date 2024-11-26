@@ -871,6 +871,7 @@ tests:
               - apiplans
               - apicatalogitems
               - managedsubscriptions
+              - aiservices
             verbs:
               - list
               - watch
