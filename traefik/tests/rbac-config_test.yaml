@@ -736,7 +736,7 @@ tests:
               - list
               - watch
 
-  - it: should provide expected role rbac when k8s gw api is enabled >=v3.2.0
+  - it: should provide expected role rbac when k8s gw api is enabled for Proxy >=v3.2.0
     set:
       image:
         tag: v3.2.0-rc1
@@ -794,6 +794,67 @@ tests:
               - get
               - list
               - watch
+  - it: should provide expected role rbac when k8s gw api is enabled for Hub >=v3.7.0
+    set:
+      image:
+        tag: v3.7.0
+      hub:
+        token: "xxx"
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies/status
+              - gatewayclasses/status
+              - gateways/status
+              - grpcroutes/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies
+              - gatewayclasses
+              - gateways
+              - grpcroutes
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+              - secrets
+              - services
+              - configmaps
+            verbs:
+              - get
+              - list
+              - watch
+
   - it: should contain additional RBACS for hub API gateway
     set:
       image:
@@ -1080,7 +1141,7 @@ tests:
               - list
               - get
               - watch
-  - it: should provide expected RBACS for version < v3.1
+  - it: should provide expected RBACS for Proxy version < v3.1
     set:
       image:
         tag: v3.0.1
@@ -1109,4 +1170,67 @@ tests:
             verbs:
               - list
               - get
+              - watch
+  - it: should provide expected RBACS for Hub version <3.3.2
+    set:
+      image:
+        tag: v3.3.0
+      hub:
+        token: "xxx"
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - endpoints
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
+              - get
+              - watch
+  - it: should provide expected RBACS for Hub version <3.7.0
+    set:
+      image:
+        tag: v3.6.0
+      hub:
+        token: "xxx"
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - endpoints
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - discovery.k8s.io
+            resources:
+              - endpointslices
+            verbs:
+              - list
               - watch
