@@ -245,6 +245,9 @@ rules:
       - apiversions
       - apibundles
       - apiplans
+      - apicatalogitems
+      - managedsubscriptions
+      - aiservices
     verbs:
       - list
       - watch
