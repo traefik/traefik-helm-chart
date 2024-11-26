@@ -1203,7 +1203,7 @@ tests:
               - list
               - get
               - watch
-  - it: should provide expected RBACS for Hub version <3.7.0
+  - it: should provide expected RBACS for Hub version >3.3.2 and <3.7.0
     set:
       image:
         tag: v3.6.0
