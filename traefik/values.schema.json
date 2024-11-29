@@ -149,6 +149,9 @@
         },
         "experimental": {
             "properties": {
+                "abortOnPluginFailure": {
+                    "type": "boolean"
+                },
                 "kubernetesGateway": {
                     "properties": {
                         "enabled": {

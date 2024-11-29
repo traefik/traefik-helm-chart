@@ -120,6 +120,8 @@ core:  # @schema additionalProperties: false
 
 # Traefik experimental features
 experimental:
+  # -- Defines whether all plugins must be loaded successfully for Traefik to start
+  abortOnPluginFailure: false
   # -- Enable traefik experimental plugins
   plugins: {}
   # demo:

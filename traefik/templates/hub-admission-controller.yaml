@@ -115,6 +115,48 @@ webhooks:
           - v1alpha1
         resources:
           - apiaccesses
+  - name: hub-agent.traefik.catalog-item
+    clientConfig:
+      service:
+        name: admission
+        namespace: {{ template "traefik.namespace" . }}
+        path: /api-catalog-item
+      caBundle: {{ $cert.Cert }}
+    sideEffects: None
+    admissionReviewVersions:
+      - v1
+    rules:
+      - operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        apiGroups:
+          - hub.traefik.io
+        apiVersions:
+          - v1alpha1
+        resources:
+          - apicatalogitems
+  - name: hub-agent.traefik.managed-subscription
+    clientConfig:
+      service:
+        name: admission
+        namespace: {{ template "traefik.namespace" . }}
+        path: /managed-subscription
+      caBundle: {{ $cert.Cert }}
+    sideEffects: None
+    admissionReviewVersions:
+      - v1
+    rules:
+      - operations:
+          - CREATE
+          - UPDATE
+          - DELETE
+        apiGroups:
+          - hub.traefik.io
+        apiVersions:
+          - v1alpha1
+        resources:
+          - managedsubscriptions
   - name: hub-agent.traefik.plan
     clientConfig:
       service:

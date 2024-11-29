@@ -201,6 +201,14 @@ tests:
             - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik
             - --entryPoints.websecure.http.tls=true
             - --log.level=INFO
+  - it: should have abortOnPluginFailure, when enabled
+    set:
+      experimental:
+        abortOnPluginFailure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.abortonpluginfailure=true"
   - it: should have http redirections enabled, when enabled with redirectTo
     set:
       ports:
