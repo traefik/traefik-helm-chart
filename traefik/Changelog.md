@@ -1,5 +1,48 @@
 # Change Log
 
+## 33.1.0  ![AppVersion: v3.2.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-11-26
+
+* fix: :bug: support specifying plugins storage
+* fix(Traefik): support for entrypoint option on allowACMEByPass
+* fix(Traefik Proxy): allowEmptyServices not disabled when set to false
+* fix(Traefik Hub): compatibility with Traefik Proxy v3.2
+* fix(KubernetesCRD): 🐛 IngressClass should be readable even when kubernetesIngress is disabled
+* feat(deps): update traefik docker tag to v3.2.1
+* feat(Traefik Proxy): add `abortOnPluginFailure` field
+* feat(Traefik Hub): add APICatalogItem and ManagedSubscription support
+* docs: 📚️ fix typos in values and readme
+* chore(release): 🚀 publish v33.1.0-rc1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index be89b00..9b4379c 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -120,6 +120,8 @@ core:  # @schema additionalProperties: false
+ 
+ # Traefik experimental features
+ experimental:
++  # -- Defines whether all plugins must be loaded successfully for Traefik to start
++  abortOnPluginFailure: false
+   # -- Enable traefik experimental plugins
+   plugins: {}
+   # demo:
+@@ -807,7 +809,7 @@ persistence:
+ certificatesResolvers: {}
+ 
+ # -- If hostNetwork is true, runs traefik in the host network namespace
+-# To prevent unschedulabel pods due to port collisions, if hostNetwork=true
++# To prevent unschedulable pods due to port collisions, if hostNetwork=true
+ # and replicas>1, a pod anti-affinity is recommended and will be set if the
+ # affinity is left as default.
+ hostNetwork: false
+```
+
+
 ## 33.1.0-rc1  ![AppVersion: v3.2.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-11-26
