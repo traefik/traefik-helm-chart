@@ -9,6 +9,18 @@ tests:
     set:
       tracing:
         addInternals: true
+        sampleRate: 0.5
+        serviceName: my-service-name
+        globalAttributes:
+          attr1: foo
+          attr2: bar
+        capturedRequestHeaders:
+          - X-CustomHeader
+        capturedResponseHeaders:
+          - X-CustomHeader
+        safeQueryParams:
+          - bar
+          - buz
         otlp:
           enabled: true
           http:
@@ -38,6 +50,27 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.addinternals"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.sampleRate=0.5"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.serviceName=my-service-name"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.globalAttributes.attr1=foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.globalAttributes.attr2=bar"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.capturedRequestHeaders[0]=X-CustomHeader"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.capturedResponseHeaders[0]=X-CustomHeader"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.safeQueryParams=bar,buz"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.otlp.http=true"

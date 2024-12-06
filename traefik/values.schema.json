@@ -1568,6 +1568,22 @@
                 "addInternals": {
                     "type": "boolean"
                 },
+                "capturedRequestHeaders": {
+                    "type": [
+                        "array"
+                    ]
+                },
+                "capturedResponseHeaders": {
+                    "type": [
+                        "array"
+                    ]
+                },
+                "globalAttributes": {
+                    "properties": {},
+                    "type": [
+                        "object"
+                    ]
+                },
                 "otlp": {
                     "properties": {
                         "enabled": {
@@ -1638,6 +1654,25 @@
                         }
                     },
                     "type": "object"
+                },
+                "safeQueryParams": {
+                    "type": [
+                        "array"
+                    ]
+                },
+                "sampleRate": {
+                    "maximum": 1,
+                    "minimum": 0,
+                    "type": [
+                        "number",
+                        "null"
+                    ]
+                },
+                "serviceName": {
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 }
             },
             "type": "object"
