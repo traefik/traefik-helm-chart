@@ -8,12 +8,12 @@ tests:
         tag: v2.11.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3.1"
-  - it: should pass when trying to use this Chart with Traefik Proxy v3.1 experimental
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3"
+  - it: should pass when trying to use this Chart with Traefik Proxy v3 experimental
     set:
       image:
         repository: traefik/traefik
-        tag: experimental-v3.1
+        tag: experimental-v3.0
     asserts:
       - notFailedTemplate: {}
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
@@ -36,7 +36,7 @@ tests:
   - it: should fail when using kubernetesGateway without experimental flag on traefik < 3.1
     set:
       image:
-        tag: v3.1.0-rc2
+        tag: v3.0.0
       providers:
         kubernetesGateway:
           enabled: true

@@ -1,7 +1,7 @@
 {{- $version := include "imageVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
-  {{- if (semverCompare "<v3.1.0-0" $version) }}
-    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3.1" -}}
+  {{- if (semverCompare "<v3.0.0-0" $version) }}
+    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
   {{- end }}
 {{- end }}
 
@@ -34,4 +34,8 @@
 
 {{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
   {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
+  {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
 {{- end }}
