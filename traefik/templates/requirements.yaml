@@ -31,3 +31,7 @@
     {{- fail "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider." }}
   {{- end }}
 {{- end }}
+
+{{- if and (semverCompare "<3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+  {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
+{{- end }}
