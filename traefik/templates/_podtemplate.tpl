@@ -384,30 +384,29 @@
           {{- end }}
 
           {{- with .Values.tracing }}
-          {{- with .sampleRate }}
+            {{- with .sampleRate }}
           - "--tracing.sampleRate={{ . }}"
-          {{- end }}
+            {{- end }}
 
-          {{- with .serviceName }}
+            {{- with .serviceName }}
           - "--tracing.serviceName={{ . }}"
-          {{- end }}
+            {{- end }}
 
-          {{- range $name, $value := .globalAttributes }}
+            {{- range $name, $value := .globalAttributes }}
           - "--tracing.globalAttributes.{{ $name }}={{ $value }}"
-          {{- end }}
+            {{- end }}
 
-          {{- range $index, $value := .capturedRequestHeaders }}
+            {{- range $index, $value := .capturedRequestHeaders }}
           - "--tracing.capturedRequestHeaders[{{ $index }}]={{ $value }}"
-          {{- end }}
+            {{- end }}
 
-          {{- range $index, $value := .capturedResponseHeaders }}
+            {{- range $index, $value := .capturedResponseHeaders }}
           - "--tracing.capturedResponseHeaders[{{ $index }}]={{ $value }}"
-          {{- end }}
+            {{- end }}
 
-          {{- if gt (len .safeQueryParams) 0 }}
-
+            {{- if gt (len .safeQueryParams) 0 }}
           - "--tracing.safeQueryParams={{- .safeQueryParams | join "," -}}"
-          {{- end }}
+            {{- end }}
 
           {{- end }}
 
