@@ -1569,20 +1569,14 @@
                     "type": "boolean"
                 },
                 "capturedRequestHeaders": {
-                    "type": [
-                        "array"
-                    ]
+                    "type": "array"
                 },
                 "capturedResponseHeaders": {
-                    "type": [
-                        "array"
-                    ]
+                    "type": "array"
                 },
                 "globalAttributes": {
                     "properties": {},
-                    "type": [
-                        "object"
-                    ]
+                    "type": "object"
                 },
                 "otlp": {
                     "properties": {
@@ -1656,9 +1650,7 @@
                     "type": "object"
                 },
                 "safeQueryParams": {
-                    "type": [
-                        "array"
-                    ]
+                    "type": "array"
                 },
                 "sampleRate": {
                     "maximum": 1,
