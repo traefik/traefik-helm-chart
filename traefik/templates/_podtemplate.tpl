@@ -404,7 +404,7 @@
           - "--tracing.capturedResponseHeaders[{{ $index }}]={{ $value }}"
             {{- end }}
 
-            {{- if gt (len .safeQueryParams) 0 }}
+            {{- if .safeQueryParams }}
           - "--tracing.safeQueryParams={{- .safeQueryParams | join "," -}}"
             {{- end }}
 

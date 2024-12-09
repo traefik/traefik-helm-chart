@@ -1,7 +1,7 @@
 {{- $version := include "imageVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
   {{- if (semverCompare "<v3.1.0-0" $version) }}
-    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
+    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3.1" -}}
   {{- end }}
 {{- end }}
 
