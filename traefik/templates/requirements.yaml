@@ -35,3 +35,7 @@
 {{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
   {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
 {{- end }}
+
+{{- if and (semverCompare "<3.2.0-0" $version) (.Values.providers.kubernetesGateway.nativeLBByDefault)}}
+  {{- fail "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0" }}
+{{- end }}
