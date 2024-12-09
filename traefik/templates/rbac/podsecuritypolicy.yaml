@@ -1,5 +1,5 @@
 {{- if .Values.podSecurityPolicy.enabled }}
-{{- if semverCompare ">=1.25.0-0" .Capabilities.KubeVersion.Version }}
+{{- if semverCompare ">=v1.25.0-0" .Capabilities.KubeVersion.Version }}
   {{- fail "ERROR: PodSecurityPolicy has been removed in Kubernetes v1.25+" }}
 {{- end }}
 ---
