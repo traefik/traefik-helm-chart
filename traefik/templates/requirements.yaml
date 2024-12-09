@@ -1,7 +1,7 @@
 {{- $version := include "imageVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
-  {{- if (semverCompare "<3.1.0-0" $version) }}
-    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3.1" -}}
+  {{- if (semverCompare "<v3.1.0-0" $version) }}
+    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
   {{- end }}
 {{- end }}
 
@@ -13,7 +13,7 @@
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
 
-{{- if and (.Values.providers.kubernetesGateway).enabled (and (semverCompare "<3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
+{{- if and (.Values.providers.kubernetesGateway).enabled (and (semverCompare "<v3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
   {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
 
@@ -30,4 +30,8 @@
   {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) }}
     {{- fail "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider." }}
   {{- end }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+  {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
 {{- end }}
