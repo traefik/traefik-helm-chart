@@ -1,5 +1,5 @@
 {{/* check helm version */}}
-{{- if (semverCompare "<v3.9.0" (.Capabilities.HelmVersion.Version | default "v3.0.0")) -}}
+{{- if (semverCompare "<3.9.0" (.Capabilities.HelmVersion.Version | default "v3.0.0")) -}}
     {{- fail "ERROR: Helm >= 3.9.0 is required" -}}
 {{- end -}}
 

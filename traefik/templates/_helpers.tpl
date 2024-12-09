@@ -138,7 +138,7 @@ based on semverCompare
  {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag) -}}
     {{- if semverCompare "<v3.3.2-0" $.Values.image.tag -}}
         {{ $hubVersion = "v3.0" }}
-    {{- else if semverCompare "<3.7.0-0" $.Values.image.tag -}}
+    {{- else if semverCompare "<v3.7.0-0" $.Values.image.tag -}}
         {{ $hubVersion = "v3.1" }}
     {{- end -}}
  {{- end -}}
