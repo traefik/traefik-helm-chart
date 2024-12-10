@@ -533,6 +533,9 @@
           - "--providers.kubernetesgateway.statusaddress.service.namespace={{ tpl .namespace $ }}"
              {{- end }}
             {{- end }}
+            {{- if .nativeLBByDefault }}
+          - "--providers.kubernetesgateway.nativeLBByDefault=true"
+            {{- end }}
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
             {{- end }}
