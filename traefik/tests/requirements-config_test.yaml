@@ -119,3 +119,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0."
+  - it: shouldn't have safeQueryParams, when enabled on traefik < 3.1.0
+    set:
+      image:
+        tag: v3.0.0
+      tracing:
+        safeQueryParams:
+         - foo
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."

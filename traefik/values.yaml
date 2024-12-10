@@ -535,6 +535,18 @@ metrics:
 tracing:  # @schema additionalProperties: false
   # -- Enables tracing for internal resources. Default: false.
   addInternals: false
+  # -- Service name used in selected backend. Default: traefik.
+  serviceName:  # @schema type:[string, null]
+  # -- Applies a list of shared key:value attributes on all spans.
+  globalAttributes: {}
+  # -- Defines the list of request headers to add as attributes. It applies to client and server kind spans.
+  capturedRequestHeaders: []
+  # -- Defines the list of response headers to add as attributes. It applies to client and server kind spans.
+  capturedResponseHeaders: []
+  # -- By default, all query parameters are redacted. Defines the list of query parameters to not redact.
+  safeQueryParams: []
+  # -- The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0.
+  sampleRate:  # @schema type:[number, null]; minimum:0; maximum:1
   otlp:
     # -- See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/
     enabled: false

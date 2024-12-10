@@ -383,6 +383,33 @@
           - "--tracing.addinternals"
           {{- end }}
 
+          {{- with .Values.tracing }}
+            {{- with .sampleRate }}
+          - "--tracing.sampleRate={{ . }}"
+            {{- end }}
+
+            {{- with .serviceName }}
+          - "--tracing.serviceName={{ . }}"
+            {{- end }}
+
+            {{- range $name, $value := .globalAttributes }}
+          - "--tracing.globalAttributes.{{ $name }}={{ $value }}"
+            {{- end }}
+
+            {{- range $index, $value := .capturedRequestHeaders }}
+          - "--tracing.capturedRequestHeaders[{{ $index }}]={{ $value }}"
+            {{- end }}
+
+            {{- range $index, $value := .capturedResponseHeaders }}
+          - "--tracing.capturedResponseHeaders[{{ $index }}]={{ $value }}"
+            {{- end }}
+
+            {{- if .safeQueryParams }}
+          - "--tracing.safeQueryParams={{- .safeQueryParams | join "," -}}"
+            {{- end }}
+
+          {{- end }}
+
           {{- with .Values.tracing.otlp }}
           {{- if .enabled }}
           - "--tracing.otlp=true"
