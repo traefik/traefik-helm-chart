@@ -706,6 +706,7 @@ tests:
         kubernetesGateway:
           enabled: true
           experimentalChannel: true
+          nativeLBByDefault: true
           labelselector: "app=traefik"
     asserts:
       - contains:
@@ -714,6 +715,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.labelselector=app=traefik"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.nativeLBByDefault=true"
   - it: should be possible to allow ACME bypass
     set:
       ports:

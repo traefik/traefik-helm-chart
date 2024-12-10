@@ -1357,6 +1357,9 @@
                         "namespaces": {
                             "type": "array"
                         },
+                        "nativeLBByDefault": {
+                            "type": "boolean"
+                        },
                         "statusAddress": {
                             "properties": {
                                 "hostname": {
