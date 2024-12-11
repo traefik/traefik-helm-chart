@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 33.1.0](https://img.shields.io/badge/Version-33.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.2.1](https://img.shields.io/badge/AppVersion-v3.2.1-informational?style=flat-square)
+![Version: 33.1.0](https://img.shields.io/badge/Version-33.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.2.2](https://img.shields.io/badge/AppVersion-v3.2.2-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -297,8 +297,11 @@ Kubernetes: `>=1.22.0-0`
 | tlsStore | object | `{}` | TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details. |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |
 | topologySpreadConstraints | list | `[]` | You can use topology spread constraints to control how Pods are spread across your cluster among failure-domains. |
-| tracing | object | `{"addInternals":false,"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":"","insecure":false,"tls":{"ca":"","cert":"","insecureSkipVerify":false,"key":""}},"http":{"enabled":false,"endpoint":"","headers":{},"tls":{"ca":"","cert":"","insecureSkipVerify":false,"key":""}}}}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
+| tracing | object | `{"addInternals":false,"capturedRequestHeaders":[],"capturedResponseHeaders":[],"globalAttributes":{},"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":"","insecure":false,"tls":{"ca":"","cert":"","insecureSkipVerify":false,"key":""}},"http":{"enabled":false,"endpoint":"","headers":{},"tls":{"ca":"","cert":"","insecureSkipVerify":false,"key":""}}},"safeQueryParams":[],"sampleRate":null,"serviceName":null}` | https://doc.traefik.io/traefik/observability/tracing/overview/ |
 | tracing.addInternals | bool | `false` | Enables tracing for internal resources. Default: false. |
+| tracing.capturedRequestHeaders | list | `[]` | Defines the list of request headers to add as attributes. It applies to client and server kind spans. |
+| tracing.capturedResponseHeaders | list | `[]` | Defines the list of response headers to add as attributes. It applies to client and server kind spans. |
+| tracing.globalAttributes | object | `{}` | Applies a list of shared key:value attributes on all spans. |
 | tracing.otlp.enabled | bool | `false` | See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/ |
 | tracing.otlp.grpc.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using gRPC |
 | tracing.otlp.grpc.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
@@ -314,6 +317,9 @@ Kubernetes: `>=1.22.0-0`
 | tracing.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
 | tracing.otlp.http.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | tracing.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
+| tracing.safeQueryParams | list | `[]` | By default, all query parameters are redacted. Defines the list of query parameters to not redact. |
+| tracing.sampleRate | string | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
+| tracing.serviceName | string | `nil` | Service name used in selected backend. Default: traefik. |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |
