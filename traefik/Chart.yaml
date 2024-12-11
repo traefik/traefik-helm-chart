@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 33.1.0
+version: 33.2.0
 # renovate: image=traefik
 appVersion: v3.2.2
 kubeVersion: ">=1.22.0-0"
@@ -25,13 +25,10 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: :bug: support specifying plugins storage"
-    - "fix(Traefik): support for entrypoint option on allowACMEByPass"
-    - "fix(Traefik Proxy): allowEmptyServices not disabled when set to false"
-    - "fix(Traefik Hub): compatibility with Traefik Proxy v3.2"
-    - "fix(KubernetesCRD): 🐛 IngressClass should be readable even when kubernetesIngress is disabled"
-    - "feat(deps): update traefik docker tag to v3.2.1"
-    - "feat(Traefik Proxy): add `abortOnPluginFailure` field"
-    - "feat(Traefik Hub): add APICatalogItem and ManagedSubscription support"
-    - "docs: 📚️ fix typos in values and readme"
-    - "chore(release): 🚀 publish v33.1.0-rc1"
+    - "fix(Traefik Proxy): :bug: abortOnPluginFailure not released yet"
+    - "feat(deps): update traefik docker tag to v3.2.2"
+    - "feat(Traefik Proxy): support NativeLB option in GatewayAPI provider"
+    - "feat(Traefik Proxy): add `tracing`parameters to helm chart values"
+    - "feat(Traefik Proxy): :art: harmonize semverCompare calls"
+    - "feat(Gateway API): update sigs.k8s.io/gateway-api to v1.2.1"
+    - "chore(release): 🚀 publish v33.2.0"
