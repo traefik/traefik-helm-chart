@@ -1,5 +1,54 @@
 # Change Log
 
+## 33.2.0  ![AppVersion: v3.2.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-12-11
+
+* fix(Traefik Proxy): :bug: abortOnPluginFailure not released yet
+* feat(deps): update traefik docker tag to v3.2.2
+* feat(Traefik Proxy): support NativeLB option in GatewayAPI provider
+* feat(Traefik Proxy): add `tracing`parameters to helm chart values
+* feat(Traefik Proxy): :art: harmonize semverCompare calls
+* feat(Gateway API): update sigs.k8s.io/gateway-api to v1.2.1
+* chore(release): 🚀 publish v33.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 9b4379c..78c8ea4 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -305,6 +305,8 @@ providers:  # @schema additionalProperties: false
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelselector: ""
++    # -- Defines whether to use Native Kubernetes load-balancing mode by default.
++    nativeLBByDefault: false
+     statusAddress:
+       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
+       ip: ""
+@@ -533,6 +535,18 @@ metrics:
+ tracing:  # @schema additionalProperties: false
+   # -- Enables tracing for internal resources. Default: false.
+   addInternals: false
++  # -- Service name used in selected backend. Default: traefik.
++  serviceName:  # @schema type:[string, null]
++  # -- Applies a list of shared key:value attributes on all spans.
++  globalAttributes: {}
++  # -- Defines the list of request headers to add as attributes. It applies to client and server kind spans.
++  capturedRequestHeaders: []
++  # -- Defines the list of response headers to add as attributes. It applies to client and server kind spans.
++  capturedResponseHeaders: []
++  # -- By default, all query parameters are redacted. Defines the list of query parameters to not redact.
++  safeQueryParams: []
++  # -- The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0.
++  sampleRate:  # @schema type:[number, null]; minimum:0; maximum:1
+   otlp:
+     # -- See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/
+     enabled: false
+```
+
 ## 33.1.0  ![AppVersion: v3.2.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-11-26
