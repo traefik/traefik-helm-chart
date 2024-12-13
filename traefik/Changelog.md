@@ -1,5 +1,12 @@
 # Change Log
 
+## 33.2.1  ![AppVersion: v3.2.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2024-12-13
+
+* fix(Gateway API): CRDs should only be defined once
+* chore(release): 🚀 publish v33.2.1
+
 ## 33.2.0  ![AppVersion: v3.2.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-12-11
