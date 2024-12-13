@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 33.2.0
+version: 33.2.1
 # renovate: image=traefik
 appVersion: v3.2.2
 kubeVersion: ">=1.22.0-0"
@@ -25,10 +25,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Traefik Proxy): :bug: abortOnPluginFailure not released yet"
-    - "feat(deps): update traefik docker tag to v3.2.2"
-    - "feat(Traefik Proxy): support NativeLB option in GatewayAPI provider"
-    - "feat(Traefik Proxy): add `tracing`parameters to helm chart values"
-    - "feat(Traefik Proxy): :art: harmonize semverCompare calls"
-    - "feat(Gateway API): update sigs.k8s.io/gateway-api to v1.2.1"
-    - "chore(release): 🚀 publish v33.2.0"
+    - "fix(Gateway API): CRDs should only be defined once"
+    - "chore(release): 🚀 publish v33.2.1"
