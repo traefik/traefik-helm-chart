@@ -968,8 +968,8 @@ hub:
 
 traefik-crds:
   # -- Set all the following to false if you want to manage CRDs your-self
-  traefik: true # @schema type:[boolean]
-  hub: | # @schema type:[boolean]
+  traefik: true
+  hub: |
     {{ tpl "ne .Values.hub.token \"\"' . }}
-  gateway_api: | # @schema type:[boolean]
+  gateway_api: |
     {{ tpl "ne .Values.providers.kubernetesGateway.enabled \"\" . }}

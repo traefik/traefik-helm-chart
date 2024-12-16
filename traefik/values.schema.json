@@ -1675,19 +1675,13 @@
         "traefik-crds": {
             "properties": {
                 "gateway_api": {
-                    "type": [
-                        "boolean"
-                    ]
+                    "type": "boolean"
                 },
                 "hub": {
-                    "type": [
-                        "boolean"
-                    ]
+                    "type": "boolean"
                 },
                 "traefik": {
-                    "type": [
-                        "boolean"
-                    ]
+                    "type": "boolean"
                 }
             },
             "type": "object"
