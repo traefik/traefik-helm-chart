@@ -1672,6 +1672,26 @@
             },
             "type": "object"
         },
+        "traefik-crds": {
+            "properties": {
+                "gateway_api": {
+                    "type": [
+                        "boolean"
+                    ]
+                },
+                "hub": {
+                    "type": [
+                        "boolean"
+                    ]
+                },
+                "traefik": {
+                    "type": [
+                        "boolean"
+                    ]
+                }
+            },
+            "type": "object"
+        },
         "updateStrategy": {
             "additionalProperties": false,
             "properties": {

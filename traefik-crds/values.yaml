@@ -1,0 +1,3 @@
+traefik: false
+gateway_api: false
+hub: false
