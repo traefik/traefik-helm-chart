@@ -966,10 +966,10 @@ hub:
   # Enable export of errors logs to the platform. Default: true.
   sendlogs:  # @schema type:[boolean, null]
 
-#traefik-crds:
-#  # -- Set all the following to false if you want to manage CRDs your-self
-#  traefik: true
-#  hub: |
-#    {{- tpl "and .Values.hub.token .Values.hub.apimanagement.enabled"' . }}
-#  gateway_api: |
-#    {{- tpl ".Values.providers.kubernetesGateway.enabled" . }}
+traefik-crds:
+  # -- Set all the following to false if you want to manage CRDs your-self
+  traefik: true
+  hub: |
+    {{- tpl "and .Values.hub.token .Values.hub.apimanagement.enabled"' . }}
+  gateway_api: |
+    {{- tpl ".Values.providers.kubernetesGateway.enabled" . }}
