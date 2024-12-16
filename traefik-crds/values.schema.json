@@ -7,7 +7,10 @@
         "deleteOnUninstall": {
             "type": "boolean"
         },
-        "gateway_api": {
+        "enabled": {
+            "type": "boolean"
+        },
+        "gatewayAPI": {
             "default": false,
             "type": [
                 "string",

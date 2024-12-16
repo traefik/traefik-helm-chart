@@ -122,7 +122,7 @@ If you still want to manage CRDs your self, it can be opt-out:
 
 ```bash
 # Upgrade Traefik and skip all CRDs installation
-helm upgrade traefik traefik/traefik --set traefik-crds.traefik=false --set traefik-crds.hub=false --set traefik-crds.gateway_api=false 
+helm upgrade traefik traefik/traefik --set traefik-crds.enabled=true --set traefik-crds.traefik=false --set traefik-crds.hub=false --set traefik-crds.gatewayAPI=false 
 ```
 
 ### Upgrade up to 27.X

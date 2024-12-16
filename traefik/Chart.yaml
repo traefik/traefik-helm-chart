@@ -31,4 +31,4 @@ dependencies:
   - name: traefik-crds
     version: 0.0.1
     repository: https://traefik.github.io/charts
-    condition: or traefik-crds.traefik traefik-crds.hub traefik-crds.gateway_api
+    condition: traefik-crds.enabled

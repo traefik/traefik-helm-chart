@@ -1674,11 +1674,22 @@
         },
         "traefik-crds": {
             "properties": {
-                "gateway_api": {
-                    "type": "string"
+                "enabled": {
+                    "type": "boolean"
+                },
+                "gatewayAPI": {
+                    "default": false,
+                    "type": [
+                        "string",
+                        "boolean"
+                    ]
                 },
                 "hub": {
-                    "type": "string"
+                    "default": false,
+                    "type": [
+                        "string",
+                        "boolean"
+                    ]
                 },
                 "traefik": {
                     "type": "boolean"

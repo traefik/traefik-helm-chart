@@ -967,9 +967,12 @@ hub:
   sendlogs:  # @schema type:[boolean, null]
 
 traefik-crds:
+  # -- Set it to true to opt-in CRD management
+  enabled: false
+
   # -- Set all the following to false if you want to manage CRDs your-self
   traefik: true
-  hub: |
+  hub: | # @schema type:[string, boolean]; default: false
     {{- tpl "and .Values.hub.token .Values.hub.apimanagement.enabled"' . }}
-  gateway_api: |
+  gatewayAPI: | # @schema type:[string, boolean]; default: false
     {{- tpl ".Values.providers.kubernetesGateway.enabled" . }}

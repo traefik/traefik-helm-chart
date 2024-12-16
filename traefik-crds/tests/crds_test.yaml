@@ -45,7 +45,7 @@ tests:
 
   - it: should have all Gateway API crds
     set:
-      gateway_api: true
+      gatewayAPI: true
     asserts:
       - hasDocuments:
           count: 5
@@ -63,7 +63,7 @@ tests:
 
   - it: should have all Gateway API crds without helm keep resource policy
     set:
-      gateway_api: true
+      gatewayAPI: true
       deleteOnUninstall: true
     asserts:
       - hasDocuments:

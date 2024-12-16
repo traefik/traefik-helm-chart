@@ -29,7 +29,8 @@ Kubernetes: `>=1.22.0-0`
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | deleteOnUninstall | bool | `false` |  |
-| gateway_api | bool | `false` |  |
+| enabled | bool | `true` |  |
+| gatewayAPI | bool | `false` |  |
 | global | string | `nil` |  |
 | hub | bool | `false` |  |
 | traefik | bool | `false` |  |

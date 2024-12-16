@@ -6,6 +6,6 @@
 {{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/hub/*.yaml") }}
 {{- end }}
 
-{{- if eq (.Values.gateway_api | toString) "true" -}}
-{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gateway_api/*.yaml") }}
+{{- if eq (.Values.gatewayAPI | toString) "true" -}}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gatewayAPI/*.yaml") }}
 {{- end }}
