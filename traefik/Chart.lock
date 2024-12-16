@@ -1,6 +1,0 @@
-dependencies:
-- name: traefik-crds
-  repository: file://../traefik-crds
-  version: 0.0.1
-digest: sha256:03a8641bfa1d261b699d166dea5aaa21d9e27bfc2328d157dae3809375709260
-generated: "2024-10-11T17:04:46.473483814+02:00"
