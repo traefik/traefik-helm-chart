@@ -24,6 +24,10 @@ A Traefik based Kubernetes ingress controller
 
 Kubernetes: `>=1.22.0-0`
 
+| Repository | Name | Version |
+|------------|------|---------|
+| https://traefik.github.io/charts | traefik-crds | 0.0.1 |
+
 ## Values
 
 | Key | Type | Default | Description |
@@ -320,6 +324,9 @@ Kubernetes: `>=1.22.0-0`
 | tracing.safeQueryParams | list | `[]` | By default, all query parameters are redacted. Defines the list of query parameters to not redact. |
 | tracing.sampleRate | string | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
 | tracing.serviceName | string | `nil` | Service name used in selected backend. Default: traefik. |
+| traefik-crds.gateway_api | string | `"{{- tpl \".Values.providers.kubernetesGateway.enabled\" . }}\n"` |  |
+| traefik-crds.hub | string | `"{{- tpl \"and .Values.hub.token .Values.hub.apimanagement.enabled\"' . }}\n"` |  |
+| traefik-crds.traefik | bool | `true` | Set all the following to false if you want to manage CRDs your-self |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |
