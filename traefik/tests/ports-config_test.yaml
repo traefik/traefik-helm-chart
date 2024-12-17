@@ -357,3 +357,26 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot create ssh port on Service without .port or .exposedPort"
+  - it: should support uppercase letters in entrypoint names
+    set:
+      ports:
+        UPPERCASE:
+          port: 443
+          expose:
+            default: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: uppercase
+            containerPort: 443
+            protocol: TCP
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: uppercase
+            port: 443
+            protocol: TCP
+            targetPort: uppercase
+        template: service.yaml

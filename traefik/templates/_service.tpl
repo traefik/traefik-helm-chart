@@ -50,7 +50,8 @@
 {{- end }}
 
 {{- define "traefik.service-ports" }}
- {{- range $name, $config := .ports }}
+ {{- range $portName, $config := .ports }}
+  {{- $name := $portName | lower -}}
   {{- if (index (default dict $config.expose) $.serviceName) }}
   {{- $port := default $config.port $config.exposedPort }}
   {{- if empty $port }}

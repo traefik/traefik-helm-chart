@@ -108,7 +108,7 @@
               {{- fail "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled" }}
             {{- end }}
           {{- end }}
-        - name: {{ $name | quote }}
+        - name: {{ $name | lower | quote }}
           containerPort: {{ default $config.port $config.containerPort }}
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
