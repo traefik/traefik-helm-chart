@@ -321,15 +321,11 @@ Kubernetes: `>=1.22.0-0`
 | tracing.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
 | tracing.otlp.http.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | tracing.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
-<<<<<<< HEAD
 | tracing.safeQueryParams | list | `[]` | By default, all query parameters are redacted. Defines the list of query parameters to not redact. |
 | tracing.sampleRate | string | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
 | tracing.serviceName | string | `nil` | Service name used in selected backend. Default: traefik. |
-| traefik-crds.gateway_api | string | `"{{- tpl \".Values.providers.kubernetesGateway.enabled\" . }}\n"` |  |
-=======
 | traefik-crds.enabled | bool | `false` | Set it to true to opt-in CRD management |
 | traefik-crds.gatewayAPI | string | `"{{- tpl \".Values.providers.kubernetesGateway.enabled\" . }}\n"` |  |
->>>>>>> b296543 (fix: rename gateway api + add enabled flag)
 | traefik-crds.hub | string | `"{{- tpl \"and .Values.hub.token .Values.hub.apimanagement.enabled\"' . }}\n"` |  |
 | traefik-crds.traefik | bool | `true` | Set all the following to false if you want to manage CRDs your-self |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
