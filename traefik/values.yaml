@@ -320,7 +320,7 @@ providers:  # @schema additionalProperties: false
       # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
       service:
         name: "{{ (include \"traefik.fullname\" .) }}"
-        namespace: "{{ .Release.Namespace }}"
+        namespace: "{{ include \"traefik.namespace\" . }}"
 
   file:
     # -- Create a file provider
@@ -874,7 +874,7 @@ affinity: {}
 #      - labelSelector:
 #          matchLabels:
 #            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
-#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
+#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ include "traefik.namespace" . }}'
 #        topologyKey: kubernetes.io/hostname
 
 # -- nodeSelector is the simplest recommended form of node selection constraint.

@@ -99,7 +99,7 @@ service generated.
 Users can provide an override for an explicit service they want bound via `.Values.providers.kubernetesIngress.publishedService.pathOverride`
 */}}
 {{- define "providers.kubernetesIngress.publishedServicePath" -}}
-{{- $defServiceName := printf "%s/%s" .Release.Namespace (include "traefik.fullname" .) -}}
+{{- $defServiceName := printf "%s/%s" (include "traefik.namespace" .) (include "traefik.fullname" .) -}}
 {{- $servicePath := default $defServiceName .Values.providers.kubernetesIngress.publishedService.pathOverride }}
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
