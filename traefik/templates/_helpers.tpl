@@ -43,7 +43,7 @@ If release name contains chart name it will be used as a full name.
 Allow customization of the instance label value.
 */}}
 {{- define "traefik.instance-name" -}}
-{{- default (printf "%s-%s" .Release.Name .Release.Namespace) .Values.instanceLabelOverride | trunc 63 | trimSuffix "-" -}}
+{{- default (printf "%s-%s" .Release.Name (include "traefik.namespace" .)) .Values.instanceLabelOverride | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 
 {{/* Shared labels used for selector*/}}
@@ -89,7 +89,7 @@ Adds the namespace to name to prevent duplicate resource names when there
 are multiple namespaced releases with the same release name.
 */}}
 {{- define "traefik.clusterRoleName" -}}
-{{- (printf "%s-%s" (include "traefik.fullname" .) .Release.Namespace) | trunc 63 | trimSuffix "-" }}
+{{- (printf "%s-%s" (include "traefik.fullname" .) (include "traefik.namespace" .)) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
@@ -150,15 +150,15 @@ based on semverCompare
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
-{{- $cert := lookup "v1" "Secret" .Release.Namespace "hub-agent-cert" -}}
+{{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) "hub-agent-cert" -}}
 {{- if $cert -}}
 {{/* reusing value of existing cert */}}
 Cert: {{ index $cert.data "tls.crt" }}
 Key: {{ index $cert.data "tls.key" }}
 {{- else -}}
 {{/* generate a new one */}}
-{{- $altNames := list ( printf "admission.%s.svc" .Release.Namespace ) -}}
-{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" .Release.Namespace ) (list) $altNames 3650 -}}
+{{- $altNames := list ( printf "admission.%s.svc" (include "traefik.namespace" .) ) -}}
+{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" (include "traefik.namespace" .) ) (list) $altNames 3650 -}}
 Cert: {{ $cert.Cert | b64enc }}
 Key: {{ $cert.Key | b64enc }}
 {{- end -}}
