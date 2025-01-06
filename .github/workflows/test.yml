@@ -30,11 +30,14 @@ jobs:
           output: traefik/values.schema.json
           fail-on-diff: true
 
-      - name: Lint
+      - name: Lint Chart
         run: make lint
 
-      - name: Test
+      - name: Test Chart
         run: make test
+
+      - name: Test overrideNamespace
+        run: make test-ns
 
       - name: Test if it's a release PR
         id: check
