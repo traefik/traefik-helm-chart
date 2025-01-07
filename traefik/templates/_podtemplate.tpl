@@ -468,6 +468,14 @@
            {{- end }}
           {{- end }}
           {{- end }}
+          {{- with .Values.experimental.fastProxy }}
+            {{- if .enabled }}
+          - "--experimental.fastProxy"
+            {{- end }}
+            {{- if .debug }}
+          - "--experimental.fastProxy.debug"
+            {{- end }}
+          {{- end }}
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
             {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}

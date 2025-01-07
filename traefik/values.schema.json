@@ -152,6 +152,17 @@
                 "abortOnPluginFailure": {
                     "type": "boolean"
                 },
+                "fastProxy": {
+                    "properties": {
+                        "debug": {
+                            "type": "boolean"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
                 "kubernetesGateway": {
                     "properties": {
                         "enabled": {
