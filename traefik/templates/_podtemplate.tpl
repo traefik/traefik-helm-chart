@@ -392,8 +392,8 @@
           - "--tracing.serviceName={{ . }}"
             {{- end }}
 
-            {{- range $name, $value := .globalAttributes }}
-          - "--tracing.globalAttributes.{{ $name }}={{ $value }}"
+            {{- range $name, $value := .resourceAttributes }}
+          - "--tracing.resourceAttributes.{{ $name }}={{ $value }}"
             {{- end }}
 
             {{- range $index, $value := .capturedRequestHeaders }}
