@@ -32,6 +32,10 @@
   {{- end }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.2.0-0" $version) (.Values.experimental.fastProxy.enabled)}}
+  {{- fail "ERROR: fastProxy is an experimental feature only available for traefik >= v3.2.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
   {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
 {{- end }}
