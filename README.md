@@ -117,7 +117,7 @@ helm install traefik traefik/traefik -n traefik --create-namespace --skip-crds
 helm list -n traefik
 # NAME        	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART             	APP VERSION
 # traefik     	traefik  	1       	2025-01-08 15:37:24.918465001 +0100 CET	deployed	traefik-33.2.1    	v3.2.3     
-# traefik-crds	traefik  	1       	2025-01-08 15:37:18.863333527 +0100 CET	deployed	traefik-crds-0.0.1	        
+# traefik-crds	traefik  	1       	2025-01-08 15:37:18.863333527 +0100 CET	deployed	traefik-crds-1.0.0	        
 ```
 
 To upgrade from an already installed chart:

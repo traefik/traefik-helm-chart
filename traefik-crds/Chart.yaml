@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik-crds
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 0.0.1
+version: 1.0.0
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
