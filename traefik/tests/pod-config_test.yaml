@@ -319,10 +319,25 @@ tests:
       experimental:
         kubernetesGateway:
           enabled: true
+        fastProxy:
+          enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.kubernetesgateway"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.fastProxy"
+  - it: should have debug experimental flag on fastProxy when set
+    set:
+      experimental:
+        fastProxy:
+          debug: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.fastProxy.debug"
+
   - it: shouldn't have experimental flag when >= 3.1.0
     set:
       image:

@@ -114,11 +114,23 @@ tests:
           errorMessage: "ERROR: certResolvers setting has been removed. See v33.0.0 Changelog."
   - it: shouldn't have abortOnPluginFailure, when enabled on traefik < 3.3.0
     set:
+      image:
+        tag: v3.2.0
       experimental:
         abortOnPluginFailure: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0."
+  - it: shouldn't have fastProxy, when enabled on traefik < 3.2.0
+    set:
+      image:
+        tag: v3.1.0
+      experimental:
+        fastProxy:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: fastProxy is an experimental feature only available for traefik >= v3.2.0."
   - it: shouldn't have safeQueryParams, when enabled on traefik < 3.1.0
     set:
       image:

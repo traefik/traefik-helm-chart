@@ -122,14 +122,19 @@ core:  # @schema additionalProperties: false
 experimental:
   # -- Defines whether all plugins must be loaded successfully for Traefik to start
   abortOnPluginFailure: false
+  fastProxy:
+    # -- Enables the FastProxy implementation.
+    enabled: false
+    # -- Enable debug mode for the FastProxy implementation.
+    debug: false
+  kubernetesGateway:
+    # -- Enable traefik experimental GatewayClass CRD
+    enabled: false
   # -- Enable traefik experimental plugins
   plugins: {}
   # demo:
   #   moduleName: github.com/traefik/plugindemo
   #   version: v0.2.1
-  kubernetesGateway:
-    # -- Enable traefik experimental GatewayClass CRD
-    enabled: false
 
 gateway:
   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
