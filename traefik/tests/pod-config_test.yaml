@@ -314,6 +314,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.statusaddress.service.namespace=NAMESPACE"
+  - it: When gateway provider is enabled with ns override, k8s providers & default statusAddress should be set
+    set:
+      namespaceOverride: foo
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.namespace=foo"
+
+
   - it: should have experimental flag when set
     set:
       experimental:

@@ -74,12 +74,18 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd"
-
   - it: should have enabled published Kubernetes service when default configuration
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
+  - it: should use overrided namespace when specified
+    set:
+      namespaceOverride: foo
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/RELEASE-NAME-traefik"
   - it: should be possible to disable published Kubernetes service when specified in configuration
     set:
       providers:
