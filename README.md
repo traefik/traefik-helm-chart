@@ -88,15 +88,10 @@ One can check what has changed in the [Changelog](./traefik/Changelog.md).
 helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
+# Update CRDs (Traefik Proxy v3 CRDs)
+kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
-```
-
-If you opt-out CRDs management system, you can still apply it manually:
-
-```bash
-# Update CRDs (Traefik Proxy v3 CRDs)
-kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik-crds/
 ```
 
 New major version indicates that there is an incompatible breaking change.
