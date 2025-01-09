@@ -319,8 +319,8 @@ providers:  # @schema additionalProperties: false
       hostname: ""
       # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
       service:
-        name: "{{ (include \"traefik.fullname\" .) }}"
-        namespace: "{{ include \"traefik.namespace\" . }}"
+        name: "{{ .Values.service.enabled | ternary (include \"traefik.fullname\" .) nil }}"
+        namespace: "{{ .Values.service.enabled | ternary (include \"traefik.namespace\" .) nil }}"
 
   file:
     # -- Create a file provider

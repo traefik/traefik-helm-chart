@@ -107,6 +107,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=foo/bar"
+  - it: should not set default publishedService when service is disabled
+    set:
+      service:
+        enabled: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
+  - it: should not set default statusAddress when service is disabled
+    set:
+      service:
+        enabled: false
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.name=RELEASE-NAME-traefik"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.namespace=NAMESPACE"
   - it: should be possible to set statusAddress fields
     set:
       providers:
