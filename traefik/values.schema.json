@@ -1053,8 +1053,13 @@
                             },
                             "type": "object"
                         },
-                        "redirectTo": {
-                            "properties": {},
+                        "redirections": {
+                            "properties": {
+                                "entryPoint": {
+                                    "properties": {},
+                                    "type": "object"
+                                }
+                            },
                             "type": "object"
                         },
                         "targetPort": {

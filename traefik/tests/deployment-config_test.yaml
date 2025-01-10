@@ -169,16 +169,6 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
-  - it: should fail when using previous syntax
-    set:
-      ports:
-        web:
-          redirectTo: websecure
-        websecure:
-          exposedPort: 443
-    asserts:
-      - failedTemplate:
-          errorPattern: "redirectTo"
   - it: should set default values for args
     asserts:
       - equal:
@@ -211,12 +201,47 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.abortonpluginfailure=true"
-  - it: should have http redirections enabled, when enabled with redirectTo
+  - it: should fail when using obsolete syntax
+    set:
+      ports:
+        web:
+          redirectTo: websecure
+        websecure:
+          exposedPort: 443
+    asserts:
+      - failedTemplate:
+          errorPattern: "redirectTo"
+  - it: should fail when using previous syntax
     set:
       ports:
         web:
           redirectTo:
             port: websecure
+        websecure:
+          exposedPort: 443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax."
+  - it: should fail when redirect on websecure without https scheme
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+        websecure:
+          exposedPort: 443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
+  - it: should be possible to set an http redirections
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
         websecure:
           exposedPort: 443
     asserts:
@@ -230,9 +255,11 @@ tests:
     set:
       ports:
         web:
-          redirectTo:
-            port: websecure
-            priority: 10
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              priority: 10
         websecure:
           exposedPort: 443
     asserts:
@@ -243,9 +270,11 @@ tests:
     set:
       ports:
         web:
-          redirectTo:
-            port: websecure
-            permanent: true
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: true
         websecure:
           exposedPort: 443
     asserts:
