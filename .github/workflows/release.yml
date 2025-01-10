@@ -72,7 +72,7 @@ jobs:
 
       - name: Render changelog configuration
         env:
-          REGEXP: "?!crds"
+          REGEXP: "?!CRDs-"
         run: |
           export DATE=$(date +%F); cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
@@ -183,7 +183,7 @@ jobs:
 
       - name: Render changelog configuration
         env:
-          REGEXP: "?!crds"
+          REGEXP: "CRDs"
         run: |
           export DATE=$(date +%F); cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
