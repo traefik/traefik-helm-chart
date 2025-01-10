@@ -1,4 +1,4 @@
 traefik: true
-gatewayAPI: false  # @schema type:[string, boolean]; default: false
-hub: false  # @schema type:[string, boolean]; default: false
+gatewayAPI: false 
+hub: false  
 deleteOnUninstall: false

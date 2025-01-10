@@ -91,6 +91,7 @@ helm list # should display two charts installed
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
 
+New major version indicates that there is an incompatible breaking change.
 > [!WARNING]
 > Please read carefully release notes of this chart before upgrading.
 
@@ -121,7 +122,6 @@ kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gatewa
 helm install traefik-crds traefik/traefik-crds
 ```
 
-New major version indicates that there is an incompatible breaking change.
 
 ### An installation with additional CRDs chart
 
