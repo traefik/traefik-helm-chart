@@ -8,18 +8,10 @@
             "type": "boolean"
         },
         "gatewayAPI": {
-            "default": false,
-            "type": [
-                "string",
-                "boolean"
-            ]
+            "type": "boolean"
         },
         "hub": {
-            "default": false,
-            "type": [
-                "string",
-                "boolean"
-            ]
+            "type": "boolean"
         },
         "traefik": {
             "type": "boolean"
