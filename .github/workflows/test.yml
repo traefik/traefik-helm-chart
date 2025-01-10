@@ -54,6 +54,9 @@ jobs:
       - name: Test overrideNamespace
         run: make test-ns
 
+      - name: Test CRDs consistency
+        run: make test-crds-consistency
+
       - name: Test if it's a release PR
         id: check
         run: |
