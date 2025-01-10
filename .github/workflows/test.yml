@@ -86,7 +86,12 @@ jobs:
           kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb --timeout=90s
           kubectl apply -f hack/metallb-config.yaml
 
-      - name: Check install on Kind
+      - name: Check install on Kind (standard)
         if: steps.check.outputs.release
         run: |
           make test-install
+
+      - name: Check install on Kind (with CRDS)
+        if: steps.check.outputs.release
+        run: |
+          make test-install-with-crds
