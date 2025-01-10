@@ -1,0 +1,190 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.14.0
+  name: apis.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: API
+    listKind: APIList
+    plural: apis
+    singular: api
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          API defines an HTTP interface that is exposed to external clients. It specifies the supported versions
+          and provides instructions for accessing its documentation. Once instantiated, an API object is associated
+          with an Ingress, IngressRoute, or HTTPRoute resource, enabling the exposure of the described API to the outside world.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: APISpec describes the API.
+            properties:
+              openApiSpec:
+                description: OpenAPISpec defines the API contract as an OpenAPI specification.
+                properties:
+                  operationSets:
+                    description: OperationSets defines the sets of operations to be
+                      referenced for granular filtering in APIAccesses.
+                    items:
+                      description: |-
+                        OperationSet gives a name to a set of matching OpenAPI operations.
+                        This set of operations can then be referenced for granular filtering in APIAccesses.
+                      properties:
+                        matchers:
+                          description: Matchers defines a list of alternative rules
+                            for matching OpenAPI operations.
+                          items:
+                            description: OperationMatcher defines criteria for matching
+                              an OpenAPI operation.
+                            minProperties: 1
+                            properties:
+                              methods:
+                                description: Methods specifies the HTTP methods to
+                                  be included for selection.
+                                items:
+                                  type: string
+                                maxItems: 10
+                                type: array
+                              path:
+                                description: Path specifies the exact path of the
+                                  operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathPrefix:
+                                description: PathPrefix specifies the path prefix
+                                  of the operations to select.
+                                maxLength: 255
+                                type: string
+                                x-kubernetes-validations:
+                                - message: must start with a '/'
+                                  rule: self.startsWith('/')
+                                - message: cannot contains '../'
+                                  rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                              pathRegex:
+                                description: PathRegex specifies a regular expression
+                                  pattern for matching operations based on their paths.
+                                type: string
+                            type: object
+                            x-kubernetes-validations:
+                            - message: path, pathPrefix and pathRegex are mutually
+                                exclusive
+                              rule: '[has(self.path), has(self.pathPrefix), has(self.pathRegex)].filter(x,
+                                x).size() <= 1'
+                          maxItems: 100
+                          minItems: 1
+                          type: array
+                        name:
+                          description: Name is the name of the OperationSet to reference
+                            in APIAccesses.
+                          maxLength: 253
+                          type: string
+                      required:
+                      - matchers
+                      - name
+                      type: object
+                    maxItems: 100
+                    type: array
+                  override:
+                    description: Override holds data used to override OpenAPI specification.
+                    properties:
+                      servers:
+                        items:
+                          properties:
+                            url:
+                              type: string
+                              x-kubernetes-validations:
+                              - message: must be a valid URL
+                                rule: isURL(self)
+                          required:
+                          - url
+                          type: object
+                        maxItems: 100
+                        minItems: 1
+                        type: array
+                    required:
+                    - servers
+                    type: object
+                  path:
+                    description: |-
+                      Path specifies the endpoint path within the Kubernetes Service where the OpenAPI specification can be obtained.
+                      The Service queried is determined by the associated Ingress, IngressRoute, or HTTPRoute resource to which the API is attached.
+                      It's important to note that this option is incompatible if the Ingress or IngressRoute specifies multiple backend services.
+                      The Path must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
+                    maxLength: 255
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must start with a '/'
+                      rule: self.startsWith('/')
+                    - message: cannot contains '../'
+                      rule: '!self.matches(r"""(\/\.\.\/)|(\/\.\.$)""")'
+                  url:
+                    description: |-
+                      URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
+                      The URL must be accessible via a GET request method and should serve a YAML or JSON document containing the OpenAPI specification.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                type: object
+                x-kubernetes-validations:
+                - message: path or url must be defined
+                  rule: has(self.path) || has(self.url)
+              versions:
+                description: Versions are the different APIVersions available.
+                items:
+                  description: APIVersionRef references an APIVersion.
+                  properties:
+                    name:
+                      description: Name of the APIVersion.
+                      maxLength: 253
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 100
+                minItems: 1
+                type: array
+            type: object
+          status:
+            description: The current status of this API.
+            properties:
+              hash:
+                description: Hash is a hash representing the API.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true

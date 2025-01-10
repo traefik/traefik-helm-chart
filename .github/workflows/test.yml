@@ -23,11 +23,26 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
-      - name: Check if values schema is up-to-date
+      - name: Check traefik if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v1
         with:
           input: traefik/values.yaml
           output: traefik/values.schema.json
+          id: "https://traefik.io/traefik-helm-chart.schema.json"
+          title: "Traefik Proxy Helm Chart"
+          description: "The Cloud Native Application Proxy"
+          additional-properties: true
+          fail-on-diff: true
+
+      - name: Check traefik-crds if values schema is up-to-date
+        uses: losisin/helm-values-schema-json-action@v1
+        with:
+          input: traefik-crds/values.yaml
+          output: traefik-crds/values.schema.json
+          id: "https://traefik.io/traefik-crds-helm-chart.schema.json"
+          title: "Traefik CRDs Helm Chart"
+          description: "The Cloud Native Application Proxy"
+          additional-properties: false
           fail-on-diff: true
 
       - name: Lint Chart
@@ -38,6 +53,9 @@ jobs:
 
       - name: Test overrideNamespace
         run: make test-ns
+
+      - name: Test CRDs consistency
+        run: make test-crds-consistency
 
       - name: Test if it's a release PR
         id: check
@@ -74,7 +92,12 @@ jobs:
           kubectl wait --namespace metallb-system --for=condition=ready pod --selector=app=metallb --timeout=90s
           kubectl apply -f hack/metallb-config.yaml
 
-      - name: Check install on Kind
+      - name: Check install on Kind (standard)
         if: steps.check.outputs.release
         run: |
           make test-install
+
+      - name: Check install on Kind (with CRDS)
+        if: steps.check.outputs.release
+        run: |
+          make test-install-with-crds

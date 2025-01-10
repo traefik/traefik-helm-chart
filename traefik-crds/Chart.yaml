@@ -1,0 +1,24 @@
+apiVersion: v2
+name: traefik-crds
+description: A Traefik based Kubernetes ingress controller
+type: application
+version: 1.0.0
+kubeVersion: ">=1.22.0-0"
+keywords:
+  - traefik
+  - ingress
+  - networking
+home: https://traefik.io/
+sources:
+  - https://github.com/traefik/traefik
+  - https://github.com/traefik/traefik-helm-chart
+maintainers:
+  - name: mloiseleur
+    email: michel.loiseleur@traefik.io
+  - name: charlie-haley
+    email: charlie.haley@traefik.io
+  - name: darkweaver87
+    email: remi.buisson@traefik.io
+  - name: jnoordsij
+icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
+annotations: {}

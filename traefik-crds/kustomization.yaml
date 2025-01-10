@@ -1,0 +1,27 @@
+---
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+  # curl -o crds-files/gatewayAPI/gateway-standard-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
+  - crds-files/gatewayAPI/gateway-standard-install.yaml
+  - crds-files/hub/hub.traefik.io_accesscontrolpolicies.yaml
+  - crds-files/hub/hub.traefik.io_apiaccesses.yaml
+  - crds-files/hub/hub.traefik.io_apicatalogitems.yaml
+  - crds-files/hub/hub.traefik.io_managedsubscriptions.yaml
+  - crds-files/hub/hub.traefik.io_apiportals.yaml
+  - crds-files/hub/hub.traefik.io_apiratelimits.yaml
+  - crds-files/hub/hub.traefik.io_apis.yaml
+  - crds-files/hub/hub.traefik.io_apiversions.yaml
+  - crds-files/hub/hub.traefik.io_apiplans.yaml
+  - crds-files/hub/hub.traefik.io_apibundles.yaml
+  - crds-files/hub/hub.traefik.io_aiservices.yaml
+  - crds-files/traefik/traefik.io_ingressroutes.yaml
+  - crds-files/traefik/traefik.io_ingressroutetcps.yaml
+  - crds-files/traefik/traefik.io_ingressrouteudps.yaml
+  - crds-files/traefik/traefik.io_middlewares.yaml
+  - crds-files/traefik/traefik.io_middlewaretcps.yaml
+  - crds-files/traefik/traefik.io_serverstransports.yaml
+  - crds-files/traefik/traefik.io_serverstransporttcps.yaml
+  - crds-files/traefik/traefik.io_tlsoptions.yaml
+  - crds-files/traefik/traefik.io_tlsstores.yaml
+  - crds-files/traefik/traefik.io_traefikservices.yaml

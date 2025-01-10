@@ -1,0 +1,11 @@
+{{- if .Values.traefik -}}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/traefik/*.yaml") }}
+{{- end }}
+
+{{- if eq (.Values.hub | toString) "true" -}}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/hub/*.yaml") }}
+{{- end }}
+
+{{- if eq (.Values.gatewayAPI | toString) "true" -}}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gatewayAPI/*.yaml") }}
+{{- end }}

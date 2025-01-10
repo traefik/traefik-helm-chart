@@ -1,0 +1,53 @@
+{
+  "template": "## [#{{TO_TAG}}](#{{RELEASE_DIFF}}) (${DATE})\n#{{CHANGELOG}}",
+  "categories": [
+    {
+      "title": "## :boom: BREAKING CHANGES",
+      "rules": [
+        {
+          "pattern": ".*\\((${REGEXP}).*\\)!:.*",
+          "on_property": "title",
+          "flags": "gu"
+        }
+      ]
+    },
+    {
+      "title": "## :rocket: Features",
+      "rules": [
+        {
+          "pattern": "feat\\((${REGEXP}).*\\):.*",
+          "on_property": "title",
+          "flags": "gu"
+        }
+      ]
+    },
+    {
+      "title": "## :bug: Bug fixes",
+      "rules": [
+        {
+          "pattern": "fix\\((${REGEXP}).*\\):.*",
+          "on_property": "title",
+          "flags": "gu"
+        }
+      ]
+    },
+    {
+      "title": "## :package: Others",
+      "rules": [
+        {
+          "pattern": "(chore|release)\\((${REGEXP}).*\\):.*",
+          "on_property": "title",
+          "flags": "gu"
+        }
+      ]
+    }
+  ],
+  "pr_template": "- ${{TITLE}} ##{{NUMBER}} by @#{{AUTHOR}}",
+  "empty_template": "- no changes",
+  "transformers": [
+    {
+      "pattern": "[\\-\\*] (\\[(...|TEST|CI|SKIP)\\])( )?(.+?)\n(.+?[\\-\\*] )(.+)",
+      "target": "- $4\n  - $6"
+    }
+  ]
+}

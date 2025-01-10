@@ -1,0 +1,15 @@
+# Default values for Traefik CRDs
+# This is a YAML-formatted file.
+# Declare variables to be passed into templates
+
+# -- Install Traefik CRDs by default
+traefik: true
+# -- Set it to true to install GatewayAPI CRDs.
+# Needed if you set providers.kubernetesGateway.enabled to true in main chart
+gatewayAPI: false
+# -- Set it to true to install Traefik Hub CRDs.
+# Needed if you set hub.enabled to true in main chart
+hub: false
+# -- Set it to true if you want to uninstall CRDs when uninstalling this chart.
+# By default, CRDs will be kept so your custom resources will not be deleted accidentally.
+deleteOnUninstall: false

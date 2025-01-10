@@ -1,0 +1,78 @@
+suite: CRDs
+templates:
+  - crds.yaml
+tests:
+  - it: should have all Traefik crds by default
+    set:
+      traefik: true
+    asserts:
+      - hasDocuments:
+          count: 10
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: traefik.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(IngressRoute|IngressRouteTCP|IngressRouteUDP|Middleware|MiddlewareTCP|ServersTransport|ServersTransportTCP|TLSOption|TLSStore|TraefikService)$
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should have all Traefik Hub crds
+    set:
+      traefik: false
+      hub: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: hub.traefik.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(AccessControlPolicy|AIService|APIAccess|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription)$
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should have all Gateway API crds
+    set:
+      traefik: false
+      gatewayAPI: true
+    asserts:
+      - hasDocuments:
+          count: 5
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: gateway.networking.k8s.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should have all Gateway API crds without helm keep resource policy
+    set:
+      traefik: false
+      gatewayAPI: true
+      deleteOnUninstall: true
+    asserts:
+      - hasDocuments:
+          count: 5
+      - isKind:
+          of: CustomResourceDefinition
+      - equal:
+          path: spec.group
+          value: gateway.networking.k8s.io
+      - matchRegex:
+          path: spec.names.kind
+          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
+      - notExists:
+          path: metadata.annotations["helm.sh/resource-policy"]
