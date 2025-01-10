@@ -314,15 +314,42 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.statusaddress.service.namespace=NAMESPACE"
-  - it: should have experimental flag when set
+  - it: When gateway provider is enabled with ns override, k8s providers & default statusAddress should be set
     set:
-      experimental:
+      namespaceOverride: foo
+      providers:
         kubernetesGateway:
           enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.statusaddress.service.namespace=foo"
+
+
+  - it: should have experimental flag when set
+    set:
+      experimental:
+        kubernetesGateway:
+          enabled: true
+        fastProxy:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: "--experimental.kubernetesgateway"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.fastProxy"
+  - it: should have debug experimental flag on fastProxy when set
+    set:
+      experimental:
+        fastProxy:
+          debug: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.fastProxy.debug"
+
   - it: shouldn't have experimental flag when >= 3.1.0
     set:
       image:

@@ -152,6 +152,17 @@
                 "abortOnPluginFailure": {
                     "type": "boolean"
                 },
+                "fastProxy": {
+                    "properties": {
+                        "debug": {
+                            "type": "boolean"
+                        },
+                        "enabled": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
                 "kubernetesGateway": {
                     "properties": {
                         "enabled": {
@@ -1577,10 +1588,6 @@
                 "capturedResponseHeaders": {
                     "type": "array"
                 },
-                "globalAttributes": {
-                    "properties": {},
-                    "type": "object"
-                },
                 "otlp": {
                     "properties": {
                         "enabled": {
@@ -1650,6 +1657,10 @@
                             "type": "object"
                         }
                     },
+                    "type": "object"
+                },
+                "resourceAttributes": {
+                    "properties": {},
                     "type": "object"
                 },
                 "safeQueryParams": {

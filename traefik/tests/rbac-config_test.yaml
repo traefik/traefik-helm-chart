@@ -40,6 +40,26 @@ tests:
           path: subjects[0].name
           value: RELEASE-NAME-traefik
         template: rbac/clusterrolebinding.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE
+        template: rbac/clusterrole.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE
+        template: rbac/clusterrolebinding.yaml
+  - it: should set expected name when ns is overriden
+    set:
+      namespaceOverride: foo
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-foo
+        template: rbac/clusterrole.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-foo
+        template: rbac/clusterrolebinding.yaml
   - it: should not create RBAC related objects when disabled
     set:
       rbac:

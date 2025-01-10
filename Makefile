@@ -12,6 +12,9 @@ traefik/tests/__snapshot__:
 test: traefik/tests/__snapshot__
 	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_HELM_UNITTEST) /charts/hack/test.sh
 
+test-ns:
+	./hack/check-ns.sh
+
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
 

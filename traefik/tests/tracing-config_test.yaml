@@ -11,7 +11,7 @@ tests:
         addInternals: true
         sampleRate: 0.5
         serviceName: my-service-name
-        globalAttributes:
+        resourceAttributes:
           attr1: foo
           attr2: bar
         capturedRequestHeaders:
@@ -58,10 +58,10 @@ tests:
           content: "--tracing.serviceName=my-service-name"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.globalAttributes.attr1=foo"
+          content: "--tracing.resourceAttributes.attr1=foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.globalAttributes.attr2=bar"
+          content: "--tracing.resourceAttributes.attr2=bar"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.capturedRequestHeaders[0]=X-CustomHeader"

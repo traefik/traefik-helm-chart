@@ -206,3 +206,13 @@ tests:
             matchLabels:
               app.kubernetes.io/name: traefik
               app.kubernetes.io/instance: traefik
+  - it: should set instance label to release.name-namespaceOverride when it is set
+    set:
+      namespaceOverride: foo
+    asserts:
+      - isSubset:
+          path: spec.selector
+          content:
+            matchLabels:
+              app.kubernetes.io/name: traefik
+              app.kubernetes.io/instance: RELEASE-NAME-foo

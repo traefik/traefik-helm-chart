@@ -392,8 +392,8 @@
           - "--tracing.serviceName={{ . }}"
             {{- end }}
 
-            {{- range $name, $value := .globalAttributes }}
-          - "--tracing.globalAttributes.{{ $name }}={{ $value }}"
+            {{- range $name, $value := .resourceAttributes }}
+          - "--tracing.resourceAttributes.{{ $name }}={{ $value }}"
             {{- end }}
 
             {{- range $index, $value := .capturedRequestHeaders }}
@@ -467,6 +467,14 @@
             {{- end }}
            {{- end }}
           {{- end }}
+          {{- end }}
+          {{- with .Values.experimental.fastProxy }}
+            {{- if .enabled }}
+          - "--experimental.fastProxy"
+            {{- end }}
+            {{- if .debug }}
+          - "--experimental.fastProxy.debug"
+            {{- end }}
           {{- end }}
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
