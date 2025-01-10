@@ -602,11 +602,15 @@
             {{- end }}
             {{- if $config.redirections }}
              {{- with $config.redirections.entryPoint }}
-              {{- if and (eq .to "websecure") (ne .scheme "https") }}
-                {{- $errorMsg := printf "ERROR: Cannot redirect %s to websecure without setting scheme to https" $entrypoint }}
+              {{- if not (hasKey $.Values.ports .to) }}
+                {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
                 {{- fail $errorMsg }}
               {{- end }}
               {{- $toPort := index $.Values.ports .to }}
+              {{- if and (($toPort.tls).enabled) (ne .scheme "https") }}
+                {{- $errorMsg := printf "ERROR: Cannot redirect %s to websecure without setting scheme to https" $entrypoint }}
+                {{- fail $errorMsg }}
+              {{- end }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
               {{- with .scheme }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme={{ . }}"

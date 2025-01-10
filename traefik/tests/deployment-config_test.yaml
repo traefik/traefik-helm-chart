@@ -234,6 +234,18 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
+  - it: should fail when redirect on non-existent entrypoint
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: foo
+        websecure:
+          exposedPort: 443
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot redirect web to foo: entryPoint not found"
   - it: should be possible to set an http redirections
     set:
       ports:
