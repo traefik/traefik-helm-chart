@@ -60,7 +60,7 @@ Due to changes in API Group of Traefik CRDs from `containo.us` to `traefik.io`, 
 
 ### Deploying
 
-#### With Traefik chart
+#### The standard way
 
 ```bash
 helm install traefik traefik/traefik
@@ -79,17 +79,7 @@ Complete documentation on all available parameters is in the [default file](./tr
 helm install -f myvalues.yaml traefik traefik/traefik
 ```
 
-:warning: If you want to use CRDs chart and Traefik chart is already deployed,
-you **have** to change ownership on CRDs **before** installating CRDs chart:
-
-```bash
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik-crds"}]'
-# If you use gateway API, you might also want to change Gateway API ownership
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik"}]'
-helm install traefik-crds traefik/traefik-crds
-```
-
-#### With Traefik & CRDs chart
+#### With additional CRDs chart
 
 ```bash
 helm install traefik-crds traefik/traefik-crds
@@ -101,9 +91,10 @@ helm list # should display two charts installed
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
 
-:warning: Please read carefully release notes of this chart before upgrading.
+> [!WARNING]
+> Please read carefully release notes of this chart before upgrading.
 
-### With Traefik chart
+### A standard installation
 
 When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
 CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for details.
@@ -119,9 +110,20 @@ kubectl apply --server-side --force-conflicts -k https://github.com/traefik/trae
 helm upgrade traefik traefik/traefik
 ```
 
+> [!WARNING]
+> If you want to upgrade from a standard installation to a CRDs chart powered one,
+> you **have** to change ownership on CRDs **before** installing CRDs chart
+
+```bash
+kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik-crds"}]'
+# If you use gateway API, you might also want to change Gateway API ownership
+kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"traefik"}]'
+helm install traefik-crds traefik/traefik-crds
+```
+
 New major version indicates that there is an incompatible breaking change.
 
-### With Traefik & CRDs charts
+### A CRDs chart powered installation
 
 ```bash
 # Update repository
