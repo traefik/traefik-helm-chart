@@ -938,7 +938,9 @@ hub:
       listenAddr: ""
       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
       secretName: ""
-
+  experimental:
+    # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+    aigateway: false
   redis:
     # -- Enable Redis Cluster. Default: true.
     cluster:    # @schema type:[boolean, null]
