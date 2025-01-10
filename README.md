@@ -111,7 +111,7 @@ helm upgrade traefik traefik/traefik
 ```
 
 > [!WARNING]
-> If you want to upgrade from a standard installation to a CRDs chart powered one,
+> When upgrading from standard installation to the one with additional CRDs chart,
 > you **have** to change ownership on CRDs **before** installing CRDs chart
 
 ```bash
@@ -123,7 +123,7 @@ helm install traefik-crds traefik/traefik-crds
 
 New major version indicates that there is an incompatible breaking change.
 
-### A CRDs chart powered installation
+### An installation with additional CRDs chart
 
 ```bash
 # Update repository
@@ -134,15 +134,6 @@ helm search repo traefik/traefik
 helm upgrade traefik-crds traefik/traefik
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
-```
-
-To upgrade from an already installed chart:
-```bash
-# Update repository
-helm repo update
-# Change CRDs ownership
-# Upgrade Traefik
-helm install traefik-crds traefik/traefik-crds -n traefik
 ```
 
 ### Upgrade up to 27.X
