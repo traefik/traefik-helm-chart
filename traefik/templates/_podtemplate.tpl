@@ -764,6 +764,9 @@
               {{- end }}
              {{- end }}
             {{- end }}
+            {{- if .experimental.aigateway }}
+          - "--hub.experimental.aigateway"
+            {{- end -}}
             {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
             {{- end -}}

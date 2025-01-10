@@ -274,6 +274,14 @@
                     },
                     "type": "object"
                 },
+                "experimental": {
+                    "properties": {
+                        "aigateway": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
                 "redis": {
                     "properties": {
                         "cluster": {
