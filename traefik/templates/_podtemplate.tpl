@@ -563,9 +563,9 @@
              {{- with .hostname }}
           - "--providers.kubernetesgateway.statusaddress.hostname={{ . }}"
              {{- end }}
-             {{- with .service }}
-          - "--providers.kubernetesgateway.statusaddress.service.name={{ tpl .name $ }}"
-          - "--providers.kubernetesgateway.statusaddress.service.namespace={{ tpl .namespace $ }}"
+             {{- if $.Values.service.enabled }}
+          - "--providers.kubernetesgateway.statusaddress.service.name={{ .service.name | default (include "traefik.fullname" $) }}"
+          - "--providers.kubernetesgateway.statusaddress.service.namespace={{ .service.namespace | default (include "traefik.namespace" $) }}"
              {{- end }}
             {{- end }}
             {{- if .nativeLBByDefault }}
