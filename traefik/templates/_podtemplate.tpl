@@ -563,7 +563,7 @@
              {{- with .hostname }}
           - "--providers.kubernetesgateway.statusaddress.hostname={{ . }}"
              {{- end }}
-             {{- if $.Values.service.enabled }}
+             {{- if (and .service.enabled $.Values.service.enabled) }}
           - "--providers.kubernetesgateway.statusaddress.service.name={{ .service.name | default (include "traefik.fullname" $) }}"
           - "--providers.kubernetesgateway.statusaddress.service.namespace={{ .service.namespace | default (include "traefik.namespace" $) }}"
              {{- end }}

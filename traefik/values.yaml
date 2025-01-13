@@ -319,6 +319,7 @@ providers:  # @schema additionalProperties: false
       hostname: ""
       # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
       service:
+        enabled: true
         name: ""
         namespace: ""
 

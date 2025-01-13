@@ -1394,6 +1394,9 @@
                                 },
                                 "service": {
                                     "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
                                         "name": {
                                             "type": "string"
                                         },
