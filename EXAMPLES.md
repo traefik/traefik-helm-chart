@@ -102,6 +102,20 @@ kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traef
 
 This command makes the dashboard accessible on the url: http://127.0.0.1:8080/dashboard/
 
+# Redirect permanently traffic from http to https
+
+It's possible to redirect all incoming requests on an entrypoint to an other entrypoint.
+
+```yaml
+ports:
+  web:
+    redirections:
+      entryPoint:
+        to: websecure
+        scheme: https
+        permanent: true
+```
+
 # Publish and protect Traefik Dashboard with basic Auth
 
 To expose the dashboard in a secure way as [recommended](https://doc.traefik.io/traefik/operations/dashboard/#dashboard-router-rule)

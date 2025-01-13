@@ -598,14 +598,29 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- if $config.redirectTo }}
-             {{- $toPort := index $.Values.ports $config.redirectTo.port }}
+              {{- fail "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax." -}}
+            {{- end }}
+            {{- if $config.redirections }}
+             {{- with $config.redirections.entryPoint }}
+              {{- if not (hasKey $.Values.ports .to) }}
+                {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
+                {{- fail $errorMsg }}
+              {{- end }}
+              {{- $toPort := index $.Values.ports .to }}
+              {{- if and (($toPort.tls).enabled) (ne .scheme "https") }}
+                {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
+                {{- fail $errorMsg }}
+              {{- end }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme=https"
-             {{- if $config.redirectTo.priority }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ $config.redirectTo.priority }}"
-             {{- end }}
-             {{- if $config.redirectTo.permanent }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent=true"
+              {{- with .scheme }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme={{ . }}"
+              {{- end }}
+              {{- with .priority }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
+              {{- end }}
+              {{- with .permanent }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ . }}"
+              {{- end }}
              {{- end }}
             {{- end }}
             {{- if $config.middlewares }}
