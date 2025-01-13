@@ -1,5 +1,91 @@
 # Change Log
 
+## 34.0.0  ![AppVersion: v3.3.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-01-13
+
+* fix(Traefik Proxy)!: use namespaceOverride as expected
+* feat(deps): update traefik docker tag to v3.3.1
+* feat(deps): update traefik docker tag to v3.2.3
+* feat(Traefik Proxy): apply migration guide to v3.3
+* feat(Traefik Proxy): add support for experimental FastProxy
+* feat(Traefik Hub): add support for AI Gateway
+* feat(Chart): :package: add optional separated chart for CRDs
+* feat(CRDs): update CRDs for Traefik Proxy v3.3.x
+* chore(release): publish v34.0.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 78c8ea4..09d33fa 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -122,14 +122,19 @@ core:  # @schema additionalProperties: false
+ experimental:
+   # -- Defines whether all plugins must be loaded successfully for Traefik to start
+   abortOnPluginFailure: false
++  fastProxy:
++    # -- Enables the FastProxy implementation.
++    enabled: false
++    # -- Enable debug mode for the FastProxy implementation.
++    debug: false
++  kubernetesGateway:
++    # -- Enable traefik experimental GatewayClass CRD
++    enabled: false
+   # -- Enable traefik experimental plugins
+   plugins: {}
+   # demo:
+   #   moduleName: github.com/traefik/plugindemo
+   #   version: v0.2.1
+-  kubernetesGateway:
+-    # -- Enable traefik experimental GatewayClass CRD
+-    enabled: false
+ 
+ gateway:
+   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+@@ -315,7 +320,7 @@ providers:  # @schema additionalProperties: false
+       # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
+       service:
+         name: "{{ (include \"traefik.fullname\" .) }}"
+-        namespace: "{{ .Release.Namespace }}"
++        namespace: "{{ include \"traefik.namespace\" . }}"
+ 
+   file:
+     # -- Create a file provider
+@@ -537,8 +542,8 @@ tracing:  # @schema additionalProperties: false
+   addInternals: false
+   # -- Service name used in selected backend. Default: traefik.
+   serviceName:  # @schema type:[string, null]
+-  # -- Applies a list of shared key:value attributes on all spans.
+-  globalAttributes: {}
++  # -- Defines additional resource attributes to be sent to the collector.
++  resourceAttributes: {}
+   # -- Defines the list of request headers to add as attributes. It applies to client and server kind spans.
+   capturedRequestHeaders: []
+   # -- Defines the list of response headers to add as attributes. It applies to client and server kind spans.
+@@ -869,7 +874,7 @@ affinity: {}
+ #      - labelSelector:
+ #          matchLabels:
+ #            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+-#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ .Release.Namespace }}'
++#            app.kubernetes.io/instance: '{{ .Release.Name }}-{{ include "traefik.namespace" . }}'
+ #        topologyKey: kubernetes.io/hostname
+ 
+ # -- nodeSelector is the simplest recommended form of node selection constraint.
+@@ -933,7 +938,9 @@ hub:
+       listenAddr: ""
+       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+       secretName: ""
+-
++  experimental:
++    # -- Set to true in order to enable AI Gateway. Requires a valid license token.
++    aigateway: false
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+     cluster:    # @schema type:[boolean, null]
+```
+
 ## 33.2.1  ![AppVersion: v3.2.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.2.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2024-12-13
