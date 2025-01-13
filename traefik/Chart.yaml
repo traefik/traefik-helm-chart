@@ -26,6 +26,8 @@ icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets
 annotations:
   artifacthub.io/changes: |
     - "fix(Traefik Proxy)!: use namespaceOverride as expected"
+    - "fix(Traefik Proxy)!: move redirectTo => redirections"
+    - "fix(Gateway API): status should not use default service when it's disabled"
     - "feat(deps): update traefik docker tag to v3.3.1"
     - "feat(deps): update traefik docker tag to v3.2.3"
     - "feat(Traefik Proxy): apply migration guide to v3.3"
@@ -34,3 +36,4 @@ annotations:
     - "feat(Chart): :package: add optional separated chart for CRDs"
     - "feat(CRDs): update CRDs for Traefik Proxy v3.3.x"
     - "chore(release): publish v34.0.0"
+    - "chore(Gateway API): :recycle: remove template from values"

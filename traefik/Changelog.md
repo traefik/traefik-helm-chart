@@ -5,6 +5,8 @@
 **Release date:** 2025-01-13
 
 * fix(Traefik Proxy)!: use namespaceOverride as expected
+* fix(Traefik Proxy)!: move redirectTo => redirections
+* fix(Gateway API): status should not use default service when it's disabled
 * feat(deps): update traefik docker tag to v3.3.1
 * feat(deps): update traefik docker tag to v3.2.3
 * feat(Traefik Proxy): apply migration guide to v3.3
@@ -13,12 +15,21 @@
 * feat(Chart): :package: add optional separated chart for CRDs
 * feat(CRDs): update CRDs for Traefik Proxy v3.3.x
 * chore(release): publish v34.0.0
+* chore(Gateway API): :recycle: remove template from values
+
+**Upgrade Notes**
+
+There are multiple breaking changes in this release:
+
+1. When using namespaceOverride, the label selector will be changed. On a production environment, it's recommended to deploy a new instance with the new version, switch the traffic to it and delete the previous one. See PR #1290 for more information
+2. `ports.x.redirectTo` has been refactored to be aligned with upstream syntax. See PR #1301 for a complete before / after example.
+
 
 ### Default value changes
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index 78c8ea4..09d33fa 100644
+index 78c8ea4..f5922fe 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -122,14 +122,19 @@ core:  # @schema additionalProperties: false
@@ -44,16 +55,19 @@ index 78c8ea4..09d33fa 100644
  
  gateway:
    # -- When providers.kubernetesGateway.enabled, deploy a default gateway
-@@ -315,7 +320,7 @@ providers:  # @schema additionalProperties: false
+@@ -314,8 +319,9 @@ providers:  # @schema additionalProperties: false
+       hostname: ""
        # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
        service:
-         name: "{{ (include \"traefik.fullname\" .) }}"
+-        name: "{{ (include \"traefik.fullname\" .) }}"
 -        namespace: "{{ .Release.Namespace }}"
-+        namespace: "{{ include \"traefik.namespace\" . }}"
++        enabled: true
++        name: ""
++        namespace: ""
  
    file:
      # -- Create a file provider
-@@ -537,8 +542,8 @@ tracing:  # @schema additionalProperties: false
+@@ -537,8 +543,8 @@ tracing:  # @schema additionalProperties: false
    addInternals: false
    # -- Service name used in selected backend. Default: traefik.
    serviceName:  # @schema type:[string, null]
@@ -64,7 +78,24 @@ index 78c8ea4..09d33fa 100644
    # -- Defines the list of request headers to add as attributes. It applies to client and server kind spans.
    capturedRequestHeaders: []
    # -- Defines the list of response headers to add as attributes. It applies to client and server kind spans.
-@@ -869,7 +874,7 @@ affinity: {}
+@@ -642,10 +648,12 @@ ports:
+     protocol: TCP
+     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+     nodePort:  # @schema type:[integer, null]; minimum:0
+-    # Port Redirections
+-    # Added in 2.2, you can make permanent redirects via entrypoints.
+-    # https://docs.traefik.io/routing/entrypoints/#redirection
+-    redirectTo: {}
++    redirections:
++      # -- Port Redirections
++      # Added in 2.2, one can make permanent redirects via entrypoints.
++      # Same sets of parameters: to, scheme, permanent and priority.
++      # https://docs.traefik.io/routing/entrypoints/#redirection
++      entryPoint: {}
+     forwardedHeaders:
+       # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+@@ -869,7 +877,7 @@ affinity: {}
  #      - labelSelector:
  #          matchLabels:
  #            app.kubernetes.io/name: '{{ template "traefik.name" . }}'
@@ -73,7 +104,7 @@ index 78c8ea4..09d33fa 100644
  #        topologyKey: kubernetes.io/hostname
  
  # -- nodeSelector is the simplest recommended form of node selection constraint.
-@@ -933,7 +938,9 @@ hub:
+@@ -933,7 +941,9 @@ hub:
        listenAddr: ""
        # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
        secretName: ""
