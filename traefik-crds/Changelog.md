@@ -1,11 +1,20 @@
 # Change Log
 
+## 1.2.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-01-15
+
+* feat(Traefik Hub): add OAS validateRequestMethodAndPath - CRDs update
+* chore(release): publish v34.1.0 and CRDs v1.2.0
+
+
 ## 1.1.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-01-13
 
 * feat(CRDs): update CRDs for Traefik Proxy v3.3.x
-* chore(release): publish CRDs v1.1.0
+* chore(release): publish v34.0.0 and CRDs v1.1.0
+
 
 ## 1.0.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
