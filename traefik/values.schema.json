@@ -270,6 +270,14 @@
                         },
                         "enabled": {
                             "type": "boolean"
+                        },
+                        "openApi": {
+                            "properties": {
+                                "validateRequestMethodAndPath": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
                         }
                     },
                     "type": "object"
