@@ -1,5 +1,34 @@
 # Change Log
 
+## 34.1.0  ![AppVersion: v3.3.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-01-15
+
+* fix(Traefik Proxy): support uppercase letters in entrypoint names
+* feat(deps): update traefik docker tag to v3.3.2
+* feat(Traefik Hub): add OAS validateRequestMethodAndPath - CRDs update
+* chore(release): publish v34.1.0 and CRDs v1.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f5922fe..3335e78 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -941,6 +941,10 @@ hub:
+       listenAddr: ""
+       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+       secretName: ""
++    openApi:
++      # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
++      validateRequestMethodAndPath: false
++
+   experimental:
+     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+     aigateway: false
+```
+
 ## 34.0.0  ![AppVersion: v3.3.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-01-13
