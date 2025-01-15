@@ -75,6 +75,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apimanagement.admission.secretName=secret"
+  - it: should be possible to enforce OAS
+    set:
+      hub:
+        apimanagement:
+          enabled: true
+          openApi:
+            validateRequestMethodAndPath: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
   - it: api management should not be enabled by default
     asserts:
       - notContains:
