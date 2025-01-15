@@ -1,6 +1,6 @@
 .PHONY: lint test
 
-IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.11.0
+IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.12.0
 IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v0.3.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.16.1-0.6.1

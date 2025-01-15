@@ -274,6 +274,14 @@
                     },
                     "type": "object"
                 },
+                "experimental": {
+                    "properties": {
+                        "aigateway": {
+                            "type": "boolean"
+                        }
+                    },
+                    "type": "object"
+                },
                 "redis": {
                     "properties": {
                         "cluster": {
@@ -1045,8 +1053,13 @@
                             },
                             "type": "object"
                         },
-                        "redirectTo": {
-                            "properties": {},
+                        "redirections": {
+                            "properties": {
+                                "entryPoint": {
+                                    "properties": {},
+                                    "type": "object"
+                                }
+                            },
                             "type": "object"
                         },
                         "targetPort": {
@@ -1381,6 +1394,9 @@
                                 },
                                 "service": {
                                     "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
                                         "name": {
                                             "type": "string"
                                         },

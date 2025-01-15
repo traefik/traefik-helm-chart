@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 33.2.1
+version: 34.0.0
 # renovate: image=traefik
-appVersion: v3.2.3
+appVersion: v3.3.1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -25,5 +25,15 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Gateway API): CRDs should only be defined once"
-    - "chore(release): 🚀 publish v33.2.1"
+    - "fix(Traefik Proxy)!: use namespaceOverride as expected"
+    - "fix(Traefik Proxy)!: move redirectTo => redirections"
+    - "fix(Gateway API): status should not use default service when it's disabled"
+    - "feat(deps): update traefik docker tag to v3.3.1"
+    - "feat(deps): update traefik docker tag to v3.2.3"
+    - "feat(Traefik Proxy): apply migration guide to v3.3"
+    - "feat(Traefik Proxy): add support for experimental FastProxy"
+    - "feat(Traefik Hub): add support for AI Gateway"
+    - "feat(Chart): :package: add optional separated chart for CRDs"
+    - "feat(CRDs): update CRDs for Traefik Proxy v3.3.x"
+    - "chore(release): publish v34.0.0"
+    - "chore(Gateway API): :recycle: remove template from values"

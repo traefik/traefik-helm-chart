@@ -86,11 +86,14 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
-  - it: api management should not be enabled by default
+  - it: api management and ai gateway should not be enabled by default
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apimanagement"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.experimental.aigateway"
   - it: should be possible to specify platformUrl
     set:
       hub:
@@ -170,3 +173,12 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.sendlogs=true"
+  - it: should be possible to enable AI Gateway
+    set:
+      hub:
+        experimental:
+          aigateway: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.experimental.aigateway"
