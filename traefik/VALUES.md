@@ -85,6 +85,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.secretName | string | `""` | Certificate of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
+| hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |

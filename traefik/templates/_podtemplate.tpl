@@ -777,6 +777,9 @@
               {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
               {{- end }}
+              {{- if .openApi.validateRequestMethodAndPath }}
+          - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
+              {{- end }}
              {{- end }}
             {{- end }}
             {{- if .experimental.aigateway }}

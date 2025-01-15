@@ -941,6 +941,10 @@ hub:
       listenAddr: ""
       # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
       secretName: ""
+    openApi:
+      # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+      validateRequestMethodAndPath: false
+
   experimental:
     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
     aigateway: false

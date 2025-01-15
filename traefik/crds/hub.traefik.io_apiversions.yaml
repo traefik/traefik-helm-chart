@@ -157,6 +157,11 @@ spec:
                     x-kubernetes-validations:
                     - message: must be a valid URL
                       rule: isURL(self)
+                  validateRequestMethodAndPath:
+                    description: |-
+                      ValidateRequestMethodAndPath validates that the path and method matches an operation defined in the OpenAPI specification.
+                      This option overrides the default behavior configured in the static configuration.
+                    type: boolean
                 type: object
                 x-kubernetes-validations:
                 - message: path or url must be defined
