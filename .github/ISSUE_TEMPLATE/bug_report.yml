@@ -46,7 +46,7 @@ body:
 
   - type: textarea
     attributes:
-      label: What did you do?
+      label: What were you expecting ?
       description: Use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown) if needed.
       placeholder: What did you do?
     validations:
@@ -54,7 +54,7 @@ body:
 
   - type: textarea
     attributes:
-      label: What did you see instead?
+      label: What did you see instead ?
       description: Use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown) if needed.
       placeholder: What did you see instead?
     validations:
@@ -62,10 +62,8 @@ body:
 
   - type: textarea
     attributes:
-      label: What is your environment & configuration?
+      label: What are your values ?
       description: |
-        platform, arguments, YAML, TOML, platform, etc.
-
         Use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown) if needed.
       placeholder: Add information here.
     validations:
