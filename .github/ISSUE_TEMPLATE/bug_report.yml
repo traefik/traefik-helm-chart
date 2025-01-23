@@ -54,7 +54,7 @@ body:
 
   - type: textarea
     attributes:
-      label: What did you see instead ?
+      label: What did you notice instead ?
       description: Use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown) if needed.
       placeholder: What did you see instead?
     validations:
