@@ -26,8 +26,8 @@ body:
 
   - type: textarea
     attributes:
-      label: What would you like to see in this Chart ?
+      label: What do you want to achieve with this Chart ?
       description: Use [Markdown syntax](https://help.github.com/articles/github-flavored-markdown) if needed.
-      placeholder: What would you like to see in this Chart ?
+      placeholder: What do you want to achieve with this Chart ?
     validations:
       required: true
