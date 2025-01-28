@@ -618,8 +618,8 @@
               {{- with .priority }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
               {{- end }}
-              {{- with .permanent }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ . }}"
+              {{- if hasKey . "permanent" }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ .permanent }}"
               {{- end }}
              {{- end }}
             {{- end }}
