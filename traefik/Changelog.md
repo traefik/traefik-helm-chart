@@ -1,5 +1,41 @@
 # Change Log
 
+## 34.2.0  ![AppVersion: v3.3.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-01-28
+
+* fix: :bug: permanent redirect should be disableable
+* feat: :sparkles: add hub tracing capabilities
+* docs: 📚️ fix typo in Guidelines.md
+* chore(release): publish v34.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 3335e78..4f93924 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -979,3 +979,17 @@ hub:
+       insecureSkipVerify: false
+   # Enable export of errors logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
++  tracing:
++    # -- Tracing headers to duplicate.
++    # To configure the following, tracing.otlp.enabled needs to be set to true.
++    additionalTraceHeaders:
++      enabled: false
++      traceContext:
++        # -- Name of the header that will contain the parent-id header copy.
++        parentId: ""
++        # -- Name of the header that will contain the trace-id copy.
++        traceId: ""
++        # -- Name of the header that will contain the traceparent copy.
++        traceParent: ""
++        # -- Name of the header that will contain the tracestate copy.
++        traceState: ""
+```
+
 ## 34.1.0  ![AppVersion: v3.3.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-01-15

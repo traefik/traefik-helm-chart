@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 34.1.0
+version: 34.2.0
 # renovate: image=traefik
 appVersion: v3.3.2
 kubeVersion: ">=1.22.0-0"
@@ -25,7 +25,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Traefik Proxy): support uppercase letters in entrypoint names"
-    - "feat(deps): update traefik docker tag to v3.3.2"
-    - "feat(Traefik Hub): add OAS validateRequestMethodAndPath - CRDs update"
-    - "chore(release): publish v34.1.0 and CRDs v1.2.0"
+    - "fix: :bug: permanent redirect should be disableable"
+    - "feat: :sparkles: add hub tracing capabilities"
+    - "docs: 📚️ fix typo in Guidelines.md"
+    - "chore(release): publish v34.2.0"
