@@ -102,6 +102,11 @@ Kubernetes: `>=1.22.0-0`
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
+| hub.tracing.additionalTraceHeaders | object | `{"enabled":false,"traceContext":{"parentId":"","traceId":"","traceParent":"","traceState":""}}` | Tracing headers to duplicate. To configure the following, tracing.otlp.enabled needs to be set to true. |
+| hub.tracing.additionalTraceHeaders.traceContext.parentId | string | `""` | Name of the header that will contain the parent-id header copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |

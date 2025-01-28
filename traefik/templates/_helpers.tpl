@@ -148,6 +148,24 @@ based on semverCompare
 {{- end -}}
 {{- end -}}
 
+{{- define "imageHubVersion" -}}
+{{/*
+Traefik hub version needs to be specified. This helper will fail if it's not the case.
+*/}}
+{{- if $.Values.hub.token -}}
+ {{ if or (not $.Values.image.tag) (not $.Values.image.registry) (not $.Values.image.repository) }}
+    {{ fail "When using Traefik Hub registry, repository and tag needs to be specified !" }}
+ {{- end -}}
+ {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag) -}}
+    {{ $.Values.image.tag }}
+ {{- else -}}
+    {{ $.Values.image.tag| replace "latest-" "" }}
+ {{- end -}}
+{{- else -}}
+ v3
+{{- end -}}
+{{- end -}}
+
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
 {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) "hub-agent-cert" -}}
@@ -170,7 +188,9 @@ Key: {{ $cert.Key | b64enc }}
         {{- if kindIs "map" $value }}
             {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
         {{- else }}
+            {{- with $value  }}
 --{{ join "." (list $path $key)}}={{ join "," $value }}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}

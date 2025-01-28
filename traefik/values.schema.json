@@ -358,6 +358,36 @@
                 },
                 "token": {
                     "type": "string"
+                },
+                "tracing": {
+                    "properties": {
+                        "additionalTraceHeaders": {
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "traceContext": {
+                                    "properties": {
+                                        "parentId": {
+                                            "type": "string"
+                                        },
+                                        "traceId": {
+                                            "type": "string"
+                                        },
+                                        "traceParent": {
+                                            "type": "string"
+                                        },
+                                        "traceState": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
                 }
             },
             "type": "object"

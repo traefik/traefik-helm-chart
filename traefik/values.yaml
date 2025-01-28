@@ -979,3 +979,17 @@ hub:
       insecureSkipVerify: false
   # Enable export of errors logs to the platform. Default: true.
   sendlogs:  # @schema type:[boolean, null]
+  tracing:
+    # -- Tracing headers to duplicate.
+    # To configure the following, tracing.otlp.enabled needs to be set to true.
+    additionalTraceHeaders:
+      enabled: false
+      traceContext:
+        # -- Name of the header that will contain the parent-id header copy.
+        parentId: ""
+        # -- Name of the header that will contain the trace-id copy.
+        traceId: ""
+        # -- Name of the header that will contain the traceparent copy.
+        traceParent: ""
+        # -- Name of the header that will contain the tracestate copy.
+        traceState: ""
