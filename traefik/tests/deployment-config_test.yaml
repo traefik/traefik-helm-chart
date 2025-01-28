@@ -293,3 +293,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.redirections.entryPoint.permanent=true"
+  - it: should have permanent http redirections disabled, when enabled with redirectTo and permanent set to false
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+              permanent: false
+        websecure:
+          exposedPort: 443
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.permanent=false"
