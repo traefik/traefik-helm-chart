@@ -65,6 +65,10 @@ tests:
       - notFailedTemplate: {}
   - it: should fail when using traefik-hub API management with namespaced RBACs
     set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: "v3"
       hub:
         token: xxx
         apimanagement:
@@ -141,3 +145,38 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."
+  - it: should fail when using Traefik Hub without image registry and repository specified.
+    set:
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "When using Traefik Hub image tag needs to be specified !"
+  - it: should fail when using hub.tracing.additionalTraceHeaders on Traefik Hub < 3.9.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.8.0
+      hub:
+        token: "xxx"
+        tracing:
+          additionalTraceHeaders:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: additionalTraceHeaders is a feature only available for traefik-hub >= v3.9.0."
+  - it: should fail when using hub.tracing.additionalTraceHeaders without tracing.otlp enabled
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.9.0
+      hub:
+        token: "xxx"
+        tracing:
+          additionalTraceHeaders:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."
