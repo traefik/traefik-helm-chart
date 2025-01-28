@@ -813,7 +813,7 @@
           - "--hub.sendlogs={{ . }}"
             {{- end }}
             {{- if and $.Values.tracing.otlp.enabled .tracing.additionalTraceHeaders.enabled }}
-            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
             {{- end }}
           {{- end }}
          {{- end }}
