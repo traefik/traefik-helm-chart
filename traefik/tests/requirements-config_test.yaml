@@ -145,6 +145,13 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."
+  - it: should fail when using Traefik Hub without image registry and repository specified.
+    set:
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "When using Traefik Hub image tag needs to be specified !"
   - it: should fail when using hub.tracing.additionalTraceHeaders on Traefik Hub < 3.9.0
     set:
       image:
