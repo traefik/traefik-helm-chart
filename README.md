@@ -91,15 +91,15 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 <details>
   <summary>Few words on technical choices about CRDs implementation</summary>
-Some Traefik Helm chart users asked us for help in managing CRDs installed by this chart (cf. #1141, #1209).
+Some Traefik Helm chart users asked for help in managing CRDs installed by this chart (cf. [#1141](https://github.com/traefik/traefik-helm-chart/issues/1141), [#1209](https://github.com/traefik/traefik-helm-chart/issues/1209)).
 Helm doesn't support CRDs upgrades (cf. [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for details). 
 
 The objectives are the following:
 
-1. continue to support the nominal installation case
-2. stay conservative about CRDs to protect resource removal (that's actually one of the reasons why helm doesn't support
+1. Support the nominal installation case following official Helm GuideLines
+2. Stay conservative about CRDs to protect resource removal (that's actually one of the reasons why helm doesn't support)
    CRDs upgrades)
-3. allow users to install multiple instances of Traefik chart along with managed CRDs
+3. Allow users to install multiple instances of Traefik chart along with helm managed CRDs
 
 Several implementations have been experimented. Here are pros and cons of each:
 
