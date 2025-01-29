@@ -36,7 +36,7 @@ Commits messages should follow [conventional commits](https://www.conventionalco
 All commits will appear in traefik helm chart changelog with two exceptions:
 
 - CRDs: CRDs are shared between Traefik and CRDs charts, thus, commits with this scope will appear in both charts changelog (e.g. `feat(CRDs): update Traefik Proxy CRDs to v3.x`)
-- CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values: update values documentation`)   
+- CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values): update values documentation`)   
 
 # Statistics
 

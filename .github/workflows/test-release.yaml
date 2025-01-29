@@ -18,7 +18,7 @@ jobs:
 
       - name: Render traefik changelog configuration
         env:
-          REGEXP: "?!CRDs-"
+          REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
         run: |
           export DATE=2025-01-28; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
 
@@ -54,7 +54,7 @@ jobs:
 
       - name: Render traefik changelog configuration
         env:
-          REGEXP: "CRDs"
+          REGEXP: '\\((CRDs|CRDs-.+)\\)'
         run: |
           export DATE=2025-01-13; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
 
