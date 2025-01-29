@@ -87,6 +87,18 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
+| hub.providers.microcks.auth.clientId | string | `""` | Microcks API client ID. |
+| hub.providers.microcks.auth.clientSecret | string | `""` | Microcks API client secret. |
+| hub.providers.microcks.auth.endpoint | string | `""` | Microcks API endpoint. |
+| hub.providers.microcks.auth.token | string | `""` | Microcks API token. |
+| hub.providers.microcks.enabled | bool | `false` | Enable Microcks provider. |
+| hub.providers.microcks.endpoint | string | `""` | Microcks API endpoint. |
+| hub.providers.microcks.pollInterval | int | `30` | Polling interval for Microcks API. |
+| hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
+| hub.providers.microcks.tls.ca | string | `""` | TLS CA |
+| hub.providers.microcks.tls.cert | string | `""` | TLS cert |
+| hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.microcks.tls.key | string | `""` | TLS key |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |

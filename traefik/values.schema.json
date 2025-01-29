@@ -290,6 +290,62 @@
                     },
                     "type": "object"
                 },
+                "providers": {
+                    "properties": {
+                        "microcks": {
+                            "properties": {
+                                "auth": {
+                                    "properties": {
+                                        "clientId": {
+                                            "type": "string"
+                                        },
+                                        "clientSecret": {
+                                            "type": "string"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "type": "string"
+                                },
+                                "pollInterval": {
+                                    "type": "integer"
+                                },
+                                "pollTimeout": {
+                                    "type": "integer"
+                                },
+                                "tls": {
+                                    "properties": {
+                                        "ca": {
+                                            "type": "string"
+                                        },
+                                        "cert": {
+                                            "type": "string"
+                                        },
+                                        "insecureSkipVerify": {
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
                 "redis": {
                     "properties": {
                         "cluster": {
