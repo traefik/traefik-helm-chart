@@ -208,3 +208,19 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub latest v3 builds
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: latest-v3
+      tracing:
+        otlp:
+          enabled: true
+      hub:
+        token: "xxx"
+        tracing:
+          additionalTraceHeaders:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}      
