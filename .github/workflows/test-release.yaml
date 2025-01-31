@@ -6,8 +6,9 @@ on:
     paths:
       - .github/fixtures/changelog-traefik.md
       - .github/fixtures/changelog-traefik-crds.md
-      - .github/workflows/release.yaml
       - .github/workflows/changelog.json
+      - .github/workflows/release.yaml
+      - .github/workflows/test-release.yaml
 
 jobs:
   test:
