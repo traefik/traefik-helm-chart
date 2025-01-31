@@ -6,8 +6,9 @@ on:
     paths:
       - .github/fixtures/changelog-traefik.md
       - .github/fixtures/changelog-traefik-crds.md
-      - .github/workflows/release.yaml
       - .github/workflows/changelog.json
+      - .github/workflows/release.yaml
+      - .github/workflows/test-release.yaml
 
 jobs:
   test:
@@ -39,7 +40,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.0.0
+        uses: LouisBrunner/diff-action@v2.2.0
         with:
           old: .github/fixtures/changelog-traefik.md
           new: /tmp/changelog.md
@@ -75,7 +76,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.0.0
+        uses: LouisBrunner/diff-action@v2.2.0
         with:
           old: .github/fixtures/changelog-traefik-crds.md
           new: /tmp/changelog.md
