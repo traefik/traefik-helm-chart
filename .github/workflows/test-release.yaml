@@ -39,7 +39,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.0.0
+        uses: LouisBrunner/diff-action@v2.2.0
         with:
           old: .github/fixtures/changelog-traefik.md
           new: /tmp/changelog.md
@@ -75,7 +75,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.0.0
+        uses: LouisBrunner/diff-action@v2.2.0
         with:
           old: .github/fixtures/changelog-traefik-crds.md
           new: /tmp/changelog.md
