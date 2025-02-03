@@ -1,0 +1,84 @@
+---
+name: Test release
+
+on:
+  pull_request:
+    paths:
+      - .github/fixtures/changelog-traefik.md
+      - .github/fixtures/changelog-traefik-crds.md
+      - .github/workflows/changelog.json
+      - .github/workflows/release.yaml
+      - .github/workflows/test-release.yaml
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Render traefik changelog configuration
+        env:
+          REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
+        run: |
+          export DATE=2025-01-28; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: v34.1.0
+          toTag: v34.2.0
+          configuration: "/tmp/changelog.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write changelog
+        run: |
+          cat <<EOF > /tmp/changelog.md
+          ${{ steps.changelog.outputs.changelog }}
+          EOF
+
+      - name: Check that the files are the exact same
+        uses: LouisBrunner/diff-action@v2.2.0
+        with:
+          old: .github/fixtures/changelog-traefik.md
+          new: /tmp/changelog.md
+          mode: strict
+          tolerance: same
+
+  test-crds:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Render traefik changelog configuration
+        env:
+          REGEXP: '\\((CRDs|CRDs-.+)\\)'
+        run: |
+          export DATE=2025-01-13; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@v5
+        with:
+          fromTag: crds_v1.0.0
+          toTag: crds_v1.1.0
+          configuration: "/tmp/changelog.json"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write changelog
+        run: |
+          cat <<EOF > /tmp/changelog.md
+          ${{ steps.changelog.outputs.changelog }}
+          EOF
+
+      - name: Check that the files are the exact same
+        uses: LouisBrunner/diff-action@v2.2.0
+        with:
+          old: .github/fixtures/changelog-traefik-crds.md
+          new: /tmp/changelog.md
+          mode: strict
+          tolerance: same
