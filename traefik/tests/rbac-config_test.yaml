@@ -887,6 +887,19 @@ tests:
           path: rules
           content:
             apiGroups:
+              - hub.traefik.io
+            resources:
+              - aiservices
+            verbs:
+              - list
+              - watch
+              - get
+
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
               - ""
             resources:
               - namespaces
@@ -952,7 +965,6 @@ tests:
               - apiplans
               - apicatalogitems
               - managedsubscriptions
-              - aiservices
             verbs:
               - list
               - watch
