@@ -812,3 +812,20 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.tracing.additionalTraceHeaders.traceContext.traceState=traceState"
+  - it: should be possible to configure Traefik Hub microcks provider
+    set:
+      image:
+        tag: v3.7.0
+      tracing:
+        otlp:
+          enabled: true
+      hub:
+        token: "xxx"
+        providers:
+          microcks:
+            enabled: true
+            endpoint: "http://microcks.svc"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks.endpoint=http://microcks.svc"

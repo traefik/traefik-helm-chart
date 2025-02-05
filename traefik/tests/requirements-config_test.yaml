@@ -180,3 +180,15 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."
+  - it: should fail when using consulCatalogEnterprise provider on hub < 3.6.0
+    set:
+      image:
+        tag: v3.6.0
+      hub:
+        token: "xxx"
+        providers:
+          microcks:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."
