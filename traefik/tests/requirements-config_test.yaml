@@ -192,3 +192,19 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."
+  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub main builds
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: main-1af57d3-1737730202
+      tracing:
+        otlp:
+          enabled: true
+      hub:
+        token: "xxx"
+        tracing:
+          additionalTraceHeaders:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
