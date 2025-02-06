@@ -3,7 +3,7 @@ apiVersion: apiextensions.k8s.io/v1
 kind: CustomResourceDefinition
 metadata:
   annotations:
-    controller-gen.kubebuilder.io/version: v0.14.0
+    controller-gen.kubebuilder.io/version: v0.17.1
   name: apis.hub.traefik.io
 spec:
   group: hub.traefik.io
@@ -42,6 +42,9 @@ spec:
           spec:
             description: APISpec describes the API.
             properties:
+              description:
+                description: Description explains what the API does.
+                type: string
               openApiSpec:
                 description: OpenAPISpec defines the API contract as an OpenAPI specification.
                 properties:
@@ -162,6 +165,11 @@ spec:
                 x-kubernetes-validations:
                 - message: path or url must be defined
                   rule: has(self.path) || has(self.url)
+              title:
+                description: Title is the human-readable name of the API that will
+                  be used on the portal.
+                maxLength: 253
+                type: string
               versions:
                 description: Versions are the different APIVersions available.
                 items:
