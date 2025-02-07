@@ -1,6 +1,6 @@
 # Change Log
 
-## Next Release  ![AppVersion: v3.3.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+## 34.3.0  ![AppVersion: v3.3.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 * fix(Traefik Hub): AIServices are available in API Gateway
 * fix(Traefik Hub): :bug: handle main and latest build
