@@ -200,8 +200,6 @@ rules:
       - update
       - patch
       - delete
-  {{- end }}
-  {{- if .Values.hub.token }}
   - apiGroups:
       - hub.traefik.io
     resources:
