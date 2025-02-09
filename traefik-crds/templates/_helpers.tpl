@@ -14,7 +14,6 @@ Render CRDs file.
                     "annotations" (dict
                             "app.kubernetes.io/managed-by" "Helm"
                             "meta.helm.sh/release-name" $scope.Release.Name
-                            "meta.helm.sh/release-namespace" $scope.Release.Namespace
                     )
                     "labels" (dict
                         "app.kubernetes.io/managed-by" "Helm"
