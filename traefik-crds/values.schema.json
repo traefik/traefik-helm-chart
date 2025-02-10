@@ -1,7 +1,7 @@
 {
     "$id": "https://traefik.io/traefik-crds-helm-chart.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "additionalProperties": false,
+    "additionalProperties": true,
     "description": "The Cloud Native Application Proxy",
     "properties": {
         "deleteOnUninstall": {
