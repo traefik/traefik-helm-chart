@@ -46,6 +46,9 @@ spec:
           spec:
             description: The desired behavior of this APIVersion.
             properties:
+              description:
+                description: Description explains what the APIVersion does.
+                type: string
               openApiSpec:
                 description: OpenAPISpec defines the API contract as an OpenAPI specification.
                 properties:
