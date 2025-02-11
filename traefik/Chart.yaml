@@ -30,7 +30,3 @@ annotations:
     - "feat: :sparkles: add missing microcks provider for Hu"b
     - "feat(deps): update traefik docker tag to v3.3.3"
     - "chore: update CRDs to v1.14.1"
-dependencies:
-  - name: traefik-crds
-    version: 1.3.0
-    repository: "file://../traefik-crds"

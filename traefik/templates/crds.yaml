@@ -1,0 +1,3 @@
+{{- if .Values.crds.enabled -}}
+{{ include "traefik.render-crds" (dict "scope" . "path" "crds-files/*.yaml") }}
+{{- end }}
