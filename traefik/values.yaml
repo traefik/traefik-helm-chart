@@ -5,7 +5,7 @@
 # Globally enable or disable traefik built-in CRD's
 # Useful if you install CRD's separately with the traefik-crds chart
 crds:
-  enabled: false
+  enabled: true
   # -- Set it to true if you want to uninstall CRDs when uninstalling this chart.
   # By default, CRDs will be kept so your custom resources will not be deleted accidentally.
   deleteOnUninstall: false
