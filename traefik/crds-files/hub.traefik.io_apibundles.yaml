@@ -109,6 +109,11 @@ spec:
                 x-kubernetes-validations:
                 - message: duplicated apis
                   rule: self.all(x, self.exists_one(y, x.name == y.name))
+              title:
+                description: Title is the human-readable name of the APIBundle that
+                  will be used on the portal.
+                maxLength: 253
+                type: string
             type: object
           status:
             description: The current status of this APIBundle.
