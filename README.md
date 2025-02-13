@@ -89,88 +89,9 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 #### With additional CRDs chart
 
-> [!NOTE]
-> <details>
->   <summary>Few words on technical choices about CRDs implementation</summary>
-> Some Traefik Helm chart users asked for help in managing CRDs installed by this chart (cf. [#1141](https://github.com/traefik/traefik-helm-chart/issues/1141), [#1209](https://github.com/traefik/traefik-helm-chart/issues/1209)).
-> Helm doesn't support CRDs upgrades (cf. [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for details). 
-> 
-> The objectives are the following:
-> 
-> 1. Support the nominal installation case following official Helm GuideLines
-> 2. Stay conservative about CRDs to protect resource removal (that's actually one of the reasons why helm doesn't support)
->    CRDs upgrades)
-> 3. Allow users to install multiple instances of Traefik chart along with helm managed CRDs
-> 
-> Several implementations have been experimented. Here are pros and cons of each:
-> 
-> <table>
->     <thead>
->     <tr>
->         <td>solution</td>
->         <td>pros</td>
->         <td>cons</td>
->     </tr>
->     </thead>
->     <tbody>
->     <tr>
->         <td>templatized CRDs within Traefik helm chart</td>
->         <td>
->             <ul>
->                 <li>simple</li>
->                 <li>users can specify only install a subset of CRDs</li>
->                 <li>users don't have to bother with CRDs upgrades</li>
->             </ul>
->         </td>
->         <td>
->             <ul>
->                 <li><code>--skip-crds</code> will be inefficient and can lost users</li>
->                 <li>the first installation fails are CRDs are not rendered first by helm</li>
->                 <li>when installing multiple instances, CRDs are attached to one instance</li>
->             </ul>
->         </td>
->     </tr>
->     <tr>
->         <td>seperated CRDs chart as main chart dependency</td>
->         <td>
->             <ul>
->                 <li>users can specify only install a subset of CRDs</li>
->                 <li>users don't have to bother with CRDs upgrades</li>
->                 <li>CRDs are versioned aside from main chart</li>
->                 <li>users can install CRDs along with multiple instances of main chart</li>
->             </ul>
->         </td>
->         <td>
->             <ul>
->                 <li><code>--skip-crds</code> will be inefficient and can lost users</li>
->                 <li>the first installation fails are CRDs are not rendered first by helm (helm doesn't respect dependency order)</li>
->                 <li>when installing multiple instances, CRDs are attached to one instance</li>
->             </ul>
->         </td>
->     </tr>
->     <tr>
->         <td>seperated CRDs chart</td>
->         <td>
->             <ul>
->                 <li>users can specify only install a subset of CRDs</li>
->                 <li>users don't have to bother with CRDs upgrades</li>
->                 <li>CRDs are versioned aside from main chart</li>
->                 <li>users can install CRDs along with multiple instances of main chart</li>
->             </ul>
->         </td>
->         <td>
->             <ul>
->                 <li><code>--skip-crds</code> will be inefficient and can lost users</li>
->                 <li>the first installation fails are CRDs are not rendered first by helm</li>
->             </ul>
->         </td>
->     </tr>
->     </tbody>
-> </table>
-> 
-> Consequently, we decided the last option was the less disruptive.
-> 
-> </details>
+The CRD chart is an additional and optional Chart.
+When using it, the CRDs of regular Traefik Chart are not required.
+See [here](./CONTRIBUTING.md#about-crds) for more details
 
 ```bash
 helm install traefik-crds traefik/traefik-crds
