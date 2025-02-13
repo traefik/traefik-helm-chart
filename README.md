@@ -9,11 +9,15 @@ Starting with v28.x, this chart now bootstraps Traefik Proxy version 3 as a Kube
 using Custom Resources `IngressRoute`: <https://doc.traefik.io/traefik/v3.0/routing/providers/kubernetes-crd/>.
 
 It's possible to use this chart with Traefik Proxy v2 using v27.x
-This chart support policy is aligned with [upstream support policy](https://doc.traefik.io/traefik/deprecation/releases/) of Traefik Proxy.
+This chart support policy is aligned
+with [upstream support policy](https://doc.traefik.io/traefik/deprecation/releases/) of Traefik Proxy.
 
-See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of this chart on CRDs.
+See [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/) and upgrading section of
+this chart on CRDs.
 
-Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations), it's possible to use an additional Chart dedicated to CRDs: **traefik-crds**.
+Starting with v34.x, to work
+around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations),
+it's possible to use an additional Chart dedicated to CRDs: **traefik-crds**.
 
 ### Philosophy
 
@@ -24,12 +28,14 @@ to avoid integrating any third party solutions nor any specific use cases.
 
 Accordingly, the encouraged approach to fulfill your needs:
 
-1. Override the default Traefik configuration values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
+1. Override the default Traefik configuration
+   values ([yaml file or cli](https://helm.sh/docs/chart_template_guide/values_files/))
 2. Append your own configurations (`kubectl apply -f myconf.yaml`)
 
 [Examples](https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md) of common usage are provided.
 
-If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this HelmChart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/).
+If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or extend this
+Helm Chart [as a Subchart](https://helm.sh/docs/chart_template_guide/subcharts_and_globals/).
 
 ## Installing
 
@@ -40,23 +46,25 @@ If needed, one may use [extraObjects](./traefik/tests/values/extra.yaml) or exte
 
 ### Kubernetes Version Support
 
-Due to changes in CRD version support, the following versions of the chart are usable and supported on the following Kubernetes versions:
+Due to changes in CRD version support, the following versions of the chart are usable and supported on the following
+Kubernetes versions:
 
-|                         |  Kubernetes v1.15 and below | Kubernetes v1.16-v1.21 | Kubernetes v1.22 and above |
-|-------------------------|-----------------------------|------------------------|----------------------------|
-| Chart v9.20.2 and below | [x]                         | [x]                    |                            |
-| Chart v10.0.0 and above |                             | [x]                    | [x]                        |
-| Chart v22.0.0 and above |                             |                        | [x]                        |
+|                         | Kubernetes v1.15 and below | Kubernetes v1.16-v1.21 | Kubernetes v1.22 and above |
+|-------------------------|----------------------------|------------------------|----------------------------|
+| Chart v9.20.2 and below | [x]                        | [x]                    |                            |
+| Chart v10.0.0 and above |                            | [x]                    | [x]                        |
+| Chart v22.0.0 and above |                            |                        | [x]                        |
 
 ### CRDs Support of Traefik Proxy
 
-Due to changes in API Group of Traefik CRDs from `containo.us` to `traefik.io`, this Chart install CRDs needed by default Traefik Proxy version, following this table:
+Due to changes in API Group of Traefik CRDs from `containo.us` to `traefik.io`, this Chart install CRDs needed by
+default Traefik Proxy version, following this table:
 
-|                         |  `containo.us`              | `traefik.io`           |
-|-------------------------|-----------------------------|------------------------|
-| Chart v22.0.0 and below |  [x]                        |                        |
-| Chart v23.0.0 and above |  [x]                        | [x]                    |
-| Chart v28.0.0 and above |                             | [x]                    |
+|                         | `containo.us` | `traefik.io` |
+|-------------------------|---------------|--------------|
+| Chart v22.0.0 and below | [x]           |              |
+| Chart v23.0.0 and above | [x]           | [x]          |
+| Chart v28.0.0 and above |               | [x]          |
 
 ### Deploying
 
@@ -81,6 +89,10 @@ helm install -f myvalues.yaml traefik traefik/traefik
 
 #### With additional CRDs chart
 
+The CRD chart is an additional and optional Chart.
+When using it, the CRDs of regular Traefik Chart are not required.
+See [here](./CONTRIBUTING.md#about-crds) for more details
+
 ```bash
 helm install traefik-crds traefik/traefik-crds
 helm install traefik traefik/traefik --skip-crds
@@ -98,7 +110,8 @@ New major version indicates that there is an incompatible breaking change.
 ### A standard installation
 
 When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
-CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for details.
+CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for
+details.
 
 ```bash
 # Update repository
@@ -122,7 +135,6 @@ kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gatewa
 helm install traefik-crds traefik/traefik-crds
 ```
 
-
 ### An installation with additional CRDs chart
 
 ```bash
@@ -138,7 +150,8 @@ helm upgrade traefik traefik/traefik
 
 ### Upgrade up to 27.X
 
-When upgrading on Traefik Proxy v2 version, one need to stay at Traefik Helm Chart v27.x. The command to upgrade to the latest Traefik Proxy v2 CRD is:
+When upgrading on Traefik Proxy v2 version, one need to stay at Traefik Helm Chart v27.x. The command to upgrade to the
+latest Traefik Proxy v2 CRD is:
 
 ```bash
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/?ref=v27
@@ -165,8 +178,9 @@ On HTTP/3, if you want to avoid this issue, you can set
 `ports.websecure.http3.advertisedPort` to an other value than `443`
 
 If you were previously using HTTP/3, you should update your values as follows:
-  - Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
-  - Remove `experimental.http3.enabled=true` entry
+
+- Replace the old value (`true`) of `ports.websecure.http3` with a key `enabled: true`
+- Remove `experimental.http3.enabled=true` entry
 
 ### Upgrading from 16.x to 17.x
 
@@ -182,7 +196,8 @@ order to be able to upgrade.
 You may also upgrade by deploying another Traefik to a different namespace and
 removing after your first Traefik.
 
-Alternatively, since version 20.3.0 of this chart, you may set `instanceLabelOverride` to the previous value of that label.
+Alternatively, since version 20.3.0 of this chart, you may set `instanceLabelOverride` to the previous value of that
+label.
 This will override the new `Release.Name-Release.Namespace` pattern to avoid any (longer) downtime.
 
 ## Contributing
