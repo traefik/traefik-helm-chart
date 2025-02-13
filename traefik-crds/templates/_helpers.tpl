@@ -12,8 +12,7 @@ Render CRDs file.
                 {{- $labelsAndAnnotations :=
                 (dict "metadata" (dict
                     "annotations" (dict
-                            "app.kubernetes.io/managed-by" "Helm"
-                            "meta.helm.sh/release-name" $scope.Release.Name
+                        "app.kubernetes.io/managed-by" "Helm"
                     )
                     "labels" (dict
                         "app.kubernetes.io/managed-by" "Helm"
