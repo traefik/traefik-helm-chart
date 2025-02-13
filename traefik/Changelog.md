@@ -1,5 +1,93 @@
 # Change Log
 
+## 34.3.0  ![AppVersion: v3.3.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+* fix(Traefik Hub): AIServices are available in API Gateway
+* fix(Traefik Hub): :bug: handle main and latest build
+* feat: :sparkles: add missing microcks provider for Hub
+* feat(deps): update traefik docker tag to v3.3.3
+* chore: update CRDs to v1.14.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 4f93924..2d8ac73 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -948,6 +948,34 @@ hub:
+   experimental:
+     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+     aigateway: false
++  providers:
++    microcks:
++      # -- Enable Microcks provider.
++      enabled: false
++      auth:
++        # -- Microcks API client ID.
++        clientId: ""
++        # -- Microcks API client secret.
++        clientSecret: ""
++        # -- Microcks API endpoint.
++        endpoint: ""
++        # -- Microcks API token.
++        token: ""
++      # -- Microcks API endpoint.
++      endpoint: ""
++      # -- Polling interval for Microcks API.
++      pollInterval: 30
++      # -- Polling timeout for Microcks API.
++      pollTimeout: 5
++      tls:
++        # -- TLS CA
++        ca: ""
++        # -- TLS cert
++        cert: ""
++        # -- TLS insecure skip verify
++        insecureSkipVerify: false
++        # -- TLS key
++        key: ""
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+     cluster:    # @schema type:[boolean, null]
+```
+
+## 34.2.0  ![AppVersion: v3.3.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-01-28
+
+* fix: :bug: permanent redirect should be disableable
+* feat: :sparkles: add hub tracing capabilities
+* docs: 📚️ fix typo in Guidelines.md
+* chore(release): publish v34.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 3335e78..4f93924 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -979,3 +979,17 @@ hub:
+       insecureSkipVerify: false
+   # Enable export of errors logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
++  tracing:
++    # -- Tracing headers to duplicate.
++    # To configure the following, tracing.otlp.enabled needs to be set to true.
++    additionalTraceHeaders:
++      enabled: false
++      traceContext:
++        # -- Name of the header that will contain the parent-id header copy.
++        parentId: ""
++        # -- Name of the header that will contain the trace-id copy.
++        traceId: ""
++        # -- Name of the header that will contain the traceparent copy.
++        traceParent: ""
++        # -- Name of the header that will contain the tracestate copy.
++        traceState: ""
+```
+
 ## 34.1.0  ![AppVersion: v3.3.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-01-15
@@ -315,17 +403,17 @@ index be89b00..9b4379c 100644
 There are multiple breaking changes in this release:
 
 1. The default port of `traefik` entrypoint has changed from `9000` to `8080`, just like the Traefik Proxy default port
-   * You _may_ have to update probes accordingly (or set this port back to 9000)
+    * You _may_ have to update probes accordingly (or set this port back to 9000)
 2. `publishedService` is enabled by default on Ingress provider
-   * You _can_ disable it, if needed
+    * You _can_ disable it, if needed
 3. The `POD_NAME` and `POD_NAMESPACE` environment variables are now set by default, without values.
-   * It is no longer necessary to add them in values and so, it can be removed from user values.
+    * It is no longer necessary to add them in values and so, it can be removed from user values.
 4. In _values_, **certResolvers** specific syntax has been reworked to align with Traefik Proxy syntax.
-   * PR [#1214](https://github.com/traefik/traefik-helm-chart/pull/1214) contains a complete before / after example on how to update _values_
+    * PR [#1214](https://github.com/traefik/traefik-helm-chart/pull/1214) contains a complete before / after example on how to update _values_
 5. Traefik Proxy 3.2 supports Gateway API v1.2 (standard channel)
-   * It is recommended to check that other software using Gateway API on your cluster are compatible
-   * There is a breaking change on CRD upgrade in this version, it _may_ do not work out of the box
-   * See [release notes](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.2.0) of gateway API v1.2 on how to upgrade their CRDs and avoid issues about invalid values on v1alpha2 version
+    * It is recommended to check that other software using Gateway API on your cluster are compatible
+    * There is a breaking change on CRD upgrade in this version, it _may_ do not work out of the box
+    * See [release notes](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.2.0) of gateway API v1.2 on how to upgrade their CRDs and avoid issues about invalid values on v1alpha2 version
 
 The CRDs needs to be updated, as documented in the README.
 

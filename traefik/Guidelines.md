@@ -31,4 +31,4 @@ There should be an empty commented line between each primary key in the values.y
 
 ## Values YAML Design
 
-The values.yaml file is designed to be user-friendly. It does not have to resemble the templated configuration if it is not conducive. Similarly, value names to not have to correspond to fields in the template if it is not conducive.
+The values.yaml file is designed to be user-friendly. It does not have to resemble the templated configuration if it is not conducive. Similarly, value names do not have to correspond to fields in the template if it is not conducive.

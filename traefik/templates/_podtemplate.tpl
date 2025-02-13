@@ -618,8 +618,8 @@
               {{- with .priority }}
           - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
               {{- end }}
-              {{- with .permanent }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ . }}"
+              {{- if hasKey . "permanent" }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ .permanent }}"
               {{- end }}
              {{- end }}
             {{- end }}
@@ -811,6 +811,12 @@
             {{- end }}
             {{- with .sendlogs }}
           - "--hub.sendlogs={{ . }}"
+            {{- end }}
+            {{- if and $.Values.tracing.otlp.enabled .tracing.additionalTraceHeaders.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.microcks.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
           {{- end }}
          {{- end }}

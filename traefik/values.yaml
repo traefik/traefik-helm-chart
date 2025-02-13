@@ -948,6 +948,34 @@ hub:
   experimental:
     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
     aigateway: false
+  providers:
+    microcks:
+      # -- Enable Microcks provider.
+      enabled: false
+      auth:
+        # -- Microcks API client ID.
+        clientId: ""
+        # -- Microcks API client secret.
+        clientSecret: ""
+        # -- Microcks API endpoint.
+        endpoint: ""
+        # -- Microcks API token.
+        token: ""
+      # -- Microcks API endpoint.
+      endpoint: ""
+      # -- Polling interval for Microcks API.
+      pollInterval: 30
+      # -- Polling timeout for Microcks API.
+      pollTimeout: 5
+      tls:
+        # -- TLS CA
+        ca: ""
+        # -- TLS cert
+        cert: ""
+        # -- TLS insecure skip verify
+        insecureSkipVerify: false
+        # -- TLS key
+        key: ""
   redis:
     # -- Enable Redis Cluster. Default: true.
     cluster:    # @schema type:[boolean, null]
@@ -979,3 +1007,17 @@ hub:
       insecureSkipVerify: false
   # Enable export of errors logs to the platform. Default: true.
   sendlogs:  # @schema type:[boolean, null]
+  tracing:
+    # -- Tracing headers to duplicate.
+    # To configure the following, tracing.otlp.enabled needs to be set to true.
+    additionalTraceHeaders:
+      enabled: false
+      traceContext:
+        # -- Name of the header that will contain the parent-id header copy.
+        parentId: ""
+        # -- Name of the header that will contain the trace-id copy.
+        traceId: ""
+        # -- Name of the header that will contain the traceparent copy.
+        traceParent: ""
+        # -- Name of the header that will contain the tracestate copy.
+        traceState: ""

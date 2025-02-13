@@ -200,8 +200,14 @@ rules:
       - update
       - patch
       - delete
-  {{- end }}
-  {{- if .Values.hub.token }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+    verbs:
+      - list
+      - watch
+      - get
     {{- if or (semverCompare ">=v3.1.0-0" $version) .Values.hub.apimanagement.enabled }}
   - apiGroups:
       - ""
@@ -238,7 +244,6 @@ rules:
       - apiplans
       - apicatalogitems
       - managedsubscriptions
-      - aiservices
     verbs:
       - list
       - watch

@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 34.1.0](https://img.shields.io/badge/Version-34.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.3.2](https://img.shields.io/badge/AppVersion-v3.3.2-informational?style=flat-square)
+![Version: 34.3.0](https://img.shields.io/badge/Version-34.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.3.3](https://img.shields.io/badge/AppVersion-v3.3.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -87,6 +87,18 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
+| hub.providers.microcks.auth.clientId | string | `""` | Microcks API client ID. |
+| hub.providers.microcks.auth.clientSecret | string | `""` | Microcks API client secret. |
+| hub.providers.microcks.auth.endpoint | string | `""` | Microcks API endpoint. |
+| hub.providers.microcks.auth.token | string | `""` | Microcks API token. |
+| hub.providers.microcks.enabled | bool | `false` | Enable Microcks provider. |
+| hub.providers.microcks.endpoint | string | `""` | Microcks API endpoint. |
+| hub.providers.microcks.pollInterval | int | `30` | Polling interval for Microcks API. |
+| hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
+| hub.providers.microcks.tls.ca | string | `""` | TLS CA |
+| hub.providers.microcks.tls.cert | string | `""` | TLS cert |
+| hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.microcks.tls.key | string | `""` | TLS key |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -102,6 +114,11 @@ Kubernetes: `>=1.22.0-0`
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
+| hub.tracing.additionalTraceHeaders | object | `{"enabled":false,"traceContext":{"parentId":"","traceId":"","traceParent":"","traceState":""}}` | Tracing headers to duplicate. To configure the following, tracing.otlp.enabled needs to be set to true. |
+| hub.tracing.additionalTraceHeaders.traceContext.parentId | string | `""` | Name of the header that will contain the parent-id header copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
+| hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |

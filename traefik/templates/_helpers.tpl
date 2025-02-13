@@ -170,7 +170,9 @@ Key: {{ $cert.Key | b64enc }}
         {{- if kindIs "map" $value }}
             {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
         {{- else }}
+            {{- with $value  }}
 --{{ join "." (list $path $key)}}={{ join "," $value }}
+            {{- end -}}
         {{- end -}}
     {{- end -}}
 {{- end -}}

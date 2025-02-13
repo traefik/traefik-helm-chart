@@ -5,7 +5,7 @@
       "title": "## :boom: BREAKING CHANGES",
       "rules": [
         {
-          "pattern": ".*\\((${REGEXP}).*\\)!:.*",
+          "pattern": ".*${REGEXP}!:.*",
           "on_property": "title",
           "flags": "gu"
         }
@@ -15,7 +15,7 @@
       "title": "## :rocket: Features",
       "rules": [
         {
-          "pattern": "feat\\((${REGEXP}).*\\):.*",
+          "pattern": "feat${REGEXP}:.*",
           "on_property": "title",
           "flags": "gu"
         }
@@ -25,7 +25,7 @@
       "title": "## :bug: Bug fixes",
       "rules": [
         {
-          "pattern": "fix\\((${REGEXP}).*\\):.*",
+          "pattern": "fix${REGEXP}:.*",
           "on_property": "title",
           "flags": "gu"
         }
@@ -35,7 +35,7 @@
       "title": "## :package: Others",
       "rules": [
         {
-          "pattern": "(chore|release)\\((${REGEXP}).*\\):.*",
+          "pattern": "(build|chore|ci|docs|style|refactor|perf|test)${REGEXP}:.*",
           "on_property": "title",
           "flags": "gu"
         }
