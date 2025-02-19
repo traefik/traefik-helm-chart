@@ -1,9 +1,21 @@
 # Change Log
 
+## 1.4.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-19
+
+* fix(traefik-crds): remove unnecessary annotations
+* feat(CRDs): update Traefik Hub CRDs to v1.17.0
+* chore(release): 🚀 publish v34.4.0 and CRDs v1.4.0
+
+
 ## 1.3.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-07
 
 * feat(deps): update traefik docker tag to v3.3.3
 * chore: update CRDs to v1.14.1
+* chore: release 34.3.0 and 1.3.0
 
 
 ## 1.2.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
