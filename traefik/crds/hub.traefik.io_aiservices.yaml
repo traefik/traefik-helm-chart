@@ -143,6 +143,32 @@ spec:
                 required:
                 - token
                 type: object
+              deepSeek:
+                description: DeepSeek configures DeepSeek.
+                properties:
+                  baseUrl:
+                    type: string
+                  model:
+                    type: string
+                  params:
+                    description: Params holds the LLM hyperparameters.
+                    properties:
+                      frequencyPenalty:
+                        type: number
+                      maxTokens:
+                        type: integer
+                      presencePenalty:
+                        type: number
+                      temperature:
+                        type: number
+                      topP:
+                        type: number
+                    type: object
+                  token:
+                    type: string
+                required:
+                - token
+                type: object
               gemini:
                 description: Gemini configures Gemini backend.
                 properties:
@@ -218,6 +244,34 @@ spec:
               openai:
                 description: OpenAI configures OpenAI.
                 properties:
+                  baseUrl:
+                    type: string
+                  model:
+                    type: string
+                  params:
+                    description: Params holds the LLM hyperparameters.
+                    properties:
+                      frequencyPenalty:
+                        type: number
+                      maxTokens:
+                        type: integer
+                      presencePenalty:
+                        type: number
+                      temperature:
+                        type: number
+                      topP:
+                        type: number
+                    type: object
+                  token:
+                    type: string
+                required:
+                - token
+                type: object
+              qWen:
+                description: QWen configures QWen.
+                properties:
+                  baseUrl:
+                    type: string
                   model:
                     type: string
                   params:
