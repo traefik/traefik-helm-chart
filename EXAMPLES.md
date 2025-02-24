@@ -855,7 +855,6 @@ metrics:
       jobLabel: traefik
       interval: 30s
       honorLabels: true
-    # Add HTTP header labels to metrics
     headerLabels:
       user_id: X-User-Id
       tenant: X-Tenant
