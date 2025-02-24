@@ -272,6 +272,11 @@
           {{- if .Values.metrics.prometheus.manualRouting }}
           - "--metrics.prometheus.manualrouting=true"
           {{- end }}
+          {{- if .Values.metrics.prometheus.headerLabels }}
+          {{- range $label, $headerKey := .Values.metrics.prometheus.headerLabels }}
+          - "--metrics.prometheus.headerlabels.{{ $label }}={{ $headerKey }}"
+          {{- end }}
+          {{- end }}
           {{- end }}
           {{- with .Values.metrics.statsd }}
           - "--metrics.statsd=true"

@@ -968,6 +968,12 @@
                         "manualRouting": {
                             "type": "boolean"
                         },
+                        "headerLabels": {
+                            "type": [
+                                "object",
+                                "null"
+                            ]
+                        },
                         "prometheusRule": {
                             "properties": {
                                 "additionalLabels": {
