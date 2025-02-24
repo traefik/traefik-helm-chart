@@ -71,6 +71,10 @@
     {{ fail "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."}}
   {{- end }}
 
+  {{- if and (semverCompare "<v3.6.0" $hubVersion) .Values.hub.providers.consulCatalogEnterprise.enabled }}
+    {{ fail "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."}}
+  {{- end }}
+
   {{- if and (semverCompare "<v3.7.0" $hubVersion) .Values.hub.providers.microcks.enabled }}
     {{ fail "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."}}
   {{- end }}
