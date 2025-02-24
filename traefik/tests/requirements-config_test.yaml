@@ -223,4 +223,16 @@ tests:
           additionalTraceHeaders:
             enabled: true
     asserts:
-      - notFailedTemplate: {}      
+      - notFailedTemplate: {}
+  - it: should fail when using consulCatalogEnterprise provider on hub < 3.6.0
+    set:
+      image:
+        tag: v3.5.0
+      hub:
+        token: "xxx"
+        providers:
+          consulCatalogEnterprise:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."

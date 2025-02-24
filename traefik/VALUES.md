@@ -87,6 +87,33 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
+| hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
+| hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
+| hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
+| hub.providers.consulCatalogEnterprise.constraints | string | `""` | Constraints is an expression that Traefik matches against the container's labels |
+| hub.providers.consulCatalogEnterprise.defaultRule | string | `"Host(`{{ normalize .Name }}`)"` | Default rule. |
+| hub.providers.consulCatalogEnterprise.enabled | bool | `false` | Enable Consul Catalog Enterprise backend with default settings. |
+| hub.providers.consulCatalogEnterprise.endpoint.address | string | `""` | The address of the Consul server |
+| hub.providers.consulCatalogEnterprise.endpoint.datacenter | string | `""` | Data center to use. If not provided, the default agent data center is used |
+| hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime | int | `0` | WaitTime limits how long a Watch will block. If not provided, the agent default |
+| hub.providers.consulCatalogEnterprise.endpoint.httpauth.password | string | `""` | Basic Auth password |
+| hub.providers.consulCatalogEnterprise.endpoint.httpauth.username | string | `""` | Basic Auth username |
+| hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.ca | string | `""` | TLS CA |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.cert | string | `""` | TLS cert |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
+| hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
+| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
+| hub.providers.consulCatalogEnterprise.namespaces | string | `""` | Sets the namespaces used to discover services (Consul Enterprise only). |
+| hub.providers.consulCatalogEnterprise.partition | string | `""` | Sets the partition used to discover services (Consul Enterprise only). |
+| hub.providers.consulCatalogEnterprise.prefix | string | `"traefik"` | Prefix for consul service tags. |
+| hub.providers.consulCatalogEnterprise.refreshInterval | int | `15` | Interval for check Consul API. |
+| hub.providers.consulCatalogEnterprise.requireConsistent | bool | `false` | Forces the read to be fully consistent. |
+| hub.providers.consulCatalogEnterprise.serviceName | string | `"traefik"` | Name of the Traefik service in Consul Catalog (needs to be registered via the |
+| hub.providers.consulCatalogEnterprise.stale | bool | `false` | Use stale consistency for catalog reads. |
+| hub.providers.consulCatalogEnterprise.strictChecks | string | `"passing, warning"` | A list of service health statuses to allow taking traffic. |
+| hub.providers.consulCatalogEnterprise.watch | bool | `false` | Watch Consul API events. |
 | hub.providers.microcks.auth.clientId | string | `""` | Microcks API client ID. |
 | hub.providers.microcks.auth.clientSecret | string | `""` | Microcks API client secret. |
 | hub.providers.microcks.auth.endpoint | string | `""` | Microcks API endpoint. |
