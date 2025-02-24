@@ -413,9 +413,7 @@ metrics:
     ## When manualRouting is true, it disables the default internal router in
     ## order to allow creating a custom router for prometheus@internal service.
     manualRouting: false
-    ## Add HTTP header labels to metrics
-    ## Example: headerLabels:
-    ##            label: headerKey
+    ## Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
     headerLabels: {}  # @schema type:[object, null]
     service:
       # -- Create a dedicated metrics service to use with ServiceMonitor
