@@ -965,14 +965,15 @@
                         "entryPoint": {
                             "type": "string"
                         },
-                        "manualRouting": {
-                            "type": "boolean"
-                        },
                         "headerLabels": {
+                            "properties": {},
                             "type": [
                                 "object",
                                 "null"
                             ]
+                        },
+                        "manualRouting": {
+                            "type": "boolean"
                         },
                         "prometheusRule": {
                             "properties": {
