@@ -274,7 +274,7 @@
           {{- end }}
           {{- if .Values.metrics.prometheus.headerLabels }}
           {{- range $label, $headerKey := .Values.metrics.prometheus.headerLabels }}
-          - "--metrics.prometheus.headerLabels.{{ $label }}={{ $headerKey }}"
+          - "--metrics.prometheus.headerlabels.{{ $label }}={{ $headerKey }}"
           {{- end }}
           {{- end }}
           {{- end }}
