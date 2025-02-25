@@ -965,6 +965,13 @@
                         "entryPoint": {
                             "type": "string"
                         },
+                        "headerLabels": {
+                            "properties": {},
+                            "type": [
+                                "object",
+                                "null"
+                            ]
+                        },
                         "manualRouting": {
                             "type": "boolean"
                         },
