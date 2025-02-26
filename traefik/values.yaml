@@ -394,26 +394,26 @@ logs:
         names: {}
 
 metrics:
-  ## -- Enable metrics for internal resources. Default: false
+  # -- Enable metrics for internal resources. Default: false
   addInternals: false
 
-  ## -- Prometheus is enabled by default.
-  ## -- It can be disabled by setting "prometheus: null"
+  ## Prometheus is enabled by default.
+  ## It can be disabled by setting "prometheus: null"
   prometheus:
     # -- Entry point used to expose metrics.
     entryPoint: metrics
-    ## Enable metrics on entry points. Default: true
+    # -- Enable metrics on entry points. Default: true
     addEntryPointsLabels:  # @schema type:[boolean, null]
-    ## Enable metrics on routers. Default: false
+    # -- Enable metrics on routers. Default: false
     addRoutersLabels:  # @schema type:[boolean, null]
-    ## Enable metrics on services. Default: true
+    # -- Enable metrics on services. Default: true
     addServicesLabels:  # @schema type:[boolean, null]
-    ## Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
+    # -- Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
     buckets: ""
-    ## When manualRouting is true, it disables the default internal router in
+    # -- When manualRouting is true, it disables the default internal router in
     ## order to allow creating a custom router for prometheus@internal service.
     manualRouting: false
-    ## Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
+    # -- Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
     headerLabels: {}  # @schema type:[object, null]
     service:
       # -- Create a dedicated metrics service to use with ServiceMonitor
