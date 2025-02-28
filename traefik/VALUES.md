@@ -216,7 +216,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.buckets | string | `""` |  |
 | metrics.prometheus.disableAPICheck | string | `nil` | When set to true, it won't check if Prometheus Operator CRDs are deployed |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
-| metrics.prometheus.headerLabels | object | `{}` | Add HTTP header labels to metrics. Example: headerLabels: { label: headerKey } |
+| metrics.prometheus.headerLabels | object | `{}` |  |
 | metrics.prometheus.manualRouting | bool | `false` |  |
 | metrics.prometheus.prometheusRule.additionalLabels | object | `{}` |  |
 | metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
