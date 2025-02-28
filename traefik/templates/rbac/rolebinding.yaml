@@ -1,7 +1,8 @@
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.kubernetesGateway).namespaces) -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces)) -}}
+{{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces $hubNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
 {{- range $allNamespaces }}
