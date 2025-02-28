@@ -189,7 +189,7 @@ Kubernetes: `>=1.22.0-0`
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC. |
 | logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
-| metrics.addInternals | bool | `false` |  |
+| metrics.addInternals | bool | `false` | Enable metrics for internal resources. Default: false |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
 | metrics.otlp.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
@@ -210,14 +210,14 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `""` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
-| metrics.prometheus.addEntryPointsLabels | string | `nil` |  |
-| metrics.prometheus.addRoutersLabels | string | `nil` |  |
-| metrics.prometheus.addServicesLabels | string | `nil` |  |
-| metrics.prometheus.buckets | string | `""` |  |
+| metrics.prometheus.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
+| metrics.prometheus.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
+| metrics.prometheus.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
+| metrics.prometheus.buckets | string | `""` | Buckets for latency metrics. Default="0.1,0.3,1.2,5.0" |
 | metrics.prometheus.disableAPICheck | string | `nil` | When set to true, it won't check if Prometheus Operator CRDs are deployed |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
-| metrics.prometheus.headerLabels | object | `{}` |  |
-| metrics.prometheus.manualRouting | bool | `false` |  |
+| metrics.prometheus.headerLabels | object | `{}` | Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage. |
+| metrics.prometheus.manualRouting | bool | `false` | When manualRouting is true, it disables the default internal router in # order to allow creating a custom router for prometheus@internal service. |
 | metrics.prometheus.prometheusRule.additionalLabels | object | `{}` |  |
 | metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.prometheusRule.namespace | string | `""` |  |
