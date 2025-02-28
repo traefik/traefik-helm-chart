@@ -939,6 +939,8 @@ hub:
   # -- Name of `Secret` with key 'token' set to a valid license token.
   # It enables API Gateway.
   token: ""
+  # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+  namespaces: []
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
     enabled: false

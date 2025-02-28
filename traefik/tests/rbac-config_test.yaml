@@ -312,6 +312,51 @@ tests:
           value: default
         template: rbac/rolebinding.yaml
         documentIndex: 2
+  - it: should use multiple namespaces if provided to hub
+    set:
+      hub:
+        namespaces:
+          - default
+          - bar
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 3
+        template: rbac/rolebinding.yaml
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/role.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: bar
+        template: rbac/role.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/role.yaml
+        documentIndex: 2
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/rolebinding.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: bar
+        template: rbac/rolebinding.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/rolebinding.yaml
+        documentIndex: 2
   - it: should use multiple namespaces if provided to all namespaced providers
     set:
       providers:
@@ -323,14 +368,18 @@ tests:
           namespaces:
             - default
             - bar
+      hub:
+        namespaces:
+          - default
+          - baz
       rbac:
         namespaced: true
     asserts:
       - hasDocuments:
-          count: 4
+          count: 5
         template: rbac/role.yaml
       - hasDocuments:
-          count: 4
+          count: 5
         template: rbac/rolebinding.yaml
       - equal:
           path: metadata.namespace
@@ -344,14 +393,19 @@ tests:
         documentIndex: 1
       - equal:
           path: metadata.namespace
-          value: default
+          value: baz
         template: rbac/role.yaml
         documentIndex: 2
       - equal:
           path: metadata.namespace
-          value: foo
+          value: default
         template: rbac/role.yaml
         documentIndex: 3
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/role.yaml
+        documentIndex: 4
       - equal:
           path: metadata.namespace
           value: NAMESPACE
@@ -364,14 +418,19 @@ tests:
         documentIndex: 1
       - equal:
           path: metadata.namespace
-          value: default
+          value: baz
         template: rbac/rolebinding.yaml
         documentIndex: 2
       - equal:
           path: metadata.namespace
-          value: foo
+          value: default
         template: rbac/rolebinding.yaml
         documentIndex: 3
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/rolebinding.yaml
+        documentIndex: 4
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
