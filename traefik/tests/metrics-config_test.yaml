@@ -406,7 +406,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus.headerlabels.user_id=X-User-Id"
+          content: "--metrics.prometheus.headerLabels.user_id=X-User-Id"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.prometheus.headerlabels.tenant=X-Tenant"
+          content: "--metrics.prometheus.headerLabels.tenant=X-Tenant"
