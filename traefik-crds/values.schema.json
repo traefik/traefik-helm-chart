@@ -4,21 +4,19 @@
     "additionalProperties": false,
     "description": "The Cloud Native Application Proxy",
     "properties": {
-        "enabled": {
-            "default": true,
-            "description": "Field that can be used as a condition when this chart is a dependency. This definition is only here as a placeholder such that it is included in the JSON schema. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info.",
+        "deleteOnUninstall": {
             "type": "boolean"
         },
-        "global": {
-            "description": "Global values shared across all (sub)charts",
-            "type": "object",
-            "additionalProperties": true
-        },
-        "deleteOnUninstall": {
+        "enabled": {
             "type": "boolean"
         },
         "gatewayAPI": {
             "type": "boolean"
+        },
+        "global": {
+            "additionalProperties": true,
+            "properties": {},
+            "type": "object"
         },
         "hub": {
             "type": "boolean"
