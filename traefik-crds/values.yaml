@@ -5,8 +5,7 @@
 # -- Global values
 # This definition is only here as a placeholder such that it is included in the json schema.
 global: {} # @schema additionalProperties: true
-# -- Set it to true when this chart is used as a dependency to install the chart.
-# Field that can be used as a condition when this chart is a dependency.
+# -- Field that can be used as a condition when this chart is a dependency.
 # This definition is only here as a placeholder such that it is included in the json schema.
 # See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info.
 enabled: true
