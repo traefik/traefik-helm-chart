@@ -2,6 +2,13 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into templates
 
+# -- Global values
+# This definition is only here as a placeholder such that it is included in the json schema.
+global: {} # @schema additionalProperties: true
+# -- Field that can be used as a condition when this chart is a dependency.
+# This definition is only here as a placeholder such that it is included in the json schema.
+# See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info.
+enabled: true
 # -- Install Traefik CRDs by default
 traefik: true
 # -- Set it to true to install GatewayAPI CRDs.
