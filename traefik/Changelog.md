@@ -7,6 +7,8 @@
 * fix(Traefik Proxy): headerLabels does not exist for metrics.prometheus
 * fix(Traefik Hub): add missing consulCatalogEnterprise provider
 * feat(deps): update traefik docker tag to v3.3.4
+* test(Traefik Proxy): fix metrics header labels
+* fix(chart): reorder source urls annotations
 * docs(Traefik Proxy): fix VALUES.md generation on prometheus values
 * chore(release): 🚀 publish v34.4.1
 
