@@ -10,8 +10,8 @@ keywords:
   - networking
 home: https://traefik.io/
 sources:
-  - https://github.com/traefik/traefik
   - https://github.com/traefik/traefik-helm-chart
+  - https://github.com/traefik/traefik
 maintainers:
   - name: mloiseleur
     email: michel.loiseleur@traefik.io
