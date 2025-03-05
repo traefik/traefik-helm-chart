@@ -3,7 +3,7 @@
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.12.0
 IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v0.3.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
-IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.17.0-0.7.2
+IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.17.1-0.7.2
 
 traefik/tests/__snapshot__:
 	@mkdir traefik/tests/__snapshot__
