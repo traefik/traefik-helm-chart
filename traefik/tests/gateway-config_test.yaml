@@ -98,6 +98,17 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
+  - it: should install Gateway in defined gateway namespace
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        namespace: "gateway-ns-override"
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: "gateway-ns-override"
   - it: should have one Gateway with the correct annotations
     set:
       providers:
