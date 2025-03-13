@@ -50,6 +50,6 @@ tests:
           path: spec.ports
           content:
             port: 9100
-            name: "metrics"
+            name: metrics
             targetPort: metrics
             protocol: TCP

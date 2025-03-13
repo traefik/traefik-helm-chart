@@ -740,7 +740,7 @@ spec:
     app.kubernetes.io/instance: traefik-traefik
   ports:
   - port: 8080
-    name: "traefik"
+    name: traefik
     targetPort: traefik
     protocol: TCP
 ```
