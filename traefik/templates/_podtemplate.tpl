@@ -108,7 +108,7 @@
               {{- fail "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled" }}
             {{- end }}
           {{- end }}
-        - name: {{ $name | lower | quote }}
+        - name: {{ include "traefik.portname" $name }}
           containerPort: {{ default $config.port $config.containerPort }}
           {{- if $config.hostPort }}
           hostPort: {{ $config.hostPort }}
@@ -118,7 +118,7 @@
           {{- end }}
           protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
-        - name: "{{ $name }}-http3"
+        - name: {{ printf "%s-http3" $name | include "traefik.portname" }}
           containerPort: {{ $config.port }}
            {{- if $config.hostPort }}
           hostPort: {{ default $config.hostPort $config.http3.advertisedPort }}
