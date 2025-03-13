@@ -116,7 +116,7 @@
           {{- if $config.hostIP }}
           hostIP: {{ $config.hostIP }}
           {{- end }}
-          protocol: {{ default "TCP" $config.protocol | quote }}
+          protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
         - name: "{{ $name }}-http3"
           containerPort: {{ $config.port }}
