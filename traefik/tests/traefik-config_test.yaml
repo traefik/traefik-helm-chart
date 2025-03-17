@@ -386,8 +386,8 @@ tests:
           mountPath: /var/log/{{ .Values.randomName }}
     asserts:
       - equal:
-          path: spec.template.spec.containers[0].volumeMounts[2].name
-          value: foo
+          path: spec.template.spec.containers[0].volumeMounts[2].mountPath
+          value: /var/log/foo
 
   - it: should set custom probe port
     set:
