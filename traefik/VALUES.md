@@ -237,6 +237,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.serviceMonitor.namespaceSelector | object | `{}` |  |
 | metrics.prometheus.serviceMonitor.relabelings | list | `[]` |  |
 | metrics.prometheus.serviceMonitor.scrapeTimeout | string | `""` |  |
+| metrics.prometheus.scrape | bool | `true` | Set prometheus.io/scrape annotation value. Default: true  |
 | namespaceOverride | string | `""` | This field override the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules` |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |

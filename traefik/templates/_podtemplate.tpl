@@ -7,7 +7,7 @@
       {{- end }}
       {{- if .Values.metrics }}
       {{- if and (.Values.metrics.prometheus) (not (.Values.metrics.prometheus.serviceMonitor).enabled) }}
-        prometheus.io/scrape: "true"
+        prometheus.io/scrape: {{ .Values.metrics.prometheus.scrape | quote}}
         prometheus.io/path: "/metrics"
         prometheus.io/port: {{ quote (index .Values.ports .Values.metrics.prometheus.entryPoint).port }}
       {{- end }}

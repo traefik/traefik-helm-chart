@@ -990,6 +990,9 @@
                             },
                             "type": "object"
                         },
+                        "scrape": {
+                            "type": "boolean"
+                        },
                         "service": {
                             "properties": {
                                 "annotations": {
