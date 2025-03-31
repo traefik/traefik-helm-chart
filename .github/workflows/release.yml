@@ -14,7 +14,7 @@ jobs:
     uses: "traefik/traefik-helm-chart/.github/workflows/test.yml@master"
 
   traefik:
-    needs: test
+    needs: [test, traefik-crds ]
     runs-on: ubuntu-latest
     steps:
 
