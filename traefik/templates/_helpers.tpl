@@ -18,7 +18,15 @@ Create chart name and version as used by the chart label.
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
+{{- if .Values.oci_meta.enabled -}}
+ {{- if .Values.hub.token -}}
+{{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
+ {{- else -}}
+{{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
+ {{- end -}}
+{{- else -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- end -}}
 {{- end -}}
 
 {{/*
