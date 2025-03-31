@@ -1,0 +1,31 @@
+suite: Traefik configuration for OCI Marketplace
+templates:
+  - deployment.yaml
+tests:
+  - it: should not set oci_meta arg by default
+    chart:
+      appVersion: v3.3.0
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.3.0
+
+  - it: should use oci_meta with proxy when enabled
+    set:
+      oci_meta:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: traefik/proxy:latest
+
+  - it: should use oci_meta with hub when enabled with token
+    set:
+      hub:
+        token: xxx
+      oci_meta:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: traefik/hub:latest
