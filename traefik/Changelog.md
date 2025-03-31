@@ -1,5 +1,14 @@
 # Change Log
 
+## 34.5.0  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-03-31
+
+* fix(gateway): `gateway.namespace` value is ignored
+* feat: allow templating the additionalVolumeMounts configuration
+* feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2
+* chore(release): publish crds 1.6.0 and traefik 34.5.0
+
 ## 34.4.1  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-02-28
