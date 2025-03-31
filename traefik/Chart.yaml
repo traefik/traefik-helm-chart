@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 34.4.1
+version: 34.5.0
 # renovate: image=traefik
 appVersion: v3.3.4
 kubeVersion: ">=1.22.0-0"
@@ -25,8 +25,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(Traefik Proxy): headerLabels does not exist for metrics.prometheus"
-    - "fix(Traefik Hub): add missing consulCatalogEnterprise provider"
-    - "feat(deps): update traefik docker tag to v3.3.4"
-    - "docs(Traefik Proxy): fix VALUES.md generation on prometheus values"
-    - "chore(release): 🚀 publish v34.4.1"
+    - "fix(gateway): `gateway.namespace` value is ignored"
+    - "feat: allow templating the additionalVolumeMounts configuration"
+    - "feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2"
+    - "chore(release): publish crds 1.6.0 and traefik 34.5.0"
