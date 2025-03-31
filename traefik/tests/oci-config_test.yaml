@@ -14,10 +14,11 @@ tests:
     set:
       oci_meta:
         enabled: true
+        repo: repo.io
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik/proxy:latest
+          value: repo.io/proxy:latest
 
   - it: should use oci_meta with hub when enabled with token
     set:
@@ -25,7 +26,8 @@ tests:
         token: xxx
       oci_meta:
         enabled: true
+        repo: repo.io
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: traefik/hub:latest
+          value: repo.io/hub:latest
