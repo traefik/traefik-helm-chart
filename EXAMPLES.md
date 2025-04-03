@@ -94,7 +94,7 @@ ingressRoute:
     enabled: true
 ```
 
-The traefik admin port can be forwarded locally. Assuming the default  `traefik` namespace is used:
+The traefik admin port can be forwarded locally. Assuming the default `traefik` namespace is used:
 
 ```bash
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n traefik) 8080:8080 -n traefik
