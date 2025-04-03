@@ -94,27 +94,6 @@ webhooks:
           - v1alpha1
         resources:
           - apis
-  - name: hub-agent.traefik.access
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-access
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apiaccesses
   - name: hub-agent.traefik.catalog-item
     clientConfig:
       service:
