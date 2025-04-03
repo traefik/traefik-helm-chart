@@ -7,8 +7,16 @@
         "deleteOnUninstall": {
             "type": "boolean"
         },
+        "enabled": {
+            "type": "boolean"
+        },
         "gatewayAPI": {
             "type": "boolean"
+        },
+        "global": {
+            "additionalProperties": true,
+            "properties": {},
+            "type": "object"
         },
         "hub": {
             "type": "boolean"

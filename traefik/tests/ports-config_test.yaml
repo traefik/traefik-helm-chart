@@ -284,14 +284,14 @@ tests:
           content:
             name: "metrics"
             containerPort: 9100
-            protocol: "TCP"
+            protocol: TCP
         template: deployment.yaml
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
             name: "traefik"
             containerPort: 9100
-            protocol: "TCP"
+            protocol: TCP
         template: deployment.yaml
       - containsDocument:
           kind: Service
@@ -327,14 +327,14 @@ tests:
           content:
             name: "metrics"
             containerPort: 9100
-            protocol: "TCP"
+            protocol: TCP
         template: deployment.yaml
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
             name: "traefik"
             containerPort: 9100
-            protocol: "TCP"
+            protocol: TCP
         template: deployment.yaml
       - containsDocument:
           kind: Service

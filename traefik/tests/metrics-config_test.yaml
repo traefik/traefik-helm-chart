@@ -396,3 +396,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.grpc.tls.insecureSkipVerify=true"
+  - it: should be possible to set headerLabels on prometheus
+    set:
+      metrics:
+        prometheus:
+          headerLabels:
+            user_id: X-User-Id
+            tenant: X-Tenant
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.headerlabels.user_id=X-User-Id"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.prometheus.headerlabels.tenant=X-Tenant"

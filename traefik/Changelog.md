@@ -1,5 +1,151 @@
 # Change Log
 
+## 34.5.0  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-03-31
+
+* fix(gateway): `gateway.namespace` value is ignored
+* feat: allow templating the additionalVolumeMounts configuration
+* feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2
+* chore(release): publish crds 1.6.0 and traefik 34.5.0
+
+## 34.4.1  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-28
+
+* fix(Traefik Proxy): headerLabels does not exist for metrics.prometheus
+* fix(Traefik Hub): add missing consulCatalogEnterprise provider
+* feat(deps): update traefik docker tag to v3.3.4
+* test(Traefik Proxy): fix metrics header labels
+* fix(chart): reorder source urls annotations
+* docs(Traefik Proxy): fix VALUES.md generation on prometheus values
+* chore(release): 🚀 publish v34.4.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 2d8ac73..956000d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -394,25 +394,27 @@ logs:
+         names: {}
+ 
+ metrics:
+-  ## -- Enable metrics for internal resources. Default: false
++  # -- Enable metrics for internal resources. Default: false
+   addInternals: false
+ 
+-  ## -- Prometheus is enabled by default.
+-  ## -- It can be disabled by setting "prometheus: null"
++  ## Prometheus is enabled by default.
++  ## It can be disabled by setting "prometheus: null"
+   prometheus:
+     # -- Entry point used to expose metrics.
+     entryPoint: metrics
+-    ## Enable metrics on entry points. Default: true
++    # -- Enable metrics on entry points. Default: true
+     addEntryPointsLabels:  # @schema type:[boolean, null]
+-    ## Enable metrics on routers. Default: false
++    # -- Enable metrics on routers. Default: false
+     addRoutersLabels:  # @schema type:[boolean, null]
+-    ## Enable metrics on services. Default: true
++    # -- Enable metrics on services. Default: true
+     addServicesLabels:  # @schema type:[boolean, null]
+-    ## Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
++    # -- Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
+     buckets: ""
+-    ## When manualRouting is true, it disables the default internal router in
++    # -- When manualRouting is true, it disables the default internal router in
+     ## order to allow creating a custom router for prometheus@internal service.
+     manualRouting: false
++    # -- Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
++    headerLabels: {}  # @schema type:[object, null]
+     service:
+       # -- Create a dedicated metrics service to use with ServiceMonitor
+       enabled: false
+@@ -949,6 +951,64 @@ hub:
+     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+     aigateway: false
+   providers:
++    consulCatalogEnterprise:
++      # -- Enable Consul Catalog Enterprise backend with default settings.
++      enabled: false
++      # -- Use local agent caching for catalog reads.
++      cache: false
++      # -- Enable Consul Connect support.
++      connectAware: false
++      # -- Consider every service as Connect capable by default.
++      connectByDefault: false
++      # -- Constraints is an expression that Traefik matches against the container's labels
++      constraints: ""
++      # -- Default rule.
++      defaultRule: "Host(`{{ normalize .Name }}`)"
++      endpoint:
++        # -- The address of the Consul server
++        address: ""
++        # -- Data center to use. If not provided, the default agent data center is used
++        datacenter: ""
++        # -- WaitTime limits how long a Watch will block. If not provided, the agent default
++        endpointWaitTime: 0
++        httpauth:
++          # -- Basic Auth password
++          password: ""
++          # -- Basic Auth username
++          username: ""
++        # -- The URI scheme for the Consul server
++        scheme: ""
++        tls:
++          # -- TLS CA
++          ca: ""
++          # -- TLS cert
++          cert: ""
++          # -- TLS insecure skip verify
++          insecureSkipVerify: false
++          # -- TLS key
++          key: ""
++        # -- Token is used to provide a per-request ACL token which overrides the agent's
++        token: ""
++      # -- Expose containers by default.
++      exposedByDefault: true
++      # -- Sets the namespaces used to discover services (Consul Enterprise only).
++      namespaces: ""
++      # -- Sets the partition used to discover services (Consul Enterprise only).
++      partition: ""
++      # -- Prefix for consul service tags.
++      prefix: "traefik"
++      # -- Interval for check Consul API.
++      refreshInterval: 15
++      # -- Forces the read to be fully consistent.
++      requireConsistent: false
++      # -- Name of the Traefik service in Consul Catalog (needs to be registered via the
++      serviceName: "traefik"
++      # -- Use stale consistency for catalog reads.
++      stale: false
++      # -- A list of service health statuses to allow taking traffic.
++      strictChecks: "passing, warning"
++      # -- Watch Consul API events.
++      watch: false
+     microcks:
+       # -- Enable Microcks provider.
+       enabled: false
+@@ -1007,6 +1067,7 @@ hub:
+       insecureSkipVerify: false
+   # Enable export of errors logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
++
+   tracing:
+     # -- Tracing headers to duplicate.
+     # To configure the following, tracing.otlp.enabled needs to be set to true.
+```
+
+## 34.4.0  ![AppVersion: v3.3.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-19
+
+* feat(CRDs): update Traefik Hub CRDs to v1.17.0
+* chore(release): 🚀 publish v34.4.0 and CRDs v1.4.0
+
 ## 34.3.0  ![AppVersion: v3.3.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 * fix(Traefik Hub): AIServices are available in API Gateway

@@ -1,6 +1,6 @@
 # traefik-crds
 
-![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.6.0](https://img.shields.io/badge/Version-1.6.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -17,8 +17,8 @@ A Traefik based Kubernetes ingress controller
 
 ## Source Code
 
-* <https://github.com/traefik/traefik>
 * <https://github.com/traefik/traefik-helm-chart>
+* <https://github.com/traefik/traefik>
 
 ## Requirements
 
@@ -29,7 +29,9 @@ Kubernetes: `>=1.22.0-0`
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | deleteOnUninstall | bool | `false` | Set it to true if you want to uninstall CRDs when uninstalling this chart. By default, CRDs will be kept so your custom resources will not be deleted accidentally. |
+| enabled | bool | `true` | Field that can be used as a condition when this chart is a dependency. This definition is only here as a placeholder such that it is included in the json schema. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info. |
 | gatewayAPI | bool | `false` | Set it to true to install GatewayAPI CRDs. Needed if you set providers.kubernetesGateway.enabled to true in main chart |
+| global | object | `{}` | Global values This definition is only here as a placeholder such that it is included in the json schema. |
 | hub | bool | `false` | Set it to true to install Traefik Hub CRDs. Needed if you set hub.enabled to true in main chart |
 | traefik | bool | `true` | Install Traefik CRDs by default |
 

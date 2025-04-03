@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 34.3.0](https://img.shields.io/badge/Version-34.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.3.3](https://img.shields.io/badge/AppVersion-v3.3.3-informational?style=flat-square)
+![Version: 34.5.0](https://img.shields.io/badge/Version-34.5.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.3.5](https://img.shields.io/badge/AppVersion-v3.3.5-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -17,8 +17,8 @@ A Traefik based Kubernetes ingress controller
 
 ## Source Code
 
-* <https://github.com/traefik/traefik>
 * <https://github.com/traefik/traefik-helm-chart>
+* <https://github.com/traefik/traefik>
 
 ## Requirements
 
@@ -87,6 +87,33 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
+| hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
+| hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
+| hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
+| hub.providers.consulCatalogEnterprise.constraints | string | `""` | Constraints is an expression that Traefik matches against the container's labels |
+| hub.providers.consulCatalogEnterprise.defaultRule | string | `"Host(`{{ normalize .Name }}`)"` | Default rule. |
+| hub.providers.consulCatalogEnterprise.enabled | bool | `false` | Enable Consul Catalog Enterprise backend with default settings. |
+| hub.providers.consulCatalogEnterprise.endpoint.address | string | `""` | The address of the Consul server |
+| hub.providers.consulCatalogEnterprise.endpoint.datacenter | string | `""` | Data center to use. If not provided, the default agent data center is used |
+| hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime | int | `0` | WaitTime limits how long a Watch will block. If not provided, the agent default |
+| hub.providers.consulCatalogEnterprise.endpoint.httpauth.password | string | `""` | Basic Auth password |
+| hub.providers.consulCatalogEnterprise.endpoint.httpauth.username | string | `""` | Basic Auth username |
+| hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.ca | string | `""` | TLS CA |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.cert | string | `""` | TLS cert |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
+| hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
+| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
+| hub.providers.consulCatalogEnterprise.namespaces | string | `""` | Sets the namespaces used to discover services (Consul Enterprise only). |
+| hub.providers.consulCatalogEnterprise.partition | string | `""` | Sets the partition used to discover services (Consul Enterprise only). |
+| hub.providers.consulCatalogEnterprise.prefix | string | `"traefik"` | Prefix for consul service tags. |
+| hub.providers.consulCatalogEnterprise.refreshInterval | int | `15` | Interval for check Consul API. |
+| hub.providers.consulCatalogEnterprise.requireConsistent | bool | `false` | Forces the read to be fully consistent. |
+| hub.providers.consulCatalogEnterprise.serviceName | string | `"traefik"` | Name of the Traefik service in Consul Catalog (needs to be registered via the |
+| hub.providers.consulCatalogEnterprise.stale | bool | `false` | Use stale consistency for catalog reads. |
+| hub.providers.consulCatalogEnterprise.strictChecks | string | `"passing, warning"` | A list of service health statuses to allow taking traffic. |
+| hub.providers.consulCatalogEnterprise.watch | bool | `false` | Watch Consul API events. |
 | hub.providers.microcks.auth.clientId | string | `""` | Microcks API client ID. |
 | hub.providers.microcks.auth.clientSecret | string | `""` | Microcks API client secret. |
 | hub.providers.microcks.auth.endpoint | string | `""` | Microcks API endpoint. |
@@ -162,7 +189,7 @@ Kubernetes: `>=1.22.0-0`
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC. |
 | logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
-| metrics.addInternals | bool | `false` |  |
+| metrics.addInternals | bool | `false` | Enable metrics for internal resources. Default: false |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
 | metrics.otlp.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
@@ -183,13 +210,14 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `""` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
-| metrics.prometheus.addEntryPointsLabels | string | `nil` |  |
-| metrics.prometheus.addRoutersLabels | string | `nil` |  |
-| metrics.prometheus.addServicesLabels | string | `nil` |  |
-| metrics.prometheus.buckets | string | `""` |  |
+| metrics.prometheus.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
+| metrics.prometheus.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
+| metrics.prometheus.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
+| metrics.prometheus.buckets | string | `""` | Buckets for latency metrics. Default="0.1,0.3,1.2,5.0" |
 | metrics.prometheus.disableAPICheck | string | `nil` | When set to true, it won't check if Prometheus Operator CRDs are deployed |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
-| metrics.prometheus.manualRouting | bool | `false` |  |
+| metrics.prometheus.headerLabels | object | `{}` | Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage. |
+| metrics.prometheus.manualRouting | bool | `false` | When manualRouting is true, it disables the default internal router in # order to allow creating a custom router for prometheus@internal service. |
 | metrics.prometheus.prometheusRule.additionalLabels | object | `{}` |  |
 | metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.prometheusRule.namespace | string | `""` |  |

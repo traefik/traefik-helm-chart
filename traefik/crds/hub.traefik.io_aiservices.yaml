@@ -61,15 +61,25 @@ spec:
                         type: number
                     type: object
                   token:
-                    type: string
-                required:
-                - token
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                 type: object
               azureOpenai:
                 description: AzureOpenAI configures AzureOpenAI.
                 properties:
-                  apiKey:
-                    type: string
+                  apiKeySecret:
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                   baseUrl:
                     type: string
                   deploymentName:
@@ -91,7 +101,6 @@ spec:
                         type: number
                     type: object
                 required:
-                - apiKey
                 - baseUrl
                 - deploymentName
                 type: object
@@ -139,15 +148,55 @@ spec:
                         type: number
                     type: object
                   token:
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
+                type: object
+              deepSeek:
+                description: DeepSeek configures DeepSeek.
+                properties:
+                  baseUrl:
                     type: string
-                required:
-                - token
+                  model:
+                    type: string
+                  params:
+                    description: Params holds the LLM hyperparameters.
+                    properties:
+                      frequencyPenalty:
+                        type: number
+                      maxTokens:
+                        type: integer
+                      presencePenalty:
+                        type: number
+                      temperature:
+                        type: number
+                      topP:
+                        type: number
+                    type: object
+                  token:
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                 type: object
               gemini:
                 description: Gemini configures Gemini backend.
                 properties:
                   apiKey:
-                    type: string
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                   model:
                     type: string
                   params:
@@ -164,14 +213,18 @@ spec:
                       topP:
                         type: number
                     type: object
-                required:
-                - apiKey
                 type: object
               mistral:
                 description: Mistral configures Mistral AI backend.
                 properties:
                   apiKey:
-                    type: string
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                   model:
                     type: string
                   params:
@@ -188,8 +241,6 @@ spec:
                       topP:
                         type: number
                     type: object
-                required:
-                - apiKey
                 type: object
               ollama:
                 description: Ollama configures Ollama backend.
@@ -218,6 +269,8 @@ spec:
               openai:
                 description: OpenAI configures OpenAI.
                 properties:
+                  baseUrl:
+                    type: string
                   model:
                     type: string
                   params:
@@ -235,9 +288,43 @@ spec:
                         type: number
                     type: object
                   token:
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
+                type: object
+              qWen:
+                description: QWen configures QWen.
+                properties:
+                  baseUrl:
                     type: string
-                required:
-                - token
+                  model:
+                    type: string
+                  params:
+                    description: Params holds the LLM hyperparameters.
+                    properties:
+                      frequencyPenalty:
+                        type: number
+                      maxTokens:
+                        type: integer
+                      presencePenalty:
+                        type: number
+                      temperature:
+                        type: number
+                      topP:
+                        type: number
+                    type: object
+                  token:
+                    description: SecretReference references a kubernetes secret.
+                    properties:
+                      secretName:
+                        type: string
+                    required:
+                    - secretName
+                    type: object
                 type: object
             type: object
         type: object

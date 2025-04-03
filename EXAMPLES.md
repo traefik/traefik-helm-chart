@@ -859,6 +859,9 @@ metrics:
       jobLabel: traefik
       interval: 30s
       honorLabels: true
+    headerLabels:
+      user_id: X-User-Id
+      tenant: X-Tenant
     prometheusRule:
       enabled: true
       rules:
@@ -1050,3 +1053,22 @@ spec:
 Once it's applied, whoami should be accessible on https://whoami.docker.localhost/
 
 </details>
+
+# Use templating for additionalVolumeMounts
+
+This example demonstrates how to use templating for the `additionalVolumeMounts` configuration to dynamically set the `subPath` parameter based on a variable.
+
+```yaml
+additionalVolumeMounts:
+  - name: plugin-volume
+    mountPath: /plugins
+    subPath: "{{ .Values.pluginVersion }}"
+```
+
+In your `values.yaml` file, you can specify the `pluginVersion` variable:
+
+```yaml
+pluginVersion: "v1.2.3"
+```
+
+This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.

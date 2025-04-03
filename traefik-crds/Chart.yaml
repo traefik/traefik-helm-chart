@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik-crds
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 1.3.0
+version: 1.6.0
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -10,8 +10,8 @@ keywords:
   - networking
 home: https://traefik.io/
 sources:
-  - https://github.com/traefik/traefik
   - https://github.com/traefik/traefik-helm-chart
+  - https://github.com/traefik/traefik
 maintainers:
   - name: mloiseleur
     email: michel.loiseleur@traefik.io
@@ -23,5 +23,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(deps): update traefik docker tag to v3.3.3"
-    - "chore: update CRDs to v1.14.1"
+    - "feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2"
+    - "chore(release): publish crds 1.6.0 and traefik 34.5.0"

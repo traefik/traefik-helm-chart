@@ -1,9 +1,60 @@
 # Change Log
 
+## 1.6.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-03-31
+
+* feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2
+* chore(release): publish crds 1.6.0 and traefik 34.5.0
+
+
+## 1.5.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-03-04
+
+* fix(chart): reorder source urls annotations
+* feat(CRDs-schema): add `global` and `enabled` placeholders for subchart/dependency
+* chore(CRDs-release): 🔧 publish v1.5.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik-crds/values.yaml b/traefik-crds/values.yaml
+index 6aca6cb..aaa56c8 100644
+--- a/traefik-crds/values.yaml
++++ b/traefik-crds/values.yaml
+@@ -2,6 +2,13 @@
+ # This is a YAML-formatted file.
+ # Declare variables to be passed into templates
+ 
++# -- Global values
++# This definition is only here as a placeholder such that it is included in the json schema.
++global: {} # @schema additionalProperties: true
++# -- Field that can be used as a condition when this chart is a dependency.
++# This definition is only here as a placeholder such that it is included in the json schema.
++# See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info.
++enabled: true
+ # -- Install Traefik CRDs by default
+ traefik: true
+ # -- Set it to true to install GatewayAPI CRDs.
+```
+
+## 1.4.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-19
+
+* fix(traefik-crds): remove unnecessary annotations
+* feat(CRDs): update Traefik Hub CRDs to v1.17.0
+* chore(release): 🚀 publish v34.4.0 and CRDs v1.4.0
+
+
 ## 1.3.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-02-07
 
 * feat(deps): update traefik docker tag to v3.3.3
 * chore: update CRDs to v1.14.1
+* chore: release 34.3.0 and 1.3.0
 
 
 ## 1.2.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)

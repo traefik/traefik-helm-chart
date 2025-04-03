@@ -292,6 +292,107 @@
                 },
                 "providers": {
                     "properties": {
+                        "consulCatalogEnterprise": {
+                            "properties": {
+                                "cache": {
+                                    "type": "boolean"
+                                },
+                                "connectAware": {
+                                    "type": "boolean"
+                                },
+                                "connectByDefault": {
+                                    "type": "boolean"
+                                },
+                                "constraints": {
+                                    "type": "string"
+                                },
+                                "defaultRule": {
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "properties": {
+                                        "address": {
+                                            "type": "string"
+                                        },
+                                        "datacenter": {
+                                            "type": "string"
+                                        },
+                                        "endpointWaitTime": {
+                                            "type": "integer"
+                                        },
+                                        "httpauth": {
+                                            "properties": {
+                                                "password": {
+                                                    "type": "string"
+                                                },
+                                                "username": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "scheme": {
+                                            "type": "string"
+                                        },
+                                        "tls": {
+                                            "properties": {
+                                                "ca": {
+                                                    "type": "string"
+                                                },
+                                                "cert": {
+                                                    "type": "string"
+                                                },
+                                                "insecureSkipVerify": {
+                                                    "type": "boolean"
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        },
+                                        "token": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "exposedByDefault": {
+                                    "type": "boolean"
+                                },
+                                "namespaces": {
+                                    "type": "string"
+                                },
+                                "partition": {
+                                    "type": "string"
+                                },
+                                "prefix": {
+                                    "type": "string"
+                                },
+                                "refreshInterval": {
+                                    "type": "integer"
+                                },
+                                "requireConsistent": {
+                                    "type": "boolean"
+                                },
+                                "serviceName": {
+                                    "type": "string"
+                                },
+                                "stale": {
+                                    "type": "boolean"
+                                },
+                                "strictChecks": {
+                                    "type": "string"
+                                },
+                                "watch": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "type": "object"
+                        },
                         "microcks": {
                             "properties": {
                                 "auth": {
@@ -863,6 +964,13 @@
                         },
                         "entryPoint": {
                             "type": "string"
+                        },
+                        "headerLabels": {
+                            "properties": {},
+                            "type": [
+                                "object",
+                                "null"
+                            ]
                         },
                         "manualRouting": {
                             "type": "boolean"

@@ -378,6 +378,16 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[2].mountPath
           value: /var/log/traefik
+  - it: should be possible to template the additionalVolumeMounts
+    set:
+      randomName: foo
+      additionalVolumeMounts:
+        - name: foo-logs
+          mountPath: /var/log/{{ .Values.randomName }}
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[2].mountPath
+          value: /var/log/foo
 
   - it: should set custom probe port
     set:
@@ -829,3 +839,120 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks.endpoint=http://microcks.svc"
+  - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
+    set:
+      image:
+        tag: v3.9.0
+      tracing:
+        otlp:
+          enabled: true
+      hub:
+        token: "xxx"
+        providers:
+          consulCatalogEnterprise:
+            enabled: true
+            cache: true
+            connectAware: true
+            connectByDefault: true
+            constraints: "constraints"
+            defaultRule: "defaultRule"
+            endpoint:
+              address: "address"
+              datacenter: "datacenter"
+              endpointWaitTime: 1
+              httpauth:
+                password: "password"
+                username: "username"
+              scheme: "scheme"
+              tls:
+                ca: "ca"
+                cert: "cert"
+                insecureSkipVerify: true
+                key: "key"
+              token: "token"
+            exposedByDefault: false
+            namespaces: "namespaces"
+            partition: "partition"
+            prefix: "prefix"
+            refreshInterval: 2
+            requireConsistent: true
+            serviceName: "serviceName"
+            stale: true
+            strictChecks: "strictChecks"
+            watch: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.cache=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.connectAware=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.connectByDefault=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.constraints=constraints"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.defaultRule=defaultRule"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.address=address"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.datacenter=datacenter"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime=1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.password=password"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.username=username"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.scheme=scheme"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.ca=ca"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.cert=cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.key=key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.token=token"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.namespaces=namespaces"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.partition=partition"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.prefix=prefix"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.refreshInterval=2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.requireConsistent=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.serviceName=serviceName"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.stale=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.strictChecks=strictChecks"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.watch=true"

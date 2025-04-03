@@ -15,9 +15,11 @@ tests:
           attr1: foo
           attr2: bar
         capturedRequestHeaders:
-          - X-CustomHeader
+          - X-RequestHeader
+          - X-OtherHeader
         capturedResponseHeaders:
-          - X-CustomHeader
+          - X-ResponseHeader
+          - X-OtherHeader
         safeQueryParams:
           - bar
           - buz
@@ -64,10 +66,10 @@ tests:
           content: "--tracing.resourceAttributes.attr2=bar"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.capturedRequestHeaders[0]=X-CustomHeader"
+          content: "--tracing.capturedRequestHeaders=X-RequestHeader,X-OtherHeader"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.capturedResponseHeaders[0]=X-CustomHeader"
+          content: "--tracing.capturedResponseHeaders=X-ResponseHeader,X-OtherHeader"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.safeQueryParams=bar,buz"

@@ -116,7 +116,7 @@
           {{- if $config.hostIP }}
           hostIP: {{ $config.hostIP }}
           {{- end }}
-          protocol: {{ default "TCP" $config.protocol | quote }}
+          protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
         - name: "{{ $name }}-http3"
           containerPort: {{ $config.port }}
@@ -165,7 +165,7 @@
             mountPath: "/etc/traefik/dynamic"
           {{- end }}
           {{- if .Values.additionalVolumeMounts }}
-            {{- toYaml .Values.additionalVolumeMounts | nindent 10 }}
+            {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
         args:
           {{- with .Values.globalArguments }}
@@ -271,6 +271,11 @@
           {{- end }}
           {{- if .Values.metrics.prometheus.manualRouting }}
           - "--metrics.prometheus.manualrouting=true"
+          {{- end }}
+          {{- if .Values.metrics.prometheus.headerLabels }}
+          {{- range $label, $headerKey := .Values.metrics.prometheus.headerLabels }}
+          - "--metrics.prometheus.headerlabels.{{ $label }}={{ $headerKey }}"
+          {{- end }}
           {{- end }}
           {{- end }}
           {{- with .Values.metrics.statsd }}
@@ -396,16 +401,16 @@
           - "--tracing.resourceAttributes.{{ $name }}={{ $value }}"
             {{- end }}
 
-            {{- range $index, $value := .capturedRequestHeaders }}
-          - "--tracing.capturedRequestHeaders[{{ $index }}]={{ $value }}"
+            {{- if .capturedRequestHeaders }}
+          - "--tracing.capturedRequestHeaders={{ .capturedRequestHeaders | join "," }}"
             {{- end }}
 
-            {{- range $index, $value := .capturedResponseHeaders }}
-          - "--tracing.capturedResponseHeaders[{{ $index }}]={{ $value }}"
+            {{- if .capturedResponseHeaders }}
+          - "--tracing.capturedResponseHeaders={{ .capturedResponseHeaders | join "," }}"
             {{- end }}
 
             {{- if .safeQueryParams }}
-          - "--tracing.safeQueryParams={{- .safeQueryParams | join "," -}}"
+          - "--tracing.safeQueryParams={{ .safeQueryParams | join "," }}"
             {{- end }}
 
           {{- end }}
@@ -814,6 +819,9 @@
             {{- end }}
             {{- if and $.Values.tracing.otlp.enabled .tracing.additionalTraceHeaders.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.consulCatalogEnterprise.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.consulCatalogEnterprise" "content" (omit $.Values.hub.providers.consulCatalogEnterprise "enabled")) | nindent 10 }}
             {{- end }}
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
