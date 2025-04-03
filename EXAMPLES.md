@@ -106,6 +106,7 @@ This command makes the dashboard accessible through the URL: http://127.0.0.1:80
 > [!IMPORTANT]
 > Note that the slash is required.
 
+
 # Redirect permanently traffic from http to https
 
 It's possible to redirect all incoming requests on an entrypoint to an other entrypoint.
