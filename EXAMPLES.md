@@ -94,13 +94,17 @@ ingressRoute:
     enabled: true
 ```
 
-The traefik admin port can be forwarded locally:
+The traefik admin port can be forwarded locally. Assuming the default `traefik` namespace is used:
 
 ```bash
-kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name) 8080:8080
+NAMESPACE=traefik
+kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n $NAMESPACE) 8080:8080 -n $NAMESPACE
 ```
 
-This command makes the dashboard accessible on the url: http://127.0.0.1:8080/dashboard/
+This command makes the dashboard accessible through the URL: http://127.0.0.1:8080/dashboard/
+
+> [!IMPORTANT]
+> Note that the slash is required.
 
 # Redirect permanently traffic from http to https
 
