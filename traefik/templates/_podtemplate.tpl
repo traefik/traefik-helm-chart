@@ -401,16 +401,16 @@
           - "--tracing.resourceAttributes.{{ $name }}={{ $value }}"
             {{- end }}
 
-            {{- range $index, $value := .capturedRequestHeaders }}
-          - "--tracing.capturedRequestHeaders[{{ $index }}]={{ $value }}"
+            {{- if .capturedRequestHeaders }}
+          - "--tracing.capturedRequestHeaders={{ .capturedRequestHeaders | join "," }}"
             {{- end }}
 
-            {{- range $index, $value := .capturedResponseHeaders }}
-          - "--tracing.capturedResponseHeaders[{{ $index }}]={{ $value }}"
+            {{- if .capturedResponseHeaders }}
+          - "--tracing.capturedResponseHeaders={{ .capturedResponseHeaders | join "," }}"
             {{- end }}
 
             {{- if .safeQueryParams }}
-          - "--tracing.safeQueryParams={{- .safeQueryParams | join "," -}}"
+          - "--tracing.safeQueryParams={{ .safeQueryParams | join "," }}"
             {{- end }}
 
           {{- end }}
