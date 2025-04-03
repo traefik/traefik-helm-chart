@@ -100,11 +100,7 @@ The traefik admin port can be forwarded locally. Assuming the default `traefik` 
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n traefik) 8080:8080 -n traefik
 ```
 
-This command makes the dashboard accessible through the URL: 
-
-```
-http://127.0.0.1:8080/dashboard/
-```
+This command makes the dashboard accessible through the URL: http://127.0.0.1:8080/dashboard/
 
 > [!IMPORTANT]
 > Note that the slash is required.
