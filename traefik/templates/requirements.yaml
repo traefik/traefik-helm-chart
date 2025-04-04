@@ -1,4 +1,4 @@
-{{- $version := include "imageVersion" $ }}
+{{- $version := include "proxyVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
   {{- if (semverCompare "<v3.0.0-0" $version) }}
     {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
@@ -50,16 +50,15 @@
 
 
 {{- if $.Values.hub.token -}}
-  {{ if not $.Values.image.tag }}
+  {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}
+  {{ if not $hubVersion }}
     {{ fail "When using Traefik Hub image tag needs to be specified !" }}
   {{- end -}}
 
-  {{ $hubVersion := (split "@" (default "v3" $.Values.image.tag))._0 }}
+  {{ $hubVersion = (split "@" (default "v3" $hubVersion))._0 }}
 
-  {{/*
-  Consider non semver versions as latest one
-  */}}
-  {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag)) -}}
+  {{/* Consider non semver versions as latest one  */}}
+  {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $hubVersion)) -}}
     {{ $hubVersion = "v3.99" }}
   {{- end }}
 
