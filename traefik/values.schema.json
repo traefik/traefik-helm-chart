@@ -1065,6 +1065,44 @@
             "properties": {},
             "type": "object"
         },
+        "oci_meta": {
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "images": {
+                    "properties": {
+                        "hub": {
+                            "properties": {
+                                "image": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "proxy": {
+                            "properties": {
+                                "image": {
+                                    "type": "string"
+                                },
+                                "tag": {
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                },
+                "repo": {
+                    "type": "string"
+                }
+            },
+            "type": "object"
+        },
         "persistence": {
             "properties": {
                 "accessMode": {

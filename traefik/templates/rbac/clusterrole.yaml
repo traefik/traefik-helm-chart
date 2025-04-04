@@ -1,4 +1,4 @@
-{{- $version := include "imageVersion" $ }}
+{{- $version := include "proxyVersion" $ }}
 {{- if and .Values.rbac.enabled (not .Values.rbac.namespaced) }}
 ---
 kind: ClusterRole

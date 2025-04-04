@@ -152,6 +152,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "When using Traefik Hub image tag needs to be specified !"
+  - it: should not fail when using Traefik Hub with tag set for OCI
+    set:
+      hub:
+        token: "xxx"
+      oci_meta:
+        enabled: true
+        images:
+          hub:
+            tag: v3.14.0
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using hub.tracing.additionalTraceHeaders on Traefik Hub < 3.9.0
     set:
       image:

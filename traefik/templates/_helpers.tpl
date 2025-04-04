@@ -18,7 +18,15 @@ Create chart name and version as used by the chart label.
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
+{{- if .Values.oci_meta.enabled -}}
+ {{- if .Values.hub.token -}}
+{{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
+ {{- else -}}
+{{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
+ {{- end -}}
+{{- else -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- end -}}
 {{- end -}}
 
 {{/*
@@ -155,23 +163,25 @@ Renders a complete tree, even values that contains template.
   {{- end }}
 {{- end -}}
 
-{{- define "imageVersion" -}}
+{{- define "proxyVersion" -}}
 {{/*
 Traefik hub is based on v3.1 (v3.0 before v3.3.1) of traefik proxy, so this is a hack to avoid to much complexity in RBAC management which are
 based on semverCompare
 */}}
 {{- if $.Values.hub.token -}}
- {{ $hubVersion := "v3.2" }}
- {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $.Values.image.tag) -}}
-    {{- if semverCompare "<v3.3.2-0" $.Values.image.tag -}}
-        {{ $hubVersion = "v3.0" }}
-    {{- else if semverCompare "<v3.7.0-0" $.Values.image.tag -}}
-        {{ $hubVersion = "v3.1" }}
+ {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
+ {{- $hubVersion := "v3.2" }}
+ {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
+    {{- if semverCompare "<v3.3.2-0" $version -}}
+        {{- $hubVersion = "v3.0" }}
+    {{- else if semverCompare "<v3.7.0-0" $version -}}
+        {{- $hubVersion = "v3.1" }}
     {{- end -}}
  {{- end -}}
 {{ $hubVersion }}
 {{- else -}}
-{{ (split "@" (default $.Chart.AppVersion $.Values.image.tag))._0 | replace "latest-" "" | replace "experimental-" "" }}
+{{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
+{{ (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
 {{- end -}}
 {{- end -}}
 

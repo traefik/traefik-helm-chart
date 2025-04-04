@@ -1082,3 +1082,18 @@ hub:
         traceParent: ""
         # -- Name of the header that will contain the tracestate copy.
         traceState: ""
+
+# -- Required for OCI Marketplace integration.
+# See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
+oci_meta:
+  # -- Enable specific values for Oracle Cloud Infrastructure
+  enabled: false
+    # -- It needs to be an ocir repo
+  repo: traefik
+  images:
+    proxy:
+      image: traefik/traefik
+      tag: latest
+    hub:
+      image: traefik-hub/traefik-hub
+      tag: latest
