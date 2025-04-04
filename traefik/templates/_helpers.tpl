@@ -170,17 +170,17 @@ based on semverCompare
 */}}
 {{- if $.Values.hub.token -}}
  {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
- {{- $hubVersion := "v3.3" }}
+ {{- $hubProxyVersion := "v3.3" }}
  {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
     {{- if semverCompare "<v3.3.2-0" $version -}}
-        {{- $hubVersion = "v3.0" }}
+        {{- $hubProxyVersion = "v3.0" }}
     {{- else if semverCompare "<v3.7.0-0" $version -}}
-        {{- $hubVersion = "v3.1" }}
+        {{- $hubProxyVersion = "v3.1" }}
     {{- else if semverCompare "<v3.11.0-0" $.Values.image.tag -}}
-        {{ $hubVersion = "v3.2" }}
+        {{ $hubProxyVersion = "v3.2" }}
     {{- end -}}
  {{- end -}}
-{{ $hubVersion }}
+{{ $hubProxyVersion }}
 {{- else -}}
 {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
 {{ (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
