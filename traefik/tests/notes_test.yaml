@@ -84,5 +84,7 @@ tests:
 
 
             RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace !
+
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider 🚨
+
             🚨 Resources populated with this chart don't match with labelSelector `not_here=Ingress` applied on kubernetesIngress provider 🚨
