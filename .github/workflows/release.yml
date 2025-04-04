@@ -10,11 +10,8 @@ env:
   crds_tag_prefix: crds_v
 
 jobs:
-  test:
-    uses: "traefik/traefik-helm-chart/.github/workflows/test.yml@master"
-
   traefik:
-    needs: [test, traefik-crds ]
+    needs: [ traefik-crds ]
     runs-on: ubuntu-latest
     steps:
 
@@ -132,7 +129,6 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
   traefik-crds:
-    needs: test
     runs-on: ubuntu-latest
     steps:
 
