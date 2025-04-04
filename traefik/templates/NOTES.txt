@@ -48,3 +48,15 @@ for more info. 🚨
     {{- end -}}
   {{- end -}}
 {{- end -}}
+
+
+{{/* Warn about renamed ports */}}
+{{- range $name, $config := .Values.ports -}}
+  {{- $sanitizedPortName := include "traefik.portname" $name -}}
+  {{- if (ne $sanitizedPortName $name) -}}
+{{- printf "\n" -}}
+🚨 Port name `{{ $name }}` does not comply with Kubernetes standards and will be renamed to `{{ $sanitizedPortName }}` in services. 🚨
+ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️
+{{- printf "\n" -}}
+  {{- end -}}
+{{- end -}}

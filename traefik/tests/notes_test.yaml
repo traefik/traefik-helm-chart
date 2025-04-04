@@ -88,3 +88,24 @@ tests:
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider 🚨
 
             🚨 Resources populated with this chart don't match with labelSelector `not_here=Ingress` applied on kubernetesIngress provider 🚨
+  - it: should display warning when using port names that do not comply with Kubernetes requirements
+    set:
+      ports:
+        myport: # should be fine and not appaer in warnings
+          port: 8080
+        web-http-too-long-name:
+          port: 8081
+        withCaptital:
+          port: 8082
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace !
+
+            🚨 Port name `web-http-too-long-name` does not comply with Kubernetes standards and will be renamed to `web-http-too-lo` in services. 🚨
+            ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️
+
+            🚨 Port name `withCaptital` does not comply with Kubernetes standards and will be renamed to `withcaptital` in services. 🚨
+            ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️
