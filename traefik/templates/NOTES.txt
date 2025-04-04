@@ -1,36 +1,61 @@
-
-
+{{/* Print release information */}}
+{{- printf "\n\n" -}}
 {{ .Release.Name }} with {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace !
+{{- printf "\n" -}}
 
-{{- if .Values.persistence }}
-{{- if and .Values.persistence.enabled (empty .Values.deployment.initContainer)}}
 
+{{/* Warn about potential permission issue with persistence */}}
+{{- if .Values.persistence -}}
+  {{- if and .Values.persistence.enabled (empty .Values.deployment.initContainer) -}}
+{{- printf "\n" -}}
 🚨 When enabling persistence for certificates, permissions on acme.json can be
 lost when Traefik restarts. You can ensure correct permissions with an
 initContainer. See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md#use-traefik-native-lets-encrypt-integration-without-cert-manager
 for more info. 🚨
+{{- printf "\n" -}}
+  {{- end -}}
+{{- end -}}
 
-{{- end }}
-{{- end }}
-{{- with .Values.providers.kubernetesCRD.labelSelector }}
-  {{- $labelsApplied := include "traefik.labels" $ }}
+
+{{/* Warn about non-matching potential labelSelector mismatch for CRD provider */}}
+{{- with .Values.providers.kubernetesCRD.labelSelector -}}
+  {{- $labelsApplied := include "traefik.labels" $ -}}
   {{- $labelSelectors := regexSplit "," . -1 }}
-  {{- range $labelSelectors }}
-    {{- $labelSelectorRaw := regexSplit "=" . -1 }}
-    {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) }}
-    {{- if not (contains $labelSelector $labelsApplied) }}
+  {{- range $labelSelectors -}}
+    {{- $labelSelectorRaw := regexSplit "=" . -1 -}}
+    {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) -}}
+    {{- if not (contains $labelSelector $labelsApplied) -}}
+{{- printf "\n" -}}
 🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesCRD provider 🚨
-    {{- end }}
-  {{- end }}
-{{- end }}
-{{- with .Values.providers.kubernetesIngress.labelSelector }}
-  {{- $labelsApplied := include "traefik.labels" $ }}
-  {{- $labelSelectors := regexSplit "," . -1 }}
-  {{- range $labelSelectors }}
-    {{- $labelSelectorRaw := regexSplit "=" . -1 }}
-    {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) }}
-    {{- if not (contains $labelSelector $labelsApplied) }}
+{{- printf "\n" -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+
+{{/* Warn about non-matching potential labelSelector mismatch for Ingress provider */}}
+{{- with .Values.providers.kubernetesIngress.labelSelector -}}
+  {{- $labelsApplied := include "traefik.labels" $ -}}
+  {{- $labelSelectors := regexSplit "," . -1 -}}
+  {{- range $labelSelectors -}}
+    {{- $labelSelectorRaw := regexSplit "=" . -1 -}}
+    {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) -}}
+    {{- if not (contains $labelSelector $labelsApplied) -}}
+{{- printf "\n" -}}
 🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesIngress provider 🚨
-    {{- end }}
-  {{- end }}
-{{- end }}
+{{- printf "\n" -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+
+{{/* Warn about renamed ports */}}
+{{- range $name, $config := .Values.ports -}}
+  {{- $sanitizedPortName := include "traefik.portname" $name -}}
+  {{- if (ne $sanitizedPortName $name) -}}
+{{- printf "\n" -}}
+🚨 Port name `{{ $name }}` does not comply with Kubernetes standards and will be renamed to `{{ $sanitizedPortName }}` in services. 🚨
+ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️
+{{- printf "\n" -}}
+  {{- end -}}
+{{- end -}}

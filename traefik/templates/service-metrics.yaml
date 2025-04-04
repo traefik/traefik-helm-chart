@@ -22,7 +22,7 @@ spec:
     {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
   - port: {{ .Values.ports.metrics.port }}
-    name: "metrics"
+    name: metrics
     targetPort: metrics
     protocol: TCP
     {{- if .Values.ports.metrics.nodePort }}

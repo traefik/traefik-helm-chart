@@ -242,7 +242,7 @@ tests:
         path: spec.ports
         content:
           port: 443
-          name: "websecure-http3"
+          name: websecure-http3
           targetPort: websecure-http3
           protocol: UDP
   - it: should be possible to advertise a different http3 UDP port
@@ -260,7 +260,7 @@ tests:
         path: spec.ports
         content:
           port: 4443
-          name: "websecure-http3"
+          name: websecure-http3
           targetPort: websecure-http3
           protocol: UDP
   - it: should split TCP and UDP Service on http3 when single is false
@@ -278,7 +278,7 @@ tests:
         path: spec.ports
         content:
           port: 443
-          name: "websecure"
+          name: websecure
           targetPort: websecure
           protocol: TCP
       documentIndex: 0
@@ -286,7 +286,7 @@ tests:
         path: spec.ports
         content:
           port: 443
-          name: "websecure-http3"
+          name: websecure-http3
           targetPort: websecure-http3
           protocol: UDP
       documentIndex: 1
@@ -306,7 +306,7 @@ tests:
         path: spec.ports
         content:
           port: 443
-          name: "websecure"
+          name: websecure
           targetPort: websecure
           protocol: TCP
       documentIndex: 0
@@ -314,7 +314,7 @@ tests:
         path: spec.ports
         content:
           port: 4443
-          name: "websecure-http3"
+          name: websecure-http3
           targetPort: websecure-http3
           protocol: UDP
       documentIndex: 1

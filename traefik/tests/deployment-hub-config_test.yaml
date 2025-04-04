@@ -41,13 +41,13 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "admission"
+            name: admission
             containerPort: 9943
             protocol: TCP
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "apiportal"
+            name: apiportal
             containerPort: 9903
             protocol: TCP
   - it: should fail when trying to set admission parameters without apimanagement

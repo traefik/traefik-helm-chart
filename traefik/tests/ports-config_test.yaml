@@ -282,14 +282,14 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "metrics"
+            name: metrics
             containerPort: 9100
             protocol: TCP
         template: deployment.yaml
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "traefik"
+            name: traefik
             containerPort: 9100
             protocol: TCP
         template: deployment.yaml
@@ -325,14 +325,14 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "metrics"
+            name: metrics
             containerPort: 9100
             protocol: TCP
         template: deployment.yaml
       - notContains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: "traefik"
+            name: traefik
             containerPort: 9100
             protocol: TCP
         template: deployment.yaml
@@ -379,4 +379,45 @@ tests:
             port: 443
             protocol: TCP
             targetPort: uppercase
+        template: service.yaml
+  - it: should truncate entrypoint names that are too long
+    set:
+      ports:
+        websecure2:
+          port: 444
+          tls:
+            enabled: true
+          http3:
+            enabled: true
+          expose:
+            default: true
+        a-way-too-long-entrypoint-name:
+          port: 1515
+          expose:
+            default: true
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure2
+            port: 444
+            protocol: TCP
+            targetPort: websecure2
+        template: service.yaml
+      - contains:
+          path: spec.ports
+          content:
+            # -http3 suffix is truncated here
+            name: websecure2-http
+            port: 444
+            protocol: UDP
+            targetPort: websecure2-http
+        template: service.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: a-way-too-long
+            port: 1515
+            protocol: TCP
+            targetPort: a-way-too-long
         template: service.yaml
