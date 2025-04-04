@@ -433,6 +433,22 @@ tests:
             prometheus.io/path: /metrics
             prometheus.io/port: "9100"
             prometheus.io/scrape: "true"
+  - it: should disable prometheus scrape if requested
+    set:
+      ports:
+        metrics:
+          port: 9100
+      metrics:
+        prometheus:
+          entryPoint: metrics
+          scrape: false
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations
+          value:
+            prometheus.io/path: /metrics
+            prometheus.io/port: "9100"
+            prometheus.io/scrape: "false"
   - it: should have prometheus addRoutersLabels enabled
     set:
       metrics:
