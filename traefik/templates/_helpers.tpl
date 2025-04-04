@@ -103,7 +103,7 @@ and https://www.rfc-editor.org/rfc/rfc6335#section-5.1.
 {{- define "traefik.portname" -}}
 {{- $portName := . -}}
 {{- $portName = $portName | lower -}}
-{{- $portName = $portName | trunc 15 | trimSuffix "-" -}}
+{{- $portName = $portName | trimPrefix "-" | trunc 15 | trimSuffix "-" -}}
 {{- print $portName -}}
 {{- end -}}
 
