@@ -14,7 +14,8 @@
 
 **Upgrade Notes**
 
-This release has been marked as minor as it will modifify services and deployment port names if it containers uppercase characters. Nevertheless, it should not impact the availability of your endpoints. 
+This release has been marked as minor as it will modify service and deployment port names containing uppercase characters. 
+Nevertheless, it should not impact the availability of your endpoints. 
 
 ## 34.5.0  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
