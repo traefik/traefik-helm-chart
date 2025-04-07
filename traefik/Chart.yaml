@@ -32,3 +32,4 @@ annotations:
     - "feat!: add port name template functions"
     - "chore(release): :rocket: publish traefik 35.0.0"
     - "chore(helpers): :bookmark: update hub proxy corresponding versions"
+    - "chore(ci): :bug: should fail on test error"
