@@ -21,7 +21,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: repo.io/proxy:v3.3.5
+          value: repo.io/traefik/traefik:v3.3.5
 
   - it: should use oci_meta with hub when enabled with token
     set:
@@ -33,4 +33,4 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: repo.io/hub:latest
+          value: repo.io/traefik-hub/traefik-hub:latest
