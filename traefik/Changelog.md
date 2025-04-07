@@ -1,5 +1,51 @@
 # Change Log
 
+## 35.0.0  ![AppVersion: v3.3.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-04-07
+
+* fix: do not quote protocol on pod ports
+* fix(tracing): 🐛 multiple response or request headers
+* feat: ✨ Oracle Cloud marketplace integration
+* feat(deps): update traefik docker tag to v3.3.5
+* feat!: add port name template functions
+* chore(release): :rocket: publish traefik 35.0.0
+* chore(helpers): :bookmark: update hub proxy corresponding versions
+* chore(ci): :bug: should fail on test error
+
+**Upgrade Notes**
+
+This release has been marked as major as it might [modify service and deployment port names](https://github.com/traefik/traefik-helm-chart/pull/1363) (if they use uppercase characters or are longer than 15 characters).
+Nevertheless, even in these cases, it should not impact the availability of your endpoints.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 956000d..f2b90da 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1082,3 +1082,18 @@ hub:
+         traceParent: ""
+         # -- Name of the header that will contain the tracestate copy.
+         traceState: ""
++
++# -- Required for OCI Marketplace integration.
++# See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
++oci_meta:
++  # -- Enable specific values for Oracle Cloud Infrastructure
++  enabled: false
++    # -- It needs to be an ocir repo
++  repo: traefik
++  images:
++    proxy:
++      image: traefik
++      tag: latest
++    hub:
++      image: traefik-hub
++      tag: latest
+```
+
 ## 34.5.0  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-03-31

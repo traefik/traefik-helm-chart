@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 34.5.0
+version: 35.0.0
 # renovate: image=traefik
 appVersion: v3.3.5
 kubeVersion: ">=1.22.0-0"
@@ -25,7 +25,11 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(gateway): `gateway.namespace` value is ignored"
-    - "feat: allow templating the additionalVolumeMounts configuration"
-    - "feat(CRDs): 🔧 update Traefik Hub CRDs to v1.17.2"
-    - "chore(release): publish crds 1.6.0 and traefik 34.5.0"
+    - "fix: do not quote protocol on pod ports"
+    - "fix(tracing): 🐛 multiple response or request headers"
+    - "feat: ✨ Oracle Cloud marketplace integration"
+    - "feat(deps): update traefik docker tag to v3.3.5"
+    - "feat!: add port name template functions"
+    - "chore(release): :rocket: publish traefik 35.0.0"
+    - "chore(helpers): :bookmark: update hub proxy corresponding versions"
+    - "chore(ci): :bug: should fail on test error"
