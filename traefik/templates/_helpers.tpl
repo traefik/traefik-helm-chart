@@ -176,7 +176,7 @@ based on semverCompare
         {{- $hubProxyVersion = "v3.0" }}
     {{- else if semverCompare "<v3.7.0-0" $version -}}
         {{- $hubProxyVersion = "v3.1" }}
-    {{- else if semverCompare "<v3.11.0-0" $.Values.image.tag -}}
+    {{- else if semverCompare "<v3.11.0-0" $version -}}
         {{ $hubProxyVersion = "v3.2" }}
     {{- end -}}
  {{- end -}}

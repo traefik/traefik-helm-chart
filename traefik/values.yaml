@@ -1092,8 +1092,8 @@ oci_meta:
   repo: traefik
   images:
     proxy:
-      image: traefik/traefik
+      image: traefik
       tag: latest
     hub:
-      image: traefik-hub/traefik-hub
+      image: traefik-hub
       tag: latest
