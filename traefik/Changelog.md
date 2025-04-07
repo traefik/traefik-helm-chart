@@ -14,8 +14,8 @@
 
 **Upgrade Notes**
 
-This release has been marked as major as it will [modify service and deployment port names containing uppercase characters](https://github.com/traefik/traefik-helm-chart/pull/1363). 
-Nevertheless, it will not impact the availability of your endpoints. 
+This release has been marked as major as it might [modify service and deployment port names](https://github.com/traefik/traefik-helm-chart/pull/1363) (if they use uppercase characters or are longer than 15 characters).
+Nevertheless, even in these cases, it should not impact the availability of your endpoints.
 
 ## 34.5.0  ![AppVersion: v3.3.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.4&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
