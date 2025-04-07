@@ -239,7 +239,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.serviceMonitor.scrapeTimeout | string | `""` |  |
 | namespaceOverride | string | `""` | This field override the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules` |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
-| oci_meta | object | `{"enabled":false,"images":{"hub":{"image":"hub","tag":"latest"},"proxy":{"image":"proxy","tag":"latest"}},"repo":"traefik"}` | Required for OCI Marketplace integration. See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm |
+| oci_meta | object | `{"enabled":false,"images":{"hub":{"image":"traefik-hub","tag":"latest"},"proxy":{"image":"traefik","tag":"latest"}},"repo":"traefik"}` | Required for OCI Marketplace integration. See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm |
 | oci_meta.enabled | bool | `false` | Enable specific values for Oracle Cloud Infrastructure |
 | oci_meta.repo | string | `"traefik"` | It needs to be an ocir repo |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
