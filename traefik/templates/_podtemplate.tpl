@@ -3,7 +3,11 @@
     metadata:
       annotations:
       {{- if .Values.deployment.podAnnotations }}
-        {{- tpl (toYaml .Values.deployment.podAnnotations) . | nindent 8 }}
+        {{- if .Values.deployment.templateAnnotations }}
+          {{- tpl (toYaml .Values.deployment.podAnnotations) . | nindent 8 }}
+        {{- else }}
+          {{- toYaml .Values.deployment.podAnnotations | nindent 8 }}
+        {{- end }}
       {{- end }}
       {{- if .Values.metrics }}
       {{- if and (.Values.metrics.prometheus) (not (.Values.metrics.prometheus.serviceMonitor).enabled) }}
