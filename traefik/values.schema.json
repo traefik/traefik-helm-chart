@@ -290,6 +290,9 @@
                     },
                     "type": "object"
                 },
+                "namespaces": {
+                    "type": "array"
+                },
                 "providers": {
                     "properties": {
                         "consulCatalogEnterprise": {

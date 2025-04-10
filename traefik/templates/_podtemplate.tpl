@@ -774,6 +774,9 @@
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
             {{- end }}
+            {{- if .namespaces }}
+          - "--hub.namespaces={{ join "," (uniq (concat (include "traefik.namespace" $ | list) .namespaces)) }}"
+            {{- end }}
             {{- with .apimanagement }}
              {{- if .enabled }}
               {{- $listenAddr := default ":9943" .admission.listenAddr }}

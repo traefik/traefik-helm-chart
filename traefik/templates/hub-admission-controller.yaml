@@ -52,12 +52,23 @@ metadata:
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
-  - name: hub-agent.traefik.portal
+  {{- $resources := list
+      (dict "name" "hub-agent.traefik.access"               "endpoint" "/api-access"            "resource" "apiaccesses")
+      (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")
+      (dict "name" "hub-agent.traefik.bundle"               "endpoint" "/api-bundle"            "resource" "apibundles")
+      (dict "name" "hub-agent.traefik.catalog-item"         "endpoint" "/api-catalog-item"      "resource" "apicatalogitems")
+      (dict "name" "hub-agent.traefik.managed-subscription" "endpoint" "/managed-subscription"  "resource" "managedsubscriptions")
+      (dict "name" "hub-agent.traefik.plan"                 "endpoint" "/api-plan"              "resource" "apiplans")
+      (dict "name" "hub-agent.traefik.portal"               "endpoint" "/api-portal"            "resource" "apiportals")
+      (dict "name" "hub-agent.traefik.version"              "endpoint" "/api-version"           "resource" "apiversions")
+  }}
+  {{- range $resources }}
+  - name: hub-agent.traefik.{{ .name }}
     clientConfig:
       service:
         name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-portal
+        namespace: {{ template "traefik.namespace" $ }}
+        path: {{ .endpoint }}
       caBundle: {{ $cert.Cert }}
     sideEffects: None
     admissionReviewVersions:
@@ -72,154 +83,16 @@ webhooks:
         apiVersions:
           - v1alpha1
         resources:
-          - apiportals
-  - name: hub-agent.traefik.api
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apis
-  - name: hub-agent.traefik.access
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-access
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apiaccesses
-  - name: hub-agent.traefik.catalog-item
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-catalog-item
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apicatalogitems
-  - name: hub-agent.traefik.managed-subscription
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /managed-subscription
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - managedsubscriptions
-  - name: hub-agent.traefik.plan
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-plan
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apiplans
-  - name: hub-agent.traefik.bundle
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-bundle
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apibundles
-  - name: hub-agent.traefik.version
-    clientConfig:
-      service:
-        name: admission
-        namespace: {{ template "traefik.namespace" . }}
-        path: /api-version
-      caBundle: {{ $cert.Cert }}
-    sideEffects: None
-    admissionReviewVersions:
-      - v1
-    rules:
-      - operations:
-          - CREATE
-          - UPDATE
-          - DELETE
-        apiGroups:
-          - hub.traefik.io
-        apiVersions:
-          - v1alpha1
-        resources:
-          - apiversions
+          - {{ .resource }}
+    {{- if $.Values.hub.namespaces }}
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: In
+          values:
+            {{- toYaml (uniq (concat (include "traefik.namespace" $ | list) $.Values.hub.namespaces)) | nindent 12 }}
+    {{- end }}
+  {{- end }}
 
 ---
 apiVersion: v1
