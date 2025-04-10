@@ -53,13 +53,13 @@ metadata:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
   {{- $resources := list
-      (dict "name" "hub-agent.traefik.portal"               "endpoint" "/api-portal"            "resource" "apiportals")
-      (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")
       (dict "name" "hub-agent.traefik.access"               "endpoint" "/api-access"            "resource" "apiaccesses")
+      (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")
+      (dict "name" "hub-agent.traefik.bundle"               "endpoint" "/api-bundle"            "resource" "apibundles")
       (dict "name" "hub-agent.traefik.catalog-item"         "endpoint" "/api-catalog-item"      "resource" "apicatalogitems")
       (dict "name" "hub-agent.traefik.managed-subscription" "endpoint" "/managed-subscription"  "resource" "managedsubscriptions")
       (dict "name" "hub-agent.traefik.plan"                 "endpoint" "/api-plan"              "resource" "apiplans")
-      (dict "name" "hub-agent.traefik.bundle"               "endpoint" "/api-bundle"            "resource" "apibundles")
+      (dict "name" "hub-agent.traefik.portal"               "endpoint" "/api-portal"            "resource" "apiportals")
       (dict "name" "hub-agent.traefik.version"              "endpoint" "/api-version"           "resource" "apiversions")
   }}
   {{- range $resources }}
