@@ -71,4 +71,8 @@
   {{- if and (semverCompare "<v3.7.0" $hubVersion) .Values.hub.providers.microcks.enabled }}
     {{ fail "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."}}
   {{- end }}
+
+  {{- if and (and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced)) (semverCompare "<v3.16.0" $hubVersion) }}
+    {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
+  {{- end }}
 {{- end }}

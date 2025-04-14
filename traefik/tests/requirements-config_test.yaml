@@ -74,6 +74,35 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using traefik-hub API management with namespaced RBACs
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: "v3.15.0"
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs"
+  - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.16.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: "v3.16.0"
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should not be possible to namespace rbac without one of the required providers
     set:
       rbac:
