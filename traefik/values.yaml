@@ -274,7 +274,7 @@ providers:  # @schema additionalProperties: false
     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
     ingressClass: ""
     # labelSelector: environment=production,method=traefik
-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
@@ -289,7 +289,7 @@ providers:  # @schema additionalProperties: false
     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
     ingressClass:  # @schema type:[string, null]
     # labelSelector: environment=production,method=traefik
-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # IP used for Kubernetes Ingress endpoints
     publishedService:
@@ -307,7 +307,7 @@ providers:  # @schema additionalProperties: false
     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
     # This option currently enables support for TCPRoute and TLSRoute.
     experimentalChannel: false
-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # -- A label selector can be defined to filter on specific GatewayClass objects only.
     labelselector: ""
@@ -939,7 +939,7 @@ hub:
   # -- Name of `Secret` with key 'token' set to a valid license token.
   # It enables API Gateway.
   token: ""
-  # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch only helm release namespace. This array can be used to watch additional namespaces.
+  # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
