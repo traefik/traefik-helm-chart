@@ -59,3 +59,24 @@ for more info. 🚨
 {{- printf "\n" -}}
   {{- end -}}
 {{- end -}}
+
+{{/* Warn about hub not watching namespaces configured in providers */}}
+{{- if and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced) }}
+    {{- if .Values.hub.namespaces -}}
+        {{- range (list "kubernetesCRD" "kubernetesGateway" "kubernetesIngress") }}
+            {{- $provider := . -}}
+            {{- $providerNamespaces := get (get $.Values.providers .) "namespaces" -}}
+            {{- if $providerNamespaces -}}
+                {{- $intersect := (include "list.intersect" (dict "a" $providerNamespaces "b" $.Values.hub.namespaces)) }}
+                {{- if $intersect }}
+                    {{- printf "WARNING: %s provider is configured to watch namespaces %s but those ones are not watched by Hub. It may be an issue !\n" $provider $intersect -}}
+                {{- end -}}
+            {{- else -}}
+                {{- printf "WARNING: %s provider is configured to watch all namespaces but Hub only watches %s. It may be an issue !\n" $provider $.Values.hub.namespaces -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
+{{- end -}}
+
+
+

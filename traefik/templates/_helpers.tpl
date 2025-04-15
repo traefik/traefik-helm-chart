@@ -247,3 +247,11 @@ Key: {{ $cert.Key | b64enc }}
     {{- end -}}
     {{- $found -}}
 {{- end -}}
+
+{{- define "list.intersect" -}}
+     {{ $list := .a }}
+     {{- range .b -}}
+        {{ $list = without $list . }}
+     {{- end -}}
+     {{ $list }}
+{{- end -}}
