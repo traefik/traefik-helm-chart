@@ -182,3 +182,12 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.experimental.aigateway"
+
+  - it: should be possible to specify namespaces to watch
+    set:
+      hub:
+        namespaces: [one, two, one]
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.namespaces=NAMESPACE,one,two"
