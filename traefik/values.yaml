@@ -939,7 +939,7 @@ hub:
   # -- Name of `Secret` with key 'token' set to a valid license token.
   # It enables API Gateway.
   token: ""
-  # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
+  # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch only helm release namespace. This array can be used to watch additional namespaces.
   namespaces: []
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
