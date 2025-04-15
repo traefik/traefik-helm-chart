@@ -97,11 +97,11 @@ spec:
                 properties:
                   operationSets:
                     description: OperationSets defines the sets of operations to be
-                      referenced for granular filtering in APIAccesses.
+                      referenced for granular filtering in APICatalogItems or ManagedSubscriptions.
                     items:
                       description: |-
                         OperationSet gives a name to a set of matching OpenAPI operations.
-                        This set of operations can then be referenced for granular filtering in APIAccesses.
+                        This set of operations can then be referenced for granular filtering in APICatalogItems or ManagedSubscriptions.
                       properties:
                         matchers:
                           description: Matchers defines a list of alternative rules
@@ -153,7 +153,7 @@ spec:
                           type: array
                         name:
                           description: Name is the name of the OperationSet to reference
-                            in APIAccesses.
+                            in APICatalogItems or ManagedSubscriptions.
                           maxLength: 253
                           type: string
                       required:

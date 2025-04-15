@@ -26,7 +26,7 @@ tests:
       hub: true
     asserts:
       - hasDocuments:
-          count: 11
+          count: 10
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -34,7 +34,7 @@ tests:
           value: hub.traefik.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(AccessControlPolicy|AIService|APIAccess|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription)$
+          pattern: ^(AccessControlPolicy|AIService|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
