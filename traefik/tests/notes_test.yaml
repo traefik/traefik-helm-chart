@@ -134,5 +134,57 @@ tests:
 
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace !
             WARNING: kubernetesCRD provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
-            WARNING: kubernetesGateway provider is configured to watch all namespaces but Hub provider only watches [ns1].
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
+  - it: should display warning when hub namespaces doesn't match kubernetesGateway namespaces
+    set:
+      image:
+        tag: v3
+
+      rbac:
+        enabled: true
+        namespaced: true
+
+      hub:
+        token: "token"
+        namespaces: [ns1]
+        apimanagement:
+          enabled: true
+
+      providers:
+        kubernetesGateway:
+          enabled: true
+          namespaces: [ns1, ns2]
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace !
+            WARNING: kubernetesCRD provider is configured to watch all namespaces but Hub provider only watches [ns1].
+            WARNING: kubernetesGateway provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
+            WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
+
+  - it: should not display any warning when hub watch all namespaces
+    set:
+      image:
+        tag: v3
+
+      rbac:
+        enabled: true
+        namespaced: true
+
+      hub:
+        token: "token"
+        namespaces: []
+        apimanagement:
+          enabled: true
+
+      providers:
+        kubernetesCRD:
+          namespaces: [ns1, ns2]
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace !
