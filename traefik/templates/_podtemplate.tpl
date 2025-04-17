@@ -17,6 +17,9 @@
       {{- with .Values.deployment.podLabels }}
       {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.global.azure.enabled }}
+        azure-extensions-usage-release-identifier: {{ .Release.Name }}
+      {{- end }}
     spec:
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
