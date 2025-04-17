@@ -9,6 +9,8 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/traefik:v3.3.0
+      - notExists:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
 
   - it: should use global.azure with proxy when enabled
     set:
@@ -24,6 +26,9 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: repo.io/foo:v3.3.5
+      - equal:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
+          value: RELEASE-NAME
 
   - it: should use global.azure with hub when enabled with token
     set:
@@ -41,3 +46,6 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: repo.io/traefik-hub:v3.15.0
+      - equal:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
+          value: RELEASE-NAME
