@@ -24,6 +24,12 @@ Create the chart image name.
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
  {{- end -}}
+{{- else if .Values.global.azure.enabled -}}
+ {{- if .Values.hub.token -}}
+{{- printf "%s/%s:%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.tag }}
+ {{- else -}}
+{{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
+ {{- end -}}
 {{- else -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
 {{- end -}}
@@ -170,6 +176,7 @@ based on semverCompare
 */}}
 {{- if $.Values.hub.token -}}
  {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
+ {{- $version = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $version) -}}
  {{- $hubProxyVersion := "v3.3" }}
  {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
     {{- if semverCompare "<v3.3.2-0" $version -}}
@@ -183,6 +190,7 @@ based on semverCompare
 {{ $hubProxyVersion }}
 {{- else -}}
 {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
+{{- $imageVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.proxy.tag $imageVersion) -}}
 {{ (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
 {{- end -}}
 {{- end -}}
