@@ -14,24 +14,26 @@ tests:
 
   - it: should use global.azure with proxy when enabled
     set:
+      versionOverride: v3.3.5
       global:
         azure:
           enabled: true
           images:
             proxy:
-              tag: v3.3.5
+              tag: xyz
               registry: repo.io
               image: foo
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: repo.io/foo:v3.3.5
+          value: repo.io/foo:xyz
       - equal:
           path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
           value: RELEASE-NAME
 
   - it: should use global.azure with hub when enabled with token
     set:
+      versionOverride: v3.15.0
       hub:
         token: xxx
       global:
@@ -39,13 +41,13 @@ tests:
           enabled: true
           images:
             hub:
-              tag: v3.15.0
+              tag: xyz
               registry: repo.io
               image: traefik-hub
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: repo.io/traefik-hub:v3.15.0
+          value: repo.io/traefik-hub:xyz
       - equal:
           path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
           value: RELEASE-NAME
