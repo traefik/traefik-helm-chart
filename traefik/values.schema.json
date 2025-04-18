@@ -244,6 +244,58 @@
             },
             "type": "object"
         },
+        "global": {
+            "properties": {
+                "azure": {
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "images": {
+                            "properties": {
+                                "hub": {
+                                    "properties": {
+                                        "digest": {
+                                            "type": "string"
+                                        },
+                                        "image": {
+                                            "type": "string"
+                                        },
+                                        "registry": {
+                                            "type": "string"
+                                        },
+                                        "tag": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                },
+                                "proxy": {
+                                    "properties": {
+                                        "digest": {
+                                            "type": "string"
+                                        },
+                                        "image": {
+                                            "type": "string"
+                                        },
+                                        "registry": {
+                                            "type": "string"
+                                        },
+                                        "tag": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            },
+                            "type": "object"
+                        }
+                    },
+                    "type": "object"
+                }
+            },
+            "type": "object"
+        },
         "globalArguments": {
             "items": {
                 "type": "string"
