@@ -1,0 +1,49 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "releaseName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the release."
+      }
+    },
+    "clusterResourceName": {
+      "type": "String",
+      "metadata": {
+        "description": "The name of the Azure Arc-enabled Kubernetes cluster resource."
+      }
+    },
+    "helmValues": {
+      "type": "String"
+    }
+  },
+  "variables": {
+    "plan-name": "DONOTMODIFY",
+    "plan-publisher": "DONOTMODIFY",
+    "plan-offerID": "DONOTMODIFY",
+    "releaseTrain": "DONOTMODIFY",
+    "clusterExtensionTypeName": "DONOTMODIFY"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KubernetesConfiguration/extensions",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('releaseName')]",
+      "properties": {
+        "extensionType": "[variables('clusterExtensionTypeName')]",
+        "autoUpgradeMinorVersion": true,
+        "releaseTrain": "[variables('releaseTrain')]",
+        "configurationSettings": "[parameters('helmValues')]",
+        "configurationProtectedSettings": {}
+      },
+      "plan": {
+        "name": "[variables('plan-name')]",
+        "publisher": "[variables('plan-publisher')]",
+        "product": "[variables('plan-offerID')]"
+      },
+      "scope": "[concat('Microsoft.Kubernetes/connectedClusters/', parameters('clusterResourceName'))]"
+    }
+  ],
+  "outputs": {}
+}
