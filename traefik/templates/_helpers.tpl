@@ -26,9 +26,9 @@ Create the chart image name.
  {{- end -}}
 {{- else if .Values.global.azure.enabled -}}
  {{- if .Values.hub.token -}}
-{{- printf "%s/%s:%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.tag }}
+{{- printf "%s/%s@%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.digest }}
  {{- else -}}
-{{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
+{{- printf "%s/%s@%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.digest }}
  {{- end -}}
 {{- else -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
