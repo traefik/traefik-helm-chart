@@ -930,6 +930,9 @@ namespaceOverride: ""
 ## -- This field override the default app.kubernetes.io/instance label for all Objects.
 instanceLabelOverride: ""
 
+## -- This field override the default version extracted from image.tag
+versionOverride: ""
+
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
   # -- Name of `Secret` with key 'token' set to a valid license token.

@@ -1,5 +1,5 @@
 {{- define "traefik.podTemplate" }}
-  {{- $version := include "proxyVersion" $ }}
+  {{- $version := include "traefik.proxyVersion" $ }}
     metadata:
       annotations:
       {{- if .Values.deployment.podAnnotations }}

@@ -14,6 +14,7 @@ tests:
       image:
         repository: traefik/traefik
         tag: experimental-v3.0
+      versionOverride: v3.1
     asserts:
       - notFailedTemplate: {}
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
@@ -54,6 +55,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0"
+  - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
+    set:
+      image:
+        tag: sha256:xxx
+      versionOverride: v3.3.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+          nativeLBByDefault: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should not fail when using kubernetesGateway on traefik > 3.1.0-rc3 without experimental flag
     set:
       image:

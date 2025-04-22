@@ -163,28 +163,44 @@ Renders a complete tree, even values that contains template.
   {{- end }}
 {{- end -}}
 
-{{- define "proxyVersion" -}}
+
 {{/*
-Traefik hub is based on v3.1 (v3.0 before v3.3.1) of traefik proxy, so this is a hack to avoid to much complexity in RBAC management which are
-based on semverCompare
+This is a hack to avoid too much complexity when proxyVersion is required on Hub.
+It requires a dict with "Version" and "Hub".
 */}}
-{{- if $.Values.hub.token -}}
- {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
- {{- $hubProxyVersion := "v3.3" }}
- {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
-    {{- if semverCompare "<v3.3.2-0" $version -}}
+{{- define "traefik.proxyVersionFromHub" -}}
+ {{- $version := .Version -}}
+ {{- if .Hub -}}
+   {{- $hubProxyVersion := "v3.3" }}
+   {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
+     {{- if semverCompare "<v3.3.2-0" $version -}}
         {{- $hubProxyVersion = "v3.0" }}
-    {{- else if semverCompare "<v3.7.0-0" $version -}}
+     {{- else if semverCompare "<v3.7.0-0" $version -}}
         {{- $hubProxyVersion = "v3.1" }}
-    {{- else if semverCompare "<v3.11.0-0" $version -}}
+     {{- else if semverCompare "<v3.11.0-0" $version -}}
         {{ $hubProxyVersion = "v3.2" }}
-    {{- end -}}
+     {{- end -}}
+   {{- end -}}
+   {{ $hubProxyVersion }}
+ {{- else -}}
+   {{ $version }}
  {{- end -}}
-{{ $hubProxyVersion }}
-{{- else -}}
-{{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
-{{ (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
 {{- end -}}
+
+
+{{/*
+The version can comes many sources: appVersion, image.tag, override, marketplace.
+*/}}
+{{- define "traefik.proxyVersion" -}}
+ {{- if $.Values.versionOverride }}
+  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" $.Values.hub.token) }}
+ {{- else if $.Values.hub.token -}}
+  {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
+  {{- include "traefik.proxyVersionFromHub" (dict "Version" $version "Hub" true) }}
+ {{- else -}}
+  {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
+  {{- (split "@" (default $.Chart.AppVersion $imageVersion))._0 }}
+ {{- end -}}
 {{- end -}}
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
