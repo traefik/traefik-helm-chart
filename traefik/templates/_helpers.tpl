@@ -199,7 +199,7 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
   {{- include "traefik.proxyVersionFromHub" (dict "Version" $version "Hub" true) }}
  {{- else -}}
   {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
-  {{- (split "@" (default $.Chart.AppVersion $imageVersion))._0 }}
+  {{- (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
  {{- end -}}
 {{- end -}}
 
