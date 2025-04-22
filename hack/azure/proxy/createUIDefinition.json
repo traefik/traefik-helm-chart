@@ -203,8 +203,8 @@
             "visible": "[basics('createNewCluster')]"
           }
         ]
-      },
-      {
+    },
+    {
         "name": "applicationDetails",
         "label": "Application Details",
         "elements": [
@@ -221,19 +221,30 @@
             },
             "visible": true
           },
+		  {
+                "name": "dashboard",
+                "type": "Microsoft.Common.CheckBox",
+                "label": "Enable Traefik local Dashboard.",
+				"defaultValue": true,
+                "toolTip": "Enable access to Dashboard through port-forward",
+                "constraints": {
+                    "required": false
+                }
+          },
           {
-            "name": "helmValues",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Values",
-            "defaultValue": "false",
-            "toolTip": "See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md",
-            "placeholder": "See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md",
-            "constraints": {
-              "required": false,
-              "regex": "^(true|false)$",
-              "validationMessage": "Only true or false are accepted"
-            },
-            "visible": true
+            	"name": "replicas",
+                "type": "Microsoft.Common.Slider",
+                "min": 1,
+                "max": 10,
+                "label": "Number of replicas",
+                "subLabel": "",
+                "defaultValue": 1,
+                "showStepMarkers": false,
+                "toolTip": "Specify number of replicas",
+                "constraints": {
+                  "required": false
+                },
+                "visible": true
           }
         ]
       }
@@ -248,7 +259,8 @@
       "osSKU": "[steps('clusterDetails').newClusterSection.osSKU]",
       "vmEnableAutoScale": "[steps('clusterDetails').newClusterSection.enableAutoScaling]",
       "vmCount": "[steps('clusterDetails').newClusterSection.vmCount]",
-      "helmValues": "[steps('applicationDetails').helmValues]"
+	  "dashboard": "[steps('applicationDetails').dashboard]",
+	  "replicas": "[steps('applicationDetails').replicas]"
     }
   }
 }

@@ -1115,9 +1115,9 @@ global:
     images:
       proxy:
         image: traefik
-        tag: v3.5.5
+        tag: latest
         registry: docker.io/library
       hub:
         image: traefik-hub
-        tag: v3.5.5
+        tag: latest
         registry: ghcr.io/traefik

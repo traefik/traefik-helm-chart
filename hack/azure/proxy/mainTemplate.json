@@ -27,10 +27,18 @@
                 "description": "The location of AKS resource."
             }
         },
-        "helmValues": {
-            "type": "String",
+        "replicas": {
+            "type": "Int",
+            "defaultValue": 1,
             "metadata": {
-                "description": "Rbac namespaced ? (true/false)"
+                "description": "Number of instances"
+            }
+        },
+        "dashboard": {
+           "type": "Bool",
+           "defaultValue": true,
+            "metadata": {
+                "description": "enable Traefik local dashboard"
             }
         },
         "vmSize": {
@@ -221,7 +229,8 @@
                 "configurationSettings": {
                   "versionOverride": "v3.3.5",
                   "global.azure.enabled": true,
-                  "rbac.namespaced": "[parameters('helmValues')]"
+                  "deployment.replicas": "[parameters('replicas')]",
+                  "ingressRoute.dashboard.enabled": "[parameters('dashboard')]"
                 },
                 "configurationProtectedSettings": {
                 }
