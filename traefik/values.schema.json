@@ -255,9 +255,6 @@
                             "properties": {
                                 "hub": {
                                     "properties": {
-                                        "digest": {
-                                            "type": "string"
-                                        },
                                         "image": {
                                             "type": "string"
                                         },
@@ -272,9 +269,6 @@
                                 },
                                 "proxy": {
                                     "properties": {
-                                        "digest": {
-                                            "type": "string"
-                                        },
                                         "image": {
                                             "type": "string"
                                         },
