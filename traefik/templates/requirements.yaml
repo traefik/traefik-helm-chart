@@ -1,4 +1,4 @@
-{{- $version := include "proxyVersion" $ }}
+{{- $version := include "traefik.proxyVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
   {{- if (semverCompare "<v3.0.0-0" $version) }}
     {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}

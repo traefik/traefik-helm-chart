@@ -1,4 +1,4 @@
-{{- $version := include "proxyVersion" $ }}
+{{- $version := include "traefik.proxyVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces)) -}}

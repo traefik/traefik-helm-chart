@@ -149,7 +149,7 @@ Kubernetes: `>=1.22.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
-| image.tag | string | `nil` | defaults to appVersion |
+| image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. When a digest is required, `versionOverride` can be used to set the version. |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true,"name":""}` | Create a default IngressClass for Traefik |
 | ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
 | ingressRoute.dashboard.enabled | bool | `false` | Create an IngressRoute for the dashboard |
@@ -167,7 +167,7 @@ Kubernetes: `>=1.22.0-0`
 | ingressRoute.healthcheck.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
 | ingressRoute.healthcheck.services | list | `[{"kind":"TraefikService","name":"ping@internal"}]` | The internal service used for the healthcheck ingressRoute |
 | ingressRoute.healthcheck.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
-| instanceLabelOverride | string | `""` |  |
+| instanceLabelOverride | string | `""` | This field override the default app.kubernetes.io/instance label for all Objects. |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
@@ -375,6 +375,7 @@ Kubernetes: `>=1.22.0-0`
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |
+| versionOverride | string | `""` | This field override the default version extracted from image.tag |
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------

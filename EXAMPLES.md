@@ -819,14 +819,15 @@ tlsOptions:
 
 # Use latest build of Traefik v3 from master
 
-An experimental build of Traefik Proxy is available on a specific repository.
+An experimental build of Traefik Proxy is available on a specific community repository: `traefik/traefik`.
 
-It can be used with those _values_:
+The tag does not follow semver, so it requires a _versionOverride_:
 
 ```yaml
 image:
   repository: traefik/traefik
-  tag: experimental-v3.0
+  tag: experimental-v3.4
+versionOverride: v3.4
 ```
 
 # Use Prometheus Operator

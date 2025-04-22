@@ -1,4 +1,4 @@
-{{- $version := include "proxyVersion" $ }}
+{{- $version := include "traefik.proxyVersion" $ }}
 {{- if and .Values.rbac.enabled (not .Values.rbac.namespaced) }}
 ---
 kind: ClusterRole

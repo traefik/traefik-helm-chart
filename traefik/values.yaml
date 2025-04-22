@@ -7,7 +7,8 @@ image:  # @schema additionalProperties: false
   registry: docker.io
   # -- Traefik image repository
   repository: traefik
-  # -- defaults to appVersion
+  # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
+  # When a digest is required, `versionOverride` can be used to set the version.
   tag:  # @schema type:[string, null]
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
@@ -927,8 +928,11 @@ extraObjects: []
 # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 namespaceOverride: ""
 
-## -- This field override the default app.kubernetes.io/instance label for all Objects.
+# -- This field override the default app.kubernetes.io/instance label for all Objects.
 instanceLabelOverride: ""
+
+# -- This field override the default version extracted from image.tag
+versionOverride: ""
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
