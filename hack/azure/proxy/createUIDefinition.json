@@ -225,13 +225,13 @@
             "name": "helmValues",
             "type": "Microsoft.Common.TextBox",
             "label": "Values",
-            "defaultValue": "",
+            "defaultValue": "false",
             "toolTip": "See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md",
             "placeholder": "See https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md",
-            "multiLine": true,
             "constraints": {
               "required": false,
-              "validations": []
+              "regex": "^(true|false)$",
+              "validationMessage": "Only true or false are accepted"
             },
             "visible": true
           }
