@@ -927,10 +927,10 @@ extraObjects: []
 # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 namespaceOverride: ""
 
-## -- This field override the default app.kubernetes.io/instance label for all Objects.
+# -- This field override the default app.kubernetes.io/instance label for all Objects.
 instanceLabelOverride: ""
 
-## -- This field override the default version extracted from image.tag
+# -- This field override the default version extracted from image.tag
 versionOverride: ""
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/

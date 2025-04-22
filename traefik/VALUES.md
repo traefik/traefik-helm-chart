@@ -167,7 +167,7 @@ Kubernetes: `>=1.22.0-0`
 | ingressRoute.healthcheck.middlewares | list | `[]` | Additional ingressRoute middlewares (e.g. for authentication) |
 | ingressRoute.healthcheck.services | list | `[{"kind":"TraefikService","name":"ping@internal"}]` | The internal service used for the healthcheck ingressRoute |
 | ingressRoute.healthcheck.tls | object | `{}` | TLS options (e.g. secret containing certificate) |
-| instanceLabelOverride | string | `""` |  |
+| instanceLabelOverride | string | `""` | This field override the default app.kubernetes.io/instance label for all Objects. |
 | livenessProbe.failureThreshold | int | `3` | The number of consecutive failures allowed before considering the probe as failed. |
 | livenessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | livenessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
@@ -375,7 +375,7 @@ Kubernetes: `>=1.22.0-0`
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |
-| versionOverride | string | `""` |  |
+| versionOverride | string | `""` | This field override the default version extracted from image.tag |
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------
