@@ -61,7 +61,7 @@ for more info. 🚨
 {{- end -}}
 
 {{/* Warn about hub not watching namespaces configured in providers */}}
-{{- if and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced) }}
+{{- if and .Values.hub.token (and .Values.rbac.enabled .Values.rbac.namespaced) }}
     {{- if .Values.hub.namespaces -}}
         {{- range (list "kubernetesCRD" "kubernetesGateway" "kubernetesIngress") }}
             {{- $provider := . -}}
@@ -69,9 +69,9 @@ for more info. 🚨
             {{- $providerEnabled := get (get $.Values.providers .) "enabled" -}}
             {{- if $providerEnabled -}}
                 {{- if $providerNamespaces -}}
-                    {{- $intersect := (include "list.intersect" (dict "a" $providerNamespaces "b" $.Values.hub.namespaces)) }}
-                    {{- if $intersect }}
-                        {{- printf "WARNING: %s provider is configured to watch namespaces %s but those ones are not watched by Hub provider.\n" $provider $intersect -}}
+                    {{- $difference := (include "list.difference" (dict "a" $providerNamespaces "b" $.Values.hub.namespaces)) | fromYamlArray }}
+                    {{- if $difference }}
+                        {{- printf "WARNING: %s provider is configured to watch namespaces %s but those ones are not watched by Hub provider.\n" $provider $difference -}}
                     {{- end -}}
                 {{- else -}}
                     {{- printf "WARNING: %s provider is configured to watch all namespaces but Hub provider only watches %s.\n" $provider $.Values.hub.namespaces -}}

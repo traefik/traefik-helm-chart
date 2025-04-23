@@ -248,10 +248,14 @@ Key: {{ $cert.Key | b64enc }}
     {{- $found -}}
 {{- end -}}
 
-{{- define "list.intersect" -}}
-     {{ $list := .a }}
-     {{- range .b -}}
-        {{ $list = without $list . }}
-     {{- end -}}
-     {{ $list }}
-{{- end -}}
+{{- define "list.difference" -}}
+    {{- $a := .a }}
+    {{- $b := .b }}
+    {{- $diff := list }}
+    {{- range $a }}
+        {{- if not (has . $b) }}
+            {{- $diff = append $diff . }}
+        {{- end }}
+    {{- end }}
+    {{- toYaml $diff }}
+{{- end }}
