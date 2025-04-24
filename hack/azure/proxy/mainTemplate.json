@@ -80,7 +80,7 @@
         },
         "kubernetesVersion": {
             "type": "String",
-            "defaultValue": "1.26.3",
+            "defaultValue": "1.32.3",
             "metadata": {
                 "description": "The version of Kubernetes."
             }
@@ -108,13 +108,6 @@
             "type": "Bool",
             "metadata": {
                 "description": "Enable private network access to the Kubernetes cluster."
-            }
-        },
-        "enableHttpApplicationRouting": {
-            "defaultValue": true,
-            "type": "Bool",
-            "metadata": {
-                "description": "Boolean flag to turn on and off http application routing."
             }
         },
         "enableAzurePolicy": {
@@ -167,7 +160,7 @@
             "dependsOn": [],
             "tags": {},
             "sku": {
-                "name": "Basic",
+                "name": "Base",
                 "tier": "Free"
             },
             "identity": {
@@ -189,7 +182,6 @@
                         "vmSize": "[parameters('vmSize')]",
                         "osType": "Linux",
                         "osSKU": "[parameters('osSKU')]",
-                        "storageProfile": "ManagedDisks",
                         "type": "VirtualMachineScaleSets",
                         "mode": "System",
                         "maxPods": 110,
@@ -206,9 +198,6 @@
                     "enablePrivateCluster": "[parameters('enablePrivateCluster')]"
                 },
                 "addonProfiles": {
-                    "httpApplicationRouting": {
-                        "enabled": "[parameters('enableHttpApplicationRouting')]"
-                    },
                     "azurepolicy": {
                         "enabled": "[parameters('enableAzurePolicy')]"
                     },
