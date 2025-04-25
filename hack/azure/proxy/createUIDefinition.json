@@ -119,7 +119,7 @@
                 "name": "newClusterResourceName",
                 "type": "Microsoft.Common.TextBox",
                 "label": "AKS cluster name",
-                "defaultValue": "",
+                "defaultValue": "traefik",
                 "toolTip": "Use only allowed characters",
                 "constraints": {
                   "required": true,
@@ -131,6 +131,7 @@
                 "name": "kubernetesVersion",
                 "type": "Microsoft.Common.DropDown",
                 "label": "Kubernetes version",
+                "defaultValue": "1.32.3",
                 "toolTip": "The version of Kubernetes that should be used for this cluster. You will be able to upgrade this version after creating the cluster.",
                 "constraints": {
                   "allowedValues": "[map(steps('clusterDetails').newClusterSection.aksVersionLookupControl.properties.orchestrators, (item) => parse(concat('{\"label\":\"', item.orchestratorVersion, '\",\"value\":\"', item.orchestratorVersion, '\"}')))]",
