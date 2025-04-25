@@ -247,3 +247,15 @@ Key: {{ $cert.Key | b64enc }}
     {{- end -}}
     {{- $found -}}
 {{- end -}}
+
+{{- define "list.difference" -}}
+    {{- $a := .a }}
+    {{- $b := .b }}
+    {{- $diff := list }}
+    {{- range $a }}
+        {{- if not (has . $b) }}
+            {{- $diff = append $diff . }}
+        {{- end }}
+    {{- end }}
+    {{- toYaml $diff }}
+{{- end }}

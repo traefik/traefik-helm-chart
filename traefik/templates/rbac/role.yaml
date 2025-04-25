@@ -1,7 +1,8 @@
 {{- $version := include "traefik.proxyVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces)) -}}
+{{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -106,26 +107,28 @@ rules:
     verbs:
       - use
 {{- end -}}
-{{- if $.Values.hub.token }}
+{{- if (and (has . $hubNamespaces) $.Values.hub.token) }}
   - apiGroups:
       - ""
     resources:
       - services
       - endpoints
-      - namespaces
       - pods
     verbs:
       - get
       - list
       - watch
   - apiGroups:
-      - discovery.k8s.io
+      - ""
     resources:
-      - endpointslices
+      - secrets
     verbs:
       - get
       - list
       - watch
+      - update
+      - create
+      - delete
   - apiGroups:
       - coordination.k8s.io
     resources:
@@ -138,6 +141,67 @@ rules:
       - update
       - patch
       - delete
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+    verbs:
+      - get
+      - list
+      - watch
+  {{- if $.Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - apiportals
+      - apis
+      - apiversions
+      - apibundles
+      - apiplans
+      - apicatalogitems
+      - apiaccesses
+      - managedsubscriptions
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+  - apiGroups:
+      - ""
+    resources:
+      - events
+    verbs:
+      - create
+      - patch
+  - apiGroups:
+      - apps
+    resources:
+      - replicasets
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}

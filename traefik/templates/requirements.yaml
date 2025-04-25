@@ -17,12 +17,6 @@
   {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
 
-{{- if .Values.hub.token }}
-  {{- if and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced) }}
-    {{- fail "ERROR: Currently Traefik Hub doesn't support namespaced RBACs" -}}
-  {{- end }}
-{{- end }}
-
 {{- if .Values.rbac.namespaced }}
   {{- if .Values.providers.kubernetesGateway.enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
@@ -76,5 +70,9 @@
 
   {{- if and (semverCompare "<v3.7.0" $hubVersion) .Values.hub.providers.microcks.enabled }}
     {{ fail "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."}}
+  {{- end }}
+
+  {{- if and (and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced)) (semverCompare "<v3.16.0" $hubVersion) }}
+    {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
   {{- end }}
 {{- end }}
