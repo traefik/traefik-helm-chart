@@ -4,217 +4,64 @@
   "version": "0.1.2-preview",
   "parameters": {
     "config": {
-      "isWizard": false,
       "basics": {
         "location": {
-          "visible": "[basics('createNewCluster')]",
-          "allowedValues": [
-            "eastus",
-            "eastus2",
-            "centralus",
-            "northcentralus",
-            "westcentralus",
-            "southcentralus",
-            "westus",
-            "westus2",
-            "westus3",
-            "canadacentral",
-            "canadaeast",
-            "brazilsouth",
-            "northeurope",
-            "westeurope",
-            "uksouth",
-            "ukwest",
-            "francecentral",
-            "francesouth",
-            "germanywestcentral",
-            "norwayeast",
-            "switzerlandnorth",
-            "swedencentral",
-            "uaenorth",
-            "southafricanorth",
-            "australiaeast",
-            "australiasoutheast",
-            "southeastasia",
-            "eastasia",
-            "southindia",
-            "centralindia",
-            "japaneast",
-            "japanwest",
-            "koreacentral",
-            "koreasouth"
-          ]
+          "visible": false
         },
         "resourceGroup": {
-          "allowExisting": true
+          "allowExisting": true,
+          "allowedMode": "UseExisting"
         }
       }
     },
     "basics": [
       {
-        "name": "createNewCluster",
-        "type": "Microsoft.Common.OptionsGroup",
-        "label": "Create new dev cluster?",
-        "defaultValue": "No",
-        "toolTip": "Create new cluster",
-        "constraints": {
-          "allowedValues": [
-            {
-              "label": "Yes",
-              "value": true
-            },
-            {
-              "label": "No",
-              "value": false
+        "name": "clusterSection",
+        "type": "Microsoft.Common.Section",
+        "elements": [
+          {
+            "name": "clusterInfoBox",
+            "type": "Microsoft.Common.InfoBox",
+            "visible": true,
+            "options": {
+              "icon": "Info",
+              "text": "This application can be installed only on Azure Arc-enabled Kubernetes clusters. To learn more on how to create Azure Arc-enabled Kubernetes cluster resources, click here.",
+              "uri": "https://learn.microsoft.com/en-us/azure/azure-arc/kubernetes/quickstart-connect-cluster"
             }
-          ],
-          "required": true
-        },
+          },
+          {
+            "name": "clusterLookupControl",
+            "type": "Microsoft.Solutions.ArmApiControl",
+            "request": {
+              "method": "GET",
+              "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.Kubernetes/connectedClusters?api-version=2022-10-01-preview')]"
+            }
+          },
+          {
+            "name": "clusterResourceName",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Azure Arc-enabled Kubernetes Cluster Name",
+            "toolTip": "Select the Azure Arc-enabled Kubernetes cluster",
+            "constraints": {
+              "allowedValues": "[map(steps('basics').clusterSection.clusterLookupControl.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
+              "required": true
+            }
+          }
+        ],
         "visible": true
       }
     ],
     "steps": [
       {
-        "name": "clusterDetails",
-        "label": "Cluster Details",
-        "elements": [
-          {
-            "name": "existingClusterSection",
-            "type": "Microsoft.Common.Section",
-            "elements": [
-              {
-                "name": "clusterLookupControl",
-                "type": "Microsoft.Solutions.ArmApiControl",
-                "request": {
-                  "method": "GET",
-                  "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.ContainerService/managedClusters?api-version=2022-03-01')]"
-                }
-              },
-              {
-                "name": "existingClusterResourceName",
-                "type": "Microsoft.Common.DropDown",
-                "label": "AKS Cluster Name",
-                "toolTip": "AKS Cluster Resource Name",
-                "constraints": {
-                  "allowedValues": "[map(steps('clusterDetails').existingClusterSection.clusterLookupControl.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
-                  "required": true
-                }
-              }
-            ],
-            "visible": "[equals(basics('createNewCluster'), false)]"
-          },
-          {
-            "name": "newClusterSection",
-            "type": "Microsoft.Common.Section",
-            "elements": [
-              {
-                "name": "aksVersionLookupControl",
-                "type": "Microsoft.Solutions.ArmApiControl",
-                "request": {
-                  "method": "GET",
-                  "path": "[concat(subscription().id, '/providers/Microsoft.ContainerService/locations/', location(),  '/orchestrators?api-version=2019-04-01&resource-type=managedClusters')]"
-                }
-              },
-              {
-                "name": "newClusterResourceName",
-                "type": "Microsoft.Common.TextBox",
-                "label": "AKS cluster name",
-                "defaultValue": "traefik",
-                "toolTip": "Use only allowed characters",
-                "constraints": {
-                  "required": true,
-                  "regex": "^[a-z0-9A-Z]{6,30}$",
-                  "validationMessage": "Only alphanumeric characters are allowed, and the value must be 6-30 characters long."
-                }
-              },
-              {
-                "name": "kubernetesVersion",
-                "type": "Microsoft.Common.DropDown",
-                "label": "Kubernetes version",
-                "defaultValue": "1.32.3",
-                "toolTip": "The version of Kubernetes that should be used for this cluster. You will be able to upgrade this version after creating the cluster.",
-                "constraints": {
-                  "allowedValues": "[map(steps('clusterDetails').newClusterSection.aksVersionLookupControl.properties.orchestrators, (item) => parse(concat('{\"label\":\"', item.orchestratorVersion, '\",\"value\":\"', item.orchestratorVersion, '\"}')))]",
-                  "required": true
-                }
-              },
-              {
-                "name": "vmSize",
-                "type": "Microsoft.Compute.SizeSelector",
-                "label": "VM size",
-                "toolTip": "The size of virtual machine for VM.",
-                "recommendedSizes": [
-                  "Standard_B4ms",
-                  "Standard_DS2_v2",
-                  "Standard_D4s_v3"
-                ],
-                "constraints": {
-                  "allowedSizes": [
-                    "Standard_B4ms",
-                    "Standard_DS2_v2",
-                    "Standard_D4s_v3"
-                  ],
-                  "excludedSizes": []
-                },
-                "osPlatform": "Linux"
-              },
-              {
-                "name": "osSKU",
-                "type": "Microsoft.Common.DropDown",
-                "label": "OS SKU",
-                "toolTip": "The SKU of Linux OS for VM.",
-                "defaultValue": "AzureLinux",
-                "constraints": {
-                  "allowedValues": [
-                    {
-                      "label": "Ubuntu",
-                      "value": "Ubuntu"
-                    },
-                    {
-                      "label": "AzureLinux",
-                      "value": "AzureLinux"
-                    }
-                  ],
-                  "required": true
-                }
-              },
-              {
-                "name": "enableAutoScaling",
-                "type": "Microsoft.Common.CheckBox",
-                "label": "Enable auto scaling",
-                "toolTip": "Enable auto scaling",
-                "defaultValue": true
-              },
-              {
-                "name": "vmCount",
-                "type": "Microsoft.Common.Slider",
-                "min": 1,
-                "max": 10,
-                "label": "VMCount",
-                "subLabel": "",
-                "defaultValue": 1,
-                "showStepMarkers": false,
-                "toolTip": "Specify VM count",
-                "constraints": {
-                  "required": false
-                },
-                "visible": true
-              }
-            ],
-            "visible": "[basics('createNewCluster')]"
-          }
-        ]
-    },
-    {
         "name": "applicationDetails",
         "label": "Application Details",
         "elements": [
           {
-            "name": "releaseName",
+            "name": "extensionResourceName",
             "type": "Microsoft.Common.TextBox",
-            "label": "Release name",
+            "label": "Cluster extension resource name",
             "defaultValue": "",
-            "toolTip": "Only lowercase alphanumeric characters are allowed, and the value must be 6-30 characters long.",
+            "toolTip": "Name of this extension on your ARC cluster.",
             "constraints": {
               "required": true,
               "regex": "^[a-z0-9]{6,30}$",
@@ -222,46 +69,39 @@
             },
             "visible": true
           },
-		  {
-                "name": "dashboard",
-                "type": "Microsoft.Common.CheckBox",
-                "label": "Enable Traefik local Dashboard.",
-				"defaultValue": true,
-                "toolTip": "Enable access to Dashboard through port-forward",
-                "constraints": {
-                    "required": false
-                }
+          {
+            "name": "dashboard",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Enable Traefik local Dashboard.",
+            "defaultValue": true,
+            "toolTip": "Enable access to Dashboard through port-forward",
+            "constraints": {
+              "required": false
+            }
           },
           {
-            	"name": "replicas",
-                "type": "Microsoft.Common.Slider",
-                "min": 1,
-                "max": 10,
-                "label": "Number of replicas",
-                "subLabel": "",
-                "defaultValue": 1,
-                "showStepMarkers": false,
-                "toolTip": "Specify number of replicas",
-                "constraints": {
-                  "required": false
-                },
-                "visible": true
+            "name": "replicas",
+            "type": "Microsoft.Common.Slider",
+            "min": 1,
+            "max": 10,
+            "label": "Number of replicas",
+            "subLabel": "",
+            "defaultValue": 1,
+            "showStepMarkers": false,
+            "toolTip": "Specify number of replicas",
+            "constraints": {
+              "required": false
+            },
+            "visible": true
           }
         ]
       }
     ],
     "outputs": {
-      "location": "[location()]",
-      "createNewCluster": "[basics('createNewCluster')]",
-      "clusterResourceName": "[if(basics('createNewCluster'), steps('clusterDetails').newClusterSection.newClusterResourceName, steps('clusterDetails').existingClusterSection.existingClusterResourceName)]",
-      "kubernetesVersion": "[steps('clusterDetails').newClusterSection.kubernetesVersion]",
-      "releaseName": "[steps('applicationDetails').releaseName]",
-      "vmSize": "[steps('clusterDetails').newClusterSection.vmSize]",
-      "osSKU": "[steps('clusterDetails').newClusterSection.osSKU]",
-      "vmEnableAutoScale": "[steps('clusterDetails').newClusterSection.enableAutoScaling]",
-      "vmCount": "[steps('clusterDetails').newClusterSection.vmCount]",
-	  "dashboard": "[steps('applicationDetails').dashboard]",
-	  "replicas": "[steps('applicationDetails').replicas]"
+      "clusterResourceName": "[basics('clusterSection').clusterResourceName]",
+      "extensionResourceName": "[steps('applicationDetails').extensionResourceName]",
+      "dashboard": "[steps('applicationDetails').dashboard]",
+      "replicas": "[steps('applicationDetails').replicas]"
     }
   }
 }
