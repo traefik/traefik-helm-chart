@@ -53,7 +53,6 @@ metadata:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
   {{- $resources := list
-      (dict "name" "hub-agent.traefik.access"               "endpoint" "/api-access"            "resource" "apiaccesses")
       (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")
       (dict "name" "hub-agent.traefik.bundle"               "endpoint" "/api-bundle"            "resource" "apibundles")
       (dict "name" "hub-agent.traefik.catalog-item"         "endpoint" "/api-catalog-item"      "resource" "apicatalogitems")

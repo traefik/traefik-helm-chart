@@ -1015,7 +1015,6 @@ tests:
               - hub.traefik.io
             resources:
               - accesscontrolpolicies
-              - apiaccesses
               - apiportals
               - apiratelimits
               - apis
