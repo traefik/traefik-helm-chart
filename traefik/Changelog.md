@@ -1,5 +1,92 @@
 # Change Log
 
+## 35.1.0  ![AppVersion: v3.3.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-04-25
+
+* feat: ✨ versionOverride
+* feat(Traefik Hub): namespaces
+* feat(CRDs): remove APIAccess resource
+* chore(release): :rocket: publish v35.1.0 and CRDs v1.7.0
+
+**Upgrade Notes**
+
+Traefik-Hub users should follow this procedure:
+
+1. `APIAccess` resources needs to be converted to [`APICatalogItem`](https://doc.traefik.io/traefik-hub/api-management/api-catalogitem) ones
+2. run the [usual upgrade procedure](https://github.com/traefik/traefik-helm-chart/blob/master/README.md#upgrading)
+3. delete the `APIAccess` CRD by running:
+
+```bash
+kubectl delete customresourcedefinitions.apiextensions.k8s.io apiaccesses.hub.traefik.io
+```
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f2b90da..04f4973 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -7,7 +7,8 @@ image:  # @schema additionalProperties: false
+   registry: docker.io
+   # -- Traefik image repository
+   repository: traefik
+-  # -- defaults to appVersion
++  # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
++  # When a digest is required, `versionOverride` can be used to set the version.
+   tag:  # @schema type:[string, null]
+   # -- Traefik image pull policy
+   pullPolicy: IfNotPresent
+@@ -273,7 +274,7 @@ providers:  # @schema additionalProperties: false
+     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
+     ingressClass: ""
+     # labelSelector: environment=production,method=traefik
+-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
++    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+     namespaces: []
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+@@ -288,7 +289,7 @@ providers:  # @schema additionalProperties: false
+     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+     ingressClass:  # @schema type:[string, null]
+     # labelSelector: environment=production,method=traefik
+-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
++    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+     namespaces: []
+     # IP used for Kubernetes Ingress endpoints
+     publishedService:
+@@ -306,7 +307,7 @@ providers:  # @schema additionalProperties: false
+     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+     # This option currently enables support for TCPRoute and TLSRoute.
+     experimentalChannel: false
+-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces.
++    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelselector: ""
+@@ -927,14 +928,19 @@ extraObjects: []
+ # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
+ namespaceOverride: ""
+ 
+-## -- This field override the default app.kubernetes.io/instance label for all Objects.
++# -- This field override the default app.kubernetes.io/instance label for all Objects.
+ instanceLabelOverride: ""
+ 
++# -- This field override the default version extracted from image.tag
++versionOverride: ""
++
+ # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+ hub:
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
++  # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
++  namespaces: []
+   apimanagement:
+     # -- Set to true in order to enable API Management. Requires a valid license token.
+     enabled: false
+
 ## 35.0.1  ![AppVersion: v3.3.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-04-18
