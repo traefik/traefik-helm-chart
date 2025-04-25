@@ -5,7 +5,6 @@ resources:
   # curl -o crds-files/gatewayAPI/gateway-standard-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
   - crds-files/gatewayAPI/gateway-standard-install.yaml
   - crds-files/hub/hub.traefik.io_accesscontrolpolicies.yaml
-  - crds-files/hub/hub.traefik.io_apiaccesses.yaml
   - crds-files/hub/hub.traefik.io_apicatalogitems.yaml
   - crds-files/hub/hub.traefik.io_managedsubscriptions.yaml
   - crds-files/hub/hub.traefik.io_apiportals.yaml
