@@ -173,6 +173,14 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.sendlogs=true"
+  - it: should be possible to disable sendlogs
+    set:
+      hub:
+        sendlogs: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.sendlogs=false"
   - it: should be possible to enable AI Gateway
     set:
       hub:
