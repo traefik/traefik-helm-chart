@@ -49,6 +49,7 @@
 
 {{- if $.Values.hub.token -}}
   {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}
+  {{ $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) }}
   {{ if not $hubVersion }}
     {{ fail "When using Traefik Hub image tag needs to be specified !" }}
   {{- end -}}
