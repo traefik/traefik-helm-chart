@@ -18,14 +18,14 @@
       "type": "Int",
       "defaultValue": 1,
       "metadata": {
-        "description": "Number of instances"
+        "description": "Number of instances."
       }
     },
     "dashboard": {
       "type": "Bool",
       "defaultValue": true,
       "metadata": {
-        "description": "enable Traefik local dashboard"
+        "description": "Enable Traefik local dashboard."
       }
     }
   },

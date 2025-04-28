@@ -40,7 +40,7 @@
           {
             "name": "clusterResourceName",
             "type": "Microsoft.Common.DropDown",
-            "label": "Azure Arc-enabled Kubernetes Cluster Name",
+            "label": "Azure Arc-enabled Kubernetes Cluster",
             "toolTip": "Select the Azure Arc-enabled Kubernetes cluster",
             "constraints": {
               "allowedValues": "[map(steps('basics').clusterSection.clusterLookupControl.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
