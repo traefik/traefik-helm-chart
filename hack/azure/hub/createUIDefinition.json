@@ -1,0 +1,133 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "config": {
+      "basics": {
+        "location": {
+          "visible": false
+        },
+        "resourceGroup": {
+          "allowExisting": true,
+          "allowedMode": "UseExisting"
+        }
+      }
+    },
+    "basics": [
+      {
+        "name": "clusterSection",
+        "type": "Microsoft.Common.Section",
+        "elements": [
+          {
+            "name": "clusterInfoBox",
+            "type": "Microsoft.Common.InfoBox",
+            "visible": true,
+            "options": {
+              "icon": "Info",
+              "text": "This application can be installed only on Azure Arc-enabled Kubernetes clusters. To learn more on how to create Azure Arc-enabled Kubernetes cluster resources, click here.",
+              "uri": "https://learn.microsoft.com/en-us/azure/azure-arc/kubernetes/quickstart-connect-cluster"
+            }
+          },
+          {
+            "name": "clusterLookupControl",
+            "type": "Microsoft.Solutions.ArmApiControl",
+            "request": {
+              "method": "GET",
+              "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.Kubernetes/connectedClusters?api-version=2022-10-01-preview')]"
+            }
+          },
+          {
+            "name": "clusterResourceName",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Azure Arc-enabled Kubernetes Cluster",
+            "toolTip": "Select the Azure Arc-enabled Kubernetes cluster",
+            "constraints": {
+              "allowedValues": "[map(steps('basics').clusterSection.clusterLookupControl.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
+              "required": true
+            }
+          }
+        ],
+        "visible": true
+      }
+    ],
+    "steps": [
+      {
+        "name": "applicationDetails",
+        "label": "Application Details",
+        "elements": [
+          {
+            "name": "extensionResourceName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Cluster extension resource name",
+            "defaultValue": "traefik-hub",
+            "toolTip": "Name of this extension on your ARC cluster.",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-z0-9]{6,30}$",
+              "validationMessage": "Only lowercase alphanumeric characters are allowed, and the value must be 6-30 characters long."
+            },
+            "visible": true
+          },
+          {
+            "name": "textBlock1",
+            "type": "Microsoft.Common.TextBlock",
+            "visible": true,
+            "options": {
+              "text": "Don't have a Traefik Hub account?",
+              "link": {
+                "label": "Request a free trial",
+                "uri": "https://info.traefik.io/try-traefik-hub-platform"
+              }
+            }
+          },
+          {
+            "name": "token",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Traefik Hub Token",
+            "placeholder": "Paste your token here",
+            "toolTip": "For existing users, please follow our [documentation](https://doc.traefik.io/traefik-hub/operations/installation) to create a new token.",
+            "constraints": {
+              "regex": "^[a-zA-Z0-9._-]+$",
+              "required": true,
+              "validationMessage": "Only valid tokens are allowed."
+            },
+            "visible": true
+          },
+          {
+            "name": "dashboard",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Enable Traefik Hub local Dashboard.",
+            "defaultValue": true,
+            "toolTip": "Enable access to Dashboard through port-forward",
+            "constraints": {
+              "required": false
+            }
+          },
+          {
+            "name": "replicas",
+            "type": "Microsoft.Common.Slider",
+            "min": 1,
+            "max": 10,
+            "label": "Number of replicas",
+            "subLabel": "",
+            "defaultValue": 1,
+            "showStepMarkers": false,
+            "toolTip": "Specify number of replicas",
+            "constraints": {
+              "required": false
+            },
+            "visible": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "clusterResourceName": "[basics('clusterSection').clusterResourceName]",
+      "extensionResourceName": "[steps('applicationDetails').extensionResourceName]",
+      "dashboard": "[steps('applicationDetails').dashboard]",
+      "replicas": "[steps('applicationDetails').replicas]",
+      "token": "[steps('applicationDetails').token]"
+    }
+  }
+}
