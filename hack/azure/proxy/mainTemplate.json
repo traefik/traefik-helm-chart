@@ -46,7 +46,7 @@
         "autoUpgradeMinorVersion": true,
         "releaseTrain": "[variables('releaseTrain')]",
         "configurationSettings": {
-          "versionOverride": "v3.3.5",
+          "versionOverride": "v3.3.6",
           "global.azure.enabled": true,
           "deployment.replicas": "[parameters('replicas')]",
           "ingressRoute.dashboard.enabled": "[parameters('dashboard')]"
