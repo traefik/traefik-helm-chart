@@ -2,15 +2,16 @@ applicationName: traefik
 publisher: Traefik Labs
 description: Traefik proxy for Azure Arc
 version: 35.1.0
-helmChart: "../../../traefik" # Path to the helm chart relative to the manifest.yaml file
+helmChart: ../../../traefik
 clusterArmTemplate: ./mainTemplate.json
 uiDefinition: ./createUIDefinition.json
-registryServer: traefiklabs.azurecr.io # The registry server where the image is hosted
+registryServer: traefiklabs.azurecr.io
 extensionRegistrationParameters:
   defaultScope: cluster
   namespace: traefik
   supportedClusterTypes:
     connectedClusters:
-      - distribution: ["All"]
+      - distribution:
+          - All
         distributionSupported: true
         unsupportedVersions: null
