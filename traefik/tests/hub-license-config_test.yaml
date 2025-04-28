@@ -1,0 +1,53 @@
+---
+suite: License configuration
+templates:
+  - deployment.yaml
+  - hub-license.yaml
+set:
+  image:
+    tag: v3.16.0
+  hub:
+    token: "xxx"
+tests:
+  - it: should not create secret by default
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-license.yaml
+      - hasDocuments:
+          count: 1
+        template: deployment.yaml
+      - containsDocument:
+          kind: Deployment
+          apiVersion: apps/v1
+          name: RELEASE-NAME-traefik
+          namespace: NAMESPACE
+        template: deployment.yaml
+  - it: should create secret when enabled
+    set:
+      hub:
+        createSecret: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: traefik-hub-license
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.token=$(HUB_TOKEN)"
+        template: deployment.yaml
+      - containsDocument:
+          kind: Secret
+          apiVersion: v1
+          name: traefik-hub-license
+          namespace: NAMESPACE
+        template: hub-license.yaml
+      - equal:
+          path: data.token
+          value: "eHh4"
+        template: hub-license.yaml
