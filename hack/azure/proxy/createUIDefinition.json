@@ -60,7 +60,7 @@
             "name": "extensionResourceName",
             "type": "Microsoft.Common.TextBox",
             "label": "Cluster extension resource name",
-            "defaultValue": "",
+            "defaultValue": "traefik",
             "toolTip": "Name of this extension on your ARC cluster.",
             "constraints": {
               "required": true,
