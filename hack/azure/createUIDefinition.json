@@ -70,6 +70,55 @@
             "visible": true
           },
           {
+            "name": "product",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Product",
+            "tooltip": "Choose the product you want to deploy.",
+            "defaultValue": "Traefik Proxy",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Traefik Proxy",
+                  "value": "proxy"
+                },
+                {
+                  "label": "Traefik Hub API Gateway",
+                  "value": "apigw"
+                },
+                {
+                  "label": "Traefik Hub API Management",
+                  "value": "apim"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "freeTrial",
+            "type": "Microsoft.Common.TextBlock",
+            "visible": "[not(equals(steps('applicationDetails').product, 'proxy'))]",
+            "options": {
+              "text": "Don't have a Traefik Hub account?",
+              "link": {
+                "label": "Request a free trial",
+                "uri": "https://info.traefik.io/try-traefik-hub-platform"
+              }
+            }
+          },
+          {
+            "name": "token",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Traefik Hub Token",
+            "placeholder": "Paste your token here",
+            "toolTip": "For existing users, please follow our [documentation](https://doc.traefik.io/traefik-hub/operations/installation) to create a new token.",
+            "constraints": {
+              "regex": "^[a-zA-Z0-9._-]+$",
+              "required": true,
+              "validationMessage": "Only valid tokens are allowed."
+            },
+            "visible": "[not(equals(steps('applicationDetails').product, 'proxy'))]"
+          },
+          {
             "name": "dashboard",
             "type": "Microsoft.Common.CheckBox",
             "label": "Enable Traefik local Dashboard.",
@@ -83,7 +132,7 @@
             "name": "replicas",
             "type": "Microsoft.Common.Slider",
             "min": 1,
-            "max": 10,
+            "max": 12,
             "label": "Number of replicas",
             "subLabel": "",
             "defaultValue": 1,
@@ -101,7 +150,9 @@
       "clusterResourceName": "[basics('clusterSection').clusterResourceName]",
       "extensionResourceName": "[steps('applicationDetails').extensionResourceName]",
       "dashboard": "[steps('applicationDetails').dashboard]",
-      "replicas": "[steps('applicationDetails').replicas]"
+      "product": "[steps('applicationDetails').product]",
+      "replicas": "[steps('applicationDetails').replicas]",
+      "token": "[steps('applicationDetails').token]"
     }
   }
 }

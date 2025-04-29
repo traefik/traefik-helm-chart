@@ -1,8 +1,8 @@
-applicationName: traefik-hub
+applicationName: traefik
 publisher: Traefik Labs
-description: Traefik Hub API & AI Gateway for Azure Arc
-version: 35.1.0
-helmChart: ../../../traefik
+description: Traefik Helm Chart for Azure Arc
+version: 35.1.1
+helmChart: ../../traefik
 clusterArmTemplate: ./mainTemplate.json
 uiDefinition: ./createUIDefinition.json
 registryServer: traefiklabs.azurecr.io
