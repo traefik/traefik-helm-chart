@@ -18,7 +18,7 @@ data:
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: hub-acp
+  name: hub-acp-{{ template "traefik.instance-name" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
@@ -48,7 +48,7 @@ webhooks:
 apiVersion: admissionregistration.k8s.io/v1
 kind: MutatingWebhookConfiguration
 metadata:
-  name: hub-api
+  name: hub-api-{{ template "traefik.instance-name" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
 webhooks:
