@@ -1,0 +1,135 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "extensionResourceName": {
+      "type": "string",
+      "defaultValue": "traefik",
+      "metadata": {
+        "description": "The name of the extension."
+      }
+    },
+    "clusterResourceName": {
+      "type": "String",
+      "defaultValue": "traefik",
+      "metadata": {
+        "description": "The name of the Azure Arc-enabled Kubernetes cluster resource."
+      }
+    },
+    "product": {
+      "type": "String",
+      "defaultValue": "proxy",
+      "metadata": {
+        "description": "The TraefikLabs product name to deploy."
+      }
+    },
+    "replicas": {
+      "type": "Int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of instances."
+      }
+    },
+    "token": {
+      "type": "String",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The token to use with Traefik Hub."
+      }
+    },
+    "dashboard": {
+      "type": "Bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Enable Traefik local dashboard."
+      }
+    }
+  },
+  "variables": {
+    "plan-name": "DONOTMODIFY",
+    "plan-publisher": "DONOTMODIFY",
+    "plan-offerID": "DONOTMODIFY",
+    "releaseTrain": "DONOTMODIFY",
+    "clusterExtensionTypeName": "DONOTMODIFY"
+  },
+  "resources": [
+    {
+      "condition": "[equals(parameters('product'),'proxy')]",
+      "type": "Microsoft.KubernetesConfiguration/extensions",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('extensionResourceName')]",
+      "properties": {
+        "extensionType": "[variables('clusterExtensionTypeName')]",
+        "autoUpgradeMinorVersion": true,
+        "releaseTrain": "[variables('releaseTrain')]",
+        "configurationSettings": {
+          "versionOverride": "v3.3.6",
+          "global.azure.enabled": true,
+          "deployment.replicas": "[parameters('replicas')]",
+          "ingressRoute.dashboard.enabled": "[parameters('dashboard')]"
+        },
+        "configurationProtectedSettings": {}
+      },
+      "plan": {
+        "name": "[variables('plan-name')]",
+        "publisher": "[variables('plan-publisher')]",
+        "product": "[variables('plan-offerID')]"
+      },
+      "scope": "[concat('Microsoft.Kubernetes/connectedClusters/', parameters('clusterResourceName'))]"
+    },
+    {
+      "condition": "[equals(parameters('product'),'apigw')]",
+      "type": "Microsoft.KubernetesConfiguration/extensions",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('extensionResourceName')]",
+      "properties": {
+        "extensionType": "[variables('clusterExtensionTypeName')]",
+        "autoUpgradeMinorVersion": true,
+        "releaseTrain": "[variables('releaseTrain')]",
+        "configurationSettings": {
+          "deployment.replicas": "[parameters('replicas')]",
+          "global.azure.enabled": true,
+          "hub.token": "[parameters('token')]",
+          "hub.createSecret": true,
+          "ingressRoute.dashboard.enabled": "[parameters('dashboard')]",
+          "versionOverride": "v3.16.0"
+        },
+        "configurationProtectedSettings": {}
+      },
+      "plan": {
+        "name": "[variables('plan-name')]",
+        "publisher": "[variables('plan-publisher')]",
+        "product": "[variables('plan-offerID')]"
+      },
+      "scope": "[concat('Microsoft.Kubernetes/connectedClusters/', parameters('clusterResourceName'))]"
+    },
+    {
+      "condition": "[equals(parameters('product'),'apim')]",
+      "type": "Microsoft.KubernetesConfiguration/extensions",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('extensionResourceName')]",
+      "properties": {
+        "extensionType": "[variables('clusterExtensionTypeName')]",
+        "autoUpgradeMinorVersion": true,
+        "releaseTrain": "[variables('releaseTrain')]",
+        "configurationSettings": {
+          "deployment.replicas": "[parameters('replicas')]",
+          "global.azure.enabled": true,
+          "hub.token": "[parameters('token')]",
+          "hub.apimanagement.enabled": true,
+          "hub.createSecret": true,
+          "ingressRoute.dashboard.enabled": "[parameters('dashboard')]",
+          "versionOverride": "v3.16.0"
+        },
+        "configurationProtectedSettings": {}
+      },
+      "plan": {
+        "name": "[variables('plan-name')]",
+        "publisher": "[variables('plan-publisher')]",
+        "product": "[variables('plan-offerID')]"
+      },
+      "scope": "[concat('Microsoft.Kubernetes/connectedClusters/', parameters('clusterResourceName'))]"
+    }
+  ],
+  "outputs": {}
+}
