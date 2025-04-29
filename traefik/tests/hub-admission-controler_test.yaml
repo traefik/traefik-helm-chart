@@ -41,7 +41,7 @@ tests:
           of: MutatingWebhookConfiguration
       - equal:
           path: metadata.name
-          value: hub-acp
+          value: hub-acp-RELEASE-NAME-NAMESPACE
   - it: should render hub-api webhook
     documentIndex: 2
     asserts:
@@ -49,7 +49,7 @@ tests:
           of: MutatingWebhookConfiguration
       - equal:
           path: metadata.name
-          value: hub-api
+          value: hub-api-RELEASE-NAME-NAMESPACE
   - it: should render admission service
     documentIndex: 3
     asserts:
