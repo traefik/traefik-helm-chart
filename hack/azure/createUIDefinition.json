@@ -64,8 +64,8 @@
             "toolTip": "Name of this extension on your ARC cluster.",
             "constraints": {
               "required": true,
-              "regex": "^[a-z0-9]{6,30}$",
-              "validationMessage": "Only lowercase alphanumeric characters are allowed, and the value must be 6-30 characters long."
+              "regex": "^[a-z0-9-]{6,30}$",
+              "validationMessage": "Only lowercase alphanumeric and '-' characters are allowed; the value must be 6-30 characters long."
             },
             "visible": true
           },
