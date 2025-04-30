@@ -504,6 +504,8 @@ metrics:
     explicitBoundaries: []
     # -- Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s
     pushInterval: ""
+    # -- Service name used in OTLP backend. Default: traefik.
+    serviceName:  # @schema type:[string, null]
     http:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
       enabled: false
