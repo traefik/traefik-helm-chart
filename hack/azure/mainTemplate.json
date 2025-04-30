@@ -42,13 +42,6 @@
         "description": "Specify the namespace the extension installs into."
       }
     },
-    "replicas": {
-      "type": "Int",
-      "defaultValue": 1,
-      "metadata": {
-        "description": "Number of instances."
-      }
-    },
     "token": {
       "type": "String",
       "defaultValue": "",
@@ -56,11 +49,11 @@
         "description": "The token to use with Traefik Hub."
       }
     },
-    "dashboard": {
-      "type": "Bool",
-      "defaultValue": true,
+    "userValues": {
+      "type": "String",
+      "defaultValue": "deployment:\n  replicas: 2\ningressClass:\n  enabled: false\ningressRoute:\n dashboard:\n    enabled: true",
       "metadata": {
-        "description": "Enable Traefik local dashboard."
+        "description": "User Helm values."
       }
     }
   },
@@ -74,6 +67,13 @@
       "proxy": "v3.3.6",
       "apigw": "v3.16.0",
       "apim": "v3.16.0"
+    },
+    "traefikValues": {
+      "global.azure.enabled": true,
+      "hub.token": "[parameters('token')]",
+      "hub.apimanagement.enabled": "[equals(parameters('product'),'apim')]",
+      "hub.createSecret": true,
+      "versionOverride": "[variables('versionOverride')[parameters('product')]]"
     }
   },
   "resources": [
@@ -85,16 +85,7 @@
         "extensionType": "[variables('clusterExtensionTypeName')]",
         "autoUpgradeMinorVersion": "[parameters('autoUpgradeMinorVersion')]",
         "releaseTrain": "[variables('releaseTrain')]",
-        "configurationSettings": {
-          "deployment.replicas": "[parameters('replicas')]",
-          "global.azure.enabled": true,
-          "hub.token": "[parameters('token')]",
-          "hub.apimanagement.enabled": "[equals(parameters('product'),'apim')]",
-          "hub.createSecret": true,
-          "ingressClass.enabled": false,
-          "ingressRoute.dashboard.enabled": "[parameters('dashboard')]",
-          "versionOverride": "[variables('versionOverride')[parameters('product')]]"
-        },
+        "configurationSettings": "[union(parameters('userValues'),variables('traefikValues'))]",
         "configurationProtectedSettings": {},
         "scope": {
           "cluster": {
