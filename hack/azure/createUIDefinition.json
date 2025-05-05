@@ -119,16 +119,27 @@
             "visible": "[not(equals(steps('applicationDetails').product, 'proxy'))]"
           },
           {
-            "name": "values",
-            "type": "Microsoft.Common.TextBox",
-            "label": "Helm Chart values",
-            "defaultValue": "deployment:\n  replicas: 2\ningressClass:\n  enabled: false\ningressRoute:\n dashboard:\n    enabled: true",
-            "multiLine": true,
-            "toolTip": "See [examples](https://github.com/traefik/traefik-helm-chart/blob/master/EXAMPLES.md).",
+            "name": "dashboard",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Enable Traefik local Dashboard.",
+            "defaultValue": true,
+            "toolTip": "Enable access to Dashboard through port-forward",
             "constraints": {
-              "regex": ".+",
-              "required": true,
-              "validationMessage": "Only valid yaml is allowed."
+              "required": false
+            }
+          },
+          {
+            "name": "replicas",
+            "type": "Microsoft.Common.Slider",
+            "min": 1,
+            "max": 12,
+            "label": "Number of replicas",
+            "subLabel": "",
+            "defaultValue": 1,
+            "showStepMarkers": false,
+            "toolTip": "Specify number of replicas",
+            "constraints": {
+              "required": false
             },
             "visible": true
           }
@@ -138,9 +149,10 @@
     "outputs": {
       "clusterResourceName": "[basics('clusterSection').clusterResourceName]",
       "extensionResourceName": "[steps('applicationDetails').extensionResourceName]",
+      "dashboard": "[steps('applicationDetails').dashboard]",
       "product": "[steps('applicationDetails').product]",
-      "token": "[steps('applicationDetails').token]",
-      "userValues": "[steps('applicationDetails').values]"
+      "replicas": "[steps('applicationDetails').replicas]",
+      "token": "[steps('applicationDetails').token]"
     }
   }
 }
