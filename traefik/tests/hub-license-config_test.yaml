@@ -23,10 +23,10 @@ tests:
           name: RELEASE-NAME-traefik
           namespace: NAMESPACE
         template: deployment.yaml
-  - it: should create secret when enabled
+  - it: should create secret if token length is greater than 65 characters
     set:
       hub:
-        createSecret: true
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -49,5 +49,23 @@ tests:
         template: hub-license.yaml
       - equal:
           path: data.token
-          value: "eHh4"
+          value: "ZXlKaGJHY2lPaUpJVXpJMU5pSXNJblI1Y0NJNklrcFhWQ0o5LmV5SnpkV0lpT2lJeE1qTTBOVFkzT0Rrd0lpd2libUZ0WlNJNklrcHZhRzRnUkc5bElpd2lhV0YwSWpveE5URTJNak01TURJeWZRLlNmbEt4d1JKU01lS0tGMlFUNGZ3cE1lSmYzNlBPazZ5SlZfYWRRc3N3NWM="
         template: hub-license.yaml
+  - it: should use token value is token value is less or equal to 64 characters
+    set:
+      hub:
+        token: "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.token=$(HUB_TOKEN)"
+        template: deployment.yaml
