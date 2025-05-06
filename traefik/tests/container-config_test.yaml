@@ -141,10 +141,7 @@ tests:
       - equal:
           path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]
           value: whatever
-  - it: should set a topologySpreadConstraints on kubernetes >= 1.19
-    capabilities:
-      majorVersion: 1
-      minorVersion: 19
+  - it: should set a topologySpreadConstraints
     set:
       topologySpreadConstraints:
       - labelSelector:
@@ -159,10 +156,7 @@ tests:
       - equal:
           path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels.app
           value: whatever
-  - it: should set a templated topologySpreadConstraints on kubernetes >= 1.19
-    capabilities:
-      majorVersion: 1
-      minorVersion: 19
+  - it: should set a templated topologySpreadConstraints
     set:
       topologySpreadConstraints:
       - labelSelector:
@@ -177,17 +171,6 @@ tests:
       - equal:
           path: spec.template.spec.topologySpreadConstraints[0].labelSelector.matchLabels.app
           value: traefik
-  - it: should set fail to set topologySpreadConstraints on kubernetes 1.18
-    capabilities:
-      majorVersion: 1
-      minorVersion: 18
-    set:
-      topologySpreadConstraints:
-      - maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: topologySpreadConstraints are supported only on kubernetes >= v1.19"
   - it: should set instance label to release.name-release.namespace if no override is set
     asserts:
       - isSubset:
