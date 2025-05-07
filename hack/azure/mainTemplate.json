@@ -90,7 +90,6 @@
           "global.azure.enabled": true,
           "hub.token": "[parameters('token')]",
           "hub.apimanagement.enabled": "[equals(parameters('product'),'apim')]",
-          "hub.createSecret": true,
           "ingressClass.enabled": false,
           "ingressRoute.dashboard.enabled": "[parameters('dashboard')]",
           "versionOverride": "[variables('versionOverride')[parameters('product')]]"
