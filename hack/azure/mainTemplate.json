@@ -1,0 +1,113 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "extensionResourceName": {
+      "type": "string",
+      "defaultValue": "traefik",
+      "metadata": {
+        "description": "The name of the extension."
+      }
+    },
+    "clusterResourceName": {
+      "type": "String",
+      "defaultValue": "traefik",
+      "metadata": {
+        "description": "The name of the Azure Arc-enabled Kubernetes cluster resource."
+      }
+    },
+    "autoUpgradeMinorVersion": {
+      "defaultValue": true,
+      "metadata": {
+        "description": "Allow auto upgrade of minor version for the extension."
+      },
+      "type": "bool"
+    },
+    "product": {
+      "type": "String",
+      "defaultValue": "proxy",
+      "allowedValues": [
+        "proxy",
+        "apigw",
+        "apim"
+      ],
+      "metadata": {
+        "description": "The TraefikLabs product name to deploy."
+      }
+    },
+    "namespace": {
+      "type": "String",
+      "defaultValue": "traefik",
+      "metadata": {
+        "description": "Specify the namespace the extension installs into."
+      }
+    },
+    "replicas": {
+      "type": "Int",
+      "defaultValue": 1,
+      "metadata": {
+        "description": "Number of instances."
+      }
+    },
+    "token": {
+      "type": "String",
+      "defaultValue": "",
+      "metadata": {
+        "description": "The token to use with Traefik Hub."
+      }
+    },
+    "dashboard": {
+      "type": "Bool",
+      "defaultValue": true,
+      "metadata": {
+        "description": "Enable Traefik local dashboard."
+      }
+    }
+  },
+  "variables": {
+    "plan-name": "DONOTMODIFY",
+    "plan-publisher": "DONOTMODIFY",
+    "plan-offerID": "DONOTMODIFY",
+    "releaseTrain": "DONOTMODIFY",
+    "clusterExtensionTypeName": "DONOTMODIFY",
+    "versionOverride": {
+      "proxy": "v3.3.6",
+      "apigw": "v3.16.0",
+      "apim": "v3.16.0"
+    }
+  },
+  "resources": [
+    {
+      "type": "Microsoft.KubernetesConfiguration/extensions",
+      "apiVersion": "2023-05-01",
+      "name": "[parameters('extensionResourceName')]",
+      "properties": {
+        "extensionType": "[variables('clusterExtensionTypeName')]",
+        "autoUpgradeMinorVersion": "[parameters('autoUpgradeMinorVersion')]",
+        "releaseTrain": "[variables('releaseTrain')]",
+        "configurationSettings": {
+          "deployment.replicas": "[parameters('replicas')]",
+          "global.azure.enabled": true,
+          "hub.token": "[parameters('token')]",
+          "hub.apimanagement.enabled": "[equals(parameters('product'),'apim')]",
+          "ingressClass.enabled": false,
+          "ingressRoute.dashboard.enabled": "[parameters('dashboard')]",
+          "versionOverride": "[variables('versionOverride')[parameters('product')]]"
+        },
+        "configurationProtectedSettings": {},
+        "scope": {
+          "cluster": {
+            "releaseNamespace": "[parameters('namespace')]"
+          }
+        }
+      },
+      "plan": {
+        "name": "[variables('plan-name')]",
+        "publisher": "[variables('plan-publisher')]",
+        "product": "[variables('plan-offerID')]"
+      },
+      "scope": "[concat('Microsoft.Kubernetes/connectedClusters/', parameters('clusterResourceName'))]"
+    }
+  ],
+  "outputs": {}
+}

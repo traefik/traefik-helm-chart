@@ -1,0 +1,53 @@
+suite: Traefik configuration for Azure Marketplace
+templates:
+  - deployment.yaml
+tests:
+  - it: should not set global.azure arg by default
+    chart:
+      appVersion: v3.3.0
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.3.0
+      - notExists:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
+
+  - it: should use global.azure with proxy when enabled
+    set:
+      versionOverride: v3.3.5
+      global:
+        azure:
+          enabled: true
+          images:
+            proxy:
+              tag: xyz
+              registry: repo.io
+              image: foo
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: repo.io/foo:xyz
+      - equal:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
+          value: RELEASE-NAME
+
+  - it: should use global.azure with hub when enabled with token
+    set:
+      versionOverride: v3.15.0
+      hub:
+        token: xxx
+      global:
+        azure:
+          enabled: true
+          images:
+            hub:
+              tag: xyz
+              registry: repo.io
+              image: traefik-hub
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: repo.io/traefik-hub:xyz
+      - equal:
+          path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
+          value: RELEASE-NAME
