@@ -860,7 +860,7 @@
           - name: HUB_TOKEN
             valueFrom:
               secretKeyRef:
-                name: {{ empty $.Values.hub.createSecret | ternary . "traefik-hub-license" }}
+                name: {{ le (len .) 64 | ternary . "traefik-hub-license" }}
                 key: token
           {{- end }}
         {{- with .Values.env }}
