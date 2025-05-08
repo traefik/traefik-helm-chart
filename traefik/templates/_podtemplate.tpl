@@ -328,6 +328,9 @@
            {{- with .pushInterval }}
           - "--metrics.otlp.pushInterval={{ . }}"
            {{- end }}
+           {{- with .serviceName }}
+          - "--metrics.otlp.serviceName={{ . }}"
+           {{- end }}
            {{- with .http }}
             {{- if .enabled }}
           - "--metrics.otlp.http=true"
