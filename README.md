@@ -26,7 +26,7 @@ Helm chart [as a subchart](https://helm.sh/docs/chart_template_guide/subcharts_a
 ### Major changes
 
 Starting with v28.x, this chart now bootstraps Traefik Proxy version 3 as a Kubernetes ingress controller,
-using Custom Resources `IngressRoute`: <https://doc.traefik.io/traefik/v3.0/routing/providers/kubernetes-crd/>.
+using Custom Resources [`IngressRoute`](https://doc.traefik.io/traefik/v3.0/routing/providers/kubernetes-crd/).
 For upgrading from chart versions prior to v28.x (using Traefik Proxy version 2), see
 - [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/)
 - upgrade notes in the [`README` on the v27 branch](https://github.com/traefik/traefik-helm-chart/tree/v27).
