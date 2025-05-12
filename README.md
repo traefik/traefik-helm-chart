@@ -93,7 +93,7 @@ New major version indicates that there is an incompatible breaking change.
 > [!WARNING]
 > Please read carefully release notes of this chart before upgrading.
 
-### A standard installation
+### Upgrade traefik chart
 
 When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
 CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for
@@ -104,24 +104,32 @@ details.
 helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
-# Update CRDs (Traefik Proxy v3 CRDs)
+# Update CRDs
 kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
 ```
+
+### Upgrade from traefik chart to traefik + CRDs chart
 
 > [!WARNING]
 > When upgrading from standard installation to the one with additional CRDs chart,
 > you **have** to change ownership on CRDs **before** installing CRDs chart
 
 ```bash
+# Update repository
+helm repo update
+# Update CRDs ownership
 kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
 # If you use gateway API, you might also want to change Gateway API ownership
 kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
+# Deploy optional CRDs chart
 helm install traefik-crds traefik/traefik-crds
+# Upgrade Traefik
+helm upgrade traefik traefik/traefik
 ```
 
-### An installation with additional CRDs chart
+### Upgrade traefik + CRDs chart
 
 ```bash
 # Update repository
