@@ -110,7 +110,7 @@ kubectl apply --server-side --force-conflicts -k https://github.com/traefik/trae
 helm upgrade traefik traefik/traefik
 ```
 
-### Upgrade from traefik chart to traefik + CRDs chart
+### Upgrade from traefik chart to traefik and opt-in CRDs charts
 
 > [!WARNING]
 > When upgrading from standard installation to the one with additional CRDs chart,
@@ -129,7 +129,7 @@ helm install traefik-crds traefik/traefik-crds
 helm upgrade traefik traefik/traefik
 ```
 
-### Upgrade traefik + CRDs chart
+### Upgrade traefik and opt-in CRDs charts
 
 ```bash
 # Update repository
