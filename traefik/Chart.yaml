@@ -17,8 +17,6 @@ sources:
 maintainers:
   - name: mloiseleur
     email: michel.loiseleur@traefik.io
-  - name: charlie-haley
-    email: charlie.haley@traefik.io
   - name: darkweaver87
     email: remi.buisson@traefik.io
   - name: jnoordsij
