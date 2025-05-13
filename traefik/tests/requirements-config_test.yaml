@@ -63,7 +63,7 @@ tests:
           serviceName: traefikTest
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: serviceName is a feature only available for traefik >= v3.2.0"
+          errorMessage: "ERROR: serviceName is a feature only available for traefik >= v3.2.0."
   - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
     set:
       image:
