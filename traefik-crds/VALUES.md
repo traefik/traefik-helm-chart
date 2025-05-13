@@ -11,7 +11,6 @@ A Traefik based Kubernetes ingress controller
 | Name | Email | Url |
 | ---- | ------ | --- |
 | mloiseleur | <michel.loiseleur@traefik.io> |  |
-| charlie-haley | <charlie.haley@traefik.io> |  |
 | darkweaver87 | <remi.buisson@traefik.io> |  |
 | jnoordsij |  |  |
 
