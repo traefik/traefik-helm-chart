@@ -134,5 +134,5 @@ workspaces:
           github_organization: traefik
           github_repositories:
             - traefik-helm-chart
-        update_since: '2022-01-01'
+        update_since: '2024-01-01'
 ```
