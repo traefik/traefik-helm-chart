@@ -367,11 +367,13 @@ tests:
         myAcmeResolver:
           acme:
             email: email@example.com
+            emailaddresses: foo@example.com,bar@example.org
             dnsChallenge:
               provider: myProvider
               resolvers:
                 - 1.1.1.1
                 - 8.8.8.8
+            profile: tlsserver
             tlsChallenge: true
     asserts:
       - contains:
@@ -386,6 +388,13 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.emailaddresses=foo@example.com,bar@example.org"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.profile=tlsserver"
+
 
   - it: should have the distributed acme resolver options applied
     set:

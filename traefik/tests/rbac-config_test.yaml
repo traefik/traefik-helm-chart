@@ -733,11 +733,127 @@ tests:
               - namespaces
               - endpoints
               - secrets
+            verbs:
+              - get
+              - list
+              - watch
+  - it: should provide required configmaps rbac when proxy >= v3.4.x on kubernetesCRD provider
+    set:
+      image:
+        tag: v3.4.1
+      providers:
+        kubernetesCRD:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - nodes
               - services
             verbs:
               - get
               - list
               - watch
+  - it: should not provide configmaps rbac when proxy >= v3.4.x without kubernetesCRD provider
+    set:
+      image:
+        tag: v3.4.1
+      providers:
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - nodes
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - nodes
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should not provide required configmaps rbac when proxy < v3.4.x on kubernetesCRD provider
+    set:
+      image:
+        tag: v3.3.7
+      providers:
+        kubernetesCRD:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - nodes
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - nodes
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+
+
+
+  - it: should provide expected role rbac when proxy >= v3.4.x
+    set:
+      image:
+        tag: v3.4.1
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - nodes
+              - services
+            verbs:
+              - get
+              - list
+              - watch
+
+
   - it: should provide expected role rbac when k8s gw api is enabled >=v3.1.0
     set:
       image:
@@ -785,6 +901,7 @@ tests:
               - ""
             resources:
               - nodes
+              - services
             verbs:
               - get
               - list
@@ -798,7 +915,6 @@ tests:
             resources:
               - namespaces
               - secrets
-              - services
             verbs:
               - get
               - list
@@ -867,7 +983,6 @@ tests:
             resources:
               - namespaces
               - secrets
-              - services
               - configmaps
             verbs:
               - get
@@ -927,7 +1042,6 @@ tests:
             resources:
               - namespaces
               - secrets
-              - services
               - configmaps
             verbs:
               - get

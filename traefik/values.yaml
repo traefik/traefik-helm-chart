@@ -115,7 +115,7 @@ ingressClass:  # @schema additionalProperties: false
   name: ""
 
 core:  # @schema additionalProperties: false
-  # -- Can be used to use globally v2 router syntax
+  # -- Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\.
   # See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes
   defaultRuleSyntax: ""
 

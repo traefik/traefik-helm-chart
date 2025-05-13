@@ -11,16 +11,6 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
     {{- end }}
 rules:
-  {{- if semverCompare ">=v3.1.0-0" $version }}
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - get
-      - list
-      - watch
-  {{- end }}
   {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
@@ -45,6 +35,10 @@ rules:
   - apiGroups:
       - ""
     resources:
+      {{- if and .Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
+      - configmaps
+      {{- end }}
+      - nodes
       - services
     verbs:
       - get
@@ -143,7 +137,6 @@ rules:
       - endpoints
     {{- end }}
       - secrets
-      - services
     {{- if semverCompare ">=v3.2.0-0" $version }}
       - configmaps
     {{- end }}
