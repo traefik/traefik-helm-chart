@@ -93,7 +93,7 @@ New major version indicates that there is an incompatible breaking change.
 > [!WARNING]
 > Please read carefully release notes of this chart before upgrading.
 
-### Upgrade traefik chart
+### Upgrade Traefik standalone chart
 
 When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
 CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for
@@ -105,12 +105,12 @@ helm repo update
 # See current Chart & Traefik version
 helm search repo traefik/traefik
 # Update CRDs
-kubectl apply --server-side --force-conflicts -k https://github.com/traefik/traefik-helm-chart/traefik/crds/
+helm show crds traefik/traefik | kubectl apply --server-side --force-conflicts -f -
 # Upgrade Traefik
 helm upgrade traefik traefik/traefik
 ```
 
-### Upgrade from traefik chart to traefik and opt-in CRDs charts
+### Upgrade from Traefik chart to Traefik and opt-in CRDs charts
 
 > [!WARNING]
 > When upgrading from standard installation to the one with additional CRDs chart,
