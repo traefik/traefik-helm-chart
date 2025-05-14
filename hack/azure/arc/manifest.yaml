@@ -2,7 +2,7 @@ applicationName: traefik
 publisher: Traefik Labs
 description: Traefik Helm Chart for Azure Arc
 version: 35.2.3
-helmChart: ../../traefik
+helmChart: ../../../traefik
 clusterArmTemplate: ./mainTemplate.json
 uiDefinition: ./createUIDefinition.json
 registryServer: traefiklabs.azurecr.io
