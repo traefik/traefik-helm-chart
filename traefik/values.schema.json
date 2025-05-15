@@ -596,6 +596,9 @@
                     "type": "object"
                 }
             },
+            "required": [
+                "namespaces"
+            ],
             "type": "object"
         },
         "image": {
