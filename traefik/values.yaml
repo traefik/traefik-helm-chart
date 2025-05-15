@@ -598,8 +598,8 @@ tracing:  # @schema additionalProperties: false
 
 # -- Global command arguments to be passed to all traefik's pods
 globalArguments:
-- "--global.checknewversion"
-- "--global.sendanonymoususage"
+  - "--global.checknewversion"
+  - "--global.sendanonymoususage"
 
 # -- Additional arguments to be passed at Traefik's binary
 # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
@@ -942,7 +942,7 @@ hub:
   # It enables API Gateway.
   token: ""
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
-  namespaces: []
+  namespaces: []  # @schema required:true
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
     enabled: false
