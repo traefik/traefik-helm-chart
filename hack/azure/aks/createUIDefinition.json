@@ -26,7 +26,7 @@
             "options": {
               "icon": "Info",
               "text": "This application can be installed only on Azure Kubernetes clusters. To learn more on how to create Azure Kubernetes cluster resources, click here.",
-              "uri": "https://learn.microsoft.com/en-us/azure/azure-arc/kubernetes/quickstart-connect-cluster"
+              "uri": "https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli"
             }
           },
           {
