@@ -176,7 +176,7 @@ tests:
         tag: v3.0.0
       tracing:
         safeQueryParams:
-         - foo
+          - foo
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."
@@ -282,3 +282,10 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."
+  - it: should fail when not using default values
+    set:
+      hub:
+        namespaces: null
+    asserts:
+      - failedTemplate:
+          errorPattern: "namespaces is required"
