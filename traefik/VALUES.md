@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 35.2.0](https://img.shields.io/badge/Version-35.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.3.7](https://img.shields.io/badge/AppVersion-v3.3.7-informational?style=flat-square)
+![Version: 35.2.0](https://img.shields.io/badge/Version-35.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.0](https://img.shields.io/badge/AppVersion-v3.4.0-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -33,7 +33,7 @@ Kubernetes: `>=1.22.0-0`
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
 | certificatesResolvers | object | `{}` | Certificates resolvers configuration. Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers See EXAMPLES.md for more details. |
 | commonLabels | object | `{}` | Add additional label to all resources |
-| core.defaultRuleSyntax | string | `""` | Can be used to use globally v2 router syntax See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
+| core.defaultRuleSyntax | string | `""` | Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
 | deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
