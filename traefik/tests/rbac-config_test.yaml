@@ -737,7 +737,8 @@ tests:
               - get
               - list
               - watch
-  - it: should provide required configmaps rbac when proxy >= v3.4.x on kubernetesCRD provider
+
+  - it: should provide required configmaps cluster rbac when proxy >= v3.4.x on kubernetesCRD provider
     set:
       image:
         tag: v3.4.1
@@ -759,7 +760,7 @@ tests:
               - get
               - list
               - watch
-  - it: should not provide configmaps rbac when proxy >= v3.4.x without kubernetesCRD provider
+  - it: should not provide configmaps cluster rbac when proxy >= v3.4.x without kubernetesCRD provider
     set:
       image:
         tag: v3.4.1
@@ -794,8 +795,7 @@ tests:
               - get
               - list
               - watch
-
-  - it: should not provide required configmaps rbac when proxy < v3.4.x on kubernetesCRD provider
+  - it: should not provide required configmaps cluster rbac when proxy < v3.4.x on kubernetesCRD provider
     set:
       image:
         tag: v3.3.7
@@ -832,13 +832,17 @@ tests:
               - watch
 
 
-
   - it: should provide expected role rbac when proxy >= v3.4.x
     set:
       image:
         tag: v3.4.1
+      providers:
+        kubernetesCRD:
+          enabled: true
+      rbac:
+        namespaced: true
     asserts:
-      - template: rbac/clusterrole.yaml
+      - template: rbac/role.yaml
         contains:
           path: rules
           content:
@@ -846,7 +850,6 @@ tests:
               - ""
             resources:
               - configmaps
-              - nodes
               - services
             verbs:
               - get
