@@ -1,18 +1,20 @@
 {{ range $name, $config := .Values.ingressRoute }}
 {{ if $config.enabled }}
+{{ $ingressClassAnnotations := dict }}
+{{- if and $.Values.ingressClass.enabled $.Values.providers.kubernetesCRD.enabled $.Values.providers.kubernetesCRD.ingressClass }}
+  {{ $ingressClassAnnotations = dict "kubernetes.io/ingress.class" $.Values.providers.kubernetesCRD.ingressClass }}
+{{- end }}
+{{ $annotations := merge $ingressClassAnnotations $config.annotations }}
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ $.Release.Name }}-{{ $name }}
   namespace: {{ template "traefik.namespace" $ }}
+  {{- with $annotations }}
   annotations:
-    {{- if and $.Values.ingressClass.enabled $.Values.providers.kubernetesCRD.enabled $.Values.providers.kubernetesCRD.ingressClass }}
-    kubernetes.io/ingress.class: {{ $.Values.providers.kubernetesCRD.ingressClass }}
-    {{- end }}
-    {{- with $config.annotations }}
     {{- toYaml . | nindent 4 }}
-    {{- end }}
+  {{- end }}
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
     {{- with $config.labels }}
