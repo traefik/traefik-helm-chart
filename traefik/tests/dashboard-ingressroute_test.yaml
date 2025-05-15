@@ -114,7 +114,7 @@ tests:
       path: metadata.annotations
       value:
         kubernetes.io/ingress.class: test-class
-- it: should insert annotations correctly (and give precedence to user annotations)
+- it: should insert annotations correctly and give precedence to user annotations
   set:
     ingressRoute:
       dashboard:
