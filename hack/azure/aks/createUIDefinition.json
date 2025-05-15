@@ -1,0 +1,158 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Azure.CreateUIDef",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "config": {
+      "basics": {
+        "location": {
+          "visible": false
+        },
+        "resourceGroup": {
+          "allowExisting": true,
+          "allowedMode": "UseExisting"
+        }
+      }
+    },
+    "basics": [
+      {
+        "name": "clusterSection",
+        "type": "Microsoft.Common.Section",
+        "elements": [
+          {
+            "name": "clusterInfoBox",
+            "type": "Microsoft.Common.InfoBox",
+            "visible": true,
+            "options": {
+              "icon": "Info",
+              "text": "This application can be installed only on Azure Kubernetes clusters. To learn more on how to create Azure Kubernetes cluster resources, click here.",
+              "uri": "https://learn.microsoft.com/en-us/azure/aks/learn/quick-kubernetes-deploy-cli"
+            }
+          },
+          {
+            "name": "clusterLookupControl",
+            "type": "Microsoft.Solutions.ArmApiControl",
+            "request": {
+              "method": "GET",
+              "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.ContainerService/managedClusters?api-version=2022-10-01-preview')]"
+            }
+          },
+          {
+            "name": "clusterResourceName",
+            "type": "Microsoft.Common.DropDown",
+            "label": "Azure Kubernetes Cluster",
+            "toolTip": "Select the Azure Kubernetes cluster",
+            "constraints": {
+              "allowedValues": "[map(steps('basics').clusterSection.clusterLookupControl.value, (item) => parse(concat('{\"label\":\"', item.name, '\",\"value\":\"', item.name, '\"}')))]",
+              "required": true
+            }
+          }
+        ],
+        "visible": true
+      }
+    ],
+    "steps": [
+      {
+        "name": "applicationDetails",
+        "label": "Application Details",
+        "elements": [
+          {
+            "name": "extensionResourceName",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Cluster extension resource name",
+            "defaultValue": "traefik",
+            "toolTip": "Name of this extension on your AKS cluster.",
+            "constraints": {
+              "required": true,
+              "regex": "^[a-z0-9-]{6,30}$",
+              "validationMessage": "Only lowercase alphanumeric and '-' characters are allowed; the value must be 6-30 characters long."
+            },
+            "visible": true
+          },
+          {
+            "name": "product",
+            "type": "Microsoft.Common.OptionsGroup",
+            "label": "Product",
+            "tooltip": "Choose the product you want to deploy.",
+            "defaultValue": "Traefik Proxy",
+            "constraints": {
+              "allowedValues": [
+                {
+                  "label": "Traefik Proxy",
+                  "value": "proxy"
+                },
+                {
+                  "label": "Traefik Hub API Gateway",
+                  "value": "apigw"
+                },
+                {
+                  "label": "Traefik Hub API Management",
+                  "value": "apim"
+                }
+              ]
+            },
+            "visible": true
+          },
+          {
+            "name": "freeTrial",
+            "type": "Microsoft.Common.TextBlock",
+            "visible": "[not(equals(steps('applicationDetails').product, 'proxy'))]",
+            "options": {
+              "text": "Don't have a Traefik Hub account?",
+              "link": {
+                "label": "Request a free trial",
+                "uri": "https://info.traefik.io/try-traefik-hub-platform"
+              }
+            }
+          },
+          {
+            "name": "token",
+            "type": "Microsoft.Common.TextBox",
+            "label": "Traefik Hub Token",
+            "placeholder": "Paste your token here",
+            "toolTip": "For existing users, please follow our [documentation](https://doc.traefik.io/traefik-hub/operations/installation) to create a new token.",
+            "constraints": {
+              "regex": "^[a-zA-Z0-9._-]+$",
+              "required": true,
+              "validationMessage": "Only valid tokens are allowed."
+            },
+            "visible": "[not(equals(steps('applicationDetails').product, 'proxy'))]"
+          },
+          {
+            "name": "dashboard",
+            "type": "Microsoft.Common.CheckBox",
+            "label": "Enable Traefik local Dashboard.",
+            "defaultValue": true,
+            "toolTip": "Enable access to Dashboard through port-forward",
+            "constraints": {
+              "required": false
+            }
+          },
+          {
+            "name": "replicas",
+            "type": "Microsoft.Common.Slider",
+            "min": 1,
+            "max": 12,
+            "label": "Number of replicas",
+            "subLabel": "",
+            "defaultValue": 1,
+            "showStepMarkers": false,
+            "toolTip": "Specify number of replicas",
+            "constraints": {
+              "required": false
+            },
+            "visible": true
+          }
+        ]
+      }
+    ],
+    "outputs": {
+      "clusterResourceName": "[basics('clusterSection').clusterResourceName]",
+      "extensionResourceName": "[steps('applicationDetails').extensionResourceName]",
+      "dashboard": "[steps('applicationDetails').dashboard]",
+      "product": "[steps('applicationDetails').product]",
+      "replicas": "[steps('applicationDetails').replicas]",
+      "token": "[steps('applicationDetails').token]"
+    }
+  }
+}

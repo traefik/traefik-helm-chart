@@ -1105,3 +1105,19 @@ oci_meta:
     hub:
       image: traefik-hub
       tag: latest
+
+# -- Required for Azure Marketplace integration.
+# See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+global:
+  azure:
+    # -- Enable specific values for Azure Marketplace
+    enabled: false
+    images:
+      proxy:
+        image: traefik
+        tag: latest
+        registry: docker.io/library
+      hub:
+        image: traefik-hub
+        tag: latest
+        registry: ghcr.io/traefik
