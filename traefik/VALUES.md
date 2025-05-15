@@ -210,6 +210,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `""` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
+| metrics.otlp.serviceName | string | `nil` | Service name used in OTLP backend. Default: traefik. |
 | metrics.prometheus.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.prometheus.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
 | metrics.prometheus.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |

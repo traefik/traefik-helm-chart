@@ -303,6 +303,7 @@ tests:
             - "1.2"
             - "5.0"
           pushInterval: 10s
+          serviceName: traefikTest
           http:
             enabled: true
             endpoint: "http://localhost:4318/v1/metrics"
@@ -345,6 +346,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.pushInterval=10s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.serviceName=traefikTest"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.http=true"
