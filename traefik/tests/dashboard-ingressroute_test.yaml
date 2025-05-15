@@ -99,9 +99,8 @@ tests:
       dashboard:
         enabled: true
   asserts:
-  - equal:
+  - isNull:
       path: metadata.annotations
-      value: null
 - it: should use the ingress class name for the annotation
   set:
     ingressRoute:
@@ -115,17 +114,22 @@ tests:
       path: metadata.annotations
       value:
         kubernetes.io/ingress.class: test-class
-- it: should insert annotations correctly
+- it: should insert annotations correctly (and give precedence to user annotations)
   set:
     ingressRoute:
       dashboard:
         enabled: true
+        providers:
+          kubernetesCRD:
+            ingressClass: test-class
         annotations:
           foo: bar
           fis: fas
+          kubernetes.io/ingress.class: test-class2
   asserts:
   - equal:
       path: metadata.annotations
       value:
         foo: bar
         fis: fas
+        kubernetes.io/ingress.class: test-class2
