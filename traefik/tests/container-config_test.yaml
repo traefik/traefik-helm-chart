@@ -125,7 +125,7 @@ tests:
       - equal:
           path: spec.template.spec.volumes[2].secret.secretName
           value: "RELEASE-NAME-custom-secret"
-  - it: should mount an extra volume as read only
+  - it: should mount an extra volume as read write
     set:
       additionalVolumes:
         - name: emptydir-volume
