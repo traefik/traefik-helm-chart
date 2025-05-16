@@ -128,6 +128,10 @@ jobs:
           registry_password: ${{ secrets.GHCR_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      - name: Trigger hub-doc synchronization workflow
+        run: gh workflow run -R traefik/hub-doc "🏗️ Sync helm-chart" -F CHART_VERSION=v35.1.0
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
   traefik-crds:
     runs-on: ubuntu-latest
     steps:
