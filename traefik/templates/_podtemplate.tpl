@@ -157,7 +157,7 @@
           {{- range .Values.volumes }}
           - name: {{ tpl (.name) $root | replace "." "-" }}
             mountPath: {{ .mountPath }}
-            readOnly: true
+            readOnly: {{ .readOnly | default(true) }}
           {{- end }}
           {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
           - name: plugins
