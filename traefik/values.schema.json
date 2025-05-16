@@ -305,6 +305,10 @@
                     "properties": {
                         "admission": {
                             "properties": {
+                                "customWebhookCertificate": {
+                                    "properties": {},
+                                    "type": "object"
+                                },
                                 "listenAddr": {
                                     "type": "string"
                                 },
