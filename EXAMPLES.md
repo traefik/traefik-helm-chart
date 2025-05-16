@@ -1074,7 +1074,7 @@ pluginVersion: "v1.2.3"
 
 This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.
 
-# Mount datadog APM socket directly into traefik container (i.e. no more socat sidecar)
+# Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
 This example demonstrate how to directly mount datadog apm socket into traefik container thus avoiding the need of socat sidecar container.
 
@@ -1082,7 +1082,7 @@ This example demonstrate how to directly mount datadog apm socket into traefik c
 metrics:
   datadog:
     address: unix:///var/run/datadog/dsd.socket # https://doc.traefik.io/traefik/observability/metrics/datadog/#address
-volumes:
+additionalVolumeMounts:
   - name: apmsocketpath
     mountPath: /var/run/datadog
     readOnly: false

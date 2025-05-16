@@ -89,14 +89,8 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts[2].name
           value: "RELEASE-NAME-custom-config"
       - equal:
-          path: spec.template.spec.containers[0].volumeMounts[2].readOnly
-          value: true
-      - equal:
           path: spec.template.spec.containers[0].volumeMounts[3].name
           value: "non-templated"
-      - equal:
-          path: spec.template.spec.containers[0].volumeMounts[3].readOnly
-          value: true
       - equal:
           path: spec.template.spec.volumes[2].name
           value: "RELEASE-NAME-custom-config"
@@ -125,23 +119,6 @@ tests:
       - equal:
           path: spec.template.spec.volumes[2].secret.secretName
           value: "RELEASE-NAME-custom-secret"
-  - it: should mount an extra volume as read write
-    set:
-      additionalVolumes:
-        - name: emptydir-volume
-          emptyDir:
-            sizeLimit: 500Mi
-      volumes:
-        - name: emptydir-volume
-          mountPath: /tmp
-          readOnly: false
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].volumeMounts[2].name
-          value: "emptydir-volume"
-      - equal:
-          path: spec.template.spec.containers[0].volumeMounts[2].readOnly
-          value: false
   - it: should set a podAntiaffinity
     set:
       affinity:
