@@ -949,8 +949,8 @@ hub:
     admission:
       # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
       listenAddr: ""
-      # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
-      secretName: ""
+      # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
+      secretName: "hub-agent-cert"
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false

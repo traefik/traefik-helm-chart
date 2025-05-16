@@ -213,7 +213,7 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
-{{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) "hub-agent-cert" -}}
+{{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
 {{- if $cert -}}
 {{/* reusing value of existing cert */}}
 Cert: {{ index $cert.data "tls.crt" }}

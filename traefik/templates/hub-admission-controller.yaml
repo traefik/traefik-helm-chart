@@ -6,7 +6,7 @@ apiVersion: v1
 kind: Secret
 type: kubernetes.io/tls
 metadata:
-  name: hub-agent-cert
+  name: {{ .Values.hub.apimanagement.admission.secretName }}
   namespace: {{ template "traefik.namespace" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
