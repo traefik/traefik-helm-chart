@@ -1102,3 +1102,21 @@ helm upgrade --install --namespace traefik traefik traefik/traefik \
   --set image.registry=ghcr.io --set image.repository=traefik/traefik-hub --set image.tag=v3.16.0
 ```
 
+# Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
+
+This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
+
+```yaml
+metrics:
+  datadog:
+    address: unix:///var/run/datadog/dsd.socket # https://doc.traefik.io/traefik/observability/metrics/datadog/#address
+additionalVolumeMounts:
+  - name: ddsocketdir
+    mountPath: /var/run/datadog
+    readOnly: false
+deployment:
+  additionalVolumes:
+    - hostPath:
+        path: /var/run/datadog/
+      name: ddsocketdir
+```
