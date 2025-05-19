@@ -1,5 +1,32 @@
 # Change Log
 
+## 1.8.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-05-19
+
+* feat: azure marketplace integration
+* feat(CRDs): ✨ update CRDs for Traefik Proxy v3.4.x
+* chore: update maintainers
+* chore(release): :rocket: publish v35.3.0 and CRDs v1.8.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik-crds/values.yaml b/traefik-crds/values.yaml
+index aaa56c8..1240977 100644
+--- a/traefik-crds/values.yaml
++++ b/traefik-crds/values.yaml
+@@ -4,7 +4,7 @@
+ 
+ # -- Global values
+ # This definition is only here as a placeholder such that it is included in the json schema.
+-global: {} # @schema additionalProperties: true
++global: {}  # @schema additionalProperties: true
+ # -- Field that can be used as a condition when this chart is a dependency.
+ # This definition is only here as a placeholder such that it is included in the json schema.
+ # See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info.
+```
+
 ## 1.7.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-04-25
