@@ -34,7 +34,7 @@
             "type": "Microsoft.Solutions.ArmApiControl",
             "request": {
               "method": "GET",
-              "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.ContainerService/managedClusters?api-version=2022-10-01-preview')]"
+              "path": "[concat(subscription().id, '/resourcegroups/', resourceGroup().name,  '/providers/Microsoft.ContainerService/managedClusters?api-version=2022-11-01')]"
             }
           },
           {

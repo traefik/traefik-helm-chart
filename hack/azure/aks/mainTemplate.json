@@ -71,9 +71,9 @@
     "releaseTrain": "DONOTMODIFY",
     "clusterExtensionTypeName": "DONOTMODIFY",
     "versionOverride": {
-      "proxy": "v3.3.6",
-      "apigw": "v3.16.0",
-      "apim": "v3.16.0"
+      "proxy": "v3.4.0",
+      "apigw": "v3.16.1",
+      "apim": "v3.16.1"
     }
   },
   "resources": [
