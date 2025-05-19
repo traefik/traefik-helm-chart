@@ -1118,5 +1118,5 @@ deployment:
   additionalVolumes:
     - hostPath:
         path: /var/run/datadog/
-      name: ddocketdir
+      name: ddsocketdir
 ```
