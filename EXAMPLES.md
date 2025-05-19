@@ -1111,7 +1111,7 @@ metrics:
   datadog:
     address: unix:///var/run/datadog/dsd.socket # https://doc.traefik.io/traefik/observability/metrics/datadog/#address
 additionalVolumeMounts:
-  - name: ddocketdir
+  - name: ddsocketdir
     mountPath: /var/run/datadog
     readOnly: false
 deployment:
