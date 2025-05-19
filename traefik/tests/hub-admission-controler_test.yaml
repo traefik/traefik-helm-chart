@@ -34,6 +34,17 @@ tests:
       - equal:
           path: metadata.name
           value: hub-agent-cert
+  - it: should be possible to specify custom webhook certificate secret name
+    set:
+      hub:
+        apimanagement:
+          admission:
+            secretName: test
+    documentIndex: 0
+    asserts:
+      - equal:
+          path: "metadata.name"
+          value: test
   - it: should render hub-acp webhook
     documentIndex: 1
     asserts:
