@@ -1098,7 +1098,7 @@ helm upgrade --install --namespace traefik traefik traefik/traefik \
   --set hub.token=traefik-hub-license \
   --set hub.apimanagement.enabled=true \
   --set hub.apimanagement.admission.customWebhookCertificate.tls.crt=$(cat /tmp/hub.crt | base64 -w0) \
-  --set hub.apimanagement.admission.customWebhookCertificate.tls.key=$(cat /tmp/hub.key | base64 -w0)
+  --set hub.apimanagement.admission.customWebhookCertificate.tls.key=$(cat /tmp/hub.key | base64 -w0) \
   --set image.registry=ghcr.io --set image.repository=traefik/traefik-hub --set image.tag=v3.16.0
 ```
 
