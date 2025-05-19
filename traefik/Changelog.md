@@ -1,5 +1,102 @@
 # Change Log
 
+## 35.3.0  ![AppVersion: v3.4.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-05-19
+
+* fix: :bug: ingress route annotations should not be null
+* fix(Traefik Hub): fail when upgrading with --reuse-values
+* fix(Traefik Hub): custom certificate name for WebHook
+* feat: azure marketplace integration
+* feat: add serviceName for otlp metrics
+* feat(deps): update traefik docker tag to v3.4.0
+* feat(deps): update traefik docker tag to v3.3.7
+* feat(Traefik Hub): improve UserXP on token
+* feat(Traefik Hub): :sparkles: set custom certificate for Hub webhooks
+* feat(CRDs): ✨ update CRDs for Traefik Proxy v3.4.x
+* chore: update maintainers
+* chore: remove K8s version check for unsupported version
+* chore(release): :rocket: publish v35.3.0 and CRDs v1.8.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 04f4973..ff04c8b 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -115,7 +115,7 @@ ingressClass:  # @schema additionalProperties: false
+   name: ""
+ 
+ core:  # @schema additionalProperties: false
+-  # -- Can be used to use globally v2 router syntax
++  # -- Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\.
+   # See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes
+   defaultRuleSyntax: ""
+ 
+@@ -504,6 +504,8 @@ metrics:
+     explicitBoundaries: []
+     # -- Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s
+     pushInterval: ""
++    # -- Service name used in OTLP backend. Default: traefik.
++    serviceName:  # @schema type:[string, null]
+     http:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
+       enabled: false
+@@ -596,8 +598,8 @@ tracing:  # @schema additionalProperties: false
+ 
+ # -- Global command arguments to be passed to all traefik's pods
+ globalArguments:
+-- "--global.checknewversion"
+-- "--global.sendanonymoususage"
++  - "--global.checknewversion"
++  - "--global.sendanonymoususage"
+ 
+ # -- Additional arguments to be passed at Traefik's binary
+ # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
+@@ -940,15 +942,17 @@ hub:
+   # It enables API Gateway.
+   token: ""
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+-  namespaces: []
++  namespaces: []  # @schema required:true
+   apimanagement:
+     # -- Set to true in order to enable API Management. Requires a valid license token.
+     enabled: false
+     admission:
+       # -- WebHook admission server listen address. Default: "0.0.0.0:9943".
+       listenAddr: ""
+-      # -- Certificate of the WebHook admission server. Default: "hub-agent-cert".
+-      secretName: ""
++      # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
++      secretName: "hub-agent-cert"
++      # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
++      customWebhookCertificate: {}
+     openApi:
+       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+       validateRequestMethodAndPath: false
+@@ -1103,3 +1107,19 @@ oci_meta:
+     hub:
+       image: traefik-hub
+       tag: latest
++
++# -- Required for Azure Marketplace integration.
++# See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
++global:
++  azure:
++    # -- Enable specific values for Azure Marketplace
++    enabled: false
++    images:
++      proxy:
++        image: traefik
++        tag: latest
++        registry: docker.io/library
++      hub:
++        image: traefik-hub
++        tag: latest
++        registry: ghcr.io/traefik
+```
+
 ## 35.2.0  ![AppVersion: v3.3.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.3.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-04-29
