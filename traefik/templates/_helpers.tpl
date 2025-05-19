@@ -213,17 +213,22 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
-{{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
-{{- if $cert -}}
-{{/* reusing value of existing cert */}}
+{{- if $.Values.hub.apimanagement.admission.customWebhookCertificate }}
+Cert: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt" }}
+Key: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.key" }}
+{{- else -}}
+    {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
+    {{- if $cert -}}
+    {{/* reusing value of existing cert */}}
 Cert: {{ index $cert.data "tls.crt" }}
 Key: {{ index $cert.data "tls.key" }}
-{{- else -}}
-{{/* generate a new one */}}
-{{- $altNames := list ( printf "admission.%s.svc" (include "traefik.namespace" .) ) -}}
-{{- $cert := genSelfSignedCert ( printf "admission.%s.svc" (include "traefik.namespace" .) ) (list) $altNames 3650 -}}
+    {{- else -}}
+    {{/* generate a new one */}}
+    {{- $altNames := list ( printf "admission.%s.svc" (include "traefik.namespace" .) ) -}}
+    {{- $cert := genSelfSignedCert ( printf "admission.%s.svc" (include "traefik.namespace" .) ) (list) $altNames 3650 -}}
 Cert: {{ $cert.Cert | b64enc }}
 Key: {{ $cert.Key | b64enc }}
+    {{- end -}}
 {{- end -}}
 {{- end -}}
 

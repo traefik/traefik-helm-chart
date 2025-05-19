@@ -1077,3 +1077,28 @@ pluginVersion: "v1.2.3"
 ```
 
 This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.
+
+# Use a custom certificate for Traefik Hub webhooks
+
+Some users are facing issues using CD tools while it invokes helm template. Hub mutating webhooks cert keeps being updated.
+This example demonstrates how to generate and use a custom certificate for Hub admission webhooks.
+
+First, generate a self-signed certificate:
+
+```bash
+# this generates a self-signed certificate with a 2048 bits key, valid for 10 years, on admission.traefik.svc DNS name
+openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes -keyout /tmp/hub.key -out /tmp/hub.crt \
+            -subj "/CN=admission.traefik.svc" -addext "subjectAltName=DNS:admission.traefik.svc"
+```
+
+Now use it while installing Traefik Hub:
+
+```bash
+helm upgrade --install --namespace traefik traefik traefik/traefik \
+  --set hub.token=traefik-hub-license \
+  --set hub.apimanagement.enabled=true \
+  --set hub.apimanagement.admission.customWebhookCertificate.tls.crt=$(cat /tmp/hub.crt | base64 -w0) \
+  --set hub.apimanagement.admission.customWebhookCertificate.tls.key=$(cat /tmp/hub.key | base64 -w0) \
+  --set image.registry=ghcr.io --set image.repository=traefik/traefik-hub --set image.tag=v3.16.0
+```
+
