@@ -1104,7 +1104,7 @@ helm upgrade --install --namespace traefik traefik traefik/traefik \
 
 # Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
-This example demonstrate how to directly mount datadog apm socket into traefik container thus avoiding the need of socat sidecar container.
+This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
 
 ```yaml
 metrics:
