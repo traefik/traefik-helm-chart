@@ -453,7 +453,11 @@ PROXY protocol is a protocol for sending client connection information, such as 
 ```yaml
 .DOTrustedIPs: &DOTrustedIPs
   - 127.0.0.1/32
-  - 10.120.0.0/16
+  # IP range Load Balancer is on
+  - 10.0.0.0/8
+  # IP range of private (VPC) interface - CHANGE THIS TO YOUR NETWORK SETTINGS
+  # This is needed when "externalTrafficPolicy: Cluster" is specified, as inbound traffic from the load balancer to a Traefik instance could be redirected from another cluster node on the way through.
+  - 172.16.0.0/12
 
 service:
   enabled: true
