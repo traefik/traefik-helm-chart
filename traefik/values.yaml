@@ -951,6 +951,9 @@ hub:
       listenAddr: ""
       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
       secretName: "hub-agent-cert"
+      customWebhookCertificate: {}
+      # tls.crt:
+      # tls.key:
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false

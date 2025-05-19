@@ -83,6 +83,7 @@ Kubernetes: `>=1.22.0-0`
 | global.azure.enabled | bool | `false` | Enable specific values for Azure Marketplace |
 | globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
+| hub.apimanagement.admission.customWebhookCertificate | object | `{}` |  |
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
