@@ -857,10 +857,7 @@
           {{- end }}
           {{- if ($.Values.resources.limits).memory }}
           - name: GOMEMLIMIT
-            valueFrom:
-              resourceFieldRef:
-                resource: limits.memory
-                divisor: '1'
+            value: {{ include "traefik.gomemlimit" .Values.resources.limits.memory | quote }}
           {{- end }}
           {{- with .Values.hub.token }}
           - name: HUB_TOKEN
