@@ -1093,7 +1093,7 @@ cat /tmp/hub.crt | base64 -w0 > /tmp/hub.crt.b64
 cat /tmp/hub.key | base64 -w0 > /tmp/hub.key.b64
 ```
 
-Now, it can be set in the values
+Now, it can be set in the values:
 
 ```yaml
 hub:
