@@ -1093,7 +1093,7 @@ cat /tmp/hub.crt | base64 -w0 > /tmp/hub.crt.b64
 cat /tmp/hub.key | base64 -w0 > /tmp/hub.key.b64
 ```
 
-Now, it can be set in the values:
+Now, it can be set in the `values.yaml`:
 
 ```yaml
 hub:
@@ -1105,7 +1105,7 @@ hub:
 ```
 
 > [!TIP]
-> When using the CLI, this parameter need to be escaped like this:
+> When using the CLI, those parameters need to be escaped like this:
 >```bash 
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
