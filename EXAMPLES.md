@@ -1117,8 +1117,8 @@ hub:
     enabled: true
     admission:
       customWebhookCertificate:
-        tls.crt: xxxx # content of /tmp/hub.crt
-        tls.key: xxxx # content of /tmp/hub.key
+        tls.crt: xxxx # content of /tmp/hub.crt.b64
+        tls.key: xxxx # content of /tmp/hub.key.b64
 ```
 
 # Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
