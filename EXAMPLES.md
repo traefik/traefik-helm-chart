@@ -1105,10 +1105,11 @@ hub:
 ```
 
 > [!TIP]
-> When using the CLI, this parameter need to be escaped like this
-> `--set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)`
-> `--set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)`
-
+> When using the CLI, this parameter need to be escaped like this:
+>```bash 
+> --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
+> --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
+>```
 # Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
 This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
