@@ -953,7 +953,7 @@ hub:
       secretName: "hub-agent-cert"
       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
       customWebhookCertificate: {}
-      # -- Set it to true if you want Traefik Hub pod to be restarted on certificate change. Default: true.
+      # -- Set it to false if you want Traefik Hub pod to not be restarted on certificate change. Default: true.
       restartOnCertificateChange: true
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
