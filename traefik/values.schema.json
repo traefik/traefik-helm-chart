@@ -312,6 +312,9 @@
                                 "listenAddr": {
                                     "type": "string"
                                 },
+                                "restartOnCertificateChange": {
+                                    "type": "boolean"
+                                },
                                 "secretName": {
                                     "type": "string"
                                 }

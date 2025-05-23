@@ -203,9 +203,10 @@ tests:
   - it: should be possible to restart pods on certificate change
     set:
       hub:
-        admission:
+        apimanagement:
           enabled: true
-          restartOnCertificateChange: true
+          admission:
+            restartOnCertificateChange: true
     asserts:
       - exists:
           path: spec.template.metadata.labels.hub-cert-hash
