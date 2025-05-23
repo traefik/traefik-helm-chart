@@ -199,3 +199,23 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.namespaces=NAMESPACE,one,two"
+
+  - it: should restart pods on certificate change by default
+    set:
+      hub:
+        apimanagement:
+          enabled: true
+    asserts:
+      - exists:
+          path: spec.template.metadata.labels.hub-cert-hash
+
+  - it: should be possible to disable pod restart on certificate change
+    set:
+      hub:
+        apimanagement:
+          enabled: true
+          admission:
+            restartOnCertificateChange: false
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels.hub-cert-hash
