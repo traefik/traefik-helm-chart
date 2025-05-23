@@ -85,6 +85,7 @@ Kubernetes: `>=1.22.0-0`
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.apimanagement.admission.customWebhookCertificate | object | `{}` | Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding. |
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
+| hub.apimanagement.admission.restartOnCertificateChange | bool | `true` | Set it to true if you want Traefik Hub pod to be restarted on certificate change. Default: true. |
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
