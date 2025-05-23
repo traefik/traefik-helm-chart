@@ -200,7 +200,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.namespaces=NAMESPACE,one,two"
 
-  - it: should be possible to restart pods on certificate change
+  - it: should restart pods on certificate change
     set:
       hub:
         apimanagement:
