@@ -4,7 +4,7 @@
 {{- if and $.Values.ingressClass.enabled $.Values.providers.kubernetesCRD.enabled $.Values.providers.kubernetesCRD.ingressClass }}
   {{ $ingressClassAnnotations = dict "kubernetes.io/ingress.class" $.Values.providers.kubernetesCRD.ingressClass }}
 {{- end }}
-{{ $annotations := merge $ingressClassAnnotations $config.annotations }}
+{{ $annotations := merge $ingressClassAnnotations (default $config.annotations dict) }}
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
