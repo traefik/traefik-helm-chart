@@ -276,10 +276,13 @@ Key: {{ $cert.Key | b64enc }}
 {{/*
   This helper converts the input value of memory to Bytes.
   Input needs to be a valid value as supported by k8s memory resource field.
+  This function aims to handle SI, IEC prefixes or no prefixes (cf. https://github.com/kubeflow/crd-validation/blob/master/vendor/k8s.io/apimachinery/pkg/api/resource/quantity.go#L44).
+  SI prefixes use power of 10 (e.g. 1e18 = 1 x 10^18) (m | "" | k | M | G | T | P | E).
+  IEC prefixes use power of 2 (e.g. 0x1p60 = 2^60) (Ki | Mi | Gi | Ti | Pi | Ei).
  */}}
 {{- define "traefik.convertMemToBytes" }}
   {{- $mem := lower . -}}
-   {{- if hasSuffix "e" $mem -}}
+  {{- if hasSuffix "e" $mem -}}
     {{- $mem = mulf (trimSuffix "e" $mem | float64) 1e18 -}}
   {{- else if hasSuffix "ei" $mem -}}
     {{- $mem = mulf (trimSuffix "e" $mem | float64) 0x1p60 -}}
@@ -295,7 +298,9 @@ Key: {{ $cert.Key | b64enc }}
     {{- $mem = mulf (trimSuffix "g" $mem | float64) 1e9 -}}
   {{- else if hasSuffix "gi" $mem -}}
     {{- $mem = mulf (trimSuffix "gi" $mem | float64) 0x1p30 -}}
-  {{- else if hasSuffix "m" $mem -}}
+  {{- else if hasSuffix "m" . -}}
+    {{- $mem = divf (trimSuffix "m" $mem | float64) 1e3 -}}
+  {{- else if hasSuffix "M" . -}}
     {{- $mem = mulf (trimSuffix "m" $mem | float64) 1e6 -}}
   {{- else if hasSuffix "mi" $mem -}}
     {{- $mem = mulf (trimSuffix "mi" $mem | float64) 0x1p20 -}}

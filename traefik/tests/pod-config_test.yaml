@@ -19,17 +19,61 @@ tests:
               resourceFieldRef:
                 resource: limits.cpu
                 divisor: "1"
-  - it: should have set GOMEMLIMIT with memory limit
+  - it: should have set GOMEMLIMIT with bytes memory limit
     set:
       resources:
         limits:
-          memory: "4Gi"
+          memory: "128974848"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "3276MiB"
+            value: "98MiB"
+  - it: should have set GOMEMLIMIT with exponential  memory limit
+    set:
+      resources:
+        limits:
+          memory: "129e6"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "98MiB"
+  - it: should have set GOMEMLIMIT with SI memory limit
+    set:
+      resources:
+        limits:
+          memory: "129M"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "98MiB"
+  - it: should have set GOMEMLIMIT SI (small unit) with memory limit
+    set:
+      resources:
+        limits:
+          memory: "128974848000m"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "98MiB"
+  - it: should have set GOMEMLIMIT with IEC memory limit
+    set:
+      resources:
+        limits:
+          memory: "123Mi"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "98MiB"
   - it: should have not set GOMAXPROCS without cpu limit
     asserts:
       - notEqual:
