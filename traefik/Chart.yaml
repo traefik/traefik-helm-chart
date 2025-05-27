@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 35.3.0
+version: 35.4.0
 # renovate: image=traefik
 appVersion: v3.4.0
 kubeVersion: ">=1.22.0-0"
@@ -23,16 +23,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: :bug: ingress route annotations should not be null"
-    - "fix(Traefik Hub): fail when upgrading with --reuse-values"
-    - "fix(Traefik Hub): custom certificate name for WebHook"
-    - "feat: azure marketplace integration"
-    - "feat: add serviceName for otlp metrics"
-    - "feat(deps): update traefik docker tag to v3.4.0"
-    - "feat(deps): update traefik docker tag to v3.3.7"
-    - "feat(Traefik Hub): improve UserXP on token"
-    - "feat(Traefik Hub): :sparkles: set custom certificate for Hub webhooks"
-    - "feat(CRDs): ✨ update CRDs for Traefik Proxy v3.4.x"
-    - "chore: update maintainers"
-    - "chore: remove K8s version check for unsupported version"
-    - "chore(release): :rocket: publish v35.3.0 and CRDs v1.8.0"
+    - "fix(CRDs): validation check on RootCA for both servertransport"
+    - "feat(Traefik Hub): :sparkles: automatically restart API Management pods on admission certificate change"
+    - "chore(release): :rocket: publish v35.4.0 and CRDs v1.8.1"

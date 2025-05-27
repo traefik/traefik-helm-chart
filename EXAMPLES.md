@@ -1080,7 +1080,7 @@ This configuration will mount the `plugin-volume` at `/plugins` with the `subPat
 
 # Use a custom certificate for Traefik Hub webhooks
 
-Some users are facing issues using CD tools while it invokes helm template. Hub mutating webhooks cert keeps being updated.
+Some CD tools may regenerate Traefik Hub mutating webhooks continuously, when using helm template.
 This example demonstrates how to generate and use a custom certificate for Hub admission webhooks.
 
 First, generate a self-signed certificate:
@@ -1089,19 +1089,27 @@ First, generate a self-signed certificate:
 # this generates a self-signed certificate with a 2048 bits key, valid for 10 years, on admission.traefik.svc DNS name
 openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes -keyout /tmp/hub.key -out /tmp/hub.crt \
             -subj "/CN=admission.traefik.svc" -addext "subjectAltName=DNS:admission.traefik.svc"
+cat /tmp/hub.crt | base64 -w0 > /tmp/hub.crt.b64
+cat /tmp/hub.key | base64 -w0 > /tmp/hub.key.b64
 ```
 
-Now use it while installing Traefik Hub:
+Now, it can be set in the `values.yaml`:
 
-```bash
-helm upgrade --install --namespace traefik traefik traefik/traefik \
-  --set hub.token=traefik-hub-license \
-  --set hub.apimanagement.enabled=true \
-  --set hub.apimanagement.admission.customWebhookCertificate.tls.crt=$(cat /tmp/hub.crt | base64 -w0) \
-  --set hub.apimanagement.admission.customWebhookCertificate.tls.key=$(cat /tmp/hub.key | base64 -w0) \
-  --set image.registry=ghcr.io --set image.repository=traefik/traefik-hub --set image.tag=v3.16.0
+```yaml
+hub:
+  apimanagement:
+    admission:
+      customWebhookCertificate:
+        tls.crt: xxxx # content of /tmp/hub.crt.b64
+        tls.key: xxxx # content of /tmp/hub.key.b64
 ```
 
+> [!TIP]
+> When using the CLI, those parameters need to be escaped like this:
+>```bash 
+> --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
+> --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
+>```
 # Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
 This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
