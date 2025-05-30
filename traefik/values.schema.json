@@ -346,6 +346,9 @@
                 "namespaces": {
                     "type": "array"
                 },
+                "offline": {
+                    "type": "boolean"
+                },
                 "providers": {
                     "properties": {
                         "consulCatalogEnterprise": {
