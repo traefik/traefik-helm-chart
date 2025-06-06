@@ -132,7 +132,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
         run: |
-          gh workflow run -R traefik/hub-doc "🏗️ Sync helm-chart" -F CHART_VERSION=${{ env.tag_prefix }}${{ steps.tag_version.outputs.new_tag }}
+          gh workflow run -R traefik/hub-doc "🏗️ Sync helm-chart" -F CHART_VERSION=${{ steps.tag_version.outputs.new_tag }}
 
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
