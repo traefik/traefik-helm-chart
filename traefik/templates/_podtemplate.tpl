@@ -175,10 +175,13 @@
             {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
         args:
-          {{- with .Values.globalArguments }}
-          {{- range . }}
-          - {{ . | quote }}
-          {{- end }}
+          {{- with .Values.global }}
+           {{- if .checkNewVersion }}
+          - "--global.checkNewVersion"
+           {{- end }}
+           {{- if .sendAnonymousUsage }}
+          - "--global.sendAnonymousUsage"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}

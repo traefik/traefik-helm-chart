@@ -275,14 +275,15 @@
                             }
                         }
                     }
+                },
+                "checkNewVersion": {
+                    "type": "boolean"
+                },
+                "sendAnonymousUsage": {
+                    "type": "boolean"
                 }
-            }
-        },
-        "globalArguments": {
-            "type": "array",
-            "items": {
-                "type": "string"
-            }
+            },
+            "additionalProperties": false
         },
         "hostNetwork": {
             "type": "boolean"
