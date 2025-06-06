@@ -1,8 +1,9 @@
 {
-    "$id": "https://traefik.io/traefik-crds-helm-chart.schema.json",
     "$schema": "https://json-schema.org/draft/2020-12/schema",
-    "additionalProperties": false,
+    "$id": "https://traefik.io/traefik-crds-helm-chart.schema.json",
+    "title": "Traefik CRDs Helm Chart",
     "description": "The Cloud Native Application Proxy",
+    "type": "object",
     "properties": {
         "deleteOnUninstall": {
             "type": "boolean"
@@ -14,9 +15,8 @@
             "type": "boolean"
         },
         "global": {
-            "additionalProperties": true,
-            "properties": {},
-            "type": "object"
+            "type": "object",
+            "additionalProperties": true
         },
         "hub": {
             "type": "boolean"
@@ -25,6 +25,5 @@
             "type": "boolean"
         }
     },
-    "title": "Traefik CRDs Helm Chart",
-    "type": "object"
+    "additionalProperties": false
 }
