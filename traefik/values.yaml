@@ -597,10 +597,25 @@ tracing:  # @schema additionalProperties: false
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
 
-# -- Global command arguments to be passed to all traefik's pods
-globalArguments:
-  - "--global.checknewversion"
-  - "--global.sendanonymoususage"
+global:  # @schema additionalProperties: false
+  checkNewVersion: true
+  # -- Please take time to consider whether or not you wish to share anonymous data with us
+  # See https://doc.traefik.io/traefik/contributing/data-collection/
+  sendAnonymousUsage: false
+  # -- Required for Azure Marketplace integration.
+  # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+  azure:
+    # -- Enable specific values for Azure Marketplace
+    enabled: false
+    images:
+      proxy:
+        image: traefik
+        tag: latest
+        registry: docker.io/library
+      hub:
+        image: traefik-hub
+        tag: latest
+        registry: ghcr.io/traefik
 
 # -- Additional arguments to be passed at Traefik's binary
 # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
@@ -1112,19 +1127,3 @@ oci_meta:
     hub:
       image: traefik-hub
       tag: latest
-
-# -- Required for Azure Marketplace integration.
-# See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
-global:
-  azure:
-    # -- Enable specific values for Azure Marketplace
-    enabled: false
-    images:
-      proxy:
-        image: traefik
-        tag: latest
-        registry: docker.io/library
-      hub:
-        image: traefik-hub
-        tag: latest
-        registry: ghcr.io/traefik
