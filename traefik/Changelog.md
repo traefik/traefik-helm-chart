@@ -1,5 +1,101 @@
 # Change Log
 
+## 36.0.0  ![AppVersion: v3.4.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-06-06
+
+* fix(notes): update condition to display certificate persistence warning
+* fix(Traefik Proxy): supported `ingressRoute.*.annotations` breaks templating
+* fix(Traefik Proxy)!: strict opt-in on data collection
+* feat(deps): update traefik docker tag to v3.4.1
+* feat(Traefik Hub): add offline flag
+* chore(schema): 🔧 update following latest upstream release
+* chore(release): 🚀 publish v36.0.0
+
+**Upgrade Notes**
+
+There is a breaking change on `globalArguments` which has been replaced by `global.xx`, following upstream.
+See PR [#1436](https://github.com/traefik/traefik-helm-chart/pull/1436) for details.
+
+Following GDPR, anonymous stats usage has been disabled by default.
+Please take time to consider whether or not you wish to share anonymous data to help TraefikLabs improve Traefik Proxy.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index a9b74a3..9bcb400 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -185,6 +185,7 @@ gatewayClass:  # @schema additionalProperties: false
+   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+   labels: {}
+ 
++# -- Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart.
+ ingressRoute:
+   dashboard:
+     # -- Create an IngressRoute for the dashboard
+@@ -596,10 +597,25 @@ tracing:  # @schema additionalProperties: false
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+         insecureSkipVerify: false
+ 
+-# -- Global command arguments to be passed to all traefik's pods
+-globalArguments:
+-  - "--global.checknewversion"
+-  - "--global.sendanonymoususage"
++global:  # @schema additionalProperties: false
++  checkNewVersion: true
++  # -- Please take time to consider whether or not you wish to share anonymous data with us
++  # See https://doc.traefik.io/traefik/contributing/data-collection/
++  sendAnonymousUsage: false
++  # -- Required for Azure Marketplace integration.
++  # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
++  azure:
++    # -- Enable specific values for Azure Marketplace
++    enabled: false
++    images:
++      proxy:
++        image: traefik
++        tag: latest
++        registry: docker.io/library
++      hub:
++        image: traefik-hub
++        tag: latest
++        registry: ghcr.io/traefik
+ 
+ # -- Additional arguments to be passed at Traefik's binary
+ # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
+@@ -941,6 +957,8 @@ hub:
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
++  # -- Disables all external network connections.
++  offline: false
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+   namespaces: []  # @schema required:true
+   apimanagement:
+@@ -1109,19 +1127,3 @@ oci_meta:
+     hub:
+       image: traefik-hub
+       tag: latest
+-
+-# -- Required for Azure Marketplace integration.
+-# See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+-global:
+-  azure:
+-    # -- Enable specific values for Azure Marketplace
+-    enabled: false
+-    images:
+-      proxy:
+-        image: traefik
+-        tag: latest
+-        registry: docker.io/library
+-      hub:
+-        image: traefik-hub
+-        tag: latest
+-        registry: ghcr.io/traefik
+```
+
 ## 35.4.0  ![AppVersion: v3.4.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-05-23
