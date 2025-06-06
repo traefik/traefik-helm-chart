@@ -1,0 +1,15 @@
+suite: unsupported IngressRoute configuration
+templates:
+- ingressroute.yaml
+tests:
+- it: should not fail when enabling an unsupported IngressRoute
+  set:
+    ingressRoute:
+      api:
+        enabled: true
+  asserts:
+  - hasDocuments:
+      count: 1
+  - equal:
+      path: metadata.name
+      value: RELEASE-NAME-api
