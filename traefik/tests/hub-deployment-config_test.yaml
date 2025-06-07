@@ -18,6 +18,14 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.token=$(HUB_TOKEN)"
+  - it: should set the offline flag when offline is enabled
+    set:
+      hub:
+        offline: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.offline"
   - it: should set minimal required parameters when enabling Traefik Hub API Management
     set:
       hub:

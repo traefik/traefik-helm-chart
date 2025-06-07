@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 35.4.0
+version: 36.0.0
 # renovate: image=traefik
-appVersion: v3.4.0
+appVersion: v3.4.1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -23,6 +23,10 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(CRDs): validation check on RootCA for both servertransport"
-    - "feat(Traefik Hub): :sparkles: automatically restart API Management pods on admission certificate change"
-    - "chore(release): :rocket: publish v35.4.0 and CRDs v1.8.1"
+    - "fix(notes): update condition to display certificate persistence warning"
+    - "fix(Traefik Proxy): supported `ingressRoute.*.annotations` breaks templating"
+    - "fix(Traefik Proxy)!: strict opt-in on data collection"
+    - "feat(deps): update traefik docker tag to v3.4.1"
+    - "feat(Traefik Hub): add offline flag"
+    - "chore(schema): 🔧 update following latest upstream release"
+    - "chore(release): 🚀 publish v36.0.0"

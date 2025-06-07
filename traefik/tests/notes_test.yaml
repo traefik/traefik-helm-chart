@@ -41,7 +41,7 @@ tests:
       persistence:
         enabled: true
       deployment:
-        initContainer:
+        initContainers:
           - name: volume-permissions
             image: busybox:1.35
             command: ["sh", "-c", "touch /data/acme.json && chmod -Rv 600 /data/* && chown 65532:65532 /data/acme.json"]

@@ -175,10 +175,13 @@
             {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
         args:
-          {{- with .Values.globalArguments }}
-          {{- range . }}
-          - {{ . | quote }}
-          {{- end }}
+          {{- with .Values.global }}
+           {{- if .checkNewVersion }}
+          - "--global.checkNewVersion"
+           {{- end }}
+           {{- if .sendAnonymousUsage }}
+          - "--global.sendAnonymousUsage"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
@@ -783,6 +786,9 @@
           - "--hub.token=$(HUB_TOKEN)"
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
+            {{- end }}
+            {{- if .offline  }}
+          - "--hub.offline"
             {{- end }}
             {{- if .namespaces }}
           - "--hub.namespaces={{ join "," (uniq (concat (include "traefik.namespace" $ | list) .namespaces)) }}"
