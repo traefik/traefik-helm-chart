@@ -316,6 +316,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
 {{- end }}
 
 {{- define "traefik.gomemlimit" }}
-{{- $memlimitBytes := include "traefik.convertMemToBytes" . | mulf 0.8 -}}
+{{- $percentage := .percentage -}}
+{{- $memlimitBytes := include "traefik.convertMemToBytes" .memory | mulf $percentage -}}
 {{- printf "%dMiB" (divf $memlimitBytes 0x1p20 | floor | int64) -}}
 {{- end }}

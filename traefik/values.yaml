@@ -873,6 +873,11 @@ serviceAccountAnnotations: {}
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container.
 resources: {}
 
+# -- Percentage of memory limit to set for GOMEMLIMIT
+# -- set as decimal (0.9 = 90%, 0.95 = 95% etc)
+# -- only takes effect when resources.limits.memory is set
+goMemLimitPercentage: 0.9
+
 # -- This example pod anti-affinity forces the scheduler to put traefik pods
 # -- on nodes where no other traefik pods are scheduled.
 # It should be used when hostNetwork: true to prevent port conflicts
