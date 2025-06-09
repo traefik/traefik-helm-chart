@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 35.4.0](https://img.shields.io/badge/Version-35.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.1](https://img.shields.io/badge/AppVersion-v3.4.1-informational?style=flat-square)
+![Version: 36.0.0](https://img.shields.io/badge/Version-36.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.1](https://img.shields.io/badge/AppVersion-v3.4.1-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -79,9 +79,10 @@ Kubernetes: `>=1.22.0-0`
 | gatewayClass.enabled | bool | `true` | When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass |
 | gatewayClass.labels | object | `{}` | Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels) |
 | gatewayClass.name | string | `""` | Set a custom name to GatewayClass |
-| global | object | `{"azure":{"enabled":false,"images":{"hub":{"image":"traefik-hub","registry":"ghcr.io/traefik","tag":"latest"},"proxy":{"image":"traefik","registry":"docker.io/library","tag":"latest"}}}}` | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
+| global.azure | object | `{"enabled":false,"images":{"hub":{"image":"traefik-hub","registry":"ghcr.io/traefik","tag":"latest"},"proxy":{"image":"traefik","registry":"docker.io/library","tag":"latest"}}}` | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.azure.enabled | bool | `false` | Enable specific values for Azure Marketplace |
-| globalArguments | list | `["--global.checknewversion","--global.sendanonymoususage"]` | Global command arguments to be passed to all traefik's pods |
+| global.checkNewVersion | bool | `true` |  |
+| global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.apimanagement.admission.customWebhookCertificate | object | `{}` | Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding. |
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
@@ -91,6 +92,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
+| hub.offline | bool | `false` | Disables all external network connections. |
 | hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
 | hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
 | hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
@@ -155,6 +157,7 @@ Kubernetes: `>=1.22.0-0`
 | image.repository | string | `"traefik"` | Traefik image repository |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. When a digest is required, `versionOverride` can be used to set the version. |
 | ingressClass | object | `{"enabled":true,"isDefaultClass":true,"name":""}` | Create a default IngressClass for Traefik |
+| ingressRoute | object | `{"dashboard":{"annotations":{},"enabled":false,"entryPoints":["traefik"],"labels":{},"matchRule":"PathPrefix(`/dashboard`) || PathPrefix(`/api`)","middlewares":[],"services":[{"kind":"TraefikService","name":"api@internal"}],"tls":{}},"healthcheck":{"annotations":{},"enabled":false,"entryPoints":["traefik"],"labels":{},"matchRule":"PathPrefix(`/ping`)","middlewares":[],"services":[{"kind":"TraefikService","name":"ping@internal"}],"tls":{}}}` | Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart. |
 | ingressRoute.dashboard.annotations | object | `{}` | Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class) |
 | ingressRoute.dashboard.enabled | bool | `false` | Create an IngressRoute for the dashboard |
 | ingressRoute.dashboard.entryPoints | list | `["traefik"]` | Specify the allowed entrypoints to use for the dashboard ingress route, (e.g. traefik, web, websecure). By default, it's using traefik entrypoint, which is not exposed. /!\ Do not expose your dashboard without any protection over the internet /!\ |
