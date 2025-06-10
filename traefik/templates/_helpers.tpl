@@ -219,7 +219,10 @@ Key: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls
 Hash: {{ sha1sum (index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt") }}
 {{- else -}}
     {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
-    {{- if $cert -}}
+    {{- if $cert }}
+        {{ if or (not (hasKey $cert.data "tls.crt")) (not (hasKey $cert.data "tls.key")) -}}
+            {{- fail (printf "ERROR: secret %s/%s exists but doesn't contain any certificate data. Please remove it or change hub.apimanagement.admission.secretName." (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName) }}
+        {{- end -}}
     {{/* reusing value of existing cert */}}
 Cert: {{ index $cert.data "tls.crt" }}
 Key: {{ index $cert.data "tls.key" }}
