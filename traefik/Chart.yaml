@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 36.0.0
+version: 36.1.0
 # renovate: image=traefik
 appVersion: v3.4.1
 kubeVersion: ">=1.22.0-0"
@@ -23,10 +23,8 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(notes): update condition to display certificate persistence warning"
-    - "fix(Traefik Proxy): supported `ingressRoute.*.annotations` breaks templating"
-    - "fix(Traefik Proxy)!: strict opt-in on data collection"
-    - "feat(deps): update traefik docker tag to v3.4.1"
-    - "feat(Traefik Hub): add offline flag"
-    - "chore(schema): 🔧 update following latest upstream release"
-    - "chore(release): 🚀 publish v36.0.0"
+    - "fix(schema): 🐛 allow additional properties on `global`"
+    - "fix(chart): update icon link to track upstream master branch"
+    - "fix(Traefik Hub): add strict check on admission cert"
+    - "feat(Traefik Hub): add v3.17 version mapping"
+    - "chore(release): 🚀 publish v36.1.0"
