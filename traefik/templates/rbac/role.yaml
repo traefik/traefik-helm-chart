@@ -181,6 +181,7 @@ rules:
       - apicatalogitems
       - apiaccesses
       - managedsubscriptions
+      - managedapplications
     verbs:
       - get
       - list
