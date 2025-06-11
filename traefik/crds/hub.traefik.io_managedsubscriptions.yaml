@@ -144,6 +144,7 @@ spec:
                 description: |-
                   Applications references the Applications that will gain access to the specified APIs.
                   Multiple ManagedSubscriptions can select the same AppID.
+                  Deprecated: Use ManagedApplications instead.
                 items:
                   description: ApplicationReference references an Application.
                   properties:
@@ -157,12 +158,30 @@ spec:
                   - appId
                   type: object
                 maxItems: 100
-                minItems: 1
                 type: array
               claims:
                 description: Claims specifies an expression that validate claims in
                   order to authorize the request.
                 type: string
+              managedApplications:
+                description: |-
+                  ManagedApplications references the ManagedApplications that will gain access to the specified APIs.
+                  Multiple ManagedSubscriptions can select the same ManagedApplication.
+                items:
+                  description: ManagedApplicationReference references a ManagedApplication.
+                  properties:
+                    name:
+                      description: Name is the name of the ManagedApplication.
+                      maxLength: 253
+                      type: string
+                  required:
+                  - name
+                  type: object
+                maxItems: 100
+                type: array
+                x-kubernetes-validations:
+                - message: duplicated managed applications
+                  rule: self.all(x, self.exists_one(y, x.name == y.name))
               operationFilter:
                 description: |-
                   OperationFilter specifies the allowed operations on APIs and APIVersions.
@@ -188,7 +207,6 @@ spec:
                   rule: self >= 0
             required:
             - apiPlan
-            - applications
             type: object
           status:
             description: The current status of this ManagedSubscription.
