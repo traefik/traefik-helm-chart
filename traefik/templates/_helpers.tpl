@@ -185,7 +185,9 @@ It requires a dict with "Version" and "Hub".
         {{- $hubProxyVersion = "v3.1" }}
      {{- else if semverCompare "<v3.10.2-0" $version -}}
         {{ $hubProxyVersion = "v3.2" }}
-     {{- else if semverCompare "<v3.17.0-0" $version -}}
+     {{- else if semverCompare "<v3.15.3-0" $version -}}
+        {{ $hubProxyVersion = "v3.3" }}
+     {{- else if or (semverCompare "=v3.16.0" $version) (semverCompare "=v3.16.1" $version) -}}
         {{ $hubProxyVersion = "v3.3" }}
      {{- end -}}
    {{- end -}}
