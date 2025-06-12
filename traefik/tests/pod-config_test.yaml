@@ -30,7 +30,7 @@ tests:
           content:
             name: GOMEMLIMIT
             value: "98MiB"
-  - it: should have set GOMEMLIMIT with exponential  memory limit
+  - it: should have set GOMEMLIMIT with exponential memory limit
     set:
       resources:
         limits:
