@@ -867,7 +867,7 @@
           {{- end }}
           {{- if ($.Values.resources.limits).memory }}
           - name: GOMEMLIMIT
-            value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.goMemLimitPercentage) | quote }}
+            value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}
           {{- with .Values.hub.token }}
           - name: HUB_TOKEN
