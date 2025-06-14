@@ -30,6 +30,14 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
+  - it: should have 0 replicas when specified via values
+    set:
+      deployment:
+        replicas: 0
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 0
   - it: should have revisionHistoryLimit with specified value
     set:
       deployment:
