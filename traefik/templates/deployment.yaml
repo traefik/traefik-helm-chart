@@ -35,8 +35,8 @@ metadata:
   {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ default 1 .Values.deployment.replicas }}
+  {{- if and (not .Values.autoscaling.enabled) (not (eq .Values.deployment.replicas nil)) }}
+  replicas: {{ .Values.deployment.replicas }}
   {{- end }}
   {{- if .Values.deployment.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
