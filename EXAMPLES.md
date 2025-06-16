@@ -76,6 +76,46 @@ autoscaling:
         averageUtilization: 80
 ```
 
+# Install with Argo Rollouts
+
+When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
+To do so, `replicas` should be set to `0` and the `Rollout` resource defined in `extraObjects`.
+
+```yaml
+deployment:
+  replicas: 0
+autoscaling:
+	enabled: true
+	minReplicas: 5
+	maxReplicas: 50
+	metrics:
+		- type: Resource
+			resource:
+				name: cpu
+				target:
+					type: Utilization
+					averageUtilization: 80
+	scaleTargetRef:
+		apiVersion: argoproj.io/v1alpha1
+		kind: Rollout
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+    metadata:
+      name: "{{ template \"traefik.fullname\" . }}"
+    spec:
+      workloadRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: "{{ template \"traefik.fullname\" . }}"
+      strategy:
+        canary:
+          steps:
+          - setWeight: 10
+          - pause:
+              duration: 5m
+```
+
 # Access Traefik dashboard without exposing it
 
 This Chart does not expose the Traefik local dashboard by default. It's explained in upstream [documentation](https://doc.traefik.io/traefik/operations/api/) why:
