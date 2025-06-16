@@ -125,6 +125,11 @@
                 "runtimeClassName": {
                     "type": "string"
                 },
+                "goMemLimitPercentage": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 100
+                },
                 "shareProcessNamespace": {
                     "type": "boolean"
                 },
