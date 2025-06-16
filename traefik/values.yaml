@@ -601,7 +601,7 @@ tracing:  # @schema additionalProperties: false
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
 
-global:  # @schema additionalProperties: false
+global:
   checkNewVersion: true
   # -- Please take time to consider whether or not you wish to share anonymous data with us
   # See https://doc.traefik.io/traefik/contributing/data-collection/

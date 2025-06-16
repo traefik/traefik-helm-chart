@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.9.0-rc1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-06-11
+
+* feat(CRDs): update Traefik Hub to v1.20.1
+* chore: release traefik v36.2.0-rc1 and traefik-crds v1.9.0-rc1
+* chore(schema): 🔧 update following latest upstream release
+
+
 ## 1.8.1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-05-23

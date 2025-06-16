@@ -1140,6 +1140,7 @@ tests:
               - apiplans
               - apicatalogitems
               - managedsubscriptions
+              - managedapplications
             verbs:
               - list
               - watch

@@ -177,14 +177,16 @@ It requires a dict with "Version" and "Hub".
 {{- define "traefik.proxyVersionFromHub" -}}
  {{- $version := .Version -}}
  {{- if .Hub -}}
-   {{- $hubProxyVersion := "v3.3" }}
+   {{- $hubProxyVersion := "v3.4" }}
    {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
      {{- if semverCompare "<v3.3.2-0" $version -}}
         {{- $hubProxyVersion = "v3.0" }}
      {{- else if semverCompare "<v3.7.0-0" $version -}}
         {{- $hubProxyVersion = "v3.1" }}
-     {{- else if semverCompare "<v3.11.0-0" $version -}}
+     {{- else if semverCompare "<v3.10.2-0" $version -}}
         {{ $hubProxyVersion = "v3.2" }}
+     {{- else if semverCompare "<v3.17.0-0" $version -}}
+        {{ $hubProxyVersion = "v3.3" }}
      {{- end -}}
    {{- end -}}
    {{ $hubProxyVersion }}
@@ -219,7 +221,10 @@ Key: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls
 Hash: {{ sha1sum (index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt") }}
 {{- else -}}
     {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
-    {{- if $cert -}}
+    {{- if $cert }}
+        {{ if or (not (hasKey $cert.data "tls.crt")) (not (hasKey $cert.data "tls.key")) -}}
+            {{- fail (printf "ERROR: secret %s/%s exists but doesn't contain any certificate data. Please remove it or change hub.apimanagement.admission.secretName." (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName) }}
+        {{- end -}}
     {{/* reusing value of existing cert */}}
 Cert: {{ index $cert.data "tls.crt" }}
 Key: {{ index $cert.data "tls.key" }}

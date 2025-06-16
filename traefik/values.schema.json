@@ -282,8 +282,7 @@
                 "sendAnonymousUsage": {
                     "type": "boolean"
                 }
-            },
-            "additionalProperties": false
+            }
         },
         "hostNetwork": {
             "type": "boolean"
