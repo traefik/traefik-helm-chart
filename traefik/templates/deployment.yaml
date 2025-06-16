@@ -37,6 +37,14 @@ metadata:
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ default 1 .Values.deployment.replicas }}
+  {{- else if and
+    .Values.autoscaling.scaleTargetRef
+    (not (and
+      (eq .Values.autoscaling.scaleTargetRef.apiVersion "apps/v1")
+      (eq .Values.autoscaling.scaleTargetRef.kind "Deployment")
+    ))
+  }}
+  replicas: {{ default 0 .Values.deployment.replicas }}
   {{- end }}
   {{- if .Values.deployment.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}

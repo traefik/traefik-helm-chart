@@ -30,6 +30,53 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
+  - it: should not have replicas when autoscaling is enabled
+    set:
+      autoscaling:
+        enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+  - it: should not have replicas when autoscaling is enabled for the deployment
+    set:
+      autoscaling:
+        enabled: true
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: Deployment
+          name: '{{ template "traefik.fullname" . }}'
+    asserts:
+      - notExists:
+          path: spec.replicas
+  - it: should have replicas when autoscaling is enabled for another resource
+    set:
+      deployment:
+        replicas: null
+      autoscaling:
+        enabled: true
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: StatefulSet
+          name: 'another-resource'
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 0
+  - it: should have specified replicas when autoscaling is enabled for another resource
+    set:
+      deployment:
+        replicas: 5
+      autoscaling:
+        enabled: true
+        scaleTargetRef:
+          apiVersion: apps/v1
+          kind: StatefulSet
+          name: 'another-resource'
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 5
+
   - it: should have revisionHistoryLimit with specified value
     set:
       deployment:
