@@ -832,7 +832,7 @@ autoscaling:  # @schema additionalProperties: false
   # -- minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod.
   minReplicas:  # @schema type:[integer, null]; minimum:0
   # -- maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
-  maxReplicas: # @schema type:[integer, null]; minimum:0
+  maxReplicas:  # @schema type:[integer, null]; minimum:0
   # -- metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).
   metrics: []
   # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).
