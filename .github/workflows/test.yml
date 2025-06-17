@@ -26,7 +26,7 @@ jobs:
       - name: Check traefik if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v2
         with:
-          input: traefik/values.yaml
+          values: traefik/values.yaml
           output: traefik/values.schema.json
           id: "https://traefik.io/traefik-helm-chart.schema.json"
           title: "Traefik Proxy Helm Chart"
@@ -37,7 +37,7 @@ jobs:
       - name: Check traefik-crds if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v2
         with:
-          input: traefik-crds/values.yaml
+          values: traefik-crds/values.yaml
           output: traefik-crds/values.schema.json
           id: "https://traefik.io/traefik-crds-helm-chart.schema.json"
           title: "Traefik CRDs Helm Chart"
