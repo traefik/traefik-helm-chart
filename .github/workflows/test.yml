@@ -30,7 +30,7 @@ jobs:
           fail-on-diff: true
 
       - name: Check traefik-crds if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@v1
+        uses: losisin/helm-values-schema-json-action@v2
         with:
           working-directory: traefik-crds
           fail-on-diff: true
