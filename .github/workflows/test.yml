@@ -26,26 +26,24 @@ jobs:
       - name: Check traefik if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v2
         with:
-          values: traefik/values.yaml
+          input: traefik/values.yaml
           output: traefik/values.schema.json
           id: "https://traefik.io/traefik-helm-chart.schema.json"
           title: "Traefik Proxy Helm Chart"
           description: "The Cloud Native Application Proxy"
           additionalProperties: true
           fail-on-diff: true
-          working-directory: traefik/
 
       - name: Check traefik-crds if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@v1
         with:
-          values: traefik-crds/values.yaml
+          input: traefik-crds/values.yaml
           output: traefik-crds/values.schema.json
           id: "https://traefik.io/traefik-crds-helm-chart.schema.json"
           title: "Traefik CRDs Helm Chart"
           description: "The Cloud Native Application Proxy"
           additionalProperties: false
           fail-on-diff: true
-          working-directory: traefik-crds/
 
       - name: Lint Chart
         run: make lint
