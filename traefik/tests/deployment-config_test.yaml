@@ -76,7 +76,6 @@ tests:
       - equal:
           path: spec.replicas
           value: 5
-
   - it: should have revisionHistoryLimit with specified value
     set:
       deployment:
