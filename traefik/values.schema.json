@@ -17,10 +17,45 @@
         "autoscaling": {
             "type": "object",
             "properties": {
+                "behavior": {
+                    "type": "object"
+                },
                 "enabled": {
                     "type": "boolean"
+                },
+                "maxReplicas": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "minimum": 0
+                },
+                "metrics": {
+                    "type": "array"
+                },
+                "minReplicas": {
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "minimum": 0
+                },
+                "scaleTargetRef": {
+                    "type": "object",
+                    "properties": {
+                        "apiVersion": {
+                            "type": "string"
+                        },
+                        "kind": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        }
+                    }
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "certificatesResolvers": {
             "type": "object"
@@ -294,6 +329,21 @@
                 "namespaces"
             ],
             "properties": {
+                "aigateway": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "maxRequestBodySize": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 0
+                        }
+                    }
+                },
                 "apimanagement": {
                     "type": "object",
                     "properties": {
@@ -324,14 +374,6 @@
                                     "type": "boolean"
                                 }
                             }
-                        }
-                    }
-                },
-                "experimental": {
-                    "type": "object",
-                    "properties": {
-                        "aigateway": {
-                            "type": "boolean"
                         }
                     }
                 },

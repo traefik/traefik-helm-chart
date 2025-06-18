@@ -806,8 +806,13 @@
               {{- end }}
              {{- end }}
             {{- end }}
-            {{- if .experimental.aigateway }}
-          - "--hub.experimental.aigateway"
+            {{- with .aigateway }}
+             {{- if .enabled }}
+          - "--hub.aigateway"
+              {{- with .maxRequestBodySize }}
+          - "--hub.aigateway.maxRequestBodySize={{ . | int }}"
+              {{- end }}
+             {{- end }}
             {{- end -}}
             {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"

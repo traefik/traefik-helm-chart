@@ -1,4 +1,4 @@
-suite: Deployment configuration
+suite: Traefik Hub API Gateway configuration
 templates:
   - deployment.yaml
 set:
@@ -101,7 +101,7 @@ tests:
           content: "--hub.apimanagement"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.experimental.aigateway"
+          content: "--hub.aigateway"
   - it: should be possible to specify platformUrl
     set:
       hub:
@@ -189,15 +189,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.sendlogs=false"
-  - it: should be possible to enable AI Gateway
-    set:
-      hub:
-        experimental:
-          aigateway: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.experimental.aigateway"
 
   - it: should be possible to specify namespaces to watch
     set:

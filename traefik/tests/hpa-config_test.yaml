@@ -37,3 +37,22 @@ tests:
           path: spec.metrics
       - isNull:
           path: spec.behavior
+  - it: should be possible to use ArgoCD rollout
+    set:
+      autoscaling:
+        enabled: true
+        maxReplicas: 2
+        scaleTargetRef:
+          apiVersion: argoproj.io/v1alpha1
+          kind: Rollout
+          name: "{{ template \"traefik.fullname\" . }}"
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef.apiVersion
+          value: argoproj.io/v1alpha1
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Rollout
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-traefik
