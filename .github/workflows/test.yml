@@ -24,7 +24,7 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Check traefik if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@v1
+        uses: losisin/helm-values-schema-json-action@v2
         with:
           input: traefik/values.yaml
           output: traefik/values.schema.json

@@ -1,5 +1,5 @@
 # Required
-input:
+values:
   - values.yaml
 
 draft: 2020

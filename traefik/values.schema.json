@@ -69,6 +69,7 @@
                     "minimum": 0
                 },
                 "healthchecksScheme": {
+                    "default": "HTTP",
                     "type": [
                         "string",
                         "null"
@@ -774,6 +775,7 @@
                                     "type": "object",
                                     "properties": {
                                         "defaultmode": {
+                                            "default": "keep",
                                             "type": "string",
                                             "enum": [
                                                 "keep",
@@ -790,6 +792,7 @@
                                     "type": "object",
                                     "properties": {
                                         "defaultmode": {
+                                            "default": "drop",
                                             "type": "string",
                                             "enum": [
                                                 "keep",
