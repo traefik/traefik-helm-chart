@@ -7,7 +7,7 @@ deployment:
   kind: DaemonSet
 ```
 
-# Configure traefik Pod parameters
+# Configure Traefik Pod parameters
 
 ## Extending /etc/hosts records
 
@@ -1127,4 +1127,17 @@ deployment:
     - hostPath:
         path: /var/run/datadog/
       name: ddsocketdir
+```
+
+
+# Use Traefik Hub AI Gateway
+
+This example demonstrates how to enable AI Gateway in Traefik Hub and set a maxRequestBodySize of 10 MiB.
+
+```yaml
+hub:
+  token: # <=== Set your token here
+  aigateway:
+    enabled: true
+    maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
