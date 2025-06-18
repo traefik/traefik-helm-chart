@@ -990,9 +990,11 @@ hub:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false
 
-  experimental:
+  aigateway:
     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
-    aigateway: false
+    enabled: false
+    # -- Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
+    maxRequestBodySize:  # @schema type:[integer, null]; minimum:0
   providers:
     consulCatalogEnterprise:
       # -- Enable Consul Catalog Enterprise backend with default settings.

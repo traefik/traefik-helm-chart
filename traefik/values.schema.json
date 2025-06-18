@@ -328,6 +328,21 @@
                 "namespaces"
             ],
             "properties": {
+                "aigateway": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "maxRequestBodySize": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 0
+                        }
+                    }
+                },
                 "apimanagement": {
                     "type": "object",
                     "properties": {
@@ -358,14 +373,6 @@
                                     "type": "boolean"
                                 }
                             }
-                        }
-                    }
-                },
-                "experimental": {
-                    "type": "object",
-                    "properties": {
-                        "aigateway": {
-                            "type": "boolean"
                         }
                     }
                 },
