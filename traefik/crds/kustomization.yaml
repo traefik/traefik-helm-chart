@@ -5,15 +5,17 @@ resources:
   # curl -o gateway-standard-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.2.1/standard-install.yaml
   - gateway-standard-install.yaml
   - hub.traefik.io_accesscontrolpolicies.yaml
+  - hub.traefik.io_aiservices.yaml
+  - hub.traefik.io_apibundles.yaml
   - hub.traefik.io_apicatalogitems.yaml
-  - hub.traefik.io_managedsubscriptions.yaml
+  - hub.traefik.io_apiplans.yaml
   - hub.traefik.io_apiportals.yaml
   - hub.traefik.io_apiratelimits.yaml
   - hub.traefik.io_apis.yaml
   - hub.traefik.io_apiversions.yaml
-  - hub.traefik.io_apiplans.yaml
-  - hub.traefik.io_apibundles.yaml
-  - hub.traefik.io_aiservices.yaml
+  - hub.traefik.io_managedapplications.yaml
+  - hub.traefik.io_managedsubscriptions.yaml
+  - kustomization.yaml
   - traefik.io_ingressroutes.yaml
   - traefik.io_ingressroutetcps.yaml
   - traefik.io_ingressrouteudps.yaml
