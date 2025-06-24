@@ -39,10 +39,7 @@ jobs:
         run: make lint
 
       - name: Test Chart
-        run: |
-          echo "essai\$1"
-          echo 'essai${{ github.ref }}$2'
-          make test
+        run: make test
 
       - name: Test overrideNamespace
         run: make test-ns
