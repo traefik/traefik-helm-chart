@@ -85,19 +85,19 @@ In order to delegate replica management, `deployment.replicas` should be set to 
 deployment:
   replicas: 0
 autoscaling:
-	enabled: true
-	minReplicas: 5
-	maxReplicas: 50
-	metrics:
-		- type: Resource
-			resource:
-				name: cpu
-				target:
-					type: Utilization
-					averageUtilization: 80
-	scaleTargetRef:
-		apiVersion: argoproj.io/v1alpha1
-		kind: Rollout
+  enabled: true
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+  scaleTargetRef:
+    apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
 extraObjects:
   - apiVersion: argoproj.io/v1alpha1
     kind: Rollout
