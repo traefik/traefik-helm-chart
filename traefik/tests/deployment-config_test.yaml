@@ -48,7 +48,7 @@ tests:
     asserts:
       - notExists:
           path: spec.replicas
-  - it: should have replicas when autoscaling is enabled for another resource
+  - it: should have zero replicas by default when autoscaling is enabled for another resource
     set:
       deployment:
         replicas: null
