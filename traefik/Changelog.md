@@ -1,5 +1,64 @@
 # Change Log
 
+## 36.2.0  ![AppVersion: v3.4.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-06-23
+
+* fix(CRDs): :bug: kustomization file for CRDs
+* feat(hub): ✨ initial support for AI Gateway
+* feat(hub): update version mapping with Proxy v3.4
+* feat(hpa): ✨ customizable scaleTargetRef
+* chore(schema): update linter
+* chore(release): 🚀 publish v36.2.0 and CRDs v1.9.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c6daa8d..25a47a9 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -825,10 +825,23 @@ service:
+   #   # externalIPs: []
+   #   # ipFamilies: [ "IPv4","IPv6" ]
+ 
+-autoscaling:
++autoscaling:  # @schema additionalProperties: false
+   # -- Create HorizontalPodAutoscaler object.
+   # See EXAMPLES.md for more details.
+   enabled: false
++  # -- minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod.
++  minReplicas:  # @schema type:[integer, null]; minimum:0
++  # -- maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
++  maxReplicas:  # @schema type:[integer, null]; minimum:0
++  # -- metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).
++  metrics: []
++  # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).
++  behavior: {}
++  # -- scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics should be collected, as well as to actually change the replica count.
++  scaleTargetRef:
++    apiVersion: apps/v1
++    kind: Deployment
++    name: "{{ template \"traefik.fullname\" . }}"
+ 
+ persistence:
+   # -- Enable persistence using Persistent Volume Claims
+@@ -977,9 +990,11 @@ hub:
+       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+       validateRequestMethodAndPath: false
+ 
+-  experimental:
++  aigateway:
+     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+-    aigateway: false
++    enabled: false
++    # -- Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
++    maxRequestBodySize:  # @schema type:[integer, null]; minimum:0
+   providers:
+     consulCatalogEnterprise:
+       # -- Enable Consul Catalog Enterprise backend with default settings.
+```
+
 ## 36.2.0-rc1  ![AppVersion: v3.4.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-06-11

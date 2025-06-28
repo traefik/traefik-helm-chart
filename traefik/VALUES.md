@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 36.2.0-rc1](https://img.shields.io/badge/Version-36.2.0--rc1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.1](https://img.shields.io/badge/AppVersion-v3.4.1-informational?style=flat-square)
+![Version: 36.2.0](https://img.shields.io/badge/Version-36.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.3](https://img.shields.io/badge/AppVersion-v3.4.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -30,7 +30,12 @@ Kubernetes: `>=1.22.0-0`
 | additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
+| autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
+| autoscaling.maxReplicas | string | `nil` | maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas. |
+| autoscaling.metrics | list | `[]` | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used). |
+| autoscaling.minReplicas | string | `nil` | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod. |
+| autoscaling.scaleTargetRef | object | `{"apiVersion":"apps/v1","kind":"Deployment","name":"{{ template \"traefik.fullname\" . }}"}` | scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics should be collected, as well as to actually change the replica count. |
 | certificatesResolvers | object | `{}` | Certificates resolvers configuration. Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers See EXAMPLES.md for more details. |
 | commonLabels | object | `{}` | Add additional label to all resources |
 | core.defaultRuleSyntax | string | `""` | Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
@@ -84,13 +89,14 @@ Kubernetes: `>=1.22.0-0`
 | global.checkNewVersion | bool | `true` |  |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
+| hub.aigateway.enabled | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
+| hub.aigateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.apimanagement.admission.customWebhookCertificate | object | `{}` | Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding. |
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.restartOnCertificateChange | bool | `true` | Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update. |
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
-| hub.experimental.aigateway | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | hub.offline | bool | `false` | Disables all external network connections. |
 | hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |

@@ -7,7 +7,7 @@ deployment:
   kind: DaemonSet
 ```
 
-# Configure traefik Pod parameters
+# Configure Traefik Pod parameters
 
 ## Extending /etc/hosts records
 
@@ -74,6 +74,46 @@ autoscaling:
       target:
         type: Utilization
         averageUtilization: 80
+```
+
+# Install with Argo Rollouts
+
+When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
+In order to delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
+
+```yaml
+deployment:
+  replicas: 0
+autoscaling:
+  enabled: true
+  minReplicas: 5
+  maxReplicas: 50
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80
+  scaleTargetRef:
+    apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+extraObjects:
+  - apiVersion: argoproj.io/v1alpha1
+    kind: Rollout
+    metadata:
+      name: "{{ template \"traefik.fullname\" . }}"
+    spec:
+      workloadRef:
+        apiVersion: apps/v1
+        kind: Deployment
+        name: "{{ template \"traefik.fullname\" . }}"
+      strategy:
+        canary:
+          steps:
+          - setWeight: 10
+          - pause:
+              duration: 5m
 ```
 
 # Access Traefik dashboard without exposing it
@@ -1127,4 +1167,17 @@ deployment:
     - hostPath:
         path: /var/run/datadog/
       name: ddsocketdir
+```
+
+
+# Use Traefik Hub AI Gateway
+
+This example demonstrates how to enable AI Gateway in Traefik Hub and set a maxRequestBodySize of 10 MiB.
+
+```yaml
+hub:
+  token: # <=== Set your token here
+  aigateway:
+    enabled: true
+    maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```

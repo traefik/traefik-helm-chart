@@ -46,7 +46,7 @@ jobs:
         id: tag_exists
         run: |
           TAG_EXISTS=false
-          if git tag -l | grep "${{ env.tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}" > /dev/null ; then
+          if git tag -l | grep '^${{ env.tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}$' > /dev/null ; then
               TAG_EXISTS=true
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT
@@ -163,7 +163,7 @@ jobs:
         id: tag_exists
         run: |
           TAG_EXISTS=false
-          if git tag -l | grep "${{ env.crds_tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}" > /dev/null ; then
+          if git tag -l | grep '^${{ env.crds_tag_prefix }}${{ steps.chart_version.outputs.CHART_VERSION }}$' > /dev/null ; then
               TAG_EXISTS=true
           fi
           echo TAG_EXISTS=$TAG_EXISTS >> $GITHUB_OUTPUT

@@ -1,0 +1,23 @@
+suite: Traefik Hub AI Gateway configuration
+templates:
+  - deployment.yaml
+set:
+  hub:
+    token: "xxx"
+    aigateway:
+      enabled: true
+tests:
+  - it: should be possible to enable AI Gateway
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.aigateway"
+  - it: should be possible to set optional AI Gateway settings
+    set:
+      hub:
+        aigateway:
+          maxRequestBodySize: 104857600
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.aigateway.maxRequestBodySize=104857600"
