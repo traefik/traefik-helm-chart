@@ -29,7 +29,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "98MiB"
+            value: "110MiB"
   - it: should have set GOMEMLIMIT with exponential memory limit
     set:
       resources:
@@ -40,7 +40,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "98MiB"
+            value: "110MiB"
   - it: should have set GOMEMLIMIT with SI memory limit
     set:
       resources:
@@ -51,7 +51,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "98MiB"
+            value: "110MiB"
   - it: should have set GOMEMLIMIT SI (small unit) with memory limit
     set:
       resources:
@@ -62,7 +62,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "98MiB"
+            value: "110MiB"
   - it: should have set GOMEMLIMIT with IEC memory limit
     set:
       resources:
@@ -73,7 +73,7 @@ tests:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            value: "98MiB"
+            value: "110MiB"
   - it: should have not set GOMAXPROCS without cpu limit
     asserts:
       - notEqual:
