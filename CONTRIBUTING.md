@@ -118,6 +118,27 @@ Several implementations have been experimented. Here are pros and cons of each:
 
 Consequently, we chose the last option, until the situation evolve on Helm side.
 
+# Release process
+
+```bash
+VERSION=
+# Checkout new branch
+git checkout -b rel/$VERSION
+# Update version in Chart.yaml
+sed -i -e "s/^version: .*\$/version: $VERSION/g" traefik/Chart.yaml
+# Commit the updated Chart.yaml
+git commit -m "chore(release): publish $VERSION" traefik/Chart.yaml
+# Generate first version of Changelog
+make changelog
+make docs
+# Copy the Changelog for current version, and put it on a clean version
+git checkout traefik/Chart.yaml
+# Amend the commit and open the PR
+git commit --amend traefik/Changelog.md traefik/Chart.yaml traefik/VALUES.md
+git push -u origin HEAD
+gh pr create -l kind/release
+```
+
 # Statistics
 
 Once a year, [monocle](https://github.com/change-metrics/monocle) is used to gather statistics on this project.
