@@ -16,7 +16,7 @@ Please read the [testing guidelines](./TESTING.md) to learn how testing is done 
 According to the Traefik HelmChart [philosophy](./README.md#philosophy),
 the guidelines for future evolutions are:
 
-- Fix bugs
+* Fix bugs
 * improve security
 * improve HelmChart support
 * improve Kubernetes features support
@@ -24,10 +24,10 @@ the guidelines for future evolutions are:
 
 While encouraging contributions, the philosophy leads to avoid introducing:
 
-- Specific use cases
-- Third party CRD
-- Dashboard exposition tuning
-- Helm chart variables that shortcuts/expose static or dynamic Traefik configuration
+* Specific use cases
+* Third party CRD
+* Dashboard exposition tuning
+* Helm chart variables that shortcuts/expose static or dynamic Traefik configuration
 
 ## Commit messages
 
@@ -35,8 +35,8 @@ Commits messages should follow [conventional commits](https://www.conventionalco
 
 All commits will appear in traefik helm chart changelog with two exceptions:
 
-- CRDs: CRDs are shared between Traefik and CRDs charts, thus, commits with this scope will appear in both charts changelog (e.g. `feat(CRDs): update Traefik Proxy CRDs to v3.x`)
-- CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values): update values documentation`)   
+* CRDs: CRDs are shared between Traefik and CRDs charts, thus, commits with this scope will appear in both charts changelog (e.g. `feat(CRDs): update Traefik Proxy CRDs to v3.x`)
+* CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values): update values documentation`)
 
 ## About CRDs
 
@@ -118,7 +118,7 @@ Several implementations have been experimented. Here are pros and cons of each:
 
 Consequently, we chose the last option, until the situation evolve on Helm side.
 
-# Statistics
+## Statistics
 
 Once a year, [monocle](https://github.com/change-metrics/monocle) is used to gather statistics on this project.
 

@@ -1,4 +1,6 @@
-# Install as a DaemonSet
+# EXAMPLES
+
+## Install as a DaemonSet
 
 Default install is using a `Deployment` but it's possible to use `DaemonSet`
 
@@ -7,9 +9,9 @@ deployment:
   kind: DaemonSet
 ```
 
-# Configure Traefik Pod parameters
+## Configure Traefik Pod parameters
 
-## Extending /etc/hosts records
+### Extending /etc/hosts records
 
 In some specific cases, you'll need to add extra records to the `/etc/hosts` file for the Traefik containers.
 You can configure it using [hostAliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/):
@@ -22,6 +24,7 @@ deployment:
      - "foo.local"
      - "bar.local"
 ```
+
 ## Extending DNS config
 
 In order to configure additional DNS servers for your traefik pod, you can use `dnsConfig` option:
@@ -40,7 +43,7 @@ deployment:
       - name: edns0
 ```
 
-# Install in a dedicated namespace, with limited RBAC
+## Install in a dedicated namespace, with limited RBAC
 
 Default install is using Cluster-wide RBAC but it can be restricted to target namespace.
 
@@ -49,7 +52,7 @@ rbac:
   namespaced: true
 ```
 
-# Install with auto-scaling
+## Install with auto-scaling
 
 When enabling [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
 to adjust replicas count according to CPU Usage, you'll need to set resources and nullify replicas.
@@ -76,7 +79,7 @@ autoscaling:
         averageUtilization: 80
 ```
 
-# Install with Argo Rollouts
+## Install with Argo Rollouts
 
 When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
 In order to delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
@@ -116,7 +119,7 @@ extraObjects:
               duration: 5m
 ```
 
-# Access Traefik dashboard without exposing it
+## Access Traefik dashboard without exposing it
 
 This Chart does not expose the Traefik local dashboard by default. It's explained in upstream [documentation](https://doc.traefik.io/traefik/operations/api/) why:
 
@@ -141,12 +144,12 @@ NAMESPACE=traefik
 kubectl port-forward $(kubectl get pods --selector "app.kubernetes.io/name=traefik" --output=name -n $NAMESPACE) 8080:8080 -n $NAMESPACE
 ```
 
-This command makes the dashboard accessible through the URL: http://127.0.0.1:8080/dashboard/
+This command makes the dashboard accessible locally on [127.0.0.1:8080/dashboard/](http://127.0.0.1:8080/dashboard/)
 
 > [!IMPORTANT]
 > Note that the slash is required.
 
-# Redirect permanently traffic from http to https
+## Redirect permanently traffic from http to https
 
 It's possible to redirect all incoming requests on an entrypoint to an other entrypoint.
 
@@ -160,7 +163,7 @@ ports:
         permanent: true
 ```
 
-# Publish and protect Traefik Dashboard with basic Auth
+## Publish and protect Traefik Dashboard with basic Auth
 
 To expose the dashboard in a secure way as [recommended](https://doc.traefik.io/traefik/operations/dashboard/#dashboard-router-rule)
 in the documentation, it may be useful to override the router rule to specify
@@ -200,13 +203,14 @@ extraObjects:
         secret: traefik-dashboard-auth-secret
 ```
 
-# Publish and protect Traefik Dashboard with an Ingress
+## Publish and protect Traefik Dashboard with an Ingress
 
 To expose the dashboard without IngressRoute, it's more complicated and less
 secure. You'll need to create an internal Service exposing Traefik API with
 special _traefik_ entrypoint. This internal Service can be created from an other tool, with the `extraObjects` section or using [custom services](#add-custom-internal-services).
 
 You'll need to double check:
+
 1. Service selector with your setup.
 2. Middleware annotation on the ingress, _default_ should be replaced with traefik's namespace
 
@@ -272,8 +276,7 @@ extraObjects:
                   name: traefik
 ```
 
-
-# Install on AWS
+## Install on AWS
 
 It can use [native AWS support](https://kubernetes.io/docs/concepts/services-networking/service/#aws-nlb-support) on Kubernetes
 
@@ -284,15 +287,17 @@ service:
 ```
 
 Or if [AWS LB controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.2/guide/service/annotations/#legacy-cloud-provider) is installed :
+
 ```yaml
 service:
   annotations:
     service.beta.kubernetes.io/aws-load-balancer-type: nlb-ip
 ```
 
-# Install on GCP
+## Install on GCP
 
 A [regional IP with a Service](https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip#use_a_service) can be used
+
 ```yaml
 service:
   spec:
@@ -300,6 +305,7 @@ service:
 ```
 
 Or a [global IP on Ingress](https://cloud.google.com/kubernetes-engine/docs/tutorials/configuring-domain-name-static-ip#use_an_ingress)
+
 ```yaml
 service:
   type: NodePort
@@ -371,7 +377,7 @@ extraObjects:
       name: traefik
 ```
 
-# Install on Azure
+## Install on Azure
 
 A [static IP on a resource group](https://learn.microsoft.com/en-us/azure/aks/static-ip) can be used:
 
@@ -442,7 +448,7 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
-# Use an IngressClass
+## Use an IngressClass
 
 Default install comes with an `IngressClass` resource that can be enabled on providers.
 
@@ -458,7 +464,7 @@ providers:
     ingressClass: traefik
 ```
 
-# Use HTTP3
+## Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
 entrypoint. They are available since v1.20 and in beta as of Kubernetes v1.24.
@@ -486,7 +492,7 @@ service:
   single: false
 ```
 
-# Use PROXY protocol on Digital Ocean
+## Use PROXY protocol on Digital Ocean
 
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
 
@@ -522,7 +528,7 @@ ports:
       trustedIPs: *DOTrustedIPs
 ```
 
-# Using plugins
+## Using plugins
 
 This chart follows common security practices: it runs as non-root with a readonly root filesystem.
 When enabling a plugin, this Chart provides by default an `emptyDir` for plugin storage.
@@ -561,7 +567,7 @@ extraObjects:
           storage: 1Gi
 ```
 
-# Use Traefik native Let's Encrypt integration, without cert-manager
+## Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.
 
@@ -640,7 +646,7 @@ podSecurityContext:
 >[!NOTE]
 > With [Traefik Hub](https://traefik.io/traefik-hub/), certificates can be stored as a `Secret` on Kubernetes with `distributedAcme` resolver.
 
-# Provide default certificate with cert-manager and CloudFlare DNS
+## Provide default certificate with cert-manager and CloudFlare DNS
 
 Setup:
 
@@ -736,7 +742,7 @@ spec:
       port: 80
 ```
 
-# Add custom (internal) services
+## Add custom (internal) services
 
 In some cases you might want to have more than one Traefik service within your cluster,
 e.g. a default (external) one and a service that is only exposed internally to pods within your cluster.
@@ -789,10 +795,10 @@ spec:
     protocol: TCP
 ```
 
-# Use this Chart as a dependency of your own chart
-
+## Use this Chart as a dependency of your own chart
 
 First, let's create a default Helm Chart, with Traefik as a dependency.
+
 ```bash
 helm create foo
 cd foo
@@ -816,6 +822,7 @@ EOF
 ```
 
 Third, one can see if it works as expected:
+
 ```bash
 helm dependency update
 helm dependency build
@@ -845,7 +852,7 @@ spec:
   maxReplicas: 3
 ```
 
-# Configure TLS
+## Configure TLS
 
 The [TLS options](https://doc.traefik.io/traefik/https/tls/#tls-options) allow one to configure some parameters of the TLS connection.
 
@@ -861,7 +868,7 @@ tlsOptions:
       - CurveP384
 ```
 
-# Use latest build of Traefik v3 from master
+## Use latest build of Traefik v3 from master
 
 An experimental build of Traefik Proxy is available on a specific community repository: `traefik/traefik`.
 
@@ -874,7 +881,7 @@ image:
 versionOverride: v3.4
 ```
 
-# Use Prometheus Operator
+## Use Prometheus Operator
 
 An optional support of this operator is included in this Chart. See documentation of this operator for more details.
 
@@ -921,7 +928,7 @@ metrics:
             description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 ```
 
-# Use kubernetes Gateway API
+## Use kubernetes Gateway API
 
 One can use the new stable kubernetes gateway API provider setting the following _values_:
 
@@ -989,13 +996,13 @@ spec:
           weight: 1
 ```
 
-Once it's applied, whoami should be accessible on http://whoami.docker.localhost/
+Once it's applied, whoami should be accessible on [whoami.docker.localhost](http://whoami.docker.localhost/)
 
 </details>
 
 :information_source: In this example, `Deployment` and `HTTPRoute` should be deployed in the same namespace as the Traefik Gateway: Chart namespace.
 
-# Use Kubernetes Gateway API with cert-manager
+## Use Kubernetes Gateway API with cert-manager
 
 One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
 
@@ -1095,11 +1102,11 @@ spec:
   selfSigned: {}
 ```
 
-Once it's applied, whoami should be accessible on https://whoami.docker.localhost/
+Once it's applied, whoami should be accessible on https://whoami.docker.localhost
 
 </details>
 
-# Use templating for additionalVolumeMounts
+## Use templating for additionalVolumeMounts
 
 This example demonstrates how to use templating for the `additionalVolumeMounts` configuration to dynamically set the `subPath` parameter based on a variable.
 
@@ -1118,7 +1125,7 @@ pluginVersion: "v1.2.3"
 
 This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.
 
-# Use a custom certificate for Traefik Hub webhooks
+## Use a custom certificate for Traefik Hub webhooks
 
 Some CD tools may regenerate Traefik Hub mutating webhooks continuously, when using helm template.
 This example demonstrates how to generate and use a custom certificate for Hub admission webhooks.
@@ -1146,11 +1153,13 @@ hub:
 
 > [!TIP]
 > When using the CLI, those parameters need to be escaped like this:
->```bash 
+>
+>```bash
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
 >```
-# Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
+
+## Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
 This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
 
@@ -1169,8 +1178,7 @@ deployment:
       name: ddsocketdir
 ```
 
-
-# Use Traefik Hub AI Gateway
+## Use Traefik Hub AI Gateway
 
 This example demonstrates how to enable AI Gateway in Traefik Hub and set a maxRequestBodySize of 10 MiB.
 

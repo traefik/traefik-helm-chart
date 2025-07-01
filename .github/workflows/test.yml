@@ -71,6 +71,11 @@ jobs:
           set -e
           exit 0
 
+      - name: Lint docs
+        run: |
+          npm install markdownlint-cli@0.44.0 --global
+          markdownlint "EXAMPLES.md" "README.md" "CONTRIBUTING.md"
+
       - name: Create kind cluster
         if: steps.check.outputs.release
         uses: helm/kind-action@v1.12.0

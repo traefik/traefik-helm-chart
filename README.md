@@ -28,13 +28,14 @@ Helm chart [as a subchart](https://helm.sh/docs/chart_template_guide/subcharts_a
 Starting with v28.x, this chart now bootstraps Traefik Proxy version 3 as a Kubernetes ingress controller,
 using Custom Resources [`IngressRoute`](https://doc.traefik.io/traefik/v3.0/routing/providers/kubernetes-crd/).
 For upgrading from chart versions prior to v28.x (using Traefik Proxy version 2), see
+
 - [Migration guide from v2 to v3](https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/)
 - upgrade notes in the [`README` on the v27 branch](https://github.com/traefik/traefik-helm-chart/tree/v27).
 
 Starting with v34.x, to work
 around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations),
 it's possible to use an additional Chart dedicated to CRDs: **traefik-crds**.
-See also the [deploy instructions below](#an-installation-with-additional-crds-chart).
+See also the [deploy instructions below](#with-additional-crds-chart).
 
 ### Support for Traefik Proxy v2
 
@@ -120,9 +121,11 @@ helm upgrade traefik traefik/traefik
 # Update repository
 helm repo update
 # Update CRDs ownership
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
+kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | \
+  xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
 # If you use gateway API, you might also want to change Gateway API ownership
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
+kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | \
+  xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
 # Deploy optional CRDs chart
 helm install traefik-crds traefik/traefik-crds
 # Upgrade Traefik
@@ -149,5 +152,5 @@ If you want to contribute to this chart, please read the [Contributing Guide](./
 Thanks to all the people who have already contributed!
 
 <a href="https://github.com/traefik/traefik-helm-chart/graphs/contributors">
-  <img src="https://contributors-img.web.app/image?repo=traefik/traefik-helm-chart" />
+  <img src="https://contributors-img.web.app/image?repo=traefik/traefik-helm-chart" alt="Contributors"/>
 </a>
