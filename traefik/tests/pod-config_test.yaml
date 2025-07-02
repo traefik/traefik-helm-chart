@@ -19,26 +19,67 @@ tests:
               resourceFieldRef:
                 resource: limits.cpu
                 divisor: "1"
-  - it: should have set GOMEMLIMIT with cpu limit
+  - it: should have set GOMEMLIMIT with bytes memory limit
     set:
       resources:
         limits:
-          memory: "4"
+          memory: "128974848"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
             name: GOMEMLIMIT
-            valueFrom:
-              resourceFieldRef:
-                resource: limits.memory
-                divisor: "1"
+            value: "110MiB"
+  - it: should have set GOMEMLIMIT with exponential memory limit
+    set:
+      resources:
+        limits:
+          memory: "129e6"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "110MiB"
+  - it: should have set GOMEMLIMIT with SI memory limit
+    set:
+      resources:
+        limits:
+          memory: "129M"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "110MiB"
+  - it: should have set GOMEMLIMIT SI (small unit) with memory limit
+    set:
+      resources:
+        limits:
+          memory: "128974848000m"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "110MiB"
+  - it: should have set GOMEMLIMIT with IEC memory limit
+    set:
+      resources:
+        limits:
+          memory: "123Mi"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+            value: "110MiB"
   - it: should have not set GOMAXPROCS without cpu limit
     asserts:
       - notEqual:
           path: spec.template.spec.containers[0].env[0].name
           value: GOMAXPROCS
-  - it: should have not set GOMEMLIMIT without cpu limit
+  - it: should have not set GOMEMLIMIT without memory limit
     asserts:
       - notEqual:
           path: spec.template.spec.containers[0].env[0].name
