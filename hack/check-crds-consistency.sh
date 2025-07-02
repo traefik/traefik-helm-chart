@@ -1,53 +1,39 @@
 #!/bin/bash
 
-# check consistency of CRDs with kustomization.yaml files
-dirpairs=(
-  "traefik/crds:traefik/crds/kustomization.yaml"
-  "traefik-crds/crds-files:traefik-crds/kustomization.yaml"
-)
+function build_ks() {
+  kustomize build "${1}"
+}
 
-for pair in "${dirpairs[@]}"; do
-  crddir="${pair%%:*}"
-  kustom="${pair##*:}"
+function build_ks_file_from_files() {
+  pushd .
+  cd "${1}" && cat <<EOF
+---
+kind: Kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+resources:
+$(find . -name '*.yaml' -not -name 'kustomization.yaml' -exec basename {} \; | sort | xargs -I {} echo "  - {}")
+EOF
+  popd || true
+}
 
-  if [ ! -f "$kustom" ]; then
-    echo "⚠️  Kustomization file not found in $crddir, skipping..."
-    continue
-  fi
+function sanitize_ks() {
+  grep -v '#' "${1}/kustomization.yaml" | sed -r 's/crds-files\/(gatewayAPI|hub|traefik)\///g'
+}
 
-  dircrd=$(mktemp)
-  kustomcrd=$(mktemp)
+gen_ks_traefik=$(mktemp -d)
+gen_ks_traefikcrds=$(mktemp -d)
+build_ks traefik/crds/ >"${gen_ks_traefik}/crds.yaml"
+build_ks traefik-crds/ >"${gen_ks_traefikcrds}/crds.yaml"
+build_ks_file_from_files traefik/crds/ >"${gen_ks_traefik}/kustomization.gen.yaml"
+build_ks_file_from_files traefik-crds/crds-files/ >"${gen_ks_traefikcrds}/kustomization.gen.yaml"
+sanitize_ks traefik/crds/ >"${gen_ks_traefik}/kustomization.yaml"
+sanitize_ks traefik-crds/ >"${gen_ks_traefikcrds}/kustomization.yaml"
 
-  find "${crddir}" -type f -name '*.yaml' ! -name 'kustomization.yaml' | xargs -n1 basename | sort >"${dircrd}"
-  grep '^[[:space:]]*-[[:space:]]*' "${kustom}" | sed 's/^[[:space:]]*-[[:space:]]*//' | grep -E '\.ya?ml$' | xargs -n1 basename | sort >"${kustomcrd}"
+diff -Naur "${gen_ks_traefik}" "${gen_ks_traefikcrds}" || {
+  echo "❌ CRDs are not consistent." && exit 1
+}
 
-  diff -Naur "${dircrd}" "${kustomcrd}" >/dev/null 2>&1
-  exitcode=$?
-  rm -f "${dircrd}" "${kustomcrd}"
-
-  if [ $exitcode -ne 0 ]; then
-    echo "⚠️  CRDs in $crddir are inconsistent with kustomization.yaml!"
-    exit 1
-  fi
-done
-
-echo "✅ CRDs in $crddir are consistent with kustomization.yaml."
-
-# check consistency of CRDs between traefik/crds and traefik-crds/
-nativecrd=$(mktemp)
-chartcrd=$(mktemp)
-
-kustomize build traefik/crds > "${nativecrd}"
-kustomize build traefik-crds/ > "${chartcrd}"
-
-diff -Naur "${nativecrd}" "${chartcrd}" > /dev/null 2>&1
-exitcode=$?
-rm -f "${nativecrd}" "${chartcrd}"
-
-if [ $exitcode -ne 0 ] ; then
-  echo "⚠️  CRDs are inconsistent between traefik/crds and traefik-crds/ !"
-  exit 1
-fi
+rm -rf "${gen_ks_traefik}" "${gen_ks_traefikcrds}"
 
 echo "✅ CRDs are consistent."
 exit 0
