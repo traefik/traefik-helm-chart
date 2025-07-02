@@ -18,6 +18,9 @@ test-ns:
 test-crds-consistency:
 	./hack/check-crds-consistency.sh
 
+test-crds-kustomization:
+	./hack/check-crds-kustomization.sh
+
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
 

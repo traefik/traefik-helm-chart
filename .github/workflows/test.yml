@@ -47,6 +47,9 @@ jobs:
       - name: Test CRDs consistency
         run: make test-crds-consistency
 
+      - name: Check if CRDs are consistent with kustomization
+        run: make test-crds-kustomization
+
       - name: Test if it's a release PR
         id: check
         run: |
