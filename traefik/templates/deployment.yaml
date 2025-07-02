@@ -46,7 +46,7 @@ spec:
   }}
   replicas: {{ default 0 .Values.deployment.replicas }}
   {{- end }}
-  {{- if .Values.deployment.revisionHistoryLimit }}
+  {{- if ne .Values.deployment.revisionHistoryLimit nil }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   {{- end }}
   selector:

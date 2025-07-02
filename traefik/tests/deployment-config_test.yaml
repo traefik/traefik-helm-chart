@@ -84,6 +84,18 @@ tests:
       - equal:
           path: spec.revisionHistoryLimit
           value: 1
+  - it: should have revisionHistoryLimit set to 0 when specified as 0
+    set:
+      deployment:
+        revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+  - it: should not have revisionHistoryLimit when not set
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
       updateStrategy:
