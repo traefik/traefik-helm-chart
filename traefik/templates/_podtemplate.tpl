@@ -625,7 +625,7 @@
                 {{- fail $errorMsg }}
               {{- end }}
               {{- $toPort := index $.Values.ports .to }}
-              {{- if and (($toPort.tls).enabled) (ne .scheme "https") }}
+              {{- if and (($toPort.tls).enabled) .scheme (ne .scheme "https") }}
                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
                 {{- fail $errorMsg }}
               {{- end }}
