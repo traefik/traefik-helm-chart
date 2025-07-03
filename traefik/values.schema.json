@@ -205,6 +205,9 @@
                 },
                 "plugins": {
                     "type": "object"
+                },
+                "localPlugins": {
+                    "type": "object"
                 }
             }
         },

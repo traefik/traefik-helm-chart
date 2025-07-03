@@ -174,6 +174,10 @@
           {{- if .Values.additionalVolumeMounts }}
             {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
+          {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+          - name: {{ $localPluginName | replace "." "-" }}
+            mountPath: {{ $localPlugin.mountPath | quote }}
+          {{- end }}
         args:
           {{- with .Values.global }}
            {{- if .checkNewVersion }}
@@ -500,6 +504,12 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
+          {{- end }}
+          {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+          {{- if not (hasKey $localPlugin "moduleName") }}
+            {{- fail  (printf "ERROR: local plugin %s is missing moduleName !" $localPluginName) }}
+          {{- end }}
+          - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
           {{- end }}
           {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
@@ -914,6 +924,11 @@
         {{- end }}
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+        {{- end }}
+        {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+        - name: {{ $localPluginName | replace "." "-" }}
+          hostPath:
+            path: {{ $localPlugin.hostPath | quote }}
         {{- end }}
         {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
         - name: plugins
