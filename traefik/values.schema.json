@@ -203,10 +203,10 @@
                         }
                     }
                 },
-                "plugins": {
+                "localPlugins": {
                     "type": "object"
                 },
-                "localPlugins": {
+                "plugins": {
                     "type": "object"
                 }
             }
