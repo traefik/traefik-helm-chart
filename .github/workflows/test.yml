@@ -71,10 +71,11 @@ jobs:
           set -e
           exit 0
 
-      - name: Lint docs
-        run: |
-          npm install markdownlint-cli@0.44.0 --global
-          markdownlint "EXAMPLES.md" "README.md" "CONTRIBUTING.md"
+      - name: markdownlint-cli
+        uses: nosborn/github-action-markdown-cli@v3.5.0
+        with:
+          files: "{EXAMPLES,README,CONTRIBUTING}.md"
+          config_file: .markdownlint.json
 
       - name: Create kind cluster
         if: steps.check.outputs.release
