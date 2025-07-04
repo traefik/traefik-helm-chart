@@ -92,7 +92,7 @@ Each release of the chart is signed using [Cosign](https://github.com/sigstore/c
 You can verify the chart by running the following command:
 
 ```shell
-cosign verify oci://ghcr.io/traefik/helm/traefik:<version> \
+cosign verify ghcr.io/traefik/helm/traefik:<version> \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity-regexp='https://github\.com/traefik/traefik-helm-chart/\.github/workflows/release\.yml@.+' \
   --certificate-github-workflow-repository=traefik/traefik-helm-chart \
