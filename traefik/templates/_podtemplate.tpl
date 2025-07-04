@@ -625,7 +625,7 @@
                 {{- fail $errorMsg }}
               {{- end }}
               {{- $toPort := index $.Values.ports .to }}
-              {{- if and (($toPort.tls).enabled) (ne .scheme "https") }}
+              {{- if and (($toPort.tls).enabled) .scheme (ne .scheme "https") }}
                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
                 {{- fail $errorMsg }}
               {{- end }}
@@ -872,10 +872,7 @@
           {{- end }}
           {{- if ($.Values.resources.limits).memory }}
           - name: GOMEMLIMIT
-            valueFrom:
-              resourceFieldRef:
-                resource: limits.memory
-                divisor: '1'
+            value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}
           {{- with .Values.hub.token }}
           - name: HUB_TOKEN

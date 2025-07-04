@@ -84,6 +84,18 @@ tests:
       - equal:
           path: spec.revisionHistoryLimit
           value: 1
+  - it: should have revisionHistoryLimit set to 0 when specified as 0
+    set:
+      deployment:
+        revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+  - it: should not have revisionHistoryLimit when not set
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
       updateStrategy:
@@ -278,7 +290,41 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax."
-  - it: should fail when redirect on websecure without https scheme
+  - it: should fail when redirect on websecure with tls enabled and non-https scheme
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: http
+        websecure:
+          exposedPort: 443
+          tls:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
+  - it: should redirect on websecure with tls enabled and https scheme
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+        websecure:
+          exposedPort: 443
+          tls:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.to=:443"
+  - it: should not fail when redirect on websecure with unset scheme
     set:
       ports:
         web:
@@ -287,9 +333,15 @@ tests:
               to: websecure
         websecure:
           exposedPort: 443
+          tls:
+            enabled: true
     asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.scheme="
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.redirections.entryPoint.to=:443"
   - it: should fail when redirect on non-existent entrypoint
     set:
       ports:

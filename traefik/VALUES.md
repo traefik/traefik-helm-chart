@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 36.2.0](https://img.shields.io/badge/Version-36.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.3](https://img.shields.io/badge/AppVersion-v3.4.3-informational?style=flat-square)
+![Version: 36.3.0](https://img.shields.io/badge/Version-36.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.4.3](https://img.shields.io/badge/AppVersion-v3.4.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -45,6 +45,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
+| deployment.goMemLimitPercentage | float | `0.9` | only takes effect when resources.limits.memory is set |
 | deployment.healthchecksHost | string | `""` |  |
 | deployment.healthchecksPort | string | `nil` |  |
 | deployment.healthchecksScheme | string | `nil` |  |

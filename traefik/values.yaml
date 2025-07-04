@@ -101,6 +101,10 @@ deployment:
   #     scheme: HTTP
   # -- Set a runtimeClassName on pod
   runtimeClassName: ""
+  # -- Percentage of memory limit to set for GOMEMLIMIT
+  # -- set as decimal (0.9 = 90%, 0.95 = 95% etc)
+  # -- only takes effect when resources.limits.memory is set
+  goMemLimitPercentage: 0.9
 
 # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
 podDisruptionBudget:  # @schema additionalProperties: false

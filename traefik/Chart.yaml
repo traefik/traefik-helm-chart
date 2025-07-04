@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 36.2.0
+version: 36.3.0
 # renovate: image=traefik
 appVersion: v3.4.3
 kubeVersion: ">=1.22.0-0"
@@ -23,9 +23,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(CRDs): :bug: kustomization file for CRDs"
-    - "feat(hub): ✨ initial support for AI Gateway"
-    - "feat(hub): update version mapping with Proxy v3.4"
-    - "feat(hpa): ✨ customizable scaleTargetRef"
-    - "chore(schema): update linter"
-    - "chore(release): 🚀 publish v36.2.0 and CRDs v1.9.0"
+    - "feat(deps): update traefik docker tag to v3.4.3"
+    - "feat(deployment): allow null and 0 replicas"
+    - "chore(release): 🚀 publish 36.3.0"

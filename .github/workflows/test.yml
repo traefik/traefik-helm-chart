@@ -71,7 +71,7 @@ jobs:
           set -e
           exit 0
 
-      - name: markdownlint-cli
+      - name: Lint markdown
         uses: nosborn/github-action-markdown-cli@v3.5.0
         with:
           files: "{EXAMPLES,README,CONTRIBUTING}.md"

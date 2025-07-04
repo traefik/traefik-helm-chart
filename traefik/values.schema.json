@@ -93,6 +93,9 @@
                 "enabled": {
                     "type": "boolean"
                 },
+                "goMemLimitPercentage": {
+                    "type": "number"
+                },
                 "healthchecksHost": {
                     "type": "string"
                 },

@@ -282,3 +282,48 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
     {{- end }}
     {{- toYaml $diff }}
 {{- end }}
+
+{{/*
+  This helper converts the input value of memory to Bytes.
+  Input needs to be a valid value as supported by k8s memory resource field.
+  This function aims to handle SI, IEC prefixes or no prefixes (cf. https://github.com/kubeflow/crd-validation/blob/master/vendor/k8s.io/apimachinery/pkg/api/resource/quantity.go#L44).
+  SI prefixes use power of 10 (e.g. 1e18 = 1 x 10^18) (m | "" | k | M | G | T | P | E).
+  IEC prefixes use power of 2 (e.g. 0x1p60 = 2^60) (Ki | Mi | Gi | Ti | Pi | Ei).
+ */}}
+{{- define "traefik.convertMemToBytes" }}
+  {{- $mem := lower . -}}
+  {{- if hasSuffix "e" $mem -}}
+    {{- $mem = mulf (trimSuffix "e" $mem | float64) 1e18 -}}
+  {{- else if hasSuffix "ei" $mem -}}
+    {{- $mem = mulf (trimSuffix "e" $mem | float64) 0x1p60 -}}
+  {{- else if hasSuffix "p" $mem -}}
+    {{- $mem = mulf (trimSuffix "p" $mem | float64) 1e15 -}}
+  {{- else if hasSuffix "pi" $mem -}}
+    {{- $mem = mulf (trimSuffix "pi" $mem | float64) 0x1p50 -}}
+  {{- else if hasSuffix "t" $mem -}}
+    {{- $mem = mulf (trimSuffix "t" $mem | float64) 1e12 -}}
+  {{- else if hasSuffix "ti" $mem -}}
+    {{- $mem = mulf (trimSuffix "ti" $mem | float64) 0x1p40 -}}
+  {{- else if hasSuffix "g" $mem -}}
+    {{- $mem = mulf (trimSuffix "g" $mem | float64) 1e9 -}}
+  {{- else if hasSuffix "gi" $mem -}}
+    {{- $mem = mulf (trimSuffix "gi" $mem | float64) 0x1p30 -}}
+  {{- else if hasSuffix "m" . -}}
+    {{- $mem = divf (trimSuffix "m" $mem | float64) 1e3 -}}
+  {{- else if hasSuffix "M" . -}}
+    {{- $mem = mulf (trimSuffix "m" $mem | float64) 1e6 -}}
+  {{- else if hasSuffix "mi" $mem -}}
+    {{- $mem = mulf (trimSuffix "mi" $mem | float64) 0x1p20 -}}
+  {{- else if hasSuffix "k" $mem -}}
+    {{- $mem = mulf (trimSuffix "k" $mem | float64) 1e3 -}}
+  {{- else if hasSuffix "ki" $mem -}}
+    {{- $mem = mulf (trimSuffix "ki" $mem | float64) 0x1p10 -}}
+  {{- end }}
+{{- $mem }}
+{{- end }}
+
+{{- define "traefik.gomemlimit" }}
+{{- $percentage := .percentage -}}
+{{- $memlimitBytes := include "traefik.convertMemToBytes" .memory | mulf $percentage -}}
+{{- printf "%dMiB" (divf $memlimitBytes 0x1p20 | floor | int64) -}}
+{{- end }}
