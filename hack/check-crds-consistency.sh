@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 function build_ks() {
   kustomize build "${1}"
 }
