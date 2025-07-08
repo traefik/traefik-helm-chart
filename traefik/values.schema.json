@@ -203,6 +203,9 @@
                         }
                     }
                 },
+                "localPlugins": {
+                    "type": "object"
+                },
                 "plugins": {
                     "type": "object"
                 }

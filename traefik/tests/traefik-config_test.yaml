@@ -336,6 +336,92 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: plugin demo is missing moduleName/version keys !"
 
+  - it: should create correct volumes, mounts and args for local plugins
+    set:
+      experimental:
+        localPlugins:
+          local-demo:
+            moduleName: github.com/traefik/plugindemo
+            mountPath: /plugins-local/src/github.com/traefik/plugindemo
+            hostPath: /plugins-local/src/github.com/traefik/plugindemo
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.local-demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: local-demo
+            mountPath: "/plugins-local/src/github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: local-demo
+            hostPath:
+              path: "/plugins-local/src/github.com/traefik/plugindemo"
+
+  - it: should support multiple local plugins
+    set:
+      experimental:
+        localPlugins:
+          foo:
+            moduleName: github.com/traefik/foo
+            mountPath: /plugins-local/src/github.com/traefik/foo
+            hostPath: /plugins-local/src/github.com/traefik/foo
+          bar:
+            moduleName: github.com/traefik/bar
+            mountPath: /plugins-local/src/github.com/traefik/bar
+            hostPath: /plugins-local/src/github.com/traefik/bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.foo.moduleName=github.com/traefik/foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.bar.moduleName=github.com/traefik/bar"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: foo
+            mountPath: "/plugins-local/src/github.com/traefik/foo"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: bar
+            mountPath: "/plugins-local/src/github.com/traefik/bar"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: foo
+            hostPath:
+              path: "/plugins-local/src/github.com/traefik/foo"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: bar
+            hostPath:
+              path: "/plugins-local/src/github.com/traefik/bar"
+
+  - it: should not have local plugins arg when no local plugins are specified
+    set:
+      experimental:
+        localPlugins: {}
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins"
+
+  - it: should fail gracefully on missing local plugins information
+    set:
+      experimental:
+        localPlugins:
+          local-demo:
+            mountPath: /plugins-local/src/github.com/traefik/plugindemo
+            hostPath: /plugins-local/src/github.com/traefik/plugindemo
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: local plugin local-demo is missing moduleName !"
+
   - it: should have tls configuration args when specified in values.yaml for port
     set:
       ports:
