@@ -173,7 +173,9 @@ rules:
   - apiGroups:
       - hub.traefik.io
     resources:
+      - apiauths
       - apiportals
+      - apiportalauths
       - apis
       - apiversions
       - apibundles
@@ -186,10 +188,12 @@ rules:
       - get
       - list
       - watch
+      {{- if not $.Values.hub.offline }}
       - create
       - update
       - patch
       - delete
+      {{- end }}
   - apiGroups:
       - ""
     resources:

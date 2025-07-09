@@ -228,7 +228,9 @@ rules:
       - hub.traefik.io
     resources:
       - accesscontrolpolicies
+      - apiauths
       - apiportals
+      - apiportalauths
       - apiratelimits
       - apis
       - apiversions
@@ -240,11 +242,13 @@ rules:
     verbs:
       - list
       - watch
+      - get
+      {{- if not .Values.hub.offline }}
       - create
       - update
       - patch
       - delete
-      - get
+      {{- end }}
   - apiGroups:
       - ""
     resources:

@@ -1132,7 +1132,9 @@ tests:
               - hub.traefik.io
             resources:
               - accesscontrolpolicies
+              - apiauths
               - apiportals
+              - apiportalauths
               - apiratelimits
               - apis
               - apiversions
@@ -1144,11 +1146,11 @@ tests:
             verbs:
               - list
               - watch
+              - get
               - create
               - update
               - patch
               - delete
-              - get
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
