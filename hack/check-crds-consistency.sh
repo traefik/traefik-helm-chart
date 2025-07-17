@@ -6,6 +6,8 @@ chartcrd=$(mktemp)
 kustomize build traefik/crds > "${nativecrd}"
 kustomize build traefik-crds/ > "${chartcrd}"
 
+diff -Naur "${nativecrd}" "${chartcrd}"
+
 diff -Naur "${nativecrd}" "${chartcrd}" > /dev/null 2>&1
 exitcode=$?
 rm -f "${nativecrd}" "${chartcrd}"
