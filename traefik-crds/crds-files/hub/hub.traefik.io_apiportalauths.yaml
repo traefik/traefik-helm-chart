@@ -1,0 +1,124 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: apiportalauths.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: APIPortalAuth
+    listKind: APIPortalAuthList
+    plural: apiportalauths
+    singular: apiportalauth
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIPortalAuth defines the authentication configuration for an
+          APIPortal.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: The desired behavior of this APIPortalAuth.
+            properties:
+              oidc:
+                description: OIDC configures the OIDC authentication.
+                properties:
+                  claims:
+                    description: Claims configures JWT claim mappings for user attributes.
+                    properties:
+                      company:
+                        description: Company is the JWT claim for user company.
+                        type: string
+                      email:
+                        description: Email is the JWT claim for user email.
+                        type: string
+                      firstname:
+                        description: Firstname is the JWT claim for user first name.
+                        type: string
+                      groups:
+                        description: Groups is the JWT claim for user groups. This
+                          field is required for authorization.
+                        type: string
+                      lastname:
+                        description: Lastname is the JWT claim for user last name.
+                        type: string
+                      userId:
+                        description: UserID is the JWT claim for user ID mapping.
+                        type: string
+                    required:
+                    - groups
+                    type: object
+                  issuerUrl:
+                    description: IssuerURL is the OIDC provider issuer URL.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                  scopes:
+                    description: Scopes is a list of OAuth2 scopes.
+                    items:
+                      type: string
+                    type: array
+                  secretName:
+                    description: SecretName is the name of the Kubernetes Secret containing
+                      clientId and clientSecret keys.
+                    maxLength: 253
+                    type: string
+                  syncedAttributes:
+                    description: |-
+                      SyncedAttributes is a list of additional attributes to sync from the OIDC provider.
+                      Each attribute must correspond to a configured claim field.
+                    items:
+                      enum:
+                      - groups
+                      - userId
+                      - firstname
+                      - lastname
+                      - email
+                      - company
+                      type: string
+                    maxItems: 6
+                    type: array
+                required:
+                - claims
+                - issuerUrl
+                - secretName
+                type: object
+            required:
+            - oidc
+            type: object
+          status:
+            description: The current status of this APIPortalAuth.
+            properties:
+              hash:
+                description: Hash is a hash representing the APIPortalAuth.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
