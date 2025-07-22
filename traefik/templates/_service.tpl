@@ -26,7 +26,10 @@
   loadBalancerClass: {{ . }}
   {{- end}}
   {{- with .service.spec }}
-  {{- toYaml . | nindent 2 }}
+  {{- $specWithoutPorts := omit . "ports" }}
+  {{- if $specWithoutPorts }}
+  {{- toYaml $specWithoutPorts | nindent 2 }}
+  {{- end }}
   {{- end }}
   selector:
     {{- include "traefik.labelselector" .root | nindent 4 }}

@@ -54,11 +54,16 @@ metadata:
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
+  {{- if $service.spec.ports }}
+  ports:
+  {{- toYaml $service.spec.ports | nindent 2 }}
+  {{- else }}
   ports:
   {{- template "traefik.service-ports" (dict "ports" $tcpPorts "serviceName" $name) }}
-{{- if $service.single }}
+  {{- if $service.single }}
   {{- template "traefik.service-ports" (dict "ports" $udpPorts "serviceName" $name) }}
-{{- end }}
+  {{- end }}
+  {{- end }}
 {{- end }}
 
 {{- if and $exposedPorts (and $udpPorts (not $service.single)) }}
@@ -77,8 +82,13 @@ metadata:
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
+  {{- if $service.spec.ports }}
+  ports:
+  {{- toYaml $service.spec.ports | nindent 2 }}
+  {{- else }}
   ports:
   {{- $ports }}
+  {{- end }}
  {{- end }}
 {{- end }}
 
