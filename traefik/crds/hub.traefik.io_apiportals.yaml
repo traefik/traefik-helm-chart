@@ -40,6 +40,17 @@ spec:
           spec:
             description: The desired behavior of this APIPortal.
             properties:
+              auth:
+                description: Auth references the APIPortalAuth resource for authentication
+                  configuration.
+                properties:
+                  name:
+                    description: Name is the name of the APIPortalAuth resource.
+                    maxLength: 253
+                    type: string
+                required:
+                - name
+                type: object
               description:
                 description: Description of the APIPortal.
                 type: string

@@ -1,0 +1,124 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: apiauths.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: APIAuth
+    listKind: APIAuthList
+    plural: apiauths
+    singular: apiauth
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: APIAuth defines the authentication configuration for APIs.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: The desired behavior of this APIAuth.
+            properties:
+              apiKey:
+                description: APIKey configures API key authentication.
+                type: object
+              isDefault:
+                description: |-
+                  IsDefault specifies if this APIAuth should be used as the default API authentication method for the namespace.
+                  Only one APIAuth per namespace should have isDefault set to true.
+                type: boolean
+              jwt:
+                description: JWT configures JWT authentication.
+                properties:
+                  appIdClaim:
+                    description: |-
+                      AppIDClaim is the name of the claim holding the identifier of the application.
+                      This field is sometimes named `client_id`.
+                    type: string
+                  forwardHeaders:
+                    additionalProperties:
+                      type: string
+                    description: ForwardHeaders specifies additional headers to forward
+                      with the request.
+                    type: object
+                  jwksFile:
+                    description: JWKSFile contains the JWKS file content for JWT verification.
+                    type: string
+                  jwksUrl:
+                    description: JWKSURL is the URL to fetch the JWKS for JWT verification.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                  publicKey:
+                    description: PublicKey is the PEM-encoded public key for JWT verification.
+                    type: string
+                  signingSecretName:
+                    description: |-
+                      SigningSecretName is the name of the Kubernetes Secret containing the signing secret.
+                      The secret must be of type Opaque and contain a key named 'value'.
+                    maxLength: 253
+                    type: string
+                  stripAuthorizationHeader:
+                    description: StripAuthorizationHeader determines whether to strip
+                      the Authorization header before forwarding the request.
+                    type: boolean
+                  tokenNameClaim:
+                    description: |-
+                      TokenNameClaim is the name of the claim holding the name of the token.
+                      This name, if provided, will be used in the metrics.
+                    type: string
+                  tokenQueryKey:
+                    description: TokenQueryKey specifies the query parameter name
+                      for the JWT token.
+                    type: string
+                required:
+                - appIdClaim
+                type: object
+                x-kubernetes-validations:
+                - message: exactly one of signingSecretName, publicKey, jwksFile,
+                    or jwksUrl must be specified
+                  rule: '[has(self.signingSecretName), has(self.publicKey), has(self.jwksFile),
+                    has(self.jwksUrl)].filter(x, x).size() == 1'
+            required:
+            - isDefault
+            type: object
+            x-kubernetes-validations:
+            - message: exactly one of apiKey or jwt must be specified
+              rule: (has(self.apiKey) && !has(self.jwt)) || (!has(self.apiKey) &&
+                has(self.jwt))
+          status:
+            description: The current status of this APIAuth.
+            properties:
+              hash:
+                description: Hash is a hash representing the APIAuth.
+                type: string
+              syncedAt:
+                format: date-time
+                type: string
+              version:
+                type: string
+            type: object
+        type: object
+    served: true
+    storage: true
