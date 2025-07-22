@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+permissions:
+  contents: write
+  packages: write
+  # This is used to create the OIDC token for signing the Helm chart
+  id-token: write
+
 env:
   tag_prefix: v
   crds_tag_prefix: crds_v
@@ -104,20 +110,30 @@ jobs:
           rm -rf traefik-crds
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-      - name: Publish Helm chart
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          token: ${{ secrets.CHARTS_TOKEN }}
-          charts_dir: .
-          charts_url: https://traefik.github.io/charts
-          owner: traefik
-          repository: charts
-          branch: master
-          target_dir: traefik
-          index_dir: .
-          commit_username: traefiker
-          commit_email: 30906710+traefiker@users.noreply.github.com
+      - name: Prepare GPG key for signing
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
+          echo "${{ secrets.GPG_KEYRING_BASE64 }}" | base64 -d > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          echo "${{ secrets.GPG_PASSPHRASE }}" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Publish Helm chart
+        uses: helm/chart-releaser-action@v1.7.0
+        with:
+          charts_dir: .
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_KEY: ${{ secrets.CR_KEY }}
+          CR_SIGN: true
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.5.0
@@ -131,36 +147,23 @@ jobs:
           registry_password: ${{ secrets.GHCR_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-      - name: Trigger hub-doc synchronization workflow
-        env:
-          GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
-        run: |
-          gh workflow run -R traefik/hub-doc "🏗️ Sync helm-chart" -F CHART_VERSION=${{ steps.tag_version.outputs.new_tag }}
-        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
-
-  sign-traefik:
-    needs: [ traefik ]
-    runs-on: ubuntu-latest
-    if: needs.traefik.outputs.TAG_EXISTS == 'false'
-    permissions:
-      contents: read
-      # This is used to create the OIDC token for signing the Helm chart
-      id-token: write
-    steps:
-
-      - name: Login to GitHub Container Registry
-        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.9.1
 
       - name: Sign Helm chart
         run: |
           cosign sign --yes \
-            -a version="${{ needs.traefik.outputs.CHART_VERSION }}" \
+            -a version="${{ steps.chart_version.outputs.CHART_VERSION }}" \
             -a commitSha="$GITHUB_SHA" \
             -a buildDate="$(date +%F)" \
-            ghcr.io/traefik/helm/traefik:${{ needs.traefik.outputs.CHART_VERSION }}
+            ghcr.io/traefik/helm/traefik:${{ steps.chart_version.outputs.CHART_VERSION }}
+
+      - name: Trigger hub-doc synchronization workflow
+        env:
+          GH_TOKEN: ${{ secrets.GHCR_TOKEN }}
+        run: |
+          gh workflow run -R traefik/hub-doc "🏗️ Sync helm-chart" -F CHART_VERSION=${{ steps.tag_version.outputs.new_tag }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
   traefik-crds:
     runs-on: ubuntu-latest
@@ -247,20 +250,30 @@ jobs:
           rm -rf traefik
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-      - name: Publish Helm chart
-        uses: stefanprodan/helm-gh-pages@master
-        with:
-          token: ${{ secrets.CHARTS_TOKEN }}
-          charts_dir: .
-          charts_url: https://traefik.github.io/charts
-          owner: traefik
-          repository: charts
-          branch: master
-          target_dir: traefik-crds
-          index_dir: .
-          commit_username: traefiker
-          commit_email: 30906710+traefiker@users.noreply.github.com
+      - name: Prepare GPG key for signing
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
+          echo "${{ secrets.GPG_KEYRING_BASE64 }}" | base64 -d > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          echo "${{ secrets.GPG_PASSPHRASE }}" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Publish Helm chart
+        uses: helm/chart-releaser-action@v1.7.0
+        with:
+          charts_dir: .
+        env:
+          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CR_KEY: ${{ secrets.CR_KEY }}
+          CR_SIGN: true
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Login to GitHub Container Registry
+        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
 
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.5.0
@@ -274,26 +287,13 @@ jobs:
           registry_password: ${{ secrets.GHCR_TOKEN }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
-  sign-traefik-crds:
-    needs: [ traefik-crds ]
-    runs-on: ubuntu-latest
-    if: needs.traefik-crds.outputs.TAG_EXISTS == 'false'
-    permissions:
-      contents: read
-      # This is used to create the OIDC token for signing the Helm chart
-      id-token: write
-    steps:
-
-      - name: Login to GitHub Container Registry
-        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u $GITHUB_ACTOR --password-stdin
-
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.9.1
 
       - name: Sign Helm chart
         run: |
           cosign sign --yes \
-            -a version="${{ needs.traefik-crds.outputs.CHART_VERSION }}" \
+            -a version="${{ steps.chart_version.outputs.CHART_VERSION }}" \
             -a commitSha="$GITHUB_SHA" \
             -a buildDate="$(date +%F)" \
-            ghcr.io/traefik/helm/traefik-crds:${{ needs.traefik-crds.outputs.CHART_VERSION }}
+            ghcr.io/traefik/helm/traefik-crds:${{ steps.chart_version.outputs.CHART_VERSION }}

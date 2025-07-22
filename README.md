@@ -88,16 +88,27 @@ helm list # should display two charts installed
 
 ## Verification
 
+### OCI Registry
+
 Each release of the chart is signed using [Cosign](https://github.com/sigstore/cosign).  
 You can verify the chart by running the following command:
 
 ```shell
-cosign verify ghcr.io/traefik/helm/traefik:<version> \
+cosign verify ghcr.io/traefik/helm/traefik:<VERSION> \
   --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
   --certificate-identity-regexp='https://github\.com/traefik/traefik-helm-chart/\.github/workflows/release\.yml@.+' \
   --certificate-github-workflow-repository=traefik/traefik-helm-chart \
   --certificate-github-workflow-name="Release Charts" \
-  --annotations version=<version>
+  --annotations version=<VERSION>
+```
+
+### Helm Registry (GH Pages)
+
+Each release of the chart is signed using *provenance files*.
+You can verify the chart by running the following command:
+
+```shell
+helm verify traefik-<VERSION>.tgz
 ```
 
 ## Upgrading
