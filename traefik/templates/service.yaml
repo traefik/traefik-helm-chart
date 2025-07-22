@@ -54,7 +54,7 @@ metadata:
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
-  {{- if $service.spec.ports }}
+  {{- if and $service.spec $service.spec.ports }}
   ports:
   {{- toYaml $service.spec.ports | nindent 2 }}
   {{- else }}
@@ -82,7 +82,7 @@ metadata:
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
-  {{- if $service.spec.ports }}
+  {{- if and $service.spec $service.spec.ports }}
   ports:
   {{- toYaml $service.spec.ports | nindent 2 }}
   {{- else }}
