@@ -571,6 +571,9 @@ extraObjects:
 
 To develop or test plugins without pushing them to a public registry, you can load plugin source code directly from your local filesystem.
 
+>[!NOTE]
+> The ``hostPath`` must point to a directory containing the plugin source code and a valid ``go.mod`` file. The ``moduleName`` must match the module name specified in the ``go.mod`` file.
+
 ```yaml
 experimental:
   localPlugins:
@@ -580,13 +583,10 @@ experimental:
       hostPath: /path/to/plugin-source
 ```
 
->[!NOTE]
-> The ``hostPath`` must point to a directory containing the plugin source code and a valid ``go.mod`` file. The ``moduleName`` must match the module name specified in the ``go.mod`` file.
-
 >[!IMPORTANT]
 > When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
 
-# Use Traefik native Let's Encrypt integration, without cert-manager
+## Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.
 
