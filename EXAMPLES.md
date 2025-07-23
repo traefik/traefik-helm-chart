@@ -567,7 +567,26 @@ extraObjects:
           storage: 1Gi
 ```
 
-## Use Traefik native Let's Encrypt integration, without cert-manager
+## Local Plugins
+
+To develop or test plugins without pushing them to a public registry, you can load plugin source code directly from your local filesystem.
+
+```yaml
+experimental:
+  localPlugins:
+    local-demo:
+      moduleName: github.com/traefik/localplugindemo
+      mountPath: /plugins-local/src/github.com/traefik/localplugindemo
+      hostPath: /path/to/plugin-source
+```
+
+>[!NOTE]
+> The ``hostPath`` must point to a directory containing the plugin source code and a valid ``go.mod`` file. The ``moduleName`` must match the module name specified in the ``go.mod`` file.
+
+>[!IMPORTANT]
+> When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
+
+# Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.
 

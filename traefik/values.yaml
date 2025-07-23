@@ -140,6 +140,11 @@ experimental:
   # demo:
   #   moduleName: github.com/traefik/plugindemo
   #   version: v0.2.1
+  localPlugins: {}
+    # demo:
+    #   moduleName: github.com/traefik/plugindemo
+    #   mountPath: /plugins-local/src/github.com/traefik/plugindemo
+    #   hostPath: /plugins-local/src/github.com/traefik/plugindemo
 
 gateway:
   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
