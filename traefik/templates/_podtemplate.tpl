@@ -406,8 +406,8 @@
           {{- end }}
 
           {{- with .Values.tracing }}
-            {{- with .sampleRate }}
-          - "--tracing.sampleRate={{ . }}"
+            {{- if ne .sampleRate nil }}
+          - "--tracing.sampleRate={{ .sampleRate }}"
             {{- end }}
 
             {{- with .serviceName }}
