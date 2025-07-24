@@ -7,5 +7,9 @@
 {{- end }}
 
 {{- if eq (.Values.gatewayAPI | toString) "true" -}}
-{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gatewayAPI/*.yaml") }}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gatewayAPI/gateway-standard-install.yaml") }}
+{{- end }}
+
+{{- if eq (.Values.gatewayAPIExperimental | toString) "true" -}}
+{{ include "traefik-crds.render-crds" (dict "scope" . "path" "crds-files/gatewayAPI/gateway-experimental-install.yaml") }}
 {{- end }}
