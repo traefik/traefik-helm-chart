@@ -84,6 +84,18 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using offline mode on hub < 3.17.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: "v3.17.2"
+      hub:
+        token: xxx
+        offline: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."
   - it: should fail when using traefik-hub API management with namespaced RBACs
     set:
       image:
