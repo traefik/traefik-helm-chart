@@ -1144,9 +1144,9 @@ tests:
               - managedsubscriptions
               - managedapplications
             verbs:
+              - get
               - list
               - watch
-              - get
               - create
               - update
               - patch
