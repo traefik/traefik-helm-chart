@@ -58,7 +58,6 @@ jobs:
           set -e
 
       - name: Check docs
-        if: steps.check.outputs.release
         run: |
           set +e
           make docs
@@ -70,6 +69,12 @@ jobs:
           fi
           set -e
           exit 0
+
+      - name: Lint markdown
+        uses: nosborn/github-action-markdown-cli@v3.5.0
+        with:
+          files: "{EXAMPLES,README,CONTRIBUTING}.md"
+          config_file: .markdownlint.json
 
       - name: Create kind cluster
         if: steps.check.outputs.release
