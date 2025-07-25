@@ -240,9 +240,9 @@ rules:
       - managedsubscriptions
       - managedapplications
     verbs:
+      - get
       - list
       - watch
-      - get
       {{- if not .Values.hub.offline }}
       - create
       - update
