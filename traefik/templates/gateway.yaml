@@ -43,7 +43,7 @@ spec:
       {{- with .namespacePolicy }}
       allowedRoutes:
         namespaces:
-          from: {{ . }}
+          {{- toYaml . | nindent 10 }}
       {{- end }}
       {{ if and (eq .protocol  "HTTPS") (not .certificateRefs) }}
         {{- fail "ERROR: certificateRefs needs to be specified using HTTPS" }}
