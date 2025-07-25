@@ -974,7 +974,7 @@ hub:
   # It enables API Gateway.
   token: ""
   # -- Disables all external network connections.
-  offline: false
+  offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
   apimanagement:

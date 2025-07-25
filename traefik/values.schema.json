@@ -387,7 +387,10 @@
                     "type": "array"
                 },
                 "offline": {
-                    "type": "boolean"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "providers": {
                     "type": "object",

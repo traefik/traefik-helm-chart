@@ -1,5 +1,5 @@
 {{- if .Values.hub.token -}}
-{{- if .Values.hub.apimanagement.enabled }}
+{{- if and .Values.hub.apimanagement.enabled (not .Values.hub.offline) }}
 {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
 ---
 apiVersion: v1

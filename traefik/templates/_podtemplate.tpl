@@ -135,10 +135,12 @@
          {{- end }}
         {{- end }}
         {{- if .Values.hub.token }}
+          {{- if not .Values.hub.offline }}
           {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
         - name: admission
           containerPort: {{ last (mustRegexSplit ":" $listenAddr 2) }}
           protocol: TCP
+          {{- end }}
           {{- if .Values.hub.apimanagement.enabled }}
         - name: apiportal
           containerPort: 9903
@@ -797,8 +799,8 @@
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
             {{- end }}
-            {{- if .offline  }}
-          - "--hub.offline"
+            {{- if ne .offline nil }}
+          - "--hub.offline={{ .offline }}"
             {{- end }}
             {{- if .namespaces }}
           - "--hub.namespaces={{ join "," (uniq (concat (include "traefik.namespace" $ | list) .namespaces)) }}"
@@ -807,9 +809,11 @@
              {{- if .enabled }}
               {{- $listenAddr := default ":9943" .admission.listenAddr }}
           - "--hub.apimanagement"
+              {{- if not $.Values.hub.offline }}
           - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
-              {{- with .admission.secretName }}
+                {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
+                {{- end }}
               {{- end }}
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
@@ -824,9 +828,11 @@
               {{- end }}
              {{- end }}
             {{- end -}}
-            {{- with .platformUrl }}
+            {{- if not .offline }}
+              {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
-            {{- end -}}
+              {{- end -}}
+            {{- end }}
             {{- range $field, $value := .redis }}
              {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
               {{- with $value }}

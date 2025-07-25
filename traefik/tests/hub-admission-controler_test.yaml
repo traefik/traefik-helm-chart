@@ -26,6 +26,15 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+  - it: should not deploy anything when offline mode is enabled
+    set:
+      hub:
+        offline: true
+        apimanagement:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: should render hub-agent-cert secret
     documentIndex: 0
     asserts:
