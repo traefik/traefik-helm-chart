@@ -34,7 +34,7 @@ tests:
           value: hub.traefik.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(AccessControlPolicy|AIService|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription|ManagedApplication|APIPortalAuth|APIAuth)$
+          pattern: ^(AccessControlPolicy|AIService|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription|ManagedApplication|APIAuth|APIPortalAuth)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
