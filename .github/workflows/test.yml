@@ -58,7 +58,6 @@ jobs:
           set -e
 
       - name: Check docs
-        if: steps.check.outputs.release
         run: |
           set +e
           make docs
