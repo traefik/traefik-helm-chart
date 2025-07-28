@@ -116,20 +116,24 @@ jobs:
         run: |
           gpg --export > ~/.gnupg/pubring.gpg
           gpg --batch --pinentry-mode loopback --yes --passphrase '${{ secrets.GPG_PASSPHRASE }}' --export-secret-key > ~/.gnupg/secring.gpg
-          echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --dearmor > $HOME/secring.gpg
-          echo "${{ secrets.GPG_PASSPHRASE }}" > $HOME/passphrase.txt
-          echo "CR_KEYRING=$HOME/secring.gpg" >> "$GITHUB_ENV"
-          echo "CR_PASSPHRASE_FILE=$HOME/passphrase.txt" >> "$GITHUB_ENV"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
-        uses: helm/chart-releaser-action@v1.7.0
+        uses: bpsoraggi/helm-gh-pages@ae39446ad80fcb6ec81b125f3ce3da8890751297
         with:
+          token: ${{ secrets.GHCR_TOKEN }}
           charts_dir: .
-        env:
-          CR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CR_KEY:  ${{ steps.gpg.outputs.name }}
-          CR_SIGN: true
+          charts_url: https://traefik.github.io/charts
+          owner: traefik
+          repository: charts
+          branch: master
+          target_dir: traefik
+          index_dir: .
+          commit_username: traefiker
+          commit_email: 30906710+traefiker@users.noreply.github.com
+          key: ${{ steps.gpg.outputs.name }}
+          private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart to the ghcr.io registry
