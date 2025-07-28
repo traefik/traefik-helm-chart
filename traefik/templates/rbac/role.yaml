@@ -45,6 +45,14 @@ rules:
       - list
       - watch
   {{- end }}
+  {{- if (semverCompare ">=v3.5.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  {{- end }}
   # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
   - apiGroups:
       - ""
