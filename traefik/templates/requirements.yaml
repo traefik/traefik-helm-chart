@@ -38,6 +38,10 @@
   {{- fail "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0" }}
 {{- end }}
 
+{{- if and (semverCompare "<3.5.0-0" $version) (.Values.providers.kubernetesIngress.strictPrefixMatching)}}
+  {{- fail "ERROR: strictPrefixMatching is a feature only available for traefik >= v3.5.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.2.0-0" $version) (.Values.metrics.otlp.serviceName)}}
   {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
 {{- end }}
