@@ -304,6 +304,8 @@ providers:  # @schema additionalProperties: false
       pathOverride: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
+    # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
+    strictPrefixMatching: false
 
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API

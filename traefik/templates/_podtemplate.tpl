@@ -574,6 +574,9 @@
            {{- if .Values.providers.kubernetesIngress.nativeLBByDefault }}
           - "--providers.kubernetesingress.nativeLBByDefault=true"
            {{- end }}
+           {{- if .Values.providers.kubernetesIngress.strictPrefixMatching }}
+          - "--providers.kubernetesingress.strictPrefixMatching=true"
+           {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--experimental.kubernetesgateway"
