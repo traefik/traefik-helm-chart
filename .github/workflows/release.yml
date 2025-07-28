@@ -13,9 +13,6 @@ jobs:
   traefik:
     needs: [ traefik-crds ]
     runs-on: ubuntu-latest
-    outputs:
-      CHART_VERSION: ${{ steps.chart_version.outputs.CHART_VERSION }}
-      TAG_EXISTS: ${{ steps.tag_exists.outputs.TAG_EXISTS }}
     steps:
 
       - name: Checkout
@@ -121,7 +118,7 @@ jobs:
       - name: Publish Helm chart
         uses: bpsoraggi/helm-gh-pages@ae39446ad80fcb6ec81b125f3ce3da8890751297
         with:
-          token: ${{ secrets.GHCR_TOKEN }}
+          token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
           charts_url: https://traefik.github.io/charts
           owner: traefik
@@ -149,7 +146,6 @@ jobs:
           sign: true
           signing_key: ${{ steps.gpg.outputs.name }}
           signing_passphrase: ${{ secrets.GPG_PASSPHRASE }}
-          update_dependencies: 'true'
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Trigger hub-doc synchronization workflow
@@ -161,9 +157,6 @@ jobs:
 
   traefik-crds:
     runs-on: ubuntu-latest
-    outputs:
-      CHART_VERSION: ${{ steps.chart_version.outputs.CHART_VERSION }}
-      TAG_EXISTS: ${{ steps.tag_exists.outputs.TAG_EXISTS }}
     steps:
 
       - name: Checkout

@@ -113,7 +113,7 @@ New major version indicates that there is an incompatible breaking change.
 
 ### Upgrade Traefik standalone chart
 
-When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
+When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling *helm upgrade* command.
 CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for
 details.
 
