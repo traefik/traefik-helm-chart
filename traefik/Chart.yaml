@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 36.3.0
+version: 37.0.0
 # renovate: image=traefik
 appVersion: v3.5.0
 kubeVersion: ">=1.22.0-0"
@@ -23,6 +23,15 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(deps): update traefik docker tag to v3.4.3"
-    - "feat(deployment): allow null and 0 replicas"
-    - "chore(release): 🚀 publish 36.3.0"
+    - "fix(observability): allow `tracing.sampleRate` to be set to zero"
+    - "fix(entryPoint): allow scheme to be unset on redirect"
+    - "fix(Deployment): revision history should be disableable"
+    - "feat(podtemplate): add support for localPlugins"
+    - "feat(podtemplate): add capacity to set GOMEMLIMIT with default at 90% of user-set memory limit"
+    - "feat(hub): offline mode"
+    - "feat(gateway-api)!: support selector for namespace policy"
+    - "feat(deps): update traefik docker tag to v3.5.0"
+    - "feat(CRDs): update for Traefik Proxy v3.5 and Gateway API v1.3.0"
+    - "feat(CRDs): update Traefik Hub to v1.21.0"
+    - "docs(plugins): improve wording and sync with `VALUES.md`"
+    - "chore(release): :rocket: publish 37.0.0 and 1.10.0"
