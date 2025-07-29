@@ -1777,6 +1777,9 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "strictPrefixMatching": {
+                            "type": "boolean"
                         }
                     }
                 }
