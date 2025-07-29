@@ -232,7 +232,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].args
           value:
-            - --global.checkNewVersion
+            - --global.checkNewVersion=true
             - --entryPoints.metrics.address=:9100/tcp
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
