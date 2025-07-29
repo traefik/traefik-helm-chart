@@ -52,6 +52,14 @@ rules:
       - list
       - watch
   {{- end }}
+  {{- if (semverCompare ">=v3.5.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  {{- end }}
   - apiGroups:
       - ""
     resources:

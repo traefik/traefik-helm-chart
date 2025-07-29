@@ -255,6 +255,15 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.nativeLBByDefault=true"
+  - it: should be possible to set strictPrefixMatching
+    set:
+      providers:
+        kubernetesIngress:
+          strictPrefixMatching: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.strictPrefixMatching=true"
 
   - it: should have a plugin storage and args if the experimental feature is enabled
     set:

@@ -760,6 +760,21 @@ tests:
               - get
               - list
               - watch
+  - it: should provide required configmaps cluster rbac when proxy >= v3.5.x
+    set:
+      image:
+        tag: v3.5.0
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
   - it: should not provide configmaps cluster rbac when proxy >= v3.4.x without kubernetesCRD provider
     set:
       image:
@@ -857,6 +872,23 @@ tests:
               - watch
 
 
+  - it: should provide expected role rbac when proxy >= v3.5.x
+    set:
+      image:
+        tag: v3.5.0
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
   - it: should provide expected role rbac when k8s gw api is enabled >=v3.1.0
     set:
       image:
