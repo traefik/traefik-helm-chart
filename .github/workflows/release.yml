@@ -116,7 +116,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
-        uses: bpsoraggi/helm-gh-pages@144dd827bf5cd326785b15fa1385ffeb5dfd7eb7
+        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
@@ -128,10 +128,10 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
-          key: ${{ steps.gpg.outputs.email }}
+          key: ${{ steps.gpg.outputs.name }}
           private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
-        if: steps.tag_exists.outputs.TAG_EXISTS == 'false' && steps.gpg.outputs.email != ''
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.5.0
@@ -252,7 +252,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
-        uses: bpsoraggi/helm-gh-pages@144dd827bf5cd326785b15fa1385ffeb5dfd7eb7
+        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
@@ -264,10 +264,10 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
-          key: ${{ steps.gpg.outputs.email }}
+          key: ${{ steps.gpg.outputs.name }}
           private_key: ${{ secrets.GPG_PRIVATE_KEY }}
           passphrase: ${{ secrets.GPG_PASSPHRASE }}
-        if: steps.tag_exists.outputs.TAG_EXISTS == 'false' && steps.gpg.outputs.email != ''
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart to the ghcr.io registry
         uses: appany/helm-oci-chart-releaser@v0.5.0
