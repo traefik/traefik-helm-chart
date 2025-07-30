@@ -233,6 +233,7 @@ tests:
           path: spec.template.spec.containers[0].args
           value:
             - --global.checkNewVersion=true
+            - --global.sendAnonymousUsage=false
             - --entryPoints.metrics.address=:9100/tcp
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
@@ -248,9 +249,6 @@ tests:
             - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik
             - --entryPoints.websecure.http.tls=true
             - --log.level=INFO
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--global.sendAnonymousUsage"
   - it: should be possible to send anonymous usage data
     set:
       global:
@@ -258,7 +256,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--global.sendAnonymousUsage"
+          content: "--global.sendAnonymousUsage=true"
   - it: should have abortOnPluginFailure, when enabled on traefik >=3.3.0
     set:
       image:
