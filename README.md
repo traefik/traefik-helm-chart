@@ -88,19 +88,48 @@ helm list # should display two charts installed
 
 ## Verification
 
-Each release of the chart is signed using *provenance files*.
-You can verify the chart by following the instructions below, depending on the registry.
+Each release of the chart is signed using *provenance files*. You can verify the chart by following the instructions below:
+
+### 1. Download the Public Signing Key
+
+To download the official Traefik Helm chart signing key, run:
+
+```shell
+gpg --keyring $HOME/.gnupg/traefik.pubring.kbx --keyserver hkps://keys.openpgp.org --no-default-keyring --receive-keys 'B0FBA7678F685E9B7024B79FFD92BB57C5A71A99'
+```
+
+Example output:
+
+```shell
+gpg: key FD92BB57C5A71A99: public key "TraefikLabs Chart Signing Key <noreply@traefik.io>" imported
+gpg: Total number processed: 1
+gpg:               imported: 1
+```
+
+This command downloads the key and stores it in a separate keyring. To add the key to your default keyring, omit the ``--keyring <keyring> --no-default-keyring`` gpg options when running the command.
+
+### 2. Export the Signing Key
+
+By default, GnuPG v2 stores keyrings in a format that is not compatible with Helm chart provenance verification. Before you can verify a Helm chart, you must convert your keyrings to the legacy format:
+
+```shell
+gpg --export --output $HOME/.gnupg/traefik.pubring.gpg  --keyring $HOME/.gnupg/traefik.pubring.kbx  --no-default-keyring 'B0FBA7678F685E9B7024B79FFD92BB57C5A71A99'
+```
+
+### 3. Verify the Chart
+
+To verify the chart, run the appropriate command for your registry:
 
 - OCI Registry
 
   ```shell
-  helm pull --verify verify oci://ghcr.io/traefik/helm/traefik:<VERSION>
+  helm fetch --verify --keyring $HOME/.gnupg/traefik.pubring.gpg oci://ghcr.io/traefik/helm/traefik:<VERSION>
   ```
 
 - Helm Registry (GH Pages)
 
   ```shell
-  helm fetch --verify <REPO>/traefik --version <VERSION>
+  helm fetch --verify --keyring $HOME/.gnupg/traefik.pubring.gpg traefik/traefik --version <VERSION>
   ```
 
 ## Upgrading
