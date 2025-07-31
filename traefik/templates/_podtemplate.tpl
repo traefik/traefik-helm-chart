@@ -185,8 +185,8 @@
            {{- if ne .checkNewVersion nil }}
           - "--global.checkNewVersion={{ .checkNewVersion | toString }}"
            {{- end }}
-           {{- if ne .sendAnonymousUsage nil }}
-          - "--global.sendAnonymousUsage={{ .sendAnonymousUsage | toString }}"
+           {{- if .sendAnonymousUsage }}
+          - "--global.sendAnonymousUsage"
            {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
