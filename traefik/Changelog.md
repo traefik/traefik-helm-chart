@@ -1,5 +1,84 @@
 # Change Log
 
+## 37.0.0  ![AppVersion: v3.5.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-07-29
+
+* fix(observability): allow `tracing.sampleRate` to be set to zero
+* fix(entryPoint): allow scheme to be unset on redirect
+* fix(Deployment): revision history should be disableable
+* feat(podtemplate): add support for localPlugins
+* feat(podtemplate): add capacity to set GOMEMLIMIT with default at 90% of user-set memory limit
+* feat(hub): offline mode
+* feat(gateway-api)!: support selector for namespace policy
+* feat(deps): update traefik docker tag to v3.5.0
+* feat(CRDs): update for Traefik Proxy v3.5 and Gateway API v1.3.0
+* feat(CRDs): update Traefik Hub to v1.21.0
+* docs(plugins): improve wording and sync with `VALUES.md`
+* chore(release): :rocket: publish 37.0.0 and 1.10.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 25a47a9..0c1274f 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -101,6 +101,10 @@ deployment:
+   #     scheme: HTTP
+   # -- Set a runtimeClassName on pod
+   runtimeClassName: ""
++  # -- Percentage of memory limit to set for GOMEMLIMIT
++  # -- set as decimal (0.9 = 90%, 0.95 = 95% etc)
++  # -- only takes effect when resources.limits.memory is set
++  goMemLimitPercentage: 0.9
+ 
+ # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
+ podDisruptionBudget:  # @schema additionalProperties: false
+@@ -131,11 +135,10 @@ experimental:
+   kubernetesGateway:
+     # -- Enable traefik experimental GatewayClass CRD
+     enabled: false
+-  # -- Enable traefik experimental plugins
++  # -- Enable experimental plugins
+   plugins: {}
+-  # demo:
+-  #   moduleName: github.com/traefik/plugindemo
+-  #   version: v0.2.1
++  # -- Enable experimental local plugins
++  localPlugins: {}
+ 
+ gateway:
+   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+@@ -159,7 +162,7 @@ gateway:
+       # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
+       protocol: HTTP
+       # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+-      namespacePolicy:  # @schema type:[string, null]
++      namespacePolicy:  # @schema type:[object, null]
+     # websecure listener is disabled by default because certificateRefs needs to be added,
+     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
+     # websecure:
+@@ -301,6 +304,8 @@ providers:  # @schema additionalProperties: false
+       pathOverride: ""
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
++    # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
++    strictPrefixMatching: false
+ 
+   kubernetesGateway:
+     # -- Enable Traefik Gateway provider for Gateway API
+@@ -971,7 +976,7 @@ hub:
+   # It enables API Gateway.
+   token: ""
+   # -- Disables all external network connections.
+-  offline: false
++  offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+   namespaces: []  # @schema required:true
+   apimanagement:
+```
+
 ## 36.3.0  ![AppVersion: v3.4.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.4.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-07-01

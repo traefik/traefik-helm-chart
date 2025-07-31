@@ -86,6 +86,23 @@ helm install traefik traefik/traefik --skip-crds
 helm list # should display two charts installed
 ```
 
+## Verification
+
+Each release of the chart is signed using *provenance files*.
+You can verify the chart by following the instructions below, depending on the registry.
+
+- OCI Registry
+
+  ```shell
+  helm pull --verify verify oci://ghcr.io/traefik/helm/traefik:<VERSION>
+  ```
+
+- Helm Registry (GH Pages)
+
+  ```shell
+  helm fetch --verify <REPO>/traefik --version <VERSION>
+  ```
+
 ## Upgrading
 
 One can check what has changed in the [Changelog](./traefik/Changelog.md).
@@ -96,7 +113,7 @@ New major version indicates that there is an incompatible breaking change.
 
 ### Upgrade Traefik standalone chart
 
-When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling _helm upgrade_ command.
+When using Helm native management for CRDs, user **MUST** upgrade CRDs before calling *helm upgrade* command.
 CRDs are **not** updated by Helm. See [HIP-0011](https://github.com/helm/community/blob/main/hips/hip-0011.md) for
 details.
 

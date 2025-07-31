@@ -38,6 +38,10 @@
   {{- fail "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0" }}
 {{- end }}
 
+{{- if and (semverCompare "<3.5.0-0" $version) (.Values.providers.kubernetesIngress.strictPrefixMatching)}}
+  {{- fail "ERROR: strictPrefixMatching is a feature only available for traefik >= v3.5.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.2.0-0" $version) (.Values.metrics.otlp.serviceName)}}
   {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
 {{- end }}
@@ -80,4 +84,9 @@
   {{- if and (and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced)) (semverCompare "<v3.16.0" $hubVersion) }}
     {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
   {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0" $hubVersion) .Values.hub.offline }}
+    {{ fail "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."}}
+  {{- end }}
+
 {{- end }}

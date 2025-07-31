@@ -52,6 +52,14 @@ rules:
       - list
       - watch
   {{- end }}
+  {{- if (semverCompare ">=v3.5.0-0" $version) }}
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+  {{- end }}
   - apiGroups:
       - ""
     resources:
@@ -228,7 +236,9 @@ rules:
       - hub.traefik.io
     resources:
       - accesscontrolpolicies
+      - apiauths
       - apiportals
+      - apiportalauths
       - apiratelimits
       - apis
       - apiversions
@@ -238,13 +248,15 @@ rules:
       - managedsubscriptions
       - managedapplications
     verbs:
+      - get
       - list
       - watch
+      {{- if not .Values.hub.offline }}
       - create
       - update
       - patch
       - delete
-      - get
+      {{- end }}
   - apiGroups:
       - ""
     resources:

@@ -101,8 +101,22 @@ jobs:
           rm -rf traefik-crds
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        id: gpg
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Prepare GPG key
+        run: |
+          gpg --export > ~/.gnupg/pubring.gpg
+          gpg --batch --pinentry-mode loopback --yes --passphrase '${{ secrets.GPG_PASSPHRASE }}' --export-secret-key > ~/.gnupg/secring.gpg
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Publish Helm chart
-        uses: stefanprodan/helm-gh-pages@master
+        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
@@ -114,6 +128,9 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
+          key: ${{ steps.gpg.outputs.name }}
+          private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart to the ghcr.io registry
@@ -126,6 +143,9 @@ jobs:
           registry: ghcr.io
           registry_username: traefiker
           registry_password: ${{ secrets.GHCR_TOKEN }}
+          sign: true
+          signing_key: ${{ steps.gpg.outputs.name }}
+          signing_passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Trigger hub-doc synchronization workflow
@@ -217,8 +237,22 @@ jobs:
           rm -rf traefik
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        id: gpg
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
+      - name: Prepare GPG key
+        run: |
+          gpg --export > ~/.gnupg/pubring.gpg
+          gpg --batch --pinentry-mode loopback --yes --passphrase '${{ secrets.GPG_PASSPHRASE }}' --export-secret-key > ~/.gnupg/secring.gpg
+        if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+
       - name: Publish Helm chart
-        uses: stefanprodan/helm-gh-pages@master
+        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
@@ -230,6 +264,9 @@ jobs:
           index_dir: .
           commit_username: traefiker
           commit_email: 30906710+traefiker@users.noreply.github.com
+          key: ${{ steps.gpg.outputs.name }}
+          private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart to the ghcr.io registry
@@ -242,4 +279,8 @@ jobs:
           registry: ghcr.io
           registry_username: traefiker
           registry_password: ${{ secrets.GHCR_TOKEN }}
+          sign: true
+          signing_key: ${{ steps.gpg.outputs.name }}
+          signing_passphrase: ${{ secrets.GPG_PASSPHRASE }}
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
+

@@ -124,6 +124,19 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.otlp.grpc.tls.insecureSkipVerify=true"
+  - it: should render --tracing.sampleRate=0 when tracing.sampleRate is 0
+    set:
+      tracing:
+        sampleRate: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.sampleRate=0"
+  - it: should not have sampleRate when not set
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.sampleRate"
   - it: Minimal config should work, without internals
     set:
       tracing:

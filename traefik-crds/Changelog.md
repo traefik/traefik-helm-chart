@@ -2,9 +2,12 @@
 
 ## 1.10.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
-**Release date:** TBD
+**Release date:** 2025-07-29
 
-* feat(CRDs): add support for experimental Gateway API CRDs installation
+* feat(hub): offline mode
+* feat(CRDs): update for Traefik Proxy v3.5 and Gateway API v1.3.0
+* feat(CRDs): update Traefik Hub to v1.21.0
+* chore(release): :rocket: publish 37.0.0 and 1.10.0
 
 
 ## 1.9.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)

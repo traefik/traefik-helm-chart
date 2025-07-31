@@ -237,7 +237,7 @@
                                 },
                                 "namespacePolicy": {
                                     "type": [
-                                        "string",
+                                        "object",
                                         "null"
                                     ]
                                 },
@@ -387,7 +387,10 @@
                     "type": "array"
                 },
                 "offline": {
-                    "type": "boolean"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "providers": {
                     "type": "object",
@@ -1774,6 +1777,9 @@
                                     "type": "string"
                                 }
                             }
+                        },
+                        "strictPrefixMatching": {
+                            "type": "boolean"
                         }
                     }
                 }

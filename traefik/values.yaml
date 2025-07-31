@@ -162,7 +162,7 @@ gateway:
       # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
       protocol: HTTP
       # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
-      namespacePolicy:  # @schema type:[string, null]
+      namespacePolicy:  # @schema type:[object, null]
     # websecure listener is disabled by default because certificateRefs needs to be added,
     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
     # websecure:
@@ -304,6 +304,8 @@ providers:  # @schema additionalProperties: false
       pathOverride: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
+    # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
+    strictPrefixMatching: false
 
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API
@@ -974,7 +976,7 @@ hub:
   # It enables API Gateway.
   token: ""
   # -- Disables all external network connections.
-  offline: false
+  offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
   apimanagement:

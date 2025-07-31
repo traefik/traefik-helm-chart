@@ -20,7 +20,7 @@ tests:
       - equal:
           path: metadata.namespace
           value: "NAMESPACE"
-  - it: should configure namespacePolicy within web listener
+  - it: should configure "All" namespacePolicy within web listener
     set:
       providers:
         kubernetesGateway:
@@ -28,11 +28,34 @@ tests:
       gateway:
         listeners:
           web:
-            namespacePolicy: All
+            namespacePolicy:
+              from: All
     asserts:
       - equal:
-          path: spec.listeners[0].allowedRoutes.namespaces.from
-          value: "All"
+          path: spec.listeners[0].allowedRoutes.namespaces
+          value: 
+            from: "All"
+  - it: should configure Selector for a namespacePolicy
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        listeners:
+          web:
+            namespacePolicy:
+              from: Selector
+              selector:
+                matchLabels:
+                  shared-gateway-access: "true"
+    asserts:
+      - equal:
+          path: spec.listeners[0].allowedRoutes.namespaces
+          value: 
+            from: "Selector"
+            selector:
+              matchLabels:
+                shared-gateway-access: "true"
   - it: should set expected apiVersion with v3 version
     set:
       image:

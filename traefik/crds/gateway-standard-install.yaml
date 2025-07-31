@@ -1,4 +1,4 @@
-# Copyright 2024 The Kubernetes Authors.
+# Copyright 2025 The Kubernetes Authors.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/3328
-    gateway.networking.k8s.io/bundle-version: v1.2.1
+    gateway.networking.k8s.io/bundle-version: v1.3.0
     gateway.networking.k8s.io/channel: standard
   creationTimestamp: null
   name: gatewayclasses.gateway.networking.k8s.io
@@ -506,7 +506,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/3328
-    gateway.networking.k8s.io/bundle-version: v1.2.1
+    gateway.networking.k8s.io/bundle-version: v1.3.0
     gateway.networking.k8s.io/channel: standard
   creationTimestamp: null
   name: gateways.gateway.networking.k8s.io
@@ -564,7 +564,7 @@ spec:
             description: Spec defines the desired state of Gateway.
             properties:
               addresses:
-                description: |+
+                description: |-
                   Addresses requested for this Gateway. This is optional and behavior can
                   depend on the implementation. If a value is set in the spec and the
                   requested address is invalid or unavailable, the implementation MUST
@@ -585,10 +585,9 @@ spec:
                   GatewayStatus.Addresses.
 
                   Support: Extended
-
                 items:
-                  description: GatewayAddress describes an address that can be bound
-                    to a Gateway.
+                  description: GatewaySpecAddress describes an address that can be
+                    bound to a Gateway.
                   oneOf:
                   - properties:
                       type:
@@ -613,15 +612,15 @@ spec:
                       type: string
                     value:
                       description: |-
-                        Value of the address. The validity of the values will depend
-                        on the type and support by the controller.
+                        When a value is unspecified, an implementation SHOULD automatically
+                        assign an address matching the requested type if possible.
+
+                        If an implementation does not support an empty value, they MUST set the
+                        "Programmed" condition in status to False with a reason of "AddressNotAssigned".
 
                         Examples: `1.2.3.4`, `128::1`, `my-ip-address`.
                       maxLength: 253
-                      minLength: 1
                       type: string
-                  required:
-                  - value
                   type: object
                   x-kubernetes-validations:
                   - message: Hostname value must only contain valid characters (matching
@@ -731,6 +730,11 @@ spec:
                       the merging behavior is implementation specific.
                       It is generally recommended that GatewayClass provides defaults that can be overridden by a Gateway.
 
+                      If the referent cannot be found, refers to an unsupported kind, or when
+                      the data within that resource is malformed, the Gateway SHOULD be
+                      rejected with the "Accepted" status condition set to "False" and an
+                      "InvalidParameters" reason.
+
                       Support: Implementation-specific
                     properties:
                       group:
@@ -761,6 +765,8 @@ spec:
                   logical endpoints that are bound on this Gateway's addresses.
                   At least one Listener MUST be specified.
 
+                  ## Distinct Listeners
+
                   Each Listener in a set of Listeners (for example, in a single Gateway)
                   MUST be _distinct_, in that a traffic flow MUST be able to be assigned to
                   exactly one listener. (This section uses "set of Listeners" rather than
@@ -772,55 +778,76 @@ spec:
                   combination of Port, Protocol, and, if supported by the protocol, Hostname.
 
                   Some combinations of port, protocol, and TLS settings are considered
-                  Core support and MUST be supported by implementations based on their
-                  targeted conformance profile:
+                  Core support and MUST be supported by implementations based on the objects
+                  they support:
 
-                  HTTP Profile
+                  HTTPRoute
 
                   1. HTTPRoute, Port: 80, Protocol: HTTP
                   2. HTTPRoute, Port: 443, Protocol: HTTPS, TLS Mode: Terminate, TLS keypair provided
 
-                  TLS Profile
+                  TLSRoute
 
                   1. TLSRoute, Port: 443, Protocol: TLS, TLS Mode: Passthrough
 
                   "Distinct" Listeners have the following property:
 
-                  The implementation can match inbound requests to a single distinct
-                  Listener. When multiple Listeners share values for fields (for
+                  **The implementation can match inbound requests to a single distinct
+                  Listener**.
+
+                  When multiple Listeners share values for fields (for
                   example, two Listeners with the same Port value), the implementation
                   can match requests to only one of the Listeners using other
                   Listener fields.
 
-                  For example, the following Listener scenarios are distinct:
+                  When multiple listeners have the same value for the Protocol field, then
+                  each of the Listeners with matching Protocol values MUST have different
+                  values for other fields.
 
-                  1. Multiple Listeners with the same Port that all use the "HTTP"
-                     Protocol that all have unique Hostname values.
-                  2. Multiple Listeners with the same Port that use either the "HTTPS" or
-                     "TLS" Protocol that all have unique Hostname values.
-                  3. A mixture of "TCP" and "UDP" Protocol Listeners, where no Listener
-                     with the same Protocol has the same Port value.
+                  The set of fields that MUST be different for a Listener differs per protocol.
+                  The following rules define the rules for what fields MUST be considered for
+                  Listeners to be distinct with each protocol currently defined in the
+                  Gateway API spec.
 
-                  Some fields in the Listener struct have possible values that affect
-                  whether the Listener is distinct. Hostname is particularly relevant
-                  for HTTP or HTTPS protocols.
+                  The set of listeners that all share a protocol value MUST have _different_
+                  values for _at least one_ of these fields to be distinct:
 
-                  When using the Hostname value to select between same-Port, same-Protocol
-                  Listeners, the Hostname value must be different on each Listener for the
-                  Listener to be distinct.
+                  * **HTTP, HTTPS, TLS**: Port, Hostname
+                  * **TCP, UDP**: Port
 
-                  When the Listeners are distinct based on Hostname, inbound request
+                  One **very** important rule to call out involves what happens when an
+                  implementation:
+
+                  * Supports TCP protocol Listeners, as well as HTTP, HTTPS, or TLS protocol
+                    Listeners, and
+                  * sees HTTP, HTTPS, or TLS protocols with the same `port` as one with TCP
+                    Protocol.
+
+                  In this case all the Listeners that share a port with the
+                  TCP Listener are not distinct and so MUST NOT be accepted.
+
+                  If an implementation does not support TCP Protocol Listeners, then the
+                  previous rule does not apply, and the TCP Listeners SHOULD NOT be
+                  accepted.
+
+                  Note that the `tls` field is not used for determining if a listener is distinct, because
+                  Listeners that _only_ differ on TLS config will still conflict in all cases.
+
+                  ### Listeners that are distinct only by Hostname
+
+                  When the Listeners are distinct based only on Hostname, inbound request
                   hostnames MUST match from the most specific to least specific Hostname
                   values to choose the correct Listener and its associated set of Routes.
 
-                  Exact matches must be processed before wildcard matches, and wildcard
-                  matches must be processed before fallback (empty Hostname value)
+                  Exact matches MUST be processed before wildcard matches, and wildcard
+                  matches MUST be processed before fallback (empty Hostname value)
                   matches. For example, `"foo.example.com"` takes precedence over
                   `"*.example.com"`, and `"*.example.com"` takes precedence over `""`.
 
                   Additionally, if there are multiple wildcard entries, more specific
                   wildcard entries must be processed before less specific wildcard entries.
                   For example, `"*.foo.example.com"` takes precedence over `"*.example.com"`.
+
                   The precise definition here is that the higher the number of dots in the
                   hostname to the right of the wildcard character, the higher the precedence.
 
@@ -828,18 +855,26 @@ spec:
                   the left, however, so `"*.example.com"` will match both
                   `"foo.bar.example.com"` _and_ `"bar.example.com"`.
 
+                  ## Handling indistinct Listeners
+
                   If a set of Listeners contains Listeners that are not distinct, then those
-                  Listeners are Conflicted, and the implementation MUST set the "Conflicted"
+                  Listeners are _Conflicted_, and the implementation MUST set the "Conflicted"
                   condition in the Listener Status to "True".
+
+                  The words "indistinct" and "conflicted" are considered equivalent for the
+                  purpose of this documentation.
 
                   Implementations MAY choose to accept a Gateway with some Conflicted
                   Listeners only if they only accept the partial Listener set that contains
-                  no Conflicted Listeners. To put this another way, implementations may
-                  accept a partial Listener set only if they throw out *all* the conflicting
-                  Listeners. No picking one of the conflicting listeners as the winner.
-                  This also means that the Gateway must have at least one non-conflicting
-                  Listener in this case, otherwise it violates the requirement that at
-                  least one Listener must be present.
+                  no Conflicted Listeners.
+
+                  Specifically, an implementation MAY accept a partial Listener set subject to
+                  the following rules:
+
+                  * The implementation MUST NOT pick one conflicting Listener as the winner.
+                    ALL indistinct Listeners must not be accepted for processing.
+                  * At least one distinct Listener MUST be present, or else the Gateway effectively
+                    contains _no_ Listeners, and must be rejected from processing as a whole.
 
                   The implementation MUST set a "ListenersNotValid" condition on the
                   Gateway Status when the Gateway contains Conflicted Listeners whether or
@@ -848,7 +883,25 @@ spec:
                   Accepted. Additionally, the Listener status for those listeners SHOULD
                   indicate which Listeners are conflicted and not Accepted.
 
-                  A Gateway's Listeners are considered "compatible" if:
+                  ## General Listener behavior
+
+                  Note that, for all distinct Listeners, requests SHOULD match at most one Listener.
+                  For example, if Listeners are defined for "foo.example.com" and "*.example.com", a
+                  request to "foo.example.com" SHOULD only be routed using routes attached
+                  to the "foo.example.com" Listener (and not the "*.example.com" Listener).
+
+                  This concept is known as "Listener Isolation", and it is an Extended feature
+                  of Gateway API. Implementations that do not support Listener Isolation MUST
+                  clearly document this, and MUST NOT claim support for the
+                  `GatewayHTTPListenerIsolation` feature.
+
+                  Implementations that _do_ support Listener Isolation SHOULD claim support
+                  for the Extended `GatewayHTTPListenerIsolation` feature and pass the associated
+                  conformance tests.
+
+                  ## Compatible Listeners
+
+                  A Gateway's Listeners are considered _compatible_ if:
 
                   1. They are distinct.
                   2. The implementation can serve them in compliance with the Addresses
@@ -863,15 +916,10 @@ spec:
                   on the same address, or cannot mix HTTPS and generic TLS listens on the same port
                   would not consider those cases compatible, even though they are distinct.
 
-                  Note that requests SHOULD match at most one Listener. For example, if
-                  Listeners are defined for "foo.example.com" and "*.example.com", a
-                  request to "foo.example.com" SHOULD only be routed using routes attached
-                  to the "foo.example.com" Listener (and not the "*.example.com" Listener).
-                  This concept is known as "Listener Isolation". Implementations that do
-                  not support Listener Isolation MUST clearly document this.
-
                   Implementations MAY merge separate Gateways onto a single set of
                   Addresses if all Listeners across all Gateways are compatible.
+
+                  In a future release the MinItems=1 requirement MAY be dropped.
 
                   Support: Core
                 items:
@@ -1034,10 +1082,31 @@ spec:
 
                         * TLS: The Listener Hostname MUST match the SNI.
                         * HTTP: The Listener Hostname MUST match the Host header of the request.
-                        * HTTPS: The Listener Hostname SHOULD match at both the TLS and HTTP
-                          protocol layers as described above. If an implementation does not
-                          ensure that both the SNI and Host header match the Listener hostname,
-                          it MUST clearly document that.
+                        * HTTPS: The Listener Hostname SHOULD match both the SNI and Host header.
+                          Note that this does not require the SNI and Host header to be the same.
+                          The semantics of this are described in more detail below.
+
+                        To ensure security, Section 11.1 of RFC-6066 emphasizes that server
+                        implementations that rely on SNI hostname matching MUST also verify
+                        hostnames within the application protocol.
+
+                        Section 9.1.2 of RFC-7540 provides a mechanism for servers to reject the
+                        reuse of a connection by responding with the HTTP 421 Misdirected Request
+                        status code. This indicates that the origin server has rejected the
+                        request because it appears to have been misdirected.
+
+                        To detect misdirected requests, Gateways SHOULD match the authority of
+                        the requests with all the SNI hostname(s) configured across all the
+                        Gateway Listeners on the same port and protocol:
+
+                        * If another Listener has an exact match or more specific wildcard entry,
+                          the Gateway SHOULD return a 421.
+                        * If the current Listener (selected by SNI matching during ClientHello)
+                          does not match the Host:
+                            * If another Listener does match the Host the Gateway SHOULD return a
+                              421.
+                            * If no other Listener matches the Host, the Gateway MUST return a
+                              404.
 
                         For HTTPRoute and TLSRoute resources, there is an interaction with the
                         `spec.hostnames` array. When both listener and route specify hostnames,
@@ -1274,7 +1343,7 @@ spec:
             description: Status defines the current state of Gateway.
             properties:
               addresses:
-                description: |+
+                description: |-
                   Addresses lists the network addresses that have been bound to the
                   Gateway.
 
@@ -1284,7 +1353,6 @@ spec:
                     * no addresses are specified, all addresses are dynamically assigned
                     * a combination of specified and dynamic addresses are assigned
                     * a specified address was unusable (e.g. already in use)
-
                 items:
                   description: GatewayStatusAddress describes a network address that
                     is bound to a Gateway.
@@ -1602,7 +1670,7 @@ spec:
             description: Spec defines the desired state of Gateway.
             properties:
               addresses:
-                description: |+
+                description: |-
                   Addresses requested for this Gateway. This is optional and behavior can
                   depend on the implementation. If a value is set in the spec and the
                   requested address is invalid or unavailable, the implementation MUST
@@ -1623,10 +1691,9 @@ spec:
                   GatewayStatus.Addresses.
 
                   Support: Extended
-
                 items:
-                  description: GatewayAddress describes an address that can be bound
-                    to a Gateway.
+                  description: GatewaySpecAddress describes an address that can be
+                    bound to a Gateway.
                   oneOf:
                   - properties:
                       type:
@@ -1651,15 +1718,15 @@ spec:
                       type: string
                     value:
                       description: |-
-                        Value of the address. The validity of the values will depend
-                        on the type and support by the controller.
+                        When a value is unspecified, an implementation SHOULD automatically
+                        assign an address matching the requested type if possible.
+
+                        If an implementation does not support an empty value, they MUST set the
+                        "Programmed" condition in status to False with a reason of "AddressNotAssigned".
 
                         Examples: `1.2.3.4`, `128::1`, `my-ip-address`.
                       maxLength: 253
-                      minLength: 1
                       type: string
-                  required:
-                  - value
                   type: object
                   x-kubernetes-validations:
                   - message: Hostname value must only contain valid characters (matching
@@ -1769,6 +1836,11 @@ spec:
                       the merging behavior is implementation specific.
                       It is generally recommended that GatewayClass provides defaults that can be overridden by a Gateway.
 
+                      If the referent cannot be found, refers to an unsupported kind, or when
+                      the data within that resource is malformed, the Gateway SHOULD be
+                      rejected with the "Accepted" status condition set to "False" and an
+                      "InvalidParameters" reason.
+
                       Support: Implementation-specific
                     properties:
                       group:
@@ -1799,6 +1871,8 @@ spec:
                   logical endpoints that are bound on this Gateway's addresses.
                   At least one Listener MUST be specified.
 
+                  ## Distinct Listeners
+
                   Each Listener in a set of Listeners (for example, in a single Gateway)
                   MUST be _distinct_, in that a traffic flow MUST be able to be assigned to
                   exactly one listener. (This section uses "set of Listeners" rather than
@@ -1810,55 +1884,76 @@ spec:
                   combination of Port, Protocol, and, if supported by the protocol, Hostname.
 
                   Some combinations of port, protocol, and TLS settings are considered
-                  Core support and MUST be supported by implementations based on their
-                  targeted conformance profile:
+                  Core support and MUST be supported by implementations based on the objects
+                  they support:
 
-                  HTTP Profile
+                  HTTPRoute
 
                   1. HTTPRoute, Port: 80, Protocol: HTTP
                   2. HTTPRoute, Port: 443, Protocol: HTTPS, TLS Mode: Terminate, TLS keypair provided
 
-                  TLS Profile
+                  TLSRoute
 
                   1. TLSRoute, Port: 443, Protocol: TLS, TLS Mode: Passthrough
 
                   "Distinct" Listeners have the following property:
 
-                  The implementation can match inbound requests to a single distinct
-                  Listener. When multiple Listeners share values for fields (for
+                  **The implementation can match inbound requests to a single distinct
+                  Listener**.
+
+                  When multiple Listeners share values for fields (for
                   example, two Listeners with the same Port value), the implementation
                   can match requests to only one of the Listeners using other
                   Listener fields.
 
-                  For example, the following Listener scenarios are distinct:
+                  When multiple listeners have the same value for the Protocol field, then
+                  each of the Listeners with matching Protocol values MUST have different
+                  values for other fields.
 
-                  1. Multiple Listeners with the same Port that all use the "HTTP"
-                     Protocol that all have unique Hostname values.
-                  2. Multiple Listeners with the same Port that use either the "HTTPS" or
-                     "TLS" Protocol that all have unique Hostname values.
-                  3. A mixture of "TCP" and "UDP" Protocol Listeners, where no Listener
-                     with the same Protocol has the same Port value.
+                  The set of fields that MUST be different for a Listener differs per protocol.
+                  The following rules define the rules for what fields MUST be considered for
+                  Listeners to be distinct with each protocol currently defined in the
+                  Gateway API spec.
 
-                  Some fields in the Listener struct have possible values that affect
-                  whether the Listener is distinct. Hostname is particularly relevant
-                  for HTTP or HTTPS protocols.
+                  The set of listeners that all share a protocol value MUST have _different_
+                  values for _at least one_ of these fields to be distinct:
 
-                  When using the Hostname value to select between same-Port, same-Protocol
-                  Listeners, the Hostname value must be different on each Listener for the
-                  Listener to be distinct.
+                  * **HTTP, HTTPS, TLS**: Port, Hostname
+                  * **TCP, UDP**: Port
 
-                  When the Listeners are distinct based on Hostname, inbound request
+                  One **very** important rule to call out involves what happens when an
+                  implementation:
+
+                  * Supports TCP protocol Listeners, as well as HTTP, HTTPS, or TLS protocol
+                    Listeners, and
+                  * sees HTTP, HTTPS, or TLS protocols with the same `port` as one with TCP
+                    Protocol.
+
+                  In this case all the Listeners that share a port with the
+                  TCP Listener are not distinct and so MUST NOT be accepted.
+
+                  If an implementation does not support TCP Protocol Listeners, then the
+                  previous rule does not apply, and the TCP Listeners SHOULD NOT be
+                  accepted.
+
+                  Note that the `tls` field is not used for determining if a listener is distinct, because
+                  Listeners that _only_ differ on TLS config will still conflict in all cases.
+
+                  ### Listeners that are distinct only by Hostname
+
+                  When the Listeners are distinct based only on Hostname, inbound request
                   hostnames MUST match from the most specific to least specific Hostname
                   values to choose the correct Listener and its associated set of Routes.
 
-                  Exact matches must be processed before wildcard matches, and wildcard
-                  matches must be processed before fallback (empty Hostname value)
+                  Exact matches MUST be processed before wildcard matches, and wildcard
+                  matches MUST be processed before fallback (empty Hostname value)
                   matches. For example, `"foo.example.com"` takes precedence over
                   `"*.example.com"`, and `"*.example.com"` takes precedence over `""`.
 
                   Additionally, if there are multiple wildcard entries, more specific
                   wildcard entries must be processed before less specific wildcard entries.
                   For example, `"*.foo.example.com"` takes precedence over `"*.example.com"`.
+
                   The precise definition here is that the higher the number of dots in the
                   hostname to the right of the wildcard character, the higher the precedence.
 
@@ -1866,18 +1961,26 @@ spec:
                   the left, however, so `"*.example.com"` will match both
                   `"foo.bar.example.com"` _and_ `"bar.example.com"`.
 
+                  ## Handling indistinct Listeners
+
                   If a set of Listeners contains Listeners that are not distinct, then those
-                  Listeners are Conflicted, and the implementation MUST set the "Conflicted"
+                  Listeners are _Conflicted_, and the implementation MUST set the "Conflicted"
                   condition in the Listener Status to "True".
+
+                  The words "indistinct" and "conflicted" are considered equivalent for the
+                  purpose of this documentation.
 
                   Implementations MAY choose to accept a Gateway with some Conflicted
                   Listeners only if they only accept the partial Listener set that contains
-                  no Conflicted Listeners. To put this another way, implementations may
-                  accept a partial Listener set only if they throw out *all* the conflicting
-                  Listeners. No picking one of the conflicting listeners as the winner.
-                  This also means that the Gateway must have at least one non-conflicting
-                  Listener in this case, otherwise it violates the requirement that at
-                  least one Listener must be present.
+                  no Conflicted Listeners.
+
+                  Specifically, an implementation MAY accept a partial Listener set subject to
+                  the following rules:
+
+                  * The implementation MUST NOT pick one conflicting Listener as the winner.
+                    ALL indistinct Listeners must not be accepted for processing.
+                  * At least one distinct Listener MUST be present, or else the Gateway effectively
+                    contains _no_ Listeners, and must be rejected from processing as a whole.
 
                   The implementation MUST set a "ListenersNotValid" condition on the
                   Gateway Status when the Gateway contains Conflicted Listeners whether or
@@ -1886,7 +1989,25 @@ spec:
                   Accepted. Additionally, the Listener status for those listeners SHOULD
                   indicate which Listeners are conflicted and not Accepted.
 
-                  A Gateway's Listeners are considered "compatible" if:
+                  ## General Listener behavior
+
+                  Note that, for all distinct Listeners, requests SHOULD match at most one Listener.
+                  For example, if Listeners are defined for "foo.example.com" and "*.example.com", a
+                  request to "foo.example.com" SHOULD only be routed using routes attached
+                  to the "foo.example.com" Listener (and not the "*.example.com" Listener).
+
+                  This concept is known as "Listener Isolation", and it is an Extended feature
+                  of Gateway API. Implementations that do not support Listener Isolation MUST
+                  clearly document this, and MUST NOT claim support for the
+                  `GatewayHTTPListenerIsolation` feature.
+
+                  Implementations that _do_ support Listener Isolation SHOULD claim support
+                  for the Extended `GatewayHTTPListenerIsolation` feature and pass the associated
+                  conformance tests.
+
+                  ## Compatible Listeners
+
+                  A Gateway's Listeners are considered _compatible_ if:
 
                   1. They are distinct.
                   2. The implementation can serve them in compliance with the Addresses
@@ -1901,15 +2022,10 @@ spec:
                   on the same address, or cannot mix HTTPS and generic TLS listens on the same port
                   would not consider those cases compatible, even though they are distinct.
 
-                  Note that requests SHOULD match at most one Listener. For example, if
-                  Listeners are defined for "foo.example.com" and "*.example.com", a
-                  request to "foo.example.com" SHOULD only be routed using routes attached
-                  to the "foo.example.com" Listener (and not the "*.example.com" Listener).
-                  This concept is known as "Listener Isolation". Implementations that do
-                  not support Listener Isolation MUST clearly document this.
-
                   Implementations MAY merge separate Gateways onto a single set of
                   Addresses if all Listeners across all Gateways are compatible.
+
+                  In a future release the MinItems=1 requirement MAY be dropped.
 
                   Support: Core
                 items:
@@ -2072,10 +2188,31 @@ spec:
 
                         * TLS: The Listener Hostname MUST match the SNI.
                         * HTTP: The Listener Hostname MUST match the Host header of the request.
-                        * HTTPS: The Listener Hostname SHOULD match at both the TLS and HTTP
-                          protocol layers as described above. If an implementation does not
-                          ensure that both the SNI and Host header match the Listener hostname,
-                          it MUST clearly document that.
+                        * HTTPS: The Listener Hostname SHOULD match both the SNI and Host header.
+                          Note that this does not require the SNI and Host header to be the same.
+                          The semantics of this are described in more detail below.
+
+                        To ensure security, Section 11.1 of RFC-6066 emphasizes that server
+                        implementations that rely on SNI hostname matching MUST also verify
+                        hostnames within the application protocol.
+
+                        Section 9.1.2 of RFC-7540 provides a mechanism for servers to reject the
+                        reuse of a connection by responding with the HTTP 421 Misdirected Request
+                        status code. This indicates that the origin server has rejected the
+                        request because it appears to have been misdirected.
+
+                        To detect misdirected requests, Gateways SHOULD match the authority of
+                        the requests with all the SNI hostname(s) configured across all the
+                        Gateway Listeners on the same port and protocol:
+
+                        * If another Listener has an exact match or more specific wildcard entry,
+                          the Gateway SHOULD return a 421.
+                        * If the current Listener (selected by SNI matching during ClientHello)
+                          does not match the Host:
+                            * If another Listener does match the Host the Gateway SHOULD return a
+                              421.
+                            * If no other Listener matches the Host, the Gateway MUST return a
+                              404.
 
                         For HTTPRoute and TLSRoute resources, there is an interaction with the
                         `spec.hostnames` array. When both listener and route specify hostnames,
@@ -2312,7 +2449,7 @@ spec:
             description: Status defines the current state of Gateway.
             properties:
               addresses:
-                description: |+
+                description: |-
                   Addresses lists the network addresses that have been bound to the
                   Gateway.
 
@@ -2322,7 +2459,6 @@ spec:
                     * no addresses are specified, all addresses are dynamically assigned
                     * a combination of specified and dynamic addresses are assigned
                     * a specified address was unusable (e.g. already in use)
-
                 items:
                   description: GatewayStatusAddress describes a network address that
                     is bound to a Gateway.
@@ -2614,7 +2750,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/3328
-    gateway.networking.k8s.io/bundle-version: v1.2.1
+    gateway.networking.k8s.io/bundle-version: v1.3.0
     gateway.networking.k8s.io/channel: standard
   creationTimestamp: null
   name: grpcroutes.gateway.networking.k8s.io
@@ -2763,7 +2899,7 @@ spec:
                 maxItems: 16
                 type: array
               parentRefs:
-                description: |+
+                description: |-
                   ParentRefs references the resources (usually Gateways) that a Route wants
                   to be attached to. Note that the referenced parent resource needs to
                   allow this for the attachment to be complete. For Gateways, that means
@@ -2814,12 +2950,6 @@ spec:
                   allowed by something in the namespace they are referring to. For example,
                   Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                   generic way to enable other kinds of cross-namespace reference.
-
-
-
-
-
-
                 items:
                   description: |-
                     ParentReference identifies an API object (usually a Gateway) that can be considered
@@ -2881,8 +3011,6 @@ spec:
                         Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                         generic way to enable any other kind of cross-namespace reference.
 
-
-
                         Support: Core
                       maxLength: 63
                       minLength: 1
@@ -2900,8 +3028,6 @@ spec:
                         as opposed to a listener(s) whose port(s) may be changed. When both Port
                         and SectionName are specified, the name and port of the selected listener
                         must match both specified values.
-
-
 
                         Implementations MAY choose to support other parent resources.
                         Implementations supporting other types of parent resources MUST clearly
@@ -2976,9 +3102,7 @@ spec:
                     == '')) || (has(p1.sectionName) && has(p2.sectionName) && p1.sectionName
                     == p2.sectionName))))
               rules:
-                description: |+
-                  Rules are a list of GRPC matchers, filters and actions.
-
+                description: Rules are a list of GRPC matchers, filters and actions.
                 items:
                   description: |-
                     GRPCRouteRule defines the semantics for matching a gRPC request based on
@@ -3023,24 +3147,6 @@ spec:
                           ReferenceGrant object is required in the referent namespace to allow that
                           namespace's owner to accept the reference. See the ReferenceGrant
                           documentation for details.
-
-                          <gateway:experimental:description>
-
-                          When the BackendRef points to a Kubernetes Service, implementations SHOULD
-                          honor the appProtocol field if it is set for the target Service Port.
-
-                          Implementations supporting appProtocol SHOULD recognize the Kubernetes
-                          Standard Application Protocols defined in KEP-3726.
-
-                          If a Service appProtocol isn't specified, an implementation MAY infer the
-                          backend protocol through its own means. Implementations MAY infer the
-                          protocol from the Route type referring to the backend Service.
-
-                          If a Route is not able to send traffic to the backend using the specified
-                          protocol then the backend is considered invalid. Implementations MUST set the
-                          "ResolvedRefs" condition to "False" with the "UnsupportedProtocol" reason.
-
-                          </gateway:experimental:description>
                         properties:
                           filters:
                             description: |-
@@ -3126,7 +3232,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -3201,7 +3307,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -3229,7 +3335,7 @@ spec:
                                       x-kubernetes-list-type: map
                                   type: object
                                 requestMirror:
-                                  description: |+
+                                  description: |-
                                     RequestMirror defines a schema for a filter that mirrors requests.
                                     Requests are sent to the specified destination, but responses from
                                     that destination are ignored.
@@ -3239,7 +3345,6 @@ spec:
                                     backends.
 
                                     Support: Extended
-
                                   properties:
                                     backendRef:
                                       description: |-
@@ -3334,9 +3439,49 @@ spec:
                                       - message: Must have port for Service reference
                                         rule: '(size(self.group) == 0 && self.kind
                                           == ''Service'') ? has(self.port) : true'
+                                    fraction:
+                                      description: |-
+                                        Fraction represents the fraction of requests that should be
+                                        mirrored to BackendRef.
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      properties:
+                                        denominator:
+                                          default: 100
+                                          format: int32
+                                          minimum: 1
+                                          type: integer
+                                        numerator:
+                                          format: int32
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - numerator
+                                      type: object
+                                      x-kubernetes-validations:
+                                      - message: numerator must be less than or equal
+                                          to denominator
+                                        rule: self.numerator <= self.denominator
+                                    percent:
+                                      description: |-
+                                        Percent represents the percentage of requests that should be
+                                        mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                        requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      format: int32
+                                      maximum: 100
+                                      minimum: 0
+                                      type: integer
                                   required:
                                   - backendRef
                                   type: object
+                                  x-kubernetes-validations:
+                                  - message: Only one of percent or fraction may be
+                                      specified in HTTPRequestMirrorFilter
+                                    rule: '!(has(self.percent) && has(self.fraction))'
                                 responseHeaderModifier:
                                   description: |-
                                     ResponseHeaderModifier defines a schema for a filter that modifies response
@@ -3370,7 +3515,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -3445,7 +3590,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -3473,7 +3618,7 @@ spec:
                                       x-kubernetes-list-type: map
                                   type: object
                                 type:
-                                  description: |+
+                                  description: |-
                                     Type identifies the type of filter to apply. As with other API fields,
                                     types are classified into three conformance levels:
 
@@ -3498,7 +3643,6 @@ spec:
                                     If a reference to a custom filter type cannot be resolved, the filter
                                     MUST NOT be skipped. Instead, requests that would have been processed by
                                     that filter MUST receive a HTTP error response.
-
                                   enum:
                                   - ResponseHeaderModifier
                                   - RequestHeaderModifier
@@ -3655,7 +3799,7 @@ spec:
                         Specifying the same filter multiple times is not supported unless explicitly
                         indicated in the filter.
 
-                        If an implementation can not support a combination of filters, it must clearly
+                        If an implementation cannot support a combination of filters, it must clearly
                         document that limitation. In cases where incompatible or unsupported
                         filters are specified and cause the `Accepted` condition to be set to status
                         `False`, implementations may use the `IncompatibleFilters` reason to specify
@@ -3738,7 +3882,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -3812,7 +3956,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -3840,7 +3984,7 @@ spec:
                                 x-kubernetes-list-type: map
                             type: object
                           requestMirror:
-                            description: |+
+                            description: |-
                               RequestMirror defines a schema for a filter that mirrors requests.
                               Requests are sent to the specified destination, but responses from
                               that destination are ignored.
@@ -3850,7 +3994,6 @@ spec:
                               backends.
 
                               Support: Extended
-
                             properties:
                               backendRef:
                                 description: |-
@@ -3945,9 +4088,49 @@ spec:
                                 - message: Must have port for Service reference
                                   rule: '(size(self.group) == 0 && self.kind == ''Service'')
                                     ? has(self.port) : true'
+                              fraction:
+                                description: |-
+                                  Fraction represents the fraction of requests that should be
+                                  mirrored to BackendRef.
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                properties:
+                                  denominator:
+                                    default: 100
+                                    format: int32
+                                    minimum: 1
+                                    type: integer
+                                  numerator:
+                                    format: int32
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - numerator
+                                type: object
+                                x-kubernetes-validations:
+                                - message: numerator must be less than or equal to
+                                    denominator
+                                  rule: self.numerator <= self.denominator
+                              percent:
+                                description: |-
+                                  Percent represents the percentage of requests that should be
+                                  mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                  requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                format: int32
+                                maximum: 100
+                                minimum: 0
+                                type: integer
                             required:
                             - backendRef
                             type: object
+                            x-kubernetes-validations:
+                            - message: Only one of percent or fraction may be specified
+                                in HTTPRequestMirrorFilter
+                              rule: '!(has(self.percent) && has(self.fraction))'
                           responseHeaderModifier:
                             description: |-
                               ResponseHeaderModifier defines a schema for a filter that modifies response
@@ -3980,7 +4163,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -4054,7 +4237,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -4082,7 +4265,7 @@ spec:
                                 x-kubernetes-list-type: map
                             type: object
                           type:
-                            description: |+
+                            description: |-
                               Type identifies the type of filter to apply. As with other API fields,
                               types are classified into three conformance levels:
 
@@ -4107,7 +4290,6 @@ spec:
                               If a reference to a custom filter type cannot be resolved, the filter
                               MUST NOT be skipped. Instead, requests that would have been processed by
                               that filter MUST receive a HTTP error response.
-
                             enum:
                             - ResponseHeaderModifier
                             - RequestHeaderModifier
@@ -4323,7 +4505,7 @@ spec:
                                 has(self.method) ? self.method.matches(r"""^[A-Za-z_][A-Za-z_0-9]*$"""):
                                 true'
                         type: object
-                      maxItems: 8
+                      maxItems: 64
                       type: array
                   type: object
                 maxItems: 16
@@ -4392,7 +4574,7 @@ spec:
                         There are a number of cases where the "Accepted" condition may not be set
                         due to lack of controller visibility, that includes when:
 
-                        * The Route refers to a non-existent parent.
+                        * The Route refers to a nonexistent parent.
                         * The Route is of a type that the controller does not support.
                         * The Route is in a namespace the controller does not have access to.
                       items:
@@ -4526,8 +4708,6 @@ spec:
                             Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                             generic way to enable any other kind of cross-namespace reference.
 
-
-
                             Support: Core
                           maxLength: 63
                           minLength: 1
@@ -4545,8 +4725,6 @@ spec:
                             as opposed to a listener(s) whose port(s) may be changed. When both Port
                             and SectionName are specified, the name and port of the selected listener
                             must match both specified values.
-
-
 
                             Implementations MAY choose to support other parent resources.
                             Implementations supporting other types of parent resources MUST clearly
@@ -4627,7 +4805,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/3328
-    gateway.networking.k8s.io/bundle-version: v1.2.1
+    gateway.networking.k8s.io/bundle-version: v1.3.0
     gateway.networking.k8s.io/channel: standard
   creationTimestamp: null
   name: httproutes.gateway.networking.k8s.io
@@ -4756,7 +4934,7 @@ spec:
                 maxItems: 16
                 type: array
               parentRefs:
-                description: |+
+                description: |-
                   ParentRefs references the resources (usually Gateways) that a Route wants
                   to be attached to. Note that the referenced parent resource needs to
                   allow this for the attachment to be complete. For Gateways, that means
@@ -4807,12 +4985,6 @@ spec:
                   allowed by something in the namespace they are referring to. For example,
                   Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                   generic way to enable other kinds of cross-namespace reference.
-
-
-
-
-
-
                 items:
                   description: |-
                     ParentReference identifies an API object (usually a Gateway) that can be considered
@@ -4874,8 +5046,6 @@ spec:
                         Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                         generic way to enable any other kind of cross-namespace reference.
 
-
-
                         Support: Core
                       maxLength: 63
                       minLength: 1
@@ -4893,8 +5063,6 @@ spec:
                         as opposed to a listener(s) whose port(s) may be changed. When both Port
                         and SectionName are specified, the name and port of the selected listener
                         must match both specified values.
-
-
 
                         Implementations MAY choose to support other parent resources.
                         Implementations supporting other types of parent resources MUST clearly
@@ -4974,9 +5142,7 @@ spec:
                   - path:
                       type: PathPrefix
                       value: /
-                description: |+
-                  Rules are a list of HTTP matchers, filters and actions.
-
+                description: Rules are a list of HTTP matchers, filters and actions.
                 items:
                   description: |-
                     HTTPRouteRule defines semantics for matching an HTTP request based on
@@ -5028,24 +5194,6 @@ spec:
                           ReferenceGrant object is required in the referent namespace to allow that
                           namespace's owner to accept the reference. See the ReferenceGrant
                           documentation for details.
-
-                          <gateway:experimental:description>
-
-                          When the BackendRef points to a Kubernetes Service, implementations SHOULD
-                          honor the appProtocol field if it is set for the target Service Port.
-
-                          Implementations supporting appProtocol SHOULD recognize the Kubernetes
-                          Standard Application Protocols defined in KEP-3726.
-
-                          If a Service appProtocol isn't specified, an implementation MAY infer the
-                          backend protocol through its own means. Implementations MAY infer the
-                          protocol from the Route type referring to the backend Service.
-
-                          If a Route is not able to send traffic to the backend using the specified
-                          protocol then the backend is considered invalid. Implementations MUST set the
-                          "ResolvedRefs" condition to "False" with the "UnsupportedProtocol" reason.
-
-                          </gateway:experimental:description>
                         properties:
                           filters:
                             description: |-
@@ -5131,7 +5279,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -5206,7 +5354,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -5234,7 +5382,7 @@ spec:
                                       x-kubernetes-list-type: map
                                   type: object
                                 requestMirror:
-                                  description: |+
+                                  description: |-
                                     RequestMirror defines a schema for a filter that mirrors requests.
                                     Requests are sent to the specified destination, but responses from
                                     that destination are ignored.
@@ -5244,7 +5392,6 @@ spec:
                                     backends.
 
                                     Support: Extended
-
                                   properties:
                                     backendRef:
                                       description: |-
@@ -5339,9 +5486,49 @@ spec:
                                       - message: Must have port for Service reference
                                         rule: '(size(self.group) == 0 && self.kind
                                           == ''Service'') ? has(self.port) : true'
+                                    fraction:
+                                      description: |-
+                                        Fraction represents the fraction of requests that should be
+                                        mirrored to BackendRef.
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      properties:
+                                        denominator:
+                                          default: 100
+                                          format: int32
+                                          minimum: 1
+                                          type: integer
+                                        numerator:
+                                          format: int32
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - numerator
+                                      type: object
+                                      x-kubernetes-validations:
+                                      - message: numerator must be less than or equal
+                                          to denominator
+                                        rule: self.numerator <= self.denominator
+                                    percent:
+                                      description: |-
+                                        Percent represents the percentage of requests that should be
+                                        mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                        requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      format: int32
+                                      maximum: 100
+                                      minimum: 0
+                                      type: integer
                                   required:
                                   - backendRef
                                   type: object
+                                  x-kubernetes-validations:
+                                  - message: Only one of percent or fraction may be
+                                      specified in HTTPRequestMirrorFilter
+                                    rule: '!(has(self.percent) && has(self.fraction))'
                                 requestRedirect:
                                   description: |-
                                     RequestRedirect defines a schema for a filter that responds to the
@@ -5528,7 +5715,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -5603,7 +5790,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -5924,7 +6111,7 @@ spec:
                         they are specified.
 
                         Implementations MAY choose to implement this ordering strictly, rejecting
-                        any combination or order of filters that can not be supported. If implementations
+                        any combination or order of filters that cannot be supported. If implementations
                         choose a strict interpretation of filter ordering, they MUST clearly document
                         that behavior.
 
@@ -5946,7 +6133,7 @@ spec:
 
                         All filters are expected to be compatible with each other except for the
                         URLRewrite and RequestRedirect filters, which may not be combined. If an
-                        implementation can not support other combinations of filters, they must clearly
+                        implementation cannot support other combinations of filters, they must clearly
                         document that limitation. In cases where incompatible or unsupported
                         filters are specified and cause the `Accepted` condition to be set to status
                         `False`, implementations may use the `IncompatibleFilters` reason to specify
@@ -6029,7 +6216,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -6103,7 +6290,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -6131,7 +6318,7 @@ spec:
                                 x-kubernetes-list-type: map
                             type: object
                           requestMirror:
-                            description: |+
+                            description: |-
                               RequestMirror defines a schema for a filter that mirrors requests.
                               Requests are sent to the specified destination, but responses from
                               that destination are ignored.
@@ -6141,7 +6328,6 @@ spec:
                               backends.
 
                               Support: Extended
-
                             properties:
                               backendRef:
                                 description: |-
@@ -6236,9 +6422,49 @@ spec:
                                 - message: Must have port for Service reference
                                   rule: '(size(self.group) == 0 && self.kind == ''Service'')
                                     ? has(self.port) : true'
+                              fraction:
+                                description: |-
+                                  Fraction represents the fraction of requests that should be
+                                  mirrored to BackendRef.
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                properties:
+                                  denominator:
+                                    default: 100
+                                    format: int32
+                                    minimum: 1
+                                    type: integer
+                                  numerator:
+                                    format: int32
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - numerator
+                                type: object
+                                x-kubernetes-validations:
+                                - message: numerator must be less than or equal to
+                                    denominator
+                                  rule: self.numerator <= self.denominator
+                              percent:
+                                description: |-
+                                  Percent represents the percentage of requests that should be
+                                  mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                  requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                format: int32
+                                maximum: 100
+                                minimum: 0
+                                type: integer
                             required:
                             - backendRef
                             type: object
+                            x-kubernetes-validations:
+                            - message: Only one of percent or fraction may be specified
+                                in HTTPRequestMirrorFilter
+                              rule: '!(has(self.percent) && has(self.fraction))'
                           requestRedirect:
                             description: |-
                               RequestRedirect defines a schema for a filter that responds to the
@@ -6424,7 +6650,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -6498,7 +6724,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -6798,7 +7024,7 @@ spec:
                                 name:
                                   description: |-
                                     Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                    case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                    case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                     If multiple entries specify equivalent header names, only the first
                                     entry with an equivalent name MUST be considered for a match. Subsequent
@@ -7171,7 +7397,7 @@ spec:
                         There are a number of cases where the "Accepted" condition may not be set
                         due to lack of controller visibility, that includes when:
 
-                        * The Route refers to a non-existent parent.
+                        * The Route refers to a nonexistent parent.
                         * The Route is of a type that the controller does not support.
                         * The Route is in a namespace the controller does not have access to.
                       items:
@@ -7305,8 +7531,6 @@ spec:
                             Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                             generic way to enable any other kind of cross-namespace reference.
 
-
-
                             Support: Core
                           maxLength: 63
                           minLength: 1
@@ -7324,8 +7548,6 @@ spec:
                             as opposed to a listener(s) whose port(s) may be changed. When both Port
                             and SectionName are specified, the name and port of the selected listener
                             must match both specified values.
-
-
 
                             Implementations MAY choose to support other parent resources.
                             Implementations supporting other types of parent resources MUST clearly
@@ -7507,7 +7729,7 @@ spec:
                 maxItems: 16
                 type: array
               parentRefs:
-                description: |+
+                description: |-
                   ParentRefs references the resources (usually Gateways) that a Route wants
                   to be attached to. Note that the referenced parent resource needs to
                   allow this for the attachment to be complete. For Gateways, that means
@@ -7558,12 +7780,6 @@ spec:
                   allowed by something in the namespace they are referring to. For example,
                   Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                   generic way to enable other kinds of cross-namespace reference.
-
-
-
-
-
-
                 items:
                   description: |-
                     ParentReference identifies an API object (usually a Gateway) that can be considered
@@ -7625,8 +7841,6 @@ spec:
                         Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                         generic way to enable any other kind of cross-namespace reference.
 
-
-
                         Support: Core
                       maxLength: 63
                       minLength: 1
@@ -7644,8 +7858,6 @@ spec:
                         as opposed to a listener(s) whose port(s) may be changed. When both Port
                         and SectionName are specified, the name and port of the selected listener
                         must match both specified values.
-
-
 
                         Implementations MAY choose to support other parent resources.
                         Implementations supporting other types of parent resources MUST clearly
@@ -7725,9 +7937,7 @@ spec:
                   - path:
                       type: PathPrefix
                       value: /
-                description: |+
-                  Rules are a list of HTTP matchers, filters and actions.
-
+                description: Rules are a list of HTTP matchers, filters and actions.
                 items:
                   description: |-
                     HTTPRouteRule defines semantics for matching an HTTP request based on
@@ -7779,24 +7989,6 @@ spec:
                           ReferenceGrant object is required in the referent namespace to allow that
                           namespace's owner to accept the reference. See the ReferenceGrant
                           documentation for details.
-
-                          <gateway:experimental:description>
-
-                          When the BackendRef points to a Kubernetes Service, implementations SHOULD
-                          honor the appProtocol field if it is set for the target Service Port.
-
-                          Implementations supporting appProtocol SHOULD recognize the Kubernetes
-                          Standard Application Protocols defined in KEP-3726.
-
-                          If a Service appProtocol isn't specified, an implementation MAY infer the
-                          backend protocol through its own means. Implementations MAY infer the
-                          protocol from the Route type referring to the backend Service.
-
-                          If a Route is not able to send traffic to the backend using the specified
-                          protocol then the backend is considered invalid. Implementations MUST set the
-                          "ResolvedRefs" condition to "False" with the "UnsupportedProtocol" reason.
-
-                          </gateway:experimental:description>
                         properties:
                           filters:
                             description: |-
@@ -7882,7 +8074,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -7957,7 +8149,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -7985,7 +8177,7 @@ spec:
                                       x-kubernetes-list-type: map
                                   type: object
                                 requestMirror:
-                                  description: |+
+                                  description: |-
                                     RequestMirror defines a schema for a filter that mirrors requests.
                                     Requests are sent to the specified destination, but responses from
                                     that destination are ignored.
@@ -7995,7 +8187,6 @@ spec:
                                     backends.
 
                                     Support: Extended
-
                                   properties:
                                     backendRef:
                                       description: |-
@@ -8090,9 +8281,49 @@ spec:
                                       - message: Must have port for Service reference
                                         rule: '(size(self.group) == 0 && self.kind
                                           == ''Service'') ? has(self.port) : true'
+                                    fraction:
+                                      description: |-
+                                        Fraction represents the fraction of requests that should be
+                                        mirrored to BackendRef.
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      properties:
+                                        denominator:
+                                          default: 100
+                                          format: int32
+                                          minimum: 1
+                                          type: integer
+                                        numerator:
+                                          format: int32
+                                          minimum: 0
+                                          type: integer
+                                      required:
+                                      - numerator
+                                      type: object
+                                      x-kubernetes-validations:
+                                      - message: numerator must be less than or equal
+                                          to denominator
+                                        rule: self.numerator <= self.denominator
+                                    percent:
+                                      description: |-
+                                        Percent represents the percentage of requests that should be
+                                        mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                        requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                        Only one of Fraction or Percent may be specified. If neither field
+                                        is specified, 100% of requests will be mirrored.
+                                      format: int32
+                                      maximum: 100
+                                      minimum: 0
+                                      type: integer
                                   required:
                                   - backendRef
                                   type: object
+                                  x-kubernetes-validations:
+                                  - message: Only one of percent or fraction may be
+                                      specified in HTTPRequestMirrorFilter
+                                    rule: '!(has(self.percent) && has(self.fraction))'
                                 requestRedirect:
                                   description: |-
                                     RequestRedirect defines a schema for a filter that responds to the
@@ -8279,7 +8510,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -8354,7 +8585,7 @@ spec:
                                           name:
                                             description: |-
                                               Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                              case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                              case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                               If multiple entries specify equivalent header names, the first entry with
                                               an equivalent name MUST be considered for a match. Subsequent entries
@@ -8675,7 +8906,7 @@ spec:
                         they are specified.
 
                         Implementations MAY choose to implement this ordering strictly, rejecting
-                        any combination or order of filters that can not be supported. If implementations
+                        any combination or order of filters that cannot be supported. If implementations
                         choose a strict interpretation of filter ordering, they MUST clearly document
                         that behavior.
 
@@ -8697,7 +8928,7 @@ spec:
 
                         All filters are expected to be compatible with each other except for the
                         URLRewrite and RequestRedirect filters, which may not be combined. If an
-                        implementation can not support other combinations of filters, they must clearly
+                        implementation cannot support other combinations of filters, they must clearly
                         document that limitation. In cases where incompatible or unsupported
                         filters are specified and cause the `Accepted` condition to be set to status
                         `False`, implementations may use the `IncompatibleFilters` reason to specify
@@ -8780,7 +9011,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -8854,7 +9085,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -8882,7 +9113,7 @@ spec:
                                 x-kubernetes-list-type: map
                             type: object
                           requestMirror:
-                            description: |+
+                            description: |-
                               RequestMirror defines a schema for a filter that mirrors requests.
                               Requests are sent to the specified destination, but responses from
                               that destination are ignored.
@@ -8892,7 +9123,6 @@ spec:
                               backends.
 
                               Support: Extended
-
                             properties:
                               backendRef:
                                 description: |-
@@ -8987,9 +9217,49 @@ spec:
                                 - message: Must have port for Service reference
                                   rule: '(size(self.group) == 0 && self.kind == ''Service'')
                                     ? has(self.port) : true'
+                              fraction:
+                                description: |-
+                                  Fraction represents the fraction of requests that should be
+                                  mirrored to BackendRef.
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                properties:
+                                  denominator:
+                                    default: 100
+                                    format: int32
+                                    minimum: 1
+                                    type: integer
+                                  numerator:
+                                    format: int32
+                                    minimum: 0
+                                    type: integer
+                                required:
+                                - numerator
+                                type: object
+                                x-kubernetes-validations:
+                                - message: numerator must be less than or equal to
+                                    denominator
+                                  rule: self.numerator <= self.denominator
+                              percent:
+                                description: |-
+                                  Percent represents the percentage of requests that should be
+                                  mirrored to BackendRef. Its minimum value is 0 (indicating 0% of
+                                  requests) and its maximum value is 100 (indicating 100% of requests).
+
+                                  Only one of Fraction or Percent may be specified. If neither field
+                                  is specified, 100% of requests will be mirrored.
+                                format: int32
+                                maximum: 100
+                                minimum: 0
+                                type: integer
                             required:
                             - backendRef
                             type: object
+                            x-kubernetes-validations:
+                            - message: Only one of percent or fraction may be specified
+                                in HTTPRequestMirrorFilter
+                              rule: '!(has(self.percent) && has(self.fraction))'
                           requestRedirect:
                             description: |-
                               RequestRedirect defines a schema for a filter that responds to the
@@ -9175,7 +9445,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -9249,7 +9519,7 @@ spec:
                                     name:
                                       description: |-
                                         Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                        case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                        case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                         If multiple entries specify equivalent header names, the first entry with
                                         an equivalent name MUST be considered for a match. Subsequent entries
@@ -9549,7 +9819,7 @@ spec:
                                 name:
                                   description: |-
                                     Name is the name of the HTTP Header to be matched. Name matching MUST be
-                                    case insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
+                                    case-insensitive. (See https://tools.ietf.org/html/rfc7230#section-3.2).
 
                                     If multiple entries specify equivalent header names, only the first
                                     entry with an equivalent name MUST be considered for a match. Subsequent
@@ -9922,7 +10192,7 @@ spec:
                         There are a number of cases where the "Accepted" condition may not be set
                         due to lack of controller visibility, that includes when:
 
-                        * The Route refers to a non-existent parent.
+                        * The Route refers to a nonexistent parent.
                         * The Route is of a type that the controller does not support.
                         * The Route is in a namespace the controller does not have access to.
                       items:
@@ -10056,8 +10326,6 @@ spec:
                             Gateway has the AllowedRoutes field, and ReferenceGrant provides a
                             generic way to enable any other kind of cross-namespace reference.
 
-
-
                             Support: Core
                           maxLength: 63
                           minLength: 1
@@ -10075,8 +10343,6 @@ spec:
                             as opposed to a listener(s) whose port(s) may be changed. When both Port
                             and SectionName are specified, the name and port of the selected listener
                             must match both specified values.
-
-
 
                             Implementations MAY choose to support other parent resources.
                             Implementations supporting other types of parent resources MUST clearly
@@ -10159,7 +10425,7 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     api-approved.kubernetes.io: https://github.com/kubernetes-sigs/gateway-api/pull/3328
-    gateway.networking.k8s.io/bundle-version: v1.2.1
+    gateway.networking.k8s.io/bundle-version: v1.3.0
     gateway.networking.k8s.io/channel: standard
   creationTimestamp: null
   name: referencegrants.gateway.networking.k8s.io

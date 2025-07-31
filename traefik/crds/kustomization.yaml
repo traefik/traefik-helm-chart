@@ -6,9 +6,11 @@ resources:
   - gateway-standard-install.yaml
   - hub.traefik.io_accesscontrolpolicies.yaml
   - hub.traefik.io_aiservices.yaml
+  - hub.traefik.io_apiauths.yaml
   - hub.traefik.io_apibundles.yaml
   - hub.traefik.io_apicatalogitems.yaml
   - hub.traefik.io_apiplans.yaml
+  - hub.traefik.io_apiportalauths.yaml
   - hub.traefik.io_apiportals.yaml
   - hub.traefik.io_apiratelimits.yaml
   - hub.traefik.io_apis.yaml

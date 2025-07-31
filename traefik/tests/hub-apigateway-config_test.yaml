@@ -25,7 +25,15 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.offline"
+          content: "--hub.offline=true"
+  - it: should set the offline flag when offline is disabled
+    set:
+      hub:
+        offline: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.offline=false"
   - it: should set minimal required parameters when enabling Traefik Hub API Management
     set:
       hub:
@@ -46,17 +54,33 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apimanagement.admission.listenAddr=:9943"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.offline=false"
       - contains:
           path: spec.template.spec.containers[0].ports
           content:
             name: admission
             containerPort: 9943
             protocol: TCP
+  - it: should not expose admission port when offline mode is enabled
+    set:
+      hub:
+        offline: true
+        apimanagement:
+          enabled: true
+    asserts:
       - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement.admission.listenAddr=:9943"
+      - notContains:
           path: spec.template.spec.containers[0].ports
           content:
-            name: apiportal
-            containerPort: 9903
+            name: admission
+            containerPort: 9943
             protocol: TCP
   - it: should fail when trying to set admission parameters without apimanagement
     set:
@@ -83,6 +107,31 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apimanagement.admission.secretName=secret"
+  - it: should not set admission parameters when offline mode is enabled
+    set:
+      hub:
+        offline: true
+        apimanagement:
+          enabled: true
+          admission:
+            listenAddr: "10.0.0.1:7500"
+            secretName: "secret"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement.admission.listenAddr=10.0.0.1:7500"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apimanagement.admission.secretName=secret"
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: admission
+            containerPort: 7500
+            protocol: TCP
   - it: should be possible to enforce OAS
     set:
       hub:
@@ -108,6 +157,15 @@ tests:
         platformUrl: "fooUrl"
     asserts:
       - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.platformUrl=fooUrl"
+  - it: should not set platformUrl when offline mode is enabled
+    set:
+      hub:
+        offline: true
+        platformUrl: "fooUrl"
+    asserts:
+      - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.platformUrl=fooUrl"
   - it: should be possible to specify ratelimit parameters (and ignore extra)
