@@ -587,6 +587,7 @@ experimental:
 > When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
 
 ### Using Inline Plugin
+
 For testing or production deployments, embed plugin source directly in values.yaml:
 
 ```yaml
@@ -609,7 +610,6 @@ experimental:
 ```
 
 > **Advantages**: No need for plugins on every node, better for containerized environments, supports up to 1MB of plugin code.
-
 
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 
