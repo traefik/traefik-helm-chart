@@ -603,6 +603,7 @@ experimental:
         .traefik.yml: |
           displayName: Your Traefik Plugin
           type: middleware
+          // Your plugin settings
           import: github.com/example/prodplugin
         main.go: |
           package main
