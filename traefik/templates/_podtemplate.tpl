@@ -934,10 +934,18 @@
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
+        {{- $root := . }}
         {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
         - name: {{ $localPluginName | replace "." "-" }}
+          {{- if $localPlugin.hostPath }}
           hostPath:
             path: {{ $localPlugin.hostPath | quote }}
+          {{- else if $localPlugin.inlinePlugin }}
+          configMap:
+            name: {{ template "traefik.fullname" $root }}-local-plugin-{{ $localPluginName | replace "." "-" }}
+          {{- else }}
+            {{- fail (printf "ERROR: local plugin %s must specify either hostPath or inlinePlugin!" $localPluginName) }}
+          {{- end }}
         {{- end }}
         {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
         - name: plugins

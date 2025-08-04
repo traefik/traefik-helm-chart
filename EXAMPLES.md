@@ -586,6 +586,31 @@ experimental:
 >[!IMPORTANT]
 > When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
 
+### Using Inline Plugin
+For testing or production deployments, embed plugin source directly in values.yaml:
+
+```yaml
+experimental:
+  localPlugins:
+    prodplugin:
+      moduleName: github.com/example/prodplugin
+      mountPath: /plugins-local/src/github.com/example/prodplugin
+      inlinePlugin:
+        go.mod: |
+          module github.com/example/prodplugin
+          go 1.23
+        .traefik.yml: |
+          displayName: Your Traefik Plugin
+          type: middleware
+          import: github.com/example/prodplugin
+        main.go: |
+          package main
+          // Your plugin implementation
+```
+
+> **Advantages**: No need for plugins on every node, better for containerized environments, supports up to 1MB of plugin code.
+
+
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.
