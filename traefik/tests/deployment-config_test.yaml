@@ -232,7 +232,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].args
           value:
-            - --global.checkNewVersion
+            - --global.checkNewVersion=true
             - --entryPoints.metrics.address=:9100/tcp
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
@@ -259,6 +259,14 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--global.sendAnonymousUsage"
+  - it: should be possible to disable checkNewVersion
+    set:
+      global:
+        checkNewVersion: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--global.checkNewVersion=false"
   - it: should have abortOnPluginFailure, when enabled on traefik >=3.3.0
     set:
       image:
