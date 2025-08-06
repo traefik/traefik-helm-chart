@@ -76,3 +76,49 @@ tests:
           pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
       - notExists:
           path: metadata.annotations["helm.sh/resource-policy"]
+
+  - it: should have all Gateway API experimental crds
+    set:
+      traefik: false
+      gatewayAPIExperimental: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - matchRegex:
+          path: spec.group
+          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should have all Gateway API experimental crds without helm keep resource policy
+    set:
+      traefik: false
+      gatewayAPIExperimental: true
+      deleteOnUninstall: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - matchRegex:
+          path: spec.group
+          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+      - notExists:
+          path: metadata.annotations["helm.sh/resource-policy"]
+
+  - it: should prioritize experimental Gateway API over standard when both are enabled
+    set:
+      traefik: false
+      gatewayAPI: true
+      gatewayAPIExperimental: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - matchRegex:
+          path: spec.group
+          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
