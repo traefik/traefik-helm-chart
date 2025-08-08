@@ -601,7 +601,6 @@ experimental:
           module github.com/example/helloworldplugin
 
           go 1.23
-
         .traefik.yml: |
           displayName: Hello World Plugin
           type: middleware
@@ -613,7 +612,6 @@ experimental:
 
           testData:
             message: "Hello, World!"
-
         main.go: |
           package helloworldplugin
 
