@@ -593,21 +593,53 @@ For testing or production deployments, embed plugin source directly in values.ya
 ```yaml
 experimental:
   localPlugins:
-    prodplugin:
-      moduleName: github.com/example/prodplugin
-      mountPath: /plugins-local/src/github.com/example/prodplugin
+    helloworld-plugin:
+      moduleName: github.com/example/helloworldplugin
+      mountPath: /plugins-local/src/github.com/example/helloworldplugin
       inlinePlugin:
         go.mod: |
-          module github.com/example/prodplugin
+          module github.com/example/helloworldplugin
+
           go 1.23
+
         .traefik.yml: |
-          displayName: Your Traefik Plugin
+          displayName: Hello World Plugin
           type: middleware
-          // Your plugin settings
-          import: github.com/example/prodplugin
+
+          import: github.com/example/helloworldplugin
+
+          summary: |
+            This is a simple plugin that prints "Hello, World!" to the response.
+
+          testData:
+            message: "Hello, World!"
+
         main.go: |
-          package main
-          // Your plugin implementation
+          package helloworldplugin
+
+          import (
+            "context"
+            "net/http"
+          )
+
+          type Config struct{}
+
+          func CreateConfig() *Config {
+            return &Config{}
+          }
+
+          type HelloWorld struct {
+            next http.Handler
+          }
+
+          func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+            return &HelloWorld{next: next}, nil
+          }
+
+          func (h *HelloWorld) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+            rw.Write([]byte("Hello, World!"))
+            h.next.ServeHTTP(rw, req)
+          }
 ```
 
 > **Advantages**: No need for plugins on every node, better for containerized environments, supports up to 1MB of plugin code.
