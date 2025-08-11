@@ -182,8 +182,8 @@
           {{- end }}
         args:
           {{- with .Values.global }}
-           {{- if ne .checkNewVersion nil }}
-          - "--global.checkNewVersion={{ .checkNewVersion | toString }}"
+           {{- if not .checkNewVersion }}
+          - "--global.checkNewVersion=false"
            {{- end }}
            {{- if .sendAnonymousUsage }}
           - "--global.sendAnonymousUsage"
