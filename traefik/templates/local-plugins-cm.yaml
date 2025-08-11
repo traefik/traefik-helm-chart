@@ -1,17 +1,16 @@
 {{- if .Values.experimental.localPlugins }}
-{{- $root := . }}
-{{- range $pluginName, $plugin := .Values.experimental.localPlugins }}
-{{- if $plugin.inlinePlugin }}
+{{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+{{- if $localPlugin.inlinePlugin }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ template "traefik.fullname" $root }}-local-plugin-{{ $pluginName | replace "." "-" }}
-  namespace: {{ template "traefik.namespace" $root }}
+  name: {{ include "traefik.localPluginCmName" (dict "context" $ "pluginName" $localPluginName) }}
+  namespace: {{ template "traefik.namespace" $ }}
   labels:
-    {{- include "traefik.labels" $root | nindent 4 }}
+    {{- include "traefik.labels" $ | nindent 4 }}
 data:
-  {{- range $fileName, $fileContent := $plugin.inlinePlugin }}
+  {{- range $fileName, $fileContent := $localPlugin.inlinePlugin }}
   {{ $fileName }}: |
     {{- $fileContent | nindent 4 }}
   {{- end }}

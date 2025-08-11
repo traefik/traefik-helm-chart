@@ -934,7 +934,6 @@
         {{- if .Values.deployment.additionalVolumes }}
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
-        {{- $root := . }}
         {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
         - name: {{ $localPluginName | replace "." "-" }}
           {{- if $localPlugin.hostPath }}
@@ -942,7 +941,7 @@
             path: {{ $localPlugin.hostPath | quote }}
           {{- else if $localPlugin.inlinePlugin }}
           configMap:
-            name: {{ template "traefik.fullname" $root }}-local-plugin-{{ $localPluginName | replace "." "-" }}
+            name: {{ include "traefik.localPluginCmName" (dict "context" $ "pluginName" $localPluginName) }}
           {{- else }}
             {{- fail (printf "ERROR: local plugin %s must specify either hostPath or inlinePlugin!" $localPluginName) }}
           {{- end }}
