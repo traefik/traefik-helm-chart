@@ -29,8 +29,8 @@ Kubernetes: `>=1.22.0-0`
 |-----|------|---------|-------------|
 | deleteOnUninstall | bool | `false` | Set it to true if you want to uninstall CRDs when uninstalling this chart. By default, CRDs will be kept so your custom resources will not be deleted accidentally. |
 | enabled | bool | `true` | Field that can be used as a condition when this chart is a dependency. This definition is only here as a placeholder such that it is included in the json schema. See https://helm.sh/docs/chart_best_practices/dependencies/#conditions-and-tags for more info. |
-| gatewayAPI | bool | `false` | Set it to true to install GatewayAPI CRDs. Needed if you set providers.kubernetesGateway.enabled to true in main chart |
-| gatewayAPIExperimental | bool | `false` | Set it to true to install experimental GatewayAPI CRDs. This includes additional experimental features beyond the standard Gateway API |
+| gatewayAPI | bool | `false` | Set it to true to install GatewayAPI CRDs. Needed if you set providers.kubernetesGateway.enabled to true in main chart Cannot be used together with gatewayAPIExperimental |
+| gatewayAPIExperimental | bool | `false` | Set it to true to install experimental GatewayAPI CRDs. This includes additional experimental features beyond the standard Gateway API Cannot be used together with gatewayAPI |
 | global | object | `{}` | Global values This definition is only here as a placeholder such that it is included in the json schema. |
 | hub | bool | `false` | Set it to true to install Traefik Hub CRDs. Needed if you set hub.enabled to true in main chart |
 | traefik | bool | `true` | Install Traefik CRDs by default |
