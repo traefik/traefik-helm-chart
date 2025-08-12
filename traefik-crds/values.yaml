@@ -13,9 +13,11 @@ enabled: true
 traefik: true
 # -- Set it to true to install GatewayAPI CRDs.
 # Needed if you set providers.kubernetesGateway.enabled to true in main chart
+# Cannot be used together with gatewayAPIExperimental
 gatewayAPI: false
 # -- Set it to true to install experimental GatewayAPI CRDs.
 # This includes additional experimental features beyond the standard Gateway API
+# Cannot be used together with gatewayAPI
 gatewayAPIExperimental: false
 # -- Set it to true to install Traefik Hub CRDs.
 # Needed if you set hub.enabled to true in main chart
