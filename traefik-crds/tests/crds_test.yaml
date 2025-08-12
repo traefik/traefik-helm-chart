@@ -76,3 +76,44 @@ tests:
           pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
       - notExists:
           path: metadata.annotations["helm.sh/resource-policy"]
+
+  - it: should have all Gateway API experimental crds
+    set:
+      traefik: false
+      gatewayAPIExperimental: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - matchRegex:
+          path: spec.group
+          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+      - equal:
+          path: metadata.annotations["helm.sh/resource-policy"]
+          value: keep
+
+  - it: should have all Gateway API experimental crds without helm keep resource policy
+    set:
+      traefik: false
+      gatewayAPIExperimental: true
+      deleteOnUninstall: true
+    asserts:
+      - hasDocuments:
+          count: 11
+      - isKind:
+          of: CustomResourceDefinition
+      - matchRegex:
+          path: spec.group
+          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+      - notExists:
+          path: metadata.annotations["helm.sh/resource-policy"]
+
+  - it: should fail when both Gateway API standard and experimental are enabled
+    set:
+      traefik: false
+      gatewayAPI: true
+      gatewayAPIExperimental: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "Cannot enable both gatewayAPI and gatewayAPIExperimental at the same time. Please choose either standard or experimental Gateway API CRDs, but not both."
