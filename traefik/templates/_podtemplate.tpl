@@ -159,9 +159,8 @@
             {{- end }}
           - name: tmp
             mountPath: /tmp
-          {{- $root := . }}
           {{- range .Values.volumes }}
-          - name: {{ tpl (.name) $root | replace "." "-" }}
+          - name: {{ tpl (.name) $ | replace "." "-" }}
             mountPath: {{ .mountPath }}
             readOnly: true
           {{- end }}
@@ -920,15 +919,14 @@
           {{- end }}
         - name: tmp
           emptyDir: {}
-        {{- $root := . }}
         {{- range .Values.volumes }}
-        - name: {{ tpl (.name) $root | replace "." "-" }}
+        - name: {{ tpl (.name) $ | replace "." "-" }}
           {{- if eq .type "secret" }}
           secret:
-            secretName: {{ tpl (.name) $root }}
+            secretName: {{ tpl (.name) $ }}
           {{- else if eq .type "configMap" }}
           configMap:
-            name: {{ tpl (.name) $root }}
+            name: {{ tpl (.name) $ }}
           {{- end }}
         {{- end }}
         {{- if .Values.deployment.additionalVolumes }}
