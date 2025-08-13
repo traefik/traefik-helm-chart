@@ -256,9 +256,12 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
 {{- end -}}
 
 {{- define "traefik.yaml2CommandLineArgs" -}}
-    {{- range ((regexSplit "\n" ((include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content)) | trim) -1) | compact) -}}
-      {{ printf "- \"%s\"\n" . }}
-    {{- end -}}
+    {{- $raw := include "traefik.yaml2CommandLineArgsRec" (dict "path" .path "content" .content) | trim -}}
+        {{- if $raw -}}
+            {{- range $line := regexSplit "\n" $raw -1 | compact }}
+            - "{{ $line }}"
+            {{- end -}}
+        {{- end -}}
 {{- end -}}
 
 {{- define "traefik.hasPluginsVolume" -}}
