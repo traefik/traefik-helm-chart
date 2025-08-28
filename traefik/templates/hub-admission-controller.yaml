@@ -1,6 +1,7 @@
 {{- if .Values.hub.token -}}
 {{- if and .Values.hub.apimanagement.enabled (not .Values.hub.offline) }}
 {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
+{{- if not .Values.hub.apimanagement.admission.existingSecretName }}
 ---
 apiVersion: v1
 kind: Secret
@@ -13,6 +14,7 @@ metadata:
 data:
   tls.crt: {{ $cert.Cert }}
   tls.key: {{ $cert.Key  }}
+{{- end }}
 
 ---
 apiVersion: admissionregistration.k8s.io/v1

@@ -217,7 +217,18 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
-{{- if $.Values.hub.apimanagement.admission.customWebhookCertificate }}
+{{- if $.Values.hub.apimanagement.admission.existingSecretName }}
+    {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.existingSecretName -}}
+    {{- if $cert }}
+        {{ if or (not (hasKey $cert.data "tls.crt")) (not (hasKey $cert.data "tls.key")) -}}
+            {{- fail (printf "ERROR: secret %s/%s exists but doesn't contain any certificate data. Please remove it or change hub.apimanagement.admission.existingSecretName." (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.existingSecretName) }}
+        {{- end -}}
+    {{/* using value of existing cert */}}
+Cert: {{ index $cert.data "tls.crt" }}
+Key: {{ index $cert.data "tls.key" }}
+Hash: {{ sha1sum (index $cert.data "tls.crt") }}
+    {{- end -}}
+{{- else if $.Values.hub.apimanagement.admission.customWebhookCertificate }}
 Cert: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt" }}
 Key: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.key" }}
 Hash: {{ sha1sum (index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt") }}

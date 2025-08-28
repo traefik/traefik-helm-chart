@@ -830,14 +830,20 @@
           - "--hub.namespaces={{ join "," (uniq (concat (include "traefik.namespace" $ | list) .namespaces)) }}"
             {{- end }}
             {{- with .apimanagement }}
-             {{- if .enabled }}
+            {{- if .enabled }}
               {{- $listenAddr := default ":9943" .admission.listenAddr }}
           - "--hub.apimanagement"
               {{- if not $.Values.hub.offline }}
           - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
-                {{- with .admission.secretName }}
+                {{- if .admission.existingSecretName }}
+                  {{- with .admission.existingSecretName }}
+          - "--hub.apimanagement.admission.secretName={{ . }}"
+                  {{- end }}
+                {{- else }}
+                  {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
                 {{- end }}
+              {{- end }}
               {{- end }}
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"

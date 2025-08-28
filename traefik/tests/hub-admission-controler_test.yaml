@@ -170,3 +170,29 @@ tests:
           path: metadata.annotations
           value:
             cert-manager.io/inject-ca-from: example1/webhook1-certificate
+  - it: should be possible to specify custom webhook certificate from existing secret
+    kubernetesProvider:
+      scheme:
+        "v1/Secret":
+          gvr:
+            version:  "v1"
+            resource: "secrets"
+            namespaced: true
+      objects:
+        - kind: Secret
+          apiVersion: v1
+          metadata:
+            name: test
+          data:
+            tls.crt: "testcert=="
+            tls.key: "testkey=="
+    set:
+      hub:
+        apimanagement:
+          admission:
+            existingSecretName: test
+    asserts:
+      - equal:
+          path: "webhooks[*].clientConfig.caBundle"
+          value: "testcert=="
+        documentIndex: 0
