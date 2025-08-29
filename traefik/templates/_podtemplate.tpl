@@ -789,7 +789,7 @@
               {{- end }}
             {{- end }}
           {{- end }}
-          {{- if .Values.certificatesResolvers -}}
+          {{- if $.Values.certificatesResolvers -}}
           {{- include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | nindent 10 }}
           {{- end }}
           {{- with .Values.additionalArguments }}
