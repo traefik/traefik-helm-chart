@@ -835,14 +835,8 @@
           - "--hub.apimanagement"
               {{- if not $.Values.hub.offline }}
           - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
-                {{- if .admission.existingSecretName }}
-                  {{- with .admission.existingSecretName }}
-          - "--hub.apimanagement.admission.secretName={{ . }}"
-                  {{- end }}
-                {{- else }}
                   {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
-                {{- end }}
               {{- end }}
               {{- end }}
               {{- if .openApi.validateRequestMethodAndPath }}

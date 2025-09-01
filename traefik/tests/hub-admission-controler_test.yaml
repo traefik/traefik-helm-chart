@@ -125,7 +125,7 @@ tests:
       - equal:
           path: "metadata.name"
           value: hub-agent-cert
-  - it: should be possible to specify custom webhook certificate
+  - it: should be possible to specify custom webhook certificate name
     set:
       hub:
         apimanagement:
@@ -141,6 +141,7 @@ tests:
       hub:
         apimanagement:
           admission:
+            selfManagedCertificate: true
             customWebhookCertificate:
               tls.crt: cert
               tls.key: key
@@ -190,7 +191,8 @@ tests:
       hub:
         apimanagement:
           admission:
-            existingSecretName: test
+            selfManagedCertificate: true
+            secretName: "test"
     asserts:
       - equal:
           path: "webhooks[*].clientConfig.caBundle"

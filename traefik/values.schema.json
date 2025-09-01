@@ -362,9 +362,6 @@
                                 "customWebhookCertificate": {
                                     "type": "object"
                                 },
-                                "existingSecretName": {
-                                    "type": "string"
-                                },
                                 "listenAddr": {
                                     "type": "string"
                                 },
@@ -373,6 +370,9 @@
                                 },
                                 "secretName": {
                                     "type": "string"
+                                },
+                                "selfManagedCertificate": {
+                                    "type": "boolean"
                                 }
                             }
                         },
