@@ -67,18 +67,30 @@ tests:
       - equal:
           path: spec.revisionHistoryLimit
           value: 1
-  - it: should have a preStop hook with specified values
+  - it: should have a preStop command hook with specified values
     set:
       deployment:
         kind: DaemonSet
         lifecycle:
           preStop:
             exec:
-              command: ["/bin/sh", "-c", "sleep 40"]
+              command: ["/bin/sh", "-c", "sleep 20"]
     asserts:
       - equal:
           path: spec.template.spec.containers[0].lifecycle.preStop.exec.command
-          value: ["/bin/sh", "-c", "sleep 40"]
+          value: ["/bin/sh", "-c", "sleep 20"]
+  - it: should have a preStop sleep hook with specified values
+    set:
+      deployment:
+        kind: DaemonSet
+        lifecycle:
+          preStop:
+            sleep:
+              seconds: 20
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].lifecycle.preStop.sleep.seconds
+          value: 20
   - it: should have a postStart hook with specified values
     set:
       deployment:
