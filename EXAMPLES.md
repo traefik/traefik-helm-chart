@@ -1186,6 +1186,7 @@ Now, it can be set in the `values.yaml`:
 hub:
   apimanagement:
     admission:
+      selfManagedCertificate: true
       customWebhookCertificate:
         tls.crt: xxxx # content of /tmp/hub.crt.b64
         tls.key: xxxx # content of /tmp/hub.key.b64
@@ -1239,7 +1240,7 @@ Now, it can be set in the `values.yaml`:
 hub:
   apimanagement:
     admission:
-      existingSecretName: hub-admission-cert
+      selfManagedCertificate: true
 ```
 
 ## Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
