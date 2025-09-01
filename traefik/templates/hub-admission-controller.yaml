@@ -21,6 +21,10 @@ metadata:
   name: hub-acp-{{ template "traefik.instance-name" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.hub.apimanagement.admission.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
 webhooks:
   - name: admission.traefik.svc
     clientConfig:
@@ -51,6 +55,11 @@ metadata:
   name: hub-api-{{ template "traefik.instance-name" . }}
   labels:
   {{- include "traefik.labels" . | nindent 4 }}
+  annotations:
+  {{- with .Values.hub.apimanagement.admission.annotations }}
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+
 webhooks:
   {{- $resources := list
       (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")

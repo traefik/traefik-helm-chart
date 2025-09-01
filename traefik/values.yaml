@@ -993,6 +993,8 @@ hub:
       customWebhookCertificate: {}
       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
       restartOnCertificateChange: true
+      # -- Set custom annotations.
+      annotations: {}
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false
