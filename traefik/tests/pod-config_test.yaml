@@ -822,3 +822,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.allowEmptyServices=false"
+  - it: should drop utc and set TZ env when access log timezone is set
+    set:
+      logs:
+        access:
+          enabled: true
+          timezone: US/Alaska
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TZ
+            value: US/Alaska
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.fields.names.StartUTC=drop"

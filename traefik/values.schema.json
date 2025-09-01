@@ -884,6 +884,9 @@
                                 "json",
                                 null
                             ]
+                        },
+                        "timezone": {
+                            "type": "string"
                         }
                     }
                 },
