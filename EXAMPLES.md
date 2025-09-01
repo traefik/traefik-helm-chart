@@ -1178,6 +1178,20 @@ hub:
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
 >```
 
+## Injecting CA data from a Certificate resource
+
+It is also possible to configure a `ValidatingWebhookConfiguration` with [annotations](https://cert-manager.io/docs/concepts/ca-injector/).
+
+They can be set in the `values.yaml` like this:
+
+```yaml
+hub:
+  apimanagement:
+    admission:
+      annotations:
+        cert-manager.io/inject-ca-from: example1/webhook1-certificate
+```
+
 ## Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 
 This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
