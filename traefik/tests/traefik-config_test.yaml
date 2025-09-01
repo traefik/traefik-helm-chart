@@ -431,6 +431,100 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: local plugin local-demo is missing moduleName !"
 
+  - it: should create correct volumes, mounts and args for new structured localPlugins and legacy hostPath
+    set:
+      experimental:
+        localPlugins:
+          # Legacy hostPath (backward compatibility)
+          legacy-host:
+            moduleName: github.com/traefik/legacyhost
+            mountPath: /plugins-local/src/github.com/traefik/legacyhost
+            hostPath: /plugins-legacy
+          # New structured plugins
+          inline-demo:
+            moduleName: github.com/traefik/inlinedemo
+            mountPath: /plugins-local/src/github.com/traefik/inlinedemo
+            type:
+              inlinePlugin:
+                main.go: "package main"
+          host-demo:
+            moduleName: github.com/traefik/hostdemo
+            mountPath: /plugins-local/src/github.com/traefik/hostdemo
+            type:
+              hostPathPlugin:
+                path: /plugins-local/src/github.com/traefik/hostdemo
+          pvc-demo:
+            moduleName: github.com/traefik/pvcdemo
+            mountPath: /plugins-local/src/github.com/traefik/pvcdemo
+            type:
+              localPathPlugin:
+                volumeName: plugin-storage
+                subPath: plugins/pvcdemo
+      deployment:
+        additionalVolumes:
+          - name: plugin-storage
+            persistentVolumeClaim:
+              claimName: plugin-storage-pvc
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.legacy-host.moduleName=github.com/traefik/legacyhost"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.inline-demo.moduleName=github.com/traefik/inlinedemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.host-demo.moduleName=github.com/traefik/hostdemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.pvc-demo.moduleName=github.com/traefik/pvcdemo"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: legacy-host
+            mountPath: "/plugins-local/src/github.com/traefik/legacyhost"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: inline-demo
+            mountPath: "/plugins-local/src/github.com/traefik/inlinedemo"
+            readOnly: true
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: host-demo
+            mountPath: "/plugins-local/src/github.com/traefik/hostdemo"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: plugin-storage
+            mountPath: "/plugins-local/src/github.com/traefik/pvcdemo"
+            subPath: plugins/pvcdemo
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: legacy-host
+            hostPath:
+              path: "/plugins-legacy"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: inline-demo
+            configMap:
+              name: RELEASE-NAME-traefik-local-plugin-inline-demo
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: host-demo
+            hostPath:
+              path: "/plugins-local/src/github.com/traefik/hostdemo"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: plugin-storage
+            persistentVolumeClaim:
+              claimName: plugin-storage-pvc
+
   - it: should have tls configuration args when specified in values.yaml for port
     set:
       ports:

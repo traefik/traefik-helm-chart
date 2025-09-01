@@ -176,9 +176,23 @@
             {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
           {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+          {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
+          {{- if eq $pluginType "localPath" }}
+          {{- $localPathConfig := include "traefik.getLocalPluginLocalPath" (dict "plugin" $localPlugin) | fromYaml }}
+          - name: {{ $localPathConfig.volumeName }}
+            mountPath: {{ $localPlugin.mountPath | quote }}
+            {{- if $localPathConfig.subPath }}
+            subPath: {{ $localPathConfig.subPath }}
+            {{- end }}
+          {{- else }}
           - name: {{ $localPluginName | replace "." "-" }}
             mountPath: {{ $localPlugin.mountPath | quote }}
+            {{- if eq $pluginType "inline" }}
+            readOnly: true
+            {{- end }}
           {{- end }}
+          {{- end }}
+
         args:
           {{- with .Values.global }}
            {{- if not .checkNewVersion }}
@@ -512,6 +526,7 @@
           {{- end }}
           - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
           {{- end }}
+
           {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
@@ -942,16 +957,24 @@
           {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
         {{- end }}
         {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+        {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
+        {{- if ne $pluginType "localPath" }}
         - name: {{ $localPluginName | replace "." "-" }}
-          {{- if $localPlugin.hostPath }}
+          {{- if eq $pluginType "hostPath" }}
+          {{- $hostPath := include "traefik.getLocalPluginHostPath" (dict "plugin" $localPlugin) }}
           hostPath:
-            path: {{ $localPlugin.hostPath | quote }}
-          {{- else if $localPlugin.inlinePlugin }}
+            path: {{ $hostPath | quote }}
+          {{- else if eq $pluginType "inline" }}
           configMap:
             name: {{ include "traefik.localPluginCmName" (dict "context" $ "pluginName" $localPluginName) }}
-          {{- else }}
-            {{- fail (printf "ERROR: local plugin %s must specify either hostPath or inlinePlugin!" $localPluginName) }}
           {{- end }}
+        {{- else }}
+        {{- $localPathConfig := include "traefik.getLocalPluginLocalPath" (dict "plugin" $localPlugin) | fromYaml }}
+        {{- $volumeExists := include "traefik.volumeExistsInAdditionalVolumes" (dict "volumeName" $localPathConfig.volumeName "additionalVolumes" $.Values.deployment.additionalVolumes) }}
+        {{- if ne $volumeExists "true" }}
+          {{- fail (printf "ERROR: localPlugin %s references volume '%s' which is not found in deployment.additionalVolumes!" $localPluginName $localPathConfig.volumeName) }}
+        {{- end }}
+        {{- end }}
         {{- end }}
         {{- if and (gt (len .Values.experimental.plugins) 0) (ne (include "traefik.hasPluginsVolume" .Values.deployment.additionalVolumes) "true") }}
         - name: plugins
