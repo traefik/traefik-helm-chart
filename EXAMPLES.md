@@ -588,7 +588,7 @@ experimental:
 
 ### Using Inline Plugin
 
-For testing or production deployments, embed plugin source directly in values.yaml:
+For testing or general use, embed plugin source directly in values.yaml:
 
 ```yaml
 experimental:
