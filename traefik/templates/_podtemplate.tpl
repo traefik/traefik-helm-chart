@@ -768,6 +768,9 @@
               {{- with .access.bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
               {{- end }}
+              {{- if .access.timezone }}
+          - "--accesslog.fields.names.StartUTC=drop"
+              {{- end }}
               {{- with .access.filters }}
                 {{- with .statuscodes }}
           - "--accesslog.filters.statuscodes={{ . }}"
@@ -789,7 +792,9 @@
               {{- end }}
             {{- end }}
           {{- end }}
+          {{- if $.Values.certificatesResolvers -}}
           {{- include "traefik.yaml2CommandLineArgs" (dict "path" "certificatesresolvers" "content" $.Values.certificatesResolvers) | nindent 10 }}
+          {{- end }}
           {{- with .Values.additionalArguments }}
           {{- range . }}
           - {{ . | quote }}
@@ -898,6 +903,10 @@
               secretKeyRef:
                 name: {{ le (len .) 64 | ternary . "traefik-hub-license" }}
                 key: token
+          {{- end }}
+          {{- if .Values.logs.access.timezone }}
+          - name: TZ
+            value: {{ .Values.logs.access.timezone }}
           {{- end }}
         {{- with .Values.env }}
           {{- toYaml . | nindent 10 }}
