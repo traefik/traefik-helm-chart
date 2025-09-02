@@ -448,6 +448,25 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
+## Use ServiceMonitor on AKS (Azure Monitor / managed Prometheus)
+
+Enable the optional ServiceMonitor so managed Prometheus can scrape Traefik metrics on AKS. You may override the CRD apiVersion if your environment requires it.
+
+```yaml
+metrics:
+  prometheus:
+    service:
+      enabled: true
+    # Set to false when using Azure Monitor to skip the CRD check (monitoring.coreos.com/v1)
+    disableAPICheck: false
+    serviceMonitor:
+      # Defaults to monitoring.coreos.com/v1
+      apiVersion: "azmonitoring.coreos.com/v1"
+    prometheusRule:
+      # Defaults to monitoring.coreos.com/v1
+      apiVersion: "azmonitoring.coreos.com/v1"
+```
+
 ## Use an IngressClass
 
 Default install comes with an `IngressClass` resource that can be enabled on providers.
