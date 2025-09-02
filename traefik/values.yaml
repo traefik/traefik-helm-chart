@@ -91,8 +91,8 @@ deployment:
   # -- Pod lifecycle actions
   lifecycle: {}
   # preStop:
-  #   exec:
-  #     command: ["/bin/sh", "-c", "sleep 40"]
+  #   sleep:
+  #     seconds: 20
   # postStart:
   #   httpGet:
   #     path: /ping
@@ -378,6 +378,8 @@ logs:
     # filePath: "/var/log/traefik/access.log
     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
     bufferingSize:  # @schema type:[integer, null]
+    # -- Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)
+    timezone: ""
     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
     filters:  # @schema additionalProperties: false
       # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
