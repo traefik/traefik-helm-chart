@@ -1208,6 +1208,17 @@
                 }
             }
         },
+        "ocsp": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "responderOverrides": {
+                    "type": "object"
+                }
+            }
+        },
         "persistence": {
             "type": "object",
             "properties": {

@@ -402,6 +402,13 @@
           {{- end }}
           {{- end }}
 
+          {{- if .Values.ocsp.enabled }}
+          - "--ocsp=true"
+          {{- if $.Values.ocsp.responderOverrides -}}
+          {{- include "traefik.yaml2CommandLineArgs" (dict "path" "ocsp.responderOverrides" "content" $.Values.ocsp.responderOverrides) | nindent 10 }}
+          {{- end }}
+          {{- end }}
+
           {{- if .Values.tracing.addInternals }}
           - "--tracing.addinternals"
           {{- end }}
