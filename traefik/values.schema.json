@@ -204,69 +204,7 @@
                     }
                 },
                 "localPlugins": {
-                    "type": "object",
-                    "patternProperties": {
-                        ".*": {
-                            "type": "object",
-                            "properties": {
-                                "moduleName": {
-                                    "type": "string",
-                                    "description": "Go module name of the plugin"
-                                },
-                                "mountPath": {
-                                    "type": "string",
-                                    "description": "Path where the plugin will be mounted in the container"
-                                },
-                                "hostPath": {
-                                    "type": "string",
-                                    "description": "Host path for backward compatibility (deprecated)"
-                                },
-                                "type": {
-                                    "type": "object",
-                                    "description": "New structured plugin type configuration",
-                                    "properties": {
-                                        "hostPathPlugin": {
-                                            "type": "object",
-                                            "description": "Host path plugin configuration (deprecated for security)",
-                                            "properties": {
-                                                "path": {
-                                                    "type": "string",
-                                                    "description": "Path on the host filesystem"
-                                                }
-                                            },
-                                            "required": ["path"]
-                                        },
-                                        "inlinePlugin": {
-                                            "type": "object",
-                                            "description": "Inline plugin configuration (recommended)",
-                                            "patternProperties": {
-                                                ".*": {
-                                                    "type": "string",
-                                                    "description": "Plugin file content"
-                                                }
-                                            }
-                                        },
-                                                                "localPathPlugin": {
-                            "type": "object",
-                            "description": "Local path plugin with volume reference (uses additionalVolumes)",
-                            "properties": {
-                                "volumeName": {
-                                    "type": "string",
-                                    "description": "Name of the volume defined in additionalVolumes"
-                                },
-                                "subPath": {
-                                    "type": "string",
-                                    "description": "Sub-path within the volume (optional)"
-                                }
-                            },
-                            "required": ["volumeName"]
-                        }
-                                    }
-                                }
-                            },
-                            "required": ["moduleName", "mountPath"]
-                        }
-                    }
+                    "type": "object"
                 },
                 "plugins": {
                     "type": "object"
