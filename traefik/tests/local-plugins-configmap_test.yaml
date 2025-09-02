@@ -13,17 +13,18 @@ tests:
           test-plugin:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/testplugin
-                go 1.23
-              .traefik.yml: |
-                displayName: Test Plugin
-                type: middleware
-                import: github.com/example/testplugin
-              main.go: |
-                package main
-                // Test plugin code
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/testplugin
+                  go 1.23
+                .traefik.yml: |
+                  displayName: Test Plugin
+                  type: middleware
+                  import: github.com/example/testplugin
+                main.go: |
+                  package main
+                  // Test plugin code
     asserts:
       - hasDocuments:
           count: 1
@@ -58,19 +59,21 @@ tests:
           plugin-one:
             moduleName: github.com/example/pluginone
             mountPath: /plugins-local/src/github.com/example/pluginone
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/pluginone
-              main.go: |
-                package pluginone
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/pluginone
+                main.go: |
+                  package pluginone
           plugin-two:
             moduleName: github.com/example/plugintwo
             mountPath: /plugins-local/src/github.com/example/plugintwo
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/plugintwo
-              main.go: |
-                package plugintwo
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/plugintwo
+                main.go: |
+                  package plugintwo
     asserts:
       - hasDocuments:
           count: 2
@@ -92,7 +95,9 @@ tests:
           host-plugin:
             moduleName: github.com/example/hostplugin
             mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
+            type:
+              hostPathPlugin:
+                path: /path/to/plugin
     asserts:
       - hasDocuments:
           count: 0
@@ -106,15 +111,18 @@ tests:
           host-plugin:
             moduleName: github.com/example/hostplugin
             mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
+            type:
+              hostPathPlugin:
+                path: /path/to/plugin
           inline-plugin:
             moduleName: github.com/example/inlineplugin
             mountPath: /plugins-local/src/github.com/example/inlineplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/inlineplugin
-              main.go: |
-                package inlineplugin
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/inlineplugin
+                main.go: |
+                  package inlineplugin
     asserts:
       - hasDocuments:
           count: 1
@@ -131,17 +139,19 @@ tests:
           test-plugin:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/testplugin
-              main.go: |
-                package testplugin
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/testplugin
+                main.go: |
+                  package testplugin
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: test-plugin
             mountPath: "/plugins-local/src/github.com/example/testplugin"
+            readOnly: true
       - contains:
           path: spec.template.spec.volumes
           content:
@@ -161,7 +171,9 @@ tests:
           host-plugin:
             moduleName: github.com/example/hostplugin
             mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
+            type:
+              hostPathPlugin:
+                path: /path/to/plugin
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
@@ -187,42 +199,45 @@ tests:
           host-plugin:
             moduleName: github.com/example/hostplugin
             mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
+            type:
+              hostPathPlugin:
+                path: /path/to/plugin
           inline-plugin:
             moduleName: github.com/example/inlineplugin
             mountPath: /plugins-local/src/github.com/example/inlineplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/inlineplugin
-              main.go: |
-                package inlineplugin
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/inlineplugin
+                main.go: |
+                  package inlineplugin
     asserts:
       # HostPath volume
-      - contains:
-          path: spec.template.spec.volumes
-          content:
-            name: host-plugin
-            hostPath:
-              path: "/path/to/plugin"
-      # ConfigMap volume  
-      - contains:
-          path: spec.template.spec.volumes
-          content:
-            name: inline-plugin
-            configMap:
-              name: RELEASE-NAME-traefik-local-plugin-inline-plugin
-      # Both volume mounts
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: host-plugin
             mountPath: "/plugins-local/src/github.com/example/hostplugin"
       - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: host-plugin
+            hostPath:
+              path: "/path/to/plugin"
+      # Inline plugin volume
+      - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: inline-plugin
             mountPath: "/plugins-local/src/github.com/example/inlineplugin"
-      # Both args
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: inline-plugin
+            configMap:
+              name: RELEASE-NAME-traefik-local-plugin-inline-plugin
+      # Args
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.host-plugin.moduleName=github.com/example/hostplugin"
@@ -230,96 +245,31 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.inline-plugin.moduleName=github.com/example/inlineplugin"
 
-  # Test plugin name with dots replacement
-  - it: should replace dots in plugin names for ConfigMap and volume names
-    templates:
-      - deployment.yaml
-      - local-plugins-cm.yaml
-    set:
-      experimental:
-        localPlugins:
-          "plugin.with.dots":
-            moduleName: github.com/example/plugin-with-dots
-            mountPath: /plugins-local/src/github.com/example/plugin-with-dots
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/plugin-with-dots
-              main.go: |
-                package pluginwithdots
-    asserts:
-      # ConfigMap name with dots replaced
-      - equal:
-          path: metadata.name
-          value: RELEASE-NAME-traefik-local-plugin-plugin-with-dots
-        template: local-plugins-cm.yaml
-      # Volume name with dots replaced
-      - contains:
-          path: spec.template.spec.volumes
-          content:
-            name: plugin-with-dots
-            configMap:
-              name: RELEASE-NAME-traefik-local-plugin-plugin-with-dots
-        template: deployment.yaml
-      # Volume mount name with dots replaced
-      - contains:
-          path: spec.template.spec.containers[0].volumeMounts
-          content:
-            name: plugin-with-dots
-            mountPath: "/plugins-local/src/github.com/example/plugin-with-dots"
-        template: deployment.yaml
-
-  # Test error scenario - missing moduleName
-  - it: should fail when inlinePlugin is missing moduleName
-    template: deployment.yaml
-    set:
-      experimental:
-        localPlugins:
-          invalid-plugin:
-            mountPath: /plugins-local/src/github.com/example/invalidplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/invalidplugin
-              main.go: |
-                package invalidplugin
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: local plugin invalid-plugin is missing moduleName !"
-
-  # Test error scenario - neither hostPath nor inlinePlugin
-  - it: should fail when plugin has neither hostPath nor inlinePlugin
-    template: deployment.yaml
-    set:
-      experimental:
-        localPlugins:
-          invalid-plugin:
-            moduleName: github.com/example/invalidplugin
-            mountPath: /plugins-local/src/github.com/example/invalidplugin
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: local plugin invalid-plugin must specify either hostPath or inlinePlugin!"
-
-  # Test DaemonSet volume mounting for inlinePlugin
+  # Test daemonset volume mounting for inlinePlugin
   - it: should create ConfigMap volume for inlinePlugin in daemonset
     template: daemonset.yaml
     set:
       deployment:
+        enabled: true
         kind: DaemonSet
       experimental:
         localPlugins:
           test-plugin:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/testplugin
-              main.go: |
-                package testplugin
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/testplugin
+                main.go: |
+                  package testplugin
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: test-plugin
             mountPath: "/plugins-local/src/github.com/example/testplugin"
+            readOnly: true
       - contains:
           path: spec.template.spec.volumes
           content:
@@ -330,19 +280,32 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.test-plugin.moduleName=github.com/example/testplugin"
 
-  # Test DaemonSet backward compatibility with hostPath
-  - it: should create hostPath volume for hostPath plugins in daemonset
+  # Test mixed scenarios in daemonset
+  - it: should handle mixed hostPath and inlinePlugin volumes in daemonset
     template: daemonset.yaml
     set:
       deployment:
+        enabled: true
         kind: DaemonSet
       experimental:
         localPlugins:
           host-plugin:
             moduleName: github.com/example/hostplugin
             mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
+            type:
+              hostPathPlugin:
+                path: /path/to/plugin
+          inline-plugin:
+            moduleName: github.com/example/inlineplugin
+            mountPath: /plugins-local/src/github.com/example/inlineplugin
+            type:
+              inlinePlugin:
+                go.mod: |
+                  module github.com/example/inlineplugin
+                main.go: |
+                  package inlineplugin
     asserts:
+      # HostPath volume
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -354,57 +317,20 @@ tests:
             name: host-plugin
             hostPath:
               path: "/path/to/plugin"
+      # Inline plugin volume
       - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.localPlugins.host-plugin.moduleName=github.com/example/hostplugin"
-
-  # Test DaemonSet mixed scenarios
-  - it: should handle mixed hostPath and inlinePlugin volumes in daemonset
-    template: daemonset.yaml
-    set:
-      deployment:
-        kind: DaemonSet
-      experimental:
-        localPlugins:
-          host-plugin:
-            moduleName: github.com/example/hostplugin
-            mountPath: /plugins-local/src/github.com/example/hostplugin
-            hostPath: /path/to/plugin
-          inline-plugin:
-            moduleName: github.com/example/inlineplugin
-            mountPath: /plugins-local/src/github.com/example/inlineplugin
-            inlinePlugin:
-              go.mod: |
-                module github.com/example/inlineplugin
-              main.go: |
-                package inlineplugin
-    asserts:
-      # HostPath volume
-      - contains:
-          path: spec.template.spec.volumes
+          path: spec.template.spec.containers[0].volumeMounts
           content:
-            name: host-plugin
-            hostPath:
-              path: "/path/to/plugin"
-      # ConfigMap volume  
+            name: inline-plugin
+            mountPath: "/plugins-local/src/github.com/example/inlineplugin"
+            readOnly: true
       - contains:
           path: spec.template.spec.volumes
           content:
             name: inline-plugin
             configMap:
               name: RELEASE-NAME-traefik-local-plugin-inline-plugin
-      # Both volume mounts
-      - contains:
-          path: spec.template.spec.containers[0].volumeMounts
-          content:
-            name: host-plugin
-            mountPath: "/plugins-local/src/github.com/example/hostplugin"
-      - contains:
-          path: spec.template.spec.containers[0].volumeMounts
-          content:
-            name: inline-plugin
-            mountPath: "/plugins-local/src/github.com/example/inlineplugin"
-      # Both args
+      # Args
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.host-plugin.moduleName=github.com/example/hostplugin"
@@ -412,12 +338,26 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.inline-plugin.moduleName=github.com/example/inlineplugin"
 
-  # Test DaemonSet error scenarios
-  - it: should fail when daemonset plugin has neither hostPath nor inlinePlugin
-    template: daemonset.yaml
+  # Test error handling for missing moduleName
+  - it: should fail when inlinePlugin is missing moduleName
+    template: deployment.yaml
     set:
-      deployment:
-        kind: DaemonSet
+      experimental:
+        localPlugins:
+          invalid-plugin:
+            mountPath: /plugins-local/src/github.com/example/invalidplugin
+            type:
+              inlinePlugin:
+                main.go: |
+                  package main
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: local plugin invalid-plugin is missing moduleName !"
+
+  # Test error handling for missing type configuration
+  - it: should fail when plugin has neither hostPath nor inlinePlugin
+    template: local-plugins-cm.yaml
+    set:
       experimental:
         localPlugins:
           invalid-plugin:
@@ -425,4 +365,37 @@ tests:
             mountPath: /plugins-local/src/github.com/example/invalidplugin
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: local plugin invalid-plugin must specify either hostPath or inlinePlugin!"
+          errorMessage: "ERROR: localPlugin invalid-plugin must specify either legacy hostPath configuration or new type configuration!"
+
+  # Test error handling for missing type configuration in daemonset
+  - it: should fail when daemonset plugin has neither hostPath nor inlinePlugin
+    template: local-plugins-cm.yaml
+    set:
+      experimental:
+        localPlugins:
+          invalid-plugin:
+            moduleName: github.com/example/invalidplugin
+            mountPath: /plugins-local/src/github.com/example/invalidplugin
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: localPlugin invalid-plugin must specify either legacy hostPath configuration or new type configuration!"
+
+  # Test ConfigMap naming with dots in plugin names
+  - it: should replace dots in plugin names for ConfigMap and volume names
+    template: local-plugins-cm.yaml
+    set:
+      experimental:
+        localPlugins:
+          plugin.with.dots:
+            moduleName: github.com/example/pluginwithdots
+            mountPath: /plugins-local/src/github.com/example/pluginwithdots
+            type:
+              inlinePlugin:
+                main.go: |
+                  package main
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-local-plugin-plugin-with-dots
