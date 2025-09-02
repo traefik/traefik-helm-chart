@@ -678,7 +678,7 @@ deployment:
       persistentVolumeClaim:
         claimName: plugin-storage-pvc
     # Or use CSI driver for S3/blob storage:
-    # - name: s3-plugin-storage  
+    # - name: s3-plugin-storage
     #   csi:
     #     driver: s3.csi.aws.com
     #     volumeAttributes:
@@ -696,7 +696,8 @@ experimental:
           subPath: plugins/s3plugin   # Optional subpath within volume
 ```
 
-> **Advantages**: 
+> **Advantages**:
+>
 > - **Flexible**: Supports any Kubernetes volume type (PVC, CSI, NFS, etc.)
 > - **Secure**: Works with CSI drivers for cloud storage (S3, Azure Blob, GCS)
 > - **Scalable**: Centralized plugin storage, no per-node requirements
@@ -785,8 +786,8 @@ podSecurityContext:
 
 Setup:
 
-* cert-manager installed in `cert-manager` namespace
-* A cloudflare account on a DNS Zone
+- cert-manager installed in `cert-manager` namespace
+- A cloudflare account on a DNS Zone
 
 **Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token.
 See [cert-manager documentation](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
