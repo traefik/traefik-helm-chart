@@ -998,7 +998,7 @@ hub:
       listenAddr: ""
       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
       secretName: "hub-agent-cert"
-      # -- Use existing custom certificate secret with the WebHook admission server.
+      # -- When CI/CD cannot access the k8s cluster to check and setup the webhook certificate in the secret, it's possible to disable this feature and manage the certificate outside of this Chart.
       selfManagedCertificate: false
       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
       customWebhookCertificate: {}
