@@ -457,9 +457,10 @@ metrics:
   prometheus:
     service:
       enabled: true
-    # Set to false when using Azure Monitor to skip the CRD check (monitoring.coreos.com/v1)
-    disableAPICheck: false
+    # Set to true when using Azure Monitor to skip the CRD check (monitoring.coreos.com/v1)
+    disableAPICheck: true
     serviceMonitor:
+      enabled: true
       # Defaults to monitoring.coreos.com/v1
       apiVersion: "azmonitoring.coreos.com/v1"
     prometheusRule:
