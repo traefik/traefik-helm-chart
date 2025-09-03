@@ -512,6 +512,12 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
+
+          {{- $settings := (get $plugin "settings") | default dict }}
+          {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- if $useUnsafe }}
+          - "--experimental.plugins.{{ $pluginName }}.settings.useUnsafe=true"
+           {{- end }}
           {{- end }}
           {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
           {{- if not (hasKey $localPlugin "moduleName") }}
