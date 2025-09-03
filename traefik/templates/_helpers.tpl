@@ -217,7 +217,7 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
-{{- if and $.Values.hub.apimanagement.admission.customWebhookCertificate $.Values.hub.apimanagement.admission.selfManagedCertificate }}
+{{- if $.Values.hub.apimanagement.admission.customWebhookCertificate }}
   Cert: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt" }}
   Key: {{ index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.key" }}
   Hash: {{ sha1sum (index $.Values.hub.apimanagement.admission.customWebhookCertificate "tls.crt") }}
