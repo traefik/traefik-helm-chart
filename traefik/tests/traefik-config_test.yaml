@@ -431,6 +431,22 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: local plugin local-demo is missing moduleName !"
 
+  - it: should allow useUnsafe option for localPlugins
+    set:
+      experimental:
+        localPlugins:
+          local-demo:
+            moduleName: github.com/traefik/plugindemo
+            settings:
+              useUnsafe: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.local-demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.local-demo.settings.useUnsafe=true"
+
   - it: should have tls configuration args when specified in values.yaml for port
     set:
       ports:

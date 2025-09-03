@@ -518,6 +518,12 @@
             {{- fail  (printf "ERROR: local plugin %s is missing moduleName !" $localPluginName) }}
           {{- end }}
           - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
+
+          {{- $settings := (get $localPlugin "settings") | default dict }}
+          {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- if $useUnsafe }}
+          - "--experimental.localPlugins.{{ $localPluginName }}.settings.useUnsafe=true"
+           {{- end }}
           {{- end }}
           {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
