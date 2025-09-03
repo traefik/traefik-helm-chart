@@ -1,5 +1,35 @@
 # Change Log
 
+## 1.11.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-09-03
+
+* feat(CRDs): update Traefik Hub to v1.21.1
+* feat(CRDs): add gatewayAPI experimental channel option
+* chore(release): :rocket: Publish 37.1.0 and 1.11.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik-crds/values.yaml b/traefik-crds/values.yaml
+index 1240977..8979fff 100644
+--- a/traefik-crds/values.yaml
++++ b/traefik-crds/values.yaml
+@@ -13,7 +13,12 @@ enabled: true
+ traefik: true
+ # -- Set it to true to install GatewayAPI CRDs.
+ # Needed if you set providers.kubernetesGateway.enabled to true in main chart
++# Cannot be used together with gatewayAPIExperimental
+ gatewayAPI: false
++# -- Set it to true to install experimental GatewayAPI CRDs.
++# This includes additional experimental features beyond the standard Gateway API
++# Cannot be used together with gatewayAPI
++gatewayAPIExperimental: false
+ # -- Set it to true to install Traefik Hub CRDs.
+ # Needed if you set hub.enabled to true in main chart
+ hub: false
+```
+
 ## 1.10.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-07-29
@@ -7,7 +37,7 @@
 * feat(hub): offline mode
 * feat(CRDs): update for Traefik Proxy v3.5 and Gateway API v1.3.0
 * feat(CRDs): update Traefik Hub to v1.21.0
-* chore(release): :rocket: publish 37.0.0 and 1.10.0
+* chore(release): 🚀 Publish 37.0.0 and 1.10.0
 
 
 ## 1.9.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
