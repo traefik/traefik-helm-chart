@@ -155,3 +155,18 @@ tests:
           path: "webhooks[*].clientConfig.caBundle"
           value: cert
         documentIndex: 1
+  - it: should be possible to specify custom annotations
+    documentIndex: 1
+    set:
+      hub:
+        apimanagement:
+          admission:
+            annotations:
+              cert-manager.io/inject-ca-from: example1/webhook1-certificate
+    asserts:
+      - isKind:
+          of: MutatingWebhookConfiguration
+      - equal:
+          path: metadata.annotations
+          value:
+            cert-manager.io/inject-ca-from: example1/webhook1-certificate

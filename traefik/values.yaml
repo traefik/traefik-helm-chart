@@ -161,7 +161,7 @@ gateway:
       hostname: ""
       # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
       protocol: HTTP
-      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
       namespacePolicy:  # @schema type:[object, null]
     # websecure listener is disabled by default because certificateRefs needs to be added,
     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
@@ -995,6 +995,8 @@ hub:
       customWebhookCertificate: {}
       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
       restartOnCertificateChange: true
+      # -- Set custom annotations.
+      annotations: {}
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false
