@@ -402,6 +402,13 @@
           {{- end }}
           {{- end }}
 
+          {{- if .Values.ocsp.enabled }}
+          - "--ocsp=true"
+          {{- if $.Values.ocsp.responderOverrides -}}
+          {{- include "traefik.yaml2CommandLineArgs" (dict "path" "ocsp.responderOverrides" "content" $.Values.ocsp.responderOverrides) | nindent 10 }}
+          {{- end }}
+          {{- end }}
+
           {{- if .Values.tracing.addInternals }}
           - "--tracing.addinternals"
           {{- end }}
@@ -505,12 +512,22 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
+           {{- $settings := (get $plugin "settings") | default dict }}
+           {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- if $useUnsafe }}
+          - "--experimental.plugins.{{ $pluginName }}.settings.useUnsafe=true"
+           {{- end }}
           {{- end }}
           {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
           {{- if not (hasKey $localPlugin "moduleName") }}
             {{- fail  (printf "ERROR: local plugin %s is missing moduleName !" $localPluginName) }}
           {{- end }}
           - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
+           {{- $settings := (get $localPlugin "settings") | default dict }}
+           {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- if $useUnsafe }}
+          - "--experimental.localPlugins.{{ $localPluginName }}.settings.useUnsafe=true"
+           {{- end }}
           {{- end }}
           {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"

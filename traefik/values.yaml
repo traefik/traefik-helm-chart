@@ -551,6 +551,13 @@ metrics:
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
 
+ocsp:
+  # -- Enable OCSP stapling support.
+  # See https://doc.traefik.io/traefik/https/ocsp/#overview
+  enabled: false
+  # -- Defines the OCSP responder URLs to use instead of the one provided by the certificate.
+  responderOverrides: {}
+
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
 tracing:  # @schema additionalProperties: false

@@ -409,6 +409,8 @@ tests:
           acme:
             email: email@example.com
             emailaddresses: foo@example.com,bar@example.org
+            clientResponseHeaderTimeout: 1m
+            clientTimeout: 1m
             dnsChallenge:
               provider: myProvider
               resolvers:
@@ -416,6 +418,8 @@ tests:
                 - 8.8.8.8
             profile: tlsserver
             tlsChallenge: true
+            httpChallenge:
+              delay: 12
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -435,6 +439,15 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.profile=tlsserver"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.httpChallenge.delay=12"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.clientResponseHeaderTimeout=1m"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.clientTimeout=1m"
 
 
   - it: should have the distributed acme resolver options applied
@@ -467,6 +480,35 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.my-resolver.tailscale=true"
+
+  - it: should have ocsp stapling off by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--ocsp=true"
+
+  - it: should set ocsp stapling
+    set:
+      ocsp:
+        enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ocsp=true"
+
+  - it: should set ocsp stapling with responderOverrides
+    set:
+      ocsp:
+        enabled: true
+        responderOverrides:
+          foo: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ocsp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ocsp.responderOverrides.foo=bar"
 
   - it: should have prometheus annotations with specified values
     set:
