@@ -345,26 +345,6 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: plugin demo is missing moduleName/version keys !"
 
-  - it: should allow useUnsafe option for plugins
-    set:
-      experimental:
-        plugins:
-          demo:
-            moduleName: github.com/traefik/plugindemo
-            version: v0.2.1
-            settings:
-              useUnsafe: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.plugins.demo.moduleName=github.com/traefik/plugindemo"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.plugins.demo.version=v0.2.1"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.plugins.demo.settings.useUnsafe=true"
-
   - it: should create correct volumes, mounts and args for local plugins
     set:
       experimental:
@@ -451,15 +431,30 @@ tests:
       - failedTemplate:
           errorMessage: "ERROR: local plugin local-demo is missing moduleName !"
 
-  - it: should allow useUnsafe option for localPlugins
+  - it: should allow useUnsafe option for plugins and localPlugins
     set:
       experimental:
+        plugins:
+          demo:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+            settings:
+              useUnsafe: true
         localPlugins:
           local-demo:
             moduleName: github.com/traefik/plugindemo
             settings:
               useUnsafe: true
     asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.version=v0.2.1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.settings.useUnsafe=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.local-demo.moduleName=github.com/traefik/plugindemo"
