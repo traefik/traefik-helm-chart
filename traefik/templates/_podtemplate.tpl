@@ -512,9 +512,8 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
-
-          {{- $settings := (get $plugin "settings") | default dict }}
-          {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- $settings := (get $plugin "settings") | default dict }}
+           {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
            {{- if $useUnsafe }}
           - "--experimental.plugins.{{ $pluginName }}.settings.useUnsafe=true"
            {{- end }}
@@ -524,9 +523,8 @@
             {{- fail  (printf "ERROR: local plugin %s is missing moduleName !" $localPluginName) }}
           {{- end }}
           - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
-
-          {{- $settings := (get $localPlugin "settings") | default dict }}
-          {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
+           {{- $settings := (get $localPlugin "settings") | default dict }}
+           {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
            {{- if $useUnsafe }}
           - "--experimental.localPlugins.{{ $localPluginName }}.settings.useUnsafe=true"
            {{- end }}
