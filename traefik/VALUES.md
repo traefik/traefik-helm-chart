@@ -237,12 +237,14 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.headerLabels | object | `{}` | Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage. |
 | metrics.prometheus.manualRouting | bool | `false` | When manualRouting is true, it disables the default internal router in # order to allow creating a custom router for prometheus@internal service. |
 | metrics.prometheus.prometheusRule.additionalLabels | object | `{}` |  |
+| metrics.prometheus.prometheusRule.apiVersion | string | `"monitoring.coreos.com/v1"` |  |
 | metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.prometheusRule.namespace | string | `""` |  |
 | metrics.prometheus.service.annotations | object | `{}` |  |
 | metrics.prometheus.service.enabled | bool | `false` | Create a dedicated metrics service to use with ServiceMonitor |
 | metrics.prometheus.service.labels | object | `{}` |  |
 | metrics.prometheus.serviceMonitor.additionalLabels | object | `{}` |  |
+| metrics.prometheus.serviceMonitor.apiVersion | string | `"monitoring.coreos.com/v1"` |  |
 | metrics.prometheus.serviceMonitor.enableHttp2 | bool | `false` |  |
 | metrics.prometheus.serviceMonitor.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.serviceMonitor.followRedirects | bool | `false` |  |

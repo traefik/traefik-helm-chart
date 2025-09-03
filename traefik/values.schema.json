@@ -1088,6 +1088,9 @@
                                 "additionalLabels": {
                                     "type": "object"
                                 },
+                                "apiVersion": {
+                                    "type": "string"
+                                },
                                 "enabled": {
                                     "type": "boolean"
                                 },
@@ -1115,6 +1118,9 @@
                             "properties": {
                                 "additionalLabels": {
                                     "type": "object"
+                                },
+                                "apiVersion": {
+                                    "type": "string"
                                 },
                                 "enableHttp2": {
                                     "type": "boolean"

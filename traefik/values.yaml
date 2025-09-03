@@ -434,6 +434,7 @@ metrics:
     serviceMonitor:
       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
       enabled: false
+      apiVersion: "monitoring.coreos.com/v1"
       metricRelabelings: []
       relabelings: []
       jobLabel: ""
@@ -449,6 +450,7 @@ metrics:
     prometheusRule:
       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
       enabled: false
+      apiVersion: "monitoring.coreos.com/v1"
       additionalLabels: {}
       namespace: ""
 

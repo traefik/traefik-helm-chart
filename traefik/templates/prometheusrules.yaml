@@ -5,7 +5,7 @@
       {{- fail "ERROR: You have to deploy monitoring.coreos.com/v1 first" }}
     {{- end }}
   {{- end }}
-apiVersion: monitoring.coreos.com/v1
+apiVersion: {{ .Values.metrics.prometheus.prometheusRule.apiVersion | default "monitoring.coreos.com/v1" }}
 kind: PrometheusRule
 metadata:
   name: {{ template "traefik.fullname" . }}
