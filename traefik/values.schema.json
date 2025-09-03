@@ -356,6 +356,9 @@
                         "admission": {
                             "type": "object",
                             "properties": {
+                                "annotations": {
+                                    "type": "object"
+                                },
                                 "customWebhookCertificate": {
                                     "type": "object"
                                 },
