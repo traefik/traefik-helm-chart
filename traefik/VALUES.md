@@ -98,7 +98,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.restartOnCertificateChange | bool | `true` | Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update. |
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
-| hub.apimanagement.admission.selfManagedCertificate | bool | `false` | Use existing custom certificate secret with the WebHook admission server. |
+| hub.apimanagement.admission.selfManagedCertificate | bool | `false` | When CI/CD cannot access the k8s cluster to check and setup the webhook certificate in the secret, it's possible to disable this feature and manage the certificate outside of this Chart. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
