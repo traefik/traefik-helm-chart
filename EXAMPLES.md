@@ -1180,7 +1180,7 @@ hub:
 
 ## Injecting CA data from a Certificate resource
 
-It is also possible to configure a `ValidatingWebhookConfiguration` with [annotations](https://cert-manager.io/docs/concepts/ca-injector/).
+It is also possible to use [CA injector](https://cert-manager.io/docs/concepts/ca-injector/) of cert-manager with annotations on the webhook.
 
 They can be set in the `values.yaml` like this:
 
