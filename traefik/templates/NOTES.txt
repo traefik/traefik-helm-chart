@@ -82,7 +82,7 @@ for more info. 🚨
 {{- end -}}
 
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
-{{- if .Values.hub.apimanagement.admission.selfManagedCertificate }}
+{{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.selfManagedCertificate }}
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and I was not able to find it in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (template "traefik.namespace" . ) -}}
