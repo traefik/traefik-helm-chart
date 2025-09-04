@@ -85,7 +85,7 @@ for more info. 🚨
 {{- if .Values.hub.apimanagement.admission.selfManagedCertificate }}
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
-    {{- printf "\nWARNING: %s secret is missing in traefik namespace.\n" $.Values.hub.apimanagement.admission.secretName -}}
+    {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and I was not able to find it in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (template "traefik.namespace" . ) -}}
     {{- printf "Please deploy %s secret and restart your Traefik Hub pods.\n" $.Values.hub.apimanagement.admission.secretName -}}
   {{- end -}}        
 {{- end -}}
