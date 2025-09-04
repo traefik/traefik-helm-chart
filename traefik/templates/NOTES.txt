@@ -60,6 +60,7 @@ for more info. 🚨
   {{- end -}}
 {{- end -}}
 
+
 {{/* Warn about hub not watching namespaces configured in providers */}}
 {{- if and .Values.hub.token (and .Values.rbac.enabled .Values.rbac.namespaced) }}
     {{- if .Values.hub.namespaces -}}
@@ -81,12 +82,11 @@ for more info. 🚨
     {{- end -}}
 {{- end -}}
 
+
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
 {{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.selfManagedCertificate }}
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
-    {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and I was not able to find it in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (template "traefik.namespace" . ) -}}
+    {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and I was not able to find it in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}
   {{- end -}}        
 {{- end -}}
-
-
