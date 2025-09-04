@@ -84,10 +84,10 @@ for more info. 🚨
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
 {{- if .Values.hub.apimanagement.admission.selfManagedCertificate }}
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
-    {{- if not $cert }}
-        {{- printf "\nWARNING: %s secret is missing in traefik namespace.\n" $.Values.hub.apimanagement.admission.secretName -}}
-        {{- printf "Please deploy %s secret and restart your Traefik Hub pods.\n" $.Values.hub.apimanagement.admission.secretName -}}
-    {{- end -}}        
+  {{- if not $cert }}
+    {{- printf "\nWARNING: %s secret is missing in traefik namespace.\n" $.Values.hub.apimanagement.admission.secretName -}}
+    {{- printf "Please deploy %s secret and restart your Traefik Hub pods.\n" $.Values.hub.apimanagement.admission.secretName -}}
+  {{- end -}}        
 {{- end -}}
 
 
