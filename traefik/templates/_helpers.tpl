@@ -282,14 +282,14 @@ Returns: hostPath, inline, or localPath
 {{- define "traefik.getLocalPluginType" -}}
     {{- $plugin := .plugin -}}
     {{- if $plugin.type -}}
-        {{- if $plugin.type.hostPathPlugin -}}
+        {{- if eq $plugin.type "hostPath" -}}
             {{- printf "hostPath" -}}
-        {{- else if $plugin.type.inlinePlugin -}}
+        {{- else if eq $plugin.type "inlinePlugin" -}}
             {{- printf "inline" -}}
-        {{- else if $plugin.type.localPathPlugin -}}
+        {{- else if eq $plugin.type "localPath" -}}
             {{- printf "localPath" -}}
         {{- else -}}
-            {{- fail (printf "ERROR: localPlugin %s has invalid type configuration. Must specify one of: hostPathPlugin, inlinePlugin, localPathPlugin" .pluginName) -}}
+            {{- fail (printf "ERROR: localPlugin %s has invalid type configuration. Must specify one of: hostPath, inlinePlugin, localPath" .pluginName) -}}
         {{- end -}}
     {{- else if $plugin.hostPath -}}
         {{- printf "hostPath" -}}
@@ -304,8 +304,8 @@ Get hostPath for a plugin (handles both old and new structure)
 {{- define "traefik.getLocalPluginHostPath" -}}
     {{- $plugin := .plugin -}}
     {{- if $plugin.type -}}
-        {{- if $plugin.type.hostPathPlugin -}}
-            {{- $plugin.type.hostPathPlugin.path -}}
+        {{- if eq $plugin.type "hostPath" -}}
+            {{- $plugin.hostPath -}}
         {{- end -}}
     {{- else -}}
         {{- $plugin.hostPath -}}
@@ -317,8 +317,14 @@ Get inline plugin files (new structure only)
 */}}
 {{- define "traefik.getLocalPluginInlineFiles" -}}
     {{- $plugin := .plugin -}}
-    {{- if and $plugin.type $plugin.type.inlinePlugin -}}
-        {{- toYaml $plugin.type.inlinePlugin -}}
+    {{- if eq $plugin.type "inlinePlugin" -}}
+        {{- $inlineFiles := dict -}}
+        {{- range $key, $value := $plugin -}}
+            {{- if and (ne $key "type") (ne $key "moduleName") (ne $key "mountPath") -}}
+                {{- $_ := set $inlineFiles $key $value -}}
+            {{- end -}}
+        {{- end -}}
+        {{- toYaml $inlineFiles -}}
     {{- end -}}
 {{- end -}}
 
@@ -327,8 +333,14 @@ Get localPath plugin configuration (new structure only)
 */}}
 {{- define "traefik.getLocalPluginLocalPath" -}}
     {{- $plugin := .plugin -}}
-    {{- if and $plugin.type $plugin.type.localPathPlugin -}}
-        {{- toYaml $plugin.type.localPathPlugin -}}
+    {{- if eq $plugin.type "localPath" -}}
+        {{- $localPathConfig := dict -}}
+        {{- range $key, $value := $plugin -}}
+            {{- if and (ne $key "type") (ne $key "moduleName") (ne $key "mountPath") -}}
+                {{- $_ := set $localPathConfig $key $value -}}
+            {{- end -}}
+        {{- end -}}
+        {{- toYaml $localPathConfig -}}
     {{- end -}}
 {{- end -}}
 

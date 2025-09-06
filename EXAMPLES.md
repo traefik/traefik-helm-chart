@@ -585,7 +585,7 @@ experimental:
     legacy-demo:
       moduleName: github.com/traefik/legacydemo
       mountPath: /plugins-local/src/github.com/traefik/legacydemo
-      hostPath: /path/to/plugin-source  # ⚠️ Deprecated - use type.hostPathPlugin instead
+      hostPath: /path/to/plugin-source  # ⚠️ Deprecated - use type: hostPath instead
 ```
 
 ## Structured Local Plugins (Current Approach)
@@ -602,23 +602,22 @@ experimental:
     helloworld-plugin:
       moduleName: github.com/example/helloworldplugin
       mountPath: /plugins-local/src/github.com/example/helloworldplugin
-      type:
-        inlinePlugin:
-          go.mod: |
-            module github.com/example/helloworldplugin
+      type: inlinePlugin
+      go.mod: |
+        module github.com/example/helloworldplugin
 
-            go 1.23
-          .traefik.yml: |
-            displayName: Hello World Plugin
-            type: middleware
+        go 1.23
+      .traefik.yml: |
+        displayName: Hello World Plugin
+        type: middleware
 
-            import: github.com/example/helloworldplugin
+        import: github.com/example/helloworldplugin
 
-            summary: |
-              This is a simple plugin that prints "Hello, World!" to the response.
+        summary: |
+          This is a simple plugin that prints "Hello, World!" to the response.
 
-            testData:
-              message: "Hello, World!"
+        testData:
+          message: "Hello, World!"
           main.go: |
             package helloworldplugin
 
@@ -652,7 +651,7 @@ experimental:
 ### Using Host Path Plugin (Use with Caution)
 
 >[!WARNING]
-> The `hostPathPlugin` type should be avoided for security reasons and requires additional work to pull plugins from repositories or blob storage. Consider using `inlinePlugin` or `localPathPlugin` instead.
+> The `hostPath` type should be avoided for security reasons and requires additional work to pull plugins from repositories or blob storage. Consider using `inlinePlugin` or `localPath` instead.
 
 ```yaml
 experimental:
@@ -660,15 +659,14 @@ experimental:
     local-demo:
       moduleName: github.com/traefik/localplugindemo
       mountPath: /plugins-local/src/github.com/traefik/localplugindemo
-      type:
-        hostPathPlugin:
-          path: /path/to/plugin-source
+      type: hostPath
+      hostPath: /path/to/plugin-source
 ```
 
 ### Using Local Path Plugin (Advanced)
 
 >[!NOTE]
-> The `localPathPlugin` type leverages the existing `additionalVolumes` mechanism for maximum flexibility. This supports PVC, CSI drivers (s3-csi-driver, FUSE), and other volume types.
+> The `localPath` type leverages the existing `additionalVolumes` mechanism for maximum flexibility. This supports PVC, CSI drivers (s3-csi-driver, FUSE), and other volume types.
 
 ```yaml
 # Define the volume in additionalVolumes first
@@ -690,10 +688,9 @@ experimental:
     s3-plugin:
       moduleName: github.com/example/s3plugin
       mountPath: /plugins-local/src/github.com/example/s3plugin
-      type:
-        localPathPlugin:
-          volumeName: plugin-storage  # Must match additionalVolumes name
-          subPath: plugins/s3plugin   # Optional subpath within volume
+      type: localPath
+      volumeName: plugin-storage  # Must match additionalVolumes name
+      subPath: plugins/s3plugin   # Optional subpath within volume
 ```
 
 > **Advantages**:

@@ -444,22 +444,19 @@ tests:
           inline-demo:
             moduleName: github.com/traefik/inlinedemo
             mountPath: /plugins-local/src/github.com/traefik/inlinedemo
-            type:
-              inlinePlugin:
-                main.go: "package main"
+            type: inlinePlugin
+            main.go: "package main"
           host-demo:
             moduleName: github.com/traefik/hostdemo
             mountPath: /plugins-local/src/github.com/traefik/hostdemo
-            type:
-              hostPathPlugin:
-                path: /plugins-local/src/github.com/traefik/hostdemo
+            type: hostPath
+            hostPath: /plugins-local/src/github.com/traefik/hostdemo
           pvc-demo:
             moduleName: github.com/traefik/pvcdemo
             mountPath: /plugins-local/src/github.com/traefik/pvcdemo
-            type:
-              localPathPlugin:
-                volumeName: plugin-storage
-                subPath: plugins/pvcdemo
+            type: localPath
+            volumeName: plugin-storage
+            subPath: plugins/pvcdemo
       deployment:
         additionalVolumes:
           - name: plugin-storage
