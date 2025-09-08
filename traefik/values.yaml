@@ -998,7 +998,7 @@ hub:
       listenAddr: ""
       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
       secretName: "hub-agent-cert"
-      # -- When CI/CD cannot access the k8s cluster to check and setup the webhook certificate in the secret, it's possible to disable this feature and manage the certificate outside of this Chart.
+      # -- When this chart is installed with a CD tool such as ArgoCD, this tool won't be able to perform a diff or detect drifts during templating stage without `--dry-run=server` option passed to helm (which is not the case with ArgoCD). Thus, this option will help you to manage the certificate with other tools like `cert-manager` and not be annoyed by the CD tool complaining about changes at every run. An alternative with ArgoCD is to use `ignoreDifferences` setting.
       selfManagedCertificate: false
       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
       customWebhookCertificate: {}
