@@ -835,7 +835,7 @@
           - "--hub.apimanagement"
               {{- if not $.Values.hub.offline }}
           - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
-                  {{- with .admission.secretName }}
+                {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
               {{- end }}
               {{- end }}
