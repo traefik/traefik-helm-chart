@@ -837,7 +837,7 @@
           - "--hub.apimanagement.admission.listenAddr={{ $listenAddr }}"
                 {{- with .admission.secretName }}
           - "--hub.apimanagement.admission.secretName={{ . }}"
-              {{- end }}
+                {{- end }}
               {{- end }}
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
