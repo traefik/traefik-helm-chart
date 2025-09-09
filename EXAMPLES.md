@@ -1210,7 +1210,7 @@ hub:
   apimanagement:
     admission:
       selfManagedCertificate: true
-      secretName: webhook1-certificate
+      secretName: admission-tls
       annotations:
         cert-manager.io/inject-ca-from: traefikns/webhook1-certificate
 ```
