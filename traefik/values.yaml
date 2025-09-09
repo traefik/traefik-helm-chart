@@ -998,6 +998,8 @@ hub:
       listenAddr: ""
       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
       secretName: "hub-agent-cert"
+      # -- By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details.
+      selfManagedCertificate: false
       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
       customWebhookCertificate: {}
       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.

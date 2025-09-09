@@ -370,6 +370,9 @@
                                 },
                                 "secretName": {
                                     "type": "string"
+                                },
+                                "selfManagedCertificate": {
+                                    "type": "boolean"
                                 }
                             }
                         },

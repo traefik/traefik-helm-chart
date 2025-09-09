@@ -830,7 +830,7 @@
           - "--hub.namespaces={{ join "," (uniq (concat (include "traefik.namespace" $ | list) .namespaces)) }}"
             {{- end }}
             {{- with .apimanagement }}
-             {{- if .enabled }}
+            {{- if .enabled }}
               {{- $listenAddr := default ":9943" .admission.listenAddr }}
           - "--hub.apimanagement"
               {{- if not $.Values.hub.offline }}
