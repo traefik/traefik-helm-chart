@@ -1184,7 +1184,9 @@ Now, it can be set in the `values.yaml`:
 
 ```yaml
 hub:
+  token: traefik-hub-license
   apimanagement:
+    enabled: true
     admission:
       customWebhookCertificate:
         tls.crt: xxxx # content of /tmp/hub.crt.b64
@@ -1203,11 +1205,39 @@ hub:
 
 It is also possible to use [CA injector](https://cert-manager.io/docs/concepts/ca-injector/) of cert-manager with annotations on the webhook.
 
-They can be set in the `values.yaml` like this:
+First, you can create the certificate with a self-signed issuer:
+
+```yaml
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: admission
+  namespace: traefik
+spec:
+  secretName: admission-tls
+  dnsNames:
+  - admission.traefik.svc
+  issuerRef:
+    name: selfsigned
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned
+  namespace: traefik
+spec:
+  selfSigned: {}
+```
+
+Once the `Certificate` is ready, it can be set in the `values.yaml` like this:
 
 ```yaml
 hub:
+  token: traefik-hub-license
   apimanagement:
+    enabled: true
     admission:
       selfManagedCertificate: true
       secretName: admission-tls
