@@ -1212,7 +1212,7 @@ hub:
       selfManagedCertificate: true
       secretName: admission-tls
       annotations:
-        cert-manager.io/inject-ca-from: traefikns/webhook1-certificate
+        cert-manager.io/inject-ca-from: traefik/admission-tls
 ```
 
 ## Use a custom certificate for Traefik Hub webhooks from an existing secret
