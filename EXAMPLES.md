@@ -1186,7 +1186,6 @@ Now, it can be set in the `values.yaml`:
 hub:
   apimanagement:
     admission:
-      selfManagedCertificate: true
       customWebhookCertificate:
         tls.crt: xxxx # content of /tmp/hub.crt.b64
         tls.key: xxxx # content of /tmp/hub.key.b64
@@ -1210,8 +1209,10 @@ They can be set in the `values.yaml` like this:
 hub:
   apimanagement:
     admission:
+      selfManagedCertificate: true
+      secretName: webhook1-certificate
       annotations:
-        cert-manager.io/inject-ca-from: example1/webhook1-certificate
+        cert-manager.io/inject-ca-from: traefikns/webhook1-certificate
 ```
 
 ## Use a custom certificate for Traefik Hub webhooks from an existing secret
