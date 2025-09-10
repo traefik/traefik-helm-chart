@@ -820,6 +820,24 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--log.noColor=true"
+  - it: should be possible to set genericCLF accesslog format with Proxy v3.5.2
+    set:
+      logs:
+        access:
+          enabled: true
+          format: genericCLF
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.format=genericCLF"
+  - it: should fail on schema level when trying to set genericCLF log format
+    set:
+      logs:
+        general:
+          format: genericCLF
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications"
   - it: should fail when setting unknown log level
     set:
       logs:

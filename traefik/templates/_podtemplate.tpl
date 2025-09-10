@@ -756,9 +756,6 @@
           {{- end }}
           {{- end }}
           {{- with .Values.logs }}
-            {{- if and .general.format (not (has .general.format (list "common" "json"))) }}
-              {{- fail "ERROR: .Values.logs.general.format must be either common or json"  }}
-            {{- end }}
             {{- with .general.format }}
           - "--log.format={{ . }}"
             {{- end }}
