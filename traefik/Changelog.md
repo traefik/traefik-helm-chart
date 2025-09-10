@@ -1,5 +1,41 @@
 # Change Log
 
+## 37.1.1  ![AppVersion: v3.5.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-09-10
+
+* feat(hub): allow to specify admission controller certificate from existing secret
+* feat(deps): update traefik docker tag to v3.5.2
+* feat(accesslog): ✨ add genericCLF format
+* chore(release): 🚀 publish v37.1.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index b56a33b..cc48b7d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -374,7 +374,7 @@ logs:
+     # -- To enable access logs
+     enabled: false
+     # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
+-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
++    format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
+     # filePath: "/var/log/traefik/access.log
+     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+     bufferingSize:  # @schema type:[integer, null]
+@@ -998,6 +998,8 @@ hub:
+       listenAddr: ""
+       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
+       secretName: "hub-agent-cert"
++      # -- By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details.
++      selfManagedCertificate: false
+       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
+       customWebhookCertificate: {}
+       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
+```
+
 ## 37.1.0  ![AppVersion: v3.5.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-09-03
