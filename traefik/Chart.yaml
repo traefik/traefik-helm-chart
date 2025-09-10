@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 37.1.0
+version: 37.1.1
 # renovate: image=traefik
 appVersion: v3.5.2
 kubeVersion: ">=1.22.0-0"
@@ -23,17 +23,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "refactor: remove `$root` hacks in favor of using `$`"
-    - "refactor: only render `--global.checkNewVersion` when it differs from default"
-    - "fix: prevent blank lines in args"
-    - "fix(deployment): allow to disable checkNewVersion via values.yaml"
-    - "feat: support custom monitoring api"
-    - "feat: support Traefik v3.5 features"
-    - "feat(hub): add annotations for webhook admission"
-    - "feat(hooks): use now stable prestop command syntax"
-    - "feat(deps): update traefik docker tag to v3.5.1"
-    - "feat(deployment): add chart value timezone that auomatically configures access logs timezone"
-    - "feat(CRDs): update Traefik Hub to v1.21.1"
-    - "feat(CRDs): add gatewayAPI experimental channel option"
-    - "docs(plugins): Sync VALUES.md"
-    - "chore(release): :rocket: Publish 37.1.0 and 1.11.0"
+    - "feat(hub): allow to specify admission controller certificate from existing secret"
+    - "feat(deps): update traefik docker tag to v3.5.2"
+    - "feat(accesslog): ✨ add genericCLF format"
+    - "chore(release): 🚀 publish v37.1.1"
