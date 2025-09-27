@@ -1,5 +1,137 @@
 # Change Log
 
+## 37.1.1  ![AppVersion: v3.5.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-09-10
+
+* feat(hub): allow to specify admission controller certificate from existing secret
+* feat(deps): update traefik docker tag to v3.5.2
+* feat(accesslog): ✨ add genericCLF format
+* chore(release): 🚀 publish v37.1.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index b56a33b..cc48b7d 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -374,7 +374,7 @@ logs:
+     # -- To enable access logs
+     enabled: false
+     # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
+-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
++    format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
+     # filePath: "/var/log/traefik/access.log
+     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+     bufferingSize:  # @schema type:[integer, null]
+@@ -998,6 +998,8 @@ hub:
+       listenAddr: ""
+       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
+       secretName: "hub-agent-cert"
++      # -- By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details.
++      selfManagedCertificate: false
+       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
+       customWebhookCertificate: {}
+       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
+```
+
+## 37.1.0  ![AppVersion: v3.5.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.1&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-09-03
+
+* refactor: remove `$root` hacks in favor of using `$`
+* refactor: only render `--global.checkNewVersion` when it differs from default
+* fix: prevent blank lines in args
+* fix(deployment): allow to disable checkNewVersion via values.yaml
+* feat: support custom monitoring api
+* feat: support Traefik v3.5 features
+* feat(hub): add annotations for webhook admission
+* feat(hooks): use now stable prestop command syntax
+* feat(deps): update traefik docker tag to v3.5.1
+* feat(deployment): add chart value timezone that auomatically configures access logs timezone
+* feat(CRDs): update Traefik Hub to v1.21.1
+* feat(CRDs): add gatewayAPI experimental channel option
+* docs(plugins): Sync VALUES.md
+* chore(release): :rocket: Publish 37.1.0 and 1.11.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 0c1274f..b56a33b 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -91,8 +91,8 @@ deployment:
+   # -- Pod lifecycle actions
+   lifecycle: {}
+   # preStop:
+-  #   exec:
+-  #     command: ["/bin/sh", "-c", "sleep 40"]
++  #   sleep:
++  #     seconds: 20
+   # postStart:
+   #   httpGet:
+   #     path: /ping
+@@ -161,7 +161,7 @@ gateway:
+       hostname: ""
+       # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
+       protocol: HTTP
+-      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
++      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+       namespacePolicy:  # @schema type:[object, null]
+     # websecure listener is disabled by default because certificateRefs needs to be added,
+     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
+@@ -378,6 +378,8 @@ logs:
+     # filePath: "/var/log/traefik/access.log
+     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+     bufferingSize:  # @schema type:[integer, null]
++    # -- Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)
++    timezone: ""
+     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
+     filters:  # @schema additionalProperties: false
+       # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
+@@ -432,6 +434,7 @@ metrics:
+     serviceMonitor:
+       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
+       enabled: false
++      apiVersion: "monitoring.coreos.com/v1"
+       metricRelabelings: []
+       relabelings: []
+       jobLabel: ""
+@@ -447,6 +450,7 @@ metrics:
+     prometheusRule:
+       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
+       enabled: false
++      apiVersion: "monitoring.coreos.com/v1"
+       additionalLabels: {}
+       namespace: ""
+ 
+@@ -547,6 +551,13 @@ metrics:
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+         insecureSkipVerify: false
+ 
++ocsp:
++  # -- Enable OCSP stapling support.
++  # See https://doc.traefik.io/traefik/https/ocsp/#overview
++  enabled: false
++  # -- Defines the OCSP responder URLs to use instead of the one provided by the certificate.
++  responderOverrides: {}
++
+ ## Tracing
+ # -- https://doc.traefik.io/traefik/observability/tracing/overview/
+ tracing:  # @schema additionalProperties: false
+@@ -991,6 +1002,8 @@ hub:
+       customWebhookCertificate: {}
+       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
+       restartOnCertificateChange: true
++      # -- Set custom annotations.
++      annotations: {}
+     openApi:
+       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+       validateRequestMethodAndPath: false
+```
+
 ## 37.0.0  ![AppVersion: v3.5.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-07-29

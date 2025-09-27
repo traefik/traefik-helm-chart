@@ -125,7 +125,7 @@ tests:
       - equal:
           path: "metadata.name"
           value: hub-agent-cert
-  - it: should be possible to specify custom webhook certificate
+  - it: should be possible to specify custom webhook certificate name
     set:
       hub:
         apimanagement:
@@ -141,6 +141,7 @@ tests:
       hub:
         apimanagement:
           admission:
+            selfManagedCertificate: true
             customWebhookCertificate:
               tls.crt: cert
               tls.key: key
@@ -155,3 +156,67 @@ tests:
           path: "webhooks[*].clientConfig.caBundle"
           value: cert
         documentIndex: 1
+  - it: should be possible to specify custom annotations
+    kubernetesProvider:
+      scheme:
+        "v1/Secret":
+          gvr:
+            version:  "v1"
+            resource: "secrets"
+            namespaced: true
+      objects:
+        - kind: Secret
+          apiVersion: v1
+          metadata:
+            name: webhook1-certificate
+          data:
+            tls.crt: "testcert=="
+            tls.key: "testkey=="
+    documentIndex: 1
+    set:
+      hub:
+        apimanagement:
+          admission:
+            selfManagedCertificate: true
+            secretName: "webhook1-certificate"
+            annotations:
+              cert-manager.io/inject-ca-from: traefik/webhook1-certificate
+    asserts:
+      - isKind:
+          of: MutatingWebhookConfiguration
+      - equal:
+          path: metadata.annotations
+          value:
+            cert-manager.io/inject-ca-from: traefik/webhook1-certificate
+          asserts:
+      - equal:
+          path: "webhooks[*].clientConfig.caBundle"
+          value: "testcert=="
+        documentIndex: 0
+  - it: should be possible to specify custom webhook certificate from existing secret
+    kubernetesProvider:
+      scheme:
+        "v1/Secret":
+          gvr:
+            version:  "v1"
+            resource: "secrets"
+            namespaced: true
+      objects:
+        - kind: Secret
+          apiVersion: v1
+          metadata:
+            name: test
+          data:
+            tls.crt: "testcert=="
+            tls.key: "testkey=="
+    set:
+      hub:
+        apimanagement:
+          admission:
+            selfManagedCertificate: true
+            secretName: "test"
+    asserts:
+      - equal:
+          path: "webhooks[*].clientConfig.caBundle"
+          value: "testcert=="
+        documentIndex: 0

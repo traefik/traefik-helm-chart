@@ -231,7 +231,7 @@ Hash: {{ sha1sum (index $.Values.hub.apimanagement.admission.customWebhookCertif
 Cert: {{ index $cert.data "tls.crt" }}
 Key: {{ index $cert.data "tls.key" }}
 Hash: {{ sha1sum (index $cert.data "tls.crt") }}
-    {{- else -}}
+    {{- else if not $.Values.hub.apimanagement.admission.selfManagedCertificate -}}
     {{/* generate a new one */}}
     {{- $altNames := list ( printf "admission.%s.svc" (include "traefik.namespace" .) ) -}}
     {{- $cert := genSelfSignedCert ( printf "admission.%s.svc" (include "traefik.namespace" .) ) (list) $altNames 3650 -}}

@@ -192,6 +192,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."
+  - it: should fail when trying to use genericCLF log format Traefik Proxy < v3.5.2
+    set:
+      image:
+        tag: v3.5.1
+      logs:
+        access:
+          format: genericCLF
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: genericCLF is an accesslog format option only available for traefik >= v3.5.2."
   - it: should fail when using Traefik Hub without image registry and repository specified.
     set:
       hub:

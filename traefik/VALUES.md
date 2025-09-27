@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 37.0.0](https://img.shields.io/badge/Version-37.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.5.1](https://img.shields.io/badge/AppVersion-v3.5.1-informational?style=flat-square)
+![Version: 37.1.1](https://img.shields.io/badge/Version-37.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.5.2](https://img.shields.io/badge/AppVersion-v3.5.2-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -79,7 +79,7 @@ Kubernetes: `>=1.22.0-0`
 | gateway.infrastructure | object | `{}` | [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) |
 | gateway.listeners | object | `{"web":{"hostname":"","namespacePolicy":null,"port":8000,"protocol":"HTTP"}}` | Define listeners |
 | gateway.listeners.web.hostname | string | `""` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname) |
-| gateway.listeners.web.namespacePolicy | string | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces |
+| gateway.listeners.web.namespacePolicy | object | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces |
 | gateway.listeners.web.port | int | `8000` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. The port must match a port declared in ports section. |
 | gateway.name | string | `""` | Set a custom name to gateway |
 | gateway.namespace | string | `""` | By default, Gateway is created in the same `Namespace` than Traefik. |
@@ -93,10 +93,12 @@ Kubernetes: `>=1.22.0-0`
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.aigateway.enabled | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
 | hub.aigateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
+| hub.apimanagement.admission.annotations | object | `{}` | Set custom annotations. |
 | hub.apimanagement.admission.customWebhookCertificate | object | `{}` | Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding. |
 | hub.apimanagement.admission.listenAddr | string | `""` | WebHook admission server listen address. Default: "0.0.0.0:9943". |
 | hub.apimanagement.admission.restartOnCertificateChange | bool | `true` | Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update. |
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
+| hub.apimanagement.admission.selfManagedCertificate | bool | `false` | By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
@@ -236,12 +238,14 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.headerLabels | object | `{}` | Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage. |
 | metrics.prometheus.manualRouting | bool | `false` | When manualRouting is true, it disables the default internal router in # order to allow creating a custom router for prometheus@internal service. |
 | metrics.prometheus.prometheusRule.additionalLabels | object | `{}` |  |
+| metrics.prometheus.prometheusRule.apiVersion | string | `"monitoring.coreos.com/v1"` |  |
 | metrics.prometheus.prometheusRule.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.prometheusRule.namespace | string | `""` |  |
 | metrics.prometheus.service.annotations | object | `{}` |  |
 | metrics.prometheus.service.enabled | bool | `false` | Create a dedicated metrics service to use with ServiceMonitor |
 | metrics.prometheus.service.labels | object | `{}` |  |
 | metrics.prometheus.serviceMonitor.additionalLabels | object | `{}` |  |
+| metrics.prometheus.serviceMonitor.apiVersion | string | `"monitoring.coreos.com/v1"` |  |
 | metrics.prometheus.serviceMonitor.enableHttp2 | bool | `false` |  |
 | metrics.prometheus.serviceMonitor.enabled | bool | `false` | Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details. |
 | metrics.prometheus.serviceMonitor.followRedirects | bool | `false` |  |
@@ -259,6 +263,8 @@ Kubernetes: `>=1.22.0-0`
 | oci_meta | object | `{"enabled":false,"images":{"hub":{"image":"traefik-hub","tag":"latest"},"proxy":{"image":"traefik","tag":"latest"}},"repo":"traefik"}` | Required for OCI Marketplace integration. See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm |
 | oci_meta.enabled | bool | `false` | Enable specific values for Oracle Cloud Infrastructure |
 | oci_meta.repo | string | `"traefik"` | It needs to be an ocir repo |
+| ocsp.enabled | bool | `false` | Enable OCSP stapling support. See https://doc.traefik.io/traefik/https/ocsp/#overview |
+| ocsp.responderOverrides | object | `{}` | Defines the OCSP responder URLs to use instead of the one provided by the certificate. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `false` | Enable persistence using Persistent Volume Claims ref: http://kubernetes.io/docs/user-guide/persistent-volumes/. It can be used to store TLS certificates along with `certificatesResolvers.<name>.acme.storage`  option |

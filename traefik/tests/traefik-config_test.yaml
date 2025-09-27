@@ -522,6 +522,37 @@ tests:
             persistentVolumeClaim:
               claimName: plugin-storage-pvc
 
+  - it: should allow useUnsafe option for plugins and localPlugins
+    set:
+      experimental:
+        plugins:
+          demo:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+            settings:
+              useUnsafe: true
+        localPlugins:
+          local-demo:
+            moduleName: github.com/traefik/plugindemo
+            settings:
+              useUnsafe: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.version=v0.2.1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.settings.useUnsafe=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.local-demo.moduleName=github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.localPlugins.local-demo.settings.useUnsafe=true"
+
   - it: should have tls configuration args when specified in values.yaml for port
     set:
       ports:

@@ -25,7 +25,7 @@ jobs:
           repository: traefik/hub
           path: ${{ github.workspace }}/hub
       - name: set up Go
-        uses: actions/setup-go@v5
+        uses: actions/setup-go@v6
         with:
           go-version-file: ${{ github.workspace }}/hub/tests/go.mod
           cache-dependency-path: ${{ github.workspace }}/hub/tests/go.sum

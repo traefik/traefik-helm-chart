@@ -42,6 +42,7 @@ spec:
               apiKey:
                 description: APIKey configures API key authentication.
                 type: object
+                x-kubernetes-preserve-unknown-fields: true
               isDefault:
                 description: |-
                   IsDefault specifies if this APIAuth should be used as the default API authentication method for the namespace.

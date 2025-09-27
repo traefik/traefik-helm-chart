@@ -46,20 +46,20 @@ tests:
             scrapeTimeout: 5s
             interval: 30s
             metricRelabelings:
-            - action: drop
-              regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
-              replacement: $1
-              separator: ;
-              sourceLabels:
-              - __name__
+              - action: drop
+                regex: ^fluentd_output_status_buffer_(oldest|newest)_.+
+                replacement: $1
+                separator: ;
+                sourceLabels:
+                  - __name__
             relabelings:
-            - action: replace
-              regex: ^(.*)$
-              replacement: $1
-              separator: ;
-              sourceLabels:
-              - __meta_kubernetes_pod_node_name
-              targetLabel: nodename
+              - action: replace
+                regex: ^(.*)$
+                replacement: $1
+                separator: ;
+                sourceLabels:
+                  - __meta_kubernetes_pod_node_name
+                targetLabel: nodename
       - equal:
           path: spec.namespaceSelector.any
           value: true
@@ -116,3 +116,22 @@ tests:
       - equal:
           path: metadata.namespace
           value: another-namespace
+  - it: should provide aks special api when set, following example
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+          # Set to false when using Azure Monitor to skip the CRD check (monitoring.coreos.com/v1)
+          disableAPICheck: true
+          serviceMonitor:
+            enabled: true
+            # Defaults to monitoring.coreos.com/v1
+            apiVersion: "azmonitoring.coreos.com/v1"
+          prometheusRule:
+            # Defaults to monitoring.coreos.com/v1
+            apiVersion: "azmonitoring.coreos.com/v1"
+    asserts:
+      - containsDocument:
+          kind: ServiceMonitor
+          apiVersion: azmonitoring.coreos.com/v1

@@ -161,7 +161,7 @@ gateway:
       hostname: ""
       # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
       protocol: HTTP
-      # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
+      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
       namespacePolicy:  # @schema type:[object, null]
     # websecure listener is disabled by default because certificateRefs needs to be added,
     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
@@ -374,7 +374,7 @@ logs:
     # -- To enable access logs
     enabled: false
     # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+    format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
     # filePath: "/var/log/traefik/access.log
     # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
     bufferingSize:  # @schema type:[integer, null]
@@ -434,6 +434,7 @@ metrics:
     serviceMonitor:
       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
       enabled: false
+      apiVersion: "monitoring.coreos.com/v1"
       metricRelabelings: []
       relabelings: []
       jobLabel: ""
@@ -449,6 +450,7 @@ metrics:
     prometheusRule:
       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
       enabled: false
+      apiVersion: "monitoring.coreos.com/v1"
       additionalLabels: {}
       namespace: ""
 
@@ -548,6 +550,13 @@ metrics:
         key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
+
+ocsp:
+  # -- Enable OCSP stapling support.
+  # See https://doc.traefik.io/traefik/https/ocsp/#overview
+  enabled: false
+  # -- Defines the OCSP responder URLs to use instead of the one provided by the certificate.
+  responderOverrides: {}
 
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
@@ -989,10 +998,14 @@ hub:
       listenAddr: ""
       # -- Certificate name of the WebHook admission server. Default: "hub-agent-cert".
       secretName: "hub-agent-cert"
+      # -- By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details.
+      selfManagedCertificate: false
       # -- Set custom certificate for the WebHook admission server. The certificate should be specified with _tls.crt_ and _tls.key_ in base64 encoding.
       customWebhookCertificate: {}
       # -- Set it to false if you need to disable Traefik Hub pod restart when mutating webhook certificate is updated. It's done with a label update.
       restartOnCertificateChange: true
+      # -- Set custom annotations.
+      annotations: {}
     openApi:
       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
       validateRequestMethodAndPath: false

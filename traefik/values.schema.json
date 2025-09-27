@@ -356,6 +356,9 @@
                         "admission": {
                             "type": "object",
                             "properties": {
+                                "annotations": {
+                                    "type": "object"
+                                },
                                 "customWebhookCertificate": {
                                     "type": "object"
                                 },
@@ -367,6 +370,9 @@
                                 },
                                 "secretName": {
                                     "type": "string"
+                                },
+                                "selfManagedCertificate": {
+                                    "type": "boolean"
                                 }
                             }
                         },
@@ -881,6 +887,7 @@
                             ],
                             "enum": [
                                 "common",
+                                "genericCLF",
                                 "json",
                                 null
                             ]
@@ -1085,6 +1092,9 @@
                                 "additionalLabels": {
                                     "type": "object"
                                 },
+                                "apiVersion": {
+                                    "type": "string"
+                                },
                                 "enabled": {
                                     "type": "boolean"
                                 },
@@ -1112,6 +1122,9 @@
                             "properties": {
                                 "additionalLabels": {
                                     "type": "object"
+                                },
+                                "apiVersion": {
+                                    "type": "string"
                                 },
                                 "enableHttp2": {
                                     "type": "boolean"
@@ -1196,6 +1209,17 @@
                 },
                 "repo": {
                     "type": "string"
+                }
+            }
+        },
+        "ocsp": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "type": "boolean"
+                },
+                "responderOverrides": {
+                    "type": "object"
                 }
             }
         },

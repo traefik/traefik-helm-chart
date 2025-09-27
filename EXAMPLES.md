@@ -448,6 +448,26 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
+## Use ServiceMonitor on AKS (Azure Monitor / managed Prometheus)
+
+Enable the optional ServiceMonitor so managed Prometheus can scrape Traefik metrics on AKS. You may override the CRD apiVersion if your environment requires it.
+
+```yaml
+metrics:
+  prometheus:
+    service:
+      enabled: true
+    # Set to true when using Azure Monitor to skip the CRD check (monitoring.coreos.com/v1)
+    disableAPICheck: true
+    serviceMonitor:
+      enabled: true
+      # Defaults to monitoring.coreos.com/v1
+      apiVersion: "azmonitoring.coreos.com/v1"
+    prometheusRule:
+      # Defaults to monitoring.coreos.com/v1
+      apiVersion: "azmonitoring.coreos.com/v1"
+```
+
 ## Use an IngressClass
 
 Default install comes with an `IngressClass` resource that can be enabled on providers.
@@ -1268,7 +1288,8 @@ First, generate a self-signed certificate:
 ```bash
 # this generates a self-signed certificate with a 2048 bits key, valid for 10 years, on admission.traefik.svc DNS name
 openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes -keyout /tmp/hub.key -out /tmp/hub.crt \
-            -subj "/CN=admission.traefik.svc" -addext "subjectAltName=DNS:admission.traefik.svc"
+            -subj '/CN=admission.traefik.svc' -addext "subjectAltName=DNS:admission.traefik.svc" \
+            -addext basicConstraints=critical,CA:FALSE -addext "keyUsage = digitalSignature, keyEncipherment" -addext "extendedKeyUsage = serverAuth, clientAuth"
 cat /tmp/hub.crt | base64 -w0 > /tmp/hub.crt.b64
 cat /tmp/hub.key | base64 -w0 > /tmp/hub.key.b64
 ```
@@ -1277,7 +1298,9 @@ Now, it can be set in the `values.yaml`:
 
 ```yaml
 hub:
+  token: traefik-hub-license
   apimanagement:
+    enabled: true
     admission:
       customWebhookCertificate:
         tls.crt: xxxx # content of /tmp/hub.crt.b64
@@ -1291,6 +1314,79 @@ hub:
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
 >```
+
+## Injecting CA data from a Certificate resource
+
+It is also possible to use [CA injector](https://cert-manager.io/docs/concepts/ca-injector/) of cert-manager with annotations on the webhook.
+
+First, you can create the certificate with a self-signed issuer:
+
+```yaml
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: admission
+  namespace: traefik
+spec:
+  secretName: admission-tls
+  dnsNames:
+  - admission.traefik.svc
+  issuerRef:
+    name: selfsigned
+
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: selfsigned
+  namespace: traefik
+spec:
+  selfSigned: {}
+```
+
+Once the `Certificate` is ready, it can be set in the `values.yaml` like this:
+
+```yaml
+hub:
+  token: traefik-hub-license
+  apimanagement:
+    enabled: true
+    admission:
+      selfManagedCertificate: true
+      secretName: admission-tls
+      annotations:
+        cert-manager.io/inject-ca-from: traefik/admission-tls
+```
+
+## Use a custom certificate for Traefik Hub webhooks from an existing secret
+
+Some CD tools may regenerate Traefik Hub mutating webhooks continuously, when using helm template.
+This example demonstrates how to generate and use a custom certificate stored in a managed secret for Hub admission webhooks.
+
+First, generate a self-signed certificate:
+
+```bash
+# this generates a self-signed certificate with a 2048 bits key, valid for 10 years, on admission.traefik.svc DNS name
+openssl req -x509 -newkey rsa:2048 -sha256 -days 3650 -nodes -keyout tls.key -out tls.crt \
+            -subj '/CN=admission.traefik.svc' -addext "subjectAltName=DNS:admission.traefik.svc" \
+            -addext basicConstraints=critical,CA:FALSE -addext "keyUsage = digitalSignature, keyEncipherment" -addext "extendedKeyUsage = serverAuth, clientAuth"
+```
+
+Create secret from generated certificate files:
+
+```bash
+kubectl create secret tls hub-admission-cert --namespace traefik --cert=tls.crt --key=tls.key
+```
+
+Now, it can be set in the `values.yaml`:
+
+```yaml
+hub:
+  apimanagement:
+    admission:
+      selfManagedCertificate: true
+```
 
 ## Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
 

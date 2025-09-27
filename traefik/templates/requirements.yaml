@@ -42,6 +42,10 @@
   {{- fail "ERROR: strictPrefixMatching is a feature only available for traefik >= v3.5.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<3.5.2-0" $version) (eq .Values.logs.access.format "genericCLF")}}
+  {{- fail "ERROR: genericCLF is an accesslog format option only available for traefik >= v3.5.2." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.2.0-0" $version) (.Values.metrics.otlp.serviceName)}}
   {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
 {{- end }}
