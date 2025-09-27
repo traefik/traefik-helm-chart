@@ -534,6 +534,8 @@ tests:
         localPlugins:
           local-demo:
             moduleName: github.com/traefik/plugindemo
+            mountPath: /plugins-local/src/github.com/traefik/plugindemo
+            hostPath: /plugins-local/src/github.com/traefik/plugindemo
             settings:
               useUnsafe: true
     asserts:
@@ -552,6 +554,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.localPlugins.local-demo.settings.useUnsafe=true"
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: local-demo
+            mountPath: "/plugins-local/src/github.com/traefik/plugindemo"
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: local-demo
+            hostPath:
+              path: "/plugins-local/src/github.com/traefik/plugindemo"
 
   - it: should have tls configuration args when specified in values.yaml for port
     set:
