@@ -900,6 +900,8 @@
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: USER
+            value: traefik
           {{- if ($.Values.resources.limits).cpu }}
           - name: GOMAXPROCS
             valueFrom:

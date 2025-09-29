@@ -897,3 +897,10 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.fields.names.StartUTC=drop"
+  - it: "should set traefik as user in env by default"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: USER
+            value: traefik
