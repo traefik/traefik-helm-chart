@@ -290,6 +290,19 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.plugins.demo.version=v0.2.1"
 
+  - it: should have a plugin hash option, if configured
+    set:
+      experimental:
+        plugins:
+          demo:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+            hash: 948a0f84e2d7708b60fe7e29a2d800fb3d1512c8e1eb386c69ff7ec743aa5287
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.plugins.demo.hash=948a0f84e2d7708b60fe7e29a2d800fb3d1512c8e1eb386c69ff7ec743aa5287"
+
   - it: should be possible to configure a customized plugin storage
     set:
       experimental:
