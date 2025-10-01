@@ -512,6 +512,9 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
+           {{- if hasKey $plugin "hash" }}
+          - "--experimental.plugins.{{ $pluginName }}.hash={{ $plugin.hash }}"
+           {{- end }}
            {{- $settings := (get $plugin "settings") | default dict }}
            {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
            {{- if $useUnsafe }}
