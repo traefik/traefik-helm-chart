@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik-crds
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 1.11.0
+version: 1.11.1
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -21,6 +21,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(CRDs): update Traefik Hub to v1.21.1"
-    - "feat(CRDs): add gatewayAPI experimental channel option"
-    - "chore(release): :rocket: Publish 37.1.0 and 1.11.0"
+    - "fix(CRDs): ✨ update for Traefik Proxy v3.5.2"
+    - "feat(CRDs): update for Traefik to v3.5.3"
+    - "chore(release): :rocket: publish traefik 37.1.2 and crds 1.11.1"
