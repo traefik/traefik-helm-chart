@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 37.1.1
+version: 37.1.2
 # renovate: image=traefik
 appVersion: v3.5.3
 kubeVersion: ">=1.22.0-0"
@@ -23,7 +23,8 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(hub): allow to specify admission controller certificate from existing secret"
-    - "feat(deps): update traefik docker tag to v3.5.2"
-    - "feat(accesslog): ✨ add genericCLF format"
-    - "chore(release): 🚀 publish v37.1.1"
+    - "fix(observability): tracer creation warning with default security context"
+    - "fix(CRDs): ✨ update for Traefik Proxy v3.5.2"
+    - "feat(deps): update traefik docker tag to v3.5.3 + add plugin hash option"
+    - "feat(CRDs): update for Traefik to v3.5.3"
+    - "chore(release): :rocket: publish traefik 37.1.2 and crds 1.11.1"
