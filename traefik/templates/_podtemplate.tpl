@@ -852,6 +852,14 @@
               {{- end }}
              {{- end }}
             {{- end -}}
+            {{- with .mcpgateway }}
+             {{- if .enabled }}
+          - "--hub.mcpgateway"
+              {{- with .maxRequestBodySize }}
+          - "--hub.mcpgateway.maxRequestBodySize={{ . | int }}"
+              {{- end }}
+             {{- end }}
+            {{- end -}}
             {{- if not .offline }}
               {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
