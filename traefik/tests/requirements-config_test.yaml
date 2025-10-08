@@ -304,25 +304,25 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."
-  - it: should fail when using mcpgateway on hub < 3.19.0
+  - it: should fail when using mcpgateway on hub < 3.18.0
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.18.0
+        tag: v3.17.0
       hub:
         token: "xxx"
         mcpgateway:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.19.0."
-  - it: should not fail when using mcpgateway on hub >= 3.19.0
+          errorMessage: "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."
+  - it: should not fail when using mcpgateway on hub >= 3.18.0
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.18.0
       hub:
         token: "xxx"
         mcpgateway:
