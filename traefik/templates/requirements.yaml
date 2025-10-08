@@ -93,4 +93,7 @@
     {{ fail "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."}}
   {{- end }}
 
+  {{- if and (semverCompare "<v3.19.0" $hubVersion) .Values.hub.mcpgateway.enabled }}
+    {{ fail "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.19.0."}}
+  {{- end }}
 {{- end }}
