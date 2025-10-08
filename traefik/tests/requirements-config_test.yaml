@@ -329,6 +329,18 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should not fail when using mcpgateway on hub >= 3.18.0 with rc
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0-rc2
+      hub:
+        token: "xxx"
+        mcpgateway:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when not using default values
     set:
       hub:
