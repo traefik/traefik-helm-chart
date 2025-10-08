@@ -389,6 +389,21 @@
                         }
                     }
                 },
+                "mcpgateway": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "maxRequestBodySize": {
+                            "type": [
+                                "integer",
+                                "null"
+                            ],
+                            "minimum": 0
+                        }
+                    }
+                },
                 "namespaces": {
                     "type": "array"
                 },
