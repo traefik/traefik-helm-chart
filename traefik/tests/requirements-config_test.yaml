@@ -367,7 +367,7 @@ tests:
             enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: otlp on general or access logs is an experimental feature and needs experimental.otlpLogs=true."
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
   - it: should fail when using otlp access logs without experimental flag
     set:
       logs:
@@ -376,7 +376,7 @@ tests:
             enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: otlp on general or access logs is an experimental feature and needs experimental.otlpLogs=true."
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
   - it: should fail when using otlp logs on trafik < 3.3.0
     set:
       image:
