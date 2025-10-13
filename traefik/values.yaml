@@ -139,6 +139,8 @@ experimental:
   plugins: {}
   # -- Enable experimental local plugins
   localPlugins: {}
+  # -- Enable OLTP logging experimental feature.
+  otlpLogs: false
 
 gateway:
   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
@@ -370,6 +372,48 @@ logs:
     filePath: ""
     # -- When set to true and format is common, it disables the colorized output.
     noColor: false
+    otlp:
+      # -- Set to true in order to enable the OpenTelemetry metrics. Note that experimental.otlpLogs needs to be set to true.
+      enabled: false
+      # -- Service name used in OTLP backend. Default: traefik.
+      serviceName:  # @schema type:[string, null]
+      http:
+        # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
+        enabled: false
+        # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
+        endpoint: ""
+        # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+        headers: {}
+        ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+        tls:
+          # -- The path to the certificate authority, it defaults to the system bundle.
+          ca: ""
+          # -- The path to the public certificate. When using this option, setting the key option is required.
+          cert: ""
+          # -- The path to the private key. When using this option, setting the cert option is required.
+          key: ""
+          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+          insecureSkipVerify:  # @schema type:[boolean, null]
+      grpc:
+        # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
+        enabled: false
+        # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
+        endpoint: ""
+        # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+        insecure: false
+        ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+        tls:
+          # -- The path to the certificate authority, it defaults to the system bundle.
+          ca: ""
+          # -- The path to the public certificate. When using this option, setting the key option is required.
+          cert: ""
+          # -- The path to the private key. When using this option, setting the cert option is required.
+          key: ""
+          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+          insecureSkipVerify: false
+      # -- Defines additional resource attributes to be sent to the collector.
+      resourceAttributes: {}
+
   access:
     # -- To enable access logs
     enabled: false
@@ -401,6 +445,47 @@ logs:
         # -- Set default mode for fields.headers
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
+    otlp:
+      # -- Set to true in order to enable the OpenTelemetry metrics. Note that experimental.otlpLogs needs to be set to true.
+      enabled: false
+      # -- Service name used in OTLP backend. Default: traefik.
+      serviceName:  # @schema type:[string, null]
+      http:
+        # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
+        enabled: false
+        # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
+        endpoint: ""
+        # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+        headers: {}
+        ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+        tls:
+          # -- The path to the certificate authority, it defaults to the system bundle.
+          ca: ""
+          # -- The path to the public certificate. When using this option, setting the key option is required.
+          cert: ""
+          # -- The path to the private key. When using this option, setting the cert option is required.
+          key: ""
+          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+          insecureSkipVerify:  # @schema type:[boolean, null]
+      grpc:
+        # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
+        enabled: false
+        # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
+        endpoint: ""
+        # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+        insecure: false
+        ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
+        tls:
+          # -- The path to the certificate authority, it defaults to the system bundle.
+          ca: ""
+          # -- The path to the public certificate. When using this option, setting the key option is required.
+          cert: ""
+          # -- The path to the private key. When using this option, setting the cert option is required.
+          key: ""
+          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+          insecureSkipVerify: false
+      # -- Defines additional resource attributes to be sent to the collector.
+      resourceAttributes: {}
 
 metrics:
   # -- Enable metrics for internal resources. Default: false

@@ -206,6 +206,9 @@
                 "localPlugins": {
                     "type": "object"
                 },
+                "otlpLogs": {
+                    "type": "boolean"
+                },
                 "plugins": {
                     "type": "object"
                 }
@@ -907,6 +910,88 @@
                                 null
                             ]
                         },
+                        "otlp": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "grpc": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "insecure": {
+                                            "type": "boolean"
+                                        },
+                                        "tls": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ca": {
+                                                    "type": "string"
+                                                },
+                                                "cert": {
+                                                    "type": "string"
+                                                },
+                                                "insecureSkipVerify": {
+                                                    "type": "boolean"
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "http": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "headers": {
+                                            "type": "object"
+                                        },
+                                        "tls": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ca": {
+                                                    "type": "string"
+                                                },
+                                                "cert": {
+                                                    "type": "string"
+                                                },
+                                                "insecureSkipVerify": {
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "resourceAttributes": {
+                                    "type": "object"
+                                },
+                                "serviceName": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
+                        },
                         "timezone": {
                             "type": "string"
                         }
@@ -945,6 +1030,88 @@
                         },
                         "noColor": {
                             "type": "boolean"
+                        },
+                        "otlp": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "grpc": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "insecure": {
+                                            "type": "boolean"
+                                        },
+                                        "tls": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ca": {
+                                                    "type": "string"
+                                                },
+                                                "cert": {
+                                                    "type": "string"
+                                                },
+                                                "insecureSkipVerify": {
+                                                    "type": "boolean"
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "http": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        },
+                                        "headers": {
+                                            "type": "object"
+                                        },
+                                        "tls": {
+                                            "type": "object",
+                                            "properties": {
+                                                "ca": {
+                                                    "type": "string"
+                                                },
+                                                "cert": {
+                                                    "type": "string"
+                                                },
+                                                "insecureSkipVerify": {
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
+                                                },
+                                                "key": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                "resourceAttributes": {
+                                    "type": "object"
+                                },
+                                "serviceName": {
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
                         }
                     }
                 }
