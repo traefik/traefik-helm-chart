@@ -64,6 +64,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: serviceName is a feature only available for traefik >= v3.2.0."
+  - it: should fail when using resourceAttributes on metrics otlp on traefik < 3.5.3
+    set:
+      image:
+        tag: v3.1.0
+      metrics:
+        otlp:
+          resourceAttributes:
+            foo: bar
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: resourceAttributes is a feature only available for traefik >= v3.5.3."
   - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
     set:
       image:

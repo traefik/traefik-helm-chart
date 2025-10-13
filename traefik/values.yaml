@@ -550,6 +550,8 @@ metrics:
         key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify: false
+    # -- Defines additional resource attributes to be sent to the collector.
+    resourceAttributes: {}
 
 ocsp:
   # -- Enable OCSP stapling support.

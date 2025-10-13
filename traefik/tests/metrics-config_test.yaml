@@ -327,6 +327,8 @@ tests:
               cert: gpath/to/foo.cert
               key: gpath/to/foo.key
               insecureSkipVerify: true
+          resourceAttributes:
+            foo: bar
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -400,6 +402,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.grpc.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.resourceAttributes.foo=bar"
   - it: should be possible to set headerLabels on prometheus
     set:
       metrics:

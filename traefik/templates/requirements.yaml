@@ -50,6 +50,10 @@
   {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.5.3-0" $version) (.Values.metrics.otlp.resourceAttributes)}}
+  {{- fail "ERROR: resourceAttributes is a feature only available for traefik >= v3.5.3." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
   {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
 {{- end }}
