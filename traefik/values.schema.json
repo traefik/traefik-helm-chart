@@ -1051,6 +1051,9 @@
                         "pushInterval": {
                             "type": "string"
                         },
+                        "resourceAttributes": {
+                            "type": "object"
+                        },
                         "serviceName": {
                             "type": [
                                 "string",

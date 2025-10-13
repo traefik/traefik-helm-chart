@@ -346,6 +346,9 @@
            {{- with .serviceName }}
           - "--metrics.otlp.serviceName={{ . }}"
            {{- end }}
+           {{- range $name, $value := .resourceAttributes }}
+          - "--metrics.otlp.resourceAttributes.{{ $name }}={{ $value }}"
+           {{- end }}
            {{- with .http }}
             {{- if .enabled }}
           - "--metrics.otlp.http=true"
