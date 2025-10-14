@@ -456,7 +456,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: pluginRegistry source plugin1 is not used in exprimental.plugins."
-  - it: should not fail when using pluginRegistry sources with unused plugin
+  - it: should not fail when using pluginRegistry sources with used plugin
     set:
       image:
         registry: "ghcr.io"
