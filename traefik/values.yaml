@@ -757,15 +757,14 @@ ports:
     exposedPort: 8080
     # -- The port protocol (TCP/UDP)
     protocol: TCP
-    # -- Defines per entrypoint observability.
     observability:  # @schema additionalProperties: false
-      # -- Enables metrics for this entryPoint.
+      # -- Defines whether a router attached to this EntryPoint produces metrics by default.
       metrics:  # @schema type:[boolean, null]; default: true
-      # -- Enables access-logs for this entryPoint.
+      # -- Defines whether a router attached to this EntryPoint produces access-logs by default.
       accessLogs:  # @schema type:[boolean, null]; default: true
-      # -- Enables tracing for this entryPoint.
+      # -- Defines whether a router attached to this EntryPoint produces traces by default.
       tracing:  # @schema type:[boolean, null]; default: true
-      # -- Defines the tracing verbosity level for this entryPoint.
+      # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
@@ -808,7 +807,6 @@ ports:
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
-    # -- Defines per entrypoint observability.
     observability:  # @schema additionalProperties: false
       # -- Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
@@ -879,7 +877,6 @@ ports:
     #   - namespace-name1@kubernetescrd
     #   - namespace-name2@kubernetescrd
     middlewares: []
-    # -- Defines per entrypoint observability.
     observability:  # @schema additionalProperties: false
       # -- Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
@@ -902,7 +899,6 @@ ports:
     exposedPort: 9100
     # -- The port protocol (TCP/UDP)
     protocol: TCP
-    # -- Defines per entrypoint observability.
     observability:  # @schema additionalProperties: false
       # -- Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
