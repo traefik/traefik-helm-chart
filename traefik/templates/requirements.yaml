@@ -121,4 +121,16 @@
   {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.mcpgateway.enabled }}
     {{ fail "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."}}
   {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.pluginRegistry.sources }}
+    {{ fail "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- with .Values.hub.pluginRegistry.sources }}
+    {{- range $pluginName, $pluginConf := . }}
+      {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
+         {{ fail (printf "ERROR: pluginRegistry source %s is not used in exprimental.plugins." $pluginName) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}

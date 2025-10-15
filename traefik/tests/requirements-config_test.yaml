@@ -359,6 +359,7 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "namespaces is required"
+<<<<<<< HEAD
   - it: should fail when using otlp logs without experimental flag
     set:
       logs:
@@ -425,3 +426,52 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."
+  - it: should fail when using pluginRegistry sources on hub < 3.18.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.17.0
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."
+  - it: should fail when using pluginRegistry sources with unused plugin
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in exprimental.plugins."
+  - it: should not fail when using pluginRegistry sources with unused plugin
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0
+      experimental:
+        plugins:
+          plugin1:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - notFailedTemplate: {}
