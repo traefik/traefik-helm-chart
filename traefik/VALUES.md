@@ -318,12 +318,20 @@ Kubernetes: `>=1.22.0-0`
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
+| ports.metrics.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.metrics.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.metrics.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.metrics.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
 | ports.traefik.hostIP | string | `nil` | Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which means it's listening on all your interfaces and all your IPs. You may want to set this value if you need traefik to listen on specific interface only. |
 | ports.traefik.hostPort | string | `nil` | Use hostPort if set. |
+| ports.traefik.observability.accessLogs | string | `nil` | Defines whether a router attached to this EntryPoint produces access-logs by default. |
+| ports.traefik.observability.metrics | string | `nil` | Defines whether a router attached to this EntryPoint produces metrics by default. |
+| ports.traefik.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for routers attached to this EntryPoint. |
+| ports.traefik.observability.tracing | string | `nil` | Defines whether a router attached to this EntryPoint produces traces by default. |
 | ports.traefik.port | int | `8080` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.expose.default | bool | `true` |  |
@@ -331,6 +339,10 @@ Kubernetes: `>=1.22.0-0`
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.web.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| ports.web.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.web.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.web.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.web.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.web.port | int | `8000` |  |
 | ports.web.protocol | string | `"TCP"` |  |
 | ports.web.proxyProtocol.insecure | bool | `false` |  |
@@ -350,6 +362,10 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
 | ports.websecure.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| ports.websecure.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.websecure.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.websecure.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.websecure.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.websecure.port | int | `8443` |  |
 | ports.websecure.protocol | string | `"TCP"` |  |
 | ports.websecure.proxyProtocol.insecure | bool | `false` |  |

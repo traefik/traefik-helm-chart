@@ -757,6 +757,15 @@ ports:
     exposedPort: 8080
     # -- The port protocol (TCP/UDP)
     protocol: TCP
+    observability:  # @schema additionalProperties: false
+      # -- Defines whether a router attached to this EntryPoint produces metrics by default.
+      metrics:  # @schema type:[boolean, null]; default: true
+      # -- Defines whether a router attached to this EntryPoint produces access-logs by default.
+      accessLogs:  # @schema type:[boolean, null]; default: true
+      # -- Defines whether a router attached to this EntryPoint produces traces by default.
+      tracing:  # @schema type:[boolean, null]; default: true
+      # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
+      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -798,6 +807,15 @@ ports:
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
+    observability:  # @schema additionalProperties: false
+      # -- Enables metrics for this entryPoint.
+      metrics:  # @schema type:[boolean, null]; default: true
+      # -- Enables access-logs for this entryPoint.
+      accessLogs:  # @schema type:[boolean, null]; default: true
+      # -- Enables tracing for this entryPoint.
+      tracing:  # @schema type:[boolean, null]; default: true
+      # -- Defines the tracing verbosity level for this entryPoint.
+      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   websecure:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -859,6 +877,15 @@ ports:
     #   - namespace-name1@kubernetescrd
     #   - namespace-name2@kubernetescrd
     middlewares: []
+    observability:  # @schema additionalProperties: false
+      # -- Enables metrics for this entryPoint.
+      metrics:  # @schema type:[boolean, null]; default: true
+      # -- Enables access-logs for this entryPoint.
+      accessLogs:  # @schema type:[boolean, null]; default: true
+      # -- Enables tracing for this entryPoint.
+      tracing:  # @schema type:[boolean, null]; default: true
+      # -- Defines the tracing verbosity level for this entryPoint.
+      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
@@ -872,6 +899,15 @@ ports:
     exposedPort: 9100
     # -- The port protocol (TCP/UDP)
     protocol: TCP
+    observability:  # @schema additionalProperties: false
+      # -- Enables metrics for this entryPoint.
+      metrics:  # @schema type:[boolean, null]; default: true
+      # -- Enables access-logs for this entryPoint.
+      accessLogs:  # @schema type:[boolean, null]; default: true
+      # -- Enables tracing for this entryPoint.
+      tracing:  # @schema type:[boolean, null]; default: true
+      # -- Defines the tracing verbosity level for this entryPoint.
+      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
 
 # -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options)
 # When using `labelSelector`, you'll need to set labels on tlsOption accordingly.

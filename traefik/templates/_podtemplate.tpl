@@ -194,6 +194,20 @@
             {{- with $config.asDefault }}
           - "--entryPoints.{{$name}}.asDefault={{ . }}"
             {{- end }}
+            {{- with $config.observability }}
+              {{- if ne .accessLogs nil }}
+          - "--entryPoints.{{$name}}.observability.accessLogs={{ .accessLogs }}"
+              {{- end }}
+              {{- if ne .metrics nil }}
+          - "--entryPoints.{{$name}}.observability.metrics={{ .metrics }}"
+              {{- end }}
+              {{- if ne .tracing nil }}
+          - "--entryPoints.{{$name}}.observability.tracing={{ .tracing }}"
+              {{- end }}
+              {{- if ne .traceVerbosity nil }}
+          - "--entryPoints.{{$name}}.observability.traceVerbosity={{ .traceVerbosity }}"
+              {{- end }}
+            {{- end }}
            {{- end }}
           {{- end }}
           - "--api.dashboard=true"

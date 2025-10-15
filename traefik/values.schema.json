@@ -1507,6 +1507,45 @@
                         "exposedPort": {
                             "type": "integer"
                         },
+                        "observability": {
+                            "type": "object",
+                            "properties": {
+                                "accessLogs": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "metrics": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "traceVerbosity": {
+                                    "default": "minimal",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "minimal",
+                                        "detailed",
+                                        null
+                                    ]
+                                },
+                                "tracing": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
                         "port": {
                             "type": "integer"
                         },
@@ -1541,6 +1580,45 @@
                                 "null"
                             ],
                             "minimum": 0
+                        },
+                        "observability": {
+                            "type": "object",
+                            "properties": {
+                                "accessLogs": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "metrics": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "traceVerbosity": {
+                                    "default": "minimal",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "minimal",
+                                        "detailed",
+                                        null
+                                    ]
+                                },
+                                "tracing": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "port": {
                             "type": "integer"
@@ -1581,6 +1659,45 @@
                                 "null"
                             ],
                             "minimum": 0
+                        },
+                        "observability": {
+                            "type": "object",
+                            "properties": {
+                                "accessLogs": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "metrics": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "traceVerbosity": {
+                                    "default": "minimal",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "minimal",
+                                        "detailed",
+                                        null
+                                    ]
+                                },
+                                "tracing": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "port": {
                             "type": "integer"
@@ -1753,6 +1870,45 @@
                                 "null"
                             ],
                             "minimum": 0
+                        },
+                        "observability": {
+                            "type": "object",
+                            "properties": {
+                                "accessLogs": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "metrics": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "traceVerbosity": {
+                                    "default": "minimal",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "minimal",
+                                        "detailed",
+                                        null
+                                    ]
+                                },
+                                "tracing": {
+                                    "default": true,
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "port": {
                             "type": "integer"

@@ -403,3 +403,25 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using per entrypoint observability on Traefik Proxy < v3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      ports:
+        web:
+          observability:
+            metrics: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using traceVerbosity on Traefik Proxy < v3.5.0
+    set:
+      image:
+        tag: v3.4.0
+      ports:
+        web:
+          observability:
+            traceVerbosity: detailed
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."
