@@ -72,7 +72,7 @@ Kubernetes: `>=1.22.0-0`
 | experimental.fastProxy.enabled | bool | `false` | Enables the FastProxy implementation. |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.localPlugins | object | `{}` | Enable experimental local plugins |
-| experimental.otlpLogs | bool | `false` | Enable OLTP logging experimental feature. |
+| experimental.otlpLogs | bool | `false` | Enable OTLP logging experimental feature. |
 | experimental.plugins | object | `{}` | Enable experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
@@ -205,7 +205,7 @@ Kubernetes: `>=1.22.0-0`
 | logs.access.filters.retryattempts | bool | `false` | Set retryAttempts, to keep the access logs when at least one retry has happened |
 | logs.access.filters.statuscodes | string | `""` | Set statusCodes, to limit the access logs to requests with a status codes in the specified range |
 | logs.access.format | string | `nil` | Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format) |
-| logs.access.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be set to true. |
+| logs.access.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled. |
 | logs.access.otlp.grpc.enabled | bool | `false` | Set to true in order to send access logs to the OpenTelemetry Collector using gRPC |
 | logs.access.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
 | logs.access.otlp.grpc.insecure | bool | `false` | Allows reporter to send access logs to the OpenTelemetry Collector without using a secured protocol. |
@@ -227,7 +227,7 @@ Kubernetes: `>=1.22.0-0`
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC. |
 | logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
-| logs.general.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be set to true. |
+| logs.general.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled. |
 | logs.general.otlp.grpc.enabled | bool | `false` | Set to true in order to send logs  to the OpenTelemetry Collector using gRPC |
 | logs.general.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
 | logs.general.otlp.grpc.insecure | bool | `false` | Allows reporter to send logs to the OpenTelemetry Collector without using a secured protocol. |
