@@ -359,7 +359,6 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "namespaces is required"
-<<<<<<< HEAD
   - it: should fail when using otlp logs without experimental flag
     set:
       logs:
