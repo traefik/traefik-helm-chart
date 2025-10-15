@@ -329,3 +329,31 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
 {{- $memlimitBytes := include "traefik.convertMemToBytes" .memory | mulf $percentage -}}
 {{- printf "%dMiB" (divf $memlimitBytes 0x1p20 | floor | int64) -}}
 {{- end }}
+
+{{- define "traefik.oltpCommonParams" }}
+  {{- $path := .path -}}
+  {{- $otlpConfig := .oltp -}}
+  {{- if $otlpConfig.enabled }}
+  - "--{{$path}}=true"
+   {{- with $otlpConfig.http }}
+    {{- if .enabled }}
+  - "--{{$path}}.http=true"
+      {{ println }}
+      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.http" $path) "content" (omit . "enabled")) | nindent 2 }}
+    {{- end }}
+   {{- end }}
+   {{- with $otlpConfig.grpc }}
+    {{- if .enabled }}
+  - "--{{$path}}.grpc=true"
+      {{ println }}
+      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.grpc" $path)  "content" (omit . "enabled")) | nindent 2 }}
+    {{- end }}
+   {{- end }}
+   {{- with $otlpConfig.serviceName }}
+  - "--{{$path}}.serviceName={{.}}"
+   {{- end }}
+   {{- range $name, $value := $otlpConfig.resourceAttributes }}
+  -  "--{{$path}}.resourceAttributes.{{ $name }}={{ $value }}"
+   {{- end }}
+  {{- end }}
+{{- end }}

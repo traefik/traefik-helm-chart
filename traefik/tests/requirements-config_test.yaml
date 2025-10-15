@@ -359,3 +359,47 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "namespaces is required"
+  - it: should fail when using otlp logs without experimental flag
+    set:
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
+  - it: should fail when using otlp access logs without experimental flag
+    set:
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
+  - it: should fail when using otlp logs on trafik < 3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      experimental:
+        otlpLogs: true
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using otlp access logs on trafik < 3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      experimental:
+        otlpLogs: true
+      logs:
+        access:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0."

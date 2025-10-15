@@ -54,6 +54,18 @@
   {{- fail "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3." }}
 {{- end }}
 
+{{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
+  {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.general.otlp.enabled)}}
+  {{- fail "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.access.otlp.enabled)}}
+  {{- fail "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
   {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
 {{- end }}
