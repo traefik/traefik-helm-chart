@@ -70,6 +70,15 @@
   {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
 {{- end }}
 
+{{- range $portName, $config := .Values.ports }}
+  {{- if and (semverCompare "<v3.3.0-0" $version) (or (ne $config.observability.accessLogs nil) (ne $config.observability.metrics nil) (ne $config.observability.tracing nil) (ne $config.observability.tracingVerbosity nil)) }}
+    {{ fail "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."}}
+  {{- end }}
+  {{- if and (semverCompare "<v3.5.0-0" $version) (ne $config.observability.traceVerbosity nil) }}
+    {{ fail "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."}}
+  {{- end }}
+{{- end }}
+
 
 {{- if $.Values.hub.token -}}
   {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}

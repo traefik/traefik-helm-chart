@@ -434,3 +434,25 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.redirections.entryPoint.permanent=false"
+  - it: should be possible to set observability on an entrypoint
+    set:
+      ports:
+        web:
+          observability:
+            accessLogs: false
+            metrics: false
+            tracing: false
+            traceVerbosity: detailed
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.accessLogs=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.metrics=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.tracing=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.traceVerbosity=detailed"
