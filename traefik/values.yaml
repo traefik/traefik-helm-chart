@@ -139,7 +139,7 @@ experimental:
   plugins: {}
   # -- Enable experimental local plugins
   localPlugins: {}
-  # -- Enable OLTP logging experimental feature.
+  # -- Enable OTLP logging experimental feature.
   otlpLogs: false
 
 gateway:
@@ -373,7 +373,7 @@ logs:
     # -- When set to true and format is common, it disables the colorized output.
     noColor: false
     otlp:
-      # -- Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be set to true.
+      # -- Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled.
       enabled: false
       # -- Service name used in OTLP backend. Default: traefik.
       serviceName:  # @schema type:[string, null]
@@ -446,7 +446,7 @@ logs:
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
     otlp:
-      # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be set to true.
+      # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
       enabled: false
       # -- Service name used in OTLP backend. Default: traefik.
       serviceName:  # @schema type:[string, null]
