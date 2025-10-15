@@ -108,6 +108,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.mcpgateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | hub.offline | string | `nil` | Disables all external network connections. |
+| hub.pluginRegistry.sources | object | `{}` |  |
 | hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
 | hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
 | hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |

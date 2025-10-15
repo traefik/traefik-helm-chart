@@ -1283,6 +1283,21 @@ hub:
         # -- Name of the header that will contain the tracestate copy.
         traceState: ""
 
+  # Define private plugin sources
+  pluginRegistry:
+    sources: {}
+      # plugin1:
+      # baseModuleName: "github.enterprise.local"
+      #   github:
+      #     entreprise:
+      #       url: "https://github.enterprise.local"
+      #     token: "urn:k8s:secret:github-token:access-token"
+      # plugin2:
+      # baseModuleName: "gitlab.company.com"
+      #   gitlab:
+      #     url: "https://gitlab.company.com"
+      #     token: "urn:k8s:secret:gitlab-token:access-token"
+
 # -- Required for OCI Marketplace integration.
 # See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
 oci_meta:

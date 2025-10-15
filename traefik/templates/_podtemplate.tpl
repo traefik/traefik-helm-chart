@@ -817,6 +817,31 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
           {{- end }}
+          {{- with .pluginRegistry.sources }}
+          - "--hub.pluginregistry=true"
+            {{- range $pluginName, $pluginConf := . }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}=true"
+          - "--hub.pluginregistry.sources.{{$pluginName}}.basemodulename={{$pluginConf.baseModuleName}}"
+              {{- with .github }}
+                {{- with .enterprise }}
+                  {{- with .url }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.github.enterprise.url={{.}}"
+                  {{- end }}
+                {{- end }}
+                {{- with .token }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.github.token={{.}}"
+                {{- end }}
+              {{- end }}
+              {{- with .gitlab }}
+                {{- with .url }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.gitlab.url={{.}}"
+                {{- end }}
+                {{- with .token }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.gitlab.token={{.}}"
+                {{- end }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
          {{- end }}
         env:
           - name: POD_NAME

@@ -1095,3 +1095,47 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.consulCatalogEnterprise.watch=true"
+  - it: should be possible to configure Traefik Hub plugin sources
+    set:
+      image:
+        tag: v3.18.0
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+              gitlab:
+                token: "glpat-xxxxxxxxxxxxxxxxxxxx"
+                url: "https://gitlab.company.com"
+            plugin2:
+              baseModuleName: "github.enterprise.local"
+              github:
+                token: "ghp_xxxxxxxxxxxxxxxxxxxx"
+                enterprise:
+                  url: "https://github.enterprise.local"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.basemodulename=gitlab.company.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.gitlab.url=https://gitlab.company.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.gitlab.token=glpat-xxxxxxxxxxxxxxxxxxxx"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.basemodulename=github.enterprise.local"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.github.enterprise.url=https://github.enterprise.local"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.github.token=ghp_xxxxxxxxxxxxxxxxxxxx"

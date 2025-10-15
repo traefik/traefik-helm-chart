@@ -431,6 +431,14 @@
                         "null"
                     ]
                 },
+                "pluginRegistry": {
+                    "type": "object",
+                    "properties": {
+                        "sources": {
+                            "type": "object"
+                        }
+                    }
+                },
                 "providers": {
                     "type": "object",
                     "properties": {
