@@ -1455,3 +1455,100 @@ hub:
     enabled: true
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
+
+## Deploy multiple Gateway with a single traefik deployment/daemonset
+
+This example demonstrates how to deploy multiple gateways like external/internal with a single traefik deployment
+
+It involves disable built-in service, create extra entrypoints for internal (or external) gateway
+
+Assuming we use the built-in ports (8000, and 8443) for internal gateway
+
+```yaml
+# New ports for external gateway
+ports:
+  web-ext:
+    port: 9080
+    expose:
+      enabled: true
+  websecure-ext:
+    port: 9443
+    expose:
+      enabled: true
+
+# This will make traefik stop updating the gateway IP, it's not important though
+# https://github.com/traefik/traefik-helm-chart/issues/1291
+service:
+  enabled: false
+
+gateway:
+  enabled: true
+
+gatewayClass:
+  enabled: true
+
+extraObjects:
+  # Make sure these service ports matching the ports defined previously
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-internal
+    spec:
+      type: LoadBalancer
+      selector:
+        app.kubernetes.io/name: traefik
+      ports:
+        - name: http
+          port: 80
+          targetPort: 8000
+        - name: https
+          port: 443
+          targetPort: 8443
+
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-external
+    spec:
+      type: LoadBalancer
+      selector:
+        app.kubernetes.io/name: traefik
+      ports:
+        - name: http
+          port: 80
+          targetPort: 9080
+        - name: https
+          port: 443
+          targetPort: 9443
+
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: Gateway
+    metadata:
+      name: traefik-external
+    spec:
+      gatewayClassName: traefik-external
+      listeners:
+        - name: http
+          protocol: HTTP
+          port: 9080
+          allowedRoutes:
+            namespaces:
+              from: All
+        - name: https
+          protocol: HTTPS
+          port: 9443
+          allowedRoutes:
+            namespaces:
+              from: All
+
+  - apiVersion: gateway.networking.k8s.io/v1
+    kind: GatewayClass
+    metadata:
+      name: traefik-external
+    spec:
+      controllerName: traefik.io/gateway-controller
+      parametersRef:
+        group: gateway.networking.k8s.io
+        kind: Gateway
+        name: traefik-gateway
+```
