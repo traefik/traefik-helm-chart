@@ -1534,12 +1534,20 @@ extraObjects:
           allowedRoutes:
             namespaces:
               from: All
-        - name: https
-          protocol: HTTPS
-          port: 9443
-          allowedRoutes:
-            namespaces:
-              from: All
+        # Comment out if you have a valid TLS certificate
+        # - name: https
+        #   protocol: HTTPS
+        #   port: 9443
+        #   allowedRoutes:
+        #     namespaces:
+        #       from: All
+        #   tls:
+        #     mode: Terminate
+        #     certificateRefs:
+        #       - group: ""
+        #         kind: Secret
+        #         name: some-tls-cert
+
 
   - apiVersion: gateway.networking.k8s.io/v1
     kind: GatewayClass
