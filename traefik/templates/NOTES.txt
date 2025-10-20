@@ -90,3 +90,8 @@ for more info. 🚨
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and was not found in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}
   {{- end -}}        
 {{- end -}}
+
+{{/* Warn about ingressRoute pointing to missing dashboard service */}}
+{{- if and (not .Values.api.dashboard) .Values.ingressRoute.dashboard.enabled }}
+  {{- printf "\nWARNING: the dashboard API is disabled, so the ingressRoute points to nowhere.\n" -}}  
+{{- end -}}

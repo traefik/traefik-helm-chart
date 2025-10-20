@@ -188,3 +188,20 @@ tests:
 
 
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace !
+  - it: should display warning when dashboard is disabled but has ingressRoute
+    set:
+      image:
+        tag: v3
+      api:
+        dashboard: false
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace !
+            
+            WARNING: the dashboard API is disabled, so the ingressRoute points to nowhere.
