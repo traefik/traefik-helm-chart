@@ -210,7 +210,9 @@
             {{- end }}
            {{- end }}
           {{- end }}
+          {{- if .Values.api.dashboard }}
           - "--api.dashboard=true"
+          {{- end }}
           - "--ping=true"
 
           {{- with .Values.core }}
