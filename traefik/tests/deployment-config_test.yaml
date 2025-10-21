@@ -269,6 +269,14 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--api.dashboard=true"
+  - it: should be possible to specify api basePath
+    set:
+      api:
+        basePath: "/proxy"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.basePath=/proxy"
   - it: should be possible to send anonymous usage data
     set:
       global:

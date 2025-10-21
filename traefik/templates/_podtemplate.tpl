@@ -215,6 +215,9 @@
           {{- else if .Values.ingressRoute.dashboard.enabled }}
             {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
           {{- end }}
+          {{- with .Values.api.basePath }}
+          - "--api.basePath={{ . }}"
+          {{- end }}
           - "--ping=true"
 
           {{- with .Values.core }}
