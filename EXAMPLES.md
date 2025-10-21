@@ -638,16 +638,15 @@ experimental:
 >[!IMPORTANT]
 > When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
 
-## Using Traefik-Hub private plugins registry
+## Using Traefik-Hub with private plugin registries
 
-Some companies might want to deploy their private plugins located on custom registries.
-Using Traefik Hub, this can be achieved this way:
+With Traefik Hub, it's possible to use plugins deployed on both public or private registries. 
+Each registry source requires a base module name (domain) and authentication credentials. 
+This can be achieved this way:
 
 ```yaml
 hub:
-  token:  traefik-hub-license
-  apimanagement:
-    enabled: true
+  token: traefik-hub-license
   pluginRegistry:
     sources:
       noop:
