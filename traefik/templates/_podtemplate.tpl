@@ -208,9 +208,30 @@
             {{- with $config.asDefault }}
           - "--entryPoints.{{$name}}.asDefault={{ . }}"
             {{- end }}
+            {{- with $config.observability }}
+              {{- if ne .accessLogs nil }}
+          - "--entryPoints.{{$name}}.observability.accessLogs={{ .accessLogs }}"
+              {{- end }}
+              {{- if ne .metrics nil }}
+          - "--entryPoints.{{$name}}.observability.metrics={{ .metrics }}"
+              {{- end }}
+              {{- if ne .tracing nil }}
+          - "--entryPoints.{{$name}}.observability.tracing={{ .tracing }}"
+              {{- end }}
+              {{- if ne .traceVerbosity nil }}
+          - "--entryPoints.{{$name}}.observability.traceVerbosity={{ .traceVerbosity }}"
+              {{- end }}
+            {{- end }}
            {{- end }}
           {{- end }}
+          {{- if .Values.api.dashboard }}
           - "--api.dashboard=true"
+          {{- else if .Values.ingressRoute.dashboard.enabled }}
+            {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
+          {{- end }}
+          {{- with .Values.api.basePath }}
+          - "--api.basePath={{ . }}"
+          {{- end }}
           - "--ping=true"
 
           {{- with .Values.core }}
@@ -334,86 +355,30 @@
           {{- end }}
 
           {{- with .Values.metrics.otlp }}
-          {{- if .enabled }}
-          - "--metrics.otlp=true"
-           {{- if ne .addEntryPointsLabels nil }}
-            {{- with .addEntryPointsLabels | toString }}
+           {{- include "traefik.oltpCommonParams" (dict "path" "metrics.otlp" "oltp" .) | nindent 8 }}
+           {{- if .enabled }}
+             {{- if ne .addEntryPointsLabels nil }}
+              {{- with .addEntryPointsLabels | toString }}
           - "--metrics.otlp.addEntryPointsLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addRoutersLabels nil }}
-            {{- with .addRoutersLabels | toString }}
+              {{- end }}
+             {{- end }}
+             {{- if ne .addRoutersLabels nil }}
+              {{- with .addRoutersLabels | toString }}
           - "--metrics.otlp.addRoutersLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- if ne .addServicesLabels nil }}
-            {{- with .addServicesLabels | toString }}
+              {{- end }}
+             {{- end }}
+             {{- if ne .addServicesLabels nil }}
+              {{- with .addServicesLabels | toString }}
           - "--metrics.otlp.addServicesLabels={{ . }}"
-            {{- end }}
-           {{- end }}
-           {{- with .explicitBoundaries }}
+              {{- end }}
+             {{- end }}
+             {{- with .explicitBoundaries }}
           - "--metrics.otlp.explicitBoundaries={{ join "," . }}"
-           {{- end }}
-           {{- with .pushInterval }}
+             {{- end }}
+             {{- with .pushInterval }}
           - "--metrics.otlp.pushInterval={{ . }}"
+             {{- end }}
            {{- end }}
-           {{- with .serviceName }}
-          - "--metrics.otlp.serviceName={{ . }}"
-           {{- end }}
-           {{- with .http }}
-            {{- if .enabled }}
-          - "--metrics.otlp.http=true"
-             {{- with .endpoint }}
-          - "--metrics.otlp.http.endpoint={{ . }}"
-             {{- end }}
-             {{- range $name, $value := .headers }}
-          - "--metrics.otlp.http.headers.{{ $name }}={{ $value }}"
-             {{- end }}
-             {{- with .tls }}
-              {{- with .ca }}
-          - "--metrics.otlp.http.tls.ca={{ . }}"
-              {{- end }}
-              {{- with .cert }}
-          - "--metrics.otlp.http.tls.cert={{ . }}"
-              {{- end }}
-              {{- with .key }}
-          - "--metrics.otlp.http.tls.key={{ . }}"
-              {{- end }}
-              {{- with .insecureSkipVerify }}
-          - "--metrics.otlp.http.tls.insecureSkipVerify={{ . }}"
-              {{- end }}
-             {{- end }}
-            {{- end }}
-           {{- end }}
-           {{- with .grpc }}
-            {{- if .enabled }}
-          - "--metrics.otlp.grpc=true"
-             {{- with .endpoint }}
-          - "--metrics.otlp.grpc.endpoint={{ . }}"
-             {{- end }}
-             {{- with .insecure }}
-          - "--metrics.otlp.grpc.insecure={{ . }}"
-             {{- end }}
-             {{- range $name, $value := .headers }}
-          - "--metrics.otlp.grpc.headers.{{ $name }}={{ $value }}"
-             {{- end }}
-             {{- with .tls }}
-              {{- with .ca }}
-          - "--metrics.otlp.grpc.tls.ca={{ . }}"
-              {{- end }}
-              {{- with .cert }}
-          - "--metrics.otlp.grpc.tls.cert={{ . }}"
-              {{- end }}
-              {{- with .key }}
-          - "--metrics.otlp.grpc.tls.key={{ . }}"
-              {{- end }}
-              {{- with .insecureSkipVerify }}
-          - "--metrics.otlp.grpc.tls.insecureSkipVerify={{ . }}"
-              {{- end }}
-             {{- end }}
-            {{- end }}
-           {{- end }}
-          {{- end }}
           {{- end }}
 
           {{- if .Values.ocsp.enabled }}
@@ -455,62 +420,7 @@
           {{- end }}
 
           {{- with .Values.tracing.otlp }}
-          {{- if .enabled }}
-          - "--tracing.otlp=true"
-           {{- with .http }}
-            {{- if .enabled }}
-          - "--tracing.otlp.http=true"
-             {{- with .endpoint }}
-          - "--tracing.otlp.http.endpoint={{ . }}"
-             {{- end }}
-             {{- range $name, $value := .headers }}
-          - "--tracing.otlp.http.headers.{{ $name }}={{ $value }}"
-             {{- end }}
-             {{- with .tls }}
-              {{- with .ca }}
-          - "--tracing.otlp.http.tls.ca={{ . }}"
-              {{- end }}
-              {{- with .cert }}
-          - "--tracing.otlp.http.tls.cert={{ . }}"
-              {{- end }}
-              {{- with .key }}
-          - "--tracing.otlp.http.tls.key={{ . }}"
-              {{- end }}
-              {{- with .insecureSkipVerify }}
-          - "--tracing.otlp.http.tls.insecureSkipVerify={{ . }}"
-              {{- end }}
-             {{- end }}
-            {{- end }}
-           {{- end }}
-           {{- with .grpc }}
-            {{- if .enabled }}
-          - "--tracing.otlp.grpc=true"
-             {{- with .endpoint }}
-          - "--tracing.otlp.grpc.endpoint={{ . }}"
-             {{- end }}
-             {{- with .insecure }}
-          - "--tracing.otlp.grpc.insecure={{ . }}"
-             {{- end }}
-             {{- range $name, $value := .headers }}
-          - "--tracing.otlp.grpc.headers.{{ $name }}={{ $value }}"
-             {{- end }}
-             {{- with .tls }}
-              {{- with .ca }}
-          - "--tracing.otlp.grpc.tls.ca={{ . }}"
-              {{- end }}
-              {{- with .cert }}
-          - "--tracing.otlp.grpc.tls.cert={{ . }}"
-              {{- end }}
-              {{- with .key }}
-          - "--tracing.otlp.grpc.tls.key={{ . }}"
-              {{- end }}
-              {{- with .insecureSkipVerify }}
-          - "--tracing.otlp.grpc.tls.insecureSkipVerify={{ . }}"
-              {{- end }}
-             {{- end }}
-            {{- end }}
-           {{- end }}
-          {{- end }}
+           {{- include "traefik.oltpCommonParams" (dict "path" "tracing.otlp" "oltp" .) | nindent 8 }}
           {{- end }}
           {{- with .Values.experimental.fastProxy }}
             {{- if .enabled }}
@@ -526,6 +436,9 @@
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
+           {{- if hasKey $plugin "hash" }}
+          - "--experimental.plugins.{{ $pluginName }}.hash={{ $plugin.hash }}"
+           {{- end }}
            {{- $settings := (get $plugin "settings") | default dict }}
            {{- $useUnsafe := (get $settings "useUnsafe") | default false }}
            {{- if $useUnsafe }}
@@ -783,6 +696,9 @@
             {{- with .general.level }}
           - "--log.level={{ . | upper }}"
             {{- end }}
+            {{- with .general.otlp }}
+             {{- include "traefik.oltpCommonParams" (dict "path" "log.otlp" "oltp" .) | nindent 8 }}
+            {{- end }}
             {{- if .access.enabled }}
           - "--accesslog=true"
               {{- with .access.format }}
@@ -818,6 +734,9 @@
           - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
               {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
+              {{- end }}
+              {{- with .access.otlp }}
+                {{- include "traefik.oltpCommonParams" (dict "path" "accesslog.otlp" "oltp" .) | nindent 8 }}
               {{- end }}
             {{- end }}
           {{- end }}
@@ -864,6 +783,14 @@
               {{- end }}
              {{- end }}
             {{- end -}}
+            {{- with .mcpgateway }}
+             {{- if .enabled }}
+          - "--hub.mcpgateway"
+              {{- with .maxRequestBodySize }}
+          - "--hub.mcpgateway.maxRequestBodySize={{ . | int }}"
+              {{- end }}
+             {{- end }}
+            {{- end -}}
             {{- if not .offline }}
               {{- with .platformUrl }}
           - "--hub.platformUrl={{ . }}"
@@ -905,6 +832,31 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
           {{- end }}
+          {{- with .pluginRegistry.sources }}
+          - "--hub.pluginregistry=true"
+            {{- range $pluginName, $pluginConf := . }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}=true"
+          - "--hub.pluginregistry.sources.{{$pluginName}}.basemodulename={{$pluginConf.baseModuleName}}"
+              {{- with .github }}
+                {{- with .enterprise }}
+                  {{- with .url }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.github.enterprise.url={{.}}"
+                  {{- end }}
+                {{- end }}
+                {{- with .token }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.github.token={{.}}"
+                {{- end }}
+              {{- end }}
+              {{- with .gitlab }}
+                {{- with .url }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.gitlab.url={{.}}"
+                {{- end }}
+                {{- with .token }}
+          - "--hub.pluginregistry.sources.{{$pluginName}}.gitlab.token={{.}}"
+                {{- end }}
+              {{- end }}
+            {{- end }}
+          {{- end }}
          {{- end }}
         env:
           - name: POD_NAME
@@ -915,6 +867,8 @@
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
+          - name: USER
+            value: traefik
           {{- if ($.Values.resources.limits).cpu }}
           - name: GOMAXPROCS
             valueFrom:

@@ -820,6 +820,99 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--log.noColor=true"
+  - it: should be possible to configure OTLP general logging
+    set:
+      logs:
+        general:
+          otlp:
+            enabled: true
+            serviceName: traefikTest
+            http:
+              enabled: true
+              endpoint: "http://localhost:4318/v1/metrics"
+              headers:
+                foo: http
+                test: http
+              tls:
+                ca: path/to/ca.crt
+                cert: path/to/foo.cert
+                key: path/to/foo.key
+                insecureSkipVerify: true
+            grpc:
+              enabled: true
+              endpoint: "http://localhost:4318/v1/metrics"
+              insecure: true
+              headers:
+                foo: grpc
+                test: grpc
+              tls:
+                ca: gpath/to/ca.crt
+                cert: gpath/to/foo.cert
+                key: gpath/to/foo.key
+                insecureSkipVerify: true
+            resourceAttributes:
+              foo: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.serviceName=traefikTest"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.endpoint=http://localhost:4318/v1/metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.headers.foo=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.headers.test=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.tls.ca=path/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.tls.cert=path/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.tls.key=path/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.http.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.insecure=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.headers.foo=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.headers.test=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.tls.ca=gpath/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.tls.cert=gpath/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.tls.key=gpath/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.grpc.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--log.otlp.resourceAttributes.foo=bar"
   - it: should be possible to set genericCLF accesslog format with Proxy v3.5.2
     set:
       logs:
@@ -897,3 +990,104 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.fields.names.StartUTC=drop"
+  - it: "should set traefik as user in env by default"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: USER
+            value: traefik
+  - it: should be possible to configure OTLP access logging
+    set:
+      logs:
+        access:
+          enabled: true
+          otlp:
+            enabled: true
+            serviceName: traefikTest
+            http:
+              enabled: true
+              endpoint: "http://localhost:4318/v1/metrics"
+              headers:
+                foo: http
+                test: http
+              tls:
+                ca: path/to/ca.crt
+                cert: path/to/foo.cert
+                key: path/to/foo.key
+                insecureSkipVerify: true
+            grpc:
+              enabled: true
+              endpoint: "http://localhost:4318/v1/metrics"
+              insecure: true
+              headers:
+                foo: grpc
+                test: grpc
+              tls:
+                ca: gpath/to/ca.crt
+                cert: gpath/to/foo.cert
+                key: gpath/to/foo.key
+                insecureSkipVerify: true
+            resourceAttributes:
+              foo: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.serviceName=traefikTest"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.endpoint=http://localhost:4318/v1/metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.headers.foo=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.headers.test=http"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.tls.ca=path/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.tls.cert=path/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.tls.key=path/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.http.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.insecure=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.headers.foo=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.headers.test=grpc"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.tls.ca=gpath/to/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.tls.cert=gpath/to/foo.cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.tls.key=gpath/to/foo.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.resourceAttributes.foo=bar"

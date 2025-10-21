@@ -1,5 +1,15 @@
 # Change Log
 
+## 37.1.2  ![AppVersion: v3.5.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-10-03
+
+* fix(observability): tracer creation warning with default security context
+* fix(CRDs): ✨ update for Traefik Proxy v3.5.2
+* feat(deps): update traefik docker tag to v3.5.3 + add plugin hash option
+* feat(CRDs): update for Traefik to v3.5.3
+* chore(release): :rocket: publish traefik 37.1.2 and crds 1.11.1
+
 ## 37.1.1  ![AppVersion: v3.5.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-09-10

@@ -50,8 +50,33 @@
   {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.5.3-0" $version) (.Values.metrics.otlp.resourceAttributes)}}
+  {{- fail "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3." }}
+{{- end }}
+
+{{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
+  {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.general.otlp.enabled)}}
+  {{- fail "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.access.otlp.enabled)}}
+  {{- fail "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
   {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
+{{- end }}
+
+{{- range $portName, $config := .Values.ports }}
+  {{- if and (semverCompare "<v3.3.0-0" $version) (or (ne $config.observability.accessLogs nil) (ne $config.observability.metrics nil) (ne $config.observability.tracing nil) (ne $config.observability.tracingVerbosity nil)) }}
+    {{ fail "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."}}
+  {{- end }}
+  {{- if and (semverCompare "<v3.5.0-0" $version) (ne $config.observability.traceVerbosity nil) }}
+    {{ fail "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."}}
+  {{- end }}
 {{- end }}
 
 
@@ -89,8 +114,23 @@
     {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
   {{- end }}
 
-  {{- if and (semverCompare "<v3.18.0" $hubVersion) .Values.hub.offline }}
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.offline }}
     {{ fail "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."}}
   {{- end }}
 
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.mcpgateway.enabled }}
+    {{ fail "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.pluginRegistry.sources }}
+    {{ fail "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."}}
+  {{- end }}
+
+  {{- with .Values.hub.pluginRegistry.sources }}
+    {{- range $pluginName, $pluginConf := . }}
+      {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
+         {{ fail (printf "ERROR: pluginRegistry source %s is not used in exprimental.plugins." $pluginName) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
 {{- end }}

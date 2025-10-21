@@ -177,7 +177,7 @@ It requires a dict with "Version" and "Hub".
 {{- define "traefik.proxyVersionFromHub" -}}
  {{- $version := .Version -}}
  {{- if .Hub -}}
-   {{- $hubProxyVersion := "v3.4" }}
+   {{- $hubProxyVersion := "v3.5" }}
    {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) -}}
      {{- if semverCompare "<v3.3.2-0" $version -}}
         {{- $hubProxyVersion = "v3.0" }}
@@ -189,6 +189,8 @@ It requires a dict with "Version" and "Hub".
         {{ $hubProxyVersion = "v3.3" }}
      {{- else if or (semverCompare "=v3.16.0" $version) (semverCompare "=v3.16.1" $version) -}}
         {{ $hubProxyVersion = "v3.3" }}
+     {{- else if semverCompare "<v3.18.0" $version -}}
+        {{ $hubProxyVersion = "v3.4" }}
      {{- end -}}
    {{- end -}}
    {{ $hubProxyVersion }}
@@ -426,4 +428,32 @@ Check if using old localPlugin hostPath structure (for deprecation warning)
 {{- $percentage := .percentage -}}
 {{- $memlimitBytes := include "traefik.convertMemToBytes" .memory | mulf $percentage -}}
 {{- printf "%dMiB" (divf $memlimitBytes 0x1p20 | floor | int64) -}}
+{{- end }}
+
+{{- define "traefik.oltpCommonParams" }}
+  {{- $path := .path -}}
+  {{- $otlpConfig := .oltp -}}
+  {{- if $otlpConfig.enabled }}
+  - "--{{$path}}=true"
+   {{- with $otlpConfig.http }}
+    {{- if .enabled }}
+  - "--{{$path}}.http=true"
+      {{ println }}
+      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.http" $path) "content" (omit . "enabled")) | nindent 2 }}
+    {{- end }}
+   {{- end }}
+   {{- with $otlpConfig.grpc }}
+    {{- if .enabled }}
+  - "--{{$path}}.grpc=true"
+      {{ println }}
+      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.grpc" $path)  "content" (omit . "enabled")) | nindent 2 }}
+    {{- end }}
+   {{- end }}
+   {{- with $otlpConfig.serviceName }}
+  - "--{{$path}}.serviceName={{.}}"
+   {{- end }}
+   {{- range $name, $value := $otlpConfig.resourceAttributes }}
+  -  "--{{$path}}.resourceAttributes.{{ $name }}={{ $value }}"
+   {{- end }}
+  {{- end }}
 {{- end }}

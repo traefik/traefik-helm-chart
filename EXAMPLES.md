@@ -276,6 +276,38 @@ extraObjects:
                   name: traefik
 ```
 
+## Publish Traefik Dashboard in Rancher UI
+
+To expose the dashboard with rancher UI some paths modifications are required.
+`basePath` needs to be changed and a `Middleware` needs to be used to URL rewriting.
+
+```yaml
+# Configure the basePath
+api:
+  basePath: "/api/v1/namespaces/traefik/services/https:traefik:443/proxy/"
+
+# Create an IngressRoute for the dashboard
+ingressRoute:
+  dashboard:
+    enabled: true
+    # Custom match rule with host domain
+    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    entryPoints: ["websecure"]
+    # Add custom middleware : this makes the path matching the internal Go router 
+    middlewares:
+      - name: traefik-dashboard-basepath
+
+# Create the custom middlewares used by the IngressRoute dashboard (can also be created from an other source).
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-dashboard-basepath
+    spec:
+      addPrefix:
+        prefix: "/api/v1/namespaces/traefik/services/https:traefik:443/proxy"
+```
+
 ## Install on AWS
 
 It can use [native AWS support](https://kubernetes.io/docs/concepts/services-networking/service/#aws-nlb-support) on Kubernetes
@@ -720,6 +752,63 @@ experimental:
 > - **Secure**: Works with CSI drivers for cloud storage (S3, Azure Blob, GCS)
 > - **Scalable**: Centralized plugin storage, no per-node requirements
 > - **Consistent**: Uses existing Helm chart patterns (`additionalVolumes`)
+
+## Using Traefik-Hub with private plugin registries
+
+With Traefik Hub, it's possible to use plugins deployed on both public or private registries.
+Each registry source requires a base module name (domain) and authentication credentials.
+This can be achieved this way:
+
+```yaml
+hub:
+  token: traefik-hub-license
+  pluginRegistry:
+    sources:
+      noop:
+        baseModuleName: "github.com"
+        github:
+          token: "ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+image:
+  registry: ghcr.io
+  repository: traefik/traefik-hub
+  tag: v3.18.0
+
+experimental:
+  plugins:
+    noop:
+      moduleName: github.com/traefik-contrib/noop
+      version: v0.1.0
+
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: noop
+    spec:
+      plugin:
+        noop:
+          responseCode: 204
+  - apiVersion: traefik.io/v1alpha1
+    kind: IngressRoute
+    metadata:
+      name: demo
+    spec:
+      entryPoints:
+        - web
+      routes:
+        - kind: Rule
+          match: Host(`demo.localhost`)
+          services:
+            - name: noop@internal
+              kind: TraefikService
+          middlewares:
+            - name: noop
+```
+
+> [!NOTE]  
+> This code is only written for demonstration purpose.
+> The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
 
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 

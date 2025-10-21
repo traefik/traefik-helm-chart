@@ -261,6 +261,22 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--global.sendAnonymousUsage"
+  - it: should be possible to disable dashboard api
+    set:
+      api:
+        dashboard: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.dashboard=true"
+  - it: should be possible to specify api basePath
+    set:
+      api:
+        basePath: "/proxy"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.basePath=/proxy"
   - it: should be possible to send anonymous usage data
     set:
       global:
@@ -297,6 +313,16 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "redirectTo"
+  - it: should fail when dashboard has ingressRoute but is disabled
+    set:
+      api:
+        dashboard: false
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard"
   - it: should fail when using previous syntax
     set:
       ports:
@@ -434,3 +460,25 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.redirections.entryPoint.permanent=false"
+  - it: should be possible to set observability on an entrypoint
+    set:
+      ports:
+        web:
+          observability:
+            accessLogs: false
+            metrics: false
+            tracing: false
+            traceVerbosity: detailed
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.accessLogs=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.metrics=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.tracing=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.observability.traceVerbosity=detailed"

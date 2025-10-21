@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 37.1.1](https://img.shields.io/badge/Version-37.1.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.5.2](https://img.shields.io/badge/AppVersion-v3.5.2-informational?style=flat-square)
+![Version: 37.1.2](https://img.shields.io/badge/Version-37.1.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.5.3](https://img.shields.io/badge/AppVersion-v3.5.3-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -30,6 +30,8 @@ Kubernetes: `>=1.22.0-0`
 | additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
+| api.basePath | string | `""` | Configure API basePath |
+| api.dashboard | bool | `true` | Enable the dashboard |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
 | autoscaling.maxReplicas | string | `nil` | maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas. |
@@ -72,6 +74,7 @@ Kubernetes: `>=1.22.0-0`
 | experimental.fastProxy.enabled | bool | `false` | Enables the FastProxy implementation. |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.localPlugins | object | `{}` | Enable experimental local plugins |
+| experimental.otlpLogs | bool | `false` | Enable OTLP logging experimental feature. |
 | experimental.plugins | object | `{}` | Enable experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
@@ -101,8 +104,11 @@ Kubernetes: `>=1.22.0-0`
 | hub.apimanagement.admission.selfManagedCertificate | bool | `false` | By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
+| hub.mcpgateway.enabled | bool | `false` | Set to true in order to enable AI MCP Gateway. Requires a valid license token. |
+| hub.mcpgateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | hub.offline | string | `nil` | Disables all external network connections. |
+| hub.pluginRegistry.sources | object | `{}` |  |
 | hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
 | hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
 | hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
@@ -202,11 +208,45 @@ Kubernetes: `>=1.22.0-0`
 | logs.access.filters.retryattempts | bool | `false` | Set retryAttempts, to keep the access logs when at least one retry has happened |
 | logs.access.filters.statuscodes | string | `""` | Set statusCodes, to limit the access logs to requests with a status codes in the specified range |
 | logs.access.format | string | `nil` | Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format) |
+| logs.access.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled. |
+| logs.access.otlp.grpc.enabled | bool | `false` | Set to true in order to send access logs to the OpenTelemetry Collector using gRPC |
+| logs.access.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
+| logs.access.otlp.grpc.insecure | bool | `false` | Allows reporter to send access logs to the OpenTelemetry Collector without using a secured protocol. |
+| logs.access.otlp.grpc.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
+| logs.access.otlp.grpc.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
+| logs.access.otlp.grpc.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| logs.access.otlp.grpc.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
+| logs.access.otlp.http.enabled | bool | `false` | Set to true in order to send access logs to the OpenTelemetry Collector using HTTP. |
+| logs.access.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs |
+| logs.access.otlp.http.headers | object | `{}` | Additional headers sent with access logs by the reporter to the OpenTelemetry Collector. |
+| logs.access.otlp.http.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
+| logs.access.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
+| logs.access.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| logs.access.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
+| logs.access.otlp.resourceAttributes | object | `{}` | Defines additional resource attributes to be sent to the collector. |
+| logs.access.otlp.serviceName | string | `nil` | Service name used in OTLP backend. Default: traefik. |
 | logs.access.timezone | string | `""` | Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones) |
 | logs.general.filePath | string | `""` | To write the logs into a log file, use the filePath option. |
 | logs.general.format | string | `nil` | Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format) |
 | logs.general.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC. |
 | logs.general.noColor | bool | `false` | When set to true and format is common, it disables the colorized output. |
+| logs.general.otlp.enabled | bool | `false` | Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled. |
+| logs.general.otlp.grpc.enabled | bool | `false` | Set to true in order to send logs  to the OpenTelemetry Collector using gRPC |
+| logs.general.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
+| logs.general.otlp.grpc.insecure | bool | `false` | Allows reporter to send logs to the OpenTelemetry Collector without using a secured protocol. |
+| logs.general.otlp.grpc.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
+| logs.general.otlp.grpc.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
+| logs.general.otlp.grpc.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| logs.general.otlp.grpc.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
+| logs.general.otlp.http.enabled | bool | `false` | Set to true in order to send logs to the OpenTelemetry Collector using HTTP. |
+| logs.general.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs |
+| logs.general.otlp.http.headers | object | `{}` | Additional headers sent with logs by the reporter to the OpenTelemetry Collector. |
+| logs.general.otlp.http.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
+| logs.general.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
+| logs.general.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
+| logs.general.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
+| logs.general.otlp.resourceAttributes | object | `{}` | Defines additional resource attributes to be sent to the collector. |
+| logs.general.otlp.serviceName | string | `nil` | Service name used in OTLP backend. Default: traefik. |
 | metrics.addInternals | bool | `false` | Enable metrics for internal resources. Default: false |
 | metrics.otlp.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.otlp.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
@@ -214,20 +254,21 @@ Kubernetes: `>=1.22.0-0`
 | metrics.otlp.enabled | bool | `false` | Set to true in order to enable the OpenTelemetry metrics |
 | metrics.otlp.explicitBoundaries | list | `[]` | Explicit boundaries for Histogram data points. Default: [.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10] |
 | metrics.otlp.grpc.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using gRPC |
-| metrics.otlp.grpc.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| metrics.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
 | metrics.otlp.grpc.insecure | bool | `false` | Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol. |
 | metrics.otlp.grpc.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
 | metrics.otlp.grpc.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
 | metrics.otlp.grpc.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.grpc.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.http.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using HTTP. |
-| metrics.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| metrics.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/metrics |
 | metrics.otlp.http.headers | object | `{}` | Additional headers sent with metrics by the reporter to the OpenTelemetry Collector. |
 | metrics.otlp.http.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
 | metrics.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
 | metrics.otlp.http.tls.insecureSkipVerify | string | `nil` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | metrics.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | metrics.otlp.pushInterval | string | `""` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
+| metrics.otlp.resourceAttributes | object | `{}` | Defines additional resource attributes to be sent to the collector. |
 | metrics.otlp.serviceName | string | `nil` | Service name used in OTLP backend. Default: traefik. |
 | metrics.prometheus.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
 | metrics.prometheus.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
@@ -280,12 +321,20 @@ Kubernetes: `>=1.22.0-0`
 | podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
+| ports.metrics.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.metrics.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.metrics.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.metrics.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
 | ports.traefik.hostIP | string | `nil` | Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which means it's listening on all your interfaces and all your IPs. You may want to set this value if you need traefik to listen on specific interface only. |
 | ports.traefik.hostPort | string | `nil` | Use hostPort if set. |
+| ports.traefik.observability.accessLogs | string | `nil` | Defines whether a router attached to this EntryPoint produces access-logs by default. |
+| ports.traefik.observability.metrics | string | `nil` | Defines whether a router attached to this EntryPoint produces metrics by default. |
+| ports.traefik.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for routers attached to this EntryPoint. |
+| ports.traefik.observability.tracing | string | `nil` | Defines whether a router attached to this EntryPoint produces traces by default. |
 | ports.traefik.port | int | `8080` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.expose.default | bool | `true` |  |
@@ -293,6 +342,10 @@ Kubernetes: `>=1.22.0-0`
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.web.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| ports.web.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.web.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.web.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.web.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.web.port | int | `8000` |  |
 | ports.web.protocol | string | `"TCP"` |  |
 | ports.web.proxyProtocol.insecure | bool | `false` |  |
@@ -312,6 +365,10 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
 | ports.websecure.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
+| ports.websecure.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
+| ports.websecure.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
+| ports.websecure.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
+| ports.websecure.observability.tracing | string | `nil` | Enables tracing for this entryPoint. |
 | ports.websecure.port | int | `8443` |  |
 | ports.websecure.protocol | string | `"TCP"` |  |
 | ports.websecure.proxyProtocol.insecure | bool | `false` |  |
@@ -379,14 +436,14 @@ Kubernetes: `>=1.22.0-0`
 | tracing.capturedResponseHeaders | list | `[]` | Defines the list of response headers to add as attributes. It applies to client and server kind spans. |
 | tracing.otlp.enabled | bool | `false` | See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/ |
 | tracing.otlp.grpc.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using gRPC |
-| tracing.otlp.grpc.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| tracing.otlp.grpc.endpoint | string | `""` | Format: <host>:<port>. Default: "localhost:4317" |
 | tracing.otlp.grpc.insecure | bool | `false` | Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol. |
 | tracing.otlp.grpc.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
 | tracing.otlp.grpc.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |
 | tracing.otlp.grpc.tls.insecureSkipVerify | bool | `false` | When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers. |
 | tracing.otlp.grpc.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | tracing.otlp.http.enabled | bool | `false` | Set to true in order to send metrics to the OpenTelemetry Collector using HTTP. |
-| tracing.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics |
+| tracing.otlp.http.endpoint | string | `""` | Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/tracing |
 | tracing.otlp.http.headers | object | `{}` | Additional headers sent with metrics by the reporter to the OpenTelemetry Collector. |
 | tracing.otlp.http.tls.ca | string | `""` | The path to the certificate authority, it defaults to the system bundle. |
 | tracing.otlp.http.tls.cert | string | `""` | The path to the public certificate. When using this option, setting the key option is required. |

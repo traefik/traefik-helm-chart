@@ -1,0 +1,23 @@
+suite: Traefik Hub MCP Gateway configuration
+templates:
+  - deployment.yaml
+set:
+  hub:
+    token: "xxx"
+    mcpgateway:
+      enabled: true
+tests:
+  - it: should be possible to enable MCP Gateway
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.mcpgateway"
+  - it: should be possible to set optional MCP Gateway settings
+    set:
+      hub:
+        mcpgateway:
+          maxRequestBodySize: 104857600
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.mcpgateway.maxRequestBodySize=104857600"
