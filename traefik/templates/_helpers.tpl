@@ -285,7 +285,7 @@ Returns: hostPath, inline, or localPath
         {{- if eq $plugin.type "hostPath" -}}
             {{- printf "hostPath" -}}
         {{- else if eq $plugin.type "inlinePlugin" -}}
-            {{- printf "inline" -}}
+            {{- printf "inlinePlugin" -}}
         {{- else if eq $plugin.type "localPath" -}}
             {{- printf "localPath" -}}
         {{- else -}}
@@ -318,13 +318,11 @@ Get inline plugin files (new structure only)
 {{- define "traefik.getLocalPluginInlineFiles" -}}
     {{- $plugin := .plugin -}}
     {{- if eq $plugin.type "inlinePlugin" -}}
-        {{- $inlineFiles := dict -}}
-        {{- range $key, $value := $plugin -}}
-            {{- if and (ne $key "type") (ne $key "moduleName") (ne $key "mountPath") -}}
-                {{- $_ := set $inlineFiles $key $value -}}
-            {{- end -}}
+        {{- if $plugin.source -}}
+            {{- toYaml $plugin.source -}}
+        {{- else -}}
+            {{- fail (printf "ERROR: localPlugin with type inlinePlugin must have a source field!" .pluginName) -}}
         {{- end -}}
-        {{- toYaml $inlineFiles -}}
     {{- end -}}
 {{- end -}}
 

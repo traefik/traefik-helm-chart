@@ -445,7 +445,20 @@ tests:
             moduleName: github.com/traefik/inlinedemo
             mountPath: /plugins-local/src/github.com/traefik/inlinedemo
             type: inlinePlugin
-            main.go: "package main"
+            source:
+              main.go: "package main"
+              go.mod: |
+                module github.com/traefik/inlinedemo
+                go 1.23
+              .traefik.yml: |
+                displayName: Inline Demo
+                type: middleware
+                import: github.com/traefik/inlinedemo
+                summary: |
+                  This is a simple plugin that prints "Hello, World!" to the response.
+                testData:
+                  message: "Hello, World!"
+
           host-demo:
             moduleName: github.com/traefik/hostdemo
             mountPath: /plugins-local/src/github.com/traefik/hostdemo

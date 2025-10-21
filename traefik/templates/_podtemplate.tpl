@@ -187,7 +187,7 @@
           {{- else }}
           - name: {{ $localPluginName | replace "." "-" }}
             mountPath: {{ $localPlugin.mountPath | quote }}
-            {{- if eq $pluginType "inline" }}
+            {{- if eq $pluginType "inlinePlugin" }}
             readOnly: true
             {{- end }}
           {{- end }}
@@ -978,7 +978,7 @@
           {{- $hostPath := include "traefik.getLocalPluginHostPath" (dict "plugin" $localPlugin) }}
           hostPath:
             path: {{ $hostPath | quote }}
-          {{- else if eq $pluginType "inline" }}
+          {{- else if eq $pluginType "inlinePlugin" }}
           configMap:
             name: {{ include "traefik.localPluginCmName" (dict "context" $ "pluginName" $localPluginName) }}
           {{- end }}

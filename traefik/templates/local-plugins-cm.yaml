@@ -1,7 +1,7 @@
 {{- if .Values.experimental.localPlugins }}
 {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
 {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
-{{- if eq $pluginType "inline" }}
+{{- if eq $pluginType "inlinePlugin" }}
 ---
 apiVersion: v1
 kind: ConfigMap

@@ -14,16 +14,17 @@ tests:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/testplugin
-              go 1.23
-            .traefik.yml: |
-              displayName: Test Plugin
-              type: middleware
-              import: github.com/example/testplugin
-            main.go: |
-              package main
-              // Test plugin code
+            source:
+              go.mod: |
+                module github.com/example/testplugin
+                go 1.23
+              .traefik.yml: |
+                displayName: Test Plugin
+                type: middleware
+                import: github.com/example/testplugin
+              main.go: |
+                package main
+                // Test plugin code
     asserts:
       - hasDocuments:
           count: 1
@@ -59,18 +60,20 @@ tests:
             moduleName: github.com/example/pluginone
             mountPath: /plugins-local/src/github.com/example/pluginone
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/pluginone
-            main.go: |
-              package pluginone
+            source:
+              go.mod: |
+                module github.com/example/pluginone
+              main.go: |
+                package pluginone
           plugin-two:
             moduleName: github.com/example/plugintwo
             mountPath: /plugins-local/src/github.com/example/plugintwo
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/plugintwo
-            main.go: |
-              package plugintwo
+            source:
+              go.mod: |
+                module github.com/example/plugintwo
+              main.go: |
+                package plugintwo
     asserts:
       - hasDocuments:
           count: 2
@@ -113,10 +116,11 @@ tests:
             moduleName: github.com/example/inlineplugin
             mountPath: /plugins-local/src/github.com/example/inlineplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/inlineplugin
-            main.go: |
-              package inlineplugin
+            source:
+              go.mod: |
+                module github.com/example/inlineplugin
+              main.go: |
+                package inlineplugin
     asserts:
       - hasDocuments:
           count: 1
@@ -134,10 +138,11 @@ tests:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/testplugin
-            main.go: |
-              package testplugin
+            source:
+              go.mod: |
+                module github.com/example/testplugin
+              main.go: |
+                package testplugin
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
@@ -197,10 +202,11 @@ tests:
             moduleName: github.com/example/inlineplugin
             mountPath: /plugins-local/src/github.com/example/inlineplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/inlineplugin
-            main.go: |
-              package inlineplugin
+            source:
+              go.mod: |
+                module github.com/example/inlineplugin
+              main.go: |
+                package inlineplugin
     asserts:
       # HostPath volume
       - contains:
@@ -248,10 +254,11 @@ tests:
             moduleName: github.com/example/testplugin
             mountPath: /plugins-local/src/github.com/example/testplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/testplugin
-            main.go: |
-              package testplugin
+            source:
+              go.mod: |
+                module github.com/example/testplugin
+              main.go: |
+                package testplugin
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
@@ -287,10 +294,11 @@ tests:
             moduleName: github.com/example/inlineplugin
             mountPath: /plugins-local/src/github.com/example/inlineplugin
             type: inlinePlugin
-            go.mod: |
-              module github.com/example/inlineplugin
-            main.go: |
-              package inlineplugin
+            source:
+              go.mod: |
+                module github.com/example/inlineplugin
+              main.go: |
+                package inlineplugin
     asserts:
       # HostPath volume
       - contains:
@@ -334,8 +342,9 @@ tests:
           invalid-plugin:
             mountPath: /plugins-local/src/github.com/example/invalidplugin
             type: inlinePlugin
-            main.go: |
-              package main
+            source:
+              main.go: |
+                package main
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: local plugin invalid-plugin is missing moduleName !"
@@ -376,8 +385,9 @@ tests:
             moduleName: github.com/example/pluginwithdots
             mountPath: /plugins-local/src/github.com/example/pluginwithdots
             type: inlinePlugin
-            main.go: |
-              package main
+            source:
+              main.go: |
+                package main
     asserts:
       - hasDocuments:
           count: 1
