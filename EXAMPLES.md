@@ -640,8 +640,8 @@ experimental:
 
 ## Using Traefik-Hub with private plugin registries
 
-With Traefik Hub, it's possible to use plugins deployed on both public or private registries. 
-Each registry source requires a base module name (domain) and authentication credentials. 
+With Traefik Hub, it's possible to use plugins deployed on both public or private registries.
+Each registry source requires a base module name (domain) and authentication credentials.
 This can be achieved this way:
 
 ```yaml
@@ -692,7 +692,7 @@ extraObjects:
 ```
 
 > [!NOTE]  
-> This code is only written for demonstration purpose. 
+> This code is only written for demonstration purpose.
 > The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
 
 ## Use Traefik native Let's Encrypt integration, without cert-manager
