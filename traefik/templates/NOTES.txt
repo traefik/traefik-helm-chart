@@ -95,13 +95,14 @@ Migration example:
       your-plugin:
         moduleName: github.com/example/yourplugin
         mountPath: /plugins-local/src/github.com/example/yourplugin
-        type:
-          inlinePlugin:        # Recommended for small/medium plugins: secure ConfigMap-based
-            # your plugin files here
-          # hostPathPlugin:    # Use with caution for security reasons
-          #   path: /path/to/plugin
-          # localPathPlugin:   # Advanced: Uses additionalVolumes, can be used with PVC, CSI drivers (s3-csi-driver, FUSE), etc.
-          #   volumeName: plugin-storage
+        # Choose one of the following types:
+        type: inlinePlugin        # Recommended for small/medium plugins: secure ConfigMap-based
+        source:                  # Required for inlinePlugin
+          # your plugin files here
+        # type: hostPath         # Use with caution for security reasons
+        #   hostPath: /path/to/plugin
+        # type: localPath       # Advanced: Uses additionalVolumes, can be used with PVC, CSI drivers (s3-csi-driver, FUSE), etc.
+        #   volumeName: plugin-storage
 {{- printf "\n" -}}
 {{- end -}}
 
