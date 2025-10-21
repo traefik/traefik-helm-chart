@@ -638,6 +638,63 @@ experimental:
 >[!IMPORTANT]
 > When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
 
+## Using Traefik-Hub with private plugin registries
+
+With Traefik Hub, it's possible to use plugins deployed on both public or private registries.
+Each registry source requires a base module name (domain) and authentication credentials.
+This can be achieved this way:
+
+```yaml
+hub:
+  token: traefik-hub-license
+  pluginRegistry:
+    sources:
+      noop:
+        baseModuleName: "github.com"
+        github:
+          token: "ghp_XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
+
+image:
+  registry: ghcr.io
+  repository: traefik/traefik-hub
+  tag: v3.18.0
+
+experimental:
+  plugins:
+    noop:
+      moduleName: github.com/traefik-contrib/noop
+      version: v0.1.0
+
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: noop
+    spec:
+      plugin:
+        noop:
+          responseCode: 204
+  - apiVersion: traefik.io/v1alpha1
+    kind: IngressRoute
+    metadata:
+      name: demo
+    spec:
+      entryPoints:
+        - web
+      routes:
+        - kind: Rule
+          match: Host(`demo.localhost`)
+          services:
+            - name: noop@internal
+              kind: TraefikService
+          middlewares:
+            - name: noop
+```
+
+> [!NOTE]  
+> This code is only written for demonstration purpose.
+> The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
+
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.

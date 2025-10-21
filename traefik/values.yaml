@@ -1283,6 +1283,10 @@ hub:
         # -- Name of the header that will contain the tracestate copy.
         traceState: ""
 
+  # Define private plugin sources
+  pluginRegistry:
+    sources: {}
+
 # -- Required for OCI Marketplace integration.
 # See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
 oci_meta:
