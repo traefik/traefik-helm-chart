@@ -640,7 +640,7 @@ experimental:
 
 ## Using Traefik-Hub private plugins registry
 
-Some companies using might want to deploy their private plugins located on custom registries.
+Some companies might want to deploy their private plugins located on custom registries.
 Using Traefik Hub, this can be achieved this way:
 
 ```yaml
