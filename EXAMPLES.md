@@ -276,6 +276,38 @@ extraObjects:
                   name: traefik
 ```
 
+## Publish Traefik Dashboard in Rancher UI
+
+To expose the dashboard with rancher UI some paths modifications are required.
+`basePath` needs to be changed and a `Middleware` needs to be used to URL rewriting.
+
+```yaml
+# Configure the basePath
+api:
+  basePath: "/api/v1/namespaces/traefik/services/https:traefik:443/proxy/"
+
+# Create an IngressRoute for the dashboard
+ingressRoute:
+  dashboard:
+    enabled: true
+    # Custom match rule with host domain
+    matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+    entryPoints: ["websecure"]
+    # Add custom middleware : this makes the path matching the internal Go router 
+    middlewares:
+      - name: traefik-dashboard-basepath
+
+# Create the custom middlewares used by the IngressRoute dashboard (can also be created from an other source).
+extraObjects:
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: traefik-dashboard-basepath
+    spec:
+      addPrefix:
+        prefix: "/api/v1/namespaces/traefik/services/https:traefik:443/proxy"
+```
+
 ## Install on AWS
 
 It can use [native AWS support](https://kubernetes.io/docs/concepts/services-networking/service/#aws-nlb-support) on Kubernetes

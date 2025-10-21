@@ -17,6 +17,13 @@
         "api": {
             "type": "object",
             "properties": {
+                "basePath": {
+                    "default": "/",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "dashboard": {
                     "type": "boolean"
                 }
