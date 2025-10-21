@@ -190,6 +190,10 @@ gatewayClass:  # @schema additionalProperties: false
   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
   labels: {}
 
+api:
+  # -- Enable the dashboard
+  dashboard: true
+
 # -- Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart.
 ingressRoute:
   dashboard:

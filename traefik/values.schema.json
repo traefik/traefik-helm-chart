@@ -14,6 +14,14 @@
         "affinity": {
             "type": "object"
         },
+        "api": {
+            "type": "object",
+            "properties": {
+                "dashboard": {
+                    "type": "boolean"
+                }
+            }
+        },
         "autoscaling": {
             "type": "object",
             "properties": {

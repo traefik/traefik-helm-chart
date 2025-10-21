@@ -210,7 +210,11 @@
             {{- end }}
            {{- end }}
           {{- end }}
+          {{- if .Values.api.dashboard }}
           - "--api.dashboard=true"
+          {{- else if .Values.ingressRoute.dashboard.enabled }}
+            {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
+          {{- end }}
           - "--ping=true"
 
           {{- with .Values.core }}
