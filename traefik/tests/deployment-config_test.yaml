@@ -305,6 +305,16 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "redirectTo"
+  - it: should fail when dashboard has ingressRoute but is disabled
+    set:
+      api:
+        dashboard: false
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard"
   - it: should fail when using previous syntax
     set:
       ports:
