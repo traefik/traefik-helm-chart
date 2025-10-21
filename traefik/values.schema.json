@@ -18,7 +18,7 @@
             "type": "object",
             "properties": {
                 "basePath": {
-                    "default": "INFO",
+                    "default": "/",
                     "type": [
                         "string",
                         "null"

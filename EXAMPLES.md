@@ -276,9 +276,9 @@ extraObjects:
                   name: traefik
 ```
 
-## Publish Traefik Dashboard behind Rancher proxy
+## Publish Traefik Dashboard in Rancher UI
 
-To expose the dashboard behind the well-known rancher proxy some paths modifications will be needed.
+To expose the dashboard with rancher UI some paths modifications are required.
 `basePath` needs to be changed and a `Middleware` needs to be used to URL rewriting.
 
 ```yaml
@@ -297,7 +297,7 @@ ingressRoute:
     middlewares:
       - name: traefik-dashboard-basepath
 
-# Create the custom middlewares used by the IngressRoute dashboard (can also be created in another way).
+# Create the custom middlewares used by the IngressRoute dashboard (can also be created from an other source).
 extraObjects:
   - apiVersion: traefik.io/v1alpha1
     kind: Middleware
