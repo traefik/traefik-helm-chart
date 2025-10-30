@@ -101,13 +101,67 @@ spec:
                     or jwksUrl must be specified
                   rule: '[has(self.signingSecretName), has(self.publicKey), has(self.jwksFile),
                     has(self.jwksUrl)].filter(x, x).size() == 1'
+              ldap:
+                description: LDAP configures LDAP authentication.
+                properties:
+                  attribute:
+                    default: cn
+                    description: |-
+                      Attribute is the LDAP object attribute used to form a bind DN when sending bind queries.
+                      The bind DN is formed as <Attribute>=<Username>,<BaseDN>.
+                    type: string
+                  baseDn:
+                    description: BaseDN is the base domain name that should be used
+                      for bind and search queries.
+                    type: string
+                  bindDn:
+                    description: |-
+                      BindDN is the domain name to bind to in order to authenticate to the LDAP server when running in search mode.
+                      If empty, an anonymous bind will be done.
+                    type: string
+                  bindPasswordSecretName:
+                    description: |-
+                      BindPasswordSecretName is the name of the Kubernetes Secret containing the password for the bind DN.
+                      The secret must contain a key named 'password'.
+                    maxLength: 253
+                    type: string
+                  certificateAuthority:
+                    description: |-
+                      CertificateAuthority is a PEM-encoded certificate to use to establish a connection with the LDAP server if the
+                      connection uses TLS but that the certificate was signed by a custom Certificate Authority.
+                    type: string
+                  insecureSkipVerify:
+                    description: InsecureSkipVerify controls whether the server's
+                      certificate chain and host name is verified.
+                    type: boolean
+                  searchFilter:
+                    description: |-
+                      SearchFilter is used to filter LDAP search queries.
+                      Example: (&(objectClass=inetOrgPerson)(gidNumber=500)(uid=%s))
+                      %s can be used as a placeholder for the username.
+                    type: string
+                  startTls:
+                    description: StartTLS instructs the middleware to issue a StartTLS
+                      request when initializing the connection with the LDAP server.
+                    type: boolean
+                  url:
+                    description: URL is the URL of the LDAP server, including the
+                      protocol (ldap or ldaps) and the port.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid LDAP URL
+                      rule: isURL(self) && (self.startsWith('ldap://') || self.startsWith('ldaps://'))
+                required:
+                - baseDn
+                - url
+                type: object
             required:
             - isDefault
             type: object
             x-kubernetes-validations:
-            - message: exactly one of apiKey or jwt must be specified
-              rule: (has(self.apiKey) && !has(self.jwt)) || (!has(self.apiKey) &&
-                has(self.jwt))
+            - message: exactly one authentication method must be specified
+              rule: '[has(self.apiKey), has(self.jwt), has(self.ldap)].filter(x, x).size()
+                == 1'
           status:
             description: The current status of this APIAuth.
             properties:

@@ -45,6 +45,14 @@ spec:
               quota:
                 description: Quota defines the quota policy.
                 properties:
+                  bucket:
+                    default: subscription
+                    description: Bucket defines the bucket strategy for the quota.
+                    enum:
+                    - subscription
+                    - application-api
+                    - application
+                    type: string
                   limit:
                     description: Limit is the maximum number of token in the bucket.
                     type: integer
@@ -64,6 +72,14 @@ spec:
               rateLimit:
                 description: RateLimit defines the rate limit policy.
                 properties:
+                  bucket:
+                    default: subscription
+                    description: Bucket defines the bucket strategy for the rate limit.
+                    enum:
+                    - subscription
+                    - application-api
+                    - application
+                    type: string
                   limit:
                     description: Limit is the maximum number of token in the bucket.
                     type: integer
