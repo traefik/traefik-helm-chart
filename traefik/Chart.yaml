@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 37.1.1
+version: 37.2.0
 # renovate: image=traefik
-appVersion: v3.5.2
+appVersion: v3.5.3
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
@@ -23,7 +23,12 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(hub): allow to specify admission controller certificate from existing secret"
-    - "feat(deps): update traefik docker tag to v3.5.2"
-    - "feat(accesslog): ✨ add genericCLF format"
-    - "chore(release): 🚀 publish v37.1.1"
+    - "feat: support API basePath"
+    - "feat: make dashboard toggleable"
+    - "feat: :package: support Traefik Hub v3.18 pluginRegistry feature"
+    - "feat(traefik-hub): add mcpgateway option"
+    - "feat(observability): :mag: add per entrypoint observability"
+    - "feat(metrics): :chart_with_upwards_trend: add OTLP resourceAttributes support"
+    - "feat(logs): :memo: add missing support of OTLP logs"
+    - "chore(release): 🚀 publish traefik 37.2.0"
+    - "chore(hub): :twisted_rightwards_arrows: update hub and proxy mapping for v3.18"

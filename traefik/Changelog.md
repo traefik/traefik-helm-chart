@@ -1,5 +1,290 @@
 # Change Log
 
+## 37.2.0  ![AppVersion: v3.5.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-10-21
+
+* feat: support API basePath
+* feat: make dashboard toggleable
+* feat: :package: support Traefik Hub v3.18 pluginRegistry feature
+* feat(traefik-hub): add mcpgateway option
+* feat(observability): :mag: add per entrypoint observability
+* feat(metrics): :chart_with_upwards_trend: add OTLP resourceAttributes support
+* feat(logs): :memo: add missing support of OTLP logs
+* chore(release): 🚀 publish traefik 37.2.0
+* chore(hub): :twisted_rightwards_arrows: update hub and proxy mapping for v3.18
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index cc48b7d..c697f6f 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -139,6 +139,8 @@ experimental:
+   plugins: {}
+   # -- Enable experimental local plugins
+   localPlugins: {}
++  # -- Enable OTLP logging experimental feature.
++  otlpLogs: false
+ 
+ gateway:
+   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+@@ -188,6 +190,12 @@ gatewayClass:  # @schema additionalProperties: false
+   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+   labels: {}
+ 
++api:
++  # -- Enable the dashboard
++  dashboard: true
++  # -- Configure API basePath
++  basePath: ""  # @schema type:[string, null]; default: "/"
++
+ # -- Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart.
+ ingressRoute:
+   dashboard:
+@@ -370,6 +378,48 @@ logs:
+     filePath: ""
+     # -- When set to true and format is common, it disables the colorized output.
+     noColor: false
++    otlp:
++      # -- Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled.
++      enabled: false
++      # -- Service name used in OTLP backend. Default: traefik.
++      serviceName:  # @schema type:[string, null]
++      http:
++        # -- Set to true in order to send logs to the OpenTelemetry Collector using HTTP.
++        enabled: false
++        # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
++        endpoint: ""
++        # -- Additional headers sent with logs by the reporter to the OpenTelemetry Collector.
++        headers: {}
++        ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
++        tls:
++          # -- The path to the certificate authority, it defaults to the system bundle.
++          ca: ""
++          # -- The path to the public certificate. When using this option, setting the key option is required.
++          cert: ""
++          # -- The path to the private key. When using this option, setting the cert option is required.
++          key: ""
++          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++          insecureSkipVerify:  # @schema type:[boolean, null]
++      grpc:
++        # -- Set to true in order to send logs  to the OpenTelemetry Collector using gRPC
++        enabled: false
++        # -- Format: <host>:<port>. Default: "localhost:4317"
++        endpoint: ""
++        # -- Allows reporter to send logs to the OpenTelemetry Collector without using a secured protocol.
++        insecure: false
++        ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
++        tls:
++          # -- The path to the certificate authority, it defaults to the system bundle.
++          ca: ""
++          # -- The path to the public certificate. When using this option, setting the key option is required.
++          cert: ""
++          # -- The path to the private key. When using this option, setting the cert option is required.
++          key: ""
++          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++          insecureSkipVerify: false
++      # -- Defines additional resource attributes to be sent to the collector.
++      resourceAttributes: {}
++
+   access:
+     # -- To enable access logs
+     enabled: false
+@@ -401,6 +451,47 @@ logs:
+         # -- Set default mode for fields.headers
+         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
+         names: {}
++    otlp:
++      # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
++      enabled: false
++      # -- Service name used in OTLP backend. Default: traefik.
++      serviceName:  # @schema type:[string, null]
++      http:
++        # -- Set to true in order to send access logs to the OpenTelemetry Collector using HTTP.
++        enabled: false
++        # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
++        endpoint: ""
++        # -- Additional headers sent with access logs by the reporter to the OpenTelemetry Collector.
++        headers: {}
++        ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
++        tls:
++          # -- The path to the certificate authority, it defaults to the system bundle.
++          ca: ""
++          # -- The path to the public certificate. When using this option, setting the key option is required.
++          cert: ""
++          # -- The path to the private key. When using this option, setting the cert option is required.
++          key: ""
++          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++          insecureSkipVerify:  # @schema type:[boolean, null]
++      grpc:
++        # -- Set to true in order to send access logs to the OpenTelemetry Collector using gRPC
++        enabled: false
++        # -- Format: <host>:<port>. Default: "localhost:4317"
++        endpoint: ""
++        # -- Allows reporter to send access logs to the OpenTelemetry Collector without using a secured protocol.
++        insecure: false
++        ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
++        tls:
++          # -- The path to the certificate authority, it defaults to the system bundle.
++          ca: ""
++          # -- The path to the public certificate. When using this option, setting the key option is required.
++          cert: ""
++          # -- The path to the private key. When using this option, setting the cert option is required.
++          key: ""
++          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++          insecureSkipVerify: false
++      # -- Defines additional resource attributes to be sent to the collector.
++      resourceAttributes: {}
+ 
+ metrics:
+   # -- Enable metrics for internal resources. Default: false
+@@ -519,7 +610,7 @@ metrics:
+     http:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
+       enabled: false
+-      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/metrics
+       endpoint: ""
+       # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+       headers: {}
+@@ -536,7 +627,7 @@ metrics:
+     grpc:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
+       enabled: false
+-      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      # -- Format: <host>:<port>. Default: "localhost:4317"
+       endpoint: ""
+       # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+       insecure: false
+@@ -550,6 +641,8 @@ metrics:
+         key: ""
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+         insecureSkipVerify: false
++    # -- Defines additional resource attributes to be sent to the collector.
++    resourceAttributes: {}
+ 
+ ocsp:
+   # -- Enable OCSP stapling support.
+@@ -581,7 +674,7 @@ tracing:  # @schema additionalProperties: false
+     http:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
+       enabled: false
+-      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/tracing
+       endpoint: ""
+       # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
+       headers: {}
+@@ -598,7 +691,7 @@ tracing:  # @schema additionalProperties: false
+     grpc:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
+       enabled: false
+-      # -- Format: <scheme>://<host>:<port><path>. Default: http://localhost:4318/v1/metrics
++      # -- Format: <host>:<port>. Default: "localhost:4317"
+       endpoint: ""
+       # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
+       insecure: false
+@@ -670,6 +763,15 @@ ports:
+     exposedPort: 8080
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
++    observability:  # @schema additionalProperties: false
++      # -- Defines whether a router attached to this EntryPoint produces metrics by default.
++      metrics:  # @schema type:[boolean, null]; default: true
++      # -- Defines whether a router attached to this EntryPoint produces access-logs by default.
++      accessLogs:  # @schema type:[boolean, null]; default: true
++      # -- Defines whether a router attached to this EntryPoint produces traces by default.
++      tracing:  # @schema type:[boolean, null]; default: true
++      # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
++      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   web:
+     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+@@ -711,6 +813,15 @@ ports:
+         graceTimeOut:               # @schema type:[string, integer, null]
+       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+       keepAliveMaxTime:             # @schema type:[string, integer, null]
++    observability:  # @schema additionalProperties: false
++      # -- Enables metrics for this entryPoint.
++      metrics:  # @schema type:[boolean, null]; default: true
++      # -- Enables access-logs for this entryPoint.
++      accessLogs:  # @schema type:[boolean, null]; default: true
++      # -- Enables tracing for this entryPoint.
++      tracing:  # @schema type:[boolean, null]; default: true
++      # -- Defines the tracing verbosity level for this entryPoint.
++      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   websecure:
+     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+@@ -772,6 +883,15 @@ ports:
+     #   - namespace-name1@kubernetescrd
+     #   - namespace-name2@kubernetescrd
+     middlewares: []
++    observability:  # @schema additionalProperties: false
++      # -- Enables metrics for this entryPoint.
++      metrics:  # @schema type:[boolean, null]; default: true
++      # -- Enables access-logs for this entryPoint.
++      accessLogs:  # @schema type:[boolean, null]; default: true
++      # -- Enables tracing for this entryPoint.
++      tracing:  # @schema type:[boolean, null]; default: true
++      # -- Defines the tracing verbosity level for this entryPoint.
++      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   metrics:
+     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
+     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
+@@ -785,6 +905,15 @@ ports:
+     exposedPort: 9100
+     # -- The port protocol (TCP/UDP)
+     protocol: TCP
++    observability:  # @schema additionalProperties: false
++      # -- Enables metrics for this entryPoint.
++      metrics:  # @schema type:[boolean, null]; default: true
++      # -- Enables access-logs for this entryPoint.
++      accessLogs:  # @schema type:[boolean, null]; default: true
++      # -- Enables tracing for this entryPoint.
++      tracing:  # @schema type:[boolean, null]; default: true
++      # -- Defines the tracing verbosity level for this entryPoint.
++      traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+ 
+ # -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options)
+ # When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
+@@ -1010,6 +1139,12 @@ hub:
+       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+       validateRequestMethodAndPath: false
+ 
++  mcpgateway:
++    # -- Set to true in order to enable AI MCP Gateway. Requires a valid license token.
++    enabled: false
++    # -- Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
++    maxRequestBodySize:  # @schema type:[integer, null]; minimum:0
++
+   aigateway:
+     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
+     enabled: false
+@@ -1148,6 +1283,10 @@ hub:
+         # -- Name of the header that will contain the tracestate copy.
+         traceState: ""
+ 
++  # Define private plugin sources
++  pluginRegistry:
++    sources: {}
++
+ # -- Required for OCI Marketplace integration.
+ # See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
+ oci_meta:
+```
+
+## 37.1.2  ![AppVersion: v3.5.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-10-03
+
+* fix(observability): tracer creation warning with default security context
+* fix(CRDs): ✨ update for Traefik Proxy v3.5.2
+* feat(deps): update traefik docker tag to v3.5.3 + add plugin hash option
+* feat(CRDs): update for Traefik to v3.5.3
+* chore(release): :rocket: publish traefik 37.1.2 and crds 1.11.1
+
 ## 37.1.1  ![AppVersion: v3.5.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-09-10

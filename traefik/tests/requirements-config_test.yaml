@@ -64,6 +64,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: serviceName is a feature only available for traefik >= v3.2.0."
+  - it: should fail when using resourceAttributes on metrics otlp on traefik < 3.5.3
+    set:
+      image:
+        tag: v3.1.0
+      metrics:
+        otlp:
+          resourceAttributes:
+            foo: bar
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3."
   - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
     set:
       image:
@@ -304,6 +315,43 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."
+  - it: should fail when using mcpgateway on hub < 3.18.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.17.0
+      hub:
+        token: "xxx"
+        mcpgateway:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."
+  - it: should not fail when using mcpgateway on hub >= 3.18.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0
+      hub:
+        token: "xxx"
+        mcpgateway:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail when using mcpgateway on hub >= 3.18.0 with rc
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0-rc2
+      hub:
+        token: "xxx"
+        mcpgateway:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when not using default values
     set:
       hub:
@@ -311,3 +359,118 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "namespaces is required"
+  - it: should fail when using otlp logs without experimental flag
+    set:
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
+  - it: should fail when using otlp access logs without experimental flag
+    set:
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
+  - it: should fail when using otlp logs on trafik < 3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      experimental:
+        otlpLogs: true
+      logs:
+        general:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using otlp access logs on trafik < 3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      experimental:
+        otlpLogs: true
+      logs:
+        access:
+          otlp:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using per entrypoint observability on Traefik Proxy < v3.3.0
+    set:
+      image:
+        tag: v3.2.0
+      ports:
+        web:
+          observability:
+            metrics: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."
+  - it: should fail when using traceVerbosity on Traefik Proxy < v3.5.0
+    set:
+      image:
+        tag: v3.4.0
+      ports:
+        web:
+          observability:
+            traceVerbosity: detailed
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."
+  - it: should fail when using pluginRegistry sources on hub < 3.18.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.17.0
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."
+  - it: should fail when using pluginRegistry sources with unused plugin
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in exprimental.plugins."
+  - it: should not fail when using pluginRegistry sources with used plugin
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.18.0
+      experimental:
+        plugins:
+          plugin1:
+            moduleName: github.com/traefik/plugindemo
+            version: v0.2.1
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+    asserts:
+      - notFailedTemplate: {}
