@@ -11,7 +11,7 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 data:
-  {{- $inlineFiles := include "traefik.getLocalPluginInlineFiles" (dict "plugin" $localPlugin) | fromYaml }}
+  {{- $inlineFiles := include "traefik.getLocalPluginInlineFiles" (dict "plugin" $localPlugin "pluginName" $localPluginName) | fromYaml }}
   {{- range $fileName, $fileContent := $inlineFiles }}
   {{ $fileName }}: |
     {{- $fileContent | nindent 4 }}
