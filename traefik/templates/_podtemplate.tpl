@@ -416,6 +416,9 @@
           - "--experimental.fastProxy.debug"
             {{- end }}
           {{- end }}
+          {{- if .Values.experimental.otlpLogs }}
+          - "--experimental.otlpLogs=true"
+          {{- end }}
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
             {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
