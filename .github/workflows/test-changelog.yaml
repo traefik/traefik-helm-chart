@@ -25,7 +25,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           fromTag: v34.1.0
           toTag: v34.2.0
@@ -61,7 +61,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0
