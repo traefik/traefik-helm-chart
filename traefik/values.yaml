@@ -515,6 +515,8 @@ metrics:
     manualRouting: false
     # -- Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
     headerLabels: {}  # @schema type:[object, null]
+    # -- Set prometheus.io/scrape annotation value. Default: true
+    scrape: true
     service:
       # -- Create a dedicated metrics service to use with ServiceMonitor
       enabled: false
