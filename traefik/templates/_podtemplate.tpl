@@ -210,6 +210,11 @@
             {{- end }}
            {{- end }}
           {{- end }}
+          {{- if .Values.api.enabled }}
+          - "--api=true"
+          {{- else if .Values.api.dashboard }}
+            {{- fail "ERROR: Cannot enable the dashboard without setting api.enable to true" -}}
+          {{- end }}
           {{- if .Values.api.dashboard }}
           - "--api.dashboard=true"
           {{- else if .Values.ingressRoute.dashboard.enabled }}

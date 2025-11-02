@@ -26,6 +26,9 @@
                 },
                 "dashboard": {
                     "type": "boolean"
+                },
+                "enabled": {
+                    "type": "boolean"
                 }
             }
         },

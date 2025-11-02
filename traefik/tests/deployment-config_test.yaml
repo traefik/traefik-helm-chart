@@ -247,6 +247,7 @@ tests:
             - --entryPoints.traefik.address=:8080/tcp
             - --entryPoints.web.address=:8000/tcp
             - --entryPoints.websecure.address=:8443/tcp
+            - --api=true
             - --api.dashboard=true
             - --ping=true
             - --metrics.prometheus=true
@@ -313,6 +314,14 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "redirectTo"
+  - it: should fail when api.dashboard is enabled but not api.enabled
+    set:
+      api:
+        enabled: false
+        dashboard: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot enable the dashboard without setting api.enable to true"
   - it: should fail when dashboard has ingressRoute but is disabled
     set:
       api:

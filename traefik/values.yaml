@@ -191,6 +191,8 @@ gatewayClass:  # @schema additionalProperties: false
   labels: {}
 
 api:
+  # -- Enable the API
+  enabled: true
   # -- Enable the dashboard
   dashboard: true
   # -- Configure API basePath
