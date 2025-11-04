@@ -45,7 +45,7 @@ tests:
       gatewayAPI: true
     asserts:
       - hasDocuments:
-          count: 5
+          count: 6
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -53,7 +53,7 @@ tests:
           value: gateway.networking.k8s.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
+          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant|BackendTLSPolicy)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
@@ -65,7 +65,7 @@ tests:
       deleteOnUninstall: true
     asserts:
       - hasDocuments:
-          count: 5
+          count: 6
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -73,7 +73,7 @@ tests:
           value: gateway.networking.k8s.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant)$
+          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant|BackendTLSPolicy)$
       - notExists:
           path: metadata.annotations["helm.sh/resource-policy"]
 
@@ -83,7 +83,7 @@ tests:
       gatewayAPIExperimental: true
     asserts:
       - hasDocuments:
-          count: 11
+          count: 12
       - isKind:
           of: CustomResourceDefinition
       - matchRegex:
@@ -100,7 +100,7 @@ tests:
       deleteOnUninstall: true
     asserts:
       - hasDocuments:
-          count: 11
+          count: 12
       - isKind:
           of: CustomResourceDefinition
       - matchRegex:
