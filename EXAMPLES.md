@@ -626,7 +626,7 @@ To develop or test plugins without pushing them to a public registry, you can lo
 >[!WARNING]
 > The legacy `hostPath` configuration at the `experimental.localPlugins` level is deprecated. Please use the new structured `experimental.localPlugins.<yourplugin>.type` configuration for better organization and future features.
 
-### Legacy Configuration (Backward Compatibility)
+### Legacy Configuration
 
 >[!WARNING]
 > This legacy `hostPath` configuration is deprecated and will be removed in the next major version. Please migrate to the structured `type` configuration below.
