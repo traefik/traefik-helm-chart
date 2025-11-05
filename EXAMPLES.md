@@ -701,7 +701,7 @@ experimental:
 
 > **Advantages**: Secure (no host filesystem access), portable, version controlled with Helm values, supports up to 1MB of plugin code.
 
-### Using Host Path Plugin (Use with Caution)
+### Using Host Path Plugin
 
 >[!WARNING]
 > The `hostPath` type should be avoided for security reasons and requires additional work to pull plugins from repositories or blob storage. Consider using `inlinePlugin` or `localPath` instead.
