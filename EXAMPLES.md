@@ -640,7 +640,7 @@ experimental:
       hostPath: /path/to/plugin-source  # ⚠️ Deprecated - use type: hostPath instead
 ```
 
-## Structured Local Plugins (Current Approach)
+## Structured Local Plugins
 
 The `localPlugins` configuration supports a structured `experimental.localPlugins.<yourplugin>.type` approach that provides better organization, security, and flexibility:
 
