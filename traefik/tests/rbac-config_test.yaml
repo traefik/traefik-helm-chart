@@ -738,6 +738,35 @@ tests:
               - list
               - watch
 
+  - it: should provide expected cluster rbac when knative provider is enabled
+    set:
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - networking.internal.knative.dev
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - networking.internal.knative.dev
+            resources:
+              - ingresses/status
+            verbs:
+              - update
+
   - it: should provide required configmaps cluster rbac when proxy >= v3.4.x on kubernetesCRD provider
     set:
       image:
