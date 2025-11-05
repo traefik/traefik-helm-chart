@@ -1256,3 +1256,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.pluginregistry.sources.plugin2.github.token=ghp_xxxxxxxxxxxxxxxxxxxx"
+  - it: should enable experimental otlpLogs when specified
+    set:
+      experimental:
+        otlpLogs: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.otlpLogs=true"
+  - it: should not enable experimental otlpLogs by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.otlpLogs=true"

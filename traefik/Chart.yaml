@@ -4,7 +4,7 @@ description: A Traefik based Kubernetes ingress controller
 type: application
 version: 37.2.0
 # renovate: image=traefik
-appVersion: v3.5.3
+appVersion: v3.5.4
 kubeVersion: ">=1.22.0-0"
 keywords:
   - traefik
