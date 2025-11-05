@@ -644,7 +644,10 @@ experimental:
 
 The `localPlugins` configuration supports a structured `experimental.localPlugins.<yourplugin>.type` approach that provides better organization, security, and flexibility:
 
-### Using Inline Plugin (Recommended for small/medium plugins)
+### Using Inline Plugin
+
+> [!NOTE]  
+> Can be used with small or medium plugins
 
 For testing or general use, embed plugin source directly in values.yaml using the secure `inlinePlugin` type:
 
