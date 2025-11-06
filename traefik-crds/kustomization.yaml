@@ -2,8 +2,8 @@
 kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  # curl -o crds-files/gatewayAPI/gateway-standard-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/standard-install.yaml
-  # curl -o crds-files/gatewayAPI/gateway-experimental-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.3.0/experimental-install.yaml
+  # curl -o crds-files/gatewayAPI/gateway-standard-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
+  # curl -o crds-files/gatewayAPI/gateway-experimental-install.yaml -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/experimental-install.yaml
   - crds-files/gatewayAPI/gateway-standard-install.yaml
   - crds-files/hub/hub.traefik.io_accesscontrolpolicies.yaml
   - crds-files/hub/hub.traefik.io_aiservices.yaml
