@@ -1311,6 +1311,9 @@
                                 }
                             }
                         },
+                        "scrape": {
+                            "type": "boolean"
+                        },
                         "service": {
                             "type": "object",
                             "properties": {
