@@ -7,8 +7,7 @@ on:
       - .github/fixtures/changelog-traefik.md
       - .github/fixtures/changelog-traefik-crds.md
       - .github/workflows/changelog.json
-      - .github/workflows/release.yaml
-      - .github/workflows/test-release.yaml
+      - .github/workflows/release.yml
 
 jobs:
   test:
