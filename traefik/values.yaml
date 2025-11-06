@@ -147,7 +147,7 @@ gateway:
   enabled: true
   # -- Set a custom name to gateway
   name: ""
-  # -- By default, Gateway is created in the same `Namespace` than Traefik.
+  # -- By default, Gateway is created in the same `Namespace` as Traefik.
   namespace: ""
   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
   annotations: {}
