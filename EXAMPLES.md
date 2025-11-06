@@ -626,7 +626,7 @@ To develop or test plugins without pushing them to a public registry, you can lo
 >[!WARNING]
 > The legacy `hostPath` configuration at the `experimental.localPlugins` level is deprecated. Please use the new structured `experimental.localPlugins.<yourplugin>.type` configuration for better organization and future features.
 
-### Legacy Configuration (Backward Compatibility)
+### Legacy Configuration
 
 >[!WARNING]
 > This legacy `hostPath` configuration is deprecated and will be removed in the next major version. Please migrate to the structured `type` configuration below.
@@ -640,11 +640,14 @@ experimental:
       hostPath: /path/to/plugin-source  # ⚠️ Deprecated - use type: hostPath instead
 ```
 
-## Structured Local Plugins (Current Approach)
+## Structured Local Plugins
 
 The `localPlugins` configuration supports a structured `experimental.localPlugins.<yourplugin>.type` approach that provides better organization, security, and flexibility:
 
-### Using Inline Plugin (Recommended for small/medium plugins)
+### Using Inline Plugin
+
+> [!NOTE]  
+> Can be used with small or medium plugins
 
 For testing or general use, embed plugin source directly in values.yaml using the secure `inlinePlugin` type:
 
@@ -701,7 +704,7 @@ experimental:
 
 > **Advantages**: Secure (no host filesystem access), portable, version controlled with Helm values, supports up to 1MB of plugin code.
 
-### Using Host Path Plugin (Use with Caution)
+### Using Host Path Plugin
 
 >[!WARNING]
 > The `hostPath` type should be avoided for security reasons and requires additional work to pull plugins from repositories or blob storage. Consider using `inlinePlugin` or `localPath` instead.
