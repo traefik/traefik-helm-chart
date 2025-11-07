@@ -1314,10 +1314,12 @@ This example exposes two Gateways (e.g., `internal` and `external`) from a singl
 ports:
   web-ext:
     port: 9080
+    exposedPort: 80
     expose:
       external: true
   websecure-ext:
     port: 9443
+    exposedPort: 443
     expose:
       external: true
 
