@@ -18,8 +18,6 @@ resources:
   - crds-files/hub/hub.traefik.io_apiversions.yaml
   - crds-files/hub/hub.traefik.io_managedapplications.yaml
   - crds-files/hub/hub.traefik.io_managedsubscriptions.yaml
-  # curl -o crds-files/knative/knative-serving-crds.yaml -L https://github.com/knative/serving/releases/download/knative-v1.20.0/serving-crds.yaml
-  - crds-files/knative/knative-serving-crds.yaml
   - crds-files/traefik/traefik.io_ingressroutes.yaml
   - crds-files/traefik/traefik.io_ingressroutetcps.yaml
   - crds-files/traefik/traefik.io_ingressrouteudps.yaml
