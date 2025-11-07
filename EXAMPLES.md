@@ -1466,93 +1466,57 @@ ports:
   web-ext:
     port: 9080
     expose:
-      default: true
+      external: true
   websecure-ext:
     port: 9443
     expose:
-      default: true
-
-# This will make traefik stop updating the gateway IP, it's not important though
-# https://github.com/traefik/traefik-helm-chart/issues/1291
-service:
-  enabled: false
+      external: true
 
 gateway:
   enabled: true
+  name: traefik-internal
 
 gatewayClass:
   enabled: true
 
-extraObjects:
-  # Make sure these service ports matching the ports defined previously
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: traefik-internal
-    spec:
+service:
+  additionalServices:
+    external:
       type: LoadBalancer
-      selector:
-        app.kubernetes.io/name: traefik
-      ports:
-        - name: http
-          port: 80
-          targetPort: 8000
-        - name: https
-          port: 443
-          targetPort: 8443
 
-  - apiVersion: v1
-    kind: Service
-    metadata:
-      name: traefik-external
-    spec:
-      type: LoadBalancer
-      selector:
-        app.kubernetes.io/name: traefik
-      ports:
-        - name: http
-          port: 80
-          targetPort: 9080
-        - name: https
-          port: 443
-          targetPort: 9443
+providers:
+  kubernetesGateway:
+    enabled: true
+    statusAddress:
+      service:
+        enabled: false
+```
 
-  - apiVersion: gateway.networking.k8s.io/v1
-    kind: Gateway
-    metadata:
-      name: traefik-external
-    spec:
-      gatewayClassName: traefik-external
-      listeners:
-        - name: http
-          protocol: HTTP
-          port: 9080
-          allowedRoutes:
-            namespaces:
-              from: All
-        # Comment out if you have a valid TLS certificate
-        # - name: https
-        #   protocol: HTTPS
-        #   port: 9443
-        #   allowedRoutes:
-        #     namespaces:
-        #       from: All
-        #   tls:
-        #     mode: Terminate
-        #     certificateRefs:
-        #       - group: ""
-        #         kind: Secret
-        #         name: some-tls-cert
-
-
-  - apiVersion: gateway.networking.k8s.io/v1
-    kind: GatewayClass
-    metadata:
-      name: traefik-external
-    spec:
-      controllerName: traefik.io/gateway-controller
-      parametersRef:
-        group: gateway.networking.k8s.io
-        kind: Gateway
-        name: traefik-gateway
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: traefik-external
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: web-ext
+      protocol: HTTP
+      port: 9080
+      allowedRoutes:
+        namespaces:
+          from: All
+    # Comment out if you have a valid TLS certificate
+    # - name: websecure-ext
+    #   protocol: HTTPS
+    #   port: 9443
+    #   allowedRoutes:
+    #     namespaces:
+    #       from: All
+    #   tls:
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - group: ""
+    #         kind: Secret
+    #         name: some-tls-cert
 ```
