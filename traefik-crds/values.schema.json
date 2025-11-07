@@ -24,6 +24,9 @@
         "hub": {
             "type": "boolean"
         },
+        "knative": {
+            "type": "boolean"
+        },
         "traefik": {
             "type": "boolean"
         }
