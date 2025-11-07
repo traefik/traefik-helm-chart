@@ -1456,25 +1456,21 @@ hub:
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
 
-## Deploy multiple Gateway with a single traefik deployment/daemonset
+## Deploy multiple Gateways with a single traefik deployment/daemonset
 
-This example demonstrates how to deploy multiple gateways like external/internal with a single traefik deployment
-
-It involves disable built-in service, create extra entrypoints for internal (or external) gateway
-
-Assuming we use the built-in ports (8000, and 8443) for internal gateway
+This example exposes two Gateways (e.g., `internal` and `external`) from a single Traefik installation.
 
 ```yaml
-# New ports for external gateway
+# Ports for external gateway
 ports:
   web-ext:
     port: 9080
     expose:
-      enabled: true
+      default: true
   websecure-ext:
     port: 9443
     expose:
-      enabled: true
+      default: true
 
 # This will make traefik stop updating the gateway IP, it's not important though
 # https://github.com/traefik/traefik-helm-chart/issues/1291
