@@ -2180,7 +2180,10 @@
         "rbac": {
             "type": "object",
             "properties": {
-                "aggregateTo": {
+                "aggregateAdminTo": {
+                    "type": "array"
+                },
+                "aggregateViewTo": {
                     "type": "array"
                 },
                 "enabled": {

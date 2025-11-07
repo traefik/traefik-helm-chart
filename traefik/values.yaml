@@ -1015,8 +1015,8 @@ certificatesResolvers: {}
 # affinity is left as default.
 hostNetwork: false
 
-# -- Whether Role Based Access Control objects like roles and rolebindings should be created
 rbac:  # @schema additionalProperties: false
+  # -- Whether Role Based Access Control objects like roles and rolebindings should be created
   enabled: true
   # When set to true:
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
@@ -1027,8 +1027,11 @@ rbac:  # @schema additionalProperties: false
   namespaced: false
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
-  aggregateTo: []
-  # List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
+  # -- Aggregate Traefik admin role to specified user roles
+  aggregateAdminTo: []
+  # -- Aggregate Traefik view role to specified user roles
+  aggregateViewTo: []
+  # -- List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
   secretResourceNames: []
 
 # -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding

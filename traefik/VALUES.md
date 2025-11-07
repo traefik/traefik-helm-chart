@@ -404,7 +404,11 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice) |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
-| rbac | object | `{"aggregateTo":[],"enabled":true,"namespaced":false,"secretResourceNames":[]}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
+| rbac.aggregateAdminTo | list | `[]` | Aggregate Traefik admin role to specified user roles |
+| rbac.aggregateViewTo | list | `[]` | Aggregate Traefik view role to specified user roles |
+| rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
+| rbac.namespaced | bool | `false` |  |
+| rbac.secretResourceNames | list | `[]` | List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret. |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |

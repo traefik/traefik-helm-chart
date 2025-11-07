@@ -1,0 +1,189 @@
+{{- $version := include "traefik.proxyVersion" $ }}
+{{- if and .Values.rbac.enabled .Values.rbac.aggregateAdminTo }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+{{- if (not .Values.rbac.namespaced) }}
+kind: ClusterRole
+{{- else }}
+kind: Role
+{{- end }}
+metadata:
+  name: {{ template "traefik.clusterRoleName" . }}-admin
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- range .Values.rbac.aggregateAdminTo }}
+    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
+    {{- end }}
+rules:
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  {{- if (.Values.providers.kubernetesGateway).enabled }}
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies
+      - grpcroutes
+      {{- end }}
+      - gatewayclasses
+      - gateways
+      - httproutes
+      - referencegrants
+      - tcproutes
+      - tlsroutes
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies/status
+      - grpcroutes/status
+      {{- end }}
+      - gatewayclasses/status
+      - gateways/status
+      - httproutes/status
+      - tcproutes/status
+      - tlsroutes/status
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
+  {{- if .Values.hub.token }}
+    {{- if .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+      - apiauths
+      - apiportals
+      - apiportalauths
+      - apiratelimits
+      - apis
+      - apiversions
+      - apibundles
+      - apiplans
+      - apicatalogitems
+      - managedsubscriptions
+      - managedapplications
+    verbs:
+      - create
+      - delete
+      - deletecollection
+      - get
+      - list
+      - patch
+      - update
+      - watch
+    {{- end -}}
+  {{- end }}
+{{- end }}
+{{- if and .Values.rbac.enabled .Values.rbac.aggregateViewTo }}
+---
+apiVersion: rbac.authorization.k8s.io/v1
+{{- if (not .Values.rbac.namespaced) }}
+kind: ClusterRole
+{{- else }}
+kind: Role
+{{- end }}
+metadata:
+  name: {{ template "traefik.clusterRoleName" . }}-view
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    {{- range .Values.rbac.aggregateViewTo }}
+    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
+    {{- end }}
+rules:
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+  {{- if (.Values.providers.kubernetesGateway).enabled }}
+  - apiGroups:
+      - gateway.networking.k8s.io
+    resources:
+      {{- if semverCompare ">=v3.2.0-0" $version }}
+      - backendtlspolicies
+      - backendtlspolicies/status
+      - grpcroutes
+      - grpcroutes/status
+      {{- end }}
+      - gatewayclasses
+      - gatewayclasses/status
+      - gateways
+      - gateways/status
+      - httproutes
+      - httproutes/status
+      - referencegrants
+      - tcproutes
+      - tcproutes/status
+      - tlsroutes
+      - tlsroutes/status
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
+  {{- if and .Values.hub.token .Values.hub.apimanagement.enabled }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+      - apiauths
+      - apiportals
+      - apiportalauths
+      - apiratelimits
+      - apis
+      - apiversions
+      - apibundles
+      - apiplans
+      - apicatalogitems
+      - managedsubscriptions
+      - managedapplications
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
+{{- end }}

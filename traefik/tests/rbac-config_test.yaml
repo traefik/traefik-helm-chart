@@ -5,6 +5,7 @@ templates:
   - rbac/role.yaml
   - rbac/rolebinding.yaml
   - rbac/serviceaccount.yaml
+  - rbac/user-facing-roles.yaml
   - deployment.yaml
 tests:
   - it: should create default RBAC related objects
@@ -21,6 +22,9 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/user-facing-roles.yaml
       - isKind:
           of: ServiceAccount
         template: rbac/serviceaccount.yaml
@@ -51,6 +55,11 @@ tests:
   - it: should set expected name when ns is overriden
     set:
       namespaceOverride: foo
+      rbac:
+        aggregateAdminTo:
+          - admin
+        aggregateViewTo:
+          - view
     asserts:
       - equal:
           path: metadata.name
@@ -60,6 +69,16 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-traefik-foo
         template: rbac/clusterrolebinding.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-foo-admin
+        documentIndex: 0
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-foo-view
+        documentIndex: 1
+        template: rbac/user-facing-roles.yaml
   - it: should not create RBAC related objects when disabled
     set:
       rbac:
@@ -77,10 +96,17 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/user-facing-roles.yaml
   - it: should create RBAC related objects at namespace scope
     set:
       rbac:
         namespaced: true
+        aggregateAdminTo:
+          - admin
+        aggregateViewTo:
+          - view
     asserts:
       - isKind:
           of: Role
@@ -88,6 +114,12 @@ tests:
       - isKind:
           of: RoleBinding
         template: rbac/rolebinding.yaml
+      - isKind:
+          of: Role
+        template: rbac/user-facing-roles.yaml
+      - hasDocuments:
+          count: 2
+        template: rbac/user-facing-roles.yaml
       - hasDocuments:
           count: 0
         template: rbac/clusterrole.yaml
@@ -190,23 +222,6 @@ tests:
                 - list
                 - watch
         template: rbac/clusterrole.yaml
-  - it: "ClusterRole should not have aggregate-to-admin label by default"
-    template: rbac/clusterrole.yaml
-    asserts:
-      - isNull:
-          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
-  - it: "ClusterRole should be configurable with multiples aggregate-to- label"
-    set:
-      rbac:
-        aggregateTo: [ "admin", "edit" ]
-    template: rbac/clusterrole.yaml
-    asserts:
-      - equal:
-          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
-          value: "true"
-      - equal:
-          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
-          value: "true"
   - it: should use helm managed namespace as default behavior
     set:
       rbac:
@@ -1474,5 +1489,275 @@ tests:
             resources:
               - endpointslices
             verbs:
+              - list
+              - watch
+  - it: should create user facing user cluster role when enabled
+    set:
+      rbac:
+        aggregateAdminTo: [ "admin", "edit" ]
+        aggregateViewTo: [ "view" ]
+    asserts:
+      - hasDocuments:
+          count: 2
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
+          value: "true"
+        documentIndex: 0
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        documentIndex: 0
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+          value: "true"
+        documentIndex: 1
+        template: rbac/user-facing-roles.yaml
+
+  - it: should not create user facing admin cluster role when only view role is enabled
+    set:
+      rbac:
+        aggregateViewTo: [ "view" ]
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+          value: "true"
+        template: rbac/user-facing-roles.yaml
+
+  - it: should not create user facing view cluster role when only admin role is enabled
+    set:
+      rbac:
+        aggregateAdminTo: [ "edit" ]
+    asserts:
+      - hasDocuments:
+          count: 1
+        template: rbac/user-facing-roles.yaml
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        template: rbac/user-facing-roles.yaml
+  - it: should provide expected cluster user facing rbac when k8s gw api is enabled
+    set:
+      image:
+        tag: v3.1.0-rc3
+      providers:
+        kubernetesGateway:
+          enabled: true
+      rbac:
+        aggregateAdminTo: [ "admin" ]
+        aggregateViewTo: [ "view" ]
+    asserts:
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - gatewayclasses
+              - gatewayclasses/status
+              - gateways
+              - gateways/status
+              - httproutes
+              - httproutes/status
+              - referencegrants
+              - tcproutes
+              - tcproutes/status
+              - tlsroutes
+              - tlsroutes/status
+            verbs:
+              - get
+              - list
+              - watch
+  - it: should provide expected user facing role rbac when k8s gw api is enabled for Proxy >=v3.2.0
+    set:
+      image:
+        tag: v3.2.0-rc1
+      providers:
+        kubernetesGateway:
+          enabled: true
+      rbac:
+        aggregateAdminTo: [ "admin" ]
+        aggregateViewTo: [ "view" ]
+    asserts:
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies/status
+              - grpcroutes/status
+              - gatewayclasses/status
+              - gateways/status
+              - httproutes/status
+              - tcproutes/status
+              - tlsroutes/status
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies
+              - grpcroutes
+              - gatewayclasses
+              - gateways
+              - httproutes
+              - referencegrants
+              - tcproutes
+              - tlsroutes
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - gateway.networking.k8s.io
+            resources:
+              - backendtlspolicies
+              - backendtlspolicies/status
+              - grpcroutes
+              - grpcroutes/status
+              - gatewayclasses
+              - gatewayclasses/status
+              - gateways
+              - gateways/status
+              - httproutes
+              - httproutes/status
+              - referencegrants
+              - tcproutes
+              - tcproutes/status
+              - tlsroutes
+              - tlsroutes/status
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should contain additional user facing RBACS for hub API management
+    set:
+      rbac:
+        aggregateAdminTo: [ "admin" ]
+        aggregateViewTo: [ "view" ]
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+    asserts:
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - accesscontrolpolicies
+              - apiauths
+              - apiportals
+              - apiportalauths
+              - apiratelimits
+              - apis
+              - apiversions
+              - apibundles
+              - apiplans
+              - apicatalogitems
+              - managedsubscriptions
+              - managedapplications
+            verbs:
+              - create
+              - delete
+              - deletecollection
+              - get
+              - list
+              - patch
+              - update
+              - watch
+      - template: rbac/user-facing-roles.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - accesscontrolpolicies
+              - apiauths
+              - apiportals
+              - apiportalauths
+              - apiratelimits
+              - apis
+              - apiversions
+              - apibundles
+              - apiplans
+              - apicatalogitems
+              - managedsubscriptions
+              - managedapplications
+            verbs:
+              - get
               - list
               - watch
