@@ -2567,7 +2567,12 @@
         "rbac": {
             "type": "object",
             "properties": {
-                "aggregateTo": {
+                "aggregateAdminTo": {
+                    "description": "Aggregate Traefik admin role to specified user roles",
+                    "type": "array"
+                },
+                "aggregateViewTo": {
+                    "description": "Aggregate Traefik view role to specified user roles",
                     "type": "array"
                 },
                 "enabled": {
