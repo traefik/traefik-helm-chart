@@ -1253,25 +1253,18 @@ With those values, a Knative service can now be deployed:
 apiVersion: serving.knative.dev/v1
 kind: Service
 metadata:
-  name: helloworld-go
-  namespace: default
+  name: whoami
 spec:
   template:
     spec:
       containers:
-        - image: gcr.io/knative-samples/helloworld-go
-          env:
-            - name: TARGET
-              value: "Go Sample v1"
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - containerPort: 80
 ```
 
-Once it's applied, sending a `GET` request to the HTTP endpoint should return the following response:
-
-```shell
-$ curl http://helloworld-go.default.example.com
-
-Hello Go Sample v1!
-```
+Once it's applied, whoami should be accessible on [whoami.docker.localhost](http://whoami.docker.localhost/)
 
 ## Use templating for additionalVolumeMounts
 
