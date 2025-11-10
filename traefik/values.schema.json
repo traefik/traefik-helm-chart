@@ -210,6 +210,9 @@
                         }
                     }
                 },
+                "knative": {
+                    "type": "boolean"
+                },
                 "kubernetesGateway": {
                     "type": "object",
                     "properties": {
@@ -2060,6 +2063,20 @@
                         },
                         "watch": {
                             "type": "boolean"
+                        }
+                    }
+                },
+                "knative": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "type": "boolean"
+                        },
+                        "labelselector": {
+                            "type": "string"
+                        },
+                        "namespaces": {
+                            "type": "array"
                         }
                     }
                 },

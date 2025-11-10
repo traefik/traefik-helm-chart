@@ -157,6 +157,9 @@ Construct a comma-separated list of whitelisted namespaces
 {{- define "providers.kubernetesIngress.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
+{{- define "providers.knative.namespaces" -}}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.knative.namespaces) }}
+{{- end -}}
 
 {{/*
 Renders a complete tree, even values that contains template.

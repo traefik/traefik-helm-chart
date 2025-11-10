@@ -72,6 +72,7 @@ Kubernetes: `>=1.22.0-0`
 | experimental.abortOnPluginFailure | bool | `false` | Defines whether all plugins must be loaded successfully for Traefik to start |
 | experimental.fastProxy.debug | bool | `false` | Enable debug mode for the FastProxy implementation. |
 | experimental.fastProxy.enabled | bool | `false` | Enables the FastProxy implementation. |
+| experimental.knative | bool | `false` | Enable Knative provider experimental feature. |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
 | experimental.localPlugins | object | `{}` | Enable experimental local plugins |
 | experimental.otlpLogs | bool | `false` | Enable OTLP logging experimental feature. |
@@ -380,6 +381,9 @@ Kubernetes: `>=1.22.0-0`
 | providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
 | providers.file.watch | bool | `true` | Allows Traefik to automatically watch for file changes |
+| providers.knative.enabled | bool | `false` | Enable Knative provider |
+| providers.knative.labelselector | string | `""` | Allow filtering Knative Ingress objects |
+| providers.knative.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
 | providers.kubernetesCRD.allowEmptyServices | bool | `true` | Allows to return 503 when there are no endpoints available |
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |

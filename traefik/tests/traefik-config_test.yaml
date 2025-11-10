@@ -910,6 +910,18 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.nativeLBByDefault=true"
+  - it: knative should be able to watch specified namespaces
+    set:
+      providers:
+        knative:
+          enabled: true
+          namespaces:
+            - "foo"
+            - "bar"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.knative.namespaces=foo,bar"
   - it: should be possible to allow ACME bypass
     set:
       ports:

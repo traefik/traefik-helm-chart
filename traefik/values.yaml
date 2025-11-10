@@ -141,6 +141,8 @@ experimental:
   localPlugins: {}
   # -- Enable OTLP logging experimental feature.
   otlpLogs: false
+  # -- Enable Knative provider experimental feature.
+  knative: false
 
 gateway:
   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
@@ -345,6 +347,14 @@ providers:  # @schema additionalProperties: false
     watch: true
     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
     content: ""
+
+  knative:
+    # -- Enable Knative provider
+    enabled: false
+    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+    namespaces: []
+    # -- Allow filtering Knative Ingress objects
+    labelselector: ""
 
 # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
 # This can be used to mount a cert pair or a configmap that holds a config.toml file.

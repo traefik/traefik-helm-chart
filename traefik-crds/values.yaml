@@ -19,6 +19,9 @@ gatewayAPI: false
 # This includes additional experimental features beyond the standard Gateway API
 # Cannot be used together with gatewayAPI
 gatewayAPIExperimental: false
+# -- Set it to true to install Knative CRDs.
+# Needed if you set providers.knative.enabled to true in main chart
+knative: false
 # -- Set it to true to install Traefik Hub CRDs.
 # Needed if you set hub.enabled to true in main chart
 hub: false

@@ -43,6 +43,26 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
+  - it: should fail when using knative without experimental flag
+    set:
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Knative is experimental. Enable it by setting experimental.knative to true"
+  - it: should fail when using knative provider on traefik < 3.6
+    set:
+      image:
+        tag: v3.5.0
+      experimental:
+        knative: true
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0."
   - it: should fail when using nativeLBByDefault on kubernetesGateway on traefik < 3.2
     set:
       image:

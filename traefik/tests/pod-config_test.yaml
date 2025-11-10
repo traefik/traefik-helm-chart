@@ -366,6 +366,15 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.statusaddress.service.namespace=foo"
 
+  - it: should be able to enable knative provider
+    set:
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.knative"
 
   - it: should have experimental flag when set
     set:

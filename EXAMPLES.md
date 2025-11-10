@@ -1058,7 +1058,7 @@ metrics:
 
 ## Use kubernetes Gateway API
 
-One can use the new stable kubernetes gateway API provider setting the following _values_:
+One can use the new stable kubernetes gateway API provider by setting the following _values_:
 
 ```yaml
 providers:
@@ -1068,7 +1068,7 @@ providers:
 
 <details>
 
-<summary>With those values, a whoami service can be exposed with a HTTPRoute</summary>
+<summary>With those values, a whoami service can be exposed with an HTTPRoute</summary>
 
 ```yaml
 ---
@@ -1132,7 +1132,7 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 
 ## Use Kubernetes Gateway API with cert-manager
 
-One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
+One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) by setting the following _values_:
 
 ```yaml
 providers:
@@ -1233,6 +1233,68 @@ spec:
 Once it's applied, whoami should be accessible on https://whoami.docker.localhost
 
 </details>
+
+## Use Knative Provider
+
+Starting with Traefik Proxy v3.6, one can use the Knative provider (_experimental_) by setting the following _values_:
+
+```yaml
+experimental:
+  knative: true
+providers:
+  knative:
+    enabled: true
+```
+
+> [!WARNING]
+> You must first have Knative deployed. With Proxy v3.6, v1.19 of Knative is supported.
+> Knative 1.19 requires Kubernetes v1.32+
+
+> [!TIP]
+> If you want to test it using k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
+
+Finish configuring Knative:
+
+```shell
+# 1. Install/update the Knative CRDs
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-crds.yaml
+# 2. Install the Knative Serving core components
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-core.yaml
+# 3. Update the config-network configuration to use the Traefik ingress class
+kubectl patch configmap/config-network -n knative-serving --type merge \
+  -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'
+# Add a custom domain to Knative configuration (in this example, docker.localhost)
+kubectl patch configmap config-domain -n knative-serving --type='merge' \
+  -p='{"data":{"docker.localhost":""}}'
+```
+
+With that done and the specified values set, a Knative Service can now be deployed:
+
+```yaml
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  template:
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - containerPort: 80
+```
+
+Once it's applied, we can check the URLs:
+
+```shell
+# 1. List Knative services
+kubectl get ksvc
+# 2. Test URLs
+curl http://whoami.default.docker.localhost
+curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
+```
 
 ## Use templating for additionalVolumeMounts
 

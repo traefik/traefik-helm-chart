@@ -513,6 +513,9 @@
           {{- if .Values.experimental.kubernetesGateway.enabled }}
           - "--experimental.kubernetesgateway"
           {{- end }}
+          {{- if .Values.experimental.knative }}
+          - "--experimental.knative"
+          {{- end }}
           {{- with .Values.providers.kubernetesCRD }}
           {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"
@@ -559,6 +562,17 @@
           - "--providers.file.watch=true"
           {{- end }}
           {{- end }}
+          {{- end }}
+          {{- with .Values.providers.knative }}
+           {{- if .enabled }}
+          - "--providers.knative"
+            {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
+          - "--providers.knative.namespaces={{ template "providers.knative.namespaces" $ }}"
+            {{- end }}
+            {{- with .labelselector }}
+          - "--providers.knative.labelselector={{ . }}"
+            {{- end }}
+           {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
