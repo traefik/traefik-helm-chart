@@ -1247,27 +1247,28 @@ providers:
 ```
 
 > [!WARNING]
+> You must first have Knative deployed. With Proxy v3.6, v1.19 of Knative is supported.
 > Knative 1.19 requires Kubernetes v1.32+
 
-It requires also to deploy Knative. With Proxy v3.6, v1.19 of Knative is supported.
-
 > [!TIP]
-> If you want to test it with k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
+> If you want to test it using k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
+
+Finish configuring Knative:
 
 ```shell
 # 1. Install/update the Knative CRDs
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-crds.yaml
-# 2. Install the Knative Serving core components.
+# 2. Install the Knative Serving core components
 kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-core.yaml
-# 3. Update the config-network configuration to use the Traefik ingress class.
+# 3. Update the config-network configuration to use the Traefik ingress class
 kubectl patch configmap/config-network -n knative-serving --type merge \
-   -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'
-# Add a custom domain to Knative configuration. Here we'll use localhost.
+  -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'
+# Add a custom domain to Knative configuration (in this example, docker.localhost)
 kubectl patch configmap config-domain -n knative-serving --type='merge' \
-  -p='{"data":{"localhost":""}}'
+  -p='{"data":{"docker.localhost":""}}'
 ```
 
-With those values and Knative deployed, a Knative Service can now be deployed:
+With that done and the specified values set, a Knative Service can now be deployed:
 
 ```yaml
 ---
@@ -1291,7 +1292,7 @@ Once it's applied, we can check accessibility:
 # 1. List Knative services
 kubectl get ksvc
 # 2. Test accessibility
-curl http://whoami.default.localhost
+curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
 ```
 
 ## Use templating for additionalVolumeMounts
