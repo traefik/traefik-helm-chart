@@ -1285,7 +1285,7 @@ spec:
             - containerPort: 80
 ```
 
-Once it's applied, we can check it's accessible:
+Once it's applied, we can check accessibility:
 
 ```shell
 # 1. List Knative services
