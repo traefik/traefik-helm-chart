@@ -1058,7 +1058,7 @@ metrics:
 
 ## Use kubernetes Gateway API
 
-One can use the new stable kubernetes gateway API provider setting the following _values_:
+One can use the new stable kubernetes gateway API provider by setting the following _values_:
 
 ```yaml
 providers:
@@ -1068,7 +1068,7 @@ providers:
 
 <details>
 
-<summary>With those values, a whoami service can be exposed with a HTTPRoute</summary>
+<summary>With those values, a whoami service can be exposed with an HTTPRoute</summary>
 
 ```yaml
 ---
@@ -1132,7 +1132,7 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 
 ## Use Kubernetes Gateway API with cert-manager
 
-One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) setting the following _values_:
+One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) by setting the following _values_:
 
 ```yaml
 providers:
@@ -1233,6 +1233,45 @@ spec:
 Once it's applied, whoami should be accessible on https://whoami.docker.localhost
 
 </details>
+
+## Use Knative Provider
+
+One can use the Knative provider (_experimental_) by setting the following _values_:
+
+```yaml
+experimental:
+  knative: true
+providers:
+  knative:
+    enabled: true
+```
+
+With those values, a Knative service can now be deployed:
+
+```yaml
+---
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: helloworld-go
+  namespace: default
+spec:
+  template:
+    spec:
+      containers:
+        - image: gcr.io/knative-samples/helloworld-go
+          env:
+            - name: TARGET
+              value: "Go Sample v1"
+```
+
+Once it's applied, sending a `GET` request to the HTTP endpoint should return the following response:
+
+```shell
+$ curl http://helloworld-go.default.example.com
+
+Hello Go Sample v1!
+```
 
 ## Use templating for additionalVolumeMounts
 
