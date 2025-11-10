@@ -1286,12 +1286,13 @@ spec:
             - containerPort: 80
 ```
 
-Once it's applied, we can check accessibility:
+Once it's applied, we can check the URLs:
 
 ```shell
 # 1. List Knative services
 kubectl get ksvc
-# 2. Test accessibility
+# 2. Test URLs
+curl http://whoami.default.docker.localhost
 curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
 ```
 
