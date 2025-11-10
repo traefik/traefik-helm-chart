@@ -1,5 +1,124 @@
 # Change Log
 
+## 37.3.0  ![AppVersion: v3.6.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-11-10
+
+* tests: update certificatesResolvers with Proxy v3.6 options
+* fix: add missing flag arg
+* fix(doc): :books: comment grammar in values.yaml
+* feat: knative provider
+* feat(deps): update traefik docker tag to v3.6.0
+* feat(deps): update traefik docker tag to v3.5.4
+* feat(CRDs): update for Traefik Proxy v3.6 and Gateway API v1.4.0
+* feat(CRDs): update Traefik Hub to v1.23.1
+* docs: 📚 fix comment grammar in values
+* chore(release): 🚀 publish traefik 37.3.0 and 1.12.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c697f6f..e90d6b9 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -141,13 +141,15 @@ experimental:
+   localPlugins: {}
+   # -- Enable OTLP logging experimental feature.
+   otlpLogs: false
++  # -- Enable Knative provider experimental feature.
++  knative: false
+ 
+ gateway:
+   # -- When providers.kubernetesGateway.enabled, deploy a default gateway
+   enabled: true
+   # -- Set a custom name to gateway
+   name: ""
+-  # -- By default, Gateway is created in the same `Namespace` than Traefik.
++  # -- By default, Gateway is created in the same `Namespace` as Traefik.
+   namespace: ""
+   # -- Additional gateway annotations (e.g. for cert-manager.io/issuer)
+   annotations: {}
+@@ -281,7 +283,7 @@ providers:  # @schema additionalProperties: false
+     allowCrossNamespace: false
+     # -- Allows to reference ExternalName services in IngressRoute
+     allowExternalNameServices: false
+-    # -- Allows to return 503 when there is no endpoints available
++    # -- Allows to return 503 when there are no endpoints available
+     allowEmptyServices: true
+     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
+     ingressClass: ""
+@@ -296,7 +298,7 @@ providers:  # @schema additionalProperties: false
+     enabled: true
+     # -- Allows to reference ExternalName services in Ingress
+     allowExternalNameServices: false
+-    # -- Allows to return 503 when there is no endpoints available
++    # -- Allows to return 503 when there are no endpoints available
+     allowEmptyServices: true
+     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+     ingressClass:  # @schema type:[string, null]
+@@ -346,6 +348,14 @@ providers:  # @schema additionalProperties: false
+     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+     content: ""
+ 
++  knative:
++    # -- Enable Knative provider
++    enabled: false
++    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
++    namespaces: []
++    # -- Allow filtering Knative Ingress objects
++    labelselector: ""
++
+ # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
+ # This can be used to mount a cert pair or a configmap that holds a config.toml file.
+ # After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg:
+@@ -982,7 +992,7 @@ autoscaling:  # @schema additionalProperties: false
+   metrics: []
+   # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).
+   behavior: {}
+-  # -- scaleTargetRef points to the target resource to scale, and is used to the pods for which metrics should be collected, as well as to actually change the replica count.
++  # -- scaleTargetRef points to the target resource to scale, and is used for the pods for which metrics should be collected, as well as to actually change the replica count.
+   scaleTargetRef:
+     apiVersion: apps/v1
+     kind: Deployment
+@@ -1100,14 +1110,14 @@ podSecurityContext:
+ # See #595 for more details and traefik/tests/values/extra.yaml for example.
+ extraObjects: []
+ 
+-# -- This field override the default Release Namespace for Helm.
++# -- This field overrides the default Release Namespace for Helm.
+ # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
+ namespaceOverride: ""
+ 
+-# -- This field override the default app.kubernetes.io/instance label for all Objects.
++# -- This field overrides the default app.kubernetes.io/instance label for all Objects.
+ instanceLabelOverride: ""
+ 
+-# -- This field override the default version extracted from image.tag
++# -- This field overrides the default version extracted from image.tag
+ versionOverride: ""
+ 
+ # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+@@ -1197,7 +1207,7 @@ hub:
+       partition: ""
+       # -- Prefix for consul service tags.
+       prefix: "traefik"
+-      # -- Interval for check Consul API.
++      # -- Interval for checking Consul API.
+       refreshInterval: 15
+       # -- Forces the read to be fully consistent.
+       requireConsistent: false
+@@ -1265,7 +1275,7 @@ hub:
+       key: ""
+       # -- When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false.
+       insecureSkipVerify: false
+-  # Enable export of errors logs to the platform. Default: true.
++  # Enable export of error logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
+ 
+   tracing:
+```
+
 ## 37.2.0  ![AppVersion: v3.5.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.5.3&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-10-21
