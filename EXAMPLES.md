@@ -1246,7 +1246,13 @@ providers:
     enabled: true
 ```
 
+> [!WARNING]
+> Knative 1.19 requires Kubernetes v1.32+
+
 It requires also to deploy Knative. With Proxy v3.6, v1.19 of Knative is supported.
+
+> [!TIP]
+> If you want to test it with k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
 
 ```shell
 # 1. Install/update the Knative CRDs
