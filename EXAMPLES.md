@@ -1236,7 +1236,7 @@ Once it's applied, whoami should be accessible on https://whoami.docker.localhos
 
 ## Use Knative Provider
 
-One can use the Knative provider (_experimental_) by setting the following _values_:
+Starting with Traefik Proxy v3.6, one can use the Knative provider (_experimental_) by setting the following _values_:
 
 ```yaml
 experimental:
