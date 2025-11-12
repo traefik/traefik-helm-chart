@@ -623,8 +623,91 @@ extraObjects:
 
 To develop or test plugins without pushing them to a public registry, you can load plugin source code directly from your local filesystem.
 
->[!NOTE]
-> The ``hostPath`` must point to a directory containing the plugin source code and a valid ``go.mod`` file. The ``moduleName`` must match the module name specified in the ``go.mod`` file.
+>[!WARNING]
+> The legacy `hostPath` configuration at the `experimental.localPlugins` level is deprecated. Please use the new structured `experimental.localPlugins.<yourplugin>.type` configuration for better organization and future features.
+
+### Legacy Configuration
+
+>[!WARNING]
+> This legacy `hostPath` configuration is deprecated and will be removed in the next major version. Please migrate to the structured `type` configuration below.
+
+```yaml
+experimental:
+  localPlugins:
+    legacy-demo:
+      moduleName: github.com/traefik/legacydemo
+      mountPath: /plugins-local/src/github.com/traefik/legacydemo
+      hostPath: /path/to/plugin-source  # ⚠️ Deprecated - use type: hostPath instead
+```
+
+## Structured Local Plugins
+
+The `localPlugins` configuration supports a structured `experimental.localPlugins.<yourplugin>.type` approach that provides better organization, security, and flexibility:
+
+### Using Inline Plugin
+
+> [!NOTE]  
+> Can be used with small or medium plugins
+
+For testing or general use, embed plugin source directly in values.yaml using the secure `inlinePlugin` type:
+
+```yaml
+experimental:
+  localPlugins:
+    helloworld-plugin:
+      moduleName: github.com/example/helloworldplugin
+      mountPath: /plugins-local/src/github.com/example/helloworldplugin
+      type: inlinePlugin
+      source:
+        go.mod: |
+          module github.com/example/helloworldplugin
+
+          go 1.23
+        .traefik.yml: |
+          displayName: Hello World Plugin
+          type: middleware
+
+          import: github.com/example/helloworldplugin
+
+          summary: |
+            This is a simple plugin that prints "Hello, World!" to the response.
+
+          testData:
+            message: "Hello, World!"
+        main.go: |
+          package helloworldplugin
+
+          import (
+            "context"
+            "net/http"
+          )
+
+          type Config struct{}
+
+          func CreateConfig() *Config {
+            return &Config{}
+          }
+
+          type HelloWorld struct {
+            next http.Handler
+          }
+
+          func New(ctx context.Context, next http.Handler, config *Config, name string) (http.Handler, error) {
+            return &HelloWorld{next: next}, nil
+          }
+
+          func (h *HelloWorld) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
+            rw.Write([]byte("Hello, World!"))
+            h.next.ServeHTTP(rw, req)
+          }
+```
+
+> **Advantages**: Secure (no host filesystem access), portable, version controlled with Helm values, supports up to 1MB of plugin code.
+
+### Using Host Path Plugin
+
+>[!WARNING]
+> The `hostPath` type should be avoided for security reasons and requires additional work to pull plugins from repositories or blob storage. Consider using `inlinePlugin` or `localPath` instead.
 
 ```yaml
 experimental:
@@ -632,11 +715,46 @@ experimental:
     local-demo:
       moduleName: github.com/traefik/localplugindemo
       mountPath: /plugins-local/src/github.com/traefik/localplugindemo
+      type: hostPath
       hostPath: /path/to/plugin-source
 ```
 
->[!IMPORTANT]
-> When using ``hostPath`` volumes, the plugin source code must be available on every node where Traefik pods might be scheduled.
+### Using Local Path Plugin (Advanced)
+
+>[!NOTE]
+> The `localPath` type leverages the existing `additionalVolumes` mechanism for maximum flexibility. This supports PVC, CSI drivers (s3-csi-driver, FUSE), and other volume types.
+
+```yaml
+# Define the volume in additionalVolumes first
+deployment:
+  additionalVolumes:
+    - name: plugin-storage
+      persistentVolumeClaim:
+        claimName: plugin-storage-pvc
+    # Or use CSI driver for S3/blob storage:
+    # - name: s3-plugin-storage
+    #   csi:
+    #     driver: s3.csi.aws.com
+    #     volumeAttributes:
+    #       bucketName: my-plugin-bucket
+
+# Then reference it in localPlugins
+experimental:
+  localPlugins:
+    s3-plugin:
+      moduleName: github.com/example/s3plugin
+      mountPath: /plugins-local/src/github.com/example/s3plugin
+      type: localPath
+      volumeName: plugin-storage  # Must match additionalVolumes name
+      subPath: plugins/s3plugin   # Optional subpath within volume
+```
+
+> **Advantages**:
+>
+> - **Flexible**: Supports any Kubernetes volume type (PVC, CSI, NFS, etc.)
+> - **Secure**: Works with CSI drivers for cloud storage (S3, Azure Blob, GCS)
+> - **Scalable**: Centralized plugin storage, no per-node requirements
+> - **Consistent**: Uses existing Helm chart patterns (`additionalVolumes`)
 
 ## Using Traefik-Hub with private plugin registries
 
@@ -778,8 +896,8 @@ podSecurityContext:
 
 Setup:
 
-* cert-manager installed in `cert-manager` namespace
-* A cloudflare account on a DNS Zone
+- cert-manager installed in `cert-manager` namespace
+- A cloudflare account on a DNS Zone
 
 **Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token.
 See [cert-manager documentation](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
