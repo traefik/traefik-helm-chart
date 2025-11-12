@@ -7,8 +7,7 @@ on:
       - .github/fixtures/changelog-traefik.md
       - .github/fixtures/changelog-traefik-crds.md
       - .github/workflows/changelog.json
-      - .github/workflows/release.yaml
-      - .github/workflows/test-release.yaml
+      - .github/workflows/release.yml
 
 jobs:
   test:
@@ -25,7 +24,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           fromTag: v34.1.0
           toTag: v34.2.0
@@ -61,7 +60,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v5
+        uses: mikepenz/release-changelog-builder-action@v6
         with:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0

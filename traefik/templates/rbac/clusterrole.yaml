@@ -188,6 +188,22 @@ rules:
     verbs:
       - update
   {{- end }}
+  {{- if (.Values.providers.knative).enabled }}
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - networking.internal.knative.dev
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  {{- end }}
   {{- if .Values.hub.token }}
   - apiGroups:
       - coordination.k8s.io

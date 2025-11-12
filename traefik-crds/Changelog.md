@@ -1,5 +1,33 @@
 # Change Log
 
+## 1.12.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-11-10
+
+* feat: knative provider
+* feat(CRDs): update for Traefik Proxy v3.6 and Gateway API v1.4.0
+* feat(CRDs): update Traefik Hub to v1.23.1
+* chore(release): 🚀 publish traefik 37.3.0 and 1.12.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik-crds/values.yaml b/traefik-crds/values.yaml
+index 8979fff..d95ed61 100644
+--- a/traefik-crds/values.yaml
++++ b/traefik-crds/values.yaml
+@@ -19,6 +19,9 @@ gatewayAPI: false
+ # This includes additional experimental features beyond the standard Gateway API
+ # Cannot be used together with gatewayAPI
+ gatewayAPIExperimental: false
++# -- Set it to true to install Knative CRDs.
++# Needed if you set providers.knative.enabled to true in main chart
++knative: false
+ # -- Set it to true to install Traefik Hub CRDs.
+ # Needed if you set hub.enabled to true in main chart
+ hub: false
+```
+
 ## 1.11.1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-10-03

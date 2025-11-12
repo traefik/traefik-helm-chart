@@ -366,6 +366,15 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.statusaddress.service.namespace=foo"
 
+  - it: should be able to enable knative provider
+    set:
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.knative"
 
   - it: should have experimental flag when set
     set:
@@ -411,13 +420,15 @@ tests:
             emailaddresses: foo@example.com,bar@example.org
             clientResponseHeaderTimeout: 1m
             clientTimeout: 1m
+            disableCommonName: true
             dnsChallenge:
               provider: myProvider
               resolvers:
                 - 1.1.1.1
                 - 8.8.8.8
             profile: tlsserver
-            tlsChallenge: true
+            tlsChallenge:
+              delay: 42
             httpChallenge:
               delay: 12
     asserts:
@@ -432,7 +443,7 @@ tests:
           content: "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.resolvers=1.1.1.1,8.8.8.8"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge=true"
+          content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge.delay=42"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.emailaddresses=foo@example.com,bar@example.org"
@@ -448,6 +459,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.clientTimeout=1m"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.disableCommonName=true"
 
 
   - it: should have the distributed acme resolver options applied

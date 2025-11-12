@@ -1,6 +1,6 @@
 # traefik-crds
 
-![Version: 1.11.1](https://img.shields.io/badge/Version-1.11.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
+![Version: 1.12.0](https://img.shields.io/badge/Version-1.12.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -33,6 +33,7 @@ Kubernetes: `>=1.22.0-0`
 | gatewayAPIExperimental | bool | `false` | Set it to true to install experimental GatewayAPI CRDs. This includes additional experimental features beyond the standard Gateway API Cannot be used together with gatewayAPI |
 | global | object | `{}` | Global values This definition is only here as a placeholder such that it is included in the json schema. |
 | hub | bool | `false` | Set it to true to install Traefik Hub CRDs. Needed if you set hub.enabled to true in main chart |
+| knative | bool | `false` | Set it to true to install Knative CRDs. Needed if you set providers.knative.enabled to true in main chart |
 | traefik | bool | `true` | Install Traefik CRDs by default |
 
 ----------------------------------------------

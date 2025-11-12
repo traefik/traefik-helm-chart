@@ -312,6 +312,52 @@ tests:
           value: default
         template: rbac/rolebinding.yaml
         documentIndex: 2
+  - it: should use multiple namespaces if provided to knative
+    set:
+      providers:
+        knative:
+          namespaces:
+            - default
+            - baz
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 3
+        template: rbac/rolebinding.yaml
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/role.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: baz
+        template: rbac/role.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/role.yaml
+        documentIndex: 2
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/rolebinding.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: baz
+        template: rbac/rolebinding.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/rolebinding.yaml
+        documentIndex: 2
   - it: should use multiple namespaces if provided to hub
     set:
       hub:
@@ -368,6 +414,10 @@ tests:
           namespaces:
             - default
             - bar
+        knative:
+          namespaces:
+            - default
+            - qux
       hub:
         namespaces:
           - default
@@ -376,10 +426,10 @@ tests:
         namespaced: true
     asserts:
       - hasDocuments:
-          count: 5
+          count: 6
         template: rbac/role.yaml
       - hasDocuments:
-          count: 5
+          count: 6
         template: rbac/rolebinding.yaml
       - equal:
           path: metadata.namespace
@@ -408,6 +458,11 @@ tests:
         documentIndex: 4
       - equal:
           path: metadata.namespace
+          value: qux
+        template: rbac/role.yaml
+        documentIndex: 5
+      - equal:
+          path: metadata.namespace
           value: NAMESPACE
         template: rbac/rolebinding.yaml
         documentIndex: 0
@@ -431,6 +486,11 @@ tests:
           value: foo
         template: rbac/rolebinding.yaml
         documentIndex: 4
+      - equal:
+          path: metadata.namespace
+          value: qux
+        template: rbac/rolebinding.yaml
+        documentIndex: 5
   - it: should accept overridden namespace
     set:
       namespaceOverride: "traefik-ns-override"
@@ -737,6 +797,35 @@ tests:
               - get
               - list
               - watch
+
+  - it: should provide expected cluster rbac when knative provider is enabled
+    set:
+      providers:
+        knative:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - networking.internal.knative.dev
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - networking.internal.knative.dev
+            resources:
+              - ingresses/status
+            verbs:
+              - update
 
   - it: should provide required configmaps cluster rbac when proxy >= v3.4.x on kubernetesCRD provider
     set:

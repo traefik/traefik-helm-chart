@@ -17,6 +17,10 @@
   {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
 
+{{- if and (.Values.providers.knative).enabled (not .Values.experimental.knative) }}
+  {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
+{{- end }}
+
 {{- if .Values.rbac.namespaced }}
   {{- if .Values.providers.kubernetesGateway.enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
@@ -32,6 +36,10 @@
 
 {{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
   {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.6.0-0" $version) (.Values.experimental.knative)}}
+  {{- fail "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0." }}
 {{- end }}
 
 {{- if and (semverCompare "<3.2.0-0" $version) (.Values.providers.kubernetesGateway.nativeLBByDefault)}}
