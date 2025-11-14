@@ -115,6 +115,19 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
+  - it: should set publishedService when service is disabled but publishedservice is enabled and path override is set
+    set:
+      service:
+        enabled: false
+      providers:
+        kubernetesIngress:
+          publishedService:
+            enabled: true
+            pathOverride: "traefik/custom-service"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=traefik/custom-service"
   - it: should not set default statusAddress when service is disabled
     set:
       service:
