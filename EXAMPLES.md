@@ -1456,7 +1456,7 @@ hub:
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
 
-## Deploy multiple Gateways with a single traefik deployment/daemonset
+## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 
 This example exposes two Gateways (e.g., `internal` and `external`) from a single Traefik installation.
 
