@@ -1390,7 +1390,7 @@ kind: Deployment
 metadata:
   name: whoami
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: whoami
@@ -1424,8 +1424,8 @@ kind: Ingress
 metadata:
   name: whoami
   annotations:
-    # NGINX-specific annotations
-    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/affinity: cookie
+    nginx.ingress.kubernetes.io/affinity-mode: persistent 
 spec:
   ingressClassName: nginx
   rules:
@@ -1487,7 +1487,8 @@ curl http://whoami.docker.localhost
 The same Ingress resource is now served by **both** NGINX and Traefik! You can verify which one is responding by checking the response headers or the service endpoints.
 
 > [!WARNING]
-> **Important note about uninstalling NGINX**: When you uninstall the NGINX Ingress Controller helm chart, it will remove the `nginx` IngressClass. Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. If you uninstall NGINX, you'll need to manually create the IngressClass like this:
+> **Important note about uninstalling NGINX**: When you uninstall the NGINX Ingress Controller helm chart, it will remove the `nginx` IngressClass. 
+> Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. If you uninstall NGINX, you'll need to manually create the IngressClass like this:
 >
 > ```yaml
 > ---
