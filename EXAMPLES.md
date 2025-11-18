@@ -1352,6 +1352,158 @@ Once it's applied, whoami should be accessible on https://whoami.docker.localhos
 
 </details>
 
+## Use Kubernetes Ingress NGINX Provider
+
+Starting with Traefik Proxy v3.6, one can use the Kubernetes Ingress NGINX provider (_experimental_) by setting the following _values_:
+
+```yaml
+experimental:
+  kubernetesIngressNginx: true
+providers:
+  kubernetesIngressNginx:
+    enabled: true
+```
+
+This provider allows Traefik to consume Kubernetes Ingress resources with NGINX-specific annotations. This is particularly useful when migrating from NGINX Ingress Controller to Traefik.
+
+<details>
+
+<summary>Complete migration example: from NGINX Ingress Controller to Traefik</summary>
+
+This example demonstrates a seamless migration from NGINX Ingress Controller to Traefik, where the same Ingress resource continues to work without modification.
+
+**Step 1**: Install NGINX Ingress Controller and deploy the whoami application
+
+```bash
+# Install NGINX Ingress Controller
+helm upgrade --install ingress-nginx ingress-nginx \
+  --repo https://kubernetes.github.io/ingress-nginx \
+  --namespace ingress-nginx --create-namespace
+```
+
+Deploy the application:
+
+```yaml
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whoami
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whoami
+  template:
+    metadata:
+      labels:
+        app: whoami
+    spec:
+      containers:
+        - name: whoami
+          image: traefik/whoami
+          ports:
+            - containerPort: 80
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: whoami
+spec:
+  selector:
+    app: whoami
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whoami
+  annotations:
+    # NGINX-specific annotations
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: whoami.docker.localhost
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whoami
+                port:
+                  number: 80
+```
+
+**Step 2**: Test that the application works with NGINX
+
+```bash
+# Get the NGINX LoadBalancer/NodePort to access it
+kubectl get svc -n ingress-nginx
+
+# Test with NGINX (adjust the URL based on your setup)
+curl http://whoami.docker.localhost
+```
+
+You should see the whoami response with your request details.
+
+**Step 3**: Install Traefik with Kubernetes Ingress NGINX provider enabled (alongside NGINX)
+
+```bash
+helm upgrade --install traefik traefik/traefik \
+  --namespace traefik --create-namespace \
+  --set experimental.kubernetesIngressNginx=true \
+  --set providers.kubernetesIngressNginx.enabled=true
+```
+
+Or using a values file:
+
+```yaml
+experimental:
+  kubernetesIngressNginx: true
+providers:
+  kubernetesIngressNginx:
+    enabled: true
+```
+
+**Step 4**: Test that the application now also works with Traefik
+
+Both NGINX and Traefik are now running in parallel, both serving the same Ingress!
+
+```bash
+# Get the Traefik LoadBalancer/NodePort to access it
+kubectl get svc -n traefik
+
+# Test with Traefik (adjust the URL based on your setup)
+curl http://whoami.docker.localhost
+```
+
+The same Ingress resource is now served by **both** NGINX and Traefik! You can verify which one is responding by checking the response headers or the service endpoints.
+
+> [!WARNING]
+> **Important note about uninstalling NGINX**: When you uninstall the NGINX Ingress Controller helm chart, it will remove the `nginx` IngressClass. Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. If you uninstall NGINX, you'll need to manually create the IngressClass like this:
+>
+> ```yaml
+> ---
+> apiVersion: networking.k8s.io/v1
+> kind: IngressClass
+> metadata:
+>   name: nginx
+> spec:
+>   controller: k8s.io/ingress-nginx
+> ```
+
+</details>
+
+> [!NOTE]
+> The Kubernetes Ingress NGINX provider supports most common NGINX Ingress annotations, allowing for a **seamless migration** from NGINX Ingress Controller to Traefik **without modifying existing Ingress resources**.
+
 ## Use Knative Provider
 
 Starting with Traefik Proxy v3.6, one can use the Knative provider (_experimental_) by setting the following _values_:

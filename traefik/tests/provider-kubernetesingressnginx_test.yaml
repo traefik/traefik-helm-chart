@@ -1,0 +1,333 @@
+suite: Kubernetes Ingress NGINX provider
+templates:
+  - deployment.yaml
+  - rbac/clusterrole.yaml
+tests:
+  - it: should not be enabled by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx"
+        template: deployment.yaml
+
+  - it: should add basic CLI args when enabled
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--experimental.kubernetesingressnginx"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.controllerclass=k8s.io/ingress-nginx"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ingressclass=nginx"
+
+  - it: should add custom controllerClass and ingressClass
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          controllerClass: "custom.io/nginx-controller"
+          ingressClass: "custom-nginx"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.controllerclass=custom.io/nginx-controller"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ingressclass=custom-nginx"
+
+  - it: should add ingressClassByName flag
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          ingressClassByName: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ingressclassbyname=true"
+
+  - it: should add watchIngressWithoutClass flag
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          watchIngressWithoutClass: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
+
+  - it: should add watched namespaces
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          namespaces:
+            - "nginx-ingress"
+            - "default"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.watchnamespace=nginx-ingress,default"
+
+  - it: should add namespace selector
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          namespaceSelector: "environment=production"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.watchnamespaceselector=environment=production"
+
+  - it: should add publishService when enabled
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          publishService:
+            enabled: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.publishservice=NAMESPACE/RELEASE-NAME-traefik"
+
+  - it: should add custom publishService path
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          publishService:
+            enabled: true
+            pathOverride: "custom-namespace/custom-service"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.publishservice=custom-namespace/custom-service"
+
+  - it: should add publishStatusAddress
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          publishStatusAddress: "1.2.3.4,5.6.7.8"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.publishstatusaddress=1.2.3.4,5.6.7.8"
+
+  - it: should add defaultBackendService
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          defaultBackendService: "default/default-backend"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.defaultbackendservice=default/default-backend"
+
+  - it: should add disableSvcExternalName flag
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          disableSvcExternalName: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.disablesvcexternalname=true"
+
+  - it: should add throttleDuration
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          throttleDuration: "10s"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.throttleduration=10s"
+
+  - it: should add certAuthFilePath
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          certAuthFilePath: "/etc/kubernetes/ca.crt"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.certauthfilepath=/etc/kubernetes/ca.crt"
+
+  - it: should add endpoint
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          endpoint: "https://k8s.example.com:6443"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.endpoint=https://k8s.example.com:6443"
+
+  - it: should add token
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          token: "my-bearer-token"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.token=my-bearer-token"
+
+  - it: should add RBAC rules when enabled
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+        kubernetesIngress:
+          enabled: false
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses/status
+            verbs:
+              - update
+
+  - it: should not duplicate RBAC rules when kubernetesIngress is also enabled
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+        kubernetesIngress:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          count: 1
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should not add RBAC rules when disabled
+    set:
+      experimental:
+        kubernetesIngressNginx: true
+      providers:
+        kubernetesIngressNginx:
+          enabled: false
+        kubernetesIngress:
+          enabled: false
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
