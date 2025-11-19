@@ -1364,10 +1364,6 @@ providers:
 
 This provider allows Traefik to consume Kubernetes Ingress resources with NGINX-specific annotations. This is particularly useful when migrating from NGINX Ingress Controller to Traefik.
 
-<details>
-
-<summary>Complete migration example: from NGINX Ingress Controller to Traefik</summary>
-
 This example demonstrates a seamless migration from NGINX Ingress Controller to Traefik, where the same Ingress resource continues to work without modification.
 
 **Step 1**: Install NGINX Ingress Controller and deploy the whoami application
@@ -1442,11 +1438,11 @@ spec:
 **Step 2**: Test that the application works with NGINX
 
 ```bash
-# Get the NGINX LoadBalancer/NodePort to access it
-kubectl get svc -n ingress-nginx
+# Port-forward to NGINX
+kubectl port-forward -n ingress-nginx deployment/ingress-nginx-controller 8000:80 &
 
-# Test with NGINX (adjust the URL based on your setup)
-curl http://whoami.docker.localhost
+# Test with NGINX
+curl http://whoami.docker.localhost:8000 -c /tmp/cookies.txt -b /tmp/cookies.txt
 ```
 
 You should see the whoami response with your request details.
@@ -1469,14 +1465,14 @@ providers:
 
 **Step 4**: Test that the application now also works with Traefik
 
-Both NGINX and Traefik are now running in parallel, both serving the same Ingress!
+Both NGINX and Traefik are now running in parallel, each serving the same Ingress thanks to the Traefik NGINX provider !
 
 ```bash
-# Get the Traefik LoadBalancer/NodePort to access it
-kubectl get svc -n traefik
+# Port-forward to Traefik
+kubectl port-forward -n traefik deployment/traefik 8001:8000 &
 
 # Test with Traefik (adjust the URL based on your setup)
-curl http://whoami.docker.localhost
+curl http://whoami.docker.localhost:8001 -c /tmp/cookies.txt -b /tmp/cookies.txt
 ```
 
 The same Ingress resource is now served by **both** NGINX and Traefik! You can verify which one is responding by checking the response headers or the service endpoints.
@@ -1494,8 +1490,6 @@ The same Ingress resource is now served by **both** NGINX and Traefik! You can v
 > spec:
 >   controller: k8s.io/ingress-nginx
 > ```
-
-</details>
 
 > [!NOTE]
 > The Kubernetes Ingress NGINX provider supports most common NGINX Ingress annotations, allowing for a **seamless migration** from NGINX Ingress Controller to Traefik **without modifying existing Ingress resources**.
