@@ -176,21 +176,21 @@
             {{- tpl (toYaml .Values.additionalVolumeMounts) . | nindent 10 }}
           {{- end }}
           {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
-          {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
-          {{- if eq $pluginType "localPath" }}
-          {{- $localPathConfig := include "traefik.getLocalPluginLocalPath" (dict "plugin" $localPlugin) | fromYaml }}
+            {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
+            {{- if eq $pluginType "localPath" }}
+              {{- $localPathConfig := include "traefik.getLocalPluginLocalPath" (dict "plugin" $localPlugin) | fromYaml }}
           - name: {{ $localPathConfig.volumeName }}
             mountPath: {{ $localPlugin.mountPath | quote }}
-            {{- if $localPathConfig.subPath }}
+              {{- if $localPathConfig.subPath }}
             subPath: {{ $localPathConfig.subPath }}
-            {{- end }}
-          {{- else }}
+              {{- end }}
+            {{- else }}
           - name: {{ $localPluginName | replace "." "-" }}
             mountPath: {{ $localPlugin.mountPath | quote }}
-            {{- if eq $pluginType "inlinePlugin" }}
+              {{- if eq $pluginType "inlinePlugin" }}
             readOnly: true
+              {{- end }}
             {{- end }}
-          {{- end }}
           {{- end }}
 
         args:

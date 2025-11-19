@@ -267,7 +267,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
 {{- end -}}
 
 {{- define "traefik.localPluginCmName" -}}
-{{ include "traefik.fullname" .context }}-local-plugin-{{ .pluginName | replace "." "-" }}
+  {{ include "traefik.fullname" .context }}-local-plugin-{{ .pluginName | replace "." "-" }}
 {{- end -}}
 
 {{- define "traefik.hasPluginsVolume" -}}

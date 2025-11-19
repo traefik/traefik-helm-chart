@@ -1,7 +1,7 @@
 {{- if .Values.experimental.localPlugins }}
-{{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
-{{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
-{{- if eq $pluginType "inlinePlugin" }}
+  {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
+    {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}
+    {{- if eq $pluginType "inlinePlugin" }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -12,10 +12,10 @@ metadata:
     {{- include "traefik.labels" $ | nindent 4 }}
 data:
   {{- $inlineFiles := include "traefik.getLocalPluginInlineFiles" (dict "plugin" $localPlugin "pluginName" $localPluginName) | fromYaml }}
-  {{- range $fileName, $fileContent := $inlineFiles }}
+    {{- range $fileName, $fileContent := $inlineFiles }}
   {{ $fileName }}: |
     {{- $fileContent | nindent 4 }}
+      {{- end }}
+    {{- end }}
   {{- end }}
-{{- end }}
-{{- end }}
 {{- end }}

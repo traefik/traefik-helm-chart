@@ -83,8 +83,8 @@ for more info. 🚨
 {{- end -}}
 
 {{/* Warn about deprecated localPlugins */}}
-{{- if include "traefik.hasDeprecatedLocalPlugins" . }}
-{{- printf "\n" -}}
+  {{- if include "traefik.hasDeprecatedLocalPlugins" . }}
+    {{- printf "\n" -}}
 ⚠️ DEPRECATION WARNING: You are using the deprecated legacy 'hostPath' configuration.
 Please migrate to the new structured 'type.hostPathPlugin' configuration within localPlugins.
 The legacy root-level hostPath configuration will be removed in the next major version.
@@ -103,8 +103,8 @@ Migration example:
         #   hostPath: /path/to/plugin
         # type: localPath       # Advanced: Uses additionalVolumes, can be used with PVC, CSI drivers (s3-csi-driver, FUSE), etc.
         #   volumeName: plugin-storage
-{{- printf "\n" -}}
-{{- end -}}
+    {{- printf "\n" -}}
+  {{- end -}}
 
 
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
