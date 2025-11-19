@@ -531,9 +531,6 @@
           {{- if .Values.experimental.knative }}
           - "--experimental.knative"
           {{- end }}
-          {{- if .Values.experimental.kubernetesIngressNginx }}
-          - "--experimental.kubernetesingressnginx"
-          {{- end }}
           {{- with .Values.providers.kubernetesCRD }}
           {{- if (and .enabled (or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced))) }}
           - "--providers.kubernetescrd.namespaces={{ template "providers.kubernetesCRD.namespaces" $ }}"

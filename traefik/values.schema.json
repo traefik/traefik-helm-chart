@@ -221,9 +221,6 @@
                         }
                     }
                 },
-                "kubernetesIngressNginx": {
-                    "type": "boolean"
-                },
                 "localPlugins": {
                     "type": "object"
                 },

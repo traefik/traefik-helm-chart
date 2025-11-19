@@ -12,16 +12,10 @@ tests:
 
   - it: should add basic CLI args when enabled
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
     asserts:
-      - template: deployment.yaml
-        contains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.kubernetesingressnginx"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
@@ -37,8 +31,6 @@ tests:
 
   - it: should add custom controllerClass and ingressClass
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -56,8 +48,6 @@ tests:
 
   - it: should add ingressClassByName flag
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -70,8 +60,6 @@ tests:
 
   - it: should add watchIngressWithoutClass flag
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -84,8 +72,6 @@ tests:
 
   - it: should add watched namespaces
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -100,8 +86,6 @@ tests:
 
   - it: should add namespace selector
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -114,8 +98,6 @@ tests:
 
   - it: should add publishService when enabled
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -129,8 +111,6 @@ tests:
 
   - it: should add custom publishService path
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -145,8 +125,6 @@ tests:
 
   - it: should add publishStatusAddress
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -159,8 +137,6 @@ tests:
 
   - it: should add defaultBackendService
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -173,8 +149,6 @@ tests:
 
   - it: should add disableSvcExternalName flag
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -187,8 +161,6 @@ tests:
 
   - it: should add throttleDuration
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -201,8 +173,6 @@ tests:
 
   - it: should add certAuthFilePath
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -215,8 +185,6 @@ tests:
 
   - it: should add endpoint
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -229,8 +197,6 @@ tests:
 
   - it: should add token
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -243,8 +209,6 @@ tests:
 
   - it: should add RBAC rules when enabled
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -281,8 +245,6 @@ tests:
 
   - it: should not duplicate RBAC rules when kubernetesIngress is also enabled
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: true
@@ -307,8 +269,6 @@ tests:
 
   - it: should not add RBAC rules when disabled
     set:
-      experimental:
-        kubernetesIngressNginx: true
       providers:
         kubernetesIngressNginx:
           enabled: false

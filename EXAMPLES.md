@@ -1354,11 +1354,9 @@ Once it's applied, whoami should be accessible on https://whoami.docker.localhos
 
 ## Use Kubernetes Ingress NGINX Provider
 
-Starting with Traefik Proxy v3.6, one can use the Kubernetes Ingress NGINX provider (_experimental_) by setting the following _values_:
+Starting with Traefik Proxy v3.6.2, one can use the Kubernetes Ingress NGINX provider by setting the following _values_:
 
 ```yaml
-experimental:
-  kubernetesIngressNginx: true
 providers:
   kubernetesIngressNginx:
     enabled: true
@@ -1458,15 +1456,12 @@ You should see the whoami response with your request details.
 ```bash
 helm upgrade --install traefik traefik/traefik \
   --namespace traefik --create-namespace \
-  --set experimental.kubernetesIngressNginx=true \
   --set providers.kubernetesIngressNginx.enabled=true
 ```
 
 Or using a values file:
 
 ```yaml
-experimental:
-  kubernetesIngressNginx: true
 providers:
   kubernetesIngressNginx:
     enabled: true

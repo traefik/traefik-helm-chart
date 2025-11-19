@@ -143,8 +143,6 @@ experimental:
   otlpLogs: false
   # -- Enable Knative provider experimental feature.
   knative: false
-  # -- Enable Kubernetes Ingress NGINX provider experimental feature.
-  kubernetesIngressNginx: false
 
 gateway:
   # -- When providers.kubernetesGateway.enabled, deploy a default gateway

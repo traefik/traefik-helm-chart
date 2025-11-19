@@ -74,7 +74,6 @@ Kubernetes: `>=1.22.0-0`
 | experimental.fastProxy.enabled | bool | `false` | Enables the FastProxy implementation. |
 | experimental.knative | bool | `false` | Enable Knative provider experimental feature. |
 | experimental.kubernetesGateway.enabled | bool | `false` | Enable traefik experimental GatewayClass CRD |
-| experimental.kubernetesIngressNginx | bool | `false` | Enable Kubernetes Ingress NGINX provider experimental feature. |
 | experimental.localPlugins | object | `{}` | Enable experimental local plugins |
 | experimental.otlpLogs | bool | `false` | Enable OTLP logging experimental feature. |
 | experimental.plugins | object | `{}` | Enable experimental plugins |
