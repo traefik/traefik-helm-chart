@@ -1,9 +1,10 @@
 {{- $version := include "traefik.proxyVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $ingressNginxNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngressNginx.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $knativeNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.knative.namespaces -}}
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $ingressNginxNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -89,6 +90,34 @@ rules:
       - ingresses/status
     verbs:
       - update
+{{- end -}}
+{{- if (and (has . $ingressNginxNamespaces) $.Values.providers.kubernetesIngressNginx.enabled) }}
+  {{- if not $.Values.providers.kubernetesIngress.enabled }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  {{- else }}
+  - apiGroups:
+      - extensions
+      - networking.k8s.io
+    resources:
+      - ingresses/status
+    verbs:
+      - update
+  {{- end }}
 {{- end -}}
 {{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
   - apiGroups:

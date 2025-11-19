@@ -1565,3 +1565,195 @@ tests:
             verbs:
               - list
               - watch
+  - it: should use multiple namespaces if provided to kubernetesIngressNginx
+    set:
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+          namespaces:
+            - default
+            - nginx-ns
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 3
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 3
+        template: rbac/rolebinding.yaml
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+        template: rbac/role.yaml
+        documentIndex: 0
+      - equal:
+          path: metadata.namespace
+          value: default
+        template: rbac/role.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: nginx-ns
+        template: rbac/role.yaml
+        documentIndex: 2
+  - it: should add RBAC rules when kubernetesIngressNginx is enabled
+    set:
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+        kubernetesIngress:
+          enabled: false
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses/status
+            verbs:
+              - update
+  - it: should not duplicate RBAC rules when kubernetesIngress is also enabled
+    set:
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+        kubernetesIngress:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          count: 1
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+  - it: should not add RBAC rules when kubernetesIngressNginx is disabled
+    set:
+      providers:
+        kubernetesIngressNginx:
+          enabled: false
+        kubernetesIngress:
+          enabled: false
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingressclasses
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+  - it: Role should be able to read ingresses when kubernetesIngressNginx is enabled without kubernetesIngress
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: false
+        kubernetesIngressNginx:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses/status
+            verbs:
+              - update
+  - it: Role should be able to update ingresses/status when both kubernetesIngress and kubernetesIngressNginx are enabled
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: true
+        kubernetesIngressNginx:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses/status
+            verbs:
+              - update
+  - it: Role should not have kubernetesIngressNginx permissions when provider is disabled
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: false
+        kubernetesIngressNginx:
+          enabled: false
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
