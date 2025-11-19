@@ -266,6 +266,10 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
     {{- end -}}
 {{- end -}}
 
+{{- define "traefik.localPluginCmName" -}}
+  {{ include "traefik.fullname" .context }}-local-plugin-{{ .pluginName | replace "." "-" }}
+{{- end -}}
+
 {{- define "traefik.hasPluginsVolume" -}}
     {{- $found := false -}}
     {{- range . -}}
@@ -274,6 +278,98 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
        {{- end -}}
     {{- end -}}
     {{- $found -}}
+{{- end -}}
+
+{{/* 
+Validate localPlugin configuration and determine plugin type
+Returns: hostPath, inline, or localPath
+*/}}
+{{- define "traefik.getLocalPluginType" -}}
+    {{- $plugin := .plugin -}}
+    {{- if $plugin.type -}}
+        {{- if eq $plugin.type "hostPath" -}}
+            {{- printf "hostPath" -}}
+        {{- else if eq $plugin.type "inlinePlugin" -}}
+            {{- printf "inlinePlugin" -}}
+        {{- else if eq $plugin.type "localPath" -}}
+            {{- printf "localPath" -}}
+        {{- else -}}
+            {{- fail (printf "ERROR: localPlugin %s has invalid type configuration. Must specify one of: hostPath, inlinePlugin, localPath" .pluginName) -}}
+        {{- end -}}
+    {{- else if $plugin.hostPath -}}
+        {{- printf "hostPath" -}}
+    {{- else -}}
+        {{- fail (printf "ERROR: localPlugin %s must specify either legacy hostPath configuration or new type configuration!" .pluginName) -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* 
+Get hostPath for a plugin (handles both old and new structure)
+*/}}
+{{- define "traefik.getLocalPluginHostPath" -}}
+    {{- $plugin := .plugin -}}
+    {{- if $plugin.type -}}
+        {{- if eq $plugin.type "hostPath" -}}
+            {{- $plugin.hostPath -}}
+        {{- end -}}
+    {{- else -}}
+        {{- $plugin.hostPath -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* 
+Get inline plugin files (new structure only)
+*/}}
+{{- define "traefik.getLocalPluginInlineFiles" -}}
+    {{- $plugin := .plugin -}}
+    {{- if eq $plugin.type "inlinePlugin" -}}
+        {{- required (printf "ERROR: localPlugin %s with type inlinePlugin must have a source field!" .pluginName) $plugin.source | toYaml -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* 
+Get localPath plugin configuration (new structure only)
+*/}}
+{{- define "traefik.getLocalPluginLocalPath" -}}
+    {{- $plugin := .plugin -}}
+    {{- if eq $plugin.type "localPath" -}}
+        {{- $localPathConfig := dict -}}
+        {{- range $key, $value := $plugin -}}
+            {{- if and (ne $key "type") (ne $key "moduleName") (ne $key "mountPath") -}}
+                {{- $_ := set $localPathConfig $key $value -}}
+            {{- end -}}
+        {{- end -}}
+        {{- toYaml $localPathConfig -}}
+    {{- end -}}
+{{- end -}}
+
+{{/* 
+Check if a volume name exists in additionalVolumes
+*/}}
+{{- define "traefik.volumeExistsInAdditionalVolumes" -}}
+    {{- $volumeName := .volumeName -}}
+    {{- $additionalVolumes := .additionalVolumes -}}
+    {{- $found := false -}}
+    {{- range $additionalVolumes -}}
+        {{- if eq .name $volumeName -}}
+            {{- $found = true -}}
+        {{- end -}}
+    {{- end -}}
+    {{- $found -}}
+{{- end -}}
+
+{{/* 
+Check if using old localPlugin hostPath structure (for deprecation warning)
+*/}}
+{{- define "traefik.hasDeprecatedLocalPlugins" -}}
+    {{- if .Values.experimental.localPlugins -}}
+        {{- range $pluginName, $plugin := .Values.experimental.localPlugins -}}
+            {{- if $plugin.hostPath -}}
+                {{- printf "true" -}}
+                {{- break -}}
+            {{- end -}}
+        {{- end -}}
+    {{- end -}}
 {{- end -}}
 
 {{- define "list.difference" -}}

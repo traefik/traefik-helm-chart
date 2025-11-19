@@ -82,6 +82,30 @@ for more info. 🚨
     {{- end -}}
 {{- end -}}
 
+{{/* Warn about deprecated localPlugins */}}
+  {{- if include "traefik.hasDeprecatedLocalPlugins" . }}
+    {{- printf "\n" -}}
+⚠️ DEPRECATION WARNING: You are using the deprecated legacy 'hostPath' configuration.
+Please migrate to the new structured 'type.hostPathPlugin' configuration within localPlugins.
+The legacy root-level hostPath configuration will be removed in the next major version.
+
+Migration example:
+  experimental:
+    localPlugins:
+      your-plugin:
+        moduleName: github.com/example/yourplugin
+        mountPath: /plugins-local/src/github.com/example/yourplugin
+        # Choose one of the following types:
+        type: inlinePlugin        # Recommended for small/medium plugins: secure ConfigMap-based
+        source:                  # Required for inlinePlugin
+          # your plugin files here
+        # type: hostPath         # Use with caution for security reasons
+        #   hostPath: /path/to/plugin
+        # type: localPath       # Advanced: Uses additionalVolumes, can be used with PVC, CSI drivers (s3-csi-driver, FUSE), etc.
+        #   volumeName: plugin-storage
+    {{- printf "\n" -}}
+  {{- end -}}
+
 
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
 {{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.selfManagedCertificate }}
