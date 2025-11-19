@@ -1573,3 +1573,70 @@ hub:
     enabled: true
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
+
+## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
+
+This example exposes two Gateways (e.g., `internal` and `external`) from a single Traefik installation.
+
+```yaml
+# Ports for external gateway
+ports:
+  web-ext:
+    port: 9080
+    exposedPort: 80
+    expose:
+      external: true
+  websecure-ext:
+    port: 9443
+    exposedPort: 443
+    expose:
+      external: true
+
+gateway:
+  enabled: true
+  name: traefik-internal
+
+gatewayClass:
+  enabled: true
+
+service:
+  additionalServices:
+    external:
+      type: LoadBalancer
+
+providers:
+  kubernetesGateway:
+    enabled: true
+    statusAddress:
+      service:
+        enabled: false
+```
+
+```yaml
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: traefik-external
+spec:
+  gatewayClassName: traefik
+  listeners:
+    - name: web-ext
+      protocol: HTTP
+      port: 9080
+      allowedRoutes:
+        namespaces:
+          from: All
+    # Comment out if you have a valid TLS certificate
+    # - name: websecure-ext
+    #   protocol: HTTPS
+    #   port: 9443
+    #   allowedRoutes:
+    #     namespaces:
+    #       from: All
+    #   tls:
+    #     mode: Terminate
+    #     certificateRefs:
+    #       - group: ""
+    #         kind: Secret
+    #         name: some-tls-cert
+```
