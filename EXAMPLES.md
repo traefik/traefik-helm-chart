@@ -1364,7 +1364,11 @@ providers:
 
 This provider allows Traefik to consume Kubernetes Ingress resources with NGINX-specific annotations. This is particularly useful when migrating from NGINX Ingress Controller to Traefik.
 
-This example demonstrates a seamless migration from NGINX Ingress Controller to Traefik, where the same Ingress resource continues to work without modification.
+<details>
+
+<summary>This example demonstrates a seamless migration from NGINX Ingress Controller to Traefik</summary>
+
+where the same Ingress resource continues to work without modification.<br>
 
 **Step 1**: Install NGINX Ingress Controller and deploy the whoami application
 
@@ -1555,6 +1559,7 @@ kubectl get ksvc
 curl http://whoami.default.docker.localhost
 curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
 ```
+</details>
 
 ## Use templating for additionalVolumeMounts
 
