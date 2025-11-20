@@ -1612,10 +1612,10 @@ hub:
 > [!TIP]
 > When using the CLI, those parameters need to be escaped like this:
 >
->```bash
+> ```bash
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.crt'=$(cat /tmp/hub.crt.b64)
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
->```
+> ```
 
 ## Injecting CA data from a Certificate resource
 
