@@ -1,5 +1,76 @@
 # Change Log
 
+## 37.4.0  ![AppVersion: v3.6.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.2&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-11-20
+
+* feat: allow `publishedService` to be set without service being enabled
+* feat: :rocket: add support of Nginx provider
+* feat(plugins): support ConfigMap inline local plugins alongside hostPath
+* feat(deps): update traefik docker tag to v3.6.2
+* feat(deps): update traefik docker tag to v3.6.1
+* chore(release): 🚀 publish traefik 37.4.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index e90d6b9..bc4c5da 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -307,7 +307,8 @@ providers:  # @schema additionalProperties: false
+     namespaces: []
+     # IP used for Kubernetes Ingress endpoints
+     publishedService:
+-      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice)
++      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice),
++      # usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.
+       enabled: true
+       # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
+       # Default to Service deployed with this Chart.
+@@ -348,6 +349,40 @@ providers:  # @schema additionalProperties: false
+     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+     content: ""
+ 
++  kubernetesIngressNginx:
++    # -- Enable Kubernetes Ingress NGINX provider (experimental)
++    enabled: false
++    # -- Ingress Class Controller value this controller satisfies
++    controllerClass: "k8s.io/ingress-nginx"
++    # -- Name of the ingress class this controller satisfies
++    ingressClass: "nginx"
++    # -- Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class
++    ingressClassByName: false
++    # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
++    watchIngressWithoutClass: false
++    # -- Namespace the controller watches for updates to Kubernetes objects. All namespaces are watched if this parameter is left empty. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
++    namespaces: []
++    # -- Selector selects namespaces the controller watches for updates to Kubernetes objects
++    namespaceSelector: ""
++    # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
++    publishService:
++      enabled: false
++      pathOverride: ""
++    # -- Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies
++    publishStatusAddress: ""
++    # -- Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'
++    defaultBackendService: ""
++    # -- Disable support for Services of type ExternalName
++    disableSvcExternalName: false
++    # -- Ingress refresh throttle duration
++    throttleDuration: ""
++    # -- Kubernetes certificate authority file path (not needed for in-cluster client)
++    certAuthFilePath: ""
++    # -- Kubernetes server endpoint (required for external cluster client)
++    endpoint: ""
++    # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
++    token: ""
++
+   knative:
+     # -- Enable Knative provider
+     enabled: false
+```
+
 ## 37.3.0  ![AppVersion: v3.6.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.0&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-11-10
