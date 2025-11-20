@@ -1478,8 +1478,8 @@ curl http://whoami.docker.localhost:8001 -c /tmp/cookies.txt -b /tmp/cookies.txt
 The same Ingress resource is now served by **both** NGINX and Traefik! You can verify which one is responding by checking the response headers or the service endpoints.
 
 > [!WARNING]
-> **Important note about uninstalling NGINX**: When you uninstall the NGINX Ingress Controller helm chart, it will remove the `nginx` IngressClass.
-> Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. If you uninstall NGINX, you'll need to manually create the IngressClass like this:
+> **Important note about NGINX**: When uninstalling the NGINX Ingress Controller helm chart, it removes the `nginx` IngressClass.
+> Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. Before uninstalling NGINX, it's recommended to ensure that an IngressClass like this will stay:
 >
 > ```yaml
 > ---
