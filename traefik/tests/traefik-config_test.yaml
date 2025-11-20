@@ -11,6 +11,13 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--the.force.is.with.me=true"
 
+  - it: should not have ingress nginx provider enabled by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx"
+        template: deployment.yaml
+
   - it: should have namespace restriction if rbac is namespaced
     set:
       rbac:

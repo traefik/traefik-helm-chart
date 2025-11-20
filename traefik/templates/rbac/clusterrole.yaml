@@ -87,7 +87,7 @@ rules:
     verbs:
       - use
   {{- end -}}
-  {{- if .Values.providers.kubernetesIngress.enabled }}
+  {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNginx.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -105,35 +105,6 @@ rules:
       - ingresses/status
     verbs:
       - update
-  {{- end -}}
-  {{- if .Values.providers.kubernetesIngressNginx.enabled }}
-   {{- if not .Values.providers.kubernetesIngress.enabled }}
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingressclasses
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-   {{- else }}
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-   {{- end }}
   {{- end -}}
   {{- if .Values.providers.kubernetesCRD.enabled }}
    {{- if not .Values.providers.kubernetesIngress.enabled }}

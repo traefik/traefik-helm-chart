@@ -1,19 +1,12 @@
 suite: Kubernetes Ingress NGINX provider
 templates:
   - deployment.yaml
+set:
+  providers:
+    kubernetesIngressNginx:
+      enabled: true
 tests:
-  - it: should not be enabled by default
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx"
-        template: deployment.yaml
-
-  - it: should add basic CLI args when enabled
-    set:
-      providers:
-        kubernetesIngressNginx:
-          enabled: true
+  - it: should set default args when enabled
     asserts:
       - template: deployment.yaml
         contains:
@@ -32,7 +25,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           controllerClass: "custom.io/nginx-controller"
           ingressClass: "custom-nginx"
     asserts:
@@ -45,51 +37,35 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.ingressclass=custom-nginx"
 
-  - it: should add ingressClassByName flag
+  - it: should add ingressClassByName & watchIngressWithoutClass flag
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           ingressClassByName: true
-    asserts:
-      - template: deployment.yaml
-        contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.ingressclassbyname=true"
-
-  - it: should add watchIngressWithoutClass flag
-    set:
-      providers:
-        kubernetesIngressNginx:
-          enabled: true
           watchIngressWithoutClass: true
     asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ingressclassbyname=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
 
-  - it: should add watched namespaces
+  - it: should add watched namespaces & namespace selector
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           namespaces:
             - "nginx-ingress"
             - "default"
+          namespaceSelector: "environment=production"
     asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.watchnamespace=nginx-ingress,default"
-
-  - it: should add namespace selector
-    set:
-      providers:
-        kubernetesIngressNginx:
-          enabled: true
-          namespaceSelector: "environment=production"
-    asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
@@ -99,7 +75,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           publishService:
             enabled: true
     asserts:
@@ -112,7 +87,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           publishService:
             enabled: true
             pathOverride: "custom-namespace/custom-service"
@@ -126,7 +100,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           publishStatusAddress: "1.2.3.4,5.6.7.8"
     asserts:
       - template: deployment.yaml
@@ -134,25 +107,17 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.publishstatusaddress=1.2.3.4,5.6.7.8"
 
-  - it: should add defaultBackendService
+  - it: should add defaultBackendService & disableSvcExternalName
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           defaultBackendService: "default/default-backend"
+          disableSvcExternalName: true
     asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.defaultbackendservice=default/default-backend"
-
-  - it: should add disableSvcExternalName flag
-    set:
-      providers:
-        kubernetesIngressNginx:
-          enabled: true
-          disableSvcExternalName: true
-    asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
@@ -162,7 +127,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           throttleDuration: "10s"
     asserts:
       - template: deployment.yaml
@@ -174,7 +138,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           certAuthFilePath: "/etc/kubernetes/ca.crt"
     asserts:
       - template: deployment.yaml
@@ -186,7 +149,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           endpoint: "https://k8s.example.com:6443"
     asserts:
       - template: deployment.yaml
@@ -198,7 +160,6 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          enabled: true
           token: "my-bearer-token"
     asserts:
       - template: deployment.yaml

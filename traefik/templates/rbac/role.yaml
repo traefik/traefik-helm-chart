@@ -73,7 +73,7 @@ rules:
       - get
       - list
       - watch
-{{- if (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) }}
+{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) (and (has . $ingressNginxNamespaces) $.Values.providers.kubernetesIngressNginx.enabled)}}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -90,34 +90,6 @@ rules:
       - ingresses/status
     verbs:
       - update
-{{- end -}}
-{{- if (and (has . $ingressNginxNamespaces) $.Values.providers.kubernetesIngressNginx.enabled) }}
-  {{- if not $.Values.providers.kubernetesIngress.enabled }}
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses
-    verbs:
-      - get
-      - list
-      - watch
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-  {{- else }}
-  - apiGroups:
-      - extensions
-      - networking.k8s.io
-    resources:
-      - ingresses/status
-    verbs:
-      - update
-  {{- end }}
 {{- end -}}
 {{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
   - apiGroups:
