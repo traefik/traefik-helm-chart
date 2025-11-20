@@ -499,7 +499,7 @@
           - "--providers.kubernetesingress.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled }}
+           {{- if or (and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled) (and .Values.providers.kubernetesIngress.publishedService.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride)}}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.labelSelector }}

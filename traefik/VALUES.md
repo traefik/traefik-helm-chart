@@ -405,7 +405,7 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
-| providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice) |
+| providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
 | rbac | object | `{"aggregateTo":[],"enabled":true,"namespaced":false,"secretResourceNames":[]}` | Whether Role Based Access Control objects like roles and rolebindings should be created |

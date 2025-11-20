@@ -307,7 +307,8 @@ providers:  # @schema additionalProperties: false
     namespaces: []
     # IP used for Kubernetes Ingress endpoints
     publishedService:
-      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice)
+      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice),
+      # usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.
       enabled: true
       # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
       # Default to Service deployed with this Chart.
