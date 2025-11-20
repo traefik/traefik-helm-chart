@@ -7,9 +7,6 @@ metadata:
   name: {{ template "traefik.clusterRoleName" . }}
   labels:
     {{- include "traefik.labels" . | nindent 4 }}
-    {{- range .Values.rbac.aggregateTo }}
-    rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
-    {{- end }}
 rules:
   {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
