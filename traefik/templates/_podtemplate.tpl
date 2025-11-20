@@ -578,6 +578,53 @@
           {{- end }}
           {{- end }}
           {{- end }}
+          {{- with .Values.providers.kubernetesIngressNginx }}
+           {{- if .enabled }}
+          - "--providers.kubernetesingressnginx"
+            {{- with .controllerClass }}
+          - "--providers.kubernetesingressnginx.controllerclass={{ . }}"
+            {{- end }}
+            {{- with .ingressClass }}
+          - "--providers.kubernetesingressnginx.ingressclass={{ . }}"
+            {{- end }}
+            {{- if .ingressClassByName }}
+          - "--providers.kubernetesingressnginx.ingressclassbyname=true"
+            {{- end }}
+            {{- if .watchIngressWithoutClass }}
+          - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
+            {{- end }}
+            {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
+          - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNginx.namespaces" $ }}"
+            {{- end }}
+            {{- with .namespaceSelector }}
+          - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
+            {{- end }}
+            {{- if and $.Values.service.enabled .publishService.enabled }}
+          - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNginx.publishServicePath" $ }}"
+            {{- end }}
+            {{- with .publishStatusAddress }}
+          - "--providers.kubernetesingressnginx.publishstatusaddress={{ . }}"
+            {{- end }}
+            {{- with .defaultBackendService }}
+          - "--providers.kubernetesingressnginx.defaultbackendservice={{ . }}"
+            {{- end }}
+            {{- if .disableSvcExternalName }}
+          - "--providers.kubernetesingressnginx.disablesvcexternalname=true"
+            {{- end }}
+            {{- with .throttleDuration }}
+          - "--providers.kubernetesingressnginx.throttleduration={{ . }}"
+            {{- end }}
+            {{- with .certAuthFilePath }}
+          - "--providers.kubernetesingressnginx.certauthfilepath={{ . }}"
+            {{- end }}
+            {{- with .endpoint }}
+          - "--providers.kubernetesingressnginx.endpoint={{ . }}"
+            {{- end }}
+            {{- with .token }}
+          - "--providers.kubernetesingressnginx.token={{ . }}"
+            {{- end }}
+           {{- end }}
+          {{- end }}
           {{- with .Values.providers.knative }}
            {{- if .enabled }}
           - "--providers.knative"

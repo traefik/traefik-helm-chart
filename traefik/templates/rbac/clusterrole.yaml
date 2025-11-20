@@ -87,7 +87,7 @@ rules:
     verbs:
       - use
   {{- end -}}
-  {{- if .Values.providers.kubernetesIngress.enabled }}
+  {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNginx.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io

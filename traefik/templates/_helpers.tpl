@@ -145,6 +145,12 @@ Users can provide an override for an explicit service they want bound via `.Valu
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
 
+{{- define "providers.kubernetesIngressNginx.publishServicePath" -}}
+{{- $defServiceName := printf "%s/%s" (include "traefik.namespace" .) (include "traefik.fullname" .) -}}
+{{- $servicePath := default $defServiceName .Values.providers.kubernetesIngressNginx.publishService.pathOverride }}
+{{- print $servicePath | trimSuffix "-" -}}
+{{- end -}}
+
 {{/*
 Construct a comma-separated list of whitelisted namespaces
 */}}
@@ -156,6 +162,9 @@ Construct a comma-separated list of whitelisted namespaces
 {{- end -}}
 {{- define "providers.kubernetesIngress.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
+{{- end -}}
+{{- define "providers.kubernetesIngressNginx.namespaces" -}}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngressNginx.namespaces) }}
 {{- end -}}
 {{- define "providers.knative.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.knative.namespaces) }}

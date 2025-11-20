@@ -63,6 +63,25 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0."
+  - it: should fail when using kubernetesIngressNginx provider on traefik < 3.6.2
+    set:
+      image:
+        tag: v3.6.1
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2."
+  - it: should not fail when using kubernetesIngressNginx provider on traefik >= 3.6.2
+    set:
+      image:
+        tag: v3.6.2
+      providers:
+        kubernetesIngressNginx:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using nativeLBByDefault on kubernetesGateway on traefik < 3.2
     set:
       image:

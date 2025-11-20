@@ -21,6 +21,7 @@
   {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
 {{- end }}
 
+
 {{- if .Values.rbac.namespaced }}
   {{- if .Values.providers.kubernetesGateway.enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
@@ -40,6 +41,10 @@
 
 {{- if and (semverCompare "<v3.6.0-0" $version) (.Values.experimental.knative)}}
   {{- fail "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNginx).enabled}}
+  {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 
 {{- if and (semverCompare "<3.2.0-0" $version) (.Values.providers.kubernetesGateway.nativeLBByDefault)}}

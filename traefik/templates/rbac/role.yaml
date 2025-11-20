@@ -1,9 +1,10 @@
 {{- $version := include "traefik.proxyVersion" $ }}
 {{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
+{{- $ingressNginxNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngressNginx.namespaces -}}
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $knativeNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.knative.namespaces -}}
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $ingressNginxNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -72,7 +73,7 @@ rules:
       - get
       - list
       - watch
-{{- if (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) }}
+{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) (and (has . $ingressNginxNamespaces) $.Values.providers.kubernetesIngressNginx.enabled)}}
   - apiGroups:
       - extensions
       - networking.k8s.io
