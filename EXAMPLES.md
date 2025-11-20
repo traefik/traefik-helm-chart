@@ -1423,7 +1423,7 @@ metadata:
   name: whoami
   annotations:
     nginx.ingress.kubernetes.io/affinity: cookie
-    nginx.ingress.kubernetes.io/affinity-mode: persistent 
+    nginx.ingress.kubernetes.io/affinity-mode: persistent
 spec:
   ingressClassName: nginx
   rules:
@@ -1481,7 +1481,7 @@ curl http://whoami.docker.localhost:8001 -c /tmp/cookies.txt -b /tmp/cookies.txt
 
 The same Ingress resource is now served by **both** NGINX and Traefik! You can verify which one is responding by checking the response headers or the service endpoints.
 
-> [!WARNING]
+> :warning:
 > **Important note about NGINX**: When uninstalling the NGINX Ingress Controller helm chart, it removes the `nginx` IngressClass.
 > Traefik needs this IngressClass to detect and serve Ingress resources that use `ingressClassName: nginx`. Before uninstalling NGINX, it's recommended to ensure that an IngressClass like this will stay:
 >
@@ -1495,7 +1495,7 @@ The same Ingress resource is now served by **both** NGINX and Traefik! You can v
 >   controller: k8s.io/ingress-nginx
 > ```
 
-> [!NOTE]
+> :information_source:
 > The Kubernetes Ingress NGINX provider supports most common NGINX Ingress annotations, allowing for a **seamless migration** from NGINX Ingress Controller to Traefik **without modifying existing Ingress resources**.
 
 ## Use Knative Provider
@@ -1510,11 +1510,11 @@ providers:
     enabled: true
 ```
 
-> [!WARNING]
+> :warning:
 > You must first have Knative deployed. With Proxy v3.6, v1.19 of Knative is supported.
 > Knative 1.19 requires Kubernetes v1.32+
 
-> [!TIP]
+> :information_source:
 > If you want to test it using k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
 
 Finish configuring Knative:
