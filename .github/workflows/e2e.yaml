@@ -16,11 +16,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout traefik-helm-chart
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           path: ${{ github.workspace }}/traefik-helm-chart
       - name: checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           repository: traefik/hub
           path: ${{ github.workspace }}/hub
