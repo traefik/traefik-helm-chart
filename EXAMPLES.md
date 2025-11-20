@@ -1559,6 +1559,7 @@ kubectl get ksvc
 curl http://whoami.default.docker.localhost
 curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
 ```
+
 </details>
 
 ## Use templating for additionalVolumeMounts
