@@ -562,6 +562,8 @@ service:
   type: LoadBalancer
   annotations:
     # This will tell DigitalOcean to enable the proxy protocol.
+    # Note that only REGIONAL type loadbalancers are supported.
+    # service.beta.kubernetes.io/do-loadbalancer-type: "REGIONAL"
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
   spec:
     # This is the default and should stay as cluster to keep the DO health checks working.
