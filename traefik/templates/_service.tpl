@@ -31,6 +31,9 @@
   selector:
     {{- include "traefik.labelselector" .root | nindent 4 }}
   {{- if eq $type "LoadBalancer" }}
+  {{- if .service.loadBalancerIP }}
+  loadBalancerIP: {{ .service.loadBalancerIP }}
+  {{- end }}
   {{- with .service.loadBalancerSourceRanges }}
   loadBalancerSourceRanges:
   {{- toYaml . | nindent 2 }}
