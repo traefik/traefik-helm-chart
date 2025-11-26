@@ -1059,7 +1059,7 @@ persistence:
   existingClaim: ""
   accessMode: ReadWriteOnce
   size: 128Mi
-  storageClass: ""
+  storageClass:  # @schema type:[string, null]
   volumeName: ""
   path: /data
   annotations: {}
