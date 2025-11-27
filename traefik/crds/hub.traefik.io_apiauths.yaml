@@ -145,9 +145,8 @@ spec:
                     !has(x.issuer) || x.issuer == "").size() <= 1'
                 - message: trustedIssuers must have unique issuer values
                   rule: '!has(self.trustedIssuers) || self.trustedIssuers.filter(x,
-                    has(x.issuer) && x.issuer != "").all(i, self.trustedIssuers.filter(x,
-                    has(x.issuer) && x.issuer != "" && x.issuer == i.issuer).size()
-                    == 1)'
+                    has(x.issuer) && x.issuer != "").map(x, x.issuer).all(x, self.trustedIssuers.exists_one(y,
+                    has(y.issuer) && y.issuer == x))'
               ldap:
                 description: LDAP configures LDAP authentication.
                 properties:
