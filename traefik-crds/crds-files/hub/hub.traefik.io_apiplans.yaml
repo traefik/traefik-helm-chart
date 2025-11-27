@@ -54,7 +54,8 @@ spec:
                     - application
                     type: string
                   limit:
-                    description: Limit is the maximum number of token in the bucket.
+                    description: Limit is the maximum number of requests per sliding
+                      Period.
                     type: integer
                     x-kubernetes-validations:
                     - message: must be a positive number
@@ -81,13 +82,17 @@ spec:
                     - application
                     type: string
                   limit:
-                    description: Limit is the maximum number of token in the bucket.
+                    description: |-
+                      Limit is the number of requests per Period used to calculate the regeneration rate.
+                      Traffic will converge to this rate over time by delaying requests when possible, and dropping them when throttling alone is not enough.
                     type: integer
                     x-kubernetes-validations:
                     - message: must be a positive number
                       rule: self >= 0
                   period:
-                    description: Period is the unit of time for the Limit.
+                    description: |-
+                      Period is the time unit used to express the rate.
+                      Combined with Limit, it defines the rate at which request capacity regenerates (Limit ÷ Period).
                     format: duration
                     type: string
                     x-kubernetes-validations:
