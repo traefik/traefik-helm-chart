@@ -338,6 +338,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.traefik.observability.tracing | string | `nil` | Defines whether a router attached to this EntryPoint produces traces by default. |
 | ports.traefik.port | int | `8080` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| ports.web.asDefault | string | `nil` |  |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
@@ -364,7 +365,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.hostPort | string | `nil` |  |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
-| ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
+| ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd @schema type: [array, null] |
 | ports.websecure.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | ports.websecure.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
 | ports.websecure.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
