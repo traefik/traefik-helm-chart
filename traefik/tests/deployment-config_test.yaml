@@ -333,7 +333,7 @@ tests:
           exposedPort: 443
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax."
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should fail when redirect on websecure with tls enabled and non-https scheme
     set:
       ports:
