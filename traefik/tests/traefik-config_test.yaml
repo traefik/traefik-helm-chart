@@ -1036,14 +1036,14 @@ tests:
           enabled: true
           experimentalChannel: true
           nativeLBByDefault: true
-          labelselector: "app=traefik"
+          labelSelector: "app=traefik"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.experimentalchannel=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesgateway.labelselector=app=traefik"
+          content: "--providers.kubernetesgateway.labelSelector=app=traefik"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.nativeLBByDefault=true"

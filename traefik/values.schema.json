@@ -2072,7 +2072,7 @@
                         "enabled": {
                             "type": "boolean"
                         },
-                        "labelselector": {
+                        "labelSelector": {
                             "type": "string"
                         },
                         "namespaces": {
@@ -2115,7 +2115,7 @@
                         "experimentalChannel": {
                             "type": "boolean"
                         },
-                        "labelselector": {
+                        "labelSelector": {
                             "type": "string"
                         },
                         "namespaces": {
