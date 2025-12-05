@@ -247,6 +247,9 @@
                 "infrastructure": {
                     "type": "object"
                 },
+                "defaultScope": {
+                    "type": "string"
+                },
                 "listeners": {
                     "type": "object",
                     "properties": {
