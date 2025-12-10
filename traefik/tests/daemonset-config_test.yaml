@@ -126,7 +126,7 @@ tests:
       hostNetwork: true
     asserts:
       - failedTemplate:
-          errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+          errorMessage: "maxUnavailable should be greater than 0 when using hostNetwork."
   - it: should fail when hostNetwork and maxUnavailable 0 (string)
     set:
       deployment:
@@ -138,7 +138,7 @@ tests:
       hostNetwork: true
     asserts:
       - failedTemplate:
-          errorMessage: "maxUnavailable should be greater than 1 when using hostNetwork."
+          errorMessage: "maxUnavailable should be greater than 0 when using hostNetwork."
   - it: should not fail when hostNetwork and maxUnavailable is a percentage
     set:
       deployment:
