@@ -560,8 +560,8 @@
             {{- if .experimentalChannel }}
           - "--providers.kubernetesgateway.experimentalchannel=true"
             {{- end }}
-            {{- with .labelselector }}
-          - "--providers.kubernetesgateway.labelselector={{ . }}"
+            {{- with .labelSelector }}
+          - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
@@ -631,8 +631,8 @@
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.knative.namespaces={{ template "providers.knative.namespaces" $ }}"
             {{- end }}
-            {{- with .labelselector }}
-          - "--providers.knative.labelselector={{ . }}"
+            {{- with .labelSelector }}
+          - "--providers.knative.labelSelector={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
