@@ -347,7 +347,7 @@ tests:
                 package main
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: local plugin invalid-plugin is missing moduleName !"
+          errorMessage: "ERROR: local plugin invalid-plugin is missing moduleName!"
 
   # Test error handling for missing type configuration
   - it: should fail when plugin has neither hostPath nor inlinePlugin

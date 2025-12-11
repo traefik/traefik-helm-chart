@@ -1,6 +1,6 @@
 {{/* Print release information */}}
 {{- printf "\n\n" -}}
-{{ .Release.Name }} with {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace !
+{{ .Release.Name }} with {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace!
 {{- printf "\n" -}}
 
 
@@ -26,7 +26,7 @@ for more info. 🚨
     {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) -}}
     {{- if not (contains $labelSelector $labelsApplied) -}}
 {{- printf "\n" -}}
-🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesCRD provider 🚨
+🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesCRD provider. 🚨
 {{- printf "\n" -}}
     {{- end -}}
   {{- end -}}
@@ -42,7 +42,7 @@ for more info. 🚨
     {{- $labelSelector := printf "%s: %s" (first $labelSelectorRaw) (last $labelSelectorRaw) -}}
     {{- if not (contains $labelSelector $labelsApplied) -}}
 {{- printf "\n" -}}
-🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesIngress provider 🚨
+🚨 Resources populated with this chart don't match with labelSelector `{{.}}` applied on kubernetesIngress provider. 🚨
 {{- printf "\n" -}}
     {{- end -}}
   {{- end -}}

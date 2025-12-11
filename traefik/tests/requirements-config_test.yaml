@@ -258,7 +258,7 @@ tests:
         token: "xxx"
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub image tag needs to be specified !"
+          errorMessage: "When using Traefik Hub image tag needs to be specified!"
   - it: should not fail when using Traefik Hub with tag set for OCI
     set:
       hub:
