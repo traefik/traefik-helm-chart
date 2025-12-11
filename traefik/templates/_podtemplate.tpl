@@ -435,7 +435,7 @@
           {{- end }}
           {{- range $pluginName, $plugin := .Values.experimental.plugins }}
           {{- if or (ne (typeOf $plugin) "map[string]interface {}") (not (hasKey $plugin "moduleName")) (not (hasKey $plugin "version")) }}
-            {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys !" $pluginName) }}
+            {{- fail  (printf "ERROR: plugin %s is missing moduleName/version keys!" $pluginName) }}
           {{- end }}
           - "--experimental.plugins.{{ $pluginName }}.moduleName={{ $plugin.moduleName }}"
           - "--experimental.plugins.{{ $pluginName }}.version={{ $plugin.version }}"
@@ -450,7 +450,7 @@
           {{- end }}
           {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
           {{- if not (hasKey $localPlugin "moduleName") }}
-            {{- fail  (printf "ERROR: local plugin %s is missing moduleName !" $localPluginName) }}
+            {{- fail  (printf "ERROR: local plugin %s is missing moduleName!" $localPluginName) }}
           {{- end }}
           - "--experimental.localPlugins.{{ $localPluginName }}.moduleName={{ $localPlugin.moduleName }}"
            {{- $settings := (get $localPlugin "settings") | default dict }}
