@@ -79,6 +79,7 @@ Kubernetes: `>=1.22.0-0`
 | experimental.plugins | object | `{}` | Enable experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
+| gateway.defaultScope | string | `""` | Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways) by setting the `defaultScope` field (e.g. `All` or `Namespace`). |
 | gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
 | gateway.infrastructure | object | `{}` | [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) |
 | gateway.listeners | object | `{"web":{"hostname":"","namespacePolicy":null,"port":8000,"protocol":"HTTP"}}` | Define listeners |

@@ -328,3 +328,14 @@ tests:
               group: traefik.io
               kind: TraefikProxy
               name: custom-config
+  - it: should be possible to configure defaultScope on the Gateway
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        defaultScope: All
+    asserts:
+      - equal:
+          path: spec.defaultScope
+          value: "All"
