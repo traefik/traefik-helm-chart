@@ -1815,13 +1815,17 @@
                         "ingressClass": {
                             "type": "string"
                         },
+                        "labelSelector": {
+                            "type": "string"
+                        },
                         "namespaces": {
                             "type": "array"
                         },
                         "nativeLBByDefault": {
                             "type": "boolean"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "kubernetesGateway": {
                     "type": "object",
