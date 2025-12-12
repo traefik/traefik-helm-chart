@@ -1629,38 +1629,6 @@ tests:
             verbs:
               - list
               - watch
-  - it: should use multiple namespaces if provided to kubernetesIngressNginx
-    set:
-      providers:
-        kubernetesIngressNginx:
-          enabled: true
-          namespaces:
-            - default
-            - nginx-ns
-      rbac:
-        namespaced: true
-    asserts:
-      - hasDocuments:
-          count: 3
-        template: rbac/role.yaml
-      - hasDocuments:
-          count: 3
-        template: rbac/rolebinding.yaml
-      - equal:
-          path: metadata.namespace
-          value: NAMESPACE
-        template: rbac/role.yaml
-        documentIndex: 0
-      - equal:
-          path: metadata.namespace
-          value: default
-        template: rbac/role.yaml
-        documentIndex: 1
-      - equal:
-          path: metadata.namespace
-          value: nginx-ns
-        template: rbac/role.yaml
-        documentIndex: 2
   - it: should add RBAC rules when kubernetesIngressNginx is enabled
     set:
       providers:
@@ -1696,6 +1664,17 @@ tests:
               - ingresses/status
             verbs:
               - update
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - namespaces
+            verbs:
+              - list
+              - watch
   - it: should not duplicate RBAC rules when kubernetesIngress is also enabled
     set:
       providers:
