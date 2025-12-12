@@ -638,9 +638,6 @@
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
-            {{- if $config.redirectTo }}
-              {{- fail "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax." -}}
-            {{- end }}
             {{- if $config.redirections }}
              {{- with $config.redirections.entryPoint }}
               {{- if not (hasKey $.Values.ports .to) }}
