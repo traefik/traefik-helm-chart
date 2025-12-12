@@ -464,6 +464,29 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."
+  - it: should fail when using sanitizePath security option on trafik < 3.6.4
+    set:
+      image:
+        tag: v3.2.0
+      ports:
+        websecure:
+          http:
+            sanitizePath: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when allowing encoded character filtering on trafik < 3.6.4
+    set:
+      image:
+        tag: v3.2.0
+      ports:
+        websecure:
+          http:
+            encodedCharacters:
+              allowEncodedSlash: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
   - it: should fail when using pluginRegistry sources on hub < 3.18.0
     set:
       image:
