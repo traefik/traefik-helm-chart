@@ -560,8 +560,8 @@
             {{- if .experimentalChannel }}
           - "--providers.kubernetesgateway.experimentalchannel=true"
             {{- end }}
-            {{- with .labelselector }}
-          - "--providers.kubernetesgateway.labelselector={{ . }}"
+            {{- with .labelSelector }}
+          - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
@@ -631,16 +631,13 @@
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.knative.namespaces={{ template "providers.knative.namespaces" $ }}"
             {{- end }}
-            {{- with .labelselector }}
-          - "--providers.knative.labelselector={{ . }}"
+            {{- with .labelSelector }}
+          - "--providers.knative.labelSelector={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
-            {{- if $config.redirectTo }}
-              {{- fail "ERROR: redirectTo syntax has been removed in v34 of this Chart. See Release notes or EXAMPLES.md for new syntax." -}}
-            {{- end }}
             {{- if $config.redirections }}
              {{- with $config.redirections.entryPoint }}
               {{- if not (hasKey $.Values.ports .to) }}
