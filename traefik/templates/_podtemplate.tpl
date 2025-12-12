@@ -683,6 +683,34 @@
                     {{- end }}
                   {{- end }}
                 {{- end }}
+                {{- with $config.http }}
+                 {{- if ne .sanitizePath nil }}
+                  {{- with .sanitizePath | toString }}
+          - "--entryPoints.{{ $entrypoint }}.http.sanitizePath={{ . }}"
+                  {{- end }}
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedSlash }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedBackSlash }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedNullCharacter }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedSemicolon }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedPercent }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedQuestionMark }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
+                 {{- end }}
+                 {{- with .encodedCharacters.allowEncodedHash }}
+          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
+                 {{- end }}
+                {{- end }}
                 {{- if $config.http3 }}
                   {{- if $config.http3.enabled }}
           - "--entryPoints.{{ $entrypoint }}.http3"
