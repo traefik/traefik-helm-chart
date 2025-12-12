@@ -179,19 +179,33 @@ spec:
                 description: Hash is a hash representing the APIBundle.
                 type: string
               resolvedApis:
-                description: ResolvedAPIs is the list of API names that were successfully
+                description: ResolvedAPIs is the list of APIs that were successfully
                   resolved.
                 items:
-                  type: string
+                  description: ResolvedAPIReference references a resolved API.
+                  properties:
+                    name:
+                      description: Name of the API.
+                      type: string
+                  required:
+                  - name
+                  type: object
                 type: array
               syncedAt:
                 format: date-time
                 type: string
               unresolvedApis:
-                description: UnresolvedAPIs is the list of API names that could not
-                  be resolved.
+                description: UnresolvedAPIs is the list of APIs that could not be
+                  resolved.
                 items:
-                  type: string
+                  description: ResolvedAPIReference references a resolved API.
+                  properties:
+                    name:
+                      description: Name of the API.
+                      type: string
+                  required:
+                  - name
+                  type: object
                 type: array
               version:
                 type: string
