@@ -1,0 +1,70 @@
+suite: Traefik security configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should have no custom security arguments by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.sanitizePath=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSlash=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedBackSlash=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedNullCharacter=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSemicolon=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedPercent=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedQuestionMark=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=false"
+  - it: should be possible to customize security arguments
+    set:
+      ports:
+        websecure:
+          http:
+            sanitizePath: false
+            encodedCharacters:
+              allowEncodedSlash: true
+              allowEncodedBackSlash: true
+              allowEncodedNullCharacter: true
+              allowEncodedSemicolon: true
+              allowEncodedPercent: true
+              allowEncodedQuestionMark: true
+              allowEncodedHash: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.sanitizePath=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSlash=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedBackSlash=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedNullCharacter=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSemicolon=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedPercent=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedQuestionMark=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=true"
+
