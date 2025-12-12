@@ -593,10 +593,10 @@
             {{- if .watchIngressWithoutClass }}
           - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
             {{- end }}
-            {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
+            {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNginx.namespaces" $ }}"
             {{- end }}
-            {{- with .namespaceSelector }}
+            {{- with .watchNamespaceSelector }}
           - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
             {{- end }}
             {{- if and $.Values.service.enabled .publishService.enabled }}

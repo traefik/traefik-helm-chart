@@ -164,7 +164,7 @@ Construct a comma-separated list of whitelisted namespaces
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
 {{- define "providers.kubernetesIngressNginx.namespaces" -}}
-{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngressNginx.namespaces) }}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngressNginx.watchNamespace) }}
 {{- end -}}
 {{- define "providers.knative.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.knative.namespaces) }}

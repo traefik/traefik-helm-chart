@@ -57,15 +57,13 @@ tests:
     set:
       providers:
         kubernetesIngressNginx:
-          namespaces:
-            - "nginx-ingress"
-            - "default"
-          namespaceSelector: "environment=production"
+          watchNamespace: "nginx-ingress"
+          watchNamespaceSelector: "environment=production"
     asserts:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.watchnamespace=nginx-ingress,default"
+          content: "--providers.kubernetesingressnginx.watchnamespace=nginx-ingress"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args

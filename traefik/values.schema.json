@@ -1939,12 +1939,6 @@
                         "ingressClassByName": {
                             "type": "boolean"
                         },
-                        "namespaceSelector": {
-                            "type": "string"
-                        },
-                        "namespaces": {
-                            "type": "array"
-                        },
                         "publishService": {
                             "type": "object",
                             "properties": {
@@ -1967,6 +1961,12 @@
                         },
                         "watchIngressWithoutClass": {
                             "type": "boolean"
+                        },
+                        "watchNamespace": {
+                            "type": "string"
+                        },
+                        "watchNamespaceSelector": {
+                            "type": "string"
                         }
                     }
                 }
