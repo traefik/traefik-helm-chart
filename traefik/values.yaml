@@ -891,6 +891,18 @@ ports:
     appProtocol:  # @schema type:[string, null]
     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
     allowACMEByPass: false
+    http:
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+      encodedCharacters:
+        allowEncodedSlash: false
+        allowEncodedBackSlash: false
+        allowEncodedNullCharacter: false
+        allowEncodedSemicolon: false
+        allowEncodedPercent: false
+        allowEncodedQuestionMark: false
+        allowEncodedHash: false
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+      sanitizePath:  # @schema type:[boolean, null]
     http3:
       ## -- Enable HTTP/3 on the entrypoint
       ## Enabling it will also enable http3 experimental feature

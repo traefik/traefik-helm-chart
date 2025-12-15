@@ -1578,6 +1578,43 @@
                         ],
                         "minimum": 0
                     },
+                    "http": {
+                        "type": "object",
+                        "properties": {
+                            "encodedCharacters": {
+                                "type": "object",
+                                "properties": {
+                                    "allowEncodedBackSlash": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedHash": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedNullCharacter": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedPercent": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedQuestionMark": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedSemicolon": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedSlash": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "sanitizePath": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            }
+                        }
+                    },
                     "http3": {
                         "type": "object",
                         "properties": {
