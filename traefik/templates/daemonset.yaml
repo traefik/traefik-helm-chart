@@ -13,7 +13,7 @@
     {{- if and (eq (.type) "RollingUpdate") (.rollingUpdate) }}
       {{- if not (contains "%" (toString .rollingUpdate.maxUnavailable)) }}
         {{- if and ($.Values.hostNetwork) (lt (float64 .rollingUpdate.maxUnavailable) 1.0) }}
-          {{- fail "maxUnavailable should be greater than 1 when using hostNetwork." }}
+          {{- fail "maxUnavailable should be greater than 0 when using hostNetwork." }}
         {{- end }}
       {{- end }}
     {{- end }}

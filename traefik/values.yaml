@@ -788,7 +788,9 @@ env: []
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
 envFrom: []
 
+# @schema mergeProperties: true
 ports:
+  # @schema additionalProperties: false
   traefik:
     port: 8080
     # -- Use hostPort if set.
@@ -822,7 +824,7 @@ ports:
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
-    # asDefault: true
+    asDefault:  # @schema type: [boolean, null]; default: null
     port: 8000
     # hostPort: 8000
     # containerPort: 8000
@@ -930,7 +932,7 @@ ports:
     # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
     #   - namespace-name1@kubernetescrd
     #   - namespace-name2@kubernetescrd
-    middlewares: []
+    middlewares: []  # @schema type: [array, null]
     observability:  # @schema additionalProperties: false
       # -- Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
