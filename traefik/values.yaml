@@ -363,10 +363,10 @@ providers:
     ingressClassByName: false
     # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
     watchIngressWithoutClass: false
-    # -- Namespace the controller watches for updates to Kubernetes objects. All namespaces are watched if this parameter is left empty. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
-    namespaces: []
-    # -- Selector selects namespaces the controller watches for updates to Kubernetes objects
-    namespaceSelector: ""
+    # -- Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.
+    watchNamespace: ""
+    # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
+    watchNamespaceSelector: ""
     # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
     publishService:
       enabled: false
