@@ -333,6 +333,9 @@ tests:
       providers:
         kubernetesGateway:
           enabled: true
+      experimental:
+        kubernetesGateway:
+          enabled: true 
       gateway:
         defaultScope: All
     asserts:

@@ -248,7 +248,12 @@
                     "type": "object"
                 },
                 "defaultScope": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "",
+                        "All", 
+                        "None"
+                    ]
                 },
                 "listeners": {
                     "type": "object",

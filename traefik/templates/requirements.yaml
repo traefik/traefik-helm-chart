@@ -21,6 +21,9 @@
   {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
 {{- end }}
 
+{{- if and (.Values.providers.kubernetesGateway.enabled) (.Values.gateway.defaultScope) (not .Values.experimental.kubernetesGateway.enabled) }}
+  {{- fail "ERROR: The Gateway 'defaultScope' field is experimental. Enable it by setting experimental.kubernetesGateway.enabled=true" }}
+{{- end }}
 
 {{- if .Values.rbac.namespaced }}
   {{- if .Values.providers.kubernetesGateway.enabled }}
