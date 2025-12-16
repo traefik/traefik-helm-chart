@@ -314,7 +314,7 @@ Kubernetes: `>=1.22.0-0`
 | persistence.name | string | `"data"` |  |
 | persistence.path | string | `"/data"` |  |
 | persistence.size | string | `"128Mi"` |  |
-| persistence.storageClass | string | `""` |  |
+| persistence.storageClass | string | `nil` |  |
 | persistence.subPath | string | `""` | Only mount a subpath of the Volume into the pod |
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | `{"enabled":false,"maxUnavailable":null,"minAvailable":null}` | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |

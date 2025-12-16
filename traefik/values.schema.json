@@ -1459,7 +1459,10 @@
                     "type": "string"
                 },
                 "storageClass": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "subPath": {
                     "type": "string"
