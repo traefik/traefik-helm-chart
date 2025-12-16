@@ -366,7 +366,7 @@ tests:
             foo: bar
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: plugin test is missing moduleName/version keys !"
+          errorMessage: "ERROR: plugin test is missing moduleName/version keys!"
 
   - it: should fail gracefully on missing plugins information
     set:
@@ -376,7 +376,7 @@ tests:
             moduleName: github.com/traefik/plugindemo
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: plugin demo is missing moduleName/version keys !"
+          errorMessage: "ERROR: plugin demo is missing moduleName/version keys!"
 
   - it: should create correct volumes, mounts and args for local plugins
     set:
@@ -462,7 +462,7 @@ tests:
             hostPath: /plugins-local/src/github.com/traefik/plugindemo
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: local plugin local-demo is missing moduleName !"
+          errorMessage: "ERROR: local plugin local-demo is missing moduleName!"
 
   - it: should create correct volumes, mounts and args for new structured localPlugins and legacy hostPath
     set:
@@ -1301,3 +1301,19 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--experimental.otlpLogs=true"
+  - it: should fail on typo with providers
+    set:
+      providers:
+        kubernetescrd: # typo here
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on typo with providers settings
+    set:
+      providers:
+        kubernetesCRD:
+          allowCrossNmespace: true # typo here
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

@@ -1462,7 +1462,10 @@
                     "type": "string"
                 },
                 "storageClass": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "subPath": {
                     "type": "string"
@@ -1580,6 +1583,43 @@
                             "null"
                         ],
                         "minimum": 0
+                    },
+                    "http": {
+                        "type": "object",
+                        "properties": {
+                            "encodedCharacters": {
+                                "type": "object",
+                                "properties": {
+                                    "allowEncodedBackSlash": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedHash": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedNullCharacter": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedPercent": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedQuestionMark": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedSemicolon": {
+                                        "type": "boolean"
+                                    },
+                                    "allowEncodedSlash": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            },
+                            "sanitizePath": {
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            }
+                        }
                     },
                     "http3": {
                         "type": "object",
@@ -1818,13 +1858,17 @@
                         "ingressClass": {
                             "type": "string"
                         },
+                        "labelSelector": {
+                            "type": "string"
+                        },
                         "namespaces": {
                             "type": "array"
                         },
                         "nativeLBByDefault": {
                             "type": "boolean"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "kubernetesGateway": {
                     "type": "object",
@@ -1938,12 +1982,6 @@
                         "ingressClassByName": {
                             "type": "boolean"
                         },
-                        "namespaceSelector": {
-                            "type": "string"
-                        },
-                        "namespaces": {
-                            "type": "array"
-                        },
                         "publishService": {
                             "type": "object",
                             "properties": {
@@ -1966,6 +2004,12 @@
                         },
                         "watchIngressWithoutClass": {
                             "type": "boolean"
+                        },
+                        "watchNamespace": {
+                            "type": "string"
+                        },
+                        "watchNamespaceSelector": {
+                            "type": "string"
                         }
                     }
                 }

@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 37.4.0](https://img.shields.io/badge/Version-37.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.2](https://img.shields.io/badge/AppVersion-v3.6.2-informational?style=flat-square)
+![Version: 37.4.0](https://img.shields.io/badge/Version-37.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.4](https://img.shields.io/badge/AppVersion-v3.6.4-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -315,7 +315,7 @@ Kubernetes: `>=1.22.0-0`
 | persistence.name | string | `"data"` |  |
 | persistence.path | string | `"/data"` |  |
 | persistence.size | string | `"128Mi"` |  |
-| persistence.storageClass | string | `""` |  |
+| persistence.storageClass | string | `nil` |  |
 | persistence.subPath | string | `""` | Only mount a subpath of the Volume into the pod |
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | `{"enabled":false,"maxUnavailable":null,"minAvailable":null}` | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
@@ -364,6 +364,8 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | string | `nil` |  |
+| ports.websecure.http.encodedCharacters | object | `{"allowEncodedBackSlash":false,"allowEncodedHash":false,"allowEncodedNullCharacter":false,"allowEncodedPercent":false,"allowEncodedQuestionMark":false,"allowEncodedSemicolon":false,"allowEncodedSlash":false}` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
+| ports.websecure.http.sanitizePath | string | `nil` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization) |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
@@ -391,6 +393,7 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
 | providers.kubernetesCRD.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
 | providers.kubernetesCRD.ingressClass | string | `""` | When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled. |
+| providers.kubernetesCRD.labelSelector | string | `""` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-labelselector) |
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesCRD.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesGateway.enabled | bool | `false` | Enable Traefik Gateway provider for Gateway API |
@@ -418,13 +421,13 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngressNginx.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNginx.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNginx.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
-| providers.kubernetesIngressNginx.namespaceSelector | string | `""` | Selector selects namespaces the controller watches for updates to Kubernetes objects |
-| providers.kubernetesIngressNginx.namespaces | list | `[]` | Namespace the controller watches for updates to Kubernetes objects. All namespaces are watched if this parameter is left empty. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngressNginx.publishService | object | `{"enabled":false,"pathOverride":""}` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
 | providers.kubernetesIngressNginx.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
 | providers.kubernetesIngressNginx.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNginx.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
 | providers.kubernetesIngressNginx.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
+| providers.kubernetesIngressNginx.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
+| providers.kubernetesIngressNginx.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
 | rbac | object | `{"aggregateTo":[],"enabled":true,"namespaced":false,"secretResourceNames":[]}` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |

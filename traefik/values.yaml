@@ -278,7 +278,9 @@ livenessProbe:  # @schema additionalProperties: false
 # -- Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
 startupProbe: {}
 
-providers:  # @schema additionalProperties: false
+# @schema additionalProperties: false
+providers:
+  # @schema additionalProperties: false
   kubernetesCRD:
     # -- Load Kubernetes IngressRoute provider
     enabled: true
@@ -290,7 +292,8 @@ providers:  # @schema additionalProperties: false
     allowEmptyServices: true
     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
     ingressClass: ""
-    # labelSelector: environment=production,method=traefik
+    # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-labelselector)
+    labelSelector: ""
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
@@ -363,10 +366,10 @@ providers:  # @schema additionalProperties: false
     ingressClassByName: false
     # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
     watchIngressWithoutClass: false
-    # -- Namespace the controller watches for updates to Kubernetes objects. All namespaces are watched if this parameter is left empty. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
-    namespaces: []
-    # -- Selector selects namespaces the controller watches for updates to Kubernetes objects
-    namespaceSelector: ""
+    # -- Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.
+    watchNamespace: ""
+    # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
+    watchNamespaceSelector: ""
     # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
     publishService:
       enabled: false
@@ -891,6 +894,18 @@ ports:
     appProtocol:  # @schema type:[string, null]
     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
     allowACMEByPass: false
+    http:
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+      encodedCharacters:
+        allowEncodedSlash: false
+        allowEncodedBackSlash: false
+        allowEncodedNullCharacter: false
+        allowEncodedSemicolon: false
+        allowEncodedPercent: false
+        allowEncodedQuestionMark: false
+        allowEncodedHash: false
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+      sanitizePath:  # @schema type:[boolean, null]
     http3:
       ## -- Enable HTTP/3 on the entrypoint
       ## Enabling it will also enable http3 experimental feature
@@ -1047,7 +1062,7 @@ persistence:
   existingClaim: ""
   accessMode: ReadWriteOnce
   size: 128Mi
-  storageClass: ""
+  storageClass:  # @schema type:[string, null]
   volumeName: ""
   path: /data
   annotations: {}

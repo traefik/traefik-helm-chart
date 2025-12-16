@@ -92,12 +92,23 @@
   {{- end }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.6.4-0" $version) (or
+    (eq .Values.ports.websecure.http.sanitizePath false)
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedBackSlash
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedNullCharacter
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedSemicolon
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedPercent
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedQuestionMark
+    .Values.ports.websecure.http.encodedCharacters.allowEncodedHash )}}
+  {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
+{{- end }}
 
 {{- if $.Values.hub.token -}}
   {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}
   {{ $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) }}
   {{ if not $hubVersion }}
-    {{ fail "When using Traefik Hub image tag needs to be specified !" }}
+    {{ fail "When using Traefik Hub image tag needs to be specified!" }}
   {{- end -}}
 
   {{ $hubVersion = (split "@" (default "v3" $hubVersion))._0 }}
