@@ -241,19 +241,14 @@
                 "annotations": {
                     "type": "object"
                 },
+                "defaultScope": {
+                    "type": "string"
+                },
                 "enabled": {
                     "type": "boolean"
                 },
                 "infrastructure": {
                     "type": "object"
-                },
-                "defaultScope": {
-                    "type": "string",
-                    "enum": [
-                        "",
-                        "All", 
-                        "None"
-                    ]
                 },
                 "listeners": {
                     "type": "object",
