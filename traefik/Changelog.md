@@ -18,6 +18,13 @@
 * feat(CRDs): update Traefik Hub to v1.24.1, with required RBACs
 * chore(release): 🚀 publish traefik 38.0.0 and crds 1.13.0
 
+**Upgrades Notes**
+
+There are two breaking changes in this release:
+
+1. Traefik Proxy v3.6.4+ contains a security fix that is also a breaking change. See [upstream documentation](https://doc.traefik.io/traefik/v3.6/migrate/v3/#v364) for more details.
+2. PR https://github.com/traefik/traefik-helm-chart/pull/1596 align _kubernetesIngressNginx_ provider setting with upstream. There is a _before_ / _after_ example in the PR description
+
 ### Default value changes
 
 ```diff
