@@ -25,6 +25,27 @@ There are two breaking changes in this release:
 1. Traefik Proxy v3.6.4+ contains a security fix that is also a breaking change. See [upstream documentation](https://doc.traefik.io/traefik/v3.6/migrate/v3/#v364) for more details.
 2. PR https://github.com/traefik/traefik-helm-chart/pull/1596 align _kubernetesIngressNginx_ provider setting with upstream. There is a _before_ / _after_ example in the PR description
 
+If you need to restore Traefik behavior of v3.6.3 or inferior, it can be set with values.
+
+Here is an example on _websecure_ entrypoint:
+
+```yaml
+ports:
+  websecure:
+    http:
+      encodedCharacters:
+        allowEncodedSlash: true
+        allowEncodedBackSlash: true
+        allowEncodedNullCharacter: true
+        allowEncodedSemicolon: true
+        allowEncodedPercent: true
+        allowEncodedQuestionMark: true
+        allowEncodedHash: true
+      sanitizePath: false
+```
+
+This is not recommended, it may expose you to [GHSA-gm3x-23wp-hc2c](https://github.com/traefik/traefik/security/advisories/GHSA-gm3x-23wp-hc2c).
+
 ### Default value changes
 
 ```diff
