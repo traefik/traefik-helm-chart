@@ -407,6 +407,7 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
+| providers.kubernetesIngress.labelSelector | string | `nil` |  |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |

@@ -1309,11 +1309,43 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should fail on typo with providers settings
+  - it: should fail on typo with kubernetescrd provider settings
     set:
       providers:
         kubernetesCRD:
           allowCrossNmespace: true # typo here
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on typo with kubernetesIngress provider settings
+    set:
+      providers:
+        kubernetesIngress:
+          nmespaces: [ "foobar"] # typo here
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on typo with kubernetesGateway provider settings
+    set:
+      providers:
+        kubernetesGateway:
+          labelSlector: "foo=bar" # typo here
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on typo with kubernetesIngressNginx provider settings
+    set:
+      providers:
+        kubernetesIngressNginx:
+          namespaces: [ "shouldfail" ] # typo here
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on typo with file provider settings
+    set:
+      providers:
+        file:
+          contnt: "foobar" # typo here
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
