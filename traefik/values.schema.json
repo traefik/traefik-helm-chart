@@ -1610,6 +1610,14 @@
                                     }
                                 }
                             },
+                            "redirections": {
+                                "type": "object",
+                                "properties": {
+                                    "entryPoint": {
+                                        "type": "object"
+                                    }
+                                }
+                            },
                             "sanitizePath": {
                                 "type": [
                                     "boolean",
@@ -1699,14 +1707,6 @@
                             },
                             "trustedIPs": {
                                 "type": "array"
-                            }
-                        }
-                    },
-                    "redirections": {
-                        "type": "object",
-                        "properties": {
-                            "entryPoint": {
-                                "type": "object"
                             }
                         }
                     },

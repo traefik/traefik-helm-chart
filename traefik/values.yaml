@@ -844,12 +844,13 @@ ports:
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
-    redirections:
-      # -- Port Redirections
-      # Added in 2.2, one can make permanent redirects via entrypoints.
-      # Same sets of parameters: to, scheme, permanent and priority.
-      # https://docs.traefik.io/routing/entrypoints/#redirection
-      entryPoint: {}
+    http:
+      redirections:
+        # -- Port Redirections
+        # Added in 2.2, one can make permanent redirects via entrypoints.
+        # Same sets of parameters: to, scheme, permanent and priority.
+        # https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example
+        entryPoint: {}
     forwardedHeaders:
       # -- Trust forwarded headers information (X-Forwarded-*).
       trustedIPs: []

@@ -343,6 +343,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
+| ports.web.http.redirections.entryPoint | object | `{}` | Port Redirections Added in 2.2, one can make permanent redirects via entrypoints. Same sets of parameters: to, scheme, permanent and priority. https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example |
 | ports.web.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | ports.web.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
 | ports.web.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
@@ -352,7 +353,6 @@ Kubernetes: `>=1.22.0-0`
 | ports.web.protocol | string | `"TCP"` |  |
 | ports.web.proxyProtocol.insecure | bool | `false` |  |
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
-| ports.web.redirections.entryPoint | object | `{}` | Port Redirections Added in 2.2, one can make permanent redirects via entrypoints. Same sets of parameters: to, scheme, permanent and priority. https://docs.traefik.io/routing/entrypoints/#redirection |
 | ports.web.targetPort | string | `nil` |  |
 | ports.web.transport | object | `{"keepAliveMaxRequests":null,"keepAliveMaxTime":null,"lifeCycle":{"graceTimeOut":null,"requestAcceptGraceTimeout":null},"respondingTimeouts":{"idleTimeout":null,"readTimeout":null,"writeTimeout":null}}` | Set transport settings for the entrypoint; see also https://doc.traefik.io/traefik/routing/entrypoints/#transport |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass) |
