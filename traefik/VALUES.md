@@ -365,10 +365,11 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.hostPort | string | `nil` |  |
 | ports.websecure.http.encodedCharacters | object | `{"allowEncodedBackSlash":false,"allowEncodedHash":false,"allowEncodedNullCharacter":false,"allowEncodedPercent":false,"allowEncodedQuestionMark":false,"allowEncodedSemicolon":false,"allowEncodedSlash":false}` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
 | ports.websecure.http.maxHeaderBytes | string | `nil` | Maximum size of request headers in bytes. Default: 1048576 (1 MB) |
+| ports.websecure.http.middlewares | list | `[]` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares) |
 | ports.websecure.http.sanitizePath | string | `nil` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization) |
+| ports.websecure.http.tls | object | `{"certResolver":"","domains":[],"enabled":true,"options":""}` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls) |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
-| ports.websecure.middlewares | list | `[]` | /!\ It introduces here a link between your static configuration and your dynamic configuration /!\ It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace   - namespace-name1@kubernetescrd   - namespace-name2@kubernetescrd |
 | ports.websecure.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | ports.websecure.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
 | ports.websecure.observability.metrics | string | `nil` | Enables metrics for this entryPoint. |
@@ -379,7 +380,6 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.proxyProtocol.insecure | bool | `false` |  |
 | ports.websecure.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.websecure.targetPort | string | `nil` |  |
-| ports.websecure.tls | object | `{"certResolver":"","domains":[],"enabled":true,"options":""}` | See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#tls) |
 | ports.websecure.transport | object | `{"keepAliveMaxRequests":null,"keepAliveMaxTime":null,"lifeCycle":{"graceTimeOut":null,"requestAcceptGraceTimeout":null},"respondingTimeouts":{"idleTimeout":null,"readTimeout":null,"writeTimeout":null}}` | See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport) |
 | priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
 | providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/) |

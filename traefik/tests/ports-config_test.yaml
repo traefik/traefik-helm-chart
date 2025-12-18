@@ -319,16 +319,18 @@ tests:
           port: 8082
         http-internal:
           port: 8443
-          tls:
-            enabled: true
           expose:
             default: true
+          http:
+            tls:
+              enabled: true
         http-external:
           port: 8445
-          tls:
-            enabled: true
           expose:
             default: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - containsDocument:
           kind: Deployment
@@ -397,8 +399,9 @@ tests:
       ports:
         websecure2:
           port: 444
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
           http3:
             enabled: true
           expose:

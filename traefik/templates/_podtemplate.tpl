@@ -638,89 +638,80 @@
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
-            {{- if ($config.http).redirections }}
-             {{- with $config.http.redirections.entryPoint }}
-              {{- if not (hasKey $.Values.ports .to) }}
-                {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
-                {{- fail $errorMsg }}
-              {{- end }}
-              {{- $toPort := index $.Values.ports .to }}
-              {{- if and (($toPort.tls).enabled) .scheme (ne .scheme "https") }}
-                {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
-                {{- fail $errorMsg }}
-              {{- end }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
-              {{- with .scheme }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme={{ . }}"
-              {{- end }}
-              {{- with .priority }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
-              {{- end }}
-              {{- if hasKey . "permanent" }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ .permanent }}"
-              {{- end }}
-             {{- end }}
-            {{- end }}
-            {{- if $config.middlewares }}
-          - "--entryPoints.{{ $entrypoint }}.http.middlewares={{ join "," $config.middlewares }}"
-            {{- end }}
             {{- with $config.http }}
-             {{- if ne .sanitizePath nil }}
-              {{- with .sanitizePath | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.sanitizePath={{ . }}"
-              {{- end }}
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedSlash }}
+              {{- with (.encodedCharacters).allowEncodedSlash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedBackSlash }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedBackSlash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedNullCharacter }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedNullCharacter }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedSemicolon }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedSemicolon }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedPercent }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedPercent }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedQuestionMark }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedQuestionMark }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
-             {{- end }}
-             {{- with (.encodedCharacters).allowEncodedHash }}
+              {{- end }}
+              {{- with (.encodedCharacters).allowEncodedHash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
-             {{- end }}
-             {{- with .maxHeaderBytes }}
-          - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
-             {{- end }}
-            {{- end }}
-            {{- if $config.tls }}
-              {{- if $config.tls.enabled }}
+              {{- end }}
+              {{- with .middlewares }}
+          - "--entryPoints.{{ $entrypoint }}.http.middlewares={{ join "," . }}"
+              {{- end }}
+              {{- with (.redirections).entryPoint }}
+               {{- if not (hasKey $.Values.ports .to) }}
+                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
+                 {{- fail $errorMsg }}
+               {{- end }}
+               {{- $toPort := index $.Values.ports .to }}
+               {{- if and (((($toPort).http).tls).enabled) .scheme (ne .scheme "https") }}
+                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
+                 {{- fail $errorMsg }}
+               {{- end }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
+               {{- with .scheme }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme={{ . }}"
+               {{- end }}
+               {{- with .priority }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
+               {{- end }}
+               {{- if hasKey . "permanent" }}
+          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ .permanent }}"
+               {{- end }}
+              {{- end }}
+              {{- if ne .sanitizePath nil }}
+               {{- with .sanitizePath | toString }}
+          - "--entryPoints.{{ $entrypoint }}.http.sanitizePath={{ . }}"
+               {{- end }}
+              {{- end }}
+              {{- if (.tls).enabled }}
           - "--entryPoints.{{ $entrypoint }}.http.tls=true"
-                {{- if $config.tls.options }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.options={{ $config.tls.options }}"
+                {{- with .tls.options }}
+          - "--entryPoints.{{ $entrypoint }}.http.tls.options={{ . }}"
                 {{- end }}
-                {{- if $config.tls.certResolver }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.certResolver={{ $config.tls.certResolver }}"
+                {{- with .tls.certResolver }}
+          - "--entryPoints.{{ $entrypoint }}.http.tls.certResolver={{ . }}"
                 {{- end }}
-                {{- if $config.tls.domains }}
-                  {{- range $index, $domain := $config.tls.domains }}
-                    {{- if $domain.main }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].main={{ $domain.main }}"
-                    {{- end }}
-                    {{- if $domain.sans }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," $domain.sans }}"
-                    {{- end }}
+                {{- range $index, $domain := .tls.domains }}
+                  {{- with $domain.main }}
+          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].main={{ . }}"
+                  {{- end }}
+                  {{- with $domain.sans }}
+          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," . }}"
                   {{- end }}
                 {{- end }}
-                {{- if $config.http3 }}
-                  {{- if $config.http3.enabled }}
+              {{- end }}
+            {{- end }}
+            {{- with $config.http3 }}
+              {{- if .enabled }}
           - "--entryPoints.{{ $entrypoint }}.http3"
-                    {{- if $config.http3.advertisedPort }}
-          - "--entryPoints.{{ $entrypoint }}.http3.advertisedPort={{ $config.http3.advertisedPort }}"
-                    {{- end }}
-                  {{- end }}
+                {{- with .advertisedPort }}
+          - "--entryPoints.{{ $entrypoint }}.http3.advertisedPort={{ . }}"
                 {{- end }}
               {{- end }}
             {{- end }}
