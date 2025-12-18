@@ -638,8 +638,8 @@
           {{- end }}
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
-            {{- if $config.redirections }}
-             {{- with $config.redirections.entryPoint }}
+            {{- if ($config.http).redirections }}
+             {{- with $config.http.redirections.entryPoint }}
               {{- if not (hasKey $.Values.ports .to) }}
                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
                 {{- fail $errorMsg }}
