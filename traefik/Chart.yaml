@@ -25,6 +25,7 @@ annotations:
   artifacthub.io/changes: |
     - "fix: update error message for maxUnavailable validation"
     - "fix(pvc): allow empty storageClassName"
+    - "fix(providers): ✨ enforce schema for all providers"
     - "fix(providers)!: align labelSelector for kubernetesGateway and knative"
     - "fix(notes): minor typo"
     - "fix(nginx)!: 🐛 align provider settings and provide required rbac"

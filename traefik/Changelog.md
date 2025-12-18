@@ -7,6 +7,7 @@
 * fix: update error message for maxUnavailable validation
 * fix(pvc): allow empty storageClassName
 * fix(providers)!: align labelSelector for kubernetesGateway and knative
+* fix(providers): ✨ enforce schema for all providers
 * fix(notes): minor typo
 * fix(nginx)!: 🐛 align provider settings and provide required rbac
 * feat(security): ✨ 🔒️ add support for request path options of traefik 3.6.4+
@@ -50,7 +51,7 @@ This is not recommended, it may expose you to [GHSA-gm3x-23wp-hc2c](https://gith
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index bc4c5da..a78bbfd 100644
+index bc4c5da..0ccdbae 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -275,7 +275,9 @@ livenessProbe:  # @schema additionalProperties: false
@@ -64,7 +65,7 @@ index bc4c5da..a78bbfd 100644
    kubernetesCRD:
      # -- Load Kubernetes IngressRoute provider
      enabled: true
-@@ -287,7 +289,8 @@ providers:  # @schema additionalProperties: false
+@@ -287,12 +289,14 @@ providers:  # @schema additionalProperties: false
      allowEmptyServices: true
      # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
      ingressClass: ""
@@ -74,7 +75,34 @@ index bc4c5da..a78bbfd 100644
      # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
      namespaces: []
      # -- Defines whether to use Native Kubernetes load-balancing mode by default.
-@@ -327,7 +330,7 @@ providers:  # @schema additionalProperties: false
+     nativeLBByDefault: false
+ 
++  # @schema additionalProperties: false
+   kubernetesIngress:
+     # -- Load Kubernetes Ingress provider
+     enabled: true
+@@ -300,9 +304,11 @@ providers:  # @schema additionalProperties: false
+     allowExternalNameServices: false
+     # -- Allows to return 503 when there are no endpoints available
+     allowEmptyServices: true
++    # -- Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup)
++    disableIngressClassLookup: false
+     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+     ingressClass:  # @schema type:[string, null]
+-    # labelSelector: environment=production,method=traefik
++    labelSelector:  # @schema type:[string, null]
+     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+     namespaces: []
+     # IP used for Kubernetes Ingress endpoints
+@@ -318,6 +324,7 @@ providers:  # @schema additionalProperties: false
+     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
+     strictPrefixMatching: false
+ 
++  # @schema additionalProperties: false
+   kubernetesGateway:
+     # -- Enable Traefik Gateway provider for Gateway API
+     enabled: false
+@@ -327,7 +334,7 @@ providers:  # @schema additionalProperties: false
      # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
      namespaces: []
      # -- A label selector can be defined to filter on specific GatewayClass objects only.
@@ -83,7 +111,23 @@ index bc4c5da..a78bbfd 100644
      # -- Defines whether to use Native Kubernetes load-balancing mode by default.
      nativeLBByDefault: false
      statusAddress:
-@@ -360,10 +363,10 @@ providers:  # @schema additionalProperties: false
+@@ -341,6 +348,7 @@ providers:  # @schema additionalProperties: false
+         name: ""
+         namespace: ""
+ 
++  # @schema additionalProperties: false
+   file:
+     # -- Create a file provider
+     enabled: false
+@@ -349,6 +357,7 @@ providers:  # @schema additionalProperties: false
+     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+     content: ""
+ 
++  # @schema additionalProperties: false
+   kubernetesIngressNginx:
+     # -- Enable Kubernetes Ingress NGINX provider (experimental)
+     enabled: false
+@@ -360,10 +369,10 @@ providers:  # @schema additionalProperties: false
      ingressClassByName: false
      # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
      watchIngressWithoutClass: false
@@ -98,7 +142,14 @@ index bc4c5da..a78bbfd 100644
      # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
      publishService:
        enabled: false
-@@ -389,7 +392,7 @@ providers:  # @schema additionalProperties: false
+@@ -383,13 +392,14 @@ providers:  # @schema additionalProperties: false
+     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
+     token: ""
+ 
++  # @schema additionalProperties: false
+   knative:
+     # -- Enable Knative provider
+     enabled: false
      # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
      namespaces: []
      # -- Allow filtering Knative Ingress objects
@@ -107,7 +158,7 @@ index bc4c5da..a78bbfd 100644
  
  # -- Add volumes to the traefik pod. The volume name will be passed to tpl.
  # This can be used to mount a cert pair or a configmap that holds a config.toml file.
-@@ -785,7 +788,9 @@ env: []
+@@ -785,7 +795,9 @@ env: []
  # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
  envFrom: []
  
@@ -117,7 +168,7 @@ index bc4c5da..a78bbfd 100644
    traefik:
      port: 8080
      # -- Use hostPort if set.
-@@ -819,7 +824,7 @@ ports:
+@@ -819,7 +831,7 @@ ports:
        traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
    web:
      ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
@@ -126,7 +177,7 @@ index bc4c5da..a78bbfd 100644
      port: 8000
      # hostPort: 8000
      # containerPort: 8000
-@@ -886,6 +891,18 @@ ports:
+@@ -886,6 +898,18 @@ ports:
      appProtocol:  # @schema type:[string, null]
      # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
      allowACMEByPass: false
@@ -145,7 +196,7 @@ index bc4c5da..a78bbfd 100644
      http3:
        ## -- Enable HTTP/3 on the entrypoint
        ## Enabling it will also enable http3 experimental feature
-@@ -927,7 +944,7 @@ ports:
+@@ -927,7 +951,7 @@ ports:
      # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
      #   - namespace-name1@kubernetescrd
      #   - namespace-name2@kubernetescrd
@@ -154,7 +205,7 @@ index bc4c5da..a78bbfd 100644
      observability:  # @schema additionalProperties: false
        # -- Enables metrics for this entryPoint.
        metrics:  # @schema type:[boolean, null]; default: true
-@@ -1042,7 +1059,7 @@ persistence:
+@@ -1042,7 +1066,7 @@ persistence:
    existingClaim: ""
    accessMode: ReadWriteOnce
    size: 128Mi
