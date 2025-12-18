@@ -296,6 +296,7 @@ providers:
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
 
+  # @schema additionalProperties: false
   kubernetesIngress:
     # -- Load Kubernetes Ingress provider
     enabled: true
@@ -303,9 +304,11 @@ providers:
     allowExternalNameServices: false
     # -- Allows to return 503 when there are no endpoints available
     allowEmptyServices: true
+    # -- Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup)
+    disableIngressClassLookup: false
     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
     ingressClass:  # @schema type:[string, null]
-    # labelSelector: environment=production,method=traefik
+    labelSelector:  # @schema type:[string, null]
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
     namespaces: []
     # IP used for Kubernetes Ingress endpoints
@@ -321,6 +324,7 @@ providers:
     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
     strictPrefixMatching: false
 
+  # @schema additionalProperties: false
   kubernetesGateway:
     # -- Enable Traefik Gateway provider for Gateway API
     enabled: false
@@ -344,6 +348,7 @@ providers:
         name: ""
         namespace: ""
 
+  # @schema additionalProperties: false
   file:
     # -- Create a file provider
     enabled: false
@@ -352,6 +357,7 @@ providers:
     # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
     content: ""
 
+  # @schema additionalProperties: false
   kubernetesIngressNginx:
     # -- Enable Kubernetes Ingress NGINX provider (experimental)
     enabled: false
@@ -386,6 +392,7 @@ providers:
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
     token: ""
 
+  # @schema additionalProperties: false
   knative:
     # -- Enable Knative provider
     enabled: false
