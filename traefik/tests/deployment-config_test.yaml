@@ -345,8 +345,9 @@ tests:
                 scheme: http
         websecure:
           exposedPort: 443
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
@@ -361,8 +362,9 @@ tests:
                 scheme: https
         websecure:
           exposedPort: 443
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -380,8 +382,9 @@ tests:
                 to: websecure
         websecure:
           exposedPort: 443
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args

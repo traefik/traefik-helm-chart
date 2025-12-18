@@ -588,7 +588,8 @@ tests:
     set:
       ports:
         websecure:
-          middlewares:
+          http:
+            middlewares:
             - auth@file
             - strip@kubernetes-crd
     asserts:
@@ -599,7 +600,8 @@ tests:
     set:
       ports:
         web:
-          middlewares:
+          http:
+            middlewares:
             - auth@file
     asserts:
       - contains:
@@ -609,7 +611,8 @@ tests:
     set:
       ports:
         web:
-          middlewares:
+          http:
+            middlewares:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args

@@ -1610,6 +1610,12 @@
                                     }
                                 }
                             },
+                            "middlewares": {
+                                "type": [
+                                    "array",
+                                    "null"
+                                ]
+                            },
                             "redirections": {
                                 "type": "object",
                                 "properties": {
@@ -1623,6 +1629,23 @@
                                     "boolean",
                                     "null"
                                 ]
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "certResolver": {
+                                        "type": "string"
+                                    },
+                                    "domains": {
+                                        "type": "array"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "options": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     },
@@ -1640,12 +1663,6 @@
                                 "type": "boolean"
                             }
                         }
-                    },
-                    "middlewares": {
-                        "type": [
-                            "array",
-                            "null"
-                        ]
                     },
                     "nodePort": {
                         "type": [
@@ -1717,23 +1734,6 @@
                             "null"
                         ],
                         "minimum": 0
-                    },
-                    "tls": {
-                        "type": "object",
-                        "properties": {
-                            "certResolver": {
-                                "type": "string"
-                            },
-                            "domains": {
-                                "type": "array"
-                            },
-                            "enabled": {
-                                "type": "boolean"
-                            },
-                            "options": {
-                                "type": "string"
-                            }
-                        }
                     },
                     "transport": {
                         "type": "object",

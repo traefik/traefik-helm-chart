@@ -12,7 +12,7 @@
 {{- range $portName, $config := $.Values.ports -}}
   {{- if $config -}}
     {{- if ($config.http3).enabled -}}
-      {{- if (not $config.tls.enabled) -}}
+      {{- if (not ($config.http).tls.enabled) -}}
         {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
       {{- end -}}
       {{ $udpConfig := deepCopy $config -}}
