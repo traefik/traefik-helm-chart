@@ -234,8 +234,9 @@ tests:
         websecure:
           http3:
             enabled: true
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     documentIndex: 0
     asserts:
     - contains:
@@ -252,8 +253,9 @@ tests:
           http3:
             enabled: true
             advertisedPort: 4443
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     documentIndex: 0
     asserts:
     - contains:
@@ -323,8 +325,9 @@ tests:
     set:
       ports:
         websecure:
-          tls:
-            enabled: false
+          http:
+            tls:
+              enabled: false
           http3:
             enabled: true
     asserts:
