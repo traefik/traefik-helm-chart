@@ -155,6 +155,9 @@ gateway:
   annotations: {}
   # -- [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels)
   infrastructure: {}
+  # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
+  # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
+  defaultScope: ""
   # -- Define listeners
   listeners:
     web:

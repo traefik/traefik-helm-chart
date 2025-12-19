@@ -241,6 +241,9 @@
                 "annotations": {
                     "type": "object"
                 },
+                "defaultScope": {
+                    "type": "string"
+                },
                 "enabled": {
                     "type": "boolean"
                 },
