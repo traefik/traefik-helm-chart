@@ -670,26 +670,29 @@
           - "--entryPoints.{{ $entrypoint }}.http.sanitizePath={{ . }}"
               {{- end }}
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedSlash }}
+             {{- with (.encodedCharacters).allowEncodedSlash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedBackSlash }}
+             {{- with (.encodedCharacters).allowEncodedBackSlash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedNullCharacter }}
+             {{- with (.encodedCharacters).allowEncodedNullCharacter }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedSemicolon }}
+             {{- with (.encodedCharacters).allowEncodedSemicolon }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedPercent }}
+             {{- with (.encodedCharacters).allowEncodedPercent }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedQuestionMark }}
+             {{- with (.encodedCharacters).allowEncodedQuestionMark }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
              {{- end }}
-             {{- with .encodedCharacters.allowEncodedHash }}
+             {{- with (.encodedCharacters).allowEncodedHash }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
+             {{- end }}
+             {{- with .maxHeaderBytes }}
+          - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
              {{- end }}
             {{- end }}
             {{- if $config.tls }}
