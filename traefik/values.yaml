@@ -909,7 +909,7 @@ ports:
         allowEncodedQuestionMark: false
         allowEncodedHash: false
       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
-      maxHeaderBytes:  # @schema type:[string, null]
+      maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
       sanitizePath:  # @schema type:[boolean, null]
     http3:

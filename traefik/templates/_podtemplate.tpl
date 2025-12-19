@@ -692,7 +692,7 @@
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
              {{- end }}
              {{- with .maxHeaderBytes }}
-          - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . }}"
+          - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
              {{- end }}
             {{- end }}
             {{- if $config.tls }}

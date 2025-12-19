@@ -1612,9 +1612,10 @@
                             },
                             "maxHeaderBytes": {
                                 "type": [
-                                    "string",
+                                    "integer",
                                     "null"
-                                ]
+                                ],
+                                "minimum": 0
                             },
                             "sanitizePath": {
                                 "type": [
