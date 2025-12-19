@@ -1,5 +1,31 @@
 # Change Log
 
+## 38.0.1  ![AppVersion: v3.6.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2025-12-19
+
+* fix(ports): 🐛 add missing `http.maxHeaderBytes` option
+* fix(ports): 🐛 `http.encodedCharacters` on custom entrypoints
+* chore(release): 🚀 publish traefik 38.0.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 0ccdbae..f2a9f10 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -908,6 +908,8 @@ ports:
+         allowEncodedPercent: false
+         allowEncodedQuestionMark: false
+         allowEncodedHash: false
++      # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
++      maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
+       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+       sanitizePath:  # @schema type:[boolean, null]
+     http3:
+```
+
 ## 38.0.0  ![AppVersion: v3.6.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-12-17
