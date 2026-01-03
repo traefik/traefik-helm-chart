@@ -1613,6 +1613,13 @@
                                     }
                                 }
                             },
+                            "maxHeaderBytes": {
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "minimum": 0
+                            },
                             "sanitizePath": {
                                 "type": [
                                     "boolean",
@@ -1824,7 +1831,8 @@
                         "watch": {
                             "type": "boolean"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "knative": {
                     "type": "object",
@@ -1838,7 +1846,8 @@
                         "namespaces": {
                             "type": "array"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "kubernetesCRD": {
                     "type": "object",
@@ -1913,7 +1922,8 @@
                                 }
                             }
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "kubernetesIngress": {
                     "type": "object",
@@ -1924,10 +1934,19 @@
                         "allowExternalNameServices": {
                             "type": "boolean"
                         },
+                        "disableIngressClassLookup": {
+                            "type": "boolean"
+                        },
                         "enabled": {
                             "type": "boolean"
                         },
                         "ingressClass": {
+                            "type": [
+                                "string",
+                                "null"
+                            ]
+                        },
+                        "labelSelector": {
                             "type": [
                                 "string",
                                 "null"
@@ -1953,7 +1972,8 @@
                         "strictPrefixMatching": {
                             "type": "boolean"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 },
                 "kubernetesIngressNginx": {
                     "type": "object",
@@ -2011,7 +2031,8 @@
                         "watchNamespaceSelector": {
                             "type": "string"
                         }
-                    }
+                    },
+                    "additionalProperties": false
                 }
             },
             "additionalProperties": false

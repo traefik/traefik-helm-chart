@@ -204,6 +204,18 @@ tests:
           path: spec.template.spec.containers[0].readinessProbe.httpGet.host
           value: localhost
 
+  - it: should be possible to set MaxHeaderBytes on entrypoint
+    template: deployment.yaml
+    set:
+      ports:
+        web:
+          http:
+            maxHeaderBytes: 2097152  # 2 MB
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.maxHeaderBytes=2097152"
+
   - it: should be possible to use a different containerPort
     set:
       ports:

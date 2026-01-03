@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 37.4.0](https://img.shields.io/badge/Version-37.4.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.5](https://img.shields.io/badge/AppVersion-v3.6.5-informational?style=flat-square)
+![Version: 38.0.1](https://img.shields.io/badge/Version-38.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.5](https://img.shields.io/badge/AppVersion-v3.6.5-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -365,6 +365,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | string | `nil` |  |
 | ports.websecure.http.encodedCharacters | object | `{"allowEncodedBackSlash":false,"allowEncodedHash":false,"allowEncodedNullCharacter":false,"allowEncodedPercent":false,"allowEncodedQuestionMark":false,"allowEncodedSemicolon":false,"allowEncodedSlash":false}` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
+| ports.websecure.http.maxHeaderBytes | string | `nil` | Maximum size of request headers in bytes. Default: 1048576 (1 MB) |
 | ports.websecure.http.sanitizePath | string | `nil` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization) |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
@@ -406,8 +407,10 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesGateway.statusAddress.service | object | `{"enabled":true,"name":"","namespace":""}` | The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart. |
 | providers.kubernetesIngress.allowEmptyServices | bool | `true` | Allows to return 503 when there are no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
+| providers.kubernetesIngress.disableIngressClassLookup | bool | `false` | Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup) |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
+| providers.kubernetesIngress.labelSelector | string | `nil` |  |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
