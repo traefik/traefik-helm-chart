@@ -242,7 +242,15 @@
                     "type": "object"
                 },
                 "defaultScope": {
-                    "type": "string"
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "All",
+                        "None",
+                        null
+                    ]
                 },
                 "enabled": {
                     "type": "boolean"

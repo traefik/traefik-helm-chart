@@ -333,11 +333,9 @@ tests:
       providers:
         kubernetesGateway:
           enabled: true
-      experimental:
-        kubernetesGateway:
-          enabled: true 
+          experimentalChannel: true
       gateway:
-        defaultScope: All
+        defaultScope: "All"
     asserts:
       - equal:
           path: spec.defaultScope
