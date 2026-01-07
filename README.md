@@ -30,7 +30,7 @@ To upgrade from chart versions prior to v28.x (which use Traefik Proxy version 2
 
 Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations), you can use an additional chart dedicated to CRDs: **traefik-crds**.
 
-To deploy with this setup, see the [instructions below](#with-additional-crds-chart).
+This has been deprecated since v38.0.2.
 
 ### Support for Traefik Proxy v2
 
