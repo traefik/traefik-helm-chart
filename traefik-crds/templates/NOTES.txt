@@ -1,0 +1,6 @@
+⚠️ DEPRECATION WARNING: This chart is deprecated.
+
+See https://github.com/traefik/traefik-helm-chart/issues/1561#issuecomment-3714210143 for more details.
+
+In order to keep CRDs and uninstall this Traefik CRDs Chart, you can follow current upstream procedure:
+https://github.com/helm/helm/issues/8127#issuecomment-2196610968

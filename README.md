@@ -74,7 +74,10 @@ To see example values files, refer to the provided [EXAMPLES](./EXAMPLES.md).
 
 For complete documentation on all available parameters, check the [default values file](./traefik/values.yaml).
 
-#### With Additional CRDs Chart
+#### With Additional CRDs Chart (⚠️  deprecated)
+
+> [!Caution]
+> The CRD chart is deprecated. It will be removed soon
 
 To manage CRDs separately, use the optional CRDs chart. When using it, the CRDs from the regular Traefik chart are not required.
 For more details, see [here](./CONTRIBUTING.md#about-crds).
@@ -161,6 +164,9 @@ helm upgrade traefik traefik/traefik
 
 ### Upgrade from the Standard Traefik Chart to Traefik + Opt-In CRDs Chart
 
+> [!Caution]
+> The CRD chart is deprecated. It will be removed soon
+
 > [!WARNING]
 > To avoid conflicts, **you must change the ownership of CRDs before installing the CRDs chart**.
 
@@ -182,6 +188,9 @@ helm upgrade traefik traefik/traefik
 ```
 
 ### Upgrade When Using Both Traefik and Opt-In CRDs Chart
+
+> [!Caution]
+> The CRD chart is deprecated. It will be removed soon
 
 To upgrade both Traefik and CRDs charts:
 
