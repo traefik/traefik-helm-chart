@@ -220,23 +220,6 @@ rules:
       - delete
       {{- end }}
   - apiGroups:
-      - hub.traefik.io
-    resources:
-      - apiauths/status
-      - apiportals/status
-      - apiportalauths/status
-      - apis/status
-      - apiversions/status
-      - apibundles/status
-      - apiplans/status
-      - apicatalogitems/status
-      - managedsubscriptions/status
-      - managedapplications/status
-    verbs:
-      - get
-      - update
-      - patch
-  - apiGroups:
       - ""
     resources:
       - events
