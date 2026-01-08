@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.13.1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-01-08
+
+* revert(CRDs): use Traefik Hub v3.18.0 compatible crds
+* docs(CRDs): add deprecation notice
+* chore(release): publish traefik 38.0.2 and crds 1.13.1
+
+
 ## 1.13.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-12-18
