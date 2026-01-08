@@ -1,5 +1,33 @@
 # Change Log
 
+## 38.0.2  ![AppVersion: v3.6.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-01-08
+
+* revert(CRDs): use Traefik Hub v3.18.0 compatible crds
+* fix(security): set the seccomp profile to RuntimeDefault
+* fix(CRDs): enforce the fact that this Chart does not support Traefik Hub v3.19.0
+* feat(deps): update traefik docker tag to v3.6.6
+* chore(release): publish traefik 38.0.2 and crds 1.13.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f2a9f10..66a7f22 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1163,6 +1163,8 @@ podSecurityContext:
+   runAsGroup: 65532
+   runAsNonRoot: true
+   runAsUser: 65532
++  seccompProfile:
++    type: RuntimeDefault
+ 
+ #
+ # -- Extra objects to deploy (value evaluated as a template)
+```
+
 ## 38.0.1  ![AppVersion: v3.6.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-12-19
