@@ -30,7 +30,7 @@ To upgrade from chart versions prior to v28.x (which use Traefik Proxy version 2
 
 Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_best_practices/custom_resource_definitions/#some-caveats-and-explanations), you can use an additional chart dedicated to CRDs: **traefik-crds**.
 
-To deploy with this setup, see the [instructions below](#with-additional-crds-chart).
+⚠️ This has been deprecated since v38.0.2.
 
 ### Support for Traefik Proxy v2
 
@@ -74,7 +74,10 @@ To see example values files, refer to the provided [EXAMPLES](./EXAMPLES.md).
 
 For complete documentation on all available parameters, check the [default values file](./traefik/values.yaml).
 
-#### With Additional CRDs Chart
+#### With Additional CRDs Chart (⚠️  deprecated)
+
+> [!Caution]
+> The `traefik-crds` chart is deprecated. It will be removed soon
 
 To manage CRDs separately, use the optional CRDs chart. When using it, the CRDs from the regular Traefik chart are not required.
 For more details, see [here](./CONTRIBUTING.md#about-crds).
@@ -161,6 +164,9 @@ helm upgrade traefik traefik/traefik
 
 ### Upgrade from the Standard Traefik Chart to Traefik + Opt-In CRDs Chart
 
+> [!Caution]
+> The `traefik-crds` chart is deprecated. It will be removed soon
+
 > [!WARNING]
 > To avoid conflicts, **you must change the ownership of CRDs before installing the CRDs chart**.
 
@@ -182,6 +188,9 @@ helm upgrade traefik traefik/traefik
 ```
 
 ### Upgrade When Using Both Traefik and Opt-In CRDs Chart
+
+> [!Caution]
+> The `traefik-crds` chart is deprecated. It will be removed soon
 
 To upgrade both Traefik and CRDs charts:
 
