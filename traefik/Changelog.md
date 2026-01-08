@@ -28,6 +28,13 @@ index f2a9f10..66a7f22 100644
  # -- Extra objects to deploy (value evaluated as a template)
 ```
 
+**Upgrades Notes**
+
+There is a breaking change on CRDs between Traefik Hub v3.18.0 and inferior and the CRDs of Traefik Hub v3.19.0+ preview versions (ea & rc).
+With this release, we remove the CRDs of Traefik Hub v3.19.0 preview versions.
+
+When Traefik Hub v3.19.0 is GA, we will release a new major version of this Chart that will only accept Traefik Hub v3.19.0+ versions.
+
 ## 38.0.1  ![AppVersion: v3.6.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2025-12-19
