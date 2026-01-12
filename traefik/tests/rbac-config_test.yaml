@@ -1440,6 +1440,70 @@ tests:
               - list
               - watch
 
+  - it: should contain status subresource permissions for hub API management in namespaced mode
+    set:
+      image:
+        tag: v3.19.0
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - apiauths/status
+              - apiportals/status
+              - apiportalauths/status
+              - apis/status
+              - apiversions/status
+              - apibundles/status
+              - apiplans/status
+              - apicatalogitems/status
+              - managedsubscriptions/status
+              - managedapplications/status
+            verbs:
+              - get
+              - update
+              - patch
+
+  - it: should contain status subresource permissions for hub API management in cluster mode
+    set:
+      image:
+        tag: v3.19.0
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - hub.traefik.io
+            resources:
+              - apiauths/status
+              - apiportals/status
+              - apiportalauths/status
+              - apis/status
+              - apiversions/status
+              - apibundles/status
+              - apiplans/status
+              - apicatalogitems/status
+              - managedsubscriptions/status
+              - managedapplications/status
+            verbs:
+              - get
+              - update
+              - patch
+
   - it: should provide expected namespace'd RBACS for version < v3.1
     set:
       image:
