@@ -4,5 +4,5 @@ See https://github.com/traefik/traefik-helm-chart/issues/1561#issuecomment-37142
 
 In order to keep CRDs and uninstall this Traefik CRDs Chart, you can follow current upstream procedure:
 https://github.com/helm/helm/issues/8127#issuecomment-2196610968
-Setting the value `deleteOnUninstall` to `true` will automatically add the `helm.sh/resource-policy="keep"` annotation to all CRDs,
+Leaving the default value of `deleteOnUninstall` to `false` will automatically add the `helm.sh/resource-policy="keep"` annotation to all CRDs,
 which may help you in this process.
