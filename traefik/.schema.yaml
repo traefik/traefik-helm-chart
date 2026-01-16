@@ -10,4 +10,4 @@ schemaRoot:
   id: https://traefik.io/traefik-helm-chart.schema.json
   title: Traefik Proxy Helm Chart
   description: The Cloud Native Application Proxy
-  additionalProperties: true
+  additionalProperties: false

@@ -223,7 +223,7 @@ tests:
           tlsChallenge: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: certResolvers setting has been removed. See v33.0.0 Changelog."
+          errorPattern: "values don't meet the specifications of the schema"
   - it: shouldn't have abortOnPluginFailure, when enabled on traefik < 3.3.0
     set:
       image:
