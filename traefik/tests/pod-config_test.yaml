@@ -584,6 +584,16 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.http3.advertisedPort=8443"
+  - it: should fail when using previous syntax on entrypoints middleware
+    set:
+      ports:
+        websecure:
+          middlewares:
+            - auth@file
+            - strip@kubernetes-crd
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should join entrypoints middleware when there are multiples
     set:
       ports:

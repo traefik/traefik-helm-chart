@@ -334,6 +334,21 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail when using previous redirection syntax
+    set:
+      ports:
+        web:
+          redirections:
+            entryPoint:
+              to: websecure
+              scheme: https
+        websecure:
+          exposedPort: 443
+          tls:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should fail when redirect on websecure with tls enabled and non-https scheme
     set:
       ports:
