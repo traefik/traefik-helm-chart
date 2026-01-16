@@ -34,6 +34,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: this Chart does not support Traefik Hub v3.19.0+."
+  - it: should pass when using non-release version with allowNonSupportedVersions
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: main-1234567
+        allowNonSupportedVersions: true
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
   - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
     set:
       image:

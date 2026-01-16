@@ -112,5 +112,14 @@ Migration example:
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and was not found in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}
-  {{- end -}}        
+  {{- end -}}
+{{- end -}}
+
+{{/* Warn about using non-supported versions */}}
+{{- if .Values.image.allowNonSupportedVersions }}
+{{- printf "\n" -}}
+WARNING: You are using a non-supported version with image.allowNonSupportedVersions=true.
+This is intended for development purposes only. Non-supported versions may contain breaking changes
+or bugs. Use at your own risk.
+{{- printf "\n" -}}
 {{- end -}}

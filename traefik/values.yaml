@@ -12,6 +12,9 @@ image:  # @schema additionalProperties: false
   tag:  # @schema type:[string, null]
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
+  # -- Allow using non-supported versions (e.g. main-xxx, pr-xxx).
+  # This is intended for development purposes only. Use at your own risk.
+  allowNonSupportedVersions: false
 
 # -- Add additional label to all resources
 commonLabels: {}
