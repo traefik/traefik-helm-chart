@@ -309,6 +309,23 @@ tests:
           kind: Service
           apiVersion: v1
         template: service.yaml
+  - it: should fail when using previous syntax on custom port
+    set:
+      ports:
+        web: null
+        websecure: null
+        metrics: null
+        traefik:
+          port: 8082
+        http-internal:
+          port: 8443
+          expose:
+            default: true
+          tls:   # <== here previous syntax, without http
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should be possible to disable web, metrics & websecure port
     set:
       ports:
@@ -319,16 +336,18 @@ tests:
           port: 8082
         http-internal:
           port: 8443
-          tls:
-            enabled: true
           expose:
             default: true
+          http:
+            tls:
+              enabled: true
         http-external:
           port: 8445
-          tls:
-            enabled: true
           expose:
             default: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - containsDocument:
           kind: Deployment
@@ -397,8 +416,9 @@ tests:
       ports:
         websecure2:
           port: 444
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
           http3:
             enabled: true
           expose:

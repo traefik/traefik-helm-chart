@@ -23,12 +23,23 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
+  - it: should fail when trying to use this Chart with Traefik Hub v3.19.0+
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.19.0-ea.9
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: this Chart does not support Traefik Hub v3.19.0+."
   - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
     set:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: latest-v3.0
+        tag: v3.18.3
       hub:
         token: "xxx"
     asserts:
@@ -310,28 +321,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."
-  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub main builds
+  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub v3.10.1+
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: main-1af57d3-1737730202
-      tracing:
-        otlp:
-          enabled: true
-      hub:
-        token: "xxx"
-        tracing:
-          additionalTraceHeaders:
-            enabled: true
-    asserts:
-      - notFailedTemplate: {}
-  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub latest v3 builds
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: latest-v3
+        tag: v3.10.1
       tracing:
         otlp:
           enabled: true

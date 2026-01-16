@@ -847,12 +847,13 @@ ports:
     protocol: TCP
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
-    redirections:
-      # -- Port Redirections
-      # Added in 2.2, one can make permanent redirects via entrypoints.
-      # Same sets of parameters: to, scheme, permanent and priority.
-      # https://docs.traefik.io/routing/entrypoints/#redirection
-      entryPoint: {}
+    http:
+      redirections:
+        # -- Port Redirections
+        # Added in 2.2, one can make permanent redirects via entrypoints.
+        # Same sets of parameters: to, scheme, permanent and priority.
+        # https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example
+        entryPoint: {}
     forwardedHeaders:
       # -- Trust forwarded headers information (X-Forwarded-*).
       trustedIPs: []
@@ -913,8 +914,16 @@ ports:
         allowEncodedHash: false
       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
+      middlewares: []  # @schema type: [array, null]
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
       sanitizePath:  # @schema type:[boolean, null]
+      # --  See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
+      tls:
+        enabled: true
+        options: ""
+        certResolver: ""
+        domains: []
     http3:
       ## -- Enable HTTP/3 on the entrypoint
       ## Enabling it will also enable http3 experimental feature
@@ -943,20 +952,6 @@ ports:
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
-    # --  See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#tls)
-    tls:
-      enabled: true
-      options: ""
-      certResolver: ""
-      domains: []
-    # -- One can apply Middlewares on an entrypoint
-    # https://doc.traefik.io/traefik/middlewares/overview/
-    # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
-    # -- /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
-    # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
-    #   - namespace-name1@kubernetescrd
-    #   - namespace-name2@kubernetescrd
-    middlewares: []  # @schema type: [array, null]
     observability:  # @schema additionalProperties: false
       # -- Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
@@ -1166,6 +1161,8 @@ podSecurityContext:
   runAsGroup: 65532
   runAsNonRoot: true
   runAsUser: 65532
+  seccompProfile:
+    type: RuntimeDefault
 
 #
 # -- Extra objects to deploy (value evaluated as a template)

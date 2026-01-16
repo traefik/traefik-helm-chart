@@ -1519,6 +1519,14 @@
                 },
                 "runAsUser": {
                     "type": "integer"
+                },
+                "seccompProfile": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },
@@ -1628,11 +1636,42 @@
                                 ],
                                 "minimum": 0
                             },
+                            "middlewares": {
+                                "type": [
+                                    "array",
+                                    "null"
+                                ]
+                            },
+                            "redirections": {
+                                "type": "object",
+                                "properties": {
+                                    "entryPoint": {
+                                        "type": "object"
+                                    }
+                                }
+                            },
                             "sanitizePath": {
                                 "type": [
                                     "boolean",
                                     "null"
                                 ]
+                            },
+                            "tls": {
+                                "type": "object",
+                                "properties": {
+                                    "certResolver": {
+                                        "type": "string"
+                                    },
+                                    "domains": {
+                                        "type": "array"
+                                    },
+                                    "enabled": {
+                                        "type": "boolean"
+                                    },
+                                    "options": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     },
@@ -1650,12 +1689,6 @@
                                 "type": "boolean"
                             }
                         }
-                    },
-                    "middlewares": {
-                        "type": [
-                            "array",
-                            "null"
-                        ]
                     },
                     "nodePort": {
                         "type": [
@@ -1720,14 +1753,6 @@
                             }
                         }
                     },
-                    "redirections": {
-                        "type": "object",
-                        "properties": {
-                            "entryPoint": {
-                                "type": "object"
-                            }
-                        }
-                    },
                     "targetPort": {
                         "type": [
                             "string",
@@ -1735,23 +1760,6 @@
                             "null"
                         ],
                         "minimum": 0
-                    },
-                    "tls": {
-                        "type": "object",
-                        "properties": {
-                            "certResolver": {
-                                "type": "string"
-                            },
-                            "domains": {
-                                "type": "array"
-                            },
-                            "enabled": {
-                                "type": "boolean"
-                            },
-                            "options": {
-                                "type": "string"
-                            }
-                        }
                     },
                     "transport": {
                         "type": "object",
