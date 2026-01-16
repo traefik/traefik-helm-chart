@@ -20,6 +20,9 @@ spec:
   infrastructure:
     {{ toYaml . | nindent 4 }}
   {{- end }}
+  {{- with .Values.gateway.defaultScope }}
+  defaultScope: {{ . }}
+  {{- end }}
   listeners:
     {{- range $name, $config := .Values.gateway.listeners }}
     - name: {{ $name }}
