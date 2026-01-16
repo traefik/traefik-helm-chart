@@ -363,7 +363,7 @@ Kubernetes: `>=1.22.0-0`
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | string | `nil` |  |
-| ports.websecure.http.encodedCharacters | object | `{"allowEncodedBackSlash":false,"allowEncodedHash":false,"allowEncodedNullCharacter":false,"allowEncodedPercent":false,"allowEncodedQuestionMark":false,"allowEncodedSemicolon":false,"allowEncodedSlash":false}` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
+| ports.websecure.http.encodedCharacters | object | `{"allowEncodedBackSlash":null,"allowEncodedHash":null,"allowEncodedNullCharacter":null,"allowEncodedPercent":null,"allowEncodedQuestionMark":null,"allowEncodedSemicolon":null,"allowEncodedSlash":null}` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
 | ports.websecure.http.maxHeaderBytes | string | `nil` | Maximum size of request headers in bytes. Default: 1048576 (1 MB) |
 | ports.websecure.http.middlewares | list | `[]` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares) |
 | ports.websecure.http.sanitizePath | string | `nil` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization) |

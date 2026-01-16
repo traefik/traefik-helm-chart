@@ -902,13 +902,13 @@ ports:
     http:
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
       encodedCharacters:
-        allowEncodedSlash: false
-        allowEncodedBackSlash: false
-        allowEncodedNullCharacter: false
-        allowEncodedSemicolon: false
-        allowEncodedPercent: false
-        allowEncodedQuestionMark: false
-        allowEncodedHash: false
+        allowEncodedSlash:  # @schema type:[boolean, null]
+        allowEncodedBackSlash:  # @schema type:[boolean, null]
+        allowEncodedNullCharacter:  # @schema type:[boolean, null]
+        allowEncodedSemicolon:  # @schema type:[boolean, null]
+        allowEncodedPercent:  # @schema type:[boolean, null]
+        allowEncodedQuestionMark:  # @schema type:[boolean, null]
+        allowEncodedHash:  # @schema type:[boolean, null]
       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
