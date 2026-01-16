@@ -334,22 +334,7 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should fail when redirect on websecure with tls enabled and non-https scheme
-    set:
-      ports:
-        web:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: http
-        websecure:
-          exposedPort: 443
-          tls:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
-  - it: should redirect on websecure with tls enabled and https scheme
+  - it: should fail when using previous redirection syntax
     set:
       ports:
         web:
@@ -361,6 +346,40 @@ tests:
           exposedPort: 443
           tls:
             enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail when redirect on websecure with tls enabled and non-https scheme
+    set:
+      ports:
+        web:
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: http
+        websecure:
+          exposedPort: 443
+          http:
+            tls:
+              enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot redirect web to websecure without setting scheme to https"
+  - it: should redirect on websecure with tls enabled and https scheme
+    set:
+      ports:
+        web:
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+        websecure:
+          exposedPort: 443
+          http:
+            tls:
+              enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -372,13 +391,15 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: websecure
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
         websecure:
           exposedPort: 443
-          tls:
-            enabled: true
+          http:
+            tls:
+              enabled: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
@@ -390,9 +411,10 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: foo
+          http:
+            redirections:
+              entryPoint:
+                to: foo
         websecure:
           exposedPort: 443
     asserts:
@@ -402,10 +424,11 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: https
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
         websecure:
           exposedPort: 443
     asserts:
@@ -419,11 +442,12 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: https
-              priority: 10
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                priority: 10
         websecure:
           exposedPort: 443
     asserts:
@@ -434,11 +458,12 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: https
-              permanent: true
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                permanent: true
         websecure:
           exposedPort: 443
     asserts:
@@ -449,11 +474,12 @@ tests:
     set:
       ports:
         web:
-          redirections:
-            entryPoint:
-              to: websecure
-              scheme: https
-              permanent: false
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+                scheme: https
+                permanent: false
         websecure:
           exposedPort: 443
     asserts:

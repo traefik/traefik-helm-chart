@@ -616,15 +616,16 @@ tests:
     set:
       ports:
         websecure:
-          tls:
-            enabled: true
-            options: "foo"
-            certResolver: "certResolverFoo"
-            domains:
-              - main: "sub.domain.tld"
-                sans:
-                  - "alt1.domain.tld"
-                  - "alt2.domain.tld"
+          http:
+            tls:
+              enabled: true
+              options: "foo"
+              certResolver: "certResolverFoo"
+              domains:
+                - main: "sub.domain.tld"
+                  sans:
+                    - "alt1.domain.tld"
+                    - "alt2.domain.tld"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -749,8 +750,9 @@ tests:
     set:
       ports:
         websecure:
-          tls:
-            enabled: false
+          http:
+            tls:
+              enabled: false
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
