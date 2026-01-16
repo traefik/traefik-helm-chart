@@ -703,6 +703,9 @@
         "image": {
             "type": "object",
             "properties": {
+                "allowNonSupportedVersions": {
+                    "type": "boolean"
+                },
                 "pullPolicy": {
                     "type": "string"
                 },

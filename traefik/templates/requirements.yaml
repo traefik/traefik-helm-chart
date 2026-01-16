@@ -118,7 +118,7 @@
     {{ $hubVersion = "v3.99" }}
   {{- end }}
 
-  {{- if semverCompare ">v3.19.0-0" $hubVersion }}
+  {{- if and (not .Values.image.allowNonSupportedVersions) (semverCompare ">v3.19.0-0" $hubVersion) }}
     {{ fail "ERROR: this Chart does not support Traefik Hub v3.19.0+."}}
   {{- end }}
 
