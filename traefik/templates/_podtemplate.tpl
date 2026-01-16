@@ -639,26 +639,40 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- with $config.http }}
-              {{- with (.encodedCharacters).allowEncodedSlash }}
+              {{- if ne (.encodedCharacters).allowEncodedSlash nil }}
+               {{- with (.encodedCharacters).allowEncodedSlash | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedBackSlash }}
+              {{- if ne (.encodedCharacters).allowEncodedBackSlash nil }}
+               {{- with (.encodedCharacters).allowEncodedBackSlash | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedNullCharacter }}
+              {{- if ne (.encodedCharacters).allowEncodedNullCharacter nil }}
+               {{- with (.encodedCharacters).allowEncodedNullCharacter | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedSemicolon }}
+              {{- if ne (.encodedCharacters).allowEncodedSemicolon nil }}
+               {{- with (.encodedCharacters).allowEncodedSemicolon | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedPercent }}
+              {{- if ne (.encodedCharacters).allowEncodedPercent nil }}
+               {{- with (.encodedCharacters).allowEncodedPercent | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedQuestionMark }}
+              {{- if ne (.encodedCharacters).allowEncodedQuestionMark nil }}
+               {{- with (.encodedCharacters).allowEncodedQuestionMark | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
+               {{- end }}
               {{- end }}
-              {{- with (.encodedCharacters).allowEncodedHash }}
+              {{- if ne (.encodedCharacters).allowEncodedHash nil }}
+               {{- with (.encodedCharacters).allowEncodedHash | toString }}
           - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
+               {{- end }}
               {{- end }}
               {{- with .maxHeaderBytes }}
           - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
