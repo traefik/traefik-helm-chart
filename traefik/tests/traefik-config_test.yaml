@@ -657,14 +657,13 @@ tests:
           value: /var/log/traefik
   - it: should be possible to template the additionalVolumeMounts
     set:
-      randomName: foo
       additionalVolumeMounts:
         - name: foo-logs
-          mountPath: /var/log/{{ .Values.randomName }}
+          mountPath: /var/log/{{ .Values.image.repository }}
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[2].mountPath
-          value: /var/log/foo
+          value: /var/log/traefik
 
   - it: should set custom probe port
     set:

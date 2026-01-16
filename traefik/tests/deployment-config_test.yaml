@@ -127,13 +127,12 @@ tests:
           value: podAnnotations
   - it: should have podAnnotations with specified values
     set:
-      type: 'internal'
       deployment:
         podAnnotations:
           traefik/powpow: podAnnotations
           traefik/name: '{{ template "traefik.name" . }}'
           traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/type: '{{ .Values.type }}'
+          traefik/repository: '{{ .Values.image.repository }}'
     asserts:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
@@ -145,8 +144,8 @@ tests:
           path: spec.template.metadata.annotations["traefik/traefik.logs"]
           value: 'log_processing_rules'
       - equal:
-          path: spec.template.metadata.annotations.traefik/type
-          value: 'internal'
+          path: spec.template.metadata.annotations.traefik/repository
+          value: 'traefik'
   - it: should have labels with specified values
     set:
       deployment:
