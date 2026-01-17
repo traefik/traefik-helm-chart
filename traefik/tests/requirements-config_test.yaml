@@ -23,23 +23,33 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
-  - it: should fail when trying to use this Chart with Traefik Hub v3.19.0+
-    set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
-        tag: v3.19.0-ea.9
-      hub:
-        token: xxx
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: this Chart does not support Traefik Hub v3.19.0+."
-  - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
+  - it: should fail when trying to use this Chart with Traefik Hub < v3.19.0
     set:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
         tag: v3.18.3
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: this Chart supports *only* Traefik Hub >= v3.19.0."
+  - it: should succeed when trying to use this Chart with Traefik Hub >= v3.19.0
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.19.0
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
+  - it: should pass when trying to use this Chart with Traefik API gateway v3 and Hub enabled and providing a token
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: latest-v3.0
       hub:
         token: "xxx"
     asserts:
@@ -145,39 +155,12 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using offline mode on hub < 3.17.0
+  - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.0
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: "v3.17.2"
-      hub:
-        token: xxx
-        offline: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."
-  - it: should fail when using traefik-hub API management with namespaced RBACs
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: "v3.15.0"
-      hub:
-        token: xxx
-        apimanagement:
-          enabled: true
-      rbac:
-        namespaced: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs"
-  - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.16.0
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: "v3.16.0"
+        tag: "v3.19.0"
       hub:
         token: xxx
         apimanagement:
@@ -278,29 +261,15 @@ tests:
         enabled: true
         images:
           hub:
-            tag: v3.14.0
+            tag: v3.19.0
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using hub.tracing.additionalTraceHeaders on Traefik Hub < 3.9.0
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: v3.8.0
-      hub:
-        token: "xxx"
-        tracing:
-          additionalTraceHeaders:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: additionalTraceHeaders is a feature only available for traefik-hub >= v3.9.0."
   - it: should fail when using hub.tracing.additionalTraceHeaders without tracing.otlp enabled
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.9.0
+        tag: v3.19.0
       hub:
         token: "xxx"
         tracing:
@@ -309,24 +278,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."
-  - it: should fail when using consulCatalogEnterprise provider on hub < 3.6.0
-    set:
-      image:
-        tag: v3.6.0
-      hub:
-        token: "xxx"
-        providers:
-          microcks:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."
-  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub v3.10.1+
+  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub v3.19.0+
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.10.1
+        tag: v3.19.1
       tracing:
         otlp:
           enabled: true
@@ -337,49 +294,12 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using consulCatalogEnterprise provider on hub < 3.6.0
-    set:
-      image:
-        tag: v3.5.0
-      hub:
-        token: "xxx"
-        providers:
-          consulCatalogEnterprise:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."
-  - it: should fail when using mcpgateway on hub < 3.18.0
+  - it: should not fail when using mcpgateway on hub >= 3.19.0
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.17.0
-      hub:
-        token: "xxx"
-        mcpgateway:
-          enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."
-  - it: should not fail when using mcpgateway on hub >= 3.18.0
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: v3.18.0
-      hub:
-        token: "xxx"
-        mcpgateway:
-          enabled: true
-    asserts:
-      - notFailedTemplate: {}
-  - it: should not fail when using mcpgateway on hub >= 3.18.0 with rc
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: v3.18.0-rc2
+        tag: v3.19.0
       hub:
         token: "xxx"
         mcpgateway:
@@ -482,27 +402,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
-  - it: should fail when using pluginRegistry sources on hub < 3.18.0
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: v3.17.0
-      hub:
-        token: "xxx"
-        pluginRegistry:
-          sources:
-            plugin1:
-              baseModuleName: "gitlab.company.com"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.18.0
+        tag: v3.19.0
       hub:
         token: "xxx"
         pluginRegistry:
@@ -517,7 +422,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.18.0
+        tag: v3.19.0
       experimental:
         plugins:
           plugin1:
