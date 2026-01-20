@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0
 
@@ -24,13 +24,13 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Check traefik if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@v2
+        uses: losisin/helm-values-schema-json-action@b0c5e688b224ce7c36fcf005184f1105850d8f3b # v2.4.1
         with:
           working-directory: traefik
           fail-on-diff: true
 
       - name: Check traefik-crds if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@v2
+        uses: losisin/helm-values-schema-json-action@b0c5e688b224ce7c36fcf005184f1105850d8f3b # v2.4.1
         with:
           working-directory: traefik-crds
           fail-on-diff: true
@@ -71,14 +71,14 @@ jobs:
           exit 0
 
       - name: Lint markdown
-        uses: nosborn/github-action-markdown-cli@v3.5.0
+        uses: nosborn/github-action-markdown-cli@508d6cefd8f0cc99eab5d2d4685b1d5f470042c1 # v3.5.0
         with:
           files: "{EXAMPLES,README,CONTRIBUTING}.md"
           config_file: .markdownlint.json
 
       - name: Create kind cluster
         if: steps.check.outputs.release
-        uses: helm/kind-action@v1.13.0
+        uses: helm/kind-action@92086f6be054225fa813e0a4b13787fc9088faab # v1.13.0
 
       - name: Install LB on Kind
         if: steps.check.outputs.release

@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Render traefik changelog configuration
         env:
@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v6
+        uses: mikepenz/release-changelog-builder-action@439f79b5b5428107c7688c1d2b0e8bacc9b8792c # v6.0.1
         with:
           fromTag: v34.1.0
           toTag: v34.2.0
@@ -39,7 +39,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.2.0
+        uses: LouisBrunner/diff-action@9ea7b75986aa27143ad4928974c98a5a1bd92170 # v2.2.0
         with:
           old: .github/fixtures/changelog-traefik.md
           new: /tmp/changelog.md
@@ -50,7 +50,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Render traefik changelog configuration
         env:
@@ -60,7 +60,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@v6
+        uses: mikepenz/release-changelog-builder-action@439f79b5b5428107c7688c1d2b0e8bacc9b8792c # v6.0.1
         with:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0
@@ -75,7 +75,7 @@ jobs:
           EOF
 
       - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@v2.2.0
+        uses: LouisBrunner/diff-action@9ea7b75986aa27143ad4928974c98a5a1bd92170 # v2.2.0
         with:
           old: .github/fixtures/changelog-traefik-crds.md
           new: /tmp/changelog.md
