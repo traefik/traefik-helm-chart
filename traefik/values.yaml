@@ -904,7 +904,7 @@ ports:
     allowACMEByPass: false
     http:
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
-      encodedCharacters:
+      encodedCharacters:  # @schema additionalProperties: false
         allowEncodedSlash:  # @schema type:[boolean, null]
         allowEncodedBackSlash:  # @schema type:[boolean, null]
         allowEncodedNullCharacter:  # @schema type:[boolean, null]

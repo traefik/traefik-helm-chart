@@ -1648,7 +1648,8 @@
                                             "null"
                                         ]
                                     }
-                                }
+                                },
+                                "additionalProperties": false
                             },
                             "maxHeaderBytes": {
                                 "type": [

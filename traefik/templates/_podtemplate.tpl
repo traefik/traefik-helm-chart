@@ -639,41 +639,7 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- with $config.http }}
-              {{- if ne (.encodedCharacters).allowEncodedSlash nil }}
-               {{- with (.encodedCharacters).allowEncodedSlash | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedBackSlash nil }}
-               {{- with (.encodedCharacters).allowEncodedBackSlash | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedNullCharacter nil }}
-               {{- with (.encodedCharacters).allowEncodedNullCharacter | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedSemicolon nil }}
-               {{- with (.encodedCharacters).allowEncodedSemicolon | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedPercent nil }}
-               {{- with (.encodedCharacters).allowEncodedPercent | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedQuestionMark nil }}
-               {{- with (.encodedCharacters).allowEncodedQuestionMark | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
-               {{- end }}
-              {{- end }}
-              {{- if ne (.encodedCharacters).allowEncodedHash nil }}
-               {{- with (.encodedCharacters).allowEncodedHash | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
-               {{- end }}
-              {{- end }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "entryPoints.%s.http.encodedCharacters" $entrypoint) "content" .encodedCharacters) | nindent 10 }}
               {{- with .maxHeaderBytes }}
           - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
               {{- end }}
