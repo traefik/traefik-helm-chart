@@ -241,6 +241,17 @@
                 "annotations": {
                     "type": "object"
                 },
+                "defaultScope": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "All",
+                        "None",
+                        null
+                    ]
+                },
                 "enabled": {
                     "type": "boolean"
                 },
@@ -2332,5 +2343,5 @@
             "type": "array"
         }
     },
-    "additionalProperties": true
+    "additionalProperties": false
 }
