@@ -190,9 +190,9 @@ It requires a dict with "Version" and "Hub".
  {{- $version := .Version -}}
  {{- if .Hub -}}
    {{- $hubProxyVersion := "v3.6.3" }}
-   {{ $hubProxyVersion }}
+   {{- $hubProxyVersion }}
  {{- else -}}
-   {{ $version }}
+   {{- $version }}
  {{- end -}}
 {{- end -}}
 
