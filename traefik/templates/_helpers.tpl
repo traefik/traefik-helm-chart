@@ -189,7 +189,7 @@ It requires a dict with "Version" and "Hub".
 {{- define "traefik.proxyVersionFromHub" -}}
  {{- $version := .Version -}}
  {{- if .Hub -}}
-   {{- $hubProxyVersion := "v3.6.3" }}
+   {{- $hubProxyVersion := "v3.6.7" }}
    {{- $hubProxyVersion }}
  {{- else -}}
    {{- $version }}
