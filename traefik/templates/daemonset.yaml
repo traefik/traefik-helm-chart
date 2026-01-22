@@ -54,5 +54,6 @@ spec:
   {{- if .Values.deployment.revisionHistoryLimit }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   {{- end }}
-  template: {{ template "traefik.podTemplate" . }}
+  {{/* This dual conversion is used to remove all spurious newlines */}}
+  template: {{ include "traefik.podTemplate" . | fromYaml | toYamlPretty | nindent 4 }}
 {{- end -}}
