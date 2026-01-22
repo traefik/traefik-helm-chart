@@ -117,40 +117,12 @@
     {{ $hubVersion = "v3.99" }}
   {{- end }}
 
-  {{- if semverCompare ">v3.19.0-0" $hubVersion }}
-    {{ fail "ERROR: this Chart does not support Traefik Hub v3.19.0+."}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.9.0-0" $hubVersion) .Values.hub.tracing.additionalTraceHeaders.enabled }}
-    {{ fail "ERROR: additionalTraceHeaders is a feature only available for traefik-hub >= v3.9.0."}}
+  {{- if semverCompare "<v3.19.0-0" $hubVersion }}
+    {{ fail "ERROR: this Chart supports *only* Traefik Hub >= v3.19.0."}}
   {{- end }}
 
   {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}
     {{ fail "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.6.0-0" $hubVersion) .Values.hub.providers.consulCatalogEnterprise.enabled }}
-    {{ fail "ERROR: consulCatalogEnterprise provider is a feature only available for traefik-hub >= v3.6.0."}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.7.0-0" $hubVersion) .Values.hub.providers.microcks.enabled }}
-    {{ fail "ERROR: microcks provider is a feature only available for traefik-hub >= v3.7.0."}}
-  {{- end }}
-
-  {{- if and (and .Values.hub.apimanagement.enabled (and .Values.rbac.enabled .Values.rbac.namespaced)) (semverCompare "<v3.16.0-0" $hubVersion) }}
-    {{- fail "ERROR: Traefik Hub < v3.16.0 doesn't support namespaced RBACs" -}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.offline }}
-    {{ fail "ERROR: offline mode is a _licensed_ feature only available for Traefik Hub >= v3.18.0."}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.mcpgateway.enabled }}
-    {{ fail "ERROR: mcpgateway is a feature only available for traefik-hub >= v3.18.0."}}
-  {{- end }}
-
-  {{- if and (semverCompare "<v3.18.0-0" $hubVersion) .Values.hub.pluginRegistry.sources }}
-    {{ fail "ERROR: pluginRegistry sources is a feature only available for traefik-hub >= v3.18.0."}}
   {{- end }}
 
   {{- with .Values.hub.pluginRegistry.sources }}
