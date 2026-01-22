@@ -107,13 +107,14 @@ deployment:
   goMemLimitPercentage: 0.9
 
 # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
+# @default -- See _values.yaml_
 podDisruptionBudget:  # @schema additionalProperties: false
   enabled: false
   maxUnavailable:  # @schema type:[string, integer, null];minimum:0
   minAvailable:    # @schema type:[string, integer, null];minimum:0
 
-# -- Create a default IngressClass for Traefik
 ingressClass:  # @schema additionalProperties: false
+  # -- Create a default IngressClass for Traefik
   enabled: true
   isDefaultClass: true
   name: ""
@@ -158,7 +159,6 @@ gateway:
   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
   defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
-  # -- Define listeners
   listeners:
     web:
       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
@@ -201,7 +201,9 @@ api:
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
 
-# -- Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart.
+# -- Only dashboard & healthcheck IngressRoute are supported.
+# It's recommended to create workloads CR outside of this Chart.
+# @default -- See _values.yaml_
 ingressRoute:
   dashboard:
     # -- Create an IngressRoute for the dashboard
@@ -213,6 +215,7 @@ ingressRoute:
     # -- The router match rule used for the dashboard ingressRoute
     matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     # -- The internal service used for the dashboard ingressRoute
+    # @default -- api@internal
     services:
       - name: api@internal
         kind: TraefikService
@@ -234,6 +237,7 @@ ingressRoute:
     # -- The router match rule used for the healthcheck ingressRoute
     matchRule: PathPrefix(`/ping`)
     # -- The internal service used for the healthcheck ingressRoute
+    # @default -- ping@internal
     services:
       - name: ping@internal
         kind: TraefikService
@@ -345,8 +349,8 @@ providers:
       ip: ""
       # -- This Hostname will get copied to the Gateway status.addresses.
       hostname: ""
-      # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
       service:
+        # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
         enabled: true
         name: ""
         namespace: ""
@@ -376,8 +380,8 @@ providers:
     watchNamespace: ""
     # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
     watchNamespaceSelector: ""
-    # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
     publishService:
+      # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
       enabled: false
       pathOverride: ""
     # -- Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies
@@ -489,6 +493,7 @@ logs:
     # -- Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)
     timezone: ""
     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
+    # @default -- See below
     filters:  # @schema additionalProperties: false
       # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
       statuscodes: ""
@@ -504,9 +509,8 @@ logs:
         defaultmode: keep  # @schema enum:[keep, drop, redact]; default: keep
         # -- Names of the fields to limit.
         names: {}
-      # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
       headers:
-        # -- Set default mode for fields.headers
+        # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
     otlp:
@@ -711,6 +715,7 @@ ocsp:
 
 ## Tracing
 # -- https://doc.traefik.io/traefik/observability/tracing/overview/
+# @default -- See _values.yaml_
 tracing:  # @schema additionalProperties: false
   # -- Enables tracing for internal resources. Default: false.
   addInternals: false
@@ -771,8 +776,8 @@ global:
   sendAnonymousUsage: false
   # -- Required for Azure Marketplace integration.
   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+  # @default -- See _values.yaml_
   azure:
-    # -- Enable specific values for Azure Marketplace
     enabled: false
     images:
       proxy:
@@ -792,7 +797,6 @@ additionalArguments: []
 #  - "--log.level=DEBUG"
 
 # -- Additional Environment variables to be passed to Traefik's binary
-# @default -- See _values.yaml_
 env: []
 
 # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
@@ -864,6 +868,7 @@ ports:
       insecure: false
     # -- Set transport settings for the entrypoint; see also
     # https://doc.traefik.io/traefik/routing/entrypoints/#transport
+    # @default -- nil
     transport:
       respondingTimeouts:
         readTimeout:   # @schema type:[string, integer, null]
@@ -903,20 +908,15 @@ ports:
     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
     allowACMEByPass: false
     http:
+      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+      # @default -- nil
       encodedCharacters:  # @schema additionalProperties: false
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedSlash:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedBackSlash:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedNullCharacter:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedSemicolon:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedPercent:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedQuestionMark:  # @schema type:[boolean, null]
-        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
         allowEncodedHash:  # @schema type:[boolean, null]
       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
@@ -924,8 +924,9 @@ ports:
       middlewares: []  # @schema type: [array, null]
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
       sanitizePath:  # @schema type:[boolean, null]
-      # --  See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
       tls:
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
+        # @default -- true
         enabled: true
         options: ""
         certResolver: ""
@@ -948,6 +949,7 @@ ports:
       trustedIPs: []
       insecure: false
     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport)
+    # @default -- nil
     transport:
       respondingTimeouts:
         readTimeout:   # @schema type:[string, integer, null]
@@ -1058,6 +1060,7 @@ autoscaling:  # @schema additionalProperties: false
   # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).
   behavior: {}
   # -- scaleTargetRef points to the target resource to scale, and is used for the pods for which metrics should be collected, as well as to actually change the replica count.
+  # @default -- Traefik Deployment
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
@@ -1090,8 +1093,8 @@ certificatesResolvers: {}
 # affinity is left as default.
 hostNetwork: false
 
-# -- Whether Role Based Access Control objects like roles and rolebindings should be created
 rbac:  # @schema additionalProperties: false
+  # -- Whether Role Based Access Control objects like roles and rolebindings should be created
   enabled: true
   # When set to true:
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
@@ -1346,9 +1349,10 @@ hub:
   sendlogs:  # @schema type:[boolean, null]
 
   tracing:
-    # -- Tracing headers to duplicate.
-    # To configure the following, tracing.otlp.enabled needs to be set to true.
     additionalTraceHeaders:
+      # -- Tracing headers to duplicate.
+      # To configure the following, tracing.otlp.enabled needs to be set to true.
+      # @default -- See below
       enabled: false
       traceContext:
         # -- Name of the header that will contain the parent-id header copy.
@@ -1366,10 +1370,11 @@ hub:
 
 # -- Required for OCI Marketplace integration.
 # See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
+# @default -- See _values.yaml_
 oci_meta:
   # -- Enable specific values for Oracle Cloud Infrastructure
   enabled: false
-    # -- It needs to be an ocir repo
+  # -- It needs to be an ocir repo
   repo: traefik
   images:
     proxy:
