@@ -903,15 +903,21 @@ ports:
     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)
     allowACMEByPass: false
     http:
-      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
-      encodedCharacters:
-        allowEncodedSlash: false
-        allowEncodedBackSlash: false
-        allowEncodedNullCharacter: false
-        allowEncodedSemicolon: false
-        allowEncodedPercent: false
-        allowEncodedQuestionMark: false
-        allowEncodedHash: false
+      encodedCharacters:  # @schema additionalProperties: false
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedSlash:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedBackSlash:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedNullCharacter:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedSemicolon:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedPercent:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedQuestionMark:  # @schema type:[boolean, null]
+        # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+        allowEncodedHash:  # @schema type:[boolean, null]
       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)

@@ -639,27 +639,7 @@
           {{- range $entrypoint, $config := $.Values.ports }}
           {{- if $config }}
             {{- with $config.http }}
-              {{- with (.encodedCharacters).allowEncodedSlash }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSlash={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedBackSlash }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedBackSlash={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedNullCharacter }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedNullCharacter={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedSemicolon }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedSemicolon={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedPercent }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedPercent={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedQuestionMark }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedQuestionMark={{ . }}"
-              {{- end }}
-              {{- with (.encodedCharacters).allowEncodedHash }}
-          - "--entryPoints.{{ $entrypoint }}.http.encodedCharacters.allowEncodedHash={{ . }}"
-              {{- end }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "entryPoints.%s.http.encodedCharacters" $entrypoint) "content" .encodedCharacters) | nindent 10 }}
               {{- with .maxHeaderBytes }}
           - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
               {{- end }}

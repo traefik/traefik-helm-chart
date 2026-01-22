@@ -74,36 +74,35 @@ tests:
           http:
             sanitizePath: false
             encodedCharacters:
-              allowEncodedSlash: true
-              allowEncodedBackSlash: true
-              allowEncodedNullCharacter: true
-              allowEncodedSemicolon: true
-              allowEncodedPercent: true
-              allowEncodedQuestionMark: true
-              allowEncodedHash: true
+              allowEncodedSlash: false
+              allowEncodedBackSlash: false
+              allowEncodedNullCharacter: false
+              allowEncodedSemicolon: false
+              allowEncodedPercent: false
+              allowEncodedQuestionMark: false
+              allowEncodedHash: false
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.foo.http.sanitizePath=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSlash=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSlash=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedBackSlash=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedBackSlash=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedNullCharacter=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedNullCharacter=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSemicolon=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSemicolon=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedPercent=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedPercent=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedQuestionMark=true"
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedQuestionMark=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedHash=true"
-
+          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedHash=false"
