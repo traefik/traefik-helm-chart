@@ -63,5 +63,5 @@ spec:
   {{- end }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
   {{/* This dual conversion is used to remove all spurious newlines */}}
-  template: {{ include "traefik.podTemplate" . | fromYaml | toYamlPretty | nindent 4 }}
+  template: {{ include "traefik.podTemplate" . | fromYaml | toYaml | nindent 4 }}
 {{- end -}}
