@@ -190,6 +190,11 @@ It requires a dict with "Version" and "Hub".
  {{- $version := .Version -}}
  {{- if .Hub -}}
    {{- $hubProxyVersion := "v3.6.7" }}
+   {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) }}
+     {{- if semverCompare "<v3.19.0-0" $version }}
+        {{- $hubProxyVersion = "v3.6.3" }}
+     {{- end -}}
+   {{- end -}}
    {{- $hubProxyVersion }}
  {{- else -}}
    {{- $version }}
