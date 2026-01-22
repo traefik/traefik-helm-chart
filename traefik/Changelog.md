@@ -1,5 +1,293 @@
 # Change Log
 
+## 39.0.0  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-01-22
+
+* refactor(chart): clean output on Deployment & Daemonset
+* fix(security)!: add support for request path options of Traefik 3.6.7+
+* fix(ports)!: 🐛 entrypoints `http` options
+* feat(gateway-api): add support for defaultScope experimental feature
+* feat(deps)!: update traefik docker tag to v3.6.7
+* feat(chart): enforce schema
+* feat(CRDs)!: support Traefik Hub v3.19.0
+* docs(values): avoid unbreakable lines in table output of VALUES.md
+* chore(release): 🚀 publish traefik 39.0.0 and crds 1.14.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 66a7f22..a8aec47 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -107,13 +107,14 @@ deployment:
+   goMemLimitPercentage: 0.9
+ 
+ # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
++# @default -- See _values.yaml_
+ podDisruptionBudget:  # @schema additionalProperties: false
+   enabled: false
+   maxUnavailable:  # @schema type:[string, integer, null];minimum:0
+   minAvailable:    # @schema type:[string, integer, null];minimum:0
+ 
+-# -- Create a default IngressClass for Traefik
+ ingressClass:  # @schema additionalProperties: false
++  # -- Create a default IngressClass for Traefik
+   enabled: true
+   isDefaultClass: true
+   name: ""
+@@ -155,7 +156,9 @@ gateway:
+   annotations: {}
+   # -- [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels)
+   infrastructure: {}
+-  # -- Define listeners
++  # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
++  # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
++  defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
+   listeners:
+     web:
+       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+@@ -198,7 +201,9 @@ api:
+   # -- Configure API basePath
+   basePath: ""  # @schema type:[string, null]; default: "/"
+ 
+-# -- Only dashboard & healthcheck IngressRoute are supported. It's recommended to create workloads CR outside of this Chart.
++# -- Only dashboard & healthcheck IngressRoute are supported.
++# It's recommended to create workloads CR outside of this Chart.
++# @default -- See _values.yaml_
+ ingressRoute:
+   dashboard:
+     # -- Create an IngressRoute for the dashboard
+@@ -210,6 +215,7 @@ ingressRoute:
+     # -- The router match rule used for the dashboard ingressRoute
+     matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+     # -- The internal service used for the dashboard ingressRoute
++    # @default -- api@internal
+     services:
+       - name: api@internal
+         kind: TraefikService
+@@ -231,6 +237,7 @@ ingressRoute:
+     # -- The router match rule used for the healthcheck ingressRoute
+     matchRule: PathPrefix(`/ping`)
+     # -- The internal service used for the healthcheck ingressRoute
++    # @default -- ping@internal
+     services:
+       - name: ping@internal
+         kind: TraefikService
+@@ -342,8 +349,8 @@ providers:
+       ip: ""
+       # -- This Hostname will get copied to the Gateway status.addresses.
+       hostname: ""
+-      # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
+       service:
++        # -- The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart.
+         enabled: true
+         name: ""
+         namespace: ""
+@@ -373,8 +380,8 @@ providers:
+     watchNamespace: ""
+     # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
+     watchNamespaceSelector: ""
+-    # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
+     publishService:
++      # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
+       enabled: false
+       pathOverride: ""
+     # -- Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies
+@@ -486,6 +493,7 @@ logs:
+     # -- Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)
+     timezone: ""
+     # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
++    # @default -- See below
+     filters:  # @schema additionalProperties: false
+       # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
+       statuscodes: ""
+@@ -501,9 +509,8 @@ logs:
+         defaultmode: keep  # @schema enum:[keep, drop, redact]; default: keep
+         # -- Names of the fields to limit.
+         names: {}
+-      # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
+       headers:
+-        # -- Set default mode for fields.headers
++        # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
+         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
+         names: {}
+     otlp:
+@@ -708,6 +715,7 @@ ocsp:
+ 
+ ## Tracing
+ # -- https://doc.traefik.io/traefik/observability/tracing/overview/
++# @default -- See _values.yaml_
+ tracing:  # @schema additionalProperties: false
+   # -- Enables tracing for internal resources. Default: false.
+   addInternals: false
+@@ -768,8 +776,8 @@ global:
+   sendAnonymousUsage: false
+   # -- Required for Azure Marketplace integration.
+   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
++  # @default -- See _values.yaml_
+   azure:
+-    # -- Enable specific values for Azure Marketplace
+     enabled: false
+     images:
+       proxy:
+@@ -789,7 +797,6 @@ additionalArguments: []
+ #  - "--log.level=DEBUG"
+ 
+ # -- Additional Environment variables to be passed to Traefik's binary
+-# @default -- See _values.yaml_
+ env: []
+ 
+ # -- Environment variables to be passed to Traefik's binary from configMaps or secrets
+@@ -844,12 +851,13 @@ ports:
+     protocol: TCP
+     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+     nodePort:  # @schema type:[integer, null]; minimum:0
+-    redirections:
+-      # -- Port Redirections
+-      # Added in 2.2, one can make permanent redirects via entrypoints.
+-      # Same sets of parameters: to, scheme, permanent and priority.
+-      # https://docs.traefik.io/routing/entrypoints/#redirection
+-      entryPoint: {}
++    http:
++      redirections:
++        # -- Port Redirections
++        # Added in 2.2, one can make permanent redirects via entrypoints.
++        # Same sets of parameters: to, scheme, permanent and priority.
++        # https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example
++        entryPoint: {}
+     forwardedHeaders:
+       # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+@@ -860,6 +868,7 @@ ports:
+       insecure: false
+     # -- Set transport settings for the entrypoint; see also
+     # https://doc.traefik.io/traefik/routing/entrypoints/#transport
++    # @default -- nil
+     transport:
+       respondingTimeouts:
+         readTimeout:   # @schema type:[string, integer, null]
+@@ -900,18 +909,28 @@ ports:
+     allowACMEByPass: false
+     http:
+       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)
+-      encodedCharacters:
+-        allowEncodedSlash: false
+-        allowEncodedBackSlash: false
+-        allowEncodedNullCharacter: false
+-        allowEncodedSemicolon: false
+-        allowEncodedPercent: false
+-        allowEncodedQuestionMark: false
+-        allowEncodedHash: false
++      # @default -- nil
++      encodedCharacters:  # @schema additionalProperties: false
++        allowEncodedSlash:  # @schema type:[boolean, null]
++        allowEncodedBackSlash:  # @schema type:[boolean, null]
++        allowEncodedNullCharacter:  # @schema type:[boolean, null]
++        allowEncodedSemicolon:  # @schema type:[boolean, null]
++        allowEncodedPercent:  # @schema type:[boolean, null]
++        allowEncodedQuestionMark:  # @schema type:[boolean, null]
++        allowEncodedHash:  # @schema type:[boolean, null]
+       # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
+       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
++      # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
++      middlewares: []  # @schema type: [array, null]
+       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+       sanitizePath:  # @schema type:[boolean, null]
++      tls:
++        # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
++        # @default -- true
++        enabled: true
++        options: ""
++        certResolver: ""
++        domains: []
+     http3:
+       ## -- Enable HTTP/3 on the entrypoint
+       ## Enabling it will also enable http3 experimental feature
+@@ -930,6 +949,7 @@ ports:
+       trustedIPs: []
+       insecure: false
+     # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport)
++    # @default -- nil
+     transport:
+       respondingTimeouts:
+         readTimeout:   # @schema type:[string, integer, null]
+@@ -940,20 +960,6 @@ ports:
+         graceTimeOut:               # @schema type:[string, integer, null]
+       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+       keepAliveMaxTime:             # @schema type:[string, integer, null]
+-    # --  See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#tls)
+-    tls:
+-      enabled: true
+-      options: ""
+-      certResolver: ""
+-      domains: []
+-    # -- One can apply Middlewares on an entrypoint
+-    # https://doc.traefik.io/traefik/middlewares/overview/
+-    # https://doc.traefik.io/traefik/routing/entrypoints/#middlewares
+-    # -- /!\ It introduces here a link between your static configuration and your dynamic configuration /!\
+-    # It follows the provider naming convention: https://doc.traefik.io/traefik/providers/overview/#provider-namespace
+-    #   - namespace-name1@kubernetescrd
+-    #   - namespace-name2@kubernetescrd
+-    middlewares: []  # @schema type: [array, null]
+     observability:  # @schema additionalProperties: false
+       # -- Enables metrics for this entryPoint.
+       metrics:  # @schema type:[boolean, null]; default: true
+@@ -1054,6 +1060,7 @@ autoscaling:  # @schema additionalProperties: false
+   # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively).
+   behavior: {}
+   # -- scaleTargetRef points to the target resource to scale, and is used for the pods for which metrics should be collected, as well as to actually change the replica count.
++  # @default -- Traefik Deployment
+   scaleTargetRef:
+     apiVersion: apps/v1
+     kind: Deployment
+@@ -1086,8 +1093,8 @@ certificatesResolvers: {}
+ # affinity is left as default.
+ hostNetwork: false
+ 
+-# -- Whether Role Based Access Control objects like roles and rolebindings should be created
+ rbac:  # @schema additionalProperties: false
++  # -- Whether Role Based Access Control objects like roles and rolebindings should be created
+   enabled: true
+   # When set to true:
+   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
+@@ -1342,9 +1349,10 @@ hub:
+   sendlogs:  # @schema type:[boolean, null]
+ 
+   tracing:
+-    # -- Tracing headers to duplicate.
+-    # To configure the following, tracing.otlp.enabled needs to be set to true.
+     additionalTraceHeaders:
++      # -- Tracing headers to duplicate.
++      # To configure the following, tracing.otlp.enabled needs to be set to true.
++      # @default -- See below
+       enabled: false
+       traceContext:
+         # -- Name of the header that will contain the parent-id header copy.
+@@ -1362,10 +1370,11 @@ hub:
+ 
+ # -- Required for OCI Marketplace integration.
+ # See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm
++# @default -- See _values.yaml_
+ oci_meta:
+   # -- Enable specific values for Oracle Cloud Infrastructure
+   enabled: false
+-    # -- It needs to be an ocir repo
++  # -- It needs to be an ocir repo
+   repo: traefik
+   images:
+     proxy:
+```
+
+**Upgrade Notes**
+
+This release contains breaking changes:
+
+1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ before using this chart version.
+2. **Encoded Characters**: Blocked by default in Traefik v3.6.7+ for security ([opt-out options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
+3. **Port Configuration**: HTTP options now require explicit `http` nesting level ([migration guide](https://github.com/traefik/traefik-helm-chart/pull/1603))
+
 ## 38.0.2  ![AppVersion: v3.6.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-08
