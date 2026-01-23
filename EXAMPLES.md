@@ -151,7 +151,7 @@ This command makes the dashboard accessible locally on [127.0.0.1:8080/dashboard
 
 ## Redirect permanently traffic from http to https
 
-It's possible to redirect all incoming requests on an entrypoint to an other entrypoint.
+It's possible to redirect all incoming requests on an entrypoint to another entrypoint.
 
 ```yaml
 ports:
