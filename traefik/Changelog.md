@@ -18,7 +18,7 @@
 
 This release contains breaking changes:
 
-1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ before using this chart version.
+1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ while using this chart version.
 2. **Encoded Characters**: Blocked by default in Traefik v3.6.7+ for security ([opt-out options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
 3. **Port Configuration**: HTTP options now require explicit `http` nesting level ([migration guide](https://github.com/traefik/traefik-helm-chart/pull/1603))
 
