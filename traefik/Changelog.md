@@ -4,7 +4,6 @@
 
 **Release date:** 2026-01-22
 
-* refactor(chart): clean output on Deployment & Daemonset
 * fix(security)!: add support for request path options of Traefik 3.6.7+
 * fix(ports)!: 🐛 entrypoints `http` options
 * feat(gateway-api): add support for defaultScope experimental feature
@@ -13,14 +12,20 @@
 * feat(CRDs)!: support Traefik Hub v3.19.0
 * docs(values): avoid unbreakable lines in table output of VALUES.md
 * chore(release): 🚀 publish traefik 39.0.0 and crds 1.14.0
+* refactor(chart): clean output on Deployment & Daemonset
 
 **Upgrade Notes**
 
-This release contains breaking changes:
+There are 3 breaking changes in this release:
 
-1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ while using this chart version.
-2. **Encoded Characters**: Blocked by default in Traefik v3.6.7+ for security ([opt-out options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
-3. **Port Configuration**: HTTP options now require explicit `http` nesting level ([migration guide](https://github.com/traefik/traefik-helm-chart/pull/1603))
+1. **Traefik Hub**: This release support **only** Traefik Hub v3.19.0+ versions.
+   * CRDs has to be upgraded **before** the Chart. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
+   * It's possible to use previous versions of the Chart for previous versions of Traefik Hub.
+2. **Encoded Characters**: Allowed by default in Traefik v3.6.7+ for security ([opt-in options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
+3. **Ports Configuration**: HTTP options now require explicit `http` nesting level with PR https://github.com/traefik/traefik-helm-chart/pull/1603.
+   * There is a _before_ / _after_ example in the PR description.
+
+:information_source: Schema validation has been enforced in this release. When it fails, it means that the parameter is not implemented.
 
 ### Default value changes
 
