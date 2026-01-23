@@ -156,11 +156,12 @@ It's possible to redirect all incoming requests on an entrypoint to an other ent
 ```yaml
 ports:
   web:
-    redirections:
-      entryPoint:
-        to: websecure
-        scheme: https
-        permanent: true
+    http:
+      redirections:
+        entryPoint:
+          to: websecure
+          scheme: https
+          permanent: true
 ```
 
 ## Publish and protect Traefik Dashboard with basic Auth
@@ -293,7 +294,7 @@ ingressRoute:
     # Custom match rule with host domain
     matchRule: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
     entryPoints: ["websecure"]
-    # Add custom middleware : this makes the path matching the internal Go router 
+    # Add custom middleware : this makes the path matching the internal Go router
     middlewares:
       - name: traefik-dashboard-basepath
 
