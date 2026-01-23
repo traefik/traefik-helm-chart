@@ -21,7 +21,7 @@ There are 3 breaking changes in this release:
 1. **Traefik Hub**: This release support **only** Traefik Hub v3.19.0+ versions.
    * CRDs has to be upgraded **before** the Chart. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
    * It's possible to use previous versions of the Chart for previous versions of Traefik Hub.
-2. **Encoded Characters**: Allowed by default in Traefik v3.6.7+ for security ([opt-in options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
+2. **Encoded Characters**: Allowed by default in Traefik v3.6.7+ ([opt-in security options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
 3. **Ports Configuration**: HTTP options now require explicit `http` nesting level with PR https://github.com/traefik/traefik-helm-chart/pull/1603.
    * There is a _before_ / _after_ example in the PR description.
 
