@@ -14,6 +14,14 @@
 * docs(values): avoid unbreakable lines in table output of VALUES.md
 * chore(release): 🚀 publish traefik 39.0.0 and crds 1.14.0
 
+**Upgrade Notes**
+
+This release contains breaking changes:
+
+1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ before using this chart version.
+2. **Encoded Characters**: Blocked by default in Traefik v3.6.7+ for security ([opt-out options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
+3. **Port Configuration**: HTTP options now require explicit `http` nesting level ([migration guide](https://github.com/traefik/traefik-helm-chart/pull/1603))
+
 ### Default value changes
 
 ```diff
@@ -280,14 +288,6 @@ index 66a7f22..a8aec47 100644
      proxy:
 ```
 
-**Upgrade Notes**
-
-This release contains breaking changes:
-
-1. **Traefik Hub**: Support for Traefik Hub versions prior to v3.19.0 has been dropped. Upgrade to Traefik Hub v3.19.0+ before using this chart version.
-2. **Encoded Characters**: Blocked by default in Traefik v3.6.7+ for security ([opt-out options](https://github.com/traefik/traefik-helm-chart/blob/master/traefik/values.yaml#L913), [documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering))
-3. **Port Configuration**: HTTP options now require explicit `http` nesting level ([migration guide](https://github.com/traefik/traefik-helm-chart/pull/1603))
-
 ## 38.0.2  ![AppVersion: v3.6.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.6&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-08
@@ -297,6 +297,13 @@ This release contains breaking changes:
 * fix(CRDs): enforce the fact that this Chart does not support Traefik Hub v3.19.0
 * feat(deps): update traefik docker tag to v3.6.6
 * chore(release): publish traefik 38.0.2 and crds 1.13.1
+
+**Upgrades Notes**
+
+There is a breaking change on CRDs between Traefik Hub v3.18.0 and inferior and the CRDs of Traefik Hub v3.19.0+ preview versions (ea & rc).
+With this release, we remove the CRDs of Traefik Hub v3.19.0 preview versions.
+
+When Traefik Hub v3.19.0 is GA, we will release a new major version of this Chart that will only accept Traefik Hub v3.19.0+ versions.
 
 ### Default value changes
 
@@ -315,13 +322,6 @@ index f2a9f10..66a7f22 100644
  #
  # -- Extra objects to deploy (value evaluated as a template)
 ```
-
-**Upgrades Notes**
-
-There is a breaking change on CRDs between Traefik Hub v3.18.0 and inferior and the CRDs of Traefik Hub v3.19.0+ preview versions (ea & rc).
-With this release, we remove the CRDs of Traefik Hub v3.19.0 preview versions.
-
-When Traefik Hub v3.19.0 is GA, we will release a new major version of this Chart that will only accept Traefik Hub v3.19.0+ versions.
 
 ## 38.0.1  ![AppVersion: v3.6.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.5&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
