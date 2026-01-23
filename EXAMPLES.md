@@ -27,7 +27,7 @@ deployment:
 
 ## Extending DNS config
 
-In order to configure additional DNS servers for your traefik pod, you can use `dnsConfig` option:
+To configure additional DNS servers for your traefik pod, you can use the `dnsConfig` option:
 
 ```yaml
 deployment:
@@ -45,7 +45,7 @@ deployment:
 
 ## Install in a dedicated namespace, with limited RBAC
 
-Default install is using Cluster-wide RBAC but it can be restricted to target namespace.
+The default install is using cluster-wide RBAC but it can be restricted to the target namespace.
 
 ```yaml
 rbac:
@@ -55,7 +55,7 @@ rbac:
 ## Install with auto-scaling
 
 When enabling [HPA](https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/)
-to adjust replicas count according to CPU Usage, you'll need to set resources and nullify replicas.
+to adjust the replicas count according to CPU Usage, you'll need to set resources and nullify replicas.
 
 ```yaml
 deployment:
@@ -82,7 +82,7 @@ autoscaling:
 ## Install with Argo Rollouts
 
 When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
-In order to delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
+To delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
 
 ```yaml
 deployment:
@@ -129,7 +129,7 @@ It says also:
 
 > In production, it should be at least secured by authentication and authorizations.
 
-Thus, there are multiple ways to expose the dashboard. For instance, after enabling the creation of dashboard `IngressRoute` in the values:
+Thus, there are multiple ways to expose the dashboard. For instance, after enabling the creation of the dashboard `IngressRoute` in the values:
 
 ```yaml
 ingressRoute:
@@ -164,12 +164,11 @@ ports:
           permanent: true
 ```
 
-## Publish and protect Traefik Dashboard with basic Auth
+## Publish and protect the Traefik Dashboard with basic Auth
 
-To expose the dashboard in a secure way as [recommended](https://doc.traefik.io/traefik/operations/dashboard/#dashboard-router-rule)
+To expose the dashboard securely as [recommended](https://doc.traefik.io/traefik/operations/dashboard/#dashboard-router-rule)
 in the documentation, it may be useful to override the router rule to specify
-a domain to match, or accept requests on the root path (/) in order to redirect
-them to /dashboard/.
+a domain to match, or accept requests on the root path (/) to redirect them to /dashboard/.
 
 ```yaml
 # Create an IngressRoute for the dashboard
@@ -204,16 +203,17 @@ extraObjects:
         secret: traefik-dashboard-auth-secret
 ```
 
-## Publish and protect Traefik Dashboard with an Ingress
+## Publish and protect the Traefik Dashboard with an Ingress
 
 To expose the dashboard without IngressRoute, it's more complicated and less
-secure. You'll need to create an internal Service exposing Traefik API with
-special _traefik_ entrypoint. This internal Service can be created from an other tool, with the `extraObjects` section or using [custom services](#add-custom-internal-services).
+secure. You'll need to create an internal Service exposing the Traefik API with
+special _traefik_ entrypoint. This internal Service can be created from another tool,
+with the `extraObjects` section or using [custom services](#add-custom-internal-services).
 
-You'll need to double check:
+You'll need to double-check:
 
 1. Service selector with your setup.
-2. Middleware annotation on the ingress, _default_ should be replaced with traefik's namespace
+2. Middleware annotation on the ingress, _default_ should be replaced with Traefik's namespace
 
 ```yaml
 ingressRoute:
@@ -279,8 +279,8 @@ extraObjects:
 
 ## Publish Traefik Dashboard in Rancher UI
 
-To expose the dashboard with rancher UI some paths modifications are required.
-`basePath` needs to be changed and a `Middleware` needs to be used to URL rewriting.
+To expose the dashboard with the Rancher UI some path modifications are required.
+`basePath` needs to be changed and a `Middleware` needs to be used for URL rewriting.
 
 ```yaml
 # Configure the basePath
@@ -422,7 +422,7 @@ service:
     service.beta.kubernetes.io/azure-load-balancer-resource-group: myResourceGroup
 ```
 
-Here is a more complete example, using also native Let's encrypt feature of Traefik Proxy with Azure DNS:
+Here is a more complete example, using the native Let's Encrypt feature of Traefik Proxy with Azure DNS:
 
 ```yaml
 persistence:
@@ -505,7 +505,7 @@ metrics:
 
 Default install comes with an `IngressClass` resource that can be enabled on providers.
 
-Here's how one can enable it on CRD & Ingress Kubernetes provider:
+Here's how one can enable it on the CRD & Ingress Kubernetes providers:
 
 ```yaml
 ingressClass:
@@ -520,12 +520,12 @@ providers:
 ## Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
-entrypoint. They are available since v1.20 and in beta as of Kubernetes v1.24.
+entrypoint. They have been available since v1.20 and in beta as of Kubernetes v1.24.
 Availability may depend on your Kubernetes provider.
 
 When using TCP and UDP with a single service, you may encounter [this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741) from Kubernetes.
 If you want to avoid this issue, you can set `ports.websecure.http3.advertisedPort`
-to an other value than 443
+to another value than 443
 
 ```yaml
 ports:
@@ -585,10 +585,10 @@ ports:
 
 ## Using plugins
 
-This chart follows common security practices: it runs as non-root with a readonly root filesystem.
+This chart follows common security practices: it runs as non-root with a read-only root filesystem.
 When enabling a plugin, this Chart provides by default an `emptyDir` for plugin storage.
 
-Here is an example with [crowdsec](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/examples/kubernetes/README.md) plugin:
+Here is an example with the [CrowdSec](https://github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin/blob/main/examples/kubernetes/README.md) plugin:
 
 ```yaml
 experimental:
@@ -844,11 +844,11 @@ spec:
 
 See [the list of supported providers](https://doc.traefik.io/traefik/https/acme/#providers) for others.
 
-## Example with CloudFlare
+## Example with Cloudflare
 
-This example needs a CloudFlare token in a Kubernetes `Secret` and a working `StorageClass`.
+This example needs a Cloudflare token in a Kubernetes `Secret` and a working `StorageClass`.
 
-**Step 1**: Create `Secret` with CloudFlare token:
+**Step 1**: Create `Secret` with Cloudflare token:
 
 ```yaml
 ---
@@ -900,7 +900,7 @@ podSecurityContext:
 Setup:
 
 - cert-manager installed in `cert-manager` namespace
-- A cloudflare account on a DNS Zone
+- A Cloudflare account on a DNS Zone
 
 **Step 1**: Create `Secret` and `Issuer` needed by `cert-manager` with your API Token.
 See [cert-manager documentation](https://cert-manager.io/docs/configuration/acme/dns01/cloudflare/)
@@ -960,7 +960,7 @@ spec:
 kubectl get certificate -n traefik
 ```
 
-If needed, logs of cert-manager pod can give you more information
+If needed, logs of the cert-manager pod can give you more information
 
 **Step 4**: Use it on the TLS Store in **values.yaml** file for this Helm Chart
 
@@ -973,7 +973,7 @@ tlsStore:
 
 **Step 5**: Enjoy. All your `IngressRoute` use this certificate by default now.
 
-They should use websecure entrypoint like this:
+They should use a websecure entrypoint like this:
 
 ```yaml
 apiVersion: traefik.io/v1alpha1
@@ -993,7 +993,7 @@ spec:
 
 ## Add custom (internal) services
 
-In some cases you might want to have more than one Traefik service within your cluster,
+In some cases, you might want to have more than one Traefik service within your cluster,
 e.g. a default (external) one and a service that is only exposed internally to pods within your cluster.
 
 The `service.additionalServices` allows you to add an arbitrary amount of services,
@@ -1117,7 +1117,7 @@ tlsOptions:
       - CurveP384
 ```
 
-## Use latest build of Traefik v3 from master
+## Use the latest build of Traefik v3 from master
 
 An experimental build of Traefik Proxy is available on a specific community repository: `traefik/traefik`.
 
@@ -1177,9 +1177,9 @@ metrics:
             description: "{{ $labels.pod }} on {{ $labels.nodename }} is down"
 ```
 
-## Use kubernetes Gateway API
+## Use Kubernetes Gateway API
 
-One can use the new stable kubernetes gateway API provider by setting the following _values_:
+One can use the new stable Kubernetes gateway API provider by setting the following _values_:
 
 ```yaml
 providers:
@@ -1253,7 +1253,7 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 
 ## Use Kubernetes Gateway API with cert-manager
 
-One can use the new stable kubernetes gateway API provider with automatic TLS certificates delivery (with cert-manager) by setting the following _values_:
+One can use the new stable Kubernetes Hateway API provider with automatic TLS certificate delivery (with cert-manager) by setting the following _values_:
 
 ```yaml
 providers:
@@ -1454,7 +1454,7 @@ curl http://whoami.docker.localhost:8000 -c /tmp/cookies.txt -b /tmp/cookies.txt
 
 You should see the whoami response with your request details.
 
-**Step 3**: Install Traefik with Kubernetes Ingress NGINX provider enabled (alongside NGINX)
+**Step 3**: Install Traefik with the Kubernetes Ingress NGINX provider enabled (alongside NGINX)
 
 ```bash
 helm upgrade --install traefik traefik/traefik \
@@ -1621,9 +1621,9 @@ hub:
 > --set 'hub.apimanagement.admission.customWebhookCertificate.tls\.key'=$(cat /tmp/hub.key.b64)
 > ```
 
-## Injecting CA data from a Certificate resource
+## Injecting CA data from a certificate resource
 
-It is also possible to use [CA injector](https://cert-manager.io/docs/concepts/ca-injector/) of cert-manager with annotations on the webhook.
+It is also possible to use the [CA injector](https://cert-manager.io/docs/concepts/ca-injector/) of cert-manager with annotations on the webhook.
 
 First, you can create the certificate with a self-signed issuer:
 
@@ -1694,9 +1694,9 @@ hub:
       selfManagedCertificate: true
 ```
 
-## Mount datadog DSD socket directly into traefik container (i.e. no more socat sidecar)
+## Mount datadog DSD socket directly into the Traefik container (i.e. no more socat sidecar)
 
-This example demonstrates how to directly mount datadog apm socket into traefik container, thus avoiding the need of socat sidecar container.
+This example demonstrates how to directly mount Datadog APM socket into Traefik container, thus avoiding the need for a socat sidecar container.
 
 ```yaml
 metrics:
