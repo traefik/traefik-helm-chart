@@ -31,7 +31,7 @@ spec:
       {{- end -}}
       {{ $found := false }}
       {{- range $portName, $portConfig := $.Values.ports -}}
-        {{- if eq $portConfig.port $config.port -}}
+        {{- if eq ($portConfig.http).port $config.port -}}
           {{ $found = true }}
         {{- end -}}
       {{- end -}}
