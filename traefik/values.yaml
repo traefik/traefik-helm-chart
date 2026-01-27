@@ -2,6 +2,11 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into templates
 
+# -- Traefik chart name override
+nameOverride: ""
+# -- Traefik chart fullname override
+fullnameOverride: ""
+
 image:  # @schema additionalProperties: false
   # -- Traefik image host registry
   registry: docker.io
