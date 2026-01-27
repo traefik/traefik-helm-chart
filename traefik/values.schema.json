@@ -188,10 +188,7 @@
             }
         },
         "enabled": {
-            "type": "boolean",
-            "const": true,
-            "default": true,
-            "description": "Allow the Helm chart to be used as optional subchart."
+            "const": true
         },
         "env": {
             "type": "array"
