@@ -2,6 +2,9 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into templates
 
+# -- Allow the helmchart to be used as optional subchart
+enabled: true  # @schema type:boolean; const:true
+
 image:  # @schema additionalProperties: false
   # -- Traefik image host registry
   registry: docker.io
