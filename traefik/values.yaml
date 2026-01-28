@@ -1383,3 +1383,6 @@ oci_meta:
     hub:
       image: traefik-hub
       tag: latest
+
+# -- Allow the Helm chart to be used as optional subchart.
+enabled: true  # @schema type:boolean; const:true
