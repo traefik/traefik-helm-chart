@@ -235,6 +235,9 @@
         "extraObjects": {
             "type": "array"
         },
+        "fullnameOverride": {
+            "type": "string"
+        },
         "gateway": {
             "type": "object",
             "properties": {
@@ -1389,6 +1392,9 @@
                     }
                 }
             }
+        },
+        "nameOverride": {
+            "type": "string"
         },
         "namespaceOverride": {
             "type": "string"
