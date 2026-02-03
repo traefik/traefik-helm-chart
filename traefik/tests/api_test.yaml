@@ -1,0 +1,78 @@
+suite: API configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should have default dashboard and ping argument
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.dashboard=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--ping=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.basePath=/"
+
+  - it: should generate generic api arguments (insecure)
+    set:
+      api:
+        insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.insecure=true"
+
+  - it: should not generate basePath flag when set to empty string
+    set:
+      api:
+        basePath: ""
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.basePath="
+
+  - it: should generate basePath flag when set to a value
+    set:
+      api:
+        basePath: "/foo"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.basePath=/foo"
+
+  - it: should generate arbitrary boolean flags
+    set:
+      api:
+        debug: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.debug=true"
+
+  - it: should fail if api.insecure is not a boolean
+    set:
+      api:
+        insecure: "yes"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: api.insecure must be a boolean"
+
+  - it: should fail if api.debug is not a boolean
+    set:
+      api:
+        debug: "yes"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: api.debug must be a boolean"
+
+  - it: should fail if ingressRoute.dashboard is enabled but api.dashboard is false
+    set:
+      api:
+        dashboard: false
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard"
