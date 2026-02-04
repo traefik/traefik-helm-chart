@@ -57,7 +57,7 @@ tests:
         scaleTargetRef:
           apiVersion: apps/v1
           kind: StatefulSet
-          name: 'another-resource'
+          name: "another-resource"
     asserts:
       - equal:
           path: spec.replicas
@@ -71,7 +71,7 @@ tests:
         scaleTargetRef:
           apiVersion: apps/v1
           kind: StatefulSet
-          name: 'another-resource'
+          name: "another-resource"
     asserts:
       - equal:
           path: spec.replicas
@@ -131,21 +131,21 @@ tests:
         podAnnotations:
           traefik/powpow: podAnnotations
           traefik/name: '{{ template "traefik.name" . }}'
-          traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/repository: '{{ .Values.image.repository }}'
+          traefik/{{ template "traefik.name" . }}.logs: "log_processing_rules"
+          traefik/repository: "{{ .Values.image.repository }}"
     asserts:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
           value: podAnnotations
       - equal:
           path: spec.template.metadata.annotations.traefik/name
-          value: 'traefik'
+          value: "traefik"
       - equal:
           path: spec.template.metadata.annotations["traefik/traefik.logs"]
-          value: 'log_processing_rules'
+          value: "log_processing_rules"
       - equal:
           path: spec.template.metadata.annotations.traefik/repository
-          value: 'traefik'
+          value: "traefik"
   - it: should have labels with specified values
     set:
       deployment:
@@ -247,6 +247,8 @@ tests:
             - --entryPoints.web.address=:8000/tcp
             - --entryPoints.websecure.address=:8443/tcp
             - --api.dashboard=true
+            - --api.debug=false
+            - --api.insecure=false
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics

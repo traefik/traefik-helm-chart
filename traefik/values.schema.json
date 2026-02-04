@@ -28,10 +28,16 @@
                     "type": "boolean"
                 },
                 "debug": {
-                    "type": "boolean"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 },
                 "insecure": {
-                    "type": "boolean"
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
                 }
             },
             "additionalProperties": false
