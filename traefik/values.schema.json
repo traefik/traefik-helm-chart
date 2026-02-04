@@ -187,6 +187,9 @@
                 }
             }
         },
+        "enabled": {
+            "const": true
+        },
         "env": {
             "type": "array"
         },
