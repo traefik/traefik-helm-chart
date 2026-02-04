@@ -199,7 +199,7 @@ api:  # @schema additionalProperties: false
   # -- Enable the dashboard
   dashboard: true
   # -- Enable the insecure API (HTTP)
-  insecure: false
+  insecure:  # @schema type:[boolean, null]
   # -- Enable the debug API
   debug:  # @schema type:[boolean, null]
   # -- Configure API basePath
