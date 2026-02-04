@@ -14,14 +14,18 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--api.basePath=/"
 
-  - it: should generate generic api arguments (insecure)
+  - it: should generate generic api arguments
     set:
       api:
         insecure: true
+        debug: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--api.insecure=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.debug=true"
 
   - it: should not generate basePath flag when set to empty string
     set:
@@ -40,15 +44,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--api.basePath=/foo"
-
-  - it: should generate arbitrary boolean flags
-    set:
-      api:
-        debug: true
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--api.debug=true"
 
   - it: should fail if ingressRoute.dashboard is enabled but api.dashboard is false
     set:
