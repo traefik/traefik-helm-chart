@@ -201,7 +201,7 @@ api:  # @schema additionalProperties: false
   # -- Enable the insecure API (HTTP)
   insecure: false
   # -- Enable the debug API
-  debug: false
+  debug:  # @schema type:[boolean, null]
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
 
