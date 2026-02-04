@@ -55,3 +55,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard"
+
+  - it: should fail on typo
+    set:
+      api:
+        dasboard: true
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
