@@ -26,8 +26,15 @@
                 },
                 "dashboard": {
                     "type": "boolean"
+                },
+                "debug": {
+                    "type": "boolean"
+                },
+                "insecure": {
+                    "type": "boolean"
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "autoscaling": {
             "type": "object",

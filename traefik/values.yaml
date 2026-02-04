@@ -195,9 +195,13 @@ gatewayClass:  # @schema additionalProperties: false
   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
   labels: {}
 
-api:
+api: # @schema additionalProperties: false
   # -- Enable the dashboard
   dashboard: true
+  # -- Enable the insecure API (HTTP)
+  insecure: false
+  # -- Enable the debug API
+  debug: false
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
 

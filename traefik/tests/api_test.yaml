@@ -50,22 +50,6 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--api.debug=true"
 
-  - it: should fail if api.insecure is not a boolean
-    set:
-      api:
-        insecure: "yes"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: api.insecure must be a boolean"
-
-  - it: should fail if api.debug is not a boolean
-    set:
-      api:
-        debug: "yes"
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: api.debug must be a boolean"
-
   - it: should fail if ingressRoute.dashboard is enabled but api.dashboard is false
     set:
       api:
