@@ -67,6 +67,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
+| enabled | bool | `true` | Allow the Helm chart to be used as optional subchart. |
 | env | list | `[]` | Additional Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.abortOnPluginFailure | bool | `false` | Defines whether all plugins must be loaded successfully for Traefik to start |
