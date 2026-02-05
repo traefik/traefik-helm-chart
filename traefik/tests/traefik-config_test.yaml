@@ -1128,33 +1128,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks.endpoint=http://microcks.svc"
-  - it: should be possible to configure Traefik Hub multicluster provider
-    set:
-      image:
-        tag: v3.7.0
-      tracing:
-        otlp:
-          enabled: true
-      hub:
-        token: "xxx"
-        providers:
-          multicluster:
-            enabled: true
-            children:
-              child1:
-                address: http://foo
-              child2:
-                address: http://bar
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child1=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child2=true"
   - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
     set:
       image:
@@ -1272,22 +1245,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.consulCatalogEnterprise.watch=true"
-  - it: should be possible to configure Traefik Hub uplinkEntryPoints
-    set:
-      image:
-        tag: v3.7.0
-      tracing:
-        otlp:
-          enabled: true
-      hub:
-        token: "xxx"
-        uplinkEntryPoints:
-          ep:
-            address: 0.0.0.0:9000
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.uplinkEntryPoints.ep=true"
   - it: should be possible to configure Traefik Hub plugin sources
     set:
       image:

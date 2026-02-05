@@ -1,0 +1,38 @@
+suite: Traefik configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should be possible to configure Traefik Hub multicluster provider
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                address: http://foo
+              child2:
+                address: http://bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2=true"
+      
+  - it: should be possible to configure Traefik Hub uplinkEntryPoints
+    set:
+      hub:
+        token: "xxx"
+        uplinkEntryPoints:
+          ep:
+            address: 0.0.0.0:9000
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.uplinkEntryPoints.ep=true"
