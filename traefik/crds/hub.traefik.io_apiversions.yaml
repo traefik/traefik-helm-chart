@@ -207,6 +207,11 @@ spec:
                     x-kubernetes-validations:
                     - message: must be a valid URL
                       rule: isURL(self)
+                  validateRequestBodySchema:
+                    description: |-
+                      ValidateRequestBodySchema validates the request body against the OpenAPI specification.
+                      This option overrides the default behavior configured in the static configuration.
+                    type: boolean
                   validateRequestMethodAndPath:
                     description: |-
                       ValidateRequestMethodAndPath validates that the path and method matches an operation defined in the OpenAPI specification.
