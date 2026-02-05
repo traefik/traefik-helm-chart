@@ -888,6 +888,10 @@
           - "--hub.sendlogs={{ . }}"
               {{- end }}
             {{- end }}
+            {{- range $epName, $epCfg := .uplinkEntryPoints }}
+          - "--hub.uplinkEntryPoints.{{ $epName }}=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "hub.uplinkEntryPoints.%s" $epName) "content" $epCfg) | nindent 10 }}
+            {{- end }}
             {{- if and $.Values.tracing.otlp.enabled .tracing.additionalTraceHeaders.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
             {{- end }}
@@ -896,6 +900,14 @@
             {{- end }}
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.multicluster.enabled }}
+          - "--hub.providers.multicluster=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
+              {{- range $childName, $childCfg := .providers.multicluster.children }}
+          - "--hub.providers.multicluster.children.{{ $childName }}=true"
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "hub.providers.multicluster.children.%s" $childName) "content" $childCfg) | nindent 10 }}
+              {{- end }}
             {{- end }}
           {{- end }}
           {{- with .pluginRegistry.sources }}

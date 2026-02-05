@@ -150,6 +150,10 @@ Kubernetes: `>=1.22.0-0`
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
+| hub.providers.multicluster.children | object | `{}` | Child objects. |
+| hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
+| hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
+| hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -170,6 +174,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
+| hub.uplinkEntryPoints | object | `{}` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |

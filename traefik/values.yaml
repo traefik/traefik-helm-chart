@@ -1316,6 +1316,16 @@ hub:
         insecureSkipVerify: false
         # -- TLS key
         key: ""
+    multicluster:
+      # -- Enable Multi-cluster provider.
+      enabled: false
+      # -- Polling interval for Multi-cluster.
+      pollInterval: 5
+      # -- Polling timeout for Multi-cluster.
+      pollTimeout: 5
+      # -- Child objects.
+      children: {}
+  uplinkEntryPoints: {}
   redis:
     # -- Enable Redis Cluster. Default: true.
     cluster:    # @schema type:[boolean, null]

@@ -610,6 +610,23 @@
                                     }
                                 }
                             }
+                        },
+                        "multicluster": {
+                            "type": "object",
+                            "properties": {
+                                "children": {
+                                    "type": "object"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "pollInterval": {
+                                    "type": "integer"
+                                },
+                                "pollTimeout": {
+                                    "type": "integer"
+                                }
+                            }
                         }
                     }
                 },
@@ -711,6 +728,9 @@
                             }
                         }
                     }
+                },
+                "uplinkEntryPoints": {
+                    "type": "object"
                 }
             }
         },
