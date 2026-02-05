@@ -150,7 +150,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
-| hub.providers.multicluster.children | object | `{}` | Child objects. |
+| hub.providers.multicluster.children | object | `{}` | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
 | hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
 | hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |

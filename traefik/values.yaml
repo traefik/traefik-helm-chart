@@ -1323,8 +1323,14 @@ hub:
       pollInterval: 5
       # -- Polling timeout for Multi-cluster.
       pollTimeout: 5
-      # -- Child objects.
+      # -- Child cluster configurations, keyed by a unique name.
       children: {}
+        # child1:
+        #   # -- URL of the child cluster's uplink entrypoint.
+        #   address: "https://child1-traefik.example.com:8443"
+        #   # -- TLS and transport configuration for connecting to this child.
+        #   serversTransport:
+        #     insecureSkipVerify: true
   uplinkEntryPoints: {}
   redis:
     # -- Enable Redis Cluster. Default: true.
