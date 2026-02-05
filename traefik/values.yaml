@@ -1323,9 +1323,9 @@ hub:
       pollInterval: 5
       # -- Polling timeout for Multi-cluster.
       pollTimeout: 5
+      # @schema mergeProperties: true
       # -- Child cluster configurations, keyed by a unique name.
       # @default -- {}
-      # @schema mergeProperties: true
       children:
         # @schema additionalProperties: false
         cluster-1:
@@ -1334,35 +1334,35 @@ hub:
           # -- TLS and transport configuration for connecting to this child.
           # @default -- {}
           serversTransport:
+            # @schema type:[boolean, null]
             # -- Disable TLS certificate verification. **Not recommended for production.**
             # @default -- false
-            # @schema type:[boolean, null]
             insecureSkipVerify:
             # -- Server name used for SNI and certificate verification.
             serverName: ""
             rootCAs: []
             certificates: []
+            # @schema type:[integer, null]
             # -- Maximum idle connections per host.
             # @default -- 200
-            # @schema type:[integer, null]
             maxIdleConnsPerHost:
             forwardingTimeouts:
+              # @schema type:[string, integer, null]
               # -- Timeout for establishing connections.
               # @default -- 30s
-              # @schema type:[string, integer, null]
               dialTimeout:
+              # @schema type:[string, integer, null]
               # -- Timeout for reading response headers.
               # @default -- 0s
-              # @schema type:[string, integer, null]
               responseHeaderTimeout:
+              # @schema type:[string, integer, null]
               # -- Timeout for idle connections.
               # @default -- 90s
-              # @schema type:[string, integer, null]
               idleConnTimeout:
             spiffe:
               ids: []
-              # -- SPIFFE trust domain.
               # @schema type:[string, integer, null]
+              # -- SPIFFE trust domain.
               trustDomain: ""
 
   uplinkEntryPoints: {}
