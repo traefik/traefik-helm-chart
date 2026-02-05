@@ -888,6 +888,9 @@
           - "--hub.sendlogs={{ . }}"
               {{- end }}
             {{- end }}
+            {{- range $epName, $epCfg := .uplinkEntryPoints }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "hub.uplinkEntryPoints.%s" $epName) "content" $epCfg) | nindent 10 }}
+            {{- end }}
             {{- if and $.Values.tracing.otlp.enabled .tracing.additionalTraceHeaders.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
             {{- end }}
@@ -896,6 +899,21 @@
             {{- end }}
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.multicluster.enabled }}
+          - "--hub.providers.multicluster=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
+              {{- range $childName, $childCfg := .providers.multicluster.children }}
+                {{- $childPath := printf "hub.providers.multicluster.children.%s" $childName }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $childPath "content" (omit $childCfg "serversTransport")) | nindent 10 }}
+                {{- with get $childCfg "serversTransport" }}
+                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" $childPath "content" (omit . "certificates")) | nindent 10 }}
+                  {{- range $idx, $val := get . "certificates" }}
+                    {{- $certPath := printf "hub.providers.multicluster.children.%s.serversTransport.certificates[%d]" $childName $idx }}
+                    {{- include "traefik.yaml2CommandLineArgs" (dict "path" $certPath "content" $val) | nindent 10 }}
+                  {{- end }}
+                {{- end }}
+              {{- end }}
             {{- end }}
           {{- end }}
           {{- with .pluginRegistry.sources }}

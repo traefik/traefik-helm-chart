@@ -67,6 +67,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
+| enabled | bool | `true` | Allow the Helm chart to be used as optional subchart. |
 | env | list | `[]` | Additional Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
 | experimental.abortOnPluginFailure | bool | `false` | Defines whether all plugins must be loaded successfully for Traefik to start |
@@ -149,6 +150,19 @@ Kubernetes: `>=1.22.0-0`
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
+| hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
+| hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
+| hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
+| hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
+| hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
+| hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -169,6 +183,7 @@ Kubernetes: `>=1.22.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
+| hub.uplinkEntryPoints | object | `{}` |  |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
