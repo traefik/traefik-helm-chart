@@ -416,7 +416,7 @@ tests:
               baseModuleName: "gitlab.company.com"
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in exprimental.plugins."
+          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in experimental.plugins."
   - it: should not fail when using pluginRegistry sources with used plugin
     set:
       image:
