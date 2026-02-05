@@ -21,20 +21,31 @@ tests:
                   certificates:
                     - certFile: /certs/client.crt
                       keyFile: /certs/client.key
+                    - certFile: /certs/client2.crt
+                      keyFile: /certs/client2.key
+
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.multicluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.address=http://foo"
+          content: "--hub.providers.multicluster.children.child1.address=http://foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child2.rootCAs=/certs/ca.crt"
+          content: "--hub.providers.multicluster.children.child2.rootCAs=/certs/ca.crt,/certs/ca2.crt"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child2.certificates.0.certFile=/certs/client.crt"
-
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[0].certFile=/certs/client.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[0].keyFile=/certs/client.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[1].certFile=/certs/client2.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[1].keyFile=/certs/client2.key"
 
   - it: should be possible to configure Traefik Hub uplinkEntryPoints
     set:
