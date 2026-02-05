@@ -1,0 +1,82 @@
+suite: Traefik configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should be possible to configure Traefik Hub multicluster provider
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                address: http://foo
+              child2:
+                address: http://bar
+                serversTransport:
+                  rootCAs:
+                    - /certs/ca.crt
+                    - /certs/ca2.crt
+                  certificates:
+                    - certFile: /certs/client.crt
+                      keyFile: /certs/client.key
+                    - certFile: /certs/client2.crt
+                      keyFile: /certs/client2.key
+
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.address=http://foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.rootCAs=/certs/ca.crt,/certs/ca2.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[0].certFile=/certs/client.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[0].keyFile=/certs/client.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[1].certFile=/certs/client2.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[1].keyFile=/certs/client2.key"
+
+  - it: should be possible to configure Traefik Hub uplinkEntryPoints
+    set:
+      hub:
+        token: "xxx"
+        uplinkEntryPoints:
+          ep:
+            address: 0.0.0.0:9000
+            http:
+              tls:
+                options: strict-mtls@file
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.uplinkEntryPoints.ep.address=0.0.0.0:9000"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.uplinkEntryPoints.ep.http.tls.options=strict-mtls@file"
+
+  - it: should fail on typo when configuring Traefik Hub multicluster provider
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                adress: http://foo # <=== typo here
+              child2:
+                address: http://bar
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

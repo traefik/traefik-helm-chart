@@ -756,6 +756,112 @@
                                     }
                                 }
                             }
+                        },
+                        "multicluster": {
+                            "type": "object",
+                            "properties": {
+                                "children": {
+                                    "description": "Child cluster configurations, keyed by a unique name.",
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "description": "URL of the child cluster's uplink entrypoint.",
+                                                "type": "string"
+                                            },
+                                            "serversTransport": {
+                                                "description": "TLS and transport configuration for connecting to this child.",
+                                                "type": "object",
+                                                "properties": {
+                                                    "certificates": {
+                                                        "type": "array"
+                                                    },
+                                                    "forwardingTimeouts": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "dialTimeout": {
+                                                                "description": "Timeout for establishing connections.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "idleConnTimeout": {
+                                                                "description": "Timeout for idle connections.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "responseHeaderTimeout": {
+                                                                "description": "Timeout for reading response headers.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "insecureSkipVerify": {
+                                                        "description": "Disable TLS certificate verification. **Not recommended for production.**",
+                                                        "type": [
+                                                            "boolean",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "maxIdleConnsPerHost": {
+                                                        "description": "Maximum idle connections per host.",
+                                                        "type": [
+                                                            "integer",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "rootCAs": {
+                                                        "type": "array"
+                                                    },
+                                                    "serverName": {
+                                                        "description": "Server name used for SNI and certificate verification.",
+                                                        "type": "string"
+                                                    },
+                                                    "spiffe": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "ids": {
+                                                                "type": "array"
+                                                            },
+                                                            "trustDomain": {
+                                                                "description": "SPIFFE trust domain.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
+                                },
+                                "enabled": {
+                                    "description": "Enable Multi-cluster provider.",
+                                    "type": "boolean"
+                                },
+                                "pollInterval": {
+                                    "description": "Polling interval for Multi-cluster.",
+                                    "type": "integer"
+                                },
+                                "pollTimeout": {
+                                    "description": "Polling timeout for Multi-cluster.",
+                                    "type": "integer"
+                                }
+                            }
                         }
                     }
                 },
@@ -876,6 +982,9 @@
                             }
                         }
                     }
+                },
+                "uplinkEntryPoints": {
+                    "type": "object"
                 }
             }
         },
