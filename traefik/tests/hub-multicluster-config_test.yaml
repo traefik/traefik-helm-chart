@@ -14,17 +14,28 @@ tests:
                 address: http://foo
               child2:
                 address: http://bar
+                serversTransport:
+                  rootCAs:
+                    - /certs/ca.crt
+                    - /certs/ca2.crt
+                  certificates:
+                    - certFile: /certs/client.crt
+                      keyFile: /certs/client.key
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.multicluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child1=true"
+          content: "--hub.providers.multicluster.children.address=http://foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child2=true"
-      
+          content: "--hub.providers.multicluster.children.child2.rootCAs=/certs/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.certificates.0.certFile=/certs/client.crt"
+
+
   - it: should be possible to configure Traefik Hub uplinkEntryPoints
     set:
       hub:
@@ -32,7 +43,29 @@ tests:
         uplinkEntryPoints:
           ep:
             address: 0.0.0.0:9000
+            http:
+              tls:
+                options: strict-mtls@file
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.uplinkEntryPoints.ep=true"
+          content: "--hub.uplinkEntryPoints.ep.address=0.0.0.0:9000"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.uplinkEntryPoints.ep.http.tls.options=strict-mtls@file"
+
+  - it: should be possible to configure Traefik Hub multicluster provider
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                adress: http://foo # <=== typo here
+              child2:
+                address: http://bar
+    asserts:
+      - failedTemplate:
+          errorPattern: "schema"

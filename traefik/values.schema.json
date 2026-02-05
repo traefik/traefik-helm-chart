@@ -615,7 +615,83 @@
                             "type": "object",
                             "properties": {
                                 "children": {
-                                    "type": "object"
+                                    "type": "object",
+                                    "additionalProperties": {
+                                        "type": "object",
+                                        "properties": {
+                                            "address": {
+                                                "type": "string"
+                                            },
+                                            "serversTransport": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "certificates": {
+                                                        "type": "array"
+                                                    },
+                                                    "forwardingTimeouts": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "dialTimeout": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "idleConnTimeout": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "responseHeaderTimeout": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    },
+                                                    "insecureSkipVerify": {
+                                                        "type": [
+                                                            "boolean",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "maxIdleConnsPerHost": {
+                                                        "type": [
+                                                            "integer",
+                                                            "null"
+                                                        ]
+                                                    },
+                                                    "rootCAs": {
+                                                        "type": "array"
+                                                    },
+                                                    "serverName": {
+                                                        "type": "string"
+                                                    },
+                                                    "spiffe": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "ids": {
+                                                                "type": "array"
+                                                            },
+                                                            "trustDomain": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        "additionalProperties": false
+                                    }
                                 },
                                 "enabled": {
                                     "type": "boolean"

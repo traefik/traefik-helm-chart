@@ -1324,13 +1324,47 @@ hub:
       # -- Polling timeout for Multi-cluster.
       pollTimeout: 5
       # -- Child cluster configurations, keyed by a unique name.
-      children: {}
-        # child1:
-        #   # -- URL of the child cluster's uplink entrypoint.
-        #   address: "https://child1-traefik.example.com:8443"
-        #   # -- TLS and transport configuration for connecting to this child.
-        #   serversTransport:
-        #     insecureSkipVerify: true
+      # @default -- {}
+      # @schema mergeProperties: true
+      children:
+        # @schema additionalProperties: false
+        cluster-1:
+          # -- URL of the child cluster's uplink entrypoint.
+          address: ""
+          # -- TLS and transport configuration for connecting to this child.
+          # @default -- {}
+          serversTransport:
+            # -- Disable TLS certificate verification. **Not recommended for production.**
+            # @default -- false
+            # @schema type:[boolean, null]
+            insecureSkipVerify:
+            # -- Server name used for SNI and certificate verification.
+            serverName: ""
+            rootCAs: []
+            certificates: []
+            # -- Maximum idle connections per host.
+            # @default -- 200
+            # @schema type:[integer, null]
+            maxIdleConnsPerHost:
+            forwardingTimeouts:
+              # -- Timeout for establishing connections.
+              # @default -- 30s
+              # @schema type:[string, integer, null]
+              dialTimeout:
+              # -- Timeout for reading response headers.
+              # @default -- 0s
+              # @schema type:[string, integer, null]
+              responseHeaderTimeout:
+              # -- Timeout for idle connections.
+              # @default -- 90s
+              # @schema type:[string, integer, null]
+              idleConnTimeout:
+            spiffe:
+              ids: []
+              # -- SPIFFE trust domain.
+              # @schema type:[string, integer, null]
+              trustDomain: ""
+
   uplinkEntryPoints: {}
   redis:
     # -- Enable Redis Cluster. Default: true.

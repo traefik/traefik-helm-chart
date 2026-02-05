@@ -150,7 +150,16 @@ Kubernetes: `>=1.22.0-0`
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
-| hub.providers.multicluster.children | object | `{}` | Child cluster configurations, keyed by a unique name. |
+| hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. @schema mergeProperties: true |
+| hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
+| hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. @schema type:[string, integer, null] |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. @schema type:[string, integer, null] |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. @schema type:[string, integer, null] |
+| hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** @schema type:[boolean, null] |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. @schema type:[integer, null] |
+| hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. @schema type:[string, integer, null] |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
 | hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
 | hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
