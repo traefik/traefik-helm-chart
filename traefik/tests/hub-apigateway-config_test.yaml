@@ -276,3 +276,195 @@ tests:
     asserts:
       - notExists:
           path: spec.template.metadata.labels.hub-cert-hash
+
+  - it: should be possible to configure Traefik Hub additionalTraceHeaders
+    set:
+      tracing:
+        otlp:
+          enabled: true
+      hub:
+        tracing:
+          additionalTraceHeaders:
+            enabled: true
+            traceContext:
+              parentId: "parentId"
+              traceId: "traceId"
+              traceParent: "traceParent"
+              traceState: "traceState"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tracing.additionalTraceHeaders.traceContext.parentId=parentId"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceId=traceId"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceParent=traceParent"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceState=traceState"
+  - it: should be possible to configure Traefik Hub microcks provider
+    set:
+      hub:
+        providers:
+          microcks:
+            enabled: true
+            endpoint: "http://microcks.svc"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks.endpoint=http://microcks.svc"
+  - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
+    set:
+      hub:
+        providers:
+          consulCatalogEnterprise:
+            enabled: true
+            cache: true
+            connectAware: true
+            connectByDefault: true
+            constraints: "constraints"
+            defaultRule: "defaultRule"
+            endpoint:
+              address: "address"
+              datacenter: "datacenter"
+              endpointWaitTime: 1
+              httpauth:
+                password: "password"
+                username: "username"
+              scheme: "scheme"
+              tls:
+                ca: "ca"
+                cert: "cert"
+                insecureSkipVerify: true
+                key: "key"
+              token: "token"
+            exposedByDefault: false
+            namespaces: "namespaces"
+            partition: "partition"
+            prefix: "prefix"
+            refreshInterval: 2
+            requireConsistent: true
+            serviceName: "serviceName"
+            stale: true
+            strictChecks: "strictChecks"
+            watch: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.cache=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.connectAware=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.connectByDefault=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.constraints=constraints"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.defaultRule=defaultRule"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.address=address"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.datacenter=datacenter"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime=1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.password=password"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.username=username"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.scheme=scheme"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.ca=ca"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.cert=cert"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.key=key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.endpoint.token=token"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.namespaces=namespaces"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.partition=partition"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.prefix=prefix"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.refreshInterval=2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.requireConsistent=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.serviceName=serviceName"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.stale=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.strictChecks=strictChecks"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise.watch=true"
+  - it: should be possible to configure Traefik Hub plugin sources
+    set:
+      hub:
+        token: "xxx"
+        pluginRegistry:
+          sources:
+            plugin1:
+              baseModuleName: "gitlab.company.com"
+              gitlab:
+                token: "glpat-xxxxxxxxxxxxxxxxxxxx"
+                url: "https://gitlab.company.com"
+            plugin2:
+              baseModuleName: "github.enterprise.local"
+              github:
+                token: "ghp_xxxxxxxxxxxxxxxxxxxx"
+                enterprise:
+                  url: "https://github.enterprise.local"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.basemodulename=gitlab.company.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.gitlab.url=https://gitlab.company.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin1.gitlab.token=glpat-xxxxxxxxxxxxxxxxxxxx"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.basemodulename=github.enterprise.local"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.github.enterprise.url=https://github.enterprise.local"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.pluginregistry.sources.plugin2.github.token=ghp_xxxxxxxxxxxxxxxxxxxx"
