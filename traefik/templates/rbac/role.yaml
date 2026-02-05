@@ -252,6 +252,16 @@ rules:
       - list
       - watch
   {{- end }}
+  {{- if $.Values.hub.providers.multicluster.enabled }}
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - uplinks
+    verbs:
+      - get
+      - list
+      - watch
+  {{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}
