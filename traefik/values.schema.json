@@ -287,6 +287,7 @@
             "type": "array"
         },
         "fullnameOverride": {
+            "description": "Overrides the resource name for templates (i.e deployment, service, etc..)",
             "type": "string"
         },
         "gateway": {
@@ -1644,6 +1645,7 @@
             }
         },
         "nameOverride": {
+            "description": "overrides the app.kubernetes.io/name label",
             "type": "string"
         },
         "namespaceOverride": {
