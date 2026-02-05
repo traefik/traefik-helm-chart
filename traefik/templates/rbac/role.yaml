@@ -173,6 +173,9 @@ rules:
       - hub.traefik.io
     resources:
       - aiservices
+  {{- if $.Values.hub.providers.multicluster.enabled }}
+      - uplinks
+  {{- end }}
     verbs:
       - get
       - list
@@ -247,16 +250,6 @@ rules:
       - apps
     resources:
       - replicasets
-    verbs:
-      - get
-      - list
-      - watch
-  {{- end }}
-  {{- if $.Values.hub.providers.multicluster.enabled }}
-  - apiGroups:
-      - hub.traefik.io
-    resources:
-      - uplinks
     verbs:
       - get
       - list
