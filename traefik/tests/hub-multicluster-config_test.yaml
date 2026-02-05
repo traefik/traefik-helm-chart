@@ -65,7 +65,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.uplinkEntryPoints.ep.http.tls.options=strict-mtls@file"
 
-  - it: should be possible to configure Traefik Hub multicluster provider
+  - it: should fail on typo when configuring Traefik Hub multicluster provider
     set:
       hub:
         token: "xxx"
@@ -79,4 +79,4 @@ tests:
                 address: http://bar
     asserts:
       - failedTemplate:
-          errorPattern: "schema"
+          errorPattern: "values don't meet the specifications of the schema"
