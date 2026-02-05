@@ -128,7 +128,7 @@
   {{- with .Values.hub.pluginRegistry.sources }}
     {{- range $pluginName, $pluginConf := . }}
       {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
-         {{ fail (printf "ERROR: pluginRegistry source %s is not used in exprimental.plugins." $pluginName) }}
+         {{ fail (printf "ERROR: pluginRegistry source %s is not used in experimental.plugins." $pluginName) }}
       {{- end }}
     {{- end }}
   {{- end }}
