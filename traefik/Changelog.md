@@ -1,5 +1,87 @@
 # Change Log
 
+## 39.1.0-ea.1  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-02-05
+
+* fix(chart): allow to be used as optional subchart
+* feat(hub): add multi-cluster support
+* feat(CRDs): support Traefik Hub v3.20.0-ea.1
+* chore(release): publish traefik 39.1.0-ea.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index a8aec47..283822b 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1316,6 +1316,56 @@ hub:
+         insecureSkipVerify: false
+         # -- TLS key
+         key: ""
++    multicluster:
++      # -- Enable Multi-cluster provider.
++      enabled: false
++      # -- Polling interval for Multi-cluster.
++      pollInterval: 5
++      # -- Polling timeout for Multi-cluster.
++      pollTimeout: 5
++      # @schema mergeProperties: true
++      # -- Child cluster configurations, keyed by a unique name.
++      # @default -- {}
++      children:
++        # @schema additionalProperties: false
++        cluster-1:
++          # -- URL of the child cluster's uplink entrypoint.
++          address: ""
++          # -- TLS and transport configuration for connecting to this child.
++          # @default -- {}
++          serversTransport:
++            # @schema type:[boolean, null]
++            # -- Disable TLS certificate verification. **Not recommended for production.**
++            # @default -- false
++            insecureSkipVerify:
++            # -- Server name used for SNI and certificate verification.
++            serverName: ""
++            rootCAs: []
++            certificates: []
++            # @schema type:[integer, null]
++            # -- Maximum idle connections per host.
++            # @default -- 200
++            maxIdleConnsPerHost:
++            forwardingTimeouts:
++              # @schema type:[string, integer, null]
++              # -- Timeout for establishing connections.
++              # @default -- 30s
++              dialTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for reading response headers.
++              # @default -- 0s
++              responseHeaderTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for idle connections.
++              # @default -- 90s
++              idleConnTimeout:
++            spiffe:
++              ids: []
++              # @schema type:[string, integer, null]
++              # -- SPIFFE trust domain.
++              trustDomain: ""
++
++  uplinkEntryPoints: {}
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+     cluster:    # @schema type:[boolean, null]
+@@ -1383,3 +1433,6 @@ oci_meta:
+     hub:
+       image: traefik-hub
+       tag: latest
++
++# -- Allow the Helm chart to be used as optional subchart.
++enabled: true  # @schema type:boolean; const:true
+```
+
 ## 39.0.0  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-22
