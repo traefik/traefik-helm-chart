@@ -1791,3 +1791,65 @@ spec:
     #         kind: Secret
     #         name: some-tls-cert
 ```
+
+## Use Multi-Cluster Provide
+
+This example shows how to configure multi-cluster traffic with a parent cluster and a child cluster.
+
+### Child cluster
+
+Enable the Multi-Cluster provider on the child, create an uplink entryPoint, and advertise a workload (_this example uses the file provider for simplicity_):
+
+```yaml
+hub:
+  token: hub-token
+  providers:
+    multicluster:
+      enabled: true
+  uplinkEntryPoints:
+    ep:
+      address: ":9000"
+
+providers:
+  file:
+    enabled: true
+    content: |
+      http:
+        uplinks:
+          whoami:
+            entryPoints:
+              - ep
+
+        routers:
+          backend:
+            rule: PathPrefix(`/`)
+            service: backend
+            uplinks:
+              - whoami
+
+        services:
+          backend:
+            loadBalancer:
+              servers:
+                - url: http://whoami.example.svc.cluster.local:80
+```
+
+### Parent cluster
+
+Configure the parent multi-cluster provider with the child's uplink entryPoint address:
+
+```yaml
+hub:
+  token: hub-token
+  providers:
+    multicluster:
+      enabled: true
+      children:
+        child1:
+          address: "http://child1.example.svc.cluster.local:9000"
+```
+
+For an uplink named `whoami`, the parent exposes:
+
+* `whoami@multicluster` (weighted across all children)
+* `whoami-child1@multicluster` (direct to a specific child)
