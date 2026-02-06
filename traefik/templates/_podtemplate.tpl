@@ -907,10 +907,12 @@
                 {{- $childPath := printf "hub.providers.multicluster.children.%s" $childName }}
                 {{- include "traefik.yaml2CommandLineArgs" (dict "path" $childPath "content" (omit $childCfg "serversTransport")) | nindent 10 }}
                 {{- with get $childCfg "serversTransport" }}
-                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" $childPath "content" (omit . "certificates")) | nindent 10 }}
-                  {{- range $idx, $val := get . "certificates" }}
-                    {{- $certPath := printf "hub.providers.multicluster.children.%s.serversTransport.certificates[%d]" $childName $idx }}
-                    {{- include "traefik.yaml2CommandLineArgs" (dict "path" $certPath "content" $val) | nindent 10 }}
+                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.serversTransport" $childPath) "content" (omit . "certificates")) | nindent 10 }}
+                  {{- with get . "certificates" }}
+                    {{- range $idx, $val := . }}
+                      {{- $certPath := printf "hub.providers.multicluster.children.%s.serversTransport.certificates[%d]" $childName $idx }}
+                      {{- include "traefik.yaml2CommandLineArgs" (dict "path" $certPath "content" $val) | nindent 10 }}
+                    {{- end }}
                   {{- end }}
                 {{- end }}
               {{- end }}

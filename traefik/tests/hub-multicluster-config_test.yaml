@@ -15,15 +15,7 @@ tests:
               child2:
                 address: http://bar
                 serversTransport:
-                  rootCAs:
-                    - /certs/ca.crt
-                    - /certs/ca2.crt
-                  certificates:
-                    - certFile: /certs/client.crt
-                      keyFile: /certs/client.key
-                    - certFile: /certs/client2.crt
-                      keyFile: /certs/client2.key
-
+                  insecureSkipVerify: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -33,7 +25,39 @@ tests:
           content: "--hub.providers.multicluster.children.child1.address=http://foo"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.multicluster.children.child2.rootCAs=/certs/ca.crt,/certs/ca2.crt"
+          content: "--hub.providers.multicluster.children.child2.serversTransport.insecureSkipVerify=true"
+
+  - it: should be possible to configure Traefik Hub multicluster provider serversTransport certificates
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                address: http://foo
+              child2:
+                address: http://bar
+                serversTransport:
+                  rootCAs:
+                    - /certs/ca.crt
+                    - /certs/ca2.crt
+                  certificates:
+                    - certFile: /certs/client.crt
+                      keyFile: /certs/client.key
+                    - certFile: /certs/client2.crt
+                      keyFile: /certs/client2.key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.address=http://foo"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child2.serversTransport.rootCAs=/certs/ca.crt,/certs/ca2.crt"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[0].certFile=/certs/client.crt"
