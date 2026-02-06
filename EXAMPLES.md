@@ -1792,7 +1792,7 @@ spec:
     #         name: some-tls-cert
 ```
 
-## Use Multi-Cluster Provide
+## Use Multi-Cluster Provider
 
 This example shows how to configure multi-cluster traffic with a parent cluster and a child cluster.
 
