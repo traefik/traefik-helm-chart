@@ -286,6 +286,10 @@
             "description": "Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example.",
             "type": "array"
         },
+        "fullnameOverride": {
+            "description": "Overrides the resource name for templates (i.e deployment, service, etc..)",
+            "type": "string"
+        },
         "gateway": {
             "type": "object",
             "properties": {
@@ -1639,6 +1643,10 @@
                     }
                 }
             }
+        },
+        "nameOverride": {
+            "description": "overrides the app.kubernetes.io/name label",
+            "type": "string"
         },
         "namespaceOverride": {
             "description": "This field overrides the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`",
