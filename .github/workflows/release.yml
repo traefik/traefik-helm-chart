@@ -54,7 +54,7 @@ jobs:
 
       - name: Get Previous tag
         id: previous_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@04e8485ecb6487243907e330d522ff60f02283ce" # v1.4.0
+        uses: "WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de" # v2.0.0
         with:
           prefix: v
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
@@ -191,7 +191,7 @@ jobs:
 
       - name: Get Previous tag
         id: previous_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@04e8485ecb6487243907e330d522ff60f02283ce" # v1.4.0
+        uses: "WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de" # v2.0.0
         with:
           prefix: crds_v
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
