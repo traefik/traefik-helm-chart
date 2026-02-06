@@ -39,7 +39,7 @@ tests:
           grpc:
             enabled: true
             endpoint: "http://localhost:4318/v1/traces"
-            insecure: true
+            insecure: false
             headers:
               foo: grpc
               test: grpc
@@ -105,7 +105,7 @@ tests:
           content: "--tracing.otlp.grpc.endpoint=http://localhost:4318/v1/traces"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.otlp.grpc.insecure=true"
+          content: "--tracing.otlp.grpc.insecure=false"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.otlp.grpc.headers.foo=grpc"
@@ -146,3 +146,25 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.otlp=true"
+  - it: should not render otlp tls options when insecure is true
+    set:
+      tracing:
+        otlp:
+          enabled: true
+          grpc:
+            enabled: true
+            insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.insecure=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing.otlp.grpc.tls"
+

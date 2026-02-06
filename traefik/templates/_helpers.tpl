@@ -442,7 +442,11 @@ Check if using old localPlugin hostPath structure (for deprecation warning)
     {{- if .enabled }}
   - "--{{$path}}.grpc=true"
       {{ println }}
-      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.grpc" $path)  "content" (omit . "enabled")) | nindent 2 }}
+      {{- $content := omit . "enabled" }}
+      {{- if .insecure }}
+        {{- $content = omit $content "tls" }}
+      {{- end }}
+      {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.grpc" $path) "content" $content) | nindent 2 }}
     {{- end }}
    {{- end }}
    {{- with $otlpConfig.serviceName }}
