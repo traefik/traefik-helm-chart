@@ -10,5 +10,5 @@ metadata:
     {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-  controllerName: traefik.io/gateway-controller
+  controllerName: {{ .Values.gatewayClass.controllerName }}
 {{- end }}

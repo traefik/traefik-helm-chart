@@ -192,6 +192,8 @@ gatewayClass:  # @schema additionalProperties: false
   enabled: true
   # -- Set a custom name to GatewayClass
   name: ""
+  # -- Set a specific controllerName
+  controllerName: traefik.io/gateway-controller
   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
   labels: {}
 
