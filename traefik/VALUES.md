@@ -62,7 +62,7 @@ Kubernetes: `>=1.22.0-0`
 | deployment.livenessPath | string | `""` | Override the liveness path. Default: /ping |
 | deployment.minReadySeconds | int | `0` | The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available |
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
-| deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
+| deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.readinessPath | string | `""` |  |
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
 | deployment.revisionHistoryLimit | string | `nil` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
