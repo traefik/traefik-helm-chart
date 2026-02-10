@@ -89,6 +89,9 @@
   {{- if and (semverCompare "<v3.5.0-0" $version) (ne $config.observability.traceVerbosity nil) }}
     {{ fail "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."}}
   {{- end }}
+  {{- if and $config.uplink (empty $.Values.hub.token) }}
+    {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}
+  {{- end }}
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
@@ -132,4 +135,16 @@
       {{- end }}
     {{- end }}
   {{- end }}
+
+  {{- range $portName, $config := .Values.ports }}
+    {{- if $config.uplink }}
+      {{- if semverCompare "<v3.20.0-0" $hubVersion }}
+        {{ fail "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."}}
+      {{- end }}
+      {{- if (not $.Values.hub.providers.multicluster.enabled) }}
+        {{ fail "ERROR: uplink EntryPoints requires the hub multicluster provider" }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
 {{- end }}

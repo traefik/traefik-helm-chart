@@ -73,21 +73,34 @@ tests:
 
   - it: should be possible to configure Traefik Hub uplinkEntryPoints
     set:
+      ports:
+        web: null
+        websecure: null
+        metrics: null
+        multicluster:
+          port: 9443
+          asDefault: true
+          uplink: true
+          expose:
+            default: true
+          http:
+            tls:
+              enabled: true
       hub:
         token: "xxx"
-        uplinkEntryPoints:
-          ep:
-            address: 0.0.0.0:9000
-            http:
-              tls:
-                options: strict-mtls@file
+        providers:
+          multicluster:
+            enabled: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.uplinkEntryPoints.ep.address=0.0.0.0:9000"
+          content: "--hub.uplinkEntryPoints.multicluster.address=:9443/tcp"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.uplinkEntryPoints.ep.http.tls.options=strict-mtls@file"
+          content: "--hub.uplinkEntryPoints.multicluster.asDefault=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.uplinkEntryPoints.multicluster.http.tls=true"
 
   - it: should fail on typo when configuring Traefik Hub multicluster provider
     set:
@@ -101,6 +114,20 @@ tests:
                 adress: http://foo # <=== typo here
               child2:
                 address: http://bar
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+
+  - it: should fail on typo when configuring Traefik Hub uplink entrypoint
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+        uplinkEntryPoints:
+          multicluster:
+            address: ":9443"
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
