@@ -1862,5 +1862,5 @@ hub:
 
 For an uplink named `whoami`, the parent exposes:
 
-* `whoami-child1@multicluster` (direct to a specific child)
-* `whoami@multicluster` (weighted across all children)
+- `whoami@multicluster` (weighted across all children)
+- `whoami-child1@multicluster` (direct to a specific child)
