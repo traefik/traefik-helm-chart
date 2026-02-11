@@ -1858,6 +1858,8 @@ hub:
       children:
         child1:
           address: "http://child1.example.svc.cluster.local:9443"
+          serversTransport:
+            insecureSkipVerify: true
 ```
 
 For an uplink named `whoami`, the parent exposes:
