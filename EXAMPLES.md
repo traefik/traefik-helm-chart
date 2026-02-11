@@ -1808,7 +1808,7 @@ ports:
   multicluster:
     port: 9443
     asDefault: true
-    uplink: true
+    uplink: true # <== This entrypoint becomes an uplink
     expose:
       default: true
     http:
