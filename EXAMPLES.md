@@ -1796,19 +1796,30 @@ spec:
 
 This example shows how to configure multi-cluster traffic with a parent cluster and a child cluster.
 
+> [!WARNING]
+> This feature is experimental and requires Traefik Hub with a specific subscription.
+
 ### Child cluster
 
 Enable the Multi-Cluster provider on the child, create an uplink entryPoint, and advertise a workload (_this example uses the file provider for simplicity_):
 
 ```yaml
+ports:
+  multicluster:
+    port: 9443
+    asDefault: true
+    uplink: true
+    expose:
+      default: true
+    http:
+      tls:
+        enabled: true
+
 hub:
   token: hub-token
   providers:
     multicluster:
       enabled: true
-  uplinkEntryPoints:
-    ep:
-      address: ":9000"
 
 providers:
   file:
@@ -1818,7 +1829,7 @@ providers:
         uplinks:
           whoami:
             entryPoints:
-              - ep
+              - multicluster
 
         routers:
           backend:
@@ -1846,7 +1857,7 @@ hub:
       enabled: true
       children:
         child1:
-          address: "http://child1.example.svc.cluster.local:9000"
+          address: "http://child1.example.svc.cluster.local:9443"
 ```
 
 For an uplink named `whoami`, the parent exposes:
