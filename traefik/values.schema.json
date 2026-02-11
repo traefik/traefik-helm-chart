@@ -804,11 +804,9 @@
                             }
                         }
                     }
-                },
-                "uplinkEntryPoints": {
-                    "type": "object"
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "image": {
             "type": "object",
@@ -1945,6 +1943,12 @@
                                 }
                             }
                         }
+                    },
+                    "uplink": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     }
                 },
                 "additionalProperties": false

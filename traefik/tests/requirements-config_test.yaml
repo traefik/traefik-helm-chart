@@ -19,10 +19,10 @@ tests:
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
     set:
       hub:
-        enabled: true
+        token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
+          errorMessage: "When using Traefik Hub image tag needs to be specified!"
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.0
     set:
       image:
@@ -402,6 +402,59 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using uplink entrypoint on Traefik Proxy
+    set:
+      ports:
+        web:
+          uplink: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink EntryPoints can only be used with Traefik Hub"
+  - it: should fail when using uplink entrypoint on Traefik Hub < 3.20
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.19.0
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."
+  - it: should fail when using uplink entrypoint without multicluster provider
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.2
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink EntryPoints requires the hub multicluster provider"
+  - it: should pass when using uplink entrypoint with Hub >= 3.20 with multicluster provider enabled
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.2
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
+
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:
