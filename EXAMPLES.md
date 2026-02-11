@@ -1791,3 +1791,78 @@ spec:
     #         kind: Secret
     #         name: some-tls-cert
 ```
+
+## Use Multi-Cluster Provider
+
+This example shows how to configure multi-cluster traffic with a parent cluster and a child cluster.
+
+> [!WARNING]
+> This feature is experimental and requires Traefik Hub with a specific subscription.
+
+### Child cluster
+
+Enable the Multi-Cluster provider on the child, create an uplink entryPoint, and advertise a workload (_this example uses the file provider for simplicity_):
+
+```yaml
+ports:
+  multicluster:
+    port: 9443
+    asDefault: true
+    uplink: true # <== This entrypoint becomes an uplink
+    expose:
+      default: true
+    http:
+      tls:
+        enabled: true
+
+hub:
+  token: hub-token
+  providers:
+    multicluster:
+      enabled: true
+
+providers:
+  file:
+    enabled: true
+    content: |
+      http:
+        uplinks:
+          whoami:
+            entryPoints:
+              - multicluster
+
+        routers:
+          backend:
+            rule: PathPrefix(`/`)
+            service: backend
+            uplinks:
+              - whoami
+
+        services:
+          backend:
+            loadBalancer:
+              servers:
+                - url: http://whoami.example.svc.cluster.local:80
+```
+
+### Parent cluster
+
+Configure the parent multi-cluster provider with the child's uplink entryPoint address:
+
+```yaml
+hub:
+  token: hub-token
+  providers:
+    multicluster:
+      enabled: true
+      children:
+        child1:
+          address: "http://child1.example.svc.cluster.local:9443"
+          serversTransport:
+            insecureSkipVerify: true
+```
+
+For an uplink named `whoami`, the parent exposes:
+
+- `whoami@multicluster` (weighted across all children)
+- `whoami-child1@multicluster` (direct to a specific child)
