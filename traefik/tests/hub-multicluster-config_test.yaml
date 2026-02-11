@@ -118,7 +118,7 @@ tests:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
 
-  - it: should fail on typo when configuring Traefik Hub uplink entrypoint
+  - it: should fail when trying upstream config on Traefik Hub uplink entrypoint
     set:
       hub:
         token: "xxx"
