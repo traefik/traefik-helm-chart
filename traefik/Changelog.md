@@ -1,5 +1,49 @@
 # Change Log
 
+## 39.1.0-ea.2  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-02-11
+
+* fix: multicluster config parsing
+* fix(hub): uplink entrypoints with multicluster
+* chore(release): publish traefik 39.1.0-ea.2
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 283822b..3d48806 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -879,6 +879,9 @@ ports:
+         graceTimeOut:               # @schema type:[string, integer, null]
+       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+       keepAliveMaxTime:             # @schema type:[string, integer, null]
++    # -- Enable this port as an uplink for multi cluster.
++    # ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription.
++    uplink:  # @schema type: [boolean, null]; default: null
+     observability:  # @schema additionalProperties: false
+       # -- Enables metrics for this entryPoint.
+       metrics:  # @schema type:[boolean, null]; default: true
+@@ -1191,7 +1194,7 @@ instanceLabelOverride: ""
+ versionOverride: ""
+ 
+ # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+-hub:
++hub:  # @schema additionalProperties: false
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
+@@ -1365,7 +1368,6 @@ hub:
+               # -- SPIFFE trust domain.
+               trustDomain: ""
+ 
+-  uplinkEntryPoints: {}
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+     cluster:    # @schema type:[boolean, null]
+```
+
 ## 39.1.0-ea.1  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-02-05

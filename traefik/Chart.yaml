@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.1.0-ea.1
+version: 39.1.0-ea.2
 # renovate: image=traefik
 appVersion: v3.6.7
 kubeVersion: ">=1.22.0-0"
@@ -23,7 +23,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix(chart): allow to be used as optional subchart"
-    - "feat(hub): add multi-cluster support"
-    - "feat(CRDs): support Traefik Hub v3.20.0-ea.1"
-    - "chore(release): publish traefik 39.1.0-ea.1"
+    - "fix: multicluster config parsing"
+    - "fix(hub): uplink entrypoints with multicluster"
+    - "chore(release): publish traefik 39.1.0-ea.2"
