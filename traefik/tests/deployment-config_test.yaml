@@ -247,8 +247,6 @@ tests:
             - --entryPoints.web.address=:8000/tcp
             - --entryPoints.websecure.address=:8443/tcp
             - --api.dashboard=true
-            - --api.debug=false
-            - --api.insecure=false
             - --ping=true
             - --metrics.prometheus=true
             - --metrics.prometheus.entrypoint=metrics
