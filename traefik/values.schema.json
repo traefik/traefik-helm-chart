@@ -1163,7 +1163,10 @@
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
-                                                    "type": "boolean"
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "key": {
                                                     "description": "The path to the private key. When using this option, setting the cert option is required.",
@@ -1306,7 +1309,10 @@
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
-                                                    "type": "boolean"
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "key": {
                                                     "description": "The path to the private key. When using this option, setting the cert option is required.",
@@ -1441,7 +1447,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
@@ -2615,7 +2624,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
@@ -2653,7 +2665,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
