@@ -1194,6 +1194,11 @@ instanceLabelOverride: ""
 # -- This field overrides the default version extracted from image.tag
 versionOverride: ""
 
+# -- overrides the app.kubernetes.io/name label
+nameOverride: ""
+# -- Overrides the resource name for templates (i.e deployment, service, etc..)
+fullnameOverride: ""
+
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
   # -- Name of `Secret` with key 'token' set to a valid license token.

@@ -1,0 +1,21 @@
+suite: Helm chart Override functionality
+templates:
+  - deployment.yaml
+tests:
+  - it: should set instance label to nameOverride when it is set
+    set:
+      nameOverride: foo
+    asserts:
+      - isSubset:
+          path: spec.selector
+          content:
+            matchLabels:
+              app.kubernetes.io/name: foo
+              app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+  - it: should set resource name to fullnameOverride when it is set
+    set:
+      fullnameOverride: foo
+    asserts:
+      - equal:
+          path: metadata.name
+          value: foo

@@ -81,6 +81,7 @@ Kubernetes: `>=1.22.0-0`
 | experimental.otlpLogs | bool | `false` | Enable OTLP logging experimental feature. |
 | experimental.plugins | object | `{}` | Enable experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
+| fullnameOverride | string | `""` | Overrides the resource name for templates (i.e deployment, service, etc..) |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
 | gateway.defaultScope | string | `nil` | Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways) by setting the `defaultScope` field (e.g. `All` or `Namespace`). |
 | gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
@@ -305,6 +306,7 @@ Kubernetes: `>=1.22.0-0`
 | metrics.prometheus.serviceMonitor.namespaceSelector | object | `{}` |  |
 | metrics.prometheus.serviceMonitor.relabelings | list | `[]` |  |
 | metrics.prometheus.serviceMonitor.scrapeTimeout | string | `""` |  |
+| nameOverride | string | `""` | overrides the app.kubernetes.io/name label |
 | namespaceOverride | string | `""` | This field overrides the default Release Namespace for Helm. It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules` |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint. |
 | oci_meta | object | See _values.yaml_ | Required for OCI Marketplace integration. See https://docs.public.content.oci.oraclecloud.com/en-us/iaas/Content/Marketplace/understanding-helm-charts.htm |
