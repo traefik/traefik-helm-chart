@@ -33,12 +33,14 @@
                     "type": "boolean"
                 },
                 "debug": {
+                    "description": "Enable the debug API",
                     "type": [
                         "boolean",
                         "null"
                     ]
                 },
                 "insecure": {
+                    "description": "Enable the insecure API (HTTP)",
                     "type": [
                         "boolean",
                         "null"
