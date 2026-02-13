@@ -234,16 +234,6 @@
                 {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
               {{- end }}
             {{- end }}
-            {{- if hasKey $apiConfig "insecure" }}
-              {{- if not (kindIs "bool" $apiConfig.insecure) }}
-                {{- fail "ERROR: api.insecure must be a boolean" -}}
-              {{- end }}
-            {{- end }}
-            {{- if hasKey $apiConfig "debug" }}
-              {{- if not (kindIs "bool" $apiConfig.debug) }}
-                {{- fail "ERROR: api.debug must be a boolean" -}}
-              {{- end }}
-            {{- end }}
             {{- include "traefik.yaml2CommandLineArgs" (dict "path" "api" "content" $apiConfig) | nindent 10 }}
           {{- end }}
           - "--ping=true"
