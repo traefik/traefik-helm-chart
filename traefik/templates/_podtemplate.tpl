@@ -224,13 +224,17 @@
             {{- end }}
            {{- end }}
           {{- end }}
-          {{- if .Values.api.dashboard }}
-          - "--api.dashboard=true"
-          {{- else if .Values.ingressRoute.dashboard.enabled }}
-            {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
-          {{- end }}
-          {{- with .Values.api.basePath }}
-          - "--api.basePath={{ . }}"
+          {{- with .Values.api }}
+            {{- $apiConfig := . }}
+            {{- if eq $apiConfig.basePath "" }}
+              {{- $apiConfig = omit $apiConfig "basePath" }}
+            {{- end }}
+            {{- if hasKey $apiConfig "dashboard" }}
+              {{- if (and $.Values.ingressRoute.dashboard.enabled (not $apiConfig.dashboard)) }}
+                {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}
+              {{- end }}
+            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "api" "content" $apiConfig) | nindent 10 }}
           {{- end }}
           - "--ping=true"
 

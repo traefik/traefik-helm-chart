@@ -32,6 +32,8 @@ Kubernetes: `>=1.22.0-0`
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | api.basePath | string | `""` | Configure API basePath |
 | api.dashboard | bool | `true` | Enable the dashboard |
+| api.debug | string | `nil` | Enable the debug API |
+| api.insecure | string | `nil` | Enable the insecure API (HTTP) |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
 | autoscaling.maxReplicas | string | `nil` | maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas. |
