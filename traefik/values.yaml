@@ -478,7 +478,7 @@ logs:
           # -- The path to the private key. When using this option, setting the cert option is required.
           key: ""
           # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-          insecureSkipVerify: false
+          insecureSkipVerify:  # @schema type:[boolean, null]
       # -- Defines additional resource attributes to be sent to the collector.
       resourceAttributes: {}
 
@@ -551,7 +551,7 @@ logs:
           # -- The path to the private key. When using this option, setting the cert option is required.
           key: ""
           # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-          insecureSkipVerify: false
+          insecureSkipVerify:  # @schema type:[boolean, null]
       # -- Defines additional resource attributes to be sent to the collector.
       resourceAttributes: {}
 
@@ -702,7 +702,7 @@ metrics:
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-        insecureSkipVerify: false
+        insecureSkipVerify:  # @schema type:[boolean, null]
     # -- Defines additional resource attributes to be sent to the collector.
     resourceAttributes: {}
 
@@ -750,7 +750,7 @@ tracing:  # @schema additionalProperties: false
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-        insecureSkipVerify: false
+        insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
       enabled: false
@@ -767,7 +767,7 @@ tracing:  # @schema additionalProperties: false
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
-        insecureSkipVerify: false
+        insecureSkipVerify:  # @schema type:[boolean, null]
 
 global:
   checkNewVersion: true

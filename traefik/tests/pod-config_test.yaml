@@ -868,7 +868,7 @@ tests:
             grpc:
               enabled: true
               endpoint: "http://localhost:4318/v1/metrics"
-              insecure: true
+              insecure: false
               headers:
                 foo: grpc
                 test: grpc
@@ -918,7 +918,7 @@ tests:
           content: "--log.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--log.otlp.grpc.insecure=true"
+          content: "--log.otlp.grpc.insecure=false"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.otlp.grpc.headers.foo=grpc"
@@ -1046,7 +1046,7 @@ tests:
             grpc:
               enabled: true
               endpoint: "http://localhost:4318/v1/metrics"
-              insecure: true
+              insecure: false
               headers:
                 foo: grpc
                 test: grpc
@@ -1096,7 +1096,7 @@ tests:
           content: "--accesslog.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--accesslog.otlp.grpc.insecure=true"
+          content: "--accesslog.otlp.grpc.insecure=false"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.otlp.grpc.headers.foo=grpc"
@@ -1118,3 +1118,26 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.otlp.resourceAttributes.foo=bar"
+  - it: should not render otlp tls options when insecure is true for access logging
+    set:
+      logs:
+        access:
+          enabled: true
+          otlp:
+            enabled: true
+            grpc:
+              enabled: true
+              insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.insecure=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.otlp.grpc.tls"
