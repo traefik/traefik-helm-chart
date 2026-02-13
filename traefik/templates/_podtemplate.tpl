@@ -15,7 +15,7 @@
       labels:
       {{- include "traefik.labels" . | nindent 8 -}}
       {{- with .Values.deployment.podLabels }}
-      {{- tpl (toYaml .) $ | nindent 8 }}
+        {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       {{- if .Values.global.azure.enabled }}
         azure-extensions-usage-release-identifier: {{ .Release.Name }}
