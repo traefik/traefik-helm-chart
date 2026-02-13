@@ -318,7 +318,7 @@ tests:
           grpc:
             enabled: true
             endpoint: "http://localhost:4318/v1/metrics"
-            insecure: true
+            insecure: false
             headers:
               foo: grpc
               test: grpc
@@ -383,7 +383,7 @@ tests:
           content: "--metrics.otlp.grpc.endpoint=http://localhost:4318/v1/metrics"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.otlp.grpc.insecure=true"
+          content: "--metrics.otlp.grpc.insecure=false"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.grpc.headers.foo=grpc"
@@ -419,3 +419,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.prometheus.headerlabels.tenant=X-Tenant"
+  - it: should not render otlp tls options when insecure is true
+    set:
+      metrics:
+        otlp:
+          enabled: true
+          grpc:
+            enabled: true
+            insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.insecure=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--metrics.otlp.grpc.tls"
