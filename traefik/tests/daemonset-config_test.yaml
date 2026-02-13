@@ -49,6 +49,28 @@ tests:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow
           value: podLabels
+  - it: should have podLabels with templated values
+    set:
+      deployment:
+        kind: DaemonSet
+        podLabels:
+          traefik/powpow: podLabels
+          traefik/name: '{{ template "traefik.name" . }}'
+          traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
+          traefik/repository: '{{ .Values.image.repository }}'
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels.traefik/powpow
+          value: podLabels
+      - equal:
+          path: spec.template.metadata.labels.traefik/name
+          value: 'traefik'
+      - equal:
+          path: spec.template.metadata.labels["traefik/traefik.logs"]
+          value: 'log_processing_rules'
+      - equal:
+          path: spec.template.metadata.labels.traefik/repository
+          value: 'traefik'
   - it: should have minReadySeconds with specified value
     set:
       deployment:

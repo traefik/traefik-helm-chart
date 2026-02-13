@@ -206,7 +206,7 @@
                     "type": "object"
                 },
                 "podLabels": {
-                    "description": "Additional Pod labels (e.g. for filtering Pod by custom labels)",
+                    "description": "Additional Pod labels (e.g. for filtering Pod by custom labels) It supports templating. One can set it with values like traefik/name: '{{ template \"traefik.name\" . }}'",
                     "type": "object"
                 },
                 "readinessPath": {

@@ -53,6 +53,7 @@ deployment:
   # It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}'
   podAnnotations: {}
   # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
+  # It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}'
   podLabels: {}
   # -- Additional containers (e.g. for metric offloading sidecars)
   additionalContainers: []
