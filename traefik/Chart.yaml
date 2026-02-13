@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.0.0
+version: 39.0.1
 # renovate: image=traefik
 appVersion: v3.6.8
 kubeVersion: ">=1.22.0-0"
@@ -23,12 +23,12 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "refactor(chart): clean output on Deployment & Daemonset"
-    - "fix(security)!: add support for request path options of Traefik 3.6.7+"
-    - "fix(ports)!: 🐛 entrypoints `http` options"
-    - "feat(gateway-api): add support for defaultScope experimental feature"
-    - "feat(deps)!: update traefik docker tag to v3.6.7"
-    - "feat(chart): enforce schema"
-    - "feat(CRDs)!: support Traefik Hub v3.19.0"
-    - "docs(values): avoid unbreakable lines in table output of VALUES.md"
-    - "chore(release): 🚀 publish traefik 39.0.0 and crds 1.14.0"
+    - "tests(hub): relocate and clean api gw tests"
+    - "fix(grpc): enforce mutually exclusive TLS and insecure options"
+    - "fix(chart): allow to be used as optional subchart"
+    - "fix(chart): add nameOverride and fullnameOverride to schema file"
+    - "fix(api): add support for missing insecure and debug options"
+    - "feat(deps): update traefik docker tag to v3.6.8"
+    - "feat(deployment): support templating for podLabels"
+    - "docs(schema): add description from helm-docs comments"
+    - "chore(release): publish v39.0.1"
