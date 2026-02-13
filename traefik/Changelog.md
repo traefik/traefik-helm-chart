@@ -1,5 +1,115 @@
 # Change Log
 
+## 39.0.1  ![AppVersion: v3.6.8](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.8&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-02-13
+
+* tests(hub): relocate and clean api gw tests
+* fix(grpc): enforce mutually exclusive TLS and insecure options
+* fix(chart): allow to be used as optional subchart
+* fix(chart): add nameOverride and fullnameOverride to schema file
+* fix(api): add support for missing insecure and debug options
+* feat(deps): update traefik docker tag to v3.6.8
+* feat(deployment): support templating for podLabels
+* docs(schema): add description from helm-docs comments
+* chore(release): publish v39.0.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index a8aec47..e1ede33 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -53,6 +53,7 @@ deployment:
+   # It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}'
+   podAnnotations: {}
+   # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
++  # It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}'
+   podLabels: {}
+   # -- Additional containers (e.g. for metric offloading sidecars)
+   additionalContainers: []
+@@ -195,9 +196,13 @@ gatewayClass:  # @schema additionalProperties: false
+   # -- Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels)
+   labels: {}
+ 
+-api:
++api:  # @schema additionalProperties: false
+   # -- Enable the dashboard
+   dashboard: true
++  # -- Enable the insecure API (HTTP)
++  insecure:  # @schema type:[boolean, null]
++  # -- Enable the debug API
++  debug:  # @schema type:[boolean, null]
+   # -- Configure API basePath
+   basePath: ""  # @schema type:[string, null]; default: "/"
+ 
+@@ -478,7 +483,7 @@ logs:
+           # -- The path to the private key. When using this option, setting the cert option is required.
+           key: ""
+           # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify: false
++          insecureSkipVerify:  # @schema type:[boolean, null]
+       # -- Defines additional resource attributes to be sent to the collector.
+       resourceAttributes: {}
+ 
+@@ -551,7 +556,7 @@ logs:
+           # -- The path to the private key. When using this option, setting the cert option is required.
+           key: ""
+           # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify: false
++          insecureSkipVerify:  # @schema type:[boolean, null]
+       # -- Defines additional resource attributes to be sent to the collector.
+       resourceAttributes: {}
+ 
+@@ -702,7 +707,7 @@ metrics:
+         # -- The path to the private key. When using this option, setting the cert option is required.
+         key: ""
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-        insecureSkipVerify: false
++        insecureSkipVerify:  # @schema type:[boolean, null]
+     # -- Defines additional resource attributes to be sent to the collector.
+     resourceAttributes: {}
+ 
+@@ -750,7 +755,7 @@ tracing:  # @schema additionalProperties: false
+         # -- The path to the private key. When using this option, setting the cert option is required.
+         key: ""
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-        insecureSkipVerify: false
++        insecureSkipVerify:  # @schema type:[boolean, null]
+     grpc:
+       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
+       enabled: false
+@@ -767,7 +772,7 @@ tracing:  # @schema additionalProperties: false
+         # -- The path to the private key. When using this option, setting the cert option is required.
+         key: ""
+         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-        insecureSkipVerify: false
++        insecureSkipVerify:  # @schema type:[boolean, null]
+ 
+ global:
+   checkNewVersion: true
+@@ -1190,6 +1195,11 @@ instanceLabelOverride: ""
+ # -- This field overrides the default version extracted from image.tag
+ versionOverride: ""
+ 
++# -- overrides the app.kubernetes.io/name label
++nameOverride: ""
++# -- Overrides the resource name for templates (i.e deployment, service, etc..)
++fullnameOverride: ""
++
+ # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+ hub:
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+@@ -1383,3 +1393,6 @@ oci_meta:
+     hub:
+       image: traefik-hub
+       tag: latest
++
++# -- Allow the Helm chart to be used as optional subchart.
++enabled: true  # @schema type:boolean; const:true
+```
+
 ## 39.0.0  ![AppVersion: v3.6.7](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.7&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-22
