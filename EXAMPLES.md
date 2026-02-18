@@ -1253,7 +1253,7 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 
 ## Use Kubernetes Gateway API with cert-manager
 
-One can use the new stable Kubernetes Hateway API provider with automatic TLS certificate delivery (with cert-manager) by setting the following _values_:
+One can use the new stable Kubernetes Gateway API provider with automatic TLS certificate delivery (with cert-manager) by setting the following _values_:
 
 ```yaml
 providers:
