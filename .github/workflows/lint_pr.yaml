@@ -6,9 +6,6 @@ on:
       - opened
       - edited
 
-permissions:
-  pull-requests: write
-
 jobs:
   main:
     name: Validate PR title
