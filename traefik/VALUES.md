@@ -494,7 +494,7 @@ Kubernetes: `>=1.22.0-0`
 | tracing.otlp.http.tls.key | string | `""` | The path to the private key. When using this option, setting the cert option is required. |
 | tracing.resourceAttributes | object | `{}` | Defines additional resource attributes to be sent to the collector. |
 | tracing.safeQueryParams | list | `[]` | By default, all query parameters are redacted. Defines the list of query parameters to not redact. |
-| tracing.sampleRate | string | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
+| tracing.sampleRate | float | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
 | tracing.serviceName | string | `nil` | Service name used in selected backend. Default: traefik. |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
