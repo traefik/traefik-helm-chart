@@ -455,3 +455,14 @@ Check if using old localPlugin hostPath structure (for deprecation warning)
    {{- end }}
   {{- end }}
 {{- end }}
+
+{{/*
+Define hub token mount path
+*/}}
+{{- define "traefik.hubTokenFilePath" }}
+{{- if .Values.hub.token -}}
+{{ printf "%s/%s" .Values.hub.tokenMountPath "token" }}
+{{- else -}}
+{{ .Values.hub.tokenFilePath }}
+{{- end -}}
+{{- end -}}
