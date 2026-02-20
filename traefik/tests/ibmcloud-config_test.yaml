@@ -1,0 +1,13 @@
+suite: Traefik configuration for IBM Cloud Marketplace
+templates:
+  - deployment.yaml
+tests:
+  - it: should render correctly when offering_version is set
+    chart:
+      appVersion: v3.3.0
+    set:
+      offering_version: v3.6.8
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.3.0
