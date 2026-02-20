@@ -1734,6 +1734,13 @@
                 }
             }
         },
+        "offering_version": {
+            "description": "Required for IBM Cloud Marketplace integration. Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart.",
+            "type": [
+                "string",
+                "null"
+            ]
+        },
         "persistence": {
             "type": "object",
             "properties": {
