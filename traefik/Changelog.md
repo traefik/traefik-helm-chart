@@ -1,5 +1,34 @@
 # Change Log
 
+## 39.0.2  ![AppVersion: v3.6.8](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.8&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-02-20
+
+* chore(release): 🚀 publish traefik 39.0.2
+* docs: fix typo in examples
+* chore(deps): update helm/kind-action action to v1.14.0
+* feat: :package: allow IBM cloud values
+* chore(ci): lint on pr title
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index e1ede33..5604572 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1394,5 +1394,9 @@ oci_meta:
+       image: traefik-hub
+       tag: latest
+ 
++# -- Required for IBM Cloud Marketplace integration.
++# Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart.
++offering_version: ""  # @schema type:[string, null]
++
+ # -- Allow the Helm chart to be used as optional subchart.
+ enabled: true  # @schema type:boolean; const:true
+```
+
 ## 39.0.1  ![AppVersion: v3.6.8](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.8&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-02-13

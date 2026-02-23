@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 39.0.1](https://img.shields.io/badge/Version-39.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.8](https://img.shields.io/badge/AppVersion-v3.6.8-informational?style=flat-square)
+![Version: 39.0.2](https://img.shields.io/badge/Version-39.0.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.8](https://img.shields.io/badge/AppVersion-v3.6.8-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -314,6 +314,7 @@ Kubernetes: `>=1.22.0-0`
 | oci_meta.repo | string | `"traefik"` | It needs to be an ocir repo |
 | ocsp.enabled | bool | `false` | Enable OCSP stapling support. See https://doc.traefik.io/traefik/https/ocsp/#overview |
 | ocsp.responderOverrides | object | `{}` | Defines the OCSP responder URLs to use instead of the one provided by the certificate. |
+| offering_version | string | `""` | Required for IBM Cloud Marketplace integration. Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.annotations | object | `{}` |  |
 | persistence.enabled | bool | `false` | Enable persistence using Persistent Volume Claims ref: http://kubernetes.io/docs/user-guide/persistent-volumes/. It can be used to store TLS certificates along with `certificatesResolvers.<name>.acme.storage`  option |
