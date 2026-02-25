@@ -550,7 +550,7 @@ service:
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
 
 ```yaml
-.DOTrustedIPs: &DOTrustedIPs
+trustedIPs: &trustedIPs
   - 127.0.0.1/32
   # IP range Load Balancer is on
   - 10.0.0.0/8
@@ -573,14 +573,14 @@ service:
 ports:
   web:
     forwardedHeaders:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
     proxyProtocol:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
   websecure:
     forwardedHeaders:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
     proxyProtocol:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
 ```
 
 ## Using plugins
