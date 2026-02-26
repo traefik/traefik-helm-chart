@@ -20,7 +20,7 @@
       {{- if .Values.global.azure.enabled }}
         azure-extensions-usage-release-identifier: {{ .Release.Name }}
       {{- end }}
-      {{- if and (or .Values.hub.token .Values.hub.tokenFilePath ) .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.restartOnCertificateChange }}
+      {{- if  and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.restartOnCertificateChange }}
         {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
@@ -134,7 +134,7 @@
           {{- end }}
          {{- end }}
         {{- end }}
-        {{- if or .Values.hub.token .Values.hub.tokenFilePath }}
+        {{- if .Values.hub.token }}
           {{- if not .Values.hub.offline }}
           {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
         - name: admission
@@ -824,7 +824,7 @@
           {{- end }}
           {{- end }}
           {{- with .Values.hub }}
-           {{- if or .token .tokenFilePath }}
+           {{- if .token }}
           - "--hub.tokenFilePath={{ include "traefik.hubTokenFilePath" $ }}"
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}

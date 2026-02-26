@@ -81,7 +81,7 @@ tests:
     set:
       hub:
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
-        tokenMountPath: "/custom"
+        tokenMountPath: "/custom/"
     asserts:
       - contains:
           path: spec.template.spec.volumes
@@ -94,7 +94,7 @@ tests:
           path: spec.template.spec.containers[0].volumeMounts
           content:
             name: hub-token
-            mountPath: /custom
+            mountPath: /custom/
             readOnly: true
         template: deployment.yaml
       - contains:
@@ -107,26 +107,3 @@ tests:
           name: traefik-hub-license
           namespace: NAMESPACE
         template: hub-license.yaml
-  - it: it should load secret from tokenFilePath
-    set:
-      hub:
-        tokenFilePath: "/custom/token"
-    asserts:
-      - notContains:
-          path: spec.template.spec.volumes
-          content:
-            name: hub-token
-            secret:
-              secretName: traefik-hub-license
-        template: deployment.yaml
-      - notContains:
-          path: spec.template.spec.containers[0].volumeMounts
-          content:
-            name: hub-token
-            mountPath: /custom
-            readOnly: true
-        template: deployment.yaml
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.tokenFilePath=/custom/token"
-        template: deployment.yaml

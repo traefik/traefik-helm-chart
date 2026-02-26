@@ -1207,9 +1207,6 @@ hub:
   token: ""
   # -- Mount path for token secret.
   tokenMountPath: "/etc/secrets"
-  # -- Name of file containing a valid license token.
-  # It enables API Gateway.
-  tokenFilePath: ""
   # -- Disables all external network connections.
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
