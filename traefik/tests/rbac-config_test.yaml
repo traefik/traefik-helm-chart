@@ -1596,3 +1596,43 @@ tests:
               - get
               - list
               - watch
+  - it: ClusterRole should not have configmaps permissions for kubernetesIngress before v3.7
+    set:
+      image:
+        tag: v3.6.0
+      providers:
+        kubernetesIngress:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - namespaces
+            verbs:
+              - list
+              - watch
+  - it: ClusterRole should have configmaps permissions for kubernetesIngress starting with v3.7
+    set:
+      image:
+        tag: v3.7.0
+      providers:
+        kubernetesIngress:
+          enabled: true
+    asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+              - namespaces
+            verbs:
+              - list
+              - watch
