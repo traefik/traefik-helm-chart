@@ -20,7 +20,7 @@
       {{- if .Values.global.azure.enabled }}
         azure-extensions-usage-release-identifier: {{ .Release.Name }}
       {{- end }}
-      {{- if  and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.restartOnCertificateChange }}
+      {{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.restartOnCertificateChange }}
         {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
