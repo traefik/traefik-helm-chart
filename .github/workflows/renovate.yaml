@@ -1,0 +1,74 @@
+name: 👷 Renovate
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 9 * * 1' # Mondays at 09:20
+
+env:
+  RENOVATE_VERSION: 43.27.0-full # renovate: datasource=docker depName=ghcr.io/renovatebot/renovate
+  CACHE_ARCHIVE: renovate_cache.tar.gz
+  CACHE_DIR: /tmp/renovate/cache/renovate/repository
+  CACHE_KEY: renovate-cache
+
+jobs:
+  renovate:
+    runs-on: 'ubuntu-latest'
+    steps:
+      - name: Get token
+        id: get_token
+        uses: actions/create-github-app-token@29824e69f54612133e76f7eaac726eef6c875baf # v2.2.1
+        with:
+          private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
+          app-id: ${{ secrets.RENOVATE_APP_ID }}
+
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      # This third party action allows you to download the cache artifact from different workflow runs
+      # Note that actions/cache doesn't work well because the cache key would need to be computed from
+      # a file within the cache, meaning there would never be any data to restore. actions/download-artifact
+      # also doesn't work because it only handles artifacts uploaded in the same run, and we want to restore
+      # from the previous successful run.
+      - uses: dawidd6/action-download-artifact@fe9d59ce33ce92db8a6ac90b2c8be6b6d90417c8 #v15
+        continue-on-error: true
+        with:
+          name: ${{ env.CACHE_KEY }}
+          path: cache-download
+
+      - name: Extract renovate cache
+        run: |
+          set -eux pipefail
+          if [ ! -d cache-download ] ; then
+            echo "No cache found."
+            exit 0
+          fi
+
+          mkdir -p $CACHE_DIR
+          tar -xzf cache-download/$CACHE_ARCHIVE -C $CACHE_DIR
+
+          sudo chown -R 12021:0 /tmp/renovate/
+          ls -R $CACHE_DIR
+
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@d65ef9e20512193cc070238b49c3873a361cd50c # v46.1.1
+        with:
+          configurationFile: .github/renovate.json5
+          renovate-version: ${{ env.RENOVATE_VERSION }}
+          token: ${{ steps.get_token.outputs.token }}
+        env:
+            LOG_LEVEL: 'info'
+            RENOVATE_REPOSITORIES: ${{ github.repository }}
+            RENOVATE_REPOSITORY_CACHE: 'enabled'
+            RENOVATE_PLATFORM_COMMIT: 'enabled'
+
+      - name: Compress renovate cache
+        run: |
+          ls $CACHE_DIR
+          tar -czvf $CACHE_ARCHIVE -C $CACHE_DIR .
+
+      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+        with:
+          name: ${{ env.CACHE_KEY }}
+          path: ${{ env.CACHE_ARCHIVE }}
+          retention-days: 7

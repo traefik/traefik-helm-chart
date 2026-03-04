@@ -1,0 +1,18 @@
+name: Add backend PRs to TraefikLabs project
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  add-to-project:
+    name: Add PR to Traefik Labs project
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/add-to-project@244f685bbc3b7adfa8466e08b698b5577571133e # v1.0.2
+        with:
+          project-url: https://github.com/orgs/traefik/projects/16
+          github-token: ${{ secrets.TRAEFIKINFRA_ADD2PROJECT }}
+          labeled: area/infrastructure, status/2-needs-review
+          label-operator: AND

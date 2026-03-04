@@ -1,0 +1,35 @@
+{
+  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  extends: [
+    "config:recommended",
+    "helpers:pinGitHubActionDigests"
+  ],
+  enabledManagers: [
+    "custom.regex",
+    "github-actions"
+  ],
+  customManagers: [
+    {
+      customType: 'regex',
+      managerFilePatterns: [
+        '/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/',
+        '/(^|/)action\\.ya?ml$/',
+      ],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: registryUrl=(?<registryUrl>[^\\s]+?))?\\s+[A-Za-z0-9_]+?_VERSION\\s*:\\s*["\']?(?<currentValue>.+?)["\']?\\s',
+      ],
+    },
+  ],
+  labels: ["area/infrastructure", "status/2-needs-review"],
+  minimumReleaseAge: '3 days',
+  packageRules: [
+    // Github Actions.
+    {
+      groupName: 'GitHub actions',
+      groupSlug: 'gh-actions',
+      matchManagers: [ 'github-actions' ],
+      rangeStrategy: 'replace',
+    }
+  ],
+  semanticCommits: 'enabled',
+}
