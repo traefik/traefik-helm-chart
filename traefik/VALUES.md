@@ -495,7 +495,6 @@ Kubernetes: `>=1.22.0-0`
 | tracing.safeQueryParams | list | `[]` | By default, all query parameters are redacted. Defines the list of query parameters to not redact. |
 | tracing.sampleRate | string | `nil` | The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0. |
 | tracing.serviceName | string | `nil` | Service name used in selected backend. Default: traefik. |
-| trustedIPs | list | `[]` | No direct effect. It can be used as a YAML anchor when setting multiple times the same set of IPs on middleware. |
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |

@@ -2726,10 +2726,6 @@
             },
             "additionalProperties": false
         },
-        "trustedIPs": {
-            "description": "No direct effect. It can be used as a YAML anchor when setting multiple times the same set of IPs on middleware.",
-            "type": "array"
-        },
         "updateStrategy": {
             "type": "object",
             "properties": {

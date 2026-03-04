@@ -1197,9 +1197,6 @@ versionOverride: ""
 nameOverride: ""
 # -- Overrides the resource name for templates (i.e deployment, service, etc..)
 fullnameOverride: ""
-# -- No direct effect. It can be used as a YAML anchor when setting multiple
-# times the same set of IPs on middleware.
-trustedIPs: []
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:
