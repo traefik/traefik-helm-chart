@@ -2458,9 +2458,6 @@
                 },
                 "namespaced": {
                     "type": "boolean"
-                },
-                "secretResourceNames": {
-                    "type": "array"
                 }
             },
             "additionalProperties": false
