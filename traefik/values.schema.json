@@ -2335,6 +2335,26 @@
                                 "null"
                             ]
                         },
+                        "ingressEndpoint": {
+                            "type": "object",
+                            "properties": {
+                                "hostname": {
+                                    "description": "Hostname used for Kubernetes Ingress endpoints",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "ip": {
+                                    "description": "IP used for Kubernetes Ingress endpoints",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            },
+                            "additionalProperties": false
+                        },
                         "labelSelector": {
                             "type": [
                                 "string",

@@ -422,6 +422,8 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngress.disableIngressClassLookup | bool | `false` | Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup) |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
+| providers.kubernetesIngress.ingressEndpoint.hostname | string | `""` | Hostname used for Kubernetes Ingress endpoints |
+| providers.kubernetesIngress.ingressEndpoint.ip | string | `""` | IP used for Kubernetes Ingress endpoints |
 | providers.kubernetesIngress.labelSelector | string | `nil` |  |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
