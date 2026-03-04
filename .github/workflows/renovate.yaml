@@ -20,9 +20,6 @@ jobs:
         with:
           private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
           app-id: ${{ secrets.RENOVATE_APP_ID }}
-          owner: ${{ github.repository_owner }}
-          repositories: |
-            traefik-helm-chart
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
