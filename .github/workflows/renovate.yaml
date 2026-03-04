@@ -6,7 +6,6 @@ on:
     - cron: '20 9 * * 1' # Mondays at 09:20
 
 env:
-  RENOVATE_VERSION: 43.27.0-full # renovate: datasource=docker depName=ghcr.io/renovatebot/renovate
   CACHE_ARCHIVE: renovate_cache.tar.gz
   CACHE_DIR: /tmp/renovate/cache/renovate/repository
   CACHE_KEY: renovate-cache
@@ -21,6 +20,9 @@ jobs:
         with:
           private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
           app-id: ${{ secrets.RENOVATE_APP_ID }}
+          owner: ${{ github.repository_owner }}
+          repositories: |
+            traefik-helm-chart
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -54,7 +56,7 @@ jobs:
         uses: renovatebot/github-action@d65ef9e20512193cc070238b49c3873a361cd50c # v46.1.1
         with:
           configurationFile: .github/renovate.json5
-          renovate-version: ${{ env.RENOVATE_VERSION }}
+          renovate-version: full
           token: ${{ steps.get_token.outputs.token }}
         env:
             LOG_LEVEL: 'info'

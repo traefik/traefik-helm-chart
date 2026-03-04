@@ -20,6 +20,19 @@
       ],
     },
   ],
+  hostRules: [
+    {
+      abortIgnoreStatusCodes: [404],
+      abortOnError: true,
+    },
+    // Reduce usage on GH API
+    // See https://github.com/renovatebot/renovate/discussions/19647#discussioncomment-4631597
+    {
+      concurrentRequestLimit: 1,
+      matchHost: 'api.github.com',
+      maxRequestsPerSecond: 8,
+    },
+  ],
   labels: ["area/infrastructure", "status/2-needs-review"],
   minimumReleaseAge: '3 days',
   packageRules: [
