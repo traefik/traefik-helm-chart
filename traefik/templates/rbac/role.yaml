@@ -207,6 +207,7 @@ rules:
       - apiplans
       - apicatalogitems
       - apiaccesses
+      - contentitems
       - managedsubscriptions
       - managedapplications
     verbs:
@@ -230,6 +231,7 @@ rules:
       - apibundles/status
       - apiplans/status
       - apicatalogitems/status
+      - contentitems/status
       - managedsubscriptions/status
       - managedapplications/status
     verbs:
