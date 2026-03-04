@@ -51,6 +51,17 @@ tests:
       - equal:
           path: metadata.annotations.azure-load-balancer-internal
           value: true
+  - it: should support templated annotations
+    release:
+      name: my-traefik
+    set:
+      service:
+        annotations:
+          custom-annotation: '{{ template "traefik.fullname" . }}.example.com'
+    asserts:
+      - equal:
+          path: metadata.annotations.custom-annotation
+          value: my-traefik.example.com
   - it: should have customized labels when specified via values
     set:
       service:
