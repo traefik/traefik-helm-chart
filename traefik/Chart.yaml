@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.0.3
+version: 39.0.4
 # renovate: image=traefik
 appVersion: v3.6.9
 kubeVersion: ">=1.22.0-0"
@@ -23,7 +23,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: remove `rbac.secretResourceNames`"
-    - "feat(deps): update traefik docker tag to v3.6.9"
-    - "docs(example): anchors on trustedIPs with schema enforced"
-    - "chore(release): :rocket: publish v39.0.3"
+    - "fix(deps): bump traefik.io CRDs to release v3.6.9"
+    - "chore(release): publish v39.0.4"
