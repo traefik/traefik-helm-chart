@@ -39,12 +39,16 @@
       matchManagers: ['github-actions'],
       rangeStrategy: 'pin',
     },
+    {
+      matchPackageNames: ['bpsoraggi/helm-gh-pages'],
+      enabled: false,
+    },
   ],
   customManagers: [
     {
       customType: 'regex',
       datasourceTemplate: 'docker',
-      fileMatch: ['Chart.yaml'],
+      managerFilePatterns: ['Chart.yaml'],
       matchStrings: [
         '#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*["\']?(?<currentValue>[\\w+\\.\\-]*)',
       ],
@@ -52,7 +56,7 @@
     {
       customType: 'regex',
       datasourceTemplate: 'docker',
-      fileMatch: ['Makefile'],
+      managerFilePatterns: ['Makefile'],
       versioningTemplate: 'docker',
       matchStrings: ['IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)'],
     },
@@ -60,7 +64,7 @@
       customType: 'regex',
       datasourceTemplate: 'docker',
       depNameTemplate: 'traefik',
-      fileMatch: ['VALUES.md'],
+      managerFilePatterns: ['VALUES.md'],
       versioningTemplate: 'docker',
       matchStrings: [
         '!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]',
