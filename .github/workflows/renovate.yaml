@@ -29,7 +29,7 @@ jobs:
       # a file within the cache, meaning there would never be any data to restore. actions/download-artifact
       # also doesn't work because it only handles artifacts uploaded in the same run, and we want to restore
       # from the previous successful run.
-      - uses: dawidd6/action-download-artifact@fe9d59ce33ce92db8a6ac90b2c8be6b6d90417c8 #v15
+      - uses: dawidd6/action-download-artifact@2536c51d3d126276eb39f74d6bc9c72ac6ef30d3 # v16
         continue-on-error: true
         with:
           name: ${{ env.CACHE_KEY }}
@@ -66,7 +66,7 @@ jobs:
           ls $CACHE_DIR
           tar -czvf $CACHE_ARCHIVE -C $CACHE_DIR .
 
-      - uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f #v6.0.0
+      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: ${{ env.CACHE_KEY }}
           path: ${{ env.CACHE_ARCHIVE }}
