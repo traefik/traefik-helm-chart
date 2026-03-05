@@ -550,14 +550,6 @@ service:
 PROXY protocol is a protocol for sending client connection information, such as origin IP addresses and port numbers, to the final backend server, rather than discarding it at the load balancer.
 
 ```yaml
-.DOTrustedIPs: &DOTrustedIPs
-  - 127.0.0.1/32
-  # IP range Load Balancer is on
-  - 10.0.0.0/8
-  # IP range of private (VPC) interface - CHANGE THIS TO YOUR NETWORK SETTINGS
-  # This is needed when "externalTrafficPolicy: Cluster" is specified, as inbound traffic from the load balancer to a Traefik instance could be redirected from another cluster node on the way through.
-  - 172.16.0.0/12
-
 service:
   enabled: true
   type: LoadBalancer
@@ -573,14 +565,20 @@ service:
 ports:
   web:
     forwardedHeaders:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: &trustedIPs
+        - 127.0.0.1/32
+        # IP range Load Balancer is on
+        - 10.0.0.0/8
+        # IP range of private (VPC) interface - CHANGE THIS TO YOUR NETWORK SETTINGS
+        # This is needed when "externalTrafficPolicy: Cluster" is specified, as inbound traffic from the load balancer to a Traefik instance could be redirected from another cluster node on the way through.
+        - 172.16.0.0/12
     proxyProtocol:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
   websecure:
     forwardedHeaders:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
     proxyProtocol:
-      trustedIPs: *DOTrustedIPs
+      trustedIPs: *trustedIPs
 ```
 
 ## Using plugins

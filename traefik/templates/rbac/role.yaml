@@ -65,9 +65,6 @@ rules:
       - ""
     resources:
       - secrets
-    {{- if gt (len $.Values.rbac.secretResourceNames) 0 }}
-    resourceNames: {{ $.Values.rbac.secretResourceNames }}
-    {{- end }}
     verbs:
       - get
       - list

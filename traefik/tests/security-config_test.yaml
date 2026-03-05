@@ -2,6 +2,25 @@ suite: Traefik security configuration
 templates:
   - deployment.yaml
 tests:
+  - it: should be possible to use anchors on trusted ips
+    set:
+      ports:
+        web:
+          forwardedHeaders:
+            trustedIPs: &trustedIPs
+              - 127.0.0.1/32
+              - 10.0.0.0/8
+              - 172.16.0.0/12
+          proxyProtocol:
+            trustedIPs: *trustedIPs
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.forwardedHeaders.trustedIPs=127.0.0.1/32,10.0.0.0/8,172.16.0.0/12"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.proxyProtocol.trustedIPs=127.0.0.1/32,10.0.0.0/8,172.16.0.0/12"
+
   - it: should have no custom security arguments by default
     asserts:
       - notContains:
