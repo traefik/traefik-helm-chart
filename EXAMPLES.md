@@ -1791,3 +1791,11 @@ spec:
     #         kind: Secret
     #         name: some-tls-cert
 ```
+
+## Set externalTrafficPolicy Local for Traefik Service
+
+```yaml
+service:
+  spec:
+    externalTrafficPolicy: Local
+```
