@@ -1,25 +1,19 @@
 {
-  $schema: "https://docs.renovatebot.com/renovate-schema.json",
+  $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    "config:recommended",
-    "helpers:pinGitHubActionDigests"
+    ':semanticCommitTypeAll(chore)',
+    ':ignoreModulesAndTests',
+    'helpers:pinGitHubActionDigests',
+    'group:monorepos',
+    'group:recommended',
+    'replacements:all',
+    'workarounds:all',
   ],
-  enabledManagers: [
-    "custom.regex",
-    "github-actions"
-  ],
-  customManagers: [
-    {
-      customType: 'regex',
-      managerFilePatterns: [
-        '/(^|/)(workflow-templates|\\.(?:github|gitea|forgejo)/(?:workflows|actions))/.+\\.ya?ml$/',
-        '/(^|/)action\\.ya?ml$/',
-      ],
-      matchStrings: [
-        '# renovate: datasource=(?<datasource>[a-zA-Z0-9-._]+?) depName=(?<depName>[^\\s]+?)(?: (?:lookupName|packageName)=(?<packageName>[^\\s]+?))?(?: versioning=(?<versioning>[^\\s]+?))?(?: extractVersion=(?<extractVersion>[^\\s]+?))?(?: registryUrl=(?<registryUrl>[^\\s]+?))?\\s+[A-Za-z0-9_]+?_VERSION\\s*:\\s*["\']?(?<currentValue>.+?)["\']?\\s',
-      ],
-    },
-  ],
+  semanticCommits: 'enabled',
+  gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
+  rebaseWhen: 'conflicted',
+  labels: ['📌 dependencies'],
+  enabledManagers: ['github-actions', 'custom.regex'],
   hostRules: [
     {
       abortIgnoreStatusCodes: [404],
@@ -33,16 +27,44 @@
       maxRequestsPerSecond: 8,
     },
   ],
-  labels: ["area/infrastructure", "status/2-needs-review"],
-  minimumReleaseAge: '3 days',
   packageRules: [
-    // Github Actions.
+    {
+      matchPackageNames: ['traefik'],
+      extends: [':semanticCommitTypeAll(feat)'],
+    },
     {
       groupName: 'GitHub actions',
       groupSlug: 'gh-actions',
-      matchManagers: [ 'github-actions' ],
-      rangeStrategy: 'replace',
-    }
+      matchManagers: ['github-actions'],
+      rangeStrategy: 'pin',
+    },
   ],
-  semanticCommits: 'enabled',
+  customManagers: [
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      fileMatch: ['Chart.yaml'],
+      matchStrings: [
+        '#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*["\']?(?<currentValue>[\\w+\\.\\-]*)',
+      ],
+    },
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      fileMatch: ['Makefile'],
+      versioningTemplate: 'docker',
+      matchStrings: ['IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)'],
+    },
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      depNameTemplate: 'traefik',
+      fileMatch: ['VALUES.md'],
+      versioningTemplate: 'docker',
+      matchStrings: [
+        '!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]',
+        '\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)',
+      ],
+    },
+  ],
 }
