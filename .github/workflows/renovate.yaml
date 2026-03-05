@@ -50,7 +50,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@d65ef9e20512193cc070238b49c3873a361cd50c # v46.1.1
+        uses: renovatebot/github-action@7b4b65bf31e07d4e3e51708d07700fb41bc03166 # v46.1.3
         with:
           configurationFile: .github/renovate.json5
           renovate-version: full

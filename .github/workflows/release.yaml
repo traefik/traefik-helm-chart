@@ -117,7 +117,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
-        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
+        uses: bpsoraggi/helm-gh-pages@89c6698c192e70ed0e495bee7d3d1ca5b477fe82
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
@@ -253,7 +253,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Publish Helm chart
-        uses: bpsoraggi/helm-gh-pages@2a2569e394590687d2c508516af3c9bb9fe7fa7e
+        uses: bpsoraggi/helm-gh-pages@89c6698c192e70ed0e495bee7d3d1ca5b477fe82
         with:
           token: ${{ secrets.CHARTS_TOKEN }}
           charts_dir: .
