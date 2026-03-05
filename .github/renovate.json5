@@ -1,14 +1,9 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
+    'config:recommended',
     ':semanticCommitTypeAll(chore)',
-    ':dependencyDashboard',
-    ':ignoreModulesAndTests',
-    'helpers:pinGitHubActionDigests',
-    'group:monorepos',
-    'group:recommended',
-    'replacements:all',
-    'workarounds:all',
+    'helpers:pinGitHubActionDigests'
   ],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
