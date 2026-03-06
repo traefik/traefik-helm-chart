@@ -455,3 +455,10 @@ Check if using old localPlugin hostPath structure (for deprecation warning)
    {{- end }}
   {{- end }}
 {{- end }}
+
+{{/*
+Define hub token mount path
+*/}}
+{{- define "traefik.hubTokenFilePath" }}
+{{- printf "%s/%s" (.Values.hub.tokenMountPath | trimSuffix "/") "token" -}}
+{{- end -}}

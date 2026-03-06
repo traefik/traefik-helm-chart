@@ -23,23 +23,23 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
-  - it: should fail when trying to use this Chart with Traefik Hub < v3.19.0
-    set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
-        tag: v3.18.3
-      hub:
-        token: xxx
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: this Chart supports *only* Traefik Hub >= v3.19.0."
-  - it: should succeed when trying to use this Chart with Traefik Hub >= v3.19.0
+  - it: should fail when trying to use this Chart with Traefik Hub < v3.19.3
     set:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
         tag: v3.19.0
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: this Chart supports *only* Traefik Hub >= v3.19.3."
+  - it: should succeed when trying to use this Chart with Traefik Hub >= v3.19.3
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.19.3
       hub:
         token: xxx
     asserts:
@@ -155,12 +155,12 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.0
+  - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.3
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: "v3.19.0"
+        tag: "v3.19.3"
       hub:
         token: xxx
         apimanagement:
@@ -261,7 +261,7 @@ tests:
         enabled: true
         images:
           hub:
-            tag: v3.19.0
+            tag: v3.19.3
     asserts:
       - notFailedTemplate: {}
   - it: should fail when using hub.tracing.additionalTraceHeaders without tracing.otlp enabled
@@ -269,7 +269,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.19.3
       hub:
         token: "xxx"
         tracing:
@@ -278,12 +278,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."
-  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub v3.19.0+
+  - it: should not fail when using hub.tracing.additionalTraceHeaders on Traefik Hub v3.19.3+
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.1
+        tag: v3.19.3
       tracing:
         otlp:
           enabled: true
@@ -294,12 +294,12 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should not fail when using mcpgateway on hub >= 3.19.0
+  - it: should not fail when using mcpgateway on hub >= 3.19.3
     set:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.19.3
       hub:
         token: "xxx"
         mcpgateway:
@@ -407,7 +407,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.19.3
       hub:
         token: "xxx"
         pluginRegistry:
@@ -422,7 +422,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.19.3
       experimental:
         plugins:
           plugin1:
