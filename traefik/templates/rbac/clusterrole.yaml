@@ -105,6 +105,9 @@ rules:
   - apiGroups:
       - ""
     resources:
+    {{- if semverCompare ">=v3.7.0-0" $version }}
+      - configmaps
+    {{- end }}
       - namespaces
     verbs:
       - list
