@@ -144,6 +144,7 @@ spec:
                 description: |-
                   Applications references the Applications that will gain access to the specified APIs.
                   Multiple ManagedSubscriptions can select the same AppID.
+
                   Deprecated: Use ManagedApplications instead.
                 items:
                   description: ApplicationReference references an Application.
