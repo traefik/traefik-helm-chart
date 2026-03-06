@@ -30,7 +30,7 @@ rules:
   - apiGroups:
       - ""
     resources:
-      {{- if and $.Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
+      {{- if or (and $.Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version)) (semverCompare ">=v3.7.0-0" $version) }}
       - configmaps
       {{- end }}
       - services
