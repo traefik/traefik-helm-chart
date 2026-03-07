@@ -1010,7 +1010,6 @@ service:
   ## -- Single service is using `MixedProtocolLBService` feature gate.
   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
-  type: LoadBalancer
   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
   annotations: {}
   # -- Additional annotations for TCP service only
@@ -1022,35 +1021,8 @@ service:
   # -- Additional entries here will be added to the service spec.
   # -- Cannot contain type, selector or ports entries.
   spec: {}
-  # externalTrafficPolicy: Cluster
-  # loadBalancerIP: "1.2.3.4"
-  # clusterIP: "2.3.4.5"
-  loadBalancerSourceRanges: []
-  # - 192.168.0.1/32
-  # - 172.16.0.0/16
-  ## -- Class of the load balancer implementation
-  # loadBalancerClass: service.k8s.aws/nlb
-  externalIPs: []
-  # - 1.2.3.4
-  ## One of SingleStack, PreferDualStack, or RequireDualStack.
-  # ipFamilyPolicy: SingleStack
-  ## List of IP families (e.g. IPv4 and/or IPv6).
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
-  # ipFamilies:
-  #   - IPv4
-  #   - IPv6
-  ##
-  additionalServices: {}
-  ## -- An additional and optional internal Service.
-  ## Same parameters as external Service
-  # internal:
-  #   type: ClusterIP
-  #   # labels: {}
-  #   # annotations: {}
-  #   # spec: {}
-  #   # loadBalancerSourceRanges: []
-  #   # externalIPs: []
-  #   # ipFamilies: [ "IPv4","IPv6" ]
+    # -- Set spec for Service object.
+    # See EXAMPLES.md for more details.
 
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object.
