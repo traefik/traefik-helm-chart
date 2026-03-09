@@ -4,6 +4,17 @@
 {{- printf "\n" -}}
 
 
+{{/* Warn about experimental versions */}}
+{{- $imageTag := (.Values.image.tag | default .Chart.AppVersion) -}}
+{{- if hasPrefix "experimental-" $imageTag -}}
+{{- printf "\n" -}}
+⚠️ WARNING: You are using an experimental image tag ({{ $imageTag }}). Experimental versions can
+be unstable, may contain breaking changes, and are NOT recommended for production use.
+This version is not supported by this chart. Use at your own risk. ⚠️
+{{- printf "\n" -}}
+{{- end -}}
+
+
 {{/* Warn about potential permission issue with persistence */}}
 {{- if .Values.persistence -}}
   {{- if and .Values.persistence.enabled (empty .Values.deployment.initContainers) -}}

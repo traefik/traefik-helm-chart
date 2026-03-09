@@ -36,6 +36,31 @@ tests:
 
 
             RELEASE-NAME with docker.io/traefik:v3.0 has been deployed successfully on NAMESPACE namespace!
+  - it: should display warning when using an experimental image tag
+    set:
+      image:
+        tag: experimental-v3.6
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:experimental-v3.6 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using an experimental image tag (experimental-v3.6). Experimental versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not supported by this chart. Use at your own risk. ⚠️
+
+  - it: should not display experimental warning when using a stable image tag
+    set:
+      image:
+        tag: v3.6.8
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:

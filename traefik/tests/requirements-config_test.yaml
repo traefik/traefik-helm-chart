@@ -16,6 +16,21 @@ tests:
         tag: experimental-v3.0
     asserts:
       - notFailedTemplate: {}
+  - it: should pass when trying to use this Chart with Traefik Proxy experimental master (latest one)
+    set:
+      image:
+        repository: traefik/traefik
+        tag: experimental-master
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not pass when trying to use this Chart with unknown tag
+    set:
+      image:
+        repository: traefik/traefik
+        tag: unknown
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: version \"unknown\" is not supported"
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
     set:
       hub:
