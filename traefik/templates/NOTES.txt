@@ -10,7 +10,7 @@
 {{- printf "\n" -}}
 ⚠️ WARNING: You are using an experimental image tag ({{ $imageTag }}). Experimental versions are
 unstable, may contain breaking changes, and are NOT recommended for production use.
-You are using this version at your own risk. ⚠️
+This version is not supported by this chart. Use at your own risk. ⚠️
 {{- printf "\n" -}}
 {{- end -}}
 
