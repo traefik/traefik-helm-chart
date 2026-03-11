@@ -434,34 +434,34 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.email=email@example.com"
+          content: "--certificatesresolvers.myacmeresolver.acme.email=email@example.com"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.provider=myProvider"
+          content: "--certificatesresolvers.myacmeresolver.acme.dnschallenge.provider=myProvider"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.dnsChallenge.resolvers=1.1.1.1,8.8.8.8"
+          content: "--certificatesresolvers.myacmeresolver.acme.dnschallenge.resolvers=1.1.1.1,8.8.8.8"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.tlsChallenge.delay=42"
+          content: "--certificatesresolvers.myacmeresolver.acme.tlschallenge.delay=42"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.emailaddresses=foo@example.com,bar@example.org"
+          content: "--certificatesresolvers.myacmeresolver.acme.emailaddresses=foo@example.com,bar@example.org"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.profile=tlsserver"
+          content: "--certificatesresolvers.myacmeresolver.acme.profile=tlsserver"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.httpChallenge.delay=12"
+          content: "--certificatesresolvers.myacmeresolver.acme.httpchallenge.delay=12"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.clientResponseHeaderTimeout=1m"
+          content: "--certificatesresolvers.myacmeresolver.acme.clientresponseheadertimeout=1m"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.clientTimeout=1m"
+          content: "--certificatesresolvers.myacmeresolver.acme.clienttimeout=1m"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.myAcmeResolver.acme.disableCommonName=true"
+          content: "--certificatesresolvers.myacmeresolver.acme.disablecommonname=true"
 
 
   - it: should have the distributed acme resolver options applied
@@ -477,13 +477,13 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.my-resolver.distributedAcme.email=email@example.com"
+          content: "--certificatesresolvers.my-resolver.distributedacme.email=email@example.com"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.my-resolver.distributedAcme.storage.kubernetes=true"
+          content: "--certificatesresolvers.my-resolver.distributedacme.storage.kubernetes=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--certificatesresolvers.my-resolver.distributedAcme.httpChallenge.entrypoint=web"
+          content: "--certificatesresolvers.my-resolver.distributedacme.httpchallenge.entrypoint=web"
 
   - it: should have the tailscale resolver options applied
     set:
@@ -522,7 +522,7 @@ tests:
           content: "--ocsp=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--ocsp.responderOverrides.foo=bar"
+          content: "--ocsp.responderoverrides.foo=bar"
 
   - it: should have prometheus annotations with specified values
     set:
@@ -909,7 +909,7 @@ tests:
           content: "--log.otlp.http.tls.key=path/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--log.otlp.http.tls.insecureSkipVerify=true"
+          content: "--log.otlp.http.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.otlp.grpc=true"
@@ -936,7 +936,7 @@ tests:
           content: "--log.otlp.grpc.tls.key=gpath/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--log.otlp.grpc.tls.insecureSkipVerify=true"
+          content: "--log.otlp.grpc.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.otlp.resourceAttributes.foo=bar"
@@ -1087,7 +1087,7 @@ tests:
           content: "--accesslog.otlp.http.tls.key=path/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--accesslog.otlp.http.tls.insecureSkipVerify=true"
+          content: "--accesslog.otlp.http.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.otlp.grpc=true"
@@ -1114,7 +1114,7 @@ tests:
           content: "--accesslog.otlp.grpc.tls.key=gpath/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--accesslog.otlp.grpc.tls.insecureSkipVerify=true"
+          content: "--accesslog.otlp.grpc.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.otlp.resourceAttributes.foo=bar"

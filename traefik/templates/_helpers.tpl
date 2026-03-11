@@ -247,14 +247,14 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
 {{- end -}}
 
 {{- define "traefik.yaml2CommandLineArgsRec" -}}
-    {{- $path := .path -}}
+    {{- $path := lower .path -}}
     {{- range $key, $value := .content -}}
         {{- if kindIs "map" $value }}
-          {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
+          {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path (lower $key)) "content" $value) -}}
         {{- else if and (kindIs "bool" $value) (ne $value nil) }}
---{{ join "." (list $path $key)}}={{ $value }}
+--{{ join "." (list $path (lower $key))}}={{ $value }}
         {{- else if not (empty $value) }}
---{{ join "." (list $path $key)}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}
+--{{ join "." (list $path (lower $key))}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}
         {{- end -}}
     {{- end -}}
 {{- end -}}

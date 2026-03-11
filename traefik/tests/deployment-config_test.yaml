@@ -296,7 +296,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--api.basePath=/proxy"
+          content: "--api.basepath=/proxy"
   - it: should be possible to send anonymous usage data
     set:
       global:

@@ -28,25 +28,25 @@ tests:
           content: "--entryPoints.websecure.http.sanitizePath=true"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSlash=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedslash=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedBackSlash=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedbackslash=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedNullCharacter=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodednullcharacter=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSemicolon=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedsemicolon=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedPercent=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedpercent=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedQuestionMark=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedquestionmark=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=false"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedhash=false"
   - it: should be possible to customize security arguments on websecure
     set:
       ports:
@@ -67,25 +67,25 @@ tests:
           content: "--entryPoints.websecure.http.sanitizePath=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSlash=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedslash=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedBackSlash=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedbackslash=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedNullCharacter=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodednullcharacter=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedSemicolon=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedsemicolon=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedPercent=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedpercent=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedQuestionMark=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedquestionmark=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=true"
+          content: "--entrypoints.websecure.http.encodedcharacters.allowencodedhash=true"
   - it: should be possible to customize security arguments on custom entrypoint
     set:
       ports:
@@ -106,22 +106,22 @@ tests:
           content: "--entryPoints.foo.http.sanitizePath=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSlash=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedslash=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedBackSlash=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedbackslash=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedNullCharacter=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodednullcharacter=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedSemicolon=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedsemicolon=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedPercent=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedpercent=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedQuestionMark=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedquestionmark=false"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--entryPoints.foo.http.encodedCharacters.allowEncodedHash=false"
+          content: "--entrypoints.foo.http.encodedcharacters.allowencodedhash=false"

@@ -12,7 +12,7 @@ tests:
           content: "--ping=true"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--api.basePath=/"
+          content: "--api.basepath=/"
 
   - it: should generate generic api arguments
     set:
@@ -34,7 +34,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--api.basePath="
+          content: "--api.basepath="
 
   - it: should generate basePath flag when set to a value
     set:
@@ -43,7 +43,7 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--api.basePath=/foo"
+          content: "--api.basepath=/foo"
 
   - it: should fail if ingressRoute.dashboard is enabled but api.dashboard is false
     set:

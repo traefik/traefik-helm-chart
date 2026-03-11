@@ -294,16 +294,16 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.tracing.additionalTraceHeaders.traceContext.parentId=parentId"
+          content: "--hub.tracing.additionaltraceheaders.tracecontext.parentid=parentId"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceId=traceId"
+          content: "--hub.tracing.additionaltraceheaders.tracecontext.traceid=traceId"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceParent=traceParent"
+          content: "--hub.tracing.additionaltraceheaders.tracecontext.traceparent=traceParent"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.tracing.additionalTraceHeaders.traceContext.traceState=traceState"
+          content: "--hub.tracing.additionaltraceheaders.tracecontext.tracestate=traceState"
   - it: should be possible to configure Traefik Hub microcks provider
     set:
       hub:
@@ -315,7 +315,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks.endpoint=http://microcks.svc"
-  - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
+  - it: should be possible to configure Traefik Hub consulcatalogenterprise" provider
     set:
       hub:
         providers:
@@ -353,79 +353,79 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.cache=true"
+          content: "--hub.providers.consulcatalogenterprise.cache=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.connectAware=true"
+          content: "--hub.providers.consulcatalogenterprise.connectaware=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.connectByDefault=true"
+          content: "--hub.providers.consulcatalogenterprise.connectbydefault=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.constraints=constraints"
+          content: "--hub.providers.consulcatalogenterprise.constraints=constraints"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.defaultRule=defaultRule"
+          content: "--hub.providers.consulcatalogenterprise.defaultrule=defaultRule"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.address=address"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.address=address"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.datacenter=datacenter"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.datacenter=datacenter"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime=1"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.endpointwaittime=1"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.password=password"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.httpauth.password=password"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.httpauth.username=username"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.httpauth.username=username"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.scheme=scheme"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.scheme=scheme"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.ca=ca"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.tls.ca=ca"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.cert=cert"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.tls.cert=cert"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify=true"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.tls.key=key"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.tls.key=key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.endpoint.token=token"
+          content: "--hub.providers.consulcatalogenterprise.endpoint.token=token"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.namespaces=namespaces"
+          content: "--hub.providers.consulcatalogenterprise.namespaces=namespaces"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.partition=partition"
+          content: "--hub.providers.consulcatalogenterprise.partition=partition"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.prefix=prefix"
+          content: "--hub.providers.consulcatalogenterprise.prefix=prefix"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.refreshInterval=2"
+          content: "--hub.providers.consulcatalogenterprise.refreshinterval=2"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.requireConsistent=true"
+          content: "--hub.providers.consulcatalogenterprise.requireconsistent=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.serviceName=serviceName"
+          content: "--hub.providers.consulcatalogenterprise.servicename=serviceName"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.stale=true"
+          content: "--hub.providers.consulcatalogenterprise.stale=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.strictChecks=strictChecks"
+          content: "--hub.providers.consulcatalogenterprise.strictchecks=strictChecks"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.consulCatalogEnterprise.watch=true"
+          content: "--hub.providers.consulcatalogenterprise.watch=true"
   - it: should be possible to configure Traefik Hub plugin sources
     set:
       hub:

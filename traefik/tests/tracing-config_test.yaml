@@ -96,7 +96,7 @@ tests:
           content: "--tracing.otlp.http.tls.key=path/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.otlp.http.tls.insecureSkipVerify=true"
+          content: "--tracing.otlp.http.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--tracing.otlp.grpc=true"
@@ -123,7 +123,7 @@ tests:
           content: "--tracing.otlp.grpc.tls.key=gpath/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--tracing.otlp.grpc.tls.insecureSkipVerify=true"
+          content: "--tracing.otlp.grpc.tls.insecureskipverify=true"
   - it: should render --tracing.sampleRate=0 when tracing.sampleRate is 0
     set:
       tracing:

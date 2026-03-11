@@ -374,7 +374,7 @@ tests:
           content: "--metrics.otlp.http.tls.key=path/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.otlp.http.tls.insecureSkipVerify=true"
+          content: "--metrics.otlp.http.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.grpc=true"
@@ -401,7 +401,7 @@ tests:
           content: "--metrics.otlp.grpc.tls.key=gpath/to/foo.key"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--metrics.otlp.grpc.tls.insecureSkipVerify=true"
+          content: "--metrics.otlp.grpc.tls.insecureskipverify=true"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--metrics.otlp.resourceAttributes.foo=bar"
