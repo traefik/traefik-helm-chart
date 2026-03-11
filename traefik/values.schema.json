@@ -2529,6 +2529,10 @@
         "service": {
             "type": "object",
             "properties": {
+                "additionalServices": {
+                    "description": "Can be used to create multiple Service. See EXAMPLES.md for more details.",
+                    "type": "object"
+                },
                 "annotations": {
                     "description": "Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)",
                     "type": "object"
