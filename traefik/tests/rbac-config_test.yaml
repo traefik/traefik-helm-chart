@@ -1334,10 +1334,10 @@ tests:
             verbs:
               - list
               - watch
-  - it: should add RBAC rules when kubernetesIngressNginx is enabled
+  - it: should add RBAC rules when kubernetesIngressNGINX is enabled
     set:
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
         kubernetesIngress:
           enabled: false
@@ -1383,7 +1383,7 @@ tests:
   - it: should not duplicate RBAC rules when kubernetesIngress is also enabled
     set:
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
         kubernetesIngress:
           enabled: true
@@ -1403,10 +1403,10 @@ tests:
               - get
               - list
               - watch
-  - it: should not add RBAC rules when kubernetesIngressNginx is disabled
+  - it: should not add RBAC rules when kubernetesIngressNGINX is disabled
     set:
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: false
         kubernetesIngress:
           enabled: false
@@ -1427,12 +1427,12 @@ tests:
               - get
               - list
               - watch
-  - it: Role should be able to read ingresses when kubernetesIngressNginx is enabled without kubernetesIngress
+  - it: Role should be able to read ingresses when kubernetesIngressNGINX is enabled without kubernetesIngress
     set:
       providers:
         kubernetesIngress:
           enabled: false
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
       rbac:
         namespaced: true
@@ -1461,12 +1461,12 @@ tests:
               - ingresses/status
             verbs:
               - update
-  - it: Role should be able to update ingresses/status when both kubernetesIngress and kubernetesIngressNginx are enabled
+  - it: Role should be able to update ingresses/status when both kubernetesIngress and kubernetesIngressNGINX are enabled
     set:
       providers:
         kubernetesIngress:
           enabled: true
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
       rbac:
         namespaced: true
@@ -1482,12 +1482,12 @@ tests:
               - ingresses/status
             verbs:
               - update
-  - it: Role should not have kubernetesIngressNginx permissions when provider is disabled
+  - it: Role should not have kubernetesIngressNGINX permissions when provider is disabled
     set:
       providers:
         kubernetesIngress:
           enabled: false
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: false
       rbac:
         namespaced: true

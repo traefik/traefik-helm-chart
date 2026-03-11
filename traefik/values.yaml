@@ -370,7 +370,7 @@ providers:
     content: ""
 
   # @schema additionalProperties: false
-  kubernetesIngressNginx:
+  kubernetesIngressNGINX:
     # -- Enable Kubernetes Ingress NGINX provider (experimental)
     enabled: false
     # -- Ingress Class Controller value this controller satisfies

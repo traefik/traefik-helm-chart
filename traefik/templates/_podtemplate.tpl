@@ -582,7 +582,7 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- with .Values.providers.kubernetesIngressNginx }}
+          {{- with .Values.providers.kubernetesIngressNGINX }}
            {{- if .enabled }}
           - "--providers.kubernetesingressnginx"
             {{- with .controllerClass }}
@@ -598,13 +598,13 @@
           - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
             {{- end }}
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
-          - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNginx.namespaces" $ }}"
+          - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNGINX.namespaces" $ }}"
             {{- end }}
             {{- with .watchNamespaceSelector }}
           - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
             {{- end }}
             {{- if and $.Values.service.enabled .publishService.enabled }}
-          - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNginx.publishServicePath" $ }}"
+          - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
             {{- end }}
             {{- with .publishStatusAddress }}
           - "--providers.kubernetesingressnginx.publishstatusaddress={{ . }}"
