@@ -15,11 +15,11 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.controllerclass=k8s.io/ingress-nginx"
+          content: "--providers.kubernetesingressnginx.controllerClass=k8s.io/ingress-nginx"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.ingressclass=nginx"
+          content: "--providers.kubernetesingressnginx.ingressClass=nginx"
 
   - it: should add custom controllerClass and ingressClass
     set:
@@ -31,11 +31,11 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.controllerclass=custom.io/nginx-controller"
+          content: "--providers.kubernetesingressnginx.controllerClass=custom.io/nginx-controller"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.ingressclass=custom-nginx"
+          content: "--providers.kubernetesingressnginx.ingressClass=custom-nginx"
 
   - it: should add ingressClassByName & watchIngressWithoutClass flag
     set:
@@ -47,11 +47,11 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.ingressclassbyname=true"
+          content: "--providers.kubernetesingressnginx.ingressClassByName=true"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
+          content: "--providers.kubernetesingressnginx.watchIngressWithoutClass=true"
 
   - it: should add watched namespaces & namespace selector
     set:
@@ -67,7 +67,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.watchnamespaceselector=environment=production"
+          content: "--providers.kubernetesingressnginx.watchNamespaceSelector=environment=production"
 
   - it: should add publishService when enabled
     set:
@@ -103,7 +103,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.publishstatusaddress=1.2.3.4,5.6.7.8"
+          content: "--providers.kubernetesingressnginx.publishStatusAddress=1.2.3.4,5.6.7.8"
 
   - it: should add defaultBackendService & disableSvcExternalName
     set:
@@ -115,11 +115,11 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.defaultbackendservice=default/default-backend"
+          content: "--providers.kubernetesingressnginx.defaultBackendService=default/default-backend"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.disablesvcexternalname=true"
+          content: "--providers.kubernetesingressnginx.disableSvcExternalName=true"
 
   - it: should add throttleDuration
     set:
@@ -130,7 +130,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.throttleduration=10s"
+          content: "--providers.kubernetesingressnginx.throttleDuration=10s"
 
   - it: should add certAuthFilePath
     set:
@@ -141,7 +141,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.certauthfilepath=/etc/kubernetes/ca.crt"
+          content: "--providers.kubernetesingressnginx.certAuthFilePath=/etc/kubernetes/ca.crt"
 
   - it: should add endpoint
     set:
