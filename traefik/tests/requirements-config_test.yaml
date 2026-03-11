@@ -327,7 +327,7 @@ tests:
         namespaces: null
     asserts:
       - failedTemplate:
-          errorPattern: "namespaces is required"
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should fail when using otlp logs without experimental flag
     set:
       logs:
