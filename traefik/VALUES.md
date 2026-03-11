@@ -455,17 +455,13 @@ Kubernetes: `>=1.25.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container. |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
-| service.additionalServices | object | `{}` |  |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
 | service.enabled | bool | `true` |  |
-| service.externalIPs | list | `[]` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
-| service.loadBalancerSourceRanges | list | `[]` |  |
 | service.single | bool | `true` |  |
-| service.spec | object | `{}` | Cannot contain type, selector or ports entries. |
-| service.type | string | `"LoadBalancer"` |  |
+| service.spec | object | `{"type":"LoadBalancer"}` | Cannot contain selector or ports entries. |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | startupProbe | object | `{}` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |

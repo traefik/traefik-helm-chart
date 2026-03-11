@@ -168,7 +168,8 @@ tests:
     set:
       service:
         single: false
-        ipFamilyPolicy: PreferDualStack
+        spec:
+          ipFamilyPolicy: PreferDualStack
       ports:
         udp:
           port: 3000
@@ -205,8 +206,9 @@ tests:
     set:
       service:
         single: false
-        ipFamilies:
-          - IPv6
+        spec:
+          ipFamilies:
+            - IPv6
       ports:
         udp:
           port: 3000

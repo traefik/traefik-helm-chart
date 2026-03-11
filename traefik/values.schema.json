@@ -2529,9 +2529,6 @@
         "service": {
             "type": "object",
             "properties": {
-                "additionalServices": {
-                    "type": "object"
-                },
                 "annotations": {
                     "description": "Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)",
                     "type": "object"
@@ -2547,25 +2544,21 @@
                 "enabled": {
                     "type": "boolean"
                 },
-                "externalIPs": {
-                    "type": "array"
-                },
                 "labels": {
                     "description": "Additional service labels (e.g. for filtering Service by custom labels)",
                     "type": "object"
-                },
-                "loadBalancerSourceRanges": {
-                    "type": "array"
                 },
                 "single": {
                     "type": "boolean"
                 },
                 "spec": {
-                    "description": "Additional entries here will be added to the service spec.",
-                    "type": "object"
-                },
-                "type": {
-                    "type": "string"
+                    "description": "Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core). Cannot contain selector or ports entries.",
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        }
+                    }
                 }
             }
         },

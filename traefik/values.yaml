@@ -1024,11 +1024,13 @@ service:
   annotationsUDP: {}
   # -- Additional service labels (e.g. for filtering Service by custom labels)
   labels: {}
-  # -- Additional entries here will be added to the service spec.
-  # -- Cannot contain type, selector or ports entries.
-  spec: {}
-    # -- Set spec for Service object.
-    # See EXAMPLES.md for more details.
+  # -- Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core).
+  # Cannot contain selector or ports entries.
+  spec:
+    type: LoadBalancer
+  # -- Can be used to create multiple Service.
+  # See EXAMPLES.md for more details.
+  additionalServices: {}
 
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object.

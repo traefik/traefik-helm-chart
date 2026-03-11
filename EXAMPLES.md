@@ -341,7 +341,8 @@ Or a [global IP on Ingress](https://cloud.google.com/kubernetes-engine/docs/tuto
 
 ```yaml
 service:
-  type: NodePort
+  spec:
+    type: NodePort
 extraObjects:
   - apiVersion: networking.k8s.io/v1
     kind: Ingress
@@ -364,7 +365,8 @@ ports:
   websecure:
     appProtocol: HTTPS # Hint for Google L7 load balancer
 service:
-  type: ClusterIP
+  spec:
+    type: ClusterIP
 extraObjects:
 - apiVersion: gateway.networking.k8s.io/v1beta1
   kind: Gateway
@@ -552,13 +554,13 @@ PROXY protocol is a protocol for sending client connection information, such as 
 ```yaml
 service:
   enabled: true
-  type: LoadBalancer
   annotations:
     # This will tell DigitalOcean to enable the proxy protocol.
     # Note that only REGIONAL type loadbalancers are supported.
     # service.beta.kubernetes.io/do-loadbalancer-type: "REGIONAL"
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
   spec:
+    type: LoadBalancer
     # This is the default and should stay as cluster to keep the DO health checks working.
     externalTrafficPolicy: Cluster
 
@@ -1751,7 +1753,8 @@ gatewayClass:
 service:
   additionalServices:
     external:
-      type: LoadBalancer
+      spec:
+        type: LoadBalancer
 
 providers:
   kubernetesGateway:
