@@ -11,33 +11,10 @@ metadata:
     rbac.authorization.k8s.io/aggregate-to-{{ . }}: "true"
     {{- end }}
 rules:
-  {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
-      - endpoints
-      - services
-    verbs:
-      - get
-      - list
-      - watch
-    {{- if $.Values.hub.token }}
-  - apiGroups:
-      - discovery.k8s.io
-    resources:
-      - endpointslices
-    verbs:
-      - get
-      - list
-      - watch
-    {{- end }}
-  {{- else }}
-  - apiGroups:
-      - ""
-    resources:
-      {{- if and .Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
       - configmaps
-      {{- end }}
       - nodes
       - services
     verbs:
@@ -51,15 +28,12 @@ rules:
     verbs:
       - list
       - watch
-  {{- end }}
-  {{- if (semverCompare ">=v3.5.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
       - pods
     verbs:
       - get
-  {{- end }}
   - apiGroups:
       - ""
     resources:
@@ -74,16 +48,6 @@ rules:
       - delete
       - deletecollection
     {{- end }}
-  {{- if .Values.podSecurityPolicy.enabled }}
-  - apiGroups:
-      - policy
-    resourceNames:
-      - {{ template "traefik.fullname" . }}
-    resources:
-      - podsecuritypolicies
-    verbs:
-      - use
-  {{- end -}}
   {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNginx.enabled }}
   - apiGroups:
       - extensions
@@ -105,9 +69,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-    {{- if semverCompare ">=v3.7.0-0" $version }}
-      - configmaps
-    {{- end }}
       - namespaces
     verbs:
       - list
@@ -148,28 +109,16 @@ rules:
       - ""
     resources:
       - namespaces
-    {{- if (semverCompare "<v3.1.0-0" $version) }}
-      - endpoints
-    {{- end }}
-      - secrets
-    {{- if semverCompare ">=v3.2.0-0" $version }}
-      - configmaps
-    {{- end }}
     verbs:
-      - get
       - list
       - watch
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      {{- if semverCompare ">=v3.2.0-0" $version }}
       - backendtlspolicies
-      {{- end }}
       - gatewayclasses
       - gateways
-      {{- if semverCompare ">=v3.2.0-0" $version }}
       - grpcroutes
-      {{- end }}
       - httproutes
       - referencegrants
       - tcproutes
@@ -181,14 +130,10 @@ rules:
   - apiGroups:
       - gateway.networking.k8s.io
     resources:
-      {{- if semverCompare ">=v3.2.0-0" $version }}
       - backendtlspolicies/status
-      {{- end }}
       - gatewayclasses/status
       - gateways/status
-      {{- if semverCompare ">=v3.2.0-0" $version }}
       - grpcroutes/status
-      {{- end }}
       - httproutes/status
       - tcproutes/status
       - tlsroutes/status
@@ -232,7 +177,7 @@ rules:
       - list
       - watch
       - get
-    {{- if or (semverCompare ">=v3.1.0-0" $version) .Values.hub.apimanagement.enabled }}
+    {{- if .Values.hub.apimanagement.enabled }}
   - apiGroups:
       - ""
     resources:
@@ -312,15 +257,6 @@ rules:
       - get
       - list
       - watch
-      {{- if (semverCompare "<v3.1.0-0" $version) }}
-  - apiGroups:
-      - ""
-    resources:
-      - nodes
-    verbs:
-      - list
-      - watch
-      {{- end -}}
     {{- end -}}
   {{- end }}
 {{- end }}

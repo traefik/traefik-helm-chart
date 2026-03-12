@@ -969,46 +969,6 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.periodSeconds
           value: 5
-  - it: should set disableIngressClassLookup if version is v3 and disableIngressClassLookup is true
-    set:
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-      image:
-        tag: v3.0.0-beta3
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: should not set disableIngressClassLookup if version is >= v3.1.5+ and rbac are namespaced
-    set:
-      rbac:
-        namespaced: true
-      image:
-        tag: v3.1.5
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
-
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: should set disableIngressClassLookup if version is < v3.1.5+ and rbac are namespaced
-    set:
-      rbac:
-        namespaced: true
-      image:
-        tag: v3.1.4
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
   - it: should set disableClusterScopeResources when version > v3.1.2+ on both providers
     set:
       rbac:
@@ -1099,16 +1059,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.allowACMEByPass=true"
-  - it: should fail when setting ACME bypass with Proxy v3.1.0
-    set:
-      image:
-        tag: v3.1.0
-      ports:
-        websecure:
-          allowACMEByPass: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+"
   - it: should enable experimental otlpLogs when specified
     set:
       experimental:

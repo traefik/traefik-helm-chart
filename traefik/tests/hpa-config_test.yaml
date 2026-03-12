@@ -5,21 +5,6 @@ capabilities:
   majorVersion: 1
   minorVersion: 23
 tests:
-  - it: should use autoscaling/v2 when k8s >= 1.23
-    values:
-      - ./values/hpa.yaml
-    asserts:
-      - isAPIVersion:
-          of: autoscaling/v2
-  - it: should use autoscaling/v2beta2 when k8s < 1.23
-    capabilities:
-      majorVersion: 1
-      minorVersion: 22
-    values:
-      - ./values/hpa.yaml
-    asserts:
-      - isAPIVersion:
-          of: autoscaling/v2beta2
   - it: should fail without maxReplicas
     set:
       autoscaling:

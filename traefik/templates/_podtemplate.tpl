@@ -464,7 +464,7 @@
            {{- end }}
           {{- end }}
 
-          {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+          {{- if .Values.experimental.abortOnPluginFailure }}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
@@ -486,7 +486,7 @@
           - "--providers.kubernetescrd.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if and .Values.rbac.namespaced (semverCompare ">=v3.1.2-0" $version) }}
+           {{- if .Values.rbac.namespaced }}
           - "--providers.kubernetescrd.disableClusterScopeResources=true"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.nativeLBByDefault }}
@@ -519,14 +519,7 @@
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
            {{- end }}
            {{- if .Values.rbac.namespaced }}
-            {{- if semverCompare "<v3.1.5-0" $version }}
-          - "--providers.kubernetesingress.disableIngressClassLookup=true"
-              {{- if semverCompare ">=v3.1.2-0" $version }}
           - "--providers.kubernetesingress.disableClusterScopeResources=true"
-              {{- end }}
-            {{- else }}
-          - "--providers.kubernetesingress.disableClusterScopeResources=true"
-            {{- end }}
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.nativeLBByDefault }}
           - "--providers.kubernetesingress.nativeLBByDefault=true"
@@ -674,9 +667,6 @@
               {{- end }}
             {{- end }}
             {{- if $config.allowACMEByPass }}
-              {{- if (semverCompare "<v3.1.3-0" $version) }}
-                {{- fail "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+" -}}
-              {{- end }}
           - "--entryPoints.{{ $entrypoint }}.allowACMEByPass=true"
             {{- end }}
             {{- if $config.forwardedHeaders }}
