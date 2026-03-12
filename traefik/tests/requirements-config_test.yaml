@@ -103,6 +103,27 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngressNGINX v3.7 options on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.2
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          httpEntryPoint: "web"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0."
+  - it: should not fail when using kubernetesIngressNGINX v3.7 options on traefik >= 3.7.0
+    set:
+      image:
+        tag: v3.7.0
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          httpEntryPoint: "web"
+    asserts:
+      - notFailedTemplate: {}
   - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
     set:
       image:

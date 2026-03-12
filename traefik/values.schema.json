@@ -2387,13 +2387,35 @@
                 "kubernetesIngressNGINX": {
                     "type": "object",
                     "properties": {
+                        "allowCrossNamespaceResources": {
+                            "description": "Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "allowSnippetAnnotations": {
+                            "description": "Enables parsing and adding -snippet annotations/directives (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
                         "certAuthFilePath": {
                             "description": "Kubernetes certificate authority file path (not needed for in-cluster client)",
                             "type": "string"
                         },
+                        "clientBodyBufferSize": {
+                            "description": "Default buffer size for reading client request body in bytes (default: 16384)",
+                            "type": "integer"
+                        },
                         "controllerClass": {
                             "description": "Ingress Class Controller value this controller satisfies",
                             "type": "string"
+                        },
+                        "customHTTPErrors": {
+                            "description": "Defines which HTTP status codes should result in calling the default backend to return an error page",
+                            "type": "array"
                         },
                         "defaultBackendService": {
                             "description": "Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'",
@@ -2411,6 +2433,18 @@
                             "description": "Kubernetes server endpoint (required for external cluster client)",
                             "type": "string"
                         },
+                        "globalAllowedResponseHeaders": {
+                            "description": "List of allowed response headers inside the custom headers annotations",
+                            "type": "array"
+                        },
+                        "httpEntryPoint": {
+                            "description": "Defines the EntryPoint to use for HTTP requests",
+                            "type": "string"
+                        },
+                        "httpsEntryPoint": {
+                            "description": "Defines the EntryPoint to use for HTTPS requests",
+                            "type": "string"
+                        },
                         "ingressClass": {
                             "description": "Name of the ingress class this controller satisfies",
                             "type": "string"
@@ -2418,6 +2452,56 @@
                         "ingressClassByName": {
                             "description": "Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class",
                             "type": "boolean"
+                        },
+                        "proxyBodySize": {
+                            "description": "Default maximum size of a client request body in bytes (default: 1048576)",
+                            "type": "integer"
+                        },
+                        "proxyBufferSize": {
+                            "description": "Default buffer size for reading the response body in bytes (default: 8192)",
+                            "type": "integer"
+                        },
+                        "proxyBuffering": {
+                            "description": "Defines whether to enable response buffering (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "proxyBuffersNumber": {
+                            "description": "Default number of buffers for reading a response (default: 4)",
+                            "type": "integer"
+                        },
+                        "proxyConnectTimeout": {
+                            "description": "Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)",
+                            "type": "integer"
+                        },
+                        "proxyNextUpstream": {
+                            "description": "Defines in which cases a request should be retried (default: \"error timeout\")",
+                            "type": "string"
+                        },
+                        "proxyNextUpstreamTimeout": {
+                            "description": "Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)",
+                            "type": "integer"
+                        },
+                        "proxyNextUpstreamTries": {
+                            "description": "Limits the number of possible tries if the backend server does not reply (default: 3)",
+                            "type": "integer"
+                        },
+                        "proxyReadTimeout": {
+                            "description": "Amount of time between two successive read operations. Unitless, in seconds (default: 60)",
+                            "type": "integer"
+                        },
+                        "proxyRequestBuffering": {
+                            "description": "Defines whether to enable request buffering (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "proxySendTimeout": {
+                            "description": "Amount of time between two successive write operations. Unitless, in seconds (default: 60)",
+                            "type": "integer"
                         },
                         "publishService": {
                             "type": "object",
@@ -2442,6 +2526,10 @@
                         "token": {
                             "description": "Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token",
                             "type": "string"
+                        },
+                        "upstreamKeepaliveTimeout": {
+                            "description": "Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)",
+                            "type": "integer"
                         },
                         "watchIngressWithoutClass": {
                             "description": "Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified",
