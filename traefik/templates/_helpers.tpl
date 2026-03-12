@@ -215,7 +215,11 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
  {{- else -}}
   {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
   {{- $imageVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.proxy.tag $imageVersion) -}}
-  {{- (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
+  {{- $version := (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" | replace "master" $.Chart.AppVersion }}
+  {{- if not (regexMatch `^v?\d+(\.\d+)?(\.\d+)?(-.*)?` $version) -}}
+    {{- fail (printf "ERROR: version %q is not supported" $imageVersion) -}}
+  {{- end -}}
+  {{- $version -}}
  {{- end -}}
 {{- end -}}
 
