@@ -464,7 +464,7 @@
            {{- end }}
           {{- end }}
 
-          {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+          {{- if .Values.experimental.abortOnPluginFailure }}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
@@ -486,7 +486,7 @@
           - "--providers.kubernetescrd.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if and .Values.rbac.namespaced (semverCompare ">=v3.1.2-0" $version) }}
+           {{- if .Values.rbac.namespaced }}
           - "--providers.kubernetescrd.disableClusterScopeResources=true"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.nativeLBByDefault }}
@@ -506,6 +506,12 @@
            {{- if or (and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled) (and .Values.providers.kubernetesIngress.publishedService.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride)}}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
            {{- end }}
+           {{- with .Values.providers.kubernetesIngress.ingressEndpoint.hostname }}
+          - "--providers.kubernetesingress.ingressendpoint.hostname={{ . }}"
+           {{- end }}
+           {{- with .Values.providers.kubernetesIngress.ingressEndpoint.ip }}
+          - "--providers.kubernetesingress.ingressendpoint.ip={{ . }}"
+           {{- end }}
            {{- if .Values.providers.kubernetesIngress.labelSelector }}
           - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
            {{- end }}
@@ -513,14 +519,7 @@
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
            {{- end }}
            {{- if .Values.rbac.namespaced }}
-            {{- if semverCompare "<v3.1.5-0" $version }}
-          - "--providers.kubernetesingress.disableIngressClassLookup=true"
-              {{- if semverCompare ">=v3.1.2-0" $version }}
           - "--providers.kubernetesingress.disableClusterScopeResources=true"
-              {{- end }}
-            {{- else }}
-          - "--providers.kubernetesingress.disableClusterScopeResources=true"
-            {{- end }}
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.nativeLBByDefault }}
           - "--providers.kubernetesingress.nativeLBByDefault=true"
@@ -585,48 +584,13 @@
           {{- with .Values.providers.kubernetesIngressNGINX }}
            {{- if .enabled }}
           - "--providers.kubernetesingressnginx"
-            {{- with .controllerClass }}
-          - "--providers.kubernetesingressnginx.controllerclass={{ . }}"
-            {{- end }}
-            {{- with .ingressClass }}
-          - "--providers.kubernetesingressnginx.ingressclass={{ . }}"
-            {{- end }}
-            {{- if .ingressClassByName }}
-          - "--providers.kubernetesingressnginx.ingressclassbyname=true"
-            {{- end }}
-            {{- if .watchIngressWithoutClass }}
-          - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
-            {{- end }}
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNGINX.namespaces" $ }}"
-            {{- end }}
-            {{- with .watchNamespaceSelector }}
-          - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
             {{- end }}
             {{- if and $.Values.service.enabled .publishService.enabled }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
             {{- end }}
-            {{- with .publishStatusAddress }}
-          - "--providers.kubernetesingressnginx.publishstatusaddress={{ . }}"
-            {{- end }}
-            {{- with .defaultBackendService }}
-          - "--providers.kubernetesingressnginx.defaultbackendservice={{ . }}"
-            {{- end }}
-            {{- if .disableSvcExternalName }}
-          - "--providers.kubernetesingressnginx.disablesvcexternalname=true"
-            {{- end }}
-            {{- with .throttleDuration }}
-          - "--providers.kubernetesingressnginx.throttleduration={{ . }}"
-            {{- end }}
-            {{- with .certAuthFilePath }}
-          - "--providers.kubernetesingressnginx.certauthfilepath={{ . }}"
-            {{- end }}
-            {{- with .endpoint }}
-          - "--providers.kubernetesingressnginx.endpoint={{ . }}"
-            {{- end }}
-            {{- with .token }}
-          - "--providers.kubernetesingressnginx.token={{ . }}"
-            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
@@ -703,9 +667,6 @@
               {{- end }}
             {{- end }}
             {{- if $config.allowACMEByPass }}
-              {{- if (semverCompare "<v3.1.3-0" $version) }}
-                {{- fail "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+" -}}
-              {{- end }}
           - "--entryPoints.{{ $entrypoint }}.allowACMEByPass=true"
             {{- end }}
             {{- if $config.forwardedHeaders }}

@@ -331,6 +331,12 @@ providers:
       # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
       # Default to Service deployed with this Chart.
       pathOverride: ""
+    # @schema additionalProperties: false
+    ingressEndpoint:
+      # -- Hostname used for Kubernetes Ingress endpoints
+      hostname: ""  # @schema type:[string, null]
+      # -- IP used for Kubernetes Ingress endpoints
+      ip: ""  # @schema type:[string, null]
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
@@ -1103,18 +1109,13 @@ rbac:  # @schema additionalProperties: false
   enabled: true
   # When set to true:
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
-  # 2. It adds `disableIngressClassLookup` on Kubernetes Ingress with Traefik Proxy v3 until v3.1.4
-  # 3. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers with Traefik Proxy v3.1.2+
+  # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers
   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
   # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
   namespaced: false
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
   aggregateTo: []
-
-# -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
-podSecurityPolicy:
-  enabled: false
 
 # -- The service account the pods will use to interact with the Kubernetes API
 serviceAccount:  # @schema additionalProperties: false

@@ -135,6 +135,36 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.ingressendpoint.publishedservice=traefik/custom-service"
+  - it: should not have ingressEndpoint hostname when default configuration
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.hostname"
+  - it: should have ingressEndpoint hostname when specified in configuration
+    set:
+      providers:
+        kubernetesIngress:
+          ingressEndpoint:
+            hostname: example.com
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.hostname=example.com"
+  - it: should not have ingressEndpoint ip when default configuration
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.ip"
+  - it: should have ingressEndpoint ip when specified in configuration
+    set:
+      providers:
+        kubernetesIngress:
+          ingressEndpoint:
+            ip: 1.2.3.4
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.ip=1.2.3.4"
   - it: should not set default statusAddress when service is disabled
     set:
       service:
@@ -939,52 +969,12 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.periodSeconds
           value: 5
-  - it: should set disableIngressClassLookup if version is v3 and disableIngressClassLookup is true
-    set:
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          disableIngressClassLookup: true
-      image:
-        tag: v3.0.0-beta3
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: should not set disableIngressClassLookup if version is >= v3.1.5+ and rbac are namespaced
+  - it: should set disableClusterScopeResources on both providers
     set:
       rbac:
         namespaced: true
       image:
-        tag: v3.1.5
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
-
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: should set disableIngressClassLookup if version is < v3.1.5+ and rbac are namespaced
-    set:
-      rbac:
-        namespaced: true
-      image:
-        tag: v3.1.4
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableClusterScopeResources=true"
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingress.disableIngressClassLookup=true"
-  - it: should set disableClusterScopeResources when version > v3.1.2+ on both providers
-    set:
-      rbac:
-        namespaced: true
-      image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -992,7 +982,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.disableClusterScopeResources=true"
-  - it: should set disableClusterScopeResources when version > v3.1.2+ only on crd enabled provider
+  - it: should set disableClusterScopeResources when version > v3.6.10+ only on crd enabled provider
     set:
       rbac:
         namespaced: true
@@ -1000,12 +990,12 @@ tests:
         kubernetesIngress:
           enabled: false
       image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.disableClusterScopeResources=true"
-  - it: should set disableClusterScopeResources when version > v3.1.2+ only on ingress enabled provider
+  - it: should set disableClusterScopeResources only on ingress enabled provider
     set:
       rbac:
         namespaced: true
@@ -1013,7 +1003,7 @@ tests:
         kubernetesCRD:
           enabled: false
       image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1069,16 +1059,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.allowACMEByPass=true"
-  - it: should fail when setting ACME bypass with Proxy v3.1.0
-    set:
-      image:
-        tag: v3.1.0
-      ports:
-        websecure:
-          allowACMEByPass: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+"
   - it: should enable experimental otlpLogs when specified
     set:
       experimental:

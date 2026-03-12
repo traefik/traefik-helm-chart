@@ -21,7 +21,7 @@ A Traefik based Kubernetes ingress controller
 
 ## Requirements
 
-Kubernetes: `>=1.22.0-0`
+Kubernetes: `>=1.25.0-0`
 
 ## Values
 
@@ -327,7 +327,6 @@ Kubernetes: `>=1.22.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
-| podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |
@@ -422,6 +421,8 @@ Kubernetes: `>=1.22.0-0`
 | providers.kubernetesIngress.disableIngressClassLookup | bool | `false` | Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup) |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
+| providers.kubernetesIngress.ingressEndpoint.hostname | string | `""` | Hostname used for Kubernetes Ingress endpoints |
+| providers.kubernetesIngress.ingressEndpoint.ip | string | `""` | IP used for Kubernetes Ingress endpoints |
 | providers.kubernetesIngress.labelSelector | string | `nil` |  |
 | providers.kubernetesIngress.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |

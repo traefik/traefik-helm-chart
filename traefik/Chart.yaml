@@ -5,7 +5,7 @@ type: application
 version: 39.0.5
 # renovate: image=traefik
 appVersion: v3.6.10
-kubeVersion: ">=1.22.0-0"
+kubeVersion: ">=1.25.0-0"
 keywords:
   - traefik
   - ingress

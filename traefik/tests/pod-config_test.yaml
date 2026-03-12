@@ -1,9 +1,6 @@
 suite: Pod configuration
 templates:
   - deployment.yaml
-capabilities:
-  majorVersion: 1
-  minorVersion: 16
 tests:
   - it: should have set GOMAXPROCS with cpu limit
     set:
@@ -400,17 +397,6 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--experimental.fastProxy.debug"
 
-  - it: shouldn't have experimental flag when >= 3.1.0
-    set:
-      image:
-        tag: v3.1.0
-      providers:
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--experimental.kubernetesgateway"
   - it: should have the certificate resolver options applied
     set:
       certificatesResolvers:
