@@ -159,6 +159,11 @@
             {{- end }}
           - name: tmp
             mountPath: /tmp
+          {{- if .Values.hub.token }}
+          - name: hub-token
+            mountPath: {{ .Values.hub.tokenMountPath }}
+            readOnly: true
+          {{- end }}
           {{- range .Values.volumes }}
           - name: {{ tpl (.name) $ | replace "." "-" }}
             mountPath: {{ .mountPath }}
@@ -791,7 +796,7 @@
           {{- end }}
           {{- with .Values.hub }}
            {{- if .token }}
-          - "--hub.token=$(HUB_TOKEN)"
+          - "--hub.tokenFilePath={{ include "traefik.hubTokenFilePath" $ }}"
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
             {{- end }}
@@ -921,13 +926,6 @@
           - name: GOMEMLIMIT
             value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}
-          {{- with .Values.hub.token }}
-          - name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: {{ le (len .) 64 | ternary . "traefik-hub-license" }}
-                key: token
-          {{- end }}
           {{- if .Values.logs.access.timezone }}
           - name: TZ
             value: {{ .Values.logs.access.timezone }}
@@ -952,6 +950,11 @@
           {{- end }}
         - name: tmp
           emptyDir: {}
+        {{- if .Values.hub.token }}
+        - name: hub-token
+          secret:
+            secretName: {{ le (len .Values.hub.token) 64 | ternary .Values.hub.token "traefik-hub-license" }}
+        {{- end }}
         {{- range .Values.volumes }}
         - name: {{ tpl (.name) $ | replace "." "-" }}
           {{- if eq .type "secret" }}
