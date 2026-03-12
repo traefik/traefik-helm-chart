@@ -2262,7 +2262,7 @@
                             "type": "string"
                         },
                         "namespaces": {
-                            "description": "Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.",
+                            "description": "Array of namespaces to watch. If left empty, Traefik watches all namespaces.",
                             "type": "array"
                         },
                         "nativeLBByDefault": {
