@@ -94,22 +94,6 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/clusterrolebinding.yaml
-  - it: should not create cluster scoped RBAC related objects when namespaced and not using ingressclass and version <3.1
-    set:
-      image:
-        tag: v3.0.0
-      rbac:
-        namespaced: true
-      providers:
-        kubernetesIngress:
-          enabled: false
-    asserts:
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrole.yaml
-      - hasDocuments:
-          count: 0
-        template: rbac/clusterrolebinding.yaml
 
   - it: should use existing ServiceAccount
     set:
@@ -556,32 +540,6 @@ tests:
               - get
               - list
               - watch
-  - it: cluster rbac should be only on traefik.io for v3
-    set:
-      image:
-        tag: v3.0.0-beta3
-    asserts:
-      - template: rbac/clusterrole.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - traefik.io
-            resources:
-              - ingressroutes
-              - ingressroutetcps
-              - ingressrouteudps
-              - middlewares
-              - middlewaretcps
-              - serverstransports
-              - serverstransporttcps
-              - tlsoptions
-              - tlsstores
-              - traefikservices
-            verbs:
-              - get
-              - list
-              - watch
   - it: namespaced rbac should be only on traefik.io API group
     set:
       rbac:
@@ -608,38 +566,7 @@ tests:
               - get
               - list
               - watch
-  - it: namespaced rbac should be only on traefik.io API group for v3
-    set:
-      rbac:
-        namespaced: true
-      image:
-        tag: v3.0.0-beta3
-    asserts:
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - traefik.io
-            resources:
-              - ingressroutes
-              - ingressroutetcps
-              - ingressrouteudps
-              - middlewares
-              - middlewaretcps
-              - tlsoptions
-              - tlsstores
-              - traefikservices
-              - serverstransports
-              - serverstransporttcps
-            verbs:
-              - get
-              - list
-              - watch
-  - it: cluster rbac should be created when version is v3
-    set:
-      image:
-        tag: v3.0.0-beta3
+  - it: cluster rbac should be created by default
     asserts:
       - isKind:
           of: ClusterRole
@@ -655,8 +582,6 @@ tests:
         template: rbac/rolebinding.yaml
   - it: should provide expected cluster rbac when k8s gw api is enabled
     set:
-      image:
-        tag: v3.0.0
       providers:
         kubernetesGateway:
           enabled: true
@@ -737,13 +662,7 @@ tests:
             verbs:
               - update
 
-  - it: should provide required configmaps cluster rbac when proxy >= v3.4.x on kubernetesCRD provider
-    set:
-      image:
-        tag: v3.4.1
-      providers:
-        kubernetesCRD:
-          enabled: true
+  - it: should provide expected cluster rbac
     asserts:
       - template: rbac/clusterrole.yaml
         contains:
@@ -759,11 +678,6 @@ tests:
               - get
               - list
               - watch
-  - it: should provide required configmaps cluster rbac when proxy >= v3.5.x
-    set:
-      image:
-        tag: v3.5.0
-    asserts:
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
@@ -775,10 +689,8 @@ tests:
             verbs:
               - get
 
-  - it: should provide expected role rbac when proxy >= v3.4.x
+  - it: should provide expected role rbac
     set:
-      image:
-        tag: v3.4.1
       providers:
         kubernetesCRD:
           enabled: true
@@ -800,28 +712,8 @@ tests:
               - watch
 
 
-  - it: should provide expected role rbac when proxy >= v3.5.x
-    set:
-      image:
-        tag: v3.5.0
-      rbac:
-        namespaced: true
-    asserts:
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - pods
-            verbs:
-              - get
-
   - it: should contain additional RBACS for hub API gateway
     set:
-      image:
-        tag: v3.1.0
       hub:
         token: xxx
     asserts:

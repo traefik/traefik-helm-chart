@@ -969,12 +969,12 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].startupProbe.periodSeconds
           value: 5
-  - it: should set disableClusterScopeResources when version > v3.1.2+ on both providers
+  - it: should set disableClusterScopeResources on both providers
     set:
       rbac:
         namespaced: true
       image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -982,7 +982,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.disableClusterScopeResources=true"
-  - it: should set disableClusterScopeResources when version > v3.1.2+ only on crd enabled provider
+  - it: should set disableClusterScopeResources when version > v3.6.10+ only on crd enabled provider
     set:
       rbac:
         namespaced: true
@@ -990,12 +990,12 @@ tests:
         kubernetesIngress:
           enabled: false
       image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.disableClusterScopeResources=true"
-  - it: should set disableClusterScopeResources when version > v3.1.2+ only on ingress enabled provider
+  - it: should set disableClusterScopeResources only on ingress enabled provider
     set:
       rbac:
         namespaced: true
@@ -1003,7 +1003,7 @@ tests:
         kubernetesCRD:
           enabled: false
       image:
-        tag: v3.1.2
+        tag: v3.6.10
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args

@@ -4,10 +4,10 @@ templates:
 tests:
   - it: should render correctly when offering_version is set
     chart:
-      appVersion: v3.3.0
+      appVersion: v3.6.10
     set:
       offering_version: v3.6.8
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v3.3.0
+          value: docker.io/traefik:v3.6.10

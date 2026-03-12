@@ -71,7 +71,7 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: latest-v3.0
+        tag: latest
       hub:
         token: "xxx"
     asserts:
@@ -137,8 +137,6 @@ tests:
           enabled: false
         kubernetesIngress:
           enabled: false
-      image:
-        tag: v3.1.2
     asserts:
       - failedTemplate:
         errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider"
