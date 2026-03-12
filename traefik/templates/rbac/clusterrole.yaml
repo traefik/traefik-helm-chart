@@ -48,7 +48,7 @@ rules:
       - delete
       - deletecollection
     {{- end }}
-  {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNginx.enabled }}
+  {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNGINX.enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io

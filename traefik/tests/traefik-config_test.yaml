@@ -1104,10 +1104,10 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should fail on typo with kubernetesIngressNginx provider settings
+  - it: should fail on typo with kubernetesIngressNGINX provider settings
     set:
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           namespaces: [ "shouldfail" ] # typo here
     asserts:
       - failedTemplate:

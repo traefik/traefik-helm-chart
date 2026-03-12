@@ -2380,7 +2380,7 @@
                     },
                     "additionalProperties": false
                 },
-                "kubernetesIngressNginx": {
+                "kubernetesIngressNGINX": {
                     "type": "object",
                     "properties": {
                         "certAuthFilePath": {

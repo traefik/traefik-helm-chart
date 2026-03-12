@@ -1359,7 +1359,7 @@ Starting with Traefik Proxy v3.6.2, one can use the Kubernetes Ingress NGINX pro
 
 ```yaml
 providers:
-  kubernetesIngressNginx:
+  kubernetesIngressNGINX:
     enabled: true
 ```
 
@@ -1457,14 +1457,14 @@ You should see the whoami response with your request details.
 ```bash
 helm upgrade --install traefik traefik/traefik \
   --namespace traefik --create-namespace \
-  --set providers.kubernetesIngressNginx.enabled=true
+  --set providers.kubernetesIngressNGINX.enabled=true
 ```
 
 Or using a values file:
 
 ```yaml
 providers:
-  kubernetesIngressNginx:
+  kubernetesIngressNGINX:
     enabled: true
 ```
 

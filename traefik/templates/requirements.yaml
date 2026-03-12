@@ -26,7 +26,7 @@
   {{- end }}
 {{- end }}
 
-{{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNginx).enabled}}
+{{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNGINX).enabled}}
   {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 

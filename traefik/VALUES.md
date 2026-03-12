@@ -429,22 +429,22 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
-| providers.kubernetesIngressNginx.certAuthFilePath | string | `""` | Kubernetes certificate authority file path (not needed for in-cluster client) |
-| providers.kubernetesIngressNginx.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
-| providers.kubernetesIngressNginx.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
-| providers.kubernetesIngressNginx.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
-| providers.kubernetesIngressNginx.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider (experimental) |
-| providers.kubernetesIngressNginx.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
-| providers.kubernetesIngressNginx.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
-| providers.kubernetesIngressNginx.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
-| providers.kubernetesIngressNginx.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
-| providers.kubernetesIngressNginx.publishService.pathOverride | string | `""` |  |
-| providers.kubernetesIngressNginx.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
-| providers.kubernetesIngressNginx.throttleDuration | string | `""` | Ingress refresh throttle duration |
-| providers.kubernetesIngressNginx.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
-| providers.kubernetesIngressNginx.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
-| providers.kubernetesIngressNginx.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
-| providers.kubernetesIngressNginx.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
+| providers.kubernetesIngressNGINX.certAuthFilePath | string | `""` | Kubernetes certificate authority file path (not needed for in-cluster client) |
+| providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
+| providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
+| providers.kubernetesIngressNGINX.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
+| providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider (experimental) |
+| providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
+| providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
+| providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
+| providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
+| providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
+| providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
+| providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
+| providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
+| providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
+| providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
+| providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
 | rbac.aggregateTo | list | `[]` |  |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | rbac.namespaced | bool | `false` |  |

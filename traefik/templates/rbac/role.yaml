@@ -47,7 +47,7 @@ rules:
       - get
       - list
       - watch
-{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNginx.enabled) }}
+{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNGINX.enabled) }}
   - apiGroups:
       - extensions
       - networking.k8s.io
