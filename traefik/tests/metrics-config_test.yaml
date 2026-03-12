@@ -1,9 +1,6 @@
 suite: Traefik Metrics configuration
 templates:
   - deployment.yaml
-capabilities:
-  majorVersion: 1
-  minorVersion: 16
 tests:
   - it: "should support to set prometheus: null"
     set:

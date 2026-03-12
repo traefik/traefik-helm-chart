@@ -1,16 +1,12 @@
 {{- $version := include "traefik.proxyVersion" $ }}
 {{- if (ne $version "experimental-v3.0") }}
-  {{- if (semverCompare "<v3.0.0-0" $version) }}
-    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3" -}}
+  {{- if (semverCompare "<v3.6.0-0" $version) }}
+    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3.6+" -}}
   {{- end }}
 {{- end }}
 
 {{- if and .Values.hub.enabled (not (contains "traefik-hub" .Values.image.repository)) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
-{{- end }}
-
-{{- if and (.Values.providers.kubernetesGateway).enabled (and (semverCompare "<v3.1.0-rc3" $version) (not .Values.experimental.kubernetesGateway.enabled)) }}
-  {{- fail "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true" -}}
 {{- end }}
 
 {{- if and (.Values.providers.knative).enabled (not .Values.experimental.knative) }}
@@ -30,65 +26,12 @@
   {{- end }}
 {{- end }}
 
-{{- if and (semverCompare "<v3.2.0-0" $version) (.Values.experimental.fastProxy.enabled)}}
-  {{- fail "ERROR: fastProxy is an experimental feature only available for traefik >= v3.2.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
-  {{- fail "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.6.0-0" $version) (.Values.experimental.knative)}}
-  {{- fail "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0." }}
-{{- end }}
-
 {{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNginx).enabled}}
   {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 
-{{- if and (semverCompare "<3.2.0-0" $version) (.Values.providers.kubernetesGateway.nativeLBByDefault)}}
-  {{- fail "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0" }}
-{{- end }}
-
-{{- if and (semverCompare "<3.5.0-0" $version) (.Values.providers.kubernetesIngress.strictPrefixMatching)}}
-  {{- fail "ERROR: strictPrefixMatching is a feature only available for traefik >= v3.5.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<3.5.2-0" $version) (eq .Values.logs.access.format "genericCLF")}}
-  {{- fail "ERROR: genericCLF is an accesslog format option only available for traefik >= v3.5.2." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.2.0-0" $version) (.Values.metrics.otlp.serviceName)}}
-  {{- fail "ERROR: serviceName is a feature only available for traefik >= v3.2.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.5.3-0" $version) (.Values.metrics.otlp.resourceAttributes)}}
-  {{- fail "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3." }}
-{{- end }}
-
 {{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
   {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.general.otlp.enabled)}}
-  {{- fail "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.3.0-0" $version) (.Values.logs.access.otlp.enabled)}}
-  {{- fail "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.1.0-0" $version) .Values.tracing.safeQueryParams }}
-  {{ fail "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."}}
-{{- end }}
-
-{{- range $portName, $config := .Values.ports }}
-  {{- if and (semverCompare "<v3.3.0-0" $version) (or (ne $config.observability.accessLogs nil) (ne $config.observability.metrics nil) (ne $config.observability.tracing nil) (ne $config.observability.tracingVerbosity nil)) }}
-    {{ fail "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."}}
-  {{- end }}
-  {{- if and (semverCompare "<v3.5.0-0" $version) (ne $config.observability.traceVerbosity nil) }}
-    {{ fail "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."}}
-  {{- end }}
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or

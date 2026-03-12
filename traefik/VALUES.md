@@ -21,7 +21,7 @@ A Traefik based Kubernetes ingress controller
 
 ## Requirements
 
-Kubernetes: `>=1.22.0-0`
+Kubernetes: `>=1.25.0-0`
 
 ## Values
 
@@ -327,7 +327,6 @@ Kubernetes: `>=1.22.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
-| podSecurityPolicy | object | `{"enabled":false}` | Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | string | `nil` | Enables access-logs for this entryPoint. |

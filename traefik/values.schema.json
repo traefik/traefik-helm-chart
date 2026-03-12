@@ -1830,15 +1830,6 @@
                 }
             }
         },
-        "podSecurityPolicy": {
-            "description": "Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding",
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                }
-            }
-        },
         "ports": {
             "type": "object",
             "additionalProperties": {
