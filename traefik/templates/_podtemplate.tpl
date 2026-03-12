@@ -591,48 +591,13 @@
           {{- with .Values.providers.kubernetesIngressNginx }}
            {{- if .enabled }}
           - "--providers.kubernetesingressnginx"
-            {{- with .controllerClass }}
-          - "--providers.kubernetesingressnginx.controllerclass={{ . }}"
-            {{- end }}
-            {{- with .ingressClass }}
-          - "--providers.kubernetesingressnginx.ingressclass={{ . }}"
-            {{- end }}
-            {{- if .ingressClassByName }}
-          - "--providers.kubernetesingressnginx.ingressclassbyname=true"
-            {{- end }}
-            {{- if .watchIngressWithoutClass }}
-          - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
-            {{- end }}
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNginx.namespaces" $ }}"
-            {{- end }}
-            {{- with .watchNamespaceSelector }}
-          - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
             {{- end }}
             {{- if and $.Values.service.enabled .publishService.enabled }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNginx.publishServicePath" $ }}"
             {{- end }}
-            {{- with .publishStatusAddress }}
-          - "--providers.kubernetesingressnginx.publishstatusaddress={{ . }}"
-            {{- end }}
-            {{- with .defaultBackendService }}
-          - "--providers.kubernetesingressnginx.defaultbackendservice={{ . }}"
-            {{- end }}
-            {{- if .disableSvcExternalName }}
-          - "--providers.kubernetesingressnginx.disablesvcexternalname=true"
-            {{- end }}
-            {{- with .throttleDuration }}
-          - "--providers.kubernetesingressnginx.throttleduration={{ . }}"
-            {{- end }}
-            {{- with .certAuthFilePath }}
-          - "--providers.kubernetesingressnginx.certauthfilepath={{ . }}"
-            {{- end }}
-            {{- with .endpoint }}
-          - "--providers.kubernetesingressnginx.endpoint={{ . }}"
-            {{- end }}
-            {{- with .token }}
-          - "--providers.kubernetesingressnginx.token={{ . }}"
-            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
