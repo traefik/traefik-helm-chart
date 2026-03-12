@@ -1,9 +1,6 @@
 suite: Pod configuration
 templates:
   - deployment.yaml
-capabilities:
-  majorVersion: 1
-  minorVersion: 16
 tests:
   - it: should have set GOMAXPROCS with cpu limit
     set:

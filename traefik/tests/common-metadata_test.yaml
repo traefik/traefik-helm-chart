@@ -40,10 +40,9 @@ tests:
         globalLabel: isConfigured
     capabilities:
       majorVersion: 1
-      minorVersion: 16
+      minorVersion: 25
       apiVersions:
         - monitoring.coreos.com/v1
-        - autoscaling/v2beta1
     asserts:
       - isNotEmpty:
           path: metadata.labels

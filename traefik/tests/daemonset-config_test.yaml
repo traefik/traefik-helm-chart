@@ -2,10 +2,7 @@ suite: DaemonSet configuration
 templates:
   - daemonset.yaml
 tests:
-  - it: should have a rollingUpdate strategy with default values on k8s > 1.21
-    capabilities:
-      majorVersion: 1
-      minorVersion: 21
+  - it: should have a rollingUpdate strategy with default values
     set:
       deployment:
         kind: DaemonSet

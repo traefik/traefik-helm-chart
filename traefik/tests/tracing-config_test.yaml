@@ -1,9 +1,6 @@
 suite: Traefik Tracing configuration
 templates:
   - deployment.yaml
-capabilities:
-  majorVersion: 1
-  minorVersion: 16
 tests:
   - it: should be possible to set specific parameters on otlp
     set:

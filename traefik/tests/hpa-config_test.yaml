@@ -1,9 +1,6 @@
 suite: HPA configuration
 templates:
   - hpa.yaml
-capabilities:
-  majorVersion: 1
-  minorVersion: 25
 tests:
   - it: should fail without maxReplicas
     set:
