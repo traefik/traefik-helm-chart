@@ -2262,7 +2262,7 @@
                             "type": "string"
                         },
                         "namespaces": {
-                            "description": "Array of namespaces to watch. If left empty, Traefik watches all namespaces.",
+                            "description": "Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.",
                             "type": "array"
                         },
                         "nativeLBByDefault": {
