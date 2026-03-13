@@ -741,6 +741,9 @@
               {{- if .access.addInternals }}
           - "--accesslog.addinternals"
               {{- end }}
+              {{- if .access.dualOutput }}
+          - "--accesslog.dualOutput=true"
+              {{- end }}
               {{- with .access.bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
               {{- end }}

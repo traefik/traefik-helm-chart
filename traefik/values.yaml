@@ -514,6 +514,8 @@ logs:
       minduration: ""
     # -- Enables accessLogs for internal resources. Default: false.
     addInternals: false
+    # -- Enables access log output alongside OTLP (v3.7+).
+    dualOutput: false
     fields:
       general:
         # -- Set default mode for fields.names

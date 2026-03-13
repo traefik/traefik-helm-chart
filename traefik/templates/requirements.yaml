@@ -34,6 +34,10 @@
   {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.0-0" $version) .Values.logs.access.dualOutput }}
+  {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
     (eq .Values.ports.websecure.http.sanitizePath false)
     .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash

@@ -950,6 +950,19 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.filters.statuscodes=200,300-302"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.dualOutput=true"
+  - it: should be possible to enable access log dualOutput
+    set:
+      logs:
+        access:
+          enabled: true
+          dualOutput: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.dualOutput=true"
   - it: should set custom startupProbe
     set:
       startupProbe:
