@@ -190,7 +190,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.proxyBodySize=1.048576e+06"
+          content: "--providers.kubernetesingressnginx.proxyBodySize=1048576"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
