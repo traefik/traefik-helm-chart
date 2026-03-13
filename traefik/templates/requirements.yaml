@@ -30,12 +30,47 @@
   {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 
+{{- with .Values.providers.kubernetesIngressNGINX }}
+  {{- if and (semverCompare "<v3.7.0-0" $version) .enabled (or
+    (ne .proxyRequestBuffering nil)
+    (gt (.clientBodyBufferSize | int) 0)
+    (gt (.proxyBodySize | int) 0)
+    (ne .proxyBuffering nil)
+    (gt (.proxyBufferSize | int) 0)
+    (gt (.proxyBuffersNumber | int) 0)
+    (gt (.proxyConnectTimeout | int) 0)
+    (gt (.proxyReadTimeout | int) 0)
+    (gt (.proxySendTimeout | int) 0)
+    (not (empty .proxyNextUpstream))
+    (gt (.proxyNextUpstreamTries | int) 0)
+    (gt (.proxyNextUpstreamTimeout | int) 0)
+    (not (empty .customHTTPErrors))
+    (gt (.upstreamKeepaliveTimeout | int) 0)
+    (ne .allowCrossNamespaceResources nil)
+    (not (empty .globalAllowedResponseHeaders))
+    (ne .allowSnippetAnnotations nil)
+    (not (empty .httpEntryPoint))
+    (not (empty .httpsEntryPoint)) )}}
+    {{- fail "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0." }}
+  {{- end }}
+{{- end }}
+
 {{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
   {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
 {{- end }}
 
 {{- if and (semverCompare "<v3.7.0-0" $version) .Values.logs.access.dualOutput }}
   {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
+  {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+{{- end }}
+
+{{- range $name, $config := .Values.ports }}
+  {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
+  {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or

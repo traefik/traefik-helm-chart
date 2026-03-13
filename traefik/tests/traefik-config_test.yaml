@@ -873,6 +873,24 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.proxyProtocol.insecure"
+  - it: should have notAppendXForwardedFor arg when specified in values.yaml for port
+    set:
+      ports:
+        websecure:
+          forwardedHeaders:
+            notAppendXForwardedFor: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should not have notAppendXForwardedFor arg by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.notAppendXForwardedFor=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.forwardedHeaders.notAppendXForwardedFor=true"
   - it: should have multiple transport configuration args when specified in values.yaml for port
     set:
       ports:

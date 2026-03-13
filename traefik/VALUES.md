@@ -98,6 +98,7 @@ Kubernetes: `>=1.25.0-0`
 | gatewayClass.name | string | `""` | Set a custom name to GatewayClass |
 | global.azure | object | See _values.yaml_ | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.checkNewVersion | bool | `true` |  |
+| global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.aigateway.enabled | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
@@ -351,6 +352,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
+| ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.web.http.redirections.entryPoint | object | `{}` | Port Redirections Added in 2.2, one can make permanent redirects via entrypoints. Same sets of parameters: to, scheme, permanent and priority. https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example |
 | ports.web.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
@@ -370,6 +372,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
+| ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | string | `nil` |  |
 | ports.websecure.http.encodedCharacters | object | nil | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
@@ -431,19 +434,38 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
+| providers.kubernetesIngressNGINX.allowCrossNamespaceResources | string | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
+| providers.kubernetesIngressNGINX.allowSnippetAnnotations | string | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |
 | providers.kubernetesIngressNGINX.certAuthFilePath | string | `""` | Kubernetes certificate authority file path (not needed for in-cluster client) |
+| providers.kubernetesIngressNGINX.clientBodyBufferSize | int | `0` | Default buffer size for reading client request body in bytes (default: 16384) |
 | providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
+| providers.kubernetesIngressNGINX.customHTTPErrors | list | `[]` | Defines which HTTP status codes should result in calling the default backend to return an error page |
 | providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
-| providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider (experimental) |
+| providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
+| providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
+| providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
+| providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
+| providers.kubernetesIngressNGINX.proxyBodySize | int | `0` | Default maximum size of a client request body in bytes (default: 1048576) |
+| providers.kubernetesIngressNGINX.proxyBufferSize | int | `0` | Default buffer size for reading the response body in bytes (default: 8192) |
+| providers.kubernetesIngressNGINX.proxyBuffering | string | `nil` | Defines whether to enable response buffering (default: false) |
+| providers.kubernetesIngressNGINX.proxyBuffersNumber | int | `0` | Default number of buffers for reading a response (default: 4) |
+| providers.kubernetesIngressNGINX.proxyConnectTimeout | int | `0` | Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.proxyNextUpstream | string | `""` | Defines in which cases a request should be retried (default: "error timeout") |
+| providers.kubernetesIngressNGINX.proxyNextUpstreamTimeout | int | `0` | Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0) |
+| providers.kubernetesIngressNGINX.proxyNextUpstreamTries | int | `0` | Limits the number of possible tries if the backend server does not reply (default: 3) |
+| providers.kubernetesIngressNGINX.proxyReadTimeout | int | `0` | Amount of time between two successive read operations. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.proxyRequestBuffering | string | `nil` | Defines whether to enable request buffering (default: false) |
+| providers.kubernetesIngressNGINX.proxySendTimeout | int | `0` | Amount of time between two successive write operations. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
+| providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `0` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
 | providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
 | providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
