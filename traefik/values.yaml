@@ -205,6 +205,8 @@ api:  # @schema additionalProperties: false
   debug:  # @schema type:[boolean, null]
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
+  # -- Custom name for the dashboard (v3.7+).
+  dashboardName: ""  # @schema type:[string, null]
 
 # -- Only dashboard & healthcheck IngressRoute are supported.
 # It's recommended to create workloads CR outside of this Chart.

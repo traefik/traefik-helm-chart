@@ -32,6 +32,13 @@
                     "description": "Enable the dashboard",
                     "type": "boolean"
                 },
+                "dashboardName": {
+                    "description": "Custom name for the dashboard (v3.7+).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "debug": {
                     "description": "Enable the debug API",
                     "type": [

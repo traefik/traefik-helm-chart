@@ -32,6 +32,7 @@ Kubernetes: `>=1.25.0-0`
 | affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | api.basePath | string | `""` | Configure API basePath |
 | api.dashboard | bool | `true` | Enable the dashboard |
+| api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
 | api.debug | string | `nil` | Enable the debug API |
 | api.insecure | string | `nil` | Enable the insecure API (HTTP) |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
