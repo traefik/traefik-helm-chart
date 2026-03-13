@@ -155,6 +155,19 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
+| hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
+| hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
+| hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
+| hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
+| hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
+| hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -366,6 +379,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.web.targetPort | string | `nil` |  |
 | ports.web.transport | object | nil | Set transport settings for the entrypoint; see also https://doc.traefik.io/traefik/routing/entrypoints/#transport |
+| ports.web.uplink | string | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
 | ports.websecure.containerPort | string | `nil` |  |
