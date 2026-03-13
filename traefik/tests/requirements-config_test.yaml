@@ -117,7 +117,7 @@ tests:
   - it: should not fail when using kubernetesIngressNGINX v3.7 options on traefik >= 3.7.0
     set:
       image:
-        tag: v3.7.0
+        tag: v3.7.0-ea.1
       providers:
         kubernetesIngressNGINX:
           enabled: true
