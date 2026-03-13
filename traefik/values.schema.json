@@ -436,6 +436,13 @@
                 "checkNewVersion": {
                     "type": "boolean"
                 },
+                "notAppendXForwardedFor": {
+                    "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "sendAnonymousUsage": {
                     "description": "Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/",
                     "type": "boolean"
@@ -1881,6 +1888,13 @@
                         "properties": {
                             "insecure": {
                                 "type": "boolean"
+                            },
+                            "notAppendXForwardedFor": {
+                                "description": "Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).",
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
                             },
                             "trustedIPs": {
                                 "description": "Trust forwarded headers information (X-Forwarded-*).",

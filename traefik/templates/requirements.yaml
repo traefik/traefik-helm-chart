@@ -63,6 +63,16 @@
   {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
+  {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+{{- end }}
+
+{{- range $name, $config := .Values.ports }}
+  {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
+  {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
     (eq .Values.ports.websecure.http.sanitizePath false)
     .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash

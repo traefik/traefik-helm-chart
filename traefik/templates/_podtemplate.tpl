@@ -201,6 +201,9 @@
            {{- if .sendAnonymousUsage }}
           - "--global.sendAnonymousUsage"
            {{- end }}
+           {{- if .notAppendXForwardedFor }}
+          - "--global.notAppendXForwardedFor=true"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
@@ -675,6 +678,9 @@
               {{- end }}
               {{- if $config.forwardedHeaders.insecure }}
           - "--entryPoints.{{ $entrypoint }}.forwardedHeaders.insecure"
+              {{- end }}
+              {{- if $config.forwardedHeaders.notAppendXForwardedFor }}
+          - "--entryPoints.{{ $entrypoint }}.forwardedHeaders.notAppendXForwardedFor=true"
               {{- end }}
             {{- end }}
             {{- if $config.proxyProtocol }}
