@@ -5,7 +5,6 @@ on:
   pull_request:
     paths:
       - .github/fixtures/changelog-traefik.md
-      - .github/fixtures/changelog-traefik-crds.md
       - .github/workflows/changelog.json
       - .github/workflows/release.yml
 
@@ -18,7 +17,7 @@ jobs:
 
       - name: Render traefik changelog configuration
         env:
-          REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
+          REGEXP: '(\\(.+\\))'
         run: |
           export DATE=2025-01-28; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
 
@@ -42,42 +41,6 @@ jobs:
         uses: LouisBrunner/diff-action@9ea7b75986aa27143ad4928974c98a5a1bd92170 # v2.2.0
         with:
           old: .github/fixtures/changelog-traefik.md
-          new: /tmp/changelog.md
-          mode: strict
-          tolerance: same
-
-  test-crds:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-
-      - name: Render traefik changelog configuration
-        env:
-          REGEXP: '\\((CRDs|CRDs-.+)\\)'
-        run: |
-          export DATE=2025-01-13; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
-
-      - name: Build Changelog
-        id: changelog
-        uses: mikepenz/release-changelog-builder-action@a34a8009a9588bb86b02a873cf592440e96a5da8 # v6.1.1
-        with:
-          fromTag: crds_v1.0.0
-          toTag: crds_v1.1.0
-          configuration: "/tmp/changelog.json"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Write changelog
-        run: |
-          cat <<EOF > /tmp/changelog.md
-          ${{ steps.changelog.outputs.changelog }}
-          EOF
-
-      - name: Check that the files are the exact same
-        uses: LouisBrunner/diff-action@9ea7b75986aa27143ad4928974c98a5a1bd92170 # v2.2.0
-        with:
-          old: .github/fixtures/changelog-traefik-crds.md
           new: /tmp/changelog.md
           mode: strict
           tolerance: same

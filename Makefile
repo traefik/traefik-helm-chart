@@ -7,16 +7,12 @@ IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.19.0-1.0.1
 
 traefik/tests/__snapshot__:
 	@mkdir traefik/tests/__snapshot__
-	@mkdir traefik-crds/tests/__snapshot__
 
 test: traefik/tests/__snapshot__
 	docker run ${DOCKER_ARGS} --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_HELM_UNITTEST) /charts/hack/test.sh
 
 test-ns:
 	./hack/check-ns.sh
-
-test-crds-consistency:
-	./hack/check-crds-consistency.sh
 
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
@@ -34,7 +30,6 @@ test-%:
 # $ helm plugin install https://github.com/losisin/helm-values-schema-json.git
 schema:
 	cd traefik && helm schema --use-helm-docs
-	cd traefik-crds && helm schema
 
 changelog:
 	@echo "== Updating Changelogs..."
