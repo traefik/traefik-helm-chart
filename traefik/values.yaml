@@ -377,7 +377,7 @@ providers:
 
   # @schema additionalProperties: false
   kubernetesIngressNGINX:
-    # -- Enable Kubernetes Ingress NGINX provider (experimental)
+    # -- Enable Kubernetes Ingress NGINX provider
     enabled: false
     # -- Ingress Class Controller value this controller satisfies
     controllerClass: "k8s.io/ingress-nginx"
@@ -409,6 +409,44 @@ providers:
     endpoint: ""
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
     token: ""
+    # -- Defines whether to enable request buffering (default: false)
+    proxyRequestBuffering: null  # @schema type:[boolean, null]
+    # -- Default buffer size for reading client request body in bytes (default: 16384)
+    clientBodyBufferSize: 0
+    # -- Default maximum size of a client request body in bytes (default: 1048576)
+    proxyBodySize: 0
+    # -- Defines whether to enable response buffering (default: false)
+    proxyBuffering: null  # @schema type:[boolean, null]
+    # -- Default buffer size for reading the response body in bytes (default: 8192)
+    proxyBufferSize: 0
+    # -- Default number of buffers for reading a response (default: 4)
+    proxyBuffersNumber: 0
+    # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
+    proxyConnectTimeout: 0
+    # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
+    proxyReadTimeout: 0
+    # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
+    proxySendTimeout: 0
+    # -- Defines in which cases a request should be retried (default: "error timeout")
+    proxyNextUpstream: ""
+    # -- Limits the number of possible tries if the backend server does not reply (default: 3)
+    proxyNextUpstreamTries: 0
+    # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
+    proxyNextUpstreamTimeout: 0
+    # -- Defines which HTTP status codes should result in calling the default backend to return an error page
+    customHTTPErrors: []
+    # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
+    upstreamKeepaliveTimeout: 0
+    # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
+    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+    # -- List of allowed response headers inside the custom headers annotations
+    globalAllowedResponseHeaders: []
+    # -- Enables parsing and adding -snippet annotations/directives (default: false)
+    allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    # -- Defines the EntryPoint to use for HTTP requests
+    httpEntryPoint: ""
+    # -- Defines the EntryPoint to use for HTTPS requests
+    httpsEntryPoint: ""
 
   # @schema additionalProperties: false
   knative:
