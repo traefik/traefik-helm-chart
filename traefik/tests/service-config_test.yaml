@@ -33,7 +33,8 @@ tests:
   - it: should be a custom type when specified via values
     set:
       service:
-        type: NodePort
+        spec:
+          type: NodePort
     asserts:
       - equal:
           path: spec.type
@@ -182,7 +183,8 @@ tests:
   - it: should have custom ipFamilyPolicy when specified via values
     set:
       service:
-        ipFamilyPolicy: PreferDualStack
+        spec:
+          ipFamilyPolicy: PreferDualStack
       ports:
         udp:
           port: 3000
@@ -205,8 +207,9 @@ tests:
   - it: should have custom ipFamilies when specified via values
     set:
       service:
-        ipFamilies:
-          - IPv6
+        spec:
+          ipFamilies:
+            - IPv6
       ports:
         udp:
           port: 3000
@@ -250,13 +253,13 @@ tests:
               enabled: true
     documentIndex: 0
     asserts:
-    - contains:
-        path: spec.ports
-        content:
-          port: 443
-          name: websecure-http3
-          targetPort: websecure-http3
-          protocol: UDP
+      - contains:
+          path: spec.ports
+          content:
+            port: 443
+            name: websecure-http3
+            targetPort: websecure-http3
+            protocol: UDP
   - it: should be possible to advertise a different http3 UDP port
     set:
       ports:
@@ -269,13 +272,13 @@ tests:
               enabled: true
     documentIndex: 0
     asserts:
-    - contains:
-        path: spec.ports
-        content:
-          port: 4443
-          name: websecure-http3
-          targetPort: websecure-http3
-          protocol: UDP
+      - contains:
+          path: spec.ports
+          content:
+            port: 4443
+            name: websecure-http3
+            targetPort: websecure-http3
+            protocol: UDP
   - it: should split TCP and UDP Service on http3 when single is false
     set:
       ports:
@@ -285,24 +288,24 @@ tests:
       service:
         single: false
     asserts:
-    - hasDocuments:
-        count: 2
-    - contains:
-        path: spec.ports
-        content:
-          port: 443
-          name: websecure
-          targetPort: websecure
-          protocol: TCP
-      documentIndex: 0
-    - contains:
-        path: spec.ports
-        content:
-          port: 443
-          name: websecure-http3
-          targetPort: websecure-http3
-          protocol: UDP
-      documentIndex: 1
+      - hasDocuments:
+          count: 2
+      - contains:
+          path: spec.ports
+          content:
+            port: 443
+            name: websecure
+            targetPort: websecure
+            protocol: TCP
+        documentIndex: 0
+      - contains:
+          path: spec.ports
+          content:
+            port: 443
+            name: websecure-http3
+            targetPort: websecure-http3
+            protocol: UDP
+        documentIndex: 1
   - it: should use advertisedPort with splitted TCP and UDP Service on http3 when single is false
     set:
       ports:
@@ -313,24 +316,24 @@ tests:
       service:
         single: false
     asserts:
-    - hasDocuments:
-        count: 2
-    - contains:
-        path: spec.ports
-        content:
-          port: 443
-          name: websecure
-          targetPort: websecure
-          protocol: TCP
-      documentIndex: 0
-    - contains:
-        path: spec.ports
-        content:
-          port: 4443
-          name: websecure-http3
-          targetPort: websecure-http3
-          protocol: UDP
-      documentIndex: 1
+      - hasDocuments:
+          count: 2
+      - contains:
+          path: spec.ports
+          content:
+            port: 443
+            name: websecure
+            targetPort: websecure
+            protocol: TCP
+        documentIndex: 0
+      - contains:
+          path: spec.ports
+          content:
+            port: 4443
+            name: websecure-http3
+            targetPort: websecure-http3
+            protocol: UDP
+        documentIndex: 1
 
   - it: should not be possible to use http3 without enabling tls
     set:
