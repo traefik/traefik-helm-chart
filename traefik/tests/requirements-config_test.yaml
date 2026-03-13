@@ -303,6 +303,26 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
+  - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      ports:
+        websecure:
+          forwardedHeaders:
+            notAppendXForwardedFor: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using global notAppendXForwardedFor on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      global:
+        notAppendXForwardedFor: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0."
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:
