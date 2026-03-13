@@ -1137,7 +1137,10 @@ rbac:  # @schema additionalProperties: false
   namespaced: false
   # Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
-  aggregateTo: []
+  # -- Aggregate Traefik admin role to specified user roles
+  aggregateAdminTo: []
+  # -- Aggregate Traefik view role to specified user roles
+  aggregateViewTo: []
 
 # -- The service account the pods will use to interact with the Kubernetes API
 serviceAccount:  # @schema additionalProperties: false
