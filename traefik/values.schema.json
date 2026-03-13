@@ -2426,7 +2426,7 @@
                             "type": "boolean"
                         },
                         "enabled": {
-                            "description": "Enable Kubernetes Ingress NGINX provider (experimental)",
+                            "description": "Enable Kubernetes Ingress NGINX provider",
                             "type": "boolean"
                         },
                         "endpoint": {

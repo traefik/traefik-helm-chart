@@ -377,7 +377,7 @@ providers:
 
   # @schema additionalProperties: false
   kubernetesIngressNGINX:
-    # -- Enable Kubernetes Ingress NGINX provider (experimental)
+    # -- Enable Kubernetes Ingress NGINX provider
     enabled: false
     # -- Ingress Class Controller value this controller satisfies
     controllerClass: "k8s.io/ingress-nginx"

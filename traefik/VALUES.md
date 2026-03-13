@@ -438,7 +438,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.customHTTPErrors | list | `[]` | Defines which HTTP status codes should result in calling the default backend to return an error page |
 | providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
-| providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider (experimental) |
+| providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
 | providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
