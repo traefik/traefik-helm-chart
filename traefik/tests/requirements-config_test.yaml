@@ -272,6 +272,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using accesslog dualOutput on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      logs:
+        access:
+          dualOutput: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:

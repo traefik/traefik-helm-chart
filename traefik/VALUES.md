@@ -205,6 +205,7 @@ Kubernetes: `>=1.25.0-0`
 | livenessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | logs.access.addInternals | bool | `false` | Enables accessLogs for internal resources. Default: false. |
 | logs.access.bufferingSize | string | `nil` | Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize) |
+| logs.access.dualOutput | bool | `false` | Enables access log output alongside OTLP (v3.7+). |
 | logs.access.enabled | bool | `false` | To enable access logs |
 | logs.access.fields.general.defaultmode | string | `"keep"` | Set default mode for fields.names |
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |

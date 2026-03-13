@@ -1064,6 +1064,10 @@
                                 "null"
                             ]
                         },
+                        "dualOutput": {
+                            "description": "Enables access log output alongside OTLP (v3.7+).",
+                            "type": "boolean"
+                        },
                         "enabled": {
                             "description": "To enable access logs",
                             "type": "boolean"
