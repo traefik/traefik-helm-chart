@@ -982,11 +982,9 @@
                             }
                         }
                     }
-                },
-                "uplinkEntryPoints": {
-                    "type": "object"
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "image": {
             "type": "object",
@@ -2288,6 +2286,13 @@
                                 }
                             }
                         }
+                    },
+                    "uplink": {
+                        "description": "Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription.",
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
                     }
                 },
                 "additionalProperties": false
