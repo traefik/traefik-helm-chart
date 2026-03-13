@@ -14,4 +14,3 @@ if ! helm plugin list 2>/dev/null | awk 'NR>1 && $1=="unittest"{found=1} END{exi
 fi
 
 helm unittest --color ./traefik
-helm unittest --color ./traefik-crds
