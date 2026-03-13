@@ -404,6 +404,7 @@ tests:
           acme:
             email: email@example.com
             emailaddresses: foo@example.com,bar@example.org
+            certificateTimeout: 60s
             clientResponseHeaderTimeout: 1m
             clientTimeout: 1m
             disableCommonName: true
@@ -445,6 +446,9 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.clientTimeout=1m"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--certificatesresolvers.myAcmeResolver.acme.certificateTimeout=60s"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--certificatesresolvers.myAcmeResolver.acme.disableCommonName=true"
