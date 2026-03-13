@@ -208,7 +208,6 @@ api:  # @schema additionalProperties: false
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
 
-
 # -- Only dashboard & healthcheck IngressRoute are supported.
 # It's recommended to create workloads CR outside of this Chart.
 # @default -- See _values.yaml_
