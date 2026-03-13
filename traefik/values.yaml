@@ -409,7 +409,7 @@ providers:
     endpoint: ""
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
     token: ""
-    ## -- ConfigMap options available within the NGINX Ingress Controller ConfigMap
+    ## ConfigMap options available within the NGINX Ingress Controller ConfigMap
     # -- Defines whether to enable request buffering (default: false)
     proxyRequestBuffering: null  # @schema type:[boolean, null]
     # -- Default buffer size for reading client request body in bytes (default: 16384)
