@@ -826,7 +826,7 @@ global:
   # See https://doc.traefik.io/traefik/contributing/data-collection/
   sendAnonymousUsage: false
   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
-  notAppendXForwardedFor:  # @schema type:[boolean, null]
+  notAppendXForwardedFor: false
   # -- Required for Azure Marketplace integration.
   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
   # @default -- See _values.yaml_
@@ -916,7 +916,7 @@ ports:
       trustedIPs: []
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
-      notAppendXForwardedFor:  # @schema type:[boolean, null]
+      notAppendXForwardedFor: false
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1000,7 +1000,7 @@ ports:
       trustedIPs: []
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
-      notAppendXForwardedFor:  # @schema type:[boolean, null]
+      notAppendXForwardedFor: false
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
