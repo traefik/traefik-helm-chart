@@ -1,0 +1,215 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.17.1
+  name: uplinks.hub.traefik.io
+spec:
+  group: hub.traefik.io
+  names:
+    kind: Uplink
+    listKind: UplinkList
+    plural: uplinks
+    singular: uplink
+  scope: Namespaced
+  versions:
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: |-
+          Uplink is an inter-cluster service advertisement: a child cluster declares an Uplink to advertise
+          to a parent cluster that it can handle a particular workload.
+        properties:
+          apiVersion:
+            description: |-
+              APIVersion defines the versioned schema of this representation of an object.
+              Servers should convert recognized schemas to the latest internal value, and
+              may reject unrecognized values.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+            type: string
+          kind:
+            description: |-
+              Kind is a string value representing the REST resource this object represents.
+              Servers may infer this from the endpoint the client submits requests to.
+              Cannot be updated.
+              In CamelCase.
+              More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: UplinkSpec describes the Uplink.
+            properties:
+              entryPoints:
+                description: EntryPoints references uplinkEntryPoints. When omitted,
+                  uses default uplinkEntrypoints.
+                items:
+                  type: string
+                type: array
+              exposeName:
+                description: |-
+                  ExposeName is the name of the service to expose.
+                  By default it uses <namespace>-<name>.
+                type: string
+              healthCheck:
+                description: HealthCheck configures the active health check on the
+                  parent cluster for this uplink's load balancer.
+                properties:
+                  followRedirects:
+                    description: |-
+                      FollowRedirects defines whether redirects should be followed during the health check calls.
+                      Default: true
+                    type: boolean
+                  headers:
+                    additionalProperties:
+                      type: string
+                    description: Headers defines custom headers to be sent to the
+                      health check endpoint.
+                    type: object
+                  hostname:
+                    description: Hostname defines the value of hostname in the Host
+                      header of the health check request.
+                    type: string
+                  interval:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: |-
+                      Interval defines the frequency of the health check calls for healthy targets.
+                      Default: 30s
+                    x-kubernetes-int-or-string: true
+                  method:
+                    description: Method defines the healthcheck method.
+                    type: string
+                  mode:
+                    description: |-
+                      Mode defines the health check mode.
+                      If defined to grpc, will use the gRPC health check protocol to probe the server.
+                      Default: http
+                    type: string
+                  path:
+                    description: Path defines the server URL path for the health check
+                      endpoint.
+                    type: string
+                  port:
+                    description: Port defines the server URL port for the health check
+                      endpoint.
+                    type: integer
+                  scheme:
+                    description: Scheme replaces the server URL scheme for the health
+                      check endpoint.
+                    type: string
+                  status:
+                    description: Status defines the expected HTTP status code of the
+                      response to the health check request.
+                    type: integer
+                  timeout:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: |-
+                      Timeout defines the maximum duration Traefik will wait for a health check request before considering the server unhealthy.
+                      Default: 5s
+                    x-kubernetes-int-or-string: true
+                  unhealthyInterval:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: |-
+                      UnhealthyInterval defines the frequency of the health check calls for unhealthy targets.
+                      When UnhealthyInterval is not defined, it defaults to the Interval value.
+                      Default: 30s
+                    x-kubernetes-int-or-string: true
+                type: object
+              passiveHealthCheck:
+                description: PassiveHealthCheck configures the passive health check
+                  on the parent cluster for this uplink's load balancer.
+                properties:
+                  failureWindow:
+                    anyOf:
+                    - type: integer
+                    - type: string
+                    description: FailureWindow defines the time window during which
+                      the failed attempts must occur for the server to be marked as
+                      unhealthy. It also defines for how long the server will be considered
+                      unhealthy.
+                    x-kubernetes-int-or-string: true
+                  maxFailedAttempts:
+                    description: MaxFailedAttempts is the number of consecutive failed
+                      attempts allowed within the failure window before marking the
+                      server as unhealthy.
+                    type: integer
+                type: object
+              weight:
+                description: Weight for WRR on the parent.
+                type: integer
+                x-kubernetes-validations:
+                - message: must be a positive number
+                  rule: self >= 0
+            type: object
+          status:
+            description: The current status of this Uplink.
+            properties:
+              conditions:
+                items:
+                  description: Condition contains details for one aspect of the current
+                    state of this API Resource.
+                  properties:
+                    lastTransitionTime:
+                      description: |-
+                        lastTransitionTime is the last time the condition transitioned from one status to another.
+                        This should be when the underlying condition changed.  If that is not known, then using the time when the API field changed is acceptable.
+                      format: date-time
+                      type: string
+                    message:
+                      description: |-
+                        message is a human readable message indicating details about the transition.
+                        This may be an empty string.
+                      maxLength: 32768
+                      type: string
+                    observedGeneration:
+                      description: |-
+                        observedGeneration represents the .metadata.generation that the condition was set based upon.
+                        For instance, if .metadata.generation is currently 12, but the .status.conditions[x].observedGeneration is 9, the condition is out of date
+                        with respect to the current state of the instance.
+                      format: int64
+                      minimum: 0
+                      type: integer
+                    reason:
+                      description: |-
+                        reason contains a programmatic identifier indicating the reason for the condition's last transition.
+                        Producers of specific condition types may define expected values and meanings for this field,
+                        and whether the values are considered a guaranteed API.
+                        The value should be a CamelCase string.
+                        This field may not be empty.
+                      maxLength: 1024
+                      minLength: 1
+                      pattern: ^[A-Za-z]([A-Za-z0-9_,:]*[A-Za-z0-9_])?$
+                      type: string
+                    status:
+                      description: status of the condition, one of True, False, Unknown.
+                      enum:
+                      - "True"
+                      - "False"
+                      - Unknown
+                      type: string
+                    type:
+                      description: type of condition in CamelCase or in foo.example.com/CamelCase.
+                      maxLength: 316
+                      pattern: ^([a-z0-9]([-a-z0-9]*[a-z0-9])?(\.[a-z0-9]([-a-z0-9]*[a-z0-9])?)*/)?(([A-Za-z0-9][-A-Za-z0-9_.]*)?[A-Za-z0-9])$
+                      type: string
+                  required:
+                  - lastTransitionTime
+                  - message
+                  - reason
+                  - status
+                  - type
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
