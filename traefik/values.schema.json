@@ -928,7 +928,7 @@
                     "type": "object",
                     "properties": {
                         "annotations": {
-                            "description": "Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class). It supports templating. One can set it with values like traefik/name: '{{ template \"traefik.name\" . }}'",
+                            "description": "Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)",
                             "type": "object"
                         },
                         "enabled": {
@@ -943,7 +943,7 @@
                             }
                         },
                         "labels": {
-                            "description": "Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels). It supports templating. One can set it with values like traefik/name: '{{ template \"traefik.name\" . }}'",
+                            "description": "Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)",
                             "type": "object"
                         },
                         "matchRule": {
@@ -979,7 +979,7 @@
                     "type": "object",
                     "properties": {
                         "annotations": {
-                            "description": "Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class). It supports templating. One can set it with values like traefik/name: '{{ template \"traefik.name\" . }}'",
+                            "description": "Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)",
                             "type": "object"
                         },
                         "enabled": {
@@ -994,7 +994,7 @@
                             }
                         },
                         "labels": {
-                            "description": "Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels). It supports templating. One can set it with values like traefik/name: '{{ template \"traefik.name\" . }}'",
+                            "description": "Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)",
                             "type": "object"
                         },
                         "matchRule": {
