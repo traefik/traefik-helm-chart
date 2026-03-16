@@ -362,6 +362,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.traefik.observability.tracing | string | `nil` | Defines whether a router attached to this EntryPoint produces traces by default. |
 | ports.traefik.port | int | `8080` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| ports.web.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass) |
 | ports.web.asDefault | string | `nil` |  |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
