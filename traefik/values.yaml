@@ -1209,6 +1209,9 @@ podSecurityContext:
 # See #595 for more details and traefik/tests/values/extra.yaml for example.
 extraObjects: []
 
+# -- Extra values to pass to the templates in extraObjects.
+extraValues: {}
+
 # -- This field overrides the default Release Namespace for Helm.
 # It will not affect optional CRDs such as `ServiceMonitor` and `PrometheusRules`
 namespaceOverride: ""
