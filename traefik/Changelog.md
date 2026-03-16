@@ -22,9 +22,14 @@
 
 **Upgrade Notes**
 
+
+> [!IMPORTANT]
+> Traefik v3.7.0-ea.1 comes with CRDs update. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
+
 There are 2 breaking changes in this release:
-- service `values.yaml` syntax is now aligned with K8S one (cf. https://github.com/traefik/traefik-helm-chart/pull/1686)
-- `providers.kubernetesIngressNginx` as been renamed to `providers.kubernetesIngressNGINX` to align with Traefik proxy naming (cf. https://github.com/traefik/traefik-helm-chart/pull/1714)
+
+- The `Service` spec syntax in _values.yaml_ is now aligned with Kubernetes syntax (cf. before / after example in the [PR](https://github.com/traefik/traefik-helm-chart/pull/1686) description)
+- `providers.kubernetesIngressNginx` as been renamed to `providers.kubernetesIngressNGINX` to align with Traefik proxy naming (cf. before / after example in the [PR](https://github.com/traefik/traefik-helm-chart/pull/1714) description)
 
 ### Default value changes
 
