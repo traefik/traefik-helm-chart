@@ -12,4 +12,18 @@ tests:
       count: 1
   - equal:
       path: metadata.name
-      value: RELEASE-NAME-api
+      value: release-name-api
+
+- it: should lowercase unsupported ingressroute names to RFC 1123
+  release:
+    name: release-name
+  set:
+    ingressRoute:
+      kubernetesCRD:
+        enabled: true
+        matchRule: PathPrefix(`/crd`)
+        entryPoints: ["web"]
+  asserts:
+  - equal:
+      path: metadata.name
+      value: release-name-kubernetescrd

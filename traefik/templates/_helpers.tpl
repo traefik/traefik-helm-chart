@@ -134,6 +134,20 @@ See also the traefik.portname helper.
 {{- end -}}
 
 {{/*
+Change input to a valid RFC 1123 resource name fragment.
+*/}}
+{{- define "traefik.rfc1123name" -}}
+{{- $name := . | toString | lower -}}
+{{- $name = regexReplaceAll "[^a-z0-9.-]+" $name "-" -}}
+{{- $name = regexReplaceAll "-+" $name "-" -}}
+{{- $name = trimAll "-." $name -}}
+{{- if eq $name "" -}}
+{{- fail "ERROR: ingressRoute name must contain at least one lowercase alphanumeric character" -}}
+{{- end -}}
+{{- print $name -}}
+{{- end -}}
+
+{{/*
 Construct the path for the providers.kubernetesingress.ingressendpoint.publishedservice.
 By convention this will simply use the <namespace>/<service-name> to match the name of the
 service generated.
