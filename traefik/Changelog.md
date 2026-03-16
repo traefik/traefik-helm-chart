@@ -1,6 +1,240 @@
 # Change Log
 
+## 40.0.0-ea.1  ![AppVersion: v3.7.0-ea.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-16
+
+* test(acme): add certificateTimeout option coverage
+* refactor(providers): :art: kubernetes ingress nginx
+* refactor(chart)!: support only Proxy v3.6+ & Kubernetes v25+
+* fix(service)!: align syntax with upstream
+* fix(providers)!: kubernetesIngressNginx => kubernetesIngressNGINX
+* feat: support templated values in service annotations
+* feat(providers): :rocket: update NGINX with v3.7 options
+* feat(logs): add accesslog.dualOutput option
+* feat(ingress): add native ingressEndpoint hostname and ip support
+* feat(entrypoints): add forwardedHeaders.notAppendXForwardedFor option
+* feat(api): add dashboardName option
+* feat(CRDs): :rocket: update CRDs to v3.7
+* docs(gateway): improve wording on namespaces
+* chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0
+* chore(ci): upgrade helm unittest to 1.0.1
+
+**Upgrade Notes**
+
+Notable changes from v3.7.0:
+- access logs now include rejected requests ([#12424](https://github.com/traefik/traefik/pull/12424))
+- `metrics.influxdb2.token` can now be a file path ([#12458](https://github.com/traefik/traefik/pull/12458))
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ef2993c..731a2fb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -199,6 +199,8 @@ gatewayClass:  # @schema additionalProperties: false
+ api:  # @schema additionalProperties: false
+   # -- Enable the dashboard
+   dashboard: true
++  # -- Custom name for the dashboard (v3.7+).
++  dashboardName: ""  # @schema type:[string, null]
+   # -- Enable the insecure API (HTTP)
+   insecure:  # @schema type:[boolean, null]
+   # -- Enable the debug API
+@@ -331,6 +333,12 @@ providers:
+       # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
+       # Default to Service deployed with this Chart.
+       pathOverride: ""
++    # @schema additionalProperties: false
++    ingressEndpoint:
++      # -- Hostname used for Kubernetes Ingress endpoints
++      hostname: ""  # @schema type:[string, null]
++      # -- IP used for Kubernetes Ingress endpoints
++      ip: ""  # @schema type:[string, null]
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
+@@ -343,7 +351,7 @@ providers:
+     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+     # This option currently enables support for TCPRoute and TLSRoute.
+     experimentalChannel: false
+-    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
++    # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelSelector: ""
+@@ -370,8 +378,8 @@ providers:
+     content: ""
+ 
+   # @schema additionalProperties: false
+-  kubernetesIngressNginx:
+-    # -- Enable Kubernetes Ingress NGINX provider (experimental)
++  kubernetesIngressNGINX:
++    # -- Enable Kubernetes Ingress NGINX provider
+     enabled: false
+     # -- Ingress Class Controller value this controller satisfies
+     controllerClass: "k8s.io/ingress-nginx"
+@@ -403,6 +411,44 @@ providers:
+     endpoint: ""
+     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
+     token: ""
++    # -- Defines whether to enable request buffering (default: false)
++    proxyRequestBuffering: null  # @schema type:[boolean, null]
++    # -- Default buffer size for reading client request body in bytes (default: 16384)
++    clientBodyBufferSize: 0
++    # -- Default maximum size of a client request body in bytes (default: 1048576)
++    proxyBodySize: 0
++    # -- Defines whether to enable response buffering (default: false)
++    proxyBuffering: null  # @schema type:[boolean, null]
++    # -- Default buffer size for reading the response body in bytes (default: 8192)
++    proxyBufferSize: 0
++    # -- Default number of buffers for reading a response (default: 4)
++    proxyBuffersNumber: 0
++    # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
++    proxyConnectTimeout: 0
++    # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
++    proxyReadTimeout: 0
++    # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
++    proxySendTimeout: 0
++    # -- Defines in which cases a request should be retried (default: "error timeout")
++    proxyNextUpstream: ""
++    # -- Limits the number of possible tries if the backend server does not reply (default: 3)
++    proxyNextUpstreamTries: 0
++    # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
++    proxyNextUpstreamTimeout: 0
++    # -- Defines which HTTP status codes should result in calling the default backend to return an error page
++    customHTTPErrors: []
++    # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
++    upstreamKeepaliveTimeout: 0
++    # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
++    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
++    # -- List of allowed response headers inside the custom headers annotations
++    globalAllowedResponseHeaders: []
++    # -- Enables parsing and adding -snippet annotations/directives (default: false)
++    allowSnippetAnnotations: null  # @schema type:[boolean, null]
++    # -- Defines the EntryPoint to use for HTTP requests
++    httpEntryPoint: ""
++    # -- Defines the EntryPoint to use for HTTPS requests
++    httpsEntryPoint: ""
+ 
+   # @schema additionalProperties: false
+   knative:
+@@ -508,6 +554,8 @@ logs:
+       minduration: ""
+     # -- Enables accessLogs for internal resources. Default: false.
+     addInternals: false
++    # -- Enables access log output alongside OTLP (v3.7+).
++    dualOutput: false
+     fields:
+       general:
+         # -- Set default mode for fields.names
+@@ -779,6 +827,8 @@ global:
+   # -- Please take time to consider whether or not you wish to share anonymous data with us
+   # See https://doc.traefik.io/traefik/contributing/data-collection/
+   sendAnonymousUsage: false
++  # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
++  notAppendXForwardedFor: false
+   # -- Required for Azure Marketplace integration.
+   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+   # @default -- See _values.yaml_
+@@ -867,6 +917,8 @@ ports:
+       # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+       insecure: false
++      # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
++      notAppendXForwardedFor: false
+     proxyProtocol:
+       # -- Enable the Proxy Protocol header parsing for the entry point
+       trustedIPs: []
+@@ -949,6 +1001,8 @@ ports:
+         # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+       insecure: false
++      # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
++      notAppendXForwardedFor: false
+     proxyProtocol:
+       # -- Enable the Proxy Protocol header parsing for the entry point
+       trustedIPs: []
+@@ -1010,7 +1064,6 @@ service:
+   ## -- Single service is using `MixedProtocolLBService` feature gate.
+   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+-  type: LoadBalancer
+   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+   annotations: {}
+   # -- Additional annotations for TCP service only
+@@ -1019,38 +1072,13 @@ service:
+   annotationsUDP: {}
+   # -- Additional service labels (e.g. for filtering Service by custom labels)
+   labels: {}
+-  # -- Additional entries here will be added to the service spec.
+-  # -- Cannot contain type, selector or ports entries.
+-  spec: {}
+-  # externalTrafficPolicy: Cluster
+-  # loadBalancerIP: "1.2.3.4"
+-  # clusterIP: "2.3.4.5"
+-  loadBalancerSourceRanges: []
+-  # - 192.168.0.1/32
+-  # - 172.16.0.0/16
+-  ## -- Class of the load balancer implementation
+-  # loadBalancerClass: service.k8s.aws/nlb
+-  externalIPs: []
+-  # - 1.2.3.4
+-  ## One of SingleStack, PreferDualStack, or RequireDualStack.
+-  # ipFamilyPolicy: SingleStack
+-  ## List of IP families (e.g. IPv4 and/or IPv6).
+-  ## ref: https://kubernetes.io/docs/concepts/services-networking/dual-stack/#services
+-  # ipFamilies:
+-  #   - IPv4
+-  #   - IPv6
+-  ##
++  # -- Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core).
++  # Cannot contain selector or ports entries.
++  spec:
++    type: LoadBalancer
++  # -- Can be used to create multiple Service.
++  # See EXAMPLES.md for more details.
+   additionalServices: {}
+-  ## -- An additional and optional internal Service.
+-  ## Same parameters as external Service
+-  # internal:
+-  #   type: ClusterIP
+-  #   # labels: {}
+-  #   # annotations: {}
+-  #   # spec: {}
+-  #   # loadBalancerSourceRanges: []
+-  #   # externalIPs: []
+-  #   # ipFamilies: [ "IPv4","IPv6" ]
+ 
+ autoscaling:  # @schema additionalProperties: false
+   # -- Create HorizontalPodAutoscaler object.
+@@ -1103,8 +1131,7 @@ rbac:  # @schema additionalProperties: false
+   enabled: true
+   # When set to true:
+   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
+-  # 2. It adds `disableIngressClassLookup` on Kubernetes Ingress with Traefik Proxy v3 until v3.1.4
+-  # 3. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers with Traefik Proxy v3.1.2+
++  # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers
+   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
+   # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
+   namespaced: false
+@@ -1112,10 +1139,6 @@ rbac:  # @schema additionalProperties: false
+   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+   aggregateTo: []
+ 
+-# -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
+-podSecurityPolicy:
+-  enabled: false
+-
+ # -- The service account the pods will use to interact with the Kubernetes API
+ serviceAccount:  # @schema additionalProperties: false
+   # If set, an existing service account is used
+```
+
 ## 39.0.5  ![AppVersion: v3.6.10](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.10&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-09
 
 * fix: :bug: handle experimental-master and fail gracefully
 * fix(nginx): add required RBAC for v3.7
