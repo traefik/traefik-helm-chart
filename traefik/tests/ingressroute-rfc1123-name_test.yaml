@@ -1,0 +1,15 @@
+suite: IngressRoute name RFC 1123 normalization
+templates:
+- ingressroute.yaml
+release:
+  name: MyRelease
+tests:
+- it: should lowercase generated ingressroute resource names
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+  asserts:
+  - equal:
+      path: metadata.name
+      value: myrelease-dashboard

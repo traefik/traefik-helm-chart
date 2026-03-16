@@ -134,6 +134,13 @@ See also the traefik.portname helper.
 {{- end -}}
 
 {{/*
+Normalize resource names that must satisfy Kubernetes RFC 1123 label rules.
+*/}}
+{{- define "traefik.resource-name" -}}
+{{- . | lower -}}
+{{- end -}}
+
+{{/*
 Construct the path for the providers.kubernetesingress.ingressendpoint.publishedservice.
 By convention this will simply use the <namespace>/<service-name> to match the name of the
 service generated.
