@@ -22,6 +22,9 @@
 
 **Upgrade Notes**
 
+> [!NOTE]
+> This version supports _only_ Traefik Proxy v3.6.x-v3.7.x and Traefik Hub v3.19.x
+
 > [!IMPORTANT]
 > Traefik v3.7.0-ea.1 comes with CRDs update. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
 
