@@ -9,7 +9,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ $.Release.Name }}-{{ $name }}
+  name: {{ $.Release.Name }}-{{ $name | lower }}
   namespace: {{ template "traefik.namespace" $ }}
   {{- with $annotations }}
   annotations:
