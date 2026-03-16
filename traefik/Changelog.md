@@ -22,9 +22,9 @@
 
 **Upgrade Notes**
 
-Notable changes from v3.7.0:
-- access logs now include rejected requests ([#12424](https://github.com/traefik/traefik/pull/12424))
-- `metrics.influxdb2.token` can now be a file path ([#12458](https://github.com/traefik/traefik/pull/12458))
+There are 2 breaking changes in this release:
+- service `values.yaml` syntax is now aligned with K8S one (cf. https://github.com/traefik/traefik-helm-chart/pull/1686)
+- `providers.kubernetesIngressNginx` as been renamed to `providers.kubernetesIngressNGINX` to align with Traefik proxy naming (cf. https://github.com/traefik/traefik-helm-chart/pull/1714)
 
 ### Default value changes
 
