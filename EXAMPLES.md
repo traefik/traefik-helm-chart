@@ -156,6 +156,9 @@ It's possible to redirect all incoming requests on an entrypoint to another entr
 ```yaml
 ports:
   web:
+    # -- If you are handling ACME challenges with another service (e.g. cert-manager),
+    #    you may enable this option to prevent redirects on ACME challenge routes for this port.
+    # allowACMEByPass: true
     http:
       redirections:
         entryPoint:
