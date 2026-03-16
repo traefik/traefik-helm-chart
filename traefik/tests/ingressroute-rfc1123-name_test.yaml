@@ -2,7 +2,7 @@ suite: IngressRoute name RFC 1123 normalization
 templates:
 - ingressroute.yaml
 release:
-  name: MyRelease
+  name: myrelease
 tests:
 - it: should lowercase generated ingressroute resource names
   set:

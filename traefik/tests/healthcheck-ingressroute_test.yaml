@@ -12,7 +12,7 @@ tests:
       count: 1
   - equal:
       path: metadata.name
-      value: RELEASE-NAME-healthcheck
+      value: release-name-healthcheck
 - it: should have the expected default route match rule
   set:
     ingressRoute:

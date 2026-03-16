@@ -21,7 +21,7 @@ tests:
       value: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
   - equal:
       path: metadata.name
-      value: RELEASE-NAME-dashboard
+      value: release-name-dashboard
 - it: should support overwriting the route match rule
   set:
     ingressRoute:
