@@ -2,8 +2,8 @@ apiVersion: v2
 name: traefik-crds
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 1.14.0
-kubeVersion: ">=1.22.0-0"
+version: 1.15.0
+kubeVersion: ">=1.25.0-0"
 keywords:
   - traefik
   - ingress
@@ -21,6 +21,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/v2.3/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(CRDs)!: support Traefik Hub v3.19.0"
-    - "docs(CRDs): improve note on deprecation"
-    - "chore(release): 🚀 publish traefik 39.0.0 and crds 1.14.0"
+    - "feat(CRDs): :rocket: update CRDs to v3.7"
+    - "chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0"

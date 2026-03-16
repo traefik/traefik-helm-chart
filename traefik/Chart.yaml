@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.0.5
+version: 40.0.0-ea.1
 # renovate: image=traefik
-appVersion: v3.6.10
+appVersion: v3.7.0-ea.1
 kubeVersion: ">=1.25.0-0"
 keywords:
   - traefik
@@ -23,8 +23,18 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: :bug: handle experimental-master and fail gracefully"
-    - "fix(nginx): add required RBAC for v3.7"
-    - "fix(gateway): setting port value for `websecure` listener can fail"
-    - "feat: upgrade traefik to version v3.6.10"
-    - "chore(release): publish v39.0.5"
+    - "test(acme): add certificateTimeout option coverage"
+    - "refactor(providers): :art: kubernetes ingress nginx"
+    - "refactor(chart)!: support only Proxy v3.6+ & Kubernetes v25+"
+    - "fix(service)!: align syntax with upstream"
+    - "fix(providers)!: kubernetesIngressNginx => kubernetesIngressNGINX"
+    - "feat: support templated values in service annotations"
+    - "feat(providers): :rocket: update NGINX with v3.7 options"
+    - "feat(logs): add accesslog.dualOutput option"
+    - "feat(ingress): add native ingressEndpoint hostname and ip support"
+    - "feat(entrypoints): add forwardedHeaders.notAppendXForwardedFor option"
+    - "feat(api): add dashboardName option"
+    - "feat(CRDs): :rocket: update CRDs to v3.7"
+    - "docs(gateway): improve wording on namespaces"
+    - "chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0"
+    - "chore(ci): upgrade helm unittest to 1.0.1"

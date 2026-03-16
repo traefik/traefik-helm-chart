@@ -1,5 +1,13 @@
 # Change Log
 
+## 1.15.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-16
+
+* feat(CRDs): :rocket: update CRDs to v3.7
+* chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0
+
+
 ## 1.14.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-23
