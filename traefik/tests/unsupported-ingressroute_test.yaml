@@ -12,4 +12,4 @@ tests:
       count: 1
   - equal:
       path: metadata.name
-      value: RELEASE-NAME-api
+      value: release-name-api
