@@ -231,6 +231,10 @@
                     ],
                     "minimum": 0
                 },
+                "hostUsers": {
+                    "description": "Whether to use the host user namespace. Setting to false enables user namespaces for improved pod security isolation. Leave unset to inherit the cluster default. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/",
+                    "type": ["boolean", "null"]
+                },
                 "runtimeClassName": {
                     "description": "Set a runtimeClassName on pod",
                     "type": "string"
