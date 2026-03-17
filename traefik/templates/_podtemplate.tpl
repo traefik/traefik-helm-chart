@@ -33,6 +33,9 @@
       automountServiceAccountToken: true
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ .Values.hostNetwork }}
+      {{- if not (kindIs "invalid" .Values.deployment.hostUsers) }}
+      hostUsers: {{ .Values.deployment.hostUsers }}
+      {{- end }}
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
