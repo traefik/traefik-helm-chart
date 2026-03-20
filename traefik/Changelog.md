@@ -1,5 +1,12 @@
 # Change Log
 
+## 39.0.6  ![AppVersion: v3.6.11](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.11&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-20
+
+* feat: :rocket: upgrade traefik to version v3.6.11
+* chore(release): :rocket: publish v39.0.6
+
 ## 39.0.5  ![AppVersion: v3.6.10](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.10&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 * fix: :bug: handle experimental-master and fail gracefully

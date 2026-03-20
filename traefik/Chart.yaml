@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.0.5
+version: 39.0.6
 # renovate: image=traefik
 appVersion: v3.6.11
 kubeVersion: ">=1.22.0-0"
@@ -23,8 +23,5 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "fix: :bug: handle experimental-master and fail gracefully"
-    - "fix(nginx): add required RBAC for v3.7"
-    - "fix(gateway): setting port value for `websecure` listener can fail"
-    - "feat: upgrade traefik to version v3.6.10"
-    - "chore(release): publish v39.0.5"
+    - "feat: :rocket: upgrade traefik to version v3.6.11"
+    - "chore(release): :rocket: publish v39.0.6"
