@@ -210,7 +210,7 @@ extraObjects:
 
 The `annotations` and `labels` fields on IngressRoute resources support Go template expressions,
 consistent with how `podAnnotations` and `podLabels` are handled elsewhere in the chart.
-This is useful for tools like [Homepage](https://gethomepage.dev/) that discover services via annotations.
+This is useful for tools discovering services via annotations.
 
 ```yaml
 ingressRoute:
