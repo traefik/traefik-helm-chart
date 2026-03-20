@@ -477,6 +477,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
+| providers.kubernetesIngressNGINX.strictValidatePathType | string | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
 | providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `0` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
