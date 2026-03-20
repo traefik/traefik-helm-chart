@@ -445,6 +445,8 @@ providers:
     globalAllowedResponseHeaders: []
     # -- Enables parsing and adding -snippet annotations/directives (default: false)
     allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+    strictValidatePathType: null  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: ""
     # -- Defines the EntryPoint to use for HTTPS requests

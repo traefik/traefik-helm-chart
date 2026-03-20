@@ -290,6 +290,17 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.allowSnippetAnnotations=true"
 
+  - it: should add strictValidatePathType
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          strictValidatePathType: false
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.strictValidatePathType=false"
+
   - it: should add httpEntryPoint & httpsEntryPoint
     set:
       providers:

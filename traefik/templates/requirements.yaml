@@ -55,6 +55,10 @@
   {{- end }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.0-ea.2" $version) (ne (.Values.providers.kubernetesIngressNGINX).strictValidatePathType nil) }}
+  {{- fail "ERROR: Kubernetes Ingress NGINX provider strictValidatePathType option requires traefik >= v3.7.0-ea.2." }}
+{{- end }}
+
 {{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
   {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
 {{- end }}

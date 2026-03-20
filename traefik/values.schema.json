@@ -2648,6 +2648,13 @@
                             "description": "Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies",
                             "type": "string"
                         },
+                        "strictValidatePathType": {
+                            "description": "Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
                         "throttleDuration": {
                             "description": "Ingress refresh throttle duration",
                             "type": "string"
