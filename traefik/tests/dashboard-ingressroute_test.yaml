@@ -133,3 +133,25 @@ tests:
         foo: bar
         fis: fas
         kubernetes.io/ingress.class: test-class2
+- it: should support templating in annotations
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+        annotations:
+          example.com/namespace: "{{ .Release.Namespace }}"
+  asserts:
+  - equal:
+      path: metadata.annotations["example.com/namespace"]
+      value: NAMESPACE
+- it: should support templating in labels
+  set:
+    ingressRoute:
+      dashboard:
+        enabled: true
+        labels:
+          example.com/namespace: "{{ .Release.Namespace }}"
+  asserts:
+  - equal:
+      path: metadata.labels["example.com/namespace"]
+      value: NAMESPACE

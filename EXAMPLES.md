@@ -203,6 +203,29 @@ extraObjects:
         secret: traefik-dashboard-auth-secret
 ```
 
+## Use Go template expressions in IngressRoute annotations and labels
+
+The `annotations` and `labels` fields on IngressRoute resources support Go template expressions,
+consistent with how `podAnnotations` and `podLabels` are handled elsewhere in the chart.
+This is useful for tools discovering services via annotations.
+
+```yaml
+ingressRoute:
+  dashboard:
+    enabled: true
+    matchRule: Host(`traefik-dashboard.example.com`)
+    entryPoints: ["websecure"]
+    # Annotations support Go template expressions evaluated at render time
+    annotations:
+      gethomepage.dev/enabled: "true"
+      gethomepage.dev/name: "Traefik"
+      gethomepage.dev/group: "Infrastructure"
+      gethomepage.dev/widget.url: "http://{{ .Release.Name }}.{{ .Release.Namespace }}:{{ .Values.ports.traefik.port }}"
+    # Labels support Go template expressions as well
+    labels:
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+```
+
 ## Publish and protect the Traefik Dashboard with an Ingress
 
 To expose the dashboard without IngressRoute, it's more complicated and less
