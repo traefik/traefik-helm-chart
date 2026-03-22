@@ -81,6 +81,12 @@ deployment:
   #       mountPath: /data
   # -- Use process namespace sharing
   shareProcessNamespace: false
+  # @schema type: [boolean, null]
+  # -- Whether to use the host user namespace. Setting this to false enables user namespaces,
+  # which can improve security by isolating the pod's users from the host.
+  # See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
+  # @default -- unset (inherits cluster default)
+  hostUsers:
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   dnsPolicy: ""
   # -- Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core)

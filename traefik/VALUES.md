@@ -55,6 +55,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.healthchecksPort | string | `nil` |  |
 | deployment.healthchecksScheme | string | `nil` |  |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
+| deployment.hostUsers | string | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
 | deployment.imagePullSecrets | list | `[]` | Pull secret for fetching traefik container image |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |

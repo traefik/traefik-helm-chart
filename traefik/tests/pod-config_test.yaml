@@ -271,6 +271,26 @@ tests:
       - equal:
           path: spec.template.spec.shareProcessNamespace
           value: true
+  - it: should set hostUsers to false when configured
+    set:
+      deployment:
+        hostUsers: false
+    asserts:
+      - equal:
+          path: spec.template.spec.hostUsers
+          value: false
+  - it: should set hostUsers to true when configured
+    set:
+      deployment:
+        hostUsers: true
+    asserts:
+      - equal:
+          path: spec.template.spec.hostUsers
+          value: true
+  - it: should not set hostUsers when unset
+    asserts:
+      - isNull:
+          path: spec.template.spec.hostUsers
   - it: should have customized labels when specified via values
     set:
       deployment:
