@@ -1,5 +1,41 @@
 # Change Log
 
+## 40.0.0-ea.2  ![AppVersion: v3.7.0-ea.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.2&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-23
+
+* chore: :fire: add deprecation notice for gateway API CRDs
+* chore(release): :rocket: publish v40.0.0-ea.2 and CRDs v0.16.0
+* chore(nginx): :rocket: support strictValidatePathType
+* chore(CRDs): update gateway API CRDs to v1.5.1 (#1752)
+
+**Upgrade Notes**
+
+> [!NOTE]
+> This version deprecates usage of deploying chart along with Gateway API CRDs.   
+
+> [!IMPORTANT]
+> Traefik v3.7.0-ea.2 comes with CRDs update. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
+
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 1d024a8..1a3b7eb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -445,6 +445,8 @@ providers:
+     globalAllowedResponseHeaders: []
+     # -- Enables parsing and adding -snippet annotations/directives (default: false)
+     allowSnippetAnnotations: null  # @schema type:[boolean, null]
++    # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
++    strictValidatePathType: null  # @schema type:[boolean, null]
+     # -- Defines the EntryPoint to use for HTTP requests
+     httpEntryPoint: ""
+     # -- Defines the EntryPoint to use for HTTPS requests
+```
+
 ## 40.0.0-ea.1  ![AppVersion: v3.7.0-ea.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-03-16
