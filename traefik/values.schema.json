@@ -1965,7 +1965,7 @@
                 "type": "object",
                 "properties": {
                     "allowACMEByPass": {
-                        "description": "See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#allowacmebypass)",
+                        "description": "See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass)",
                         "type": "boolean"
                     },
                     "appProtocol": {
