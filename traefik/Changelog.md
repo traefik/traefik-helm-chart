@@ -6,17 +6,16 @@
 
 * chore: :fire: add deprecation notice for gateway API CRDs
 * chore(release): :rocket: publish v40.0.0-ea.2 and CRDs v0.16.0
-* chore(nginx): :rocket: support strictValidatePathType
+* feat(nginx): :rocket: support strictValidatePathType
 * chore(CRDs): update gateway API CRDs to v1.5.1 (#1752)
 
 **Upgrade Notes**
 
 > [!NOTE]
-> This version deprecates usage of deploying chart along with Gateway API CRDs.   
+> Gateway API CRDs will no longer be shipped with this chart in the next future major version. See [#1669](https://github.com/traefik/traefik-helm-chart/issues/1669) for more details.
 
 > [!IMPORTANT]
 > Traefik v3.7.0-ea.2 comes with CRDs update. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions.
-
 
 ### Default value changes
 

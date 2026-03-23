@@ -25,5 +25,5 @@ annotations:
   artifacthub.io/changes: |
     - "chore: :fire: add deprecation notice for gateway API CRDs"
     - "chore(release): :rocket: publish v40.0.0-ea.2 and CRDs v0.16.0"
-    - "chore(nginx): :rocket: support strictValidatePathType"
+    - "feat(nginx): :rocket: support strictValidatePathType"
     - "chore(CRDs): update gateway API CRDs to v1.5.1 (#1752)"
