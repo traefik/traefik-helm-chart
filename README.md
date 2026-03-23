@@ -32,6 +32,14 @@ Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_be
 
 ⚠️ This has been deprecated since v38.0.2.
 
+### Gateway API CRDs
+
+⚠️ Gateway API CRDs will no longer be shipped with this chart in a future major version. If you use the Kubernetes Gateway API provider, you will need to install them yourself before deploying Traefik v3.7:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+```
+
 ### Support for unmaintained versions of Traefik Proxy
 
 This chart's support policy aligns with the [upstream support policy](https://doc.traefik.io/traefik/deprecation/releases/) of Traefik Proxy.
