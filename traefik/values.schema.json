@@ -180,6 +180,13 @@
                     "description": "Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)",
                     "type": "array"
                 },
+                "hostUsers": {
+                    "description": "Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "imagePullSecrets": {
                     "description": "Pull secret for fetching traefik container image",
                     "type": "array"
