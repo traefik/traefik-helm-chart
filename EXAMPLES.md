@@ -9,6 +9,20 @@ deployment:
   kind: DaemonSet
 ```
 
+The update strategy default value in `traefik/values.yaml` needs to be changed, in order to accommodate for a `DaemonSet`.
+
+Whenever the `DaemonSet` gets updated with a new configuration using `maxUnavailable: 0`, this prevents any pod owned by the DaemonSet from being terminated, and a `DaemonSet` cannot schedule more than one pod per node, which results in a rollout deadlock.
+
+Instead, this minimal working update-strategy configuration can be used.
+
+```yaml
+updateStrategy:
+  type: RollingUpdate
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 0
+```
+
 ## Configure Traefik Pod parameters
 
 ### Extending /etc/hosts records
