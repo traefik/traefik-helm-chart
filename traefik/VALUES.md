@@ -489,7 +489,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
 | providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `0` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
-| providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
+| providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
 | providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
 | rbac.aggregateTo | list | `[]` | Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
