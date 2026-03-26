@@ -106,7 +106,7 @@
             "additionalProperties": false
         },
         "certificatesResolvers": {
-            "description": "Certificates resolvers configuration. Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers See EXAMPLES.md for more details.",
+            "description": "Certificates resolvers configuration. Ref: https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/ See EXAMPLES.md for more details.",
             "type": "object"
         },
         "commonLabels": {
@@ -1183,7 +1183,7 @@
                             "type": "boolean"
                         },
                         "bufferingSize": {
-                            "description": "Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)",
+                            "description": "Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)",
                             "type": [
                                 "integer",
                                 "null"
@@ -1223,7 +1223,7 @@
                                     "type": "object",
                                     "properties": {
                                         "defaultmode": {
-                                            "description": "[Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)",
+                                            "description": "[Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)",
                                             "default": "drop",
                                             "type": "string",
                                             "enum": [
@@ -1240,7 +1240,7 @@
                             }
                         },
                         "filters": {
-                            "description": "Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)",
+                            "description": "Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters)",
                             "type": "object",
                             "properties": {
                                 "minduration": {
@@ -1259,7 +1259,7 @@
                             "additionalProperties": false
                         },
                         "format": {
-                            "description": "Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)",
+                            "description": "Set [access log format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-format)",
                             "default": "common",
                             "type": [
                                 "string",
@@ -1375,7 +1375,7 @@
                             }
                         },
                         "timezone": {
-                            "description": "Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)",
+                            "description": "Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones)",
                             "type": "string"
                         }
                     }
@@ -1388,7 +1388,7 @@
                             "type": "string"
                         },
                         "format": {
-                            "description": "Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)",
+                            "description": "Set [logs format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-log-format)",
                             "default": "common",
                             "type": [
                                 "string",
@@ -1854,7 +1854,7 @@
             "type": "object",
             "properties": {
                 "enabled": {
-                    "description": "Enable OCSP stapling support. See https://doc.traefik.io/traefik/https/ocsp/#overview",
+                    "description": "Enable OCSP stapling support. See https://doc.traefik.io/traefik/reference/install-configuration/tls/ocsp/",
                     "type": "boolean"
                 },
                 "responderOverrides": {
@@ -2230,7 +2230,7 @@
                         "minimum": 0
                     },
                     "transport": {
-                        "description": "See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport)",
+                        "description": "Set transport settings for the entrypoint",
                         "type": "object",
                         "properties": {
                             "keepAliveMaxRequests": {
@@ -2316,7 +2316,7 @@
                     "type": "object",
                     "properties": {
                         "content": {
-                            "description": "File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)",
+                            "description": "File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)",
                             "type": "string"
                         },
                         "enabled": {
@@ -2504,7 +2504,7 @@
                             "type": "object",
                             "properties": {
                                 "enabled": {
-                                    "description": "Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.",
+                                    "description": "Enable [publishedService](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.",
                                     "type": "boolean"
                                 },
                                 "pathOverride": {
@@ -2813,11 +2813,11 @@
             "type": "object"
         },
         "tlsOptions": {
-            "description": "TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options) When using `labelSelector`, you'll need to set labels on tlsOption accordingly. See EXAMPLE.md for details.",
+            "description": "TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsoption/) When using `labelSelector`, you'll need to set labels on tlsOption accordingly. See EXAMPLE.md for details.",
             "type": "object"
         },
         "tlsStore": {
-            "description": "TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details.",
+            "description": "TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsstore/). This is useful if you want to set a default certificate. See EXAMPLE.md for details.",
             "type": "object"
         },
         "tolerations": {
@@ -2829,7 +2829,7 @@
             "type": "array"
         },
         "tracing": {
-            "description": "https://doc.traefik.io/traefik/observability/tracing/overview/",
+            "description": "https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/",
             "type": "object",
             "properties": {
                 "addInternals": {
@@ -2848,7 +2848,7 @@
                     "type": "object",
                     "properties": {
                         "enabled": {
-                            "description": "See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/",
+                            "description": "See https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/#configuration-options",
                             "type": "boolean"
                         },
                         "grpc": {
