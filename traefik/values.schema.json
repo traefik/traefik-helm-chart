@@ -2689,6 +2689,7 @@
             "type": "object",
             "properties": {
                 "aggregateTo": {
+                    "description": "Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles",
                     "type": "array"
                 },
                 "enabled": {
@@ -2696,6 +2697,7 @@
                     "type": "boolean"
                 },
                 "namespaced": {
+                    "description": "When set to true: \u003cbr /\u003e 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.\u003cbr /\u003e 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers\u003cbr /\u003e **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. \u003cbr /\u003e See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.",
                     "type": "boolean"
                 }
             },

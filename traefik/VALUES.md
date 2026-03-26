@@ -491,9 +491,9 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
 | providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
 | providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
-| rbac.aggregateTo | list | `[]` |  |
+| rbac.aggregateTo | list | `[]` | Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
-| rbac.namespaced | bool | `false` |  |
+| rbac.namespaced | bool | `false` | When set to true: <br /> 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br /> 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br /> **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br /> See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details. |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
