@@ -7,6 +7,7 @@ Default install is using a `Deployment` but it's possible to use `DaemonSet`
 ```yaml
 deployment:
   kind: DaemonSet
+
 # The update strategy needs to be changed accordingly
 # See https://kubernetes.io/docs/tasks/manage-daemon/update-daemon-set/ for details
 updateStrategy:
