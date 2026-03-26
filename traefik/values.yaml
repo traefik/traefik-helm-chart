@@ -333,7 +333,7 @@ providers:
     namespaces: []
     # IP used for Kubernetes Ingress endpoints
     publishedService:
-      # -- Enable [publishedService](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#publishedservice),
+      # -- Enable [publishedService](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice),
       # usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.
       enabled: true
       # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
@@ -380,7 +380,7 @@ providers:
     enabled: false
     # -- Allows Traefik to automatically watch for file changes
     watch: true
-    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/providers/file/)
+    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)
     content: ""
 
   # @schema additionalProperties: false
@@ -488,7 +488,7 @@ additionalVolumeMounts: []
 
 logs:
   general:
-    # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+    # -- Set [logs format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-log-format)
     format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
     # By default, the level is set to INFO.
     # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
@@ -542,14 +542,14 @@ logs:
   access:
     # -- To enable access logs
     enabled: false
-    # -- Set [access log format](https://doc.traefik.io/traefik/observability/access-logs/#format)
+    # -- Set [access log format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-format)
     format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
     # filePath: "/var/log/traefik/access.log
-    # -- Set [bufferingSize](https://doc.traefik.io/traefik/observability/access-logs/#bufferingsize)
+    # -- Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)
     bufferingSize:  # @schema type:[integer, null]
-    # -- Set [timezone](https://doc.traefik.io/traefik/observability/access-logs/#time-zones)
+    # -- Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones)
     timezone: ""
-    # -- Set [filtering](https://docs.traefik.io/observability/access-logs/#filtering)
+    # -- Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters)
     # @default -- See below
     filters:  # @schema additionalProperties: false
       # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
@@ -569,7 +569,7 @@ logs:
         # -- Names of the fields to limit.
         names: {}
       headers:
-        # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observability/access-logs/#limiting-the-fieldsincluding-headers)
+        # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
     otlp:
@@ -767,13 +767,13 @@ metrics:
 
 ocsp:
   # -- Enable OCSP stapling support.
-  # See https://doc.traefik.io/traefik/https/ocsp/#overview
+  # See https://doc.traefik.io/traefik/reference/install-configuration/tls/ocsp/
   enabled: false
   # -- Defines the OCSP responder URLs to use instead of the one provided by the certificate.
   responderOverrides: {}
 
 ## Tracing
-# -- https://doc.traefik.io/traefik/observability/tracing/overview/
+# -- https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/
 # @default -- See _values.yaml_
 tracing:  # @schema additionalProperties: false
   # -- Enables tracing for internal resources. Default: false.
@@ -791,7 +791,7 @@ tracing:  # @schema additionalProperties: false
   # -- The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0.
   sampleRate:  # @schema type:[number, null]; minimum:0; maximum:1
   otlp:
-    # -- See https://doc.traefik.io/traefik/v3.0/observability/tracing/opentelemetry/
+    # -- See https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/#configuration-options
     enabled: false
     http:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
@@ -931,8 +931,7 @@ ports:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
       insecure: false
-    # -- Set transport settings for the entrypoint; see also
-    # https://doc.traefik.io/traefik/routing/entrypoints/#transport
+    # -- Set transport settings for the entrypoint
     # @default -- nil
     transport:
       respondingTimeouts:
@@ -1002,7 +1001,7 @@ ports:
     http3:
       ## -- Enable HTTP/3 on the entrypoint
       ## Enabling it will also enable http3 experimental feature
-      ## https://doc.traefik.io/traefik/routing/entrypoints/#http3
+      ## https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3
       ## There are known limitations when trying to listen on same ports for
       ## TCP & UDP (Http3). There is a workaround in this chart using dual Service.
       ## https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741
@@ -1018,7 +1017,6 @@ ports:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
       insecure: false
-    # -- See [upstream documentation](https://doc.traefik.io/traefik/routing/entrypoints/#transport)
     # @default -- nil
     transport:
       respondingTimeouts:
@@ -1062,12 +1060,13 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
 
-# -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/https/tls/#tls-options)
+# -- TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsoption/)
 # When using `labelSelector`, you'll need to set labels on tlsOption accordingly.
 # See EXAMPLE.md for details.
 tlsOptions: {}
 
-# -- TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/https/tls/#default-certificate). This is useful if you want to set a default certificate. See EXAMPLE.md for details.
+# -- TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsstore/).
+# This is useful if you want to set a default certificate. See EXAMPLE.md for details.
 tlsStore: {}
 
 service:
@@ -1127,7 +1126,7 @@ persistence:
   subPath: ""
 
 # -- Certificates resolvers configuration.
-# Ref: https://doc.traefik.io/traefik/https/acme/#certificate-resolvers
+# Ref: https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/
 # See EXAMPLES.md for more details.
 certificatesResolvers: {}
 
@@ -1140,13 +1139,13 @@ hostNetwork: false
 rbac:  # @schema additionalProperties: false
   # -- Whether Role Based Access Control objects like roles and rolebindings should be created
   enabled: true
-  # When set to true:
-  # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.
-  # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers
-  # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC.
-  # See [upstream documentation](https://doc.traefik.io/traefik/providers/kubernetes-ingress/#disableclusterscoperesources) for more details.
+  # -- When set to true: <br />
+  # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
+  # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
+  # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
+  # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
   namespaced: false
-  # Enable user-facing roles
+  # -- Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
   aggregateTo: []
 
