@@ -43,6 +43,12 @@
       matchBaseBranches: ['master'],
       rangeStrategy: 'pin',
     },
+    // No GHA update on previous branches
+    {
+      matchManagers: ['github-actions'],
+      matchBaseBranches: ['v40.0'],
+      enabled: false
+    },
     {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
