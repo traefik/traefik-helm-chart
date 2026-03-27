@@ -30,7 +30,11 @@
     {
       matchPackageNames: ['traefik'],
       extends: [':semanticCommitTypeAll(feat)'],
-      matchBaseBranches: [ 'master', 'v40.0' ],
+    },
+    {
+      matchPackageNames: ['traefik'],
+      matchBaseBranches: [ 'v40.0'],
+      ignoreUnstable: false,
     },
     {
       matchPackageNames: ['traefik'],
