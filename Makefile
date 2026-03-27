@@ -1,7 +1,7 @@
 .PHONY: lint test
 
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.14.0
-IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v0.3.0
+IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.17.2-0.8.0
 
@@ -35,6 +35,6 @@ schema:
 
 changelog:
 	@echo "== Updating Changelogs..."
-	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG)
+	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG) /app/helm-changelog --update
 	@./hack/changelog.sh
 	@echo "== Updating finished"
