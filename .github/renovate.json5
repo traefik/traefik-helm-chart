@@ -32,9 +32,15 @@
       extends: [':semanticCommitTypeAll(feat)'],
     },
     {
+      matchPackageNames: ['traefik'],
+      matchBaseBranches: [ 'v40.0'],
+      ignoreUnstable: false,
+    },
+    {
       groupName: 'GitHub actions',
       groupSlug: 'gh-actions',
       matchManagers: ['github-actions'],
+      matchBaseBranches: ['master'],
       rangeStrategy: 'pin',
     },
     {
