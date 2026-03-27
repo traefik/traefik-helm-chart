@@ -395,7 +395,7 @@ providers:
     ingressClassByName: false
     # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
     watchIngressWithoutClass: false
-    # -- Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.
+    # -- Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.
     watchNamespace: ""
     # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
     watchNamespaceSelector: ""
