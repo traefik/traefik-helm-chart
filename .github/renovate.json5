@@ -49,7 +49,6 @@
       matchBaseBranches: ['v40.0'],
       enabled: false
     },
-
     {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
