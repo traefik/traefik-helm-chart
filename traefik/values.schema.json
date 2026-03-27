@@ -2672,7 +2672,7 @@
                             "type": "boolean"
                         },
                         "watchNamespace": {
-                            "description": "Namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.",
+                            "description": "Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.",
                             "type": "string"
                         },
                         "watchNamespaceSelector": {
