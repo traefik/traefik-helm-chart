@@ -1,5 +1,12 @@
 # Change Log
 
+## 40.0.0-ea.3  ![AppVersion: v3.7.0-ea.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.3&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-27
+
+* feat: 🚀 upgrade traefik to v3.7.0-ea.3
+* chore(release): 🚀 publish v40.0.0-ea.3
+
 ## 40.0.0-ea.2  ![AppVersion: v3.7.0-ea.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.2&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-03-23
