@@ -3,8 +3,11 @@
   extends: [
     'config:recommended',
     ':semanticCommitTypeAll(chore)',
-    'helpers:pinGitHubActionDigests'
+    'helpers:pinGitHubActionDigests',
+    // Update appVersion in Chart.yaml
+    'customManagers:helmChartYamlAppVersions'
   ],
+  baseBranchPatterns: [ 'master', 'v40.0'],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
   rebaseWhen: 'conflicted',
@@ -43,15 +46,7 @@
     {
       customType: 'regex',
       datasourceTemplate: 'docker',
-      managerFilePatterns: ['Chart.yaml'],
-      matchStrings: [
-        '#\\s*renovate: image=(?<depName>.*?)\\s+appVersion:\\s*["\']?(?<currentValue>[\\w+\\.\\-]*)',
-      ],
-    },
-    {
-      customType: 'regex',
-      datasourceTemplate: 'docker',
-      managerFilePatterns: ['Makefile'],
+      managerFilePatterns: ['/^Makefile/'],
       versioningTemplate: 'docker',
       matchStrings: ['IMAGE_(.+)=(?<depName>.*?):(?<currentValue>.*)'],
     },
@@ -59,12 +54,12 @@
       customType: 'regex',
       datasourceTemplate: 'docker',
       depNameTemplate: 'traefik',
-      managerFilePatterns: ['VALUES.md'],
+      managerFilePatterns: ['/VALUES.md/'],
       versioningTemplate: 'docker',
       matchStrings: [
-        '!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]',
-        '\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)',
-      ],
-    },
+        "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
+        "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
+      ]
+    }
   ],
 }
