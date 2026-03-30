@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@a34a8009a9588bb86b02a873cf592440e96a5da8 # v6.1.1
+        uses: mikepenz/release-changelog-builder-action@2cb9befdbc05f65b8354cc9873cd506509bd0782 # v6.2.0
         with:
           fromTag: v34.1.0
           toTag: v34.2.0
@@ -60,7 +60,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@a34a8009a9588bb86b02a873cf592440e96a5da8 # v6.1.1
+        uses: mikepenz/release-changelog-builder-action@2cb9befdbc05f65b8354cc9873cd506509bd0782 # v6.2.0
         with:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0
