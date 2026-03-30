@@ -43,7 +43,7 @@ All commits will appear in traefik helm chart changelog with two exceptions:
 Renovate can be run locally for debugging purpose, like this:
 
 ```bash
-docker run -it -v $(pwd):/usr/src/app  -e RENOVATE_CONFIG_FILE=/usr/src/app/.github/renovate.json5 -e LOG_LEVEL=DEBUG renovate/renovate --dry-run --platform=local
+docker run -it -v $(pwd):/usr/src/app  -e RENOVATE_CONFIG_FILE=/usr/src/app/.github/renovate.json5 -e LOG_LEVEL=DEBUG renovate/renovate --platform=local
 ```
 
 ## About CRDs
