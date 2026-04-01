@@ -1,32 +1,27 @@
 {{- if .Values.autoscaling.enabled }}
+
+{{- if not .Values.autoscaling.maxReplicas }}
+  {{- fail "ERROR: maxReplicas is required on HPA" }}
+{{- end }}
+
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "hub-platform.fullname" . }}
+  namespace: {{ template "traefik.namespace" . }}
   labels:
     {{- include "hub-platform.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: {{ include "hub-platform.fullname" . }}
-  minReplicas: {{ .Values.autoscaling.minReplicas }}
+    apiVersion: {{ .Values.autoscaling.scaleTargetRef.apiVersion }}
+    kind: {{ .Values.autoscaling.scaleTargetRef.kind }}
+    name: {{ tpl .Values.autoscaling.scaleTargetRef.name . }}
+{{- with .Values.autoscaling.minReplicas }}
+  minReplicas: {{ . }}
+{{- end }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+{{- with .Values.autoscaling.metrics }}
   metrics:
-    {{- if .Values.autoscaling.targetCPUUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: cpu
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetCPUUtilizationPercentage }}
-    {{- end }}
-    {{- if .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    - type: Resource
-      resource:
-        name: memory
-        target:
-          type: Utilization
-          averageUtilization: {{ .Values.autoscaling.targetMemoryUtilizationPercentage }}
-    {{- end }}
+{{ toYaml . | indent 4 }}
+{{- end }}
 {{- end }}
