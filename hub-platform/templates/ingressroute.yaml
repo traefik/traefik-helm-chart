@@ -1,0 +1,43 @@
+{{- if .Values.ingressRoute.enabled -}}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "hub-platform.fullname" . }}
+  namespace: {{ include "hub-platform.namespace" . }}
+  labels:
+    {{- include "hub-platform.labels" . | nindent 4 }}
+    {{- with .Values.ingressRoute.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.ingressRoute.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- with .Values.ingressRoute.entryPoints }}
+  entryPoints:
+  - {{ . }}
+  {{- end }}
+  routes:
+    {{- range .Values.ingressRoute.routes }}
+    - kind: Rule
+      match: {{ .match | quote }}
+      {{- with .middlewares }}
+      middlewares:
+        {{- toYaml . | nindent 6 }}
+      {{- end }}
+      {{- with .services }}
+      services:
+        {{- toYaml . | nindent 6 }}
+      {{- else }}
+      services:
+        - name: {{ include "hub-platform.fullname" $ }}
+          port: {{ $.Values.service.port }}
+      {{- end }}
+    {{- end }}
+
+  {{- with .Values.ingressRoute.tls }}
+  tls:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+{{- end }}
