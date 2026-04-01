@@ -111,11 +111,19 @@ ingressRoute:
   entryPoints: ["websecure"]
   # -- Routes
   routes: []
+    # - match: >-
+    #   Host(`foo.bar.com`) && (
+    #   PathPrefix(`/foo/bar`) ||
+    #   PathPrefix(`/foo/baz`)
+    #   )
+    # middlewares:
+    #   - name: foo
+    # services:
+    #   - name: bar
+    #     port: 80
   # -- TLS options (e.g. secret containing certificate)
-  tls: []
+  tls: {}
   #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
 
 # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
 # @default -- See _values.yaml_
