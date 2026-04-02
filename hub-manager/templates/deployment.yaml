@@ -1,10 +1,10 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "hub-platform.fullname" . }}
-  namespace: {{ include "hub-platform.namespace" . }}
+  name: {{ include "hub-manager.fullname" . }}
+  namespace: {{ include "hub-manager.namespace" . }}
   labels:
-    {{- include "hub-platform.labels" . | nindent 4 }}
+    {{- include "hub-manager.labels" . | nindent 4 }}
     {{- with .Values.deployment.labels }}
       {{- toYaml . | nindent 4 }}
     {{- end }}
@@ -21,7 +21,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "hub-platform.labelselector" . | nindent 6 }}
+      {{- include "hub-manager.labelselector" . | nindent 6 }}
   {{- with .Values.updateStrategy }}
   strategy:
     type: {{ .type }}
@@ -31,4 +31,4 @@ spec:
       maxSurge: {{ .rollingUpdate.maxSurge }}
     {{- end }}
   {{- end }}
-  template: {{ include "hub-platform.podTemplate" . | fromYaml | toYaml | nindent 4 }}
+  template: {{ include "hub-manager.podTemplate" . | fromYaml | toYaml | nindent 4 }}
