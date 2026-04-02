@@ -1,7 +1,7 @@
-{{- define "hub-platform.podTemplate" }}
+{{- define "hub-manager.podTemplate" }}
     metadata:
       labels:
-      {{- include "hub-platform.labels" . | nindent 8 -}}
+      {{- include "hub-manager.labels" . | nindent 8 -}}
       {{- with .Values.deployment.podLabels }}
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
@@ -14,7 +14,7 @@
       affinity:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "hub-platform.serviceAccountName" . }}
+      serviceAccountName: {{ include "hub-manager.serviceAccountName" . }}
       automountServiceAccountToken: false
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       {{- with .Values.deployment.imagePullSecrets }}
@@ -22,8 +22,8 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      - image: {{ include "hub-platform.image-name" . }}
-        name: {{ include "hub-platform.fullname" . }}
+      - image: {{ include "hub-manager.image-name" . }}
+        name: {{ include "hub-manager.fullname" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
         resources:
@@ -48,7 +48,7 @@
         ports:
         {{- range $name, $config := .Values.ports }}
          {{- if $config }}
-        - name: {{ include "hub-platform.portname" $name }}
+        - name: {{ include "hub-manager.portname" $name }}
           containerPort: {{ default $config.port $config.containerPort }}
           protocol: {{ default "TCP" $config.protocol }}
          {{- end }}

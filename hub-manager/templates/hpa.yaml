@@ -7,10 +7,10 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "hub-platform.fullname" . }}
+  name: {{ include "hub-manager.fullname" . }}
   namespace: {{ template "traefik.namespace" . }}
   labels:
-    {{- include "hub-platform.labels" . | nindent 4 }}
+    {{- include "hub-manager.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: {{ .Values.autoscaling.scaleTargetRef.apiVersion }}

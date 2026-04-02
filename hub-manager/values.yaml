@@ -1,4 +1,4 @@
-# Default values for Hub-platform
+# Default values for hub-manager
 # This is a YAML-formatted file
 # Declare variables to be passed into templates
 
@@ -74,7 +74,7 @@ autoscaling:  # @schema additionalProperties: false
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: "{{ template \"hub-platform.fullname\" . }}"
+    name: "{{ template \"hub-manager.fullname\" . }}"
 
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container
 resources: {}
