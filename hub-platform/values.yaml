@@ -59,16 +59,6 @@ serviceAccount:
   # -- Additional serviceAccount annotations (e.g. for oidc authentication)
   annotations: {}
 
-# This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
-service:
-  enabled: true
-  # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
-  type: ClusterIP
-  # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
-  port: 80
-  # -- Additional annotations
-  annotations: {}
-
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object
   enabled: false
@@ -85,31 +75,6 @@ autoscaling:  # @schema additionalProperties: false
     apiVersion: apps/v1
     kind: Deployment
     name: "{{ template \"hub-platform.fullname\" . }}"
-
-# This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
-ingressRoute:
-  enabled: false
-  # -- Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
-  annotations: {}
-  # -- Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
-  labels: {}
-  # -- Specify the allowed entrypoints to use for the ingress route
-  entryPoints: ["websecure"]
-  # -- Routes
-  routes: []
-    # - match: >-
-    #   Host(`foo.bar.com`) && (
-    #   PathPrefix(`/foo/bar`) ||
-    #   PathPrefix(`/foo/baz`)
-    #   )
-    # middlewares:
-    #   - name: foo
-    # services:
-    #   - name: bar
-    #     port: 80
-  # -- TLS options (e.g. secret containing certificate)
-  tls: {}
-  #  - secretName: chart-example-tls
 
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container
 resources: {}
