@@ -2015,3 +2015,42 @@ For an uplink named `whoami`, the parent exposes:
 
 - `whoami@multicluster` (weighted across all children)
 - `whoami-child1@multicluster` (direct to a specific child)
+
+## Bind to privileged ports (80 and 443)
+
+By default, Traefik listens on high ports (8000/8443) because binding to ports below 1024 requires extra privileges. To bind directly to ports 80 and 443, add the `NET_BIND_SERVICE` capability and configure the port numbers:
+
+```yaml
+ports:
+  web:
+    port: 80
+    containerPort: 80
+  websecure:
+    port: 443
+    containerPort: 443
+
+securityContext:
+  capabilities:
+    drop: [ALL]
+    add: [NET_BIND_SERVICE]
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+```
+
+This keeps the container running as a non-root user while allowing it to bind to privileged ports. No changes to `podSecurityContext` are needed.
+
+If you also want the host to listen on ports 80 and 443 directly (bypassing the Service), combine with `hostPort`:
+
+```yaml
+ports:
+  web:
+    port: 80
+    containerPort: 80
+    hostPort: 80
+  websecure:
+    port: 443
+    containerPort: 443
+    hostPort: 443
+```
+
+> **Note:** When using `hostPort`, you typically want to deploy Traefik as a `DaemonSet` (see the DaemonSet example above) so that each node binds the ports.
