@@ -129,36 +129,6 @@ postgres:
   # -- Name of Secret with key 'postgres-uri' set to a valid Postgres connection string
   uri: ""
 
-mongodb:
-  # -- Name of Secret with key 'mongodb-uri' set to a valid MongoDB connection string
-  uri: ""
-  # -- MongoDB minimum pool size
-  minPool: 10
-  # -- MongoDB maximum pool size
-  maxPool: 30
-  # -- Name of Secret with key 'mongodb-encryption-key' set to a valid encryption key
-  encryptionKey: ""
-
-mq:
-  # -- URL of the NATS message queue
-  url: ""
-  # -- Path to user credential file to use on NATs message queue
-  credsFile: ""
-  # -- Time to wait before re-processing a NAK message
-  delay: 1
-  idp:
-    # -- IDP stream name
-    streamName: "idps"
-    # -- IDP consumer durable name on the IDP stream
-    consumerName: "hub-api-management-idp"
-    # -- Portal consumer durable name on the IDP stream
-    portalName: "hub-api-management-portal"
-  workspace:
-    # -- Workspaces stream name
-    streamName: "workspaces"
-    # -- Consumer durable name on the workspace stream
-    consumerName: "hub-api-management"
-
 jwt:
   # -- Name of Secret with key 'jwt-iss' set to a valid JWT Issuer
   iss: ""

@@ -89,33 +89,6 @@
             {{- end }}
           {{- end }}
 
-          {{- with .Values.mq }}
-            {{- with .url }}
-          - "--mq-url={{ . }}"
-            {{- end }}
-            {{- with .credsFile }}
-          - "--mq-creds-file={{ . }}"
-            {{- end }}
-            {{- with .delay }}
-          - "--mq-nak-delay={{ . }}"
-            {{- end }}
-            {{- with .idp.streamName }}
-          - "--mq-idp-stream-name={{ . }}"
-            {{- end }}
-            {{- with .idp.consumerName }}
-          - "--mq-idp-stream-idp-consumer-durable-name={{ . }}"
-            {{- end }}
-            {{- with .idp.portalName }}
-          - "--mq-idp-stream-portal-consumer-durable-name={{ . }}"
-            {{- end }}
-            {{- with .workspace.streamName }}
-          - "--mq-workspace-stream-name={{ . }}"
-            {{- end }}
-            {{- with .workspace.consumerName }}
-          - "--mq-workspace-stream-consumer-durable-name={{ . }}"
-            {{- end }}
-          {{- end }}
-
           {{- with .Values.tracing }}
             {{- if .insecure }}
           - "--tracing-insecure"
@@ -128,23 +101,6 @@
               secretKeyRef:
                 key: postgres-uri
                 name: {{ .uri }}
-          {{- end }}
-
-          {{- with .Values.mongodb }}
-          - name: MONGODB_URI
-            valueFrom:
-              secretKeyRef:
-                key: mongodb-uri
-                name: {{ .uri }}
-          - name: MONGODB_MINPOOL
-            value: {{ default "10" .minpool }}
-          - name: MONGODB_MAXPOOL
-            value: {{ default "30" .maxpool }}
-          - name: MONGODB_ENCRYPTION_KEY
-            valueFrom:
-              secretKeyRef:
-                key: mongodb-encryption-key
-                name: {{ .encryptionKey }}
           {{- end }}
 
           {{- with .Values.tracing }}
