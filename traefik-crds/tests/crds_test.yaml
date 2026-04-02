@@ -26,7 +26,7 @@ tests:
       hub: true
     asserts:
       - hasDocuments:
-          count: 14
+          count: 15
       - isKind:
           of: CustomResourceDefinition
       - equal:
