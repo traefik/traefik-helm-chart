@@ -2,10 +2,7 @@ suite: NOTES.txt output
 templates:
   - NOTES.txt
 chart:
-  appVersion: 2.3.0
-capabilities:
-  majorVersion: 1
-  minorVersion: 16
+  appVersion: 3.6.10
 tests:
   - it: should use helm managed namespace in release notes output
     set:
@@ -16,7 +13,7 @@ tests:
           value: |2
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should use helm managed namespace in release notes output
     set:
       namespaceOverride: "traefik-ns-override"
@@ -25,17 +22,42 @@ tests:
           value: |2
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on traefik-ns-override namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on traefik-ns-override namespace!
   - it: should use tag version in release notes output if set
     set:
       image:
-        tag: v3.0
+        tag: v3.7.0
     asserts:
       - equalRaw:
           value: |2
 
 
-            RELEASE-NAME with docker.io/traefik:v3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:v3.7.0 has been deployed successfully on NAMESPACE namespace!
+  - it: should display warning when using an experimental image tag
+    set:
+      image:
+        tag: experimental-v3.6
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:experimental-v3.6 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using an experimental image tag (experimental-v3.6). Experimental versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not supported by this chart. Use at your own risk. ⚠️
+
+  - it: should not display experimental warning when using a stable image tag
+    set:
+      image:
+        tag: v3.6.8
+    asserts:
+      - equalRaw:
+          value: |
+
+
+            RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
@@ -53,7 +75,7 @@ tests:
           value: |2
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when enabling persistence without initContainer
     set:
       persistence:
@@ -63,7 +85,7 @@ tests:
           value: |
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
             lost when Traefik restarts. You can ensure correct permissions with an
@@ -83,7 +105,7 @@ tests:
           value: |
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider. 🚨
 
@@ -102,7 +124,7 @@ tests:
           value: |
 
 
-            RELEASE-NAME with docker.io/traefik:2.3.0 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Port name `web-http-too-long-name` does not comply with Kubernetes standards and will be renamed to `web-http-too-lo` in services. 🚨
             ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️

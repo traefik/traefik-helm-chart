@@ -145,9 +145,9 @@ Users can provide an override for an explicit service they want bound via `.Valu
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
 
-{{- define "providers.kubernetesIngressNginx.publishServicePath" -}}
+{{- define "providers.kubernetesIngressNGINX.publishServicePath" -}}
 {{- $defServiceName := printf "%s/%s" (include "traefik.namespace" .) (include "traefik.fullname" .) -}}
-{{- $servicePath := default $defServiceName .Values.providers.kubernetesIngressNginx.publishService.pathOverride }}
+{{- $servicePath := default $defServiceName .Values.providers.kubernetesIngressNGINX.publishService.pathOverride }}
 {{- print $servicePath | trimSuffix "-" -}}
 {{- end -}}
 
@@ -163,8 +163,8 @@ Construct a comma-separated list of whitelisted namespaces
 {{- define "providers.kubernetesIngress.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngress.namespaces) }}
 {{- end -}}
-{{- define "providers.kubernetesIngressNginx.namespaces" -}}
-{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngressNginx.watchNamespace) }}
+{{- define "providers.kubernetesIngressNGINX.namespaces" -}}
+{{- default (include "traefik.namespace" .) (join "," .Values.providers.kubernetesIngressNGINX.watchNamespace) }}
 {{- end -}}
 {{- define "providers.knative.namespaces" -}}
 {{- default (include "traefik.namespace" .) (join "," .Values.providers.knative.namespaces) }}
@@ -215,7 +215,11 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
  {{- else -}}
   {{- $imageVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.proxy.tag $.Values.image.tag) -}}
   {{- $imageVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.proxy.tag $imageVersion) -}}
-  {{- (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" }}
+  {{- $version := (split "@" (default $.Chart.AppVersion $imageVersion))._0 | replace "latest-" "" | replace "experimental-" "" | replace "master" $.Chart.AppVersion }}
+  {{- if not (regexMatch `^v?\d+(\.\d+)?(\.\d+)?(-.*)?` $version) -}}
+    {{- fail (printf "ERROR: version %q is not supported" $imageVersion) -}}
+  {{- end -}}
+  {{- $version -}}
  {{- end -}}
 {{- end -}}
 
@@ -254,7 +258,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
         {{- else if and (kindIs "bool" $value) (ne $value nil) }}
 --{{ join "." (list $path $key)}}={{ $value }}
         {{- else if not (empty $value) }}
---{{ join "." (list $path $key)}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else }}{{ $value }}{{ end }}
+--{{ join "." (list $path $key)}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else if kindIs "float64" $value }}{{ printf "%.0f" $value }}{{ else }}{{ $value }}{{ end }}
         {{- end -}}
     {{- end -}}
 {{- end -}}

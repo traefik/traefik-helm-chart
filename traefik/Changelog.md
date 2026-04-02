@@ -1,5 +1,52 @@
 # Change Log
 
+## 39.0.5  ![AppVersion: v3.6.10](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.10&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+* fix: :bug: handle experimental-master and fail gracefully
+* fix(nginx): add required RBAC for v3.7
+* fix(gateway): setting port value for `websecure` listener can fail
+* feat: upgrade traefik to version v3.6.10
+
+**Upgrade Notes**
+
+This version allows users to test the upcoming Traefik v3.7.0.
+
+Since v3.7.0 is not released yet, the required CRDs are not part of the chart release.
+Users must manually apply the latest CRDs from the `master` branch before upgrading.
+## 39.0.4  ![AppVersion: v3.6.9](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.9&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-05
+
+* fix(deps): bump traefik.io CRDs to release v3.6.9
+* chore(release): publish v39.0.4
+
+## 39.0.3  ![AppVersion: v3.6.9](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.9&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-05
+
+* fix: remove `rbac.secretResourceNames`
+* feat(deps): update traefik docker tag to v3.6.9
+* docs(example): anchors on trustedIPs with schema enforced
+* chore(release): :rocket: publish v39.0.3
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 5604572..ef2993c 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1111,8 +1111,6 @@ rbac:  # @schema additionalProperties: false
+   # Enable user-facing roles
+   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+   aggregateTo: []
+-  # List of Kubernetes secrets that are accessible for Traefik. If empty, then access is granted to every secret.
+-  secretResourceNames: []
+ 
+ # -- Enable to create a PodSecurityPolicy and assign it to the Service Account via RoleBinding or ClusterRoleBinding
+ podSecurityPolicy:
+```
+
 ## 39.0.2  ![AppVersion: v3.6.8](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.8&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-02-20

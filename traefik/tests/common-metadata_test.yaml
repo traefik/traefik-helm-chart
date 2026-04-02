@@ -15,7 +15,6 @@ templates:
   - tlsstore.yaml
   - rbac/clusterrole.yaml
   - rbac/clusterrolebinding.yaml
-  - rbac/podsecuritypolicy.yaml
   - rbac/serviceaccount.yaml
 
 tests:
@@ -27,7 +26,6 @@ tests:
       ingressRoute.healthcheck.enabled: true
       persistence.enabled: true
       podDisruptionBudget.enabled: true
-      podSecurityPolicy.enabled: true
       providers.kubernetesGateway.enabled: true
       metrics.prometheus.prometheusRule.enabled: true
       metrics.prometheus.prometheusRule.namespace: test
@@ -42,10 +40,9 @@ tests:
         globalLabel: isConfigured
     capabilities:
       majorVersion: 1
-      minorVersion: 16
+      minorVersion: 25
       apiVersions:
         - monitoring.coreos.com/v1
-        - autoscaling/v2beta1
     asserts:
       - isNotEmpty:
           path: metadata.labels

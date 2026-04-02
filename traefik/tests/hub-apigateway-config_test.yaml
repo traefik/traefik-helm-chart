@@ -151,23 +151,6 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.aigateway"
-  - it: should be possible to specify platformUrl
-    set:
-      hub:
-        platformUrl: "fooUrl"
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.platformUrl=fooUrl"
-  - it: should not set platformUrl when offline mode is enabled
-    set:
-      hub:
-        offline: true
-        platformUrl: "fooUrl"
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.platformUrl=fooUrl"
   - it: should be possible to specify ratelimit parameters (and ignore extra)
     set:
       hub:

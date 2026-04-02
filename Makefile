@@ -1,9 +1,9 @@
 .PHONY: lint test
 
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.14.0
-IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v0.3.0
+IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
-IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.17.2-0.8.0
+IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.19.0-1.0.1
 
 traefik/tests/__snapshot__:
 	@mkdir traefik/tests/__snapshot__
@@ -24,6 +24,9 @@ lint:
 docs:
 	docker run --rm -v "$(CURDIR):/helm-docs" $(IMAGE_HELM_DOCS) -o VALUES.md
 
+# To launch only one test
+# $ helm plugin install https://github.com/helm-unittest/helm-unittest
+# $ helm unittest -f 'tests/oci-config_test.yaml' traefik
 test-%:
 	docker run ${DOCKER_ARGS} --network=host --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -v $(HOME)/.kube:/root/.kube -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh $*
 
@@ -35,6 +38,6 @@ schema:
 
 changelog:
 	@echo "== Updating Changelogs..."
-	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG)
+	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG) /app/helm-changelog --update
 	@./hack/changelog.sh
 	@echo "== Updating finished"

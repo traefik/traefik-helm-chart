@@ -8,21 +8,43 @@ tests:
         tag: v2.11.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3"
-  - it: should pass when trying to use this Chart with Traefik Proxy v3 experimental
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3.6+"
+  - it: should fail when trying to use this Chart with Traefik Proxy v3.5
+    set:
+      image:
+        tag: v3.5.0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3.6+"
+  - it: should pass when trying to use this Chart with Traefik Proxy v3.6 experimental
     set:
       image:
         repository: traefik/traefik
-        tag: experimental-v3.0
+        tag: experimental-v3.6
     asserts:
       - notFailedTemplate: {}
+  - it: should pass when trying to use this Chart with Traefik Proxy experimental master (latest one)
+    set:
+      image:
+        repository: traefik/traefik
+        tag: experimental-master
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not pass when trying to use this Chart with unknown tag
+    set:
+      image:
+        repository: traefik/traefik
+        tag: unknown
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: version \"unknown\" is not supported"
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
     set:
       hub:
-        enabled: true
+        token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
+          errorMessage: "When using Traefik Hub image tag needs to be specified!"
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.0
     set:
       image:
@@ -49,21 +71,11 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: latest-v3.0
+        tag: latest
       hub:
         token: "xxx"
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using kubernetesGateway without experimental flag on traefik < 3.1
-    set:
-      image:
-        tag: v3.0.0
-      providers:
-        kubernetesGateway:
-          enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Before traefik v3.1.0-rc3, kubernetesGateway is experimental. Enable it by setting experimental.kubernetesGateway.enabled to true"
   - it: should fail when using knative without experimental flag
     set:
       providers:
@@ -72,87 +84,55 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Knative is experimental. Enable it by setting experimental.knative to true"
-  - it: should fail when using knative provider on traefik < 3.6
-    set:
-      image:
-        tag: v3.5.0
-      experimental:
-        knative: true
-      providers:
-        knative:
-          enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Knative provider is an experimental feature only available for traefik >= v3.6.0."
-  - it: should fail when using kubernetesIngressNginx provider on traefik < 3.6.2
+  - it: should fail when using kubernetesIngressNGINX provider on traefik < 3.6.2
     set:
       image:
         tag: v3.6.1
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2."
-  - it: should not fail when using kubernetesIngressNginx provider on traefik >= 3.6.2
+  - it: should not fail when using kubernetesIngressNGINX provider on traefik >= 3.6.2
     set:
       image:
         tag: v3.6.2
       providers:
-        kubernetesIngressNginx:
+        kubernetesIngressNGINX:
           enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using nativeLBByDefault on kubernetesGateway on traefik < 3.2
+  - it: should fail when using kubernetesIngressNGINX v3.7 options on traefik < 3.7.0
     set:
       image:
-        tag: v3.1.0
+        tag: v3.6.2
       providers:
-        kubernetesGateway:
+        kubernetesIngressNGINX:
           enabled: true
-          nativeLBByDefault: true
+          httpEntryPoint: "web"
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: nativeLBByDefault has been introduced in Kubernetes Gateway provider in v3.2.0"
-  - it: should fail when using serviceName on metrics otlp on traefik < 3.2
+          errorMessage: "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0."
+  - it: should not fail when using kubernetesIngressNGINX v3.7 options on traefik >= 3.7.0
     set:
       image:
-        tag: v3.1.0
-      metrics:
-        otlp:
-          serviceName: traefikTest
+        tag: v3.7.0-ea.1
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          httpEntryPoint: "web"
     asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: serviceName is a feature only available for traefik >= v3.2.0."
-  - it: should fail when using resourceAttributes on metrics otlp on traefik < 3.5.3
-    set:
-      image:
-        tag: v3.1.0
-      metrics:
-        otlp:
-          resourceAttributes:
-            foo: bar
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: resourceAttributes with otlp on metrics is a feature only available for traefik >= v3.5.3."
+      - notFailedTemplate: {}
   - it: should succeed when using version override with nativeLBByDefault on kubernetesGateway
     set:
       image:
         tag: sha256:xxx
-      versionOverride: v3.3.0
+      versionOverride: v3.6.0
       providers:
         kubernetesGateway:
           enabled: true
           nativeLBByDefault: true
-    asserts:
-      - notFailedTemplate: {}
-  - it: should not fail when using kubernetesGateway on traefik > 3.1.0-rc3 without experimental flag
-    set:
-      image:
-        tag: v3.1.0-rc3
-      providers:
-        kubernetesGateway:
-          enabled: true
     asserts:
       - notFailedTemplate: {}
   - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.0
@@ -178,8 +158,6 @@ tests:
           enabled: false
         kubernetesIngress:
           enabled: false
-      image:
-        tag: v3.1.2
     asserts:
       - failedTemplate:
         errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider"
@@ -207,45 +185,6 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: shouldn't have abortOnPluginFailure, when enabled on traefik < 3.3.0
-    set:
-      image:
-        tag: v3.2.0
-      experimental:
-        abortOnPluginFailure: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: abortOnPluginFailure is an experimental feature only available for traefik >= v3.3.0."
-  - it: shouldn't have fastProxy, when enabled on traefik < 3.2.0
-    set:
-      image:
-        tag: v3.1.0
-      experimental:
-        fastProxy:
-          enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: fastProxy is an experimental feature only available for traefik >= v3.2.0."
-  - it: shouldn't have safeQueryParams, when enabled on traefik < 3.1.0
-    set:
-      image:
-        tag: v3.0.0
-      tracing:
-        safeQueryParams:
-          - foo
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: safeQueryParams is a feature only available for traefik >= v3.1.0."
-  - it: should fail when trying to use genericCLF log format Traefik Proxy < v3.5.2
-    set:
-      image:
-        tag: v3.5.1
-      logs:
-        access:
-          format: genericCLF
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: genericCLF is an accesslog format option only available for traefik >= v3.5.2."
   - it: should fail when using Traefik Hub without image registry and repository specified.
     set:
       hub:
@@ -312,7 +251,7 @@ tests:
         namespaces: null
     asserts:
       - failedTemplate:
-          errorPattern: "namespaces is required"
+          errorPattern: "values don't meet the specifications of the schema"
   - it: should fail when using otlp logs without experimental flag
     set:
       logs:
@@ -331,58 +270,10 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
-  - it: should fail when using otlp logs on trafik < 3.3.0
-    set:
-      image:
-        tag: v3.2.0
-      experimental:
-        otlpLogs: true
-      logs:
-        general:
-          otlp:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: otlp on logs is a feature only available for traefik >= v3.3.0."
-  - it: should fail when using otlp access logs on trafik < 3.3.0
-    set:
-      image:
-        tag: v3.2.0
-      experimental:
-        otlpLogs: true
-      logs:
-        access:
-          otlp:
-            enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: otlp on access logs is a feature only available for traefik >= v3.3.0."
-  - it: should fail when using per entrypoint observability on Traefik Proxy < v3.3.0
-    set:
-      image:
-        tag: v3.2.0
-      ports:
-        web:
-          observability:
-            metrics: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: per entrypoint observability is a feature only available for traefik >= v3.3.0."
-  - it: should fail when using traceVerbosity on Traefik Proxy < v3.5.0
-    set:
-      image:
-        tag: v3.4.0
-      ports:
-        web:
-          observability:
-            traceVerbosity: detailed
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: traceVerbosity is a feature only available for traefik >= v3.5.0."
   - it: should fail when using sanitizePath security option on trafik < 3.6.4
     set:
       image:
-        tag: v3.2.0
+        tag: v3.6.0
       ports:
         websecure:
           http:
@@ -393,7 +284,7 @@ tests:
   - it: should fail when allowing encoded character filtering on trafik < 3.6.4
     set:
       image:
-        tag: v3.2.0
+        tag: v3.6.0
       ports:
         websecure:
           http:
@@ -402,6 +293,88 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using accesslog dualOutput on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      logs:
+        access:
+          dualOutput: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
+  - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      ports:
+        websecure:
+          forwardedHeaders:
+            notAppendXForwardedFor: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using global notAppendXForwardedFor on traefik < 3.7.0
+    set:
+      image:
+        tag: v3.6.10
+      global:
+        notAppendXForwardedFor: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using uplink entrypoint on Traefik Proxy
+    set:
+      ports:
+        web:
+          uplink: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink EntryPoints can only be used with Traefik Hub"
+  - it: should fail when using uplink entrypoint on Traefik Hub < 3.20
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.19.0
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."
+  - it: should fail when using uplink entrypoint without multicluster provider
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.2
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: uplink EntryPoints requires the hub multicluster provider"
+  - it: should pass when using uplink entrypoint with Hub >= 3.20 with multicluster provider enabled
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.2
+      ports:
+        web:
+          uplink: true
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:
@@ -416,7 +389,7 @@ tests:
               baseModuleName: "gitlab.company.com"
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in exprimental.plugins."
+          errorMessage: "ERROR: pluginRegistry source plugin1 is not used in experimental.plugins."
   - it: should not fail when using pluginRegistry sources with used plugin
     set:
       image:

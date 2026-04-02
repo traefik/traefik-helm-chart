@@ -50,7 +50,7 @@ metadata:
   {{- template "traefik.service-metadata" (dict "root" $ "service" $service) }}
   annotations:
   {{- with (merge dict (default dict $service.annotationsTCP) (default dict $service.annotations)) }}
-  {{- toYaml . | nindent 4 }}
+  {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}
@@ -73,7 +73,7 @@ metadata:
   {{- template "traefik.service-metadata" (dict "root" $ "service" $service) }}
   annotations:
   {{- with (merge dict (default dict $service.annotationsUDP) (default dict $service.annotations)) }}
-  {{- toYaml . | nindent 4 }}
+  {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
 spec:
   {{- template "traefik.service-spec" (dict "root" $ "service" $service) }}

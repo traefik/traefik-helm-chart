@@ -13,12 +13,12 @@ metadata:
   namespace: {{ template "traefik.namespace" $ }}
   {{- with $annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
     {{- with $config.labels }}
-    {{- toYaml . | nindent 4 }}
+    {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
 spec:
   entryPoints:

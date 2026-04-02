@@ -22,7 +22,8 @@ tests:
       service:
         additionalServices:
           internal:
-            type: LoadBalancer
+            spec:
+              type: LoadBalancer
     asserts:
       - equal:
           path: spec.type
@@ -221,4 +222,3 @@ tests:
           apiVersion: v1
           name: RELEASE-NAME-traefik-internal
         documentIndex: 1
-

@@ -313,10 +313,23 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--global.checkNewVersion=false"
+  - it: should have global notAppendXForwardedFor when enabled
+    set:
+      global:
+        notAppendXForwardedFor: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--global.notAppendXForwardedFor=true"
+  - it: should not have global notAppendXForwardedFor by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--global.notAppendXForwardedFor=true"
   - it: should have abortOnPluginFailure, when enabled on traefik >=3.3.0
     set:
       image:
-        tag: v3.3.0
+        tag: v3.6.10
       experimental:
         abortOnPluginFailure: true
     asserts:
