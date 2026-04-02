@@ -37,20 +37,6 @@ deployment:
   podAnnotations: {}
   # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
   podLabels: {}
-  # -- Additional containers
-  additionalContainers: []
-  # https://docs.datadoghq.com/developers/dogstatsd/unix_socket/?tab=host
-  # - name: socat-proxy
-  #   image: alpine/socat:1.0.5
-  #   args: ["-s", "-u", "udp-recv:8125", "unix-sendto:/socket/socket"]
-  #   volumeMounts:
-  #     - name: dsdsocket
-  #       mountPath: /socket
-  # -- Additional volumes available for use with additionalContainers
-  additionalVolumes: []
-  # - name: dsdsocket
-  #   hostPath:
-  #     path: /var/run/statsd-exporter
   # -- Pull secret for fetching container image
   imagePullSecrets: []
   # -- Pod lifecycle actions
@@ -125,13 +111,6 @@ ingressRoute:
   tls: {}
   #  - secretName: chart-example-tls
 
-# -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
-# @default -- See _values.yaml_
-podDisruptionBudget:  # @schema additionalProperties: false
-  enabled: false
-  maxUnavailable:  # @schema type:[string, integer, null];minimum:0
-  minAvailable:    # @schema type:[string, integer, null];minimum:0
-
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container
 resources: {}
 
@@ -155,9 +134,6 @@ securityContext:
   capabilities:
     drop:
       - NET_RAW
-
-# -- [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context)
-podSecurityContext: {}
 
 readinessProbe:  # @schema additionalProperties: false
   httpGet:
