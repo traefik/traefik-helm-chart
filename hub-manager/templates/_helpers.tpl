@@ -74,6 +74,15 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
+The name of the ClusterRole and ClusterRoleBinding to use.
+Adds the namespace to name to prevent duplicate resource names when there
+are multiple namespaced releases with the same release name.
+*/}}
+{{- define "hub-manager.clusterRoleName" -}}
+{{- (printf "%s-%s" (include "hub-manager.fullname" .) (include "hub-manager.namespace" .)) | trunc 63 | trimSuffix "-" }}
+{{- end -}}
+
+{{/*
 Construct the namespace for all namespaced resources
 Preserve the default behavior of the Release namespace if no override is provided
 */}}
