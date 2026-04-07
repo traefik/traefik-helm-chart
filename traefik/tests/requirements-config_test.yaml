@@ -44,7 +44,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
+          errorMessage: "When using Traefik Hub image tag needs to be specified!"
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.3
     set:
       image:
@@ -336,7 +336,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.19.0
+        tag: v3.19.3
       ports:
         web:
           uplink: true
