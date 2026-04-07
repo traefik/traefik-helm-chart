@@ -47,6 +47,7 @@ A Helm chart for Kubernetes
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint |
 | ports.http.port | int | `8080` |  |
 | ports.http.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| postgres.encryptionKey | string | `""` | Name of Secret with key 'postgres-encryption-key' set to a valid encryption key |
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
 | readinessProbe.failureThreshold | int | `2` | The number of consecutive failures allowed before considering the probe as failed |
 | readinessProbe.httpGet.path | string | `"/ready"` |  |
@@ -62,6 +63,7 @@ A Helm chart for Kubernetes
 | services.traceURL | string | `""` | URL of the trace service |
 | services.workspaceURL | string | `""` | Base URL of the workspace service |
 | startupProbe | object | `{}` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |
+| token | string | `""` | Name of Secret with key 'token' set to a valid license token |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints |
 | tracing.address | string | `""` | Address to send traces |
 | tracing.insecure | bool | `false` | use HTTP instead of HTTPS |
