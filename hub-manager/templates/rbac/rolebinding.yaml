@@ -3,7 +3,7 @@ kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "hub-manager.fullname" $ }}
-  namespace: {{ include "hub-manager.namespace" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hub-manager.labels" $ | nindent 4 }}
 roleRef:
@@ -13,4 +13,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: {{ include "hub-manager.serviceAccountName" $ }}
-    namespace: {{ include "hub-manager.namespace" $ }}
+    namespace: {{ .Release.Namespace }}

@@ -4,9 +4,9 @@
 
 image:  # @schema additionalProperties: false
   # -- Hub-manager image host registry
-  registry: gcr.io
+  registry: ghcr.io
   # -- Hub-manager image repository
-  repository: traefiklabs/hub-manager
+  repository: traefik/hub-manager
   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-
   tag:  # @schema type:[string, null]
   # -- Traefik image pull policy
@@ -58,7 +58,7 @@ serviceAccount:
   # If not set and create is true, a name is generated using the fullname template
   name: ""
   # -- Whether to automatically mount a ServiceAccount's API credentials
-  automount: true
+  automountServiceAccountToken: false
   # -- Additional serviceAccount annotations (e.g. for oidc authentication)
   annotations: {}
 
@@ -134,28 +134,6 @@ postgres:
   # -- Name of Secret with key 'postgres-encryption-key' set to a valid encryption key
   encryptionKey: ""
 
-jwt:
-  # -- Name of Secret with key 'jwt-iss' set to a valid JWT Issuer
-  iss: ""
-  # -- Name of Secret with key 'jwt-sub' set to a valid JWT Sub
-  sub: ""
-  # -- Name of Secret with key 'jwt-cert' set to a valid JWT Cert
-  cert: ""
-
-services:
-  # -- Base URL of the offer service
-  offerURL: ""
-  # -- Base URL of the workspace service
-  workspaceURL: ""
-  # -- URL of the trace service
-  traceURL: ""
-
-hydra:
-  # -- URL of the Hydra admin API
-  url: ""
-  # -- URL of the Hydra issuer
-  issuerURL: ""
-
 tracing:
   # -- Address to send traces
   address: ""
@@ -174,12 +152,3 @@ ports:
     port: 8080
     # -- The port protocol (TCP/UDP)
     protocol: TCP
-  
-# -- overrides the app.kubernetes.io/name label
-nameOverride: ""
-
-# -- Overrides the resource name for templates (i.e deployment, service, etc..)
-fullnameOverride: ""
-
-# -- This field overrides the default Release Namespace for Helm
-namespaceOverride: ""
