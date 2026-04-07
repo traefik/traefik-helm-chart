@@ -15,6 +15,9 @@ image:  # @schema additionalProperties: false
 # -- Address to listen on
 address: ":80"
 
+# -- Name of Secret with key 'token' set to a valid license token
+token: ""
+
 logs:
   # -- Set logs format
   format: "json" # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
