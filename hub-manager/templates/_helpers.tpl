@@ -2,7 +2,7 @@
 Expand the name of the chart.
 */}}
 {{- define "hub-manager.name" -}}
-{{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- .Chart.Name | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
@@ -11,15 +11,11 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 If release name contains chart name it will be used as a full name.
 */}}
 {{- define "hub-manager.fullname" -}}
-{{- if .Values.fullnameOverride }}
-{{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
+{{- $name := .Chart.Name }}
 {{- if contains $name .Release.Name }}
 {{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
 {{- end }}
 {{- end }}
 
@@ -79,19 +75,7 @@ Adds the namespace to name to prevent duplicate resource names when there
 are multiple namespaced releases with the same release name.
 */}}
 {{- define "hub-manager.clusterRoleName" -}}
-{{- (printf "%s-%s" (include "hub-manager.fullname" .) (include "hub-manager.namespace" .)) | trunc 63 | trimSuffix "-" }}
-{{- end -}}
-
-{{/*
-Construct the namespace for all namespaced resources
-Preserve the default behavior of the Release namespace if no override is provided
-*/}}
-{{- define "hub-manager.namespace" -}}
-{{- if .Values.namespaceOverride -}}
-{{- .Values.namespaceOverride | trunc 63 | trimSuffix "-" -}}
-{{- else -}}
-{{- .Release.Namespace -}}
-{{- end -}}
+{{- (printf "%s-%s" (include "hub-manager.fullname" .)) | trunc 63 | trimSuffix "-" }}
 {{- end -}}
 
 {{/*
