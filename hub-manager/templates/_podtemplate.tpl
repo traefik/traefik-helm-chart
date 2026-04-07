@@ -101,6 +101,11 @@
               secretKeyRef:
                 key: postgres-uri
                 name: {{ .uri }}
+          - name: POSTGRES_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                key: postgres-encryption-key
+                name: {{ .encryptionKey }}
           {{- end }}
 
           {{- with .Values.tracing }}
