@@ -41,13 +41,9 @@
         lifecycle: {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
-        {{- range $name, $config := .Values.ports }}
-         {{- if $config }}
-        - name: {{ include "hub-manager.portname" $name }}
-          containerPort: {{ default $config.port $config.containerPort }}
-          protocol: {{ default "TCP" $config.protocol }}
-         {{- end }}
-        {{- end }}
+        - name: http
+          containerPort: 8080
+          protocol: TCP
         {{- with .Values.securityContext }}
         securityContext:
           {{- toYaml . | nindent 10 }}
@@ -58,7 +54,7 @@
         {{- end }}
         args:
           - "serve"
-          - "--addr={{ default ":80" .Values.address }}"
+          - "--addr={{ .Values.address }}"
 
           {{- with .Values.token }}
           - "--hub.token=$(HUB_TOKEN)"
