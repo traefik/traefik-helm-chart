@@ -28,13 +28,13 @@
         {{- with .Values.resources }}
         resources: {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- with .Values.deployment.readinessProbe }}
+        {{- with .Values.readinessProbe }}
         readinessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- with .Values.deployment.livenessProbe }}
+        {{- with .Values.livenessProbe }}
         livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- with .Values.deployment.startupProbe}}
+        {{- with .Values.startupProbe}}
         startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.deployment.lifecycle }}
