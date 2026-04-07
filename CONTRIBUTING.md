@@ -38,6 +38,14 @@ All commits will appear in traefik helm chart changelog with two exceptions:
 * CRDs: CRDs are shared between Traefik and CRDs charts, thus, commits with this scope will appear in both charts changelog (e.g. `feat(CRDs): update Traefik Proxy CRDs to v3.x`)
 * CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values): update values documentation`)
 
+## About Renovate
+
+Renovate can be run locally for debugging purpose, like this:
+
+```bash
+docker run -it -v $(pwd):/usr/src/app  -e RENOVATE_CONFIG_FILE=/usr/src/app/.github/renovate.json5 -e LOG_LEVEL=DEBUG renovate/renovate --platform=local
+```
+
 ## About CRDs
 
 Some Traefik Helm chart users asked for help in managing CRDs installed by this chart (cf. [#1141](https://github.com/traefik/traefik-helm-chart/issues/1141), [#1209](https://github.com/traefik/traefik-helm-chart/issues/1209)).

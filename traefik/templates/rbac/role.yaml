@@ -16,23 +16,10 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
-  {{- if (semverCompare "<v3.1.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
-      - endpoints
-      - services
-    verbs:
-      - get
-      - list
-      - watch
-  {{- else }}
-  - apiGroups:
-      - ""
-    resources:
-      {{- if and $.Values.providers.kubernetesCRD.enabled (semverCompare ">=v3.4.0-0" $version) }}
       - configmaps
-      {{- end }}
       - services
     verbs:
       - get
@@ -45,22 +32,13 @@ rules:
     verbs:
       - list
       - watch
-  {{- end }}
-  {{- if (semverCompare ">=v3.5.0-0" $version) }}
   - apiGroups:
       - ""
     resources:
       - pods
     verbs:
       - get
-  {{- end }}
   # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-    verbs:
-      - list
   - apiGroups:
       - ""
     resources:
@@ -69,7 +47,7 @@ rules:
       - get
       - list
       - watch
-{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNginx.enabled) }}
+{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNGINX.enabled) }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -122,16 +100,6 @@ rules:
     verbs:
       - update
 {{- end }}
-{{- if $.Values.podSecurityPolicy.enabled }}
-  - apiGroups:
-      - extensions
-    resourceNames:
-      - {{ template "traefik.fullname" $ }}
-    resources:
-      - podsecuritypolicies
-    verbs:
-      - use
-{{- end -}}
 {{- if (and (has . $hubNamespaces) $.Values.hub.token) }}
   - apiGroups:
       - ""
@@ -170,6 +138,9 @@ rules:
       - hub.traefik.io
     resources:
       - aiservices
+  {{- if $.Values.hub.providers.multicluster.enabled }}
+      - uplinks
+  {{- end }}
     verbs:
       - get
       - list

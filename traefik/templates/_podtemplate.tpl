@@ -33,6 +33,9 @@
       automountServiceAccountToken: true
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       hostNetwork: {{ .Values.hostNetwork }}
+      {{- if not (kindIs "invalid" .Values.deployment.hostUsers) }}
+      hostUsers: {{ .Values.deployment.hostUsers }}
+      {{- end }}
       {{- with .Values.deployment.dnsPolicy }}
       dnsPolicy: {{ . }}
       {{- end }}
@@ -206,25 +209,29 @@
            {{- if .sendAnonymousUsage }}
           - "--global.sendAnonymousUsage"
            {{- end }}
+           {{- if .notAppendXForwardedFor }}
+          - "--global.notAppendXForwardedFor=true"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
-          - "--entryPoints.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+            {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
+          - "--{{$entryPoints}}.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
             {{- with $config.asDefault }}
-          - "--entryPoints.{{$name}}.asDefault={{ . }}"
+          - "--{{$entryPoints}}.{{$name}}.asDefault={{ . }}"
             {{- end }}
             {{- with $config.observability }}
               {{- if ne .accessLogs nil }}
-          - "--entryPoints.{{$name}}.observability.accessLogs={{ .accessLogs }}"
+          - "--{{$entryPoints}}.{{$name}}.observability.accessLogs={{ .accessLogs }}"
               {{- end }}
               {{- if ne .metrics nil }}
-          - "--entryPoints.{{$name}}.observability.metrics={{ .metrics }}"
+          - "--{{$entryPoints}}.{{$name}}.observability.metrics={{ .metrics }}"
               {{- end }}
               {{- if ne .tracing nil }}
-          - "--entryPoints.{{$name}}.observability.tracing={{ .tracing }}"
+          - "--{{$entryPoints}}.{{$name}}.observability.tracing={{ .tracing }}"
               {{- end }}
               {{- if ne .traceVerbosity nil }}
-          - "--entryPoints.{{$name}}.observability.traceVerbosity={{ .traceVerbosity }}"
+          - "--{{$entryPoints}}.{{$name}}.observability.traceVerbosity={{ .traceVerbosity }}"
               {{- end }}
             {{- end }}
            {{- end }}
@@ -469,7 +476,7 @@
            {{- end }}
           {{- end }}
 
-          {{- if and (semverCompare ">=v3.3.0-0" $version) (.Values.experimental.abortOnPluginFailure)}}
+          {{- if .Values.experimental.abortOnPluginFailure }}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
@@ -491,7 +498,7 @@
           - "--providers.kubernetescrd.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if and .Values.rbac.namespaced (semverCompare ">=v3.1.2-0" $version) }}
+           {{- if .Values.rbac.namespaced }}
           - "--providers.kubernetescrd.disableClusterScopeResources=true"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.nativeLBByDefault }}
@@ -511,6 +518,12 @@
            {{- if or (and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled) (and .Values.providers.kubernetesIngress.publishedService.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride)}}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
            {{- end }}
+           {{- with .Values.providers.kubernetesIngress.ingressEndpoint.hostname }}
+          - "--providers.kubernetesingress.ingressendpoint.hostname={{ . }}"
+           {{- end }}
+           {{- with .Values.providers.kubernetesIngress.ingressEndpoint.ip }}
+          - "--providers.kubernetesingress.ingressendpoint.ip={{ . }}"
+           {{- end }}
            {{- if .Values.providers.kubernetesIngress.labelSelector }}
           - "--providers.kubernetesingress.labelSelector={{ .Values.providers.kubernetesIngress.labelSelector }}"
            {{- end }}
@@ -518,14 +531,7 @@
           - "--providers.kubernetesingress.ingressClass={{ .Values.providers.kubernetesIngress.ingressClass }}"
            {{- end }}
            {{- if .Values.rbac.namespaced }}
-            {{- if semverCompare "<v3.1.5-0" $version }}
-          - "--providers.kubernetesingress.disableIngressClassLookup=true"
-              {{- if semverCompare ">=v3.1.2-0" $version }}
           - "--providers.kubernetesingress.disableClusterScopeResources=true"
-              {{- end }}
-            {{- else }}
-          - "--providers.kubernetesingress.disableClusterScopeResources=true"
-            {{- end }}
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.nativeLBByDefault }}
           - "--providers.kubernetesingress.nativeLBByDefault=true"
@@ -587,51 +593,16 @@
           {{- end }}
           {{- end }}
           {{- end }}
-          {{- with .Values.providers.kubernetesIngressNginx }}
+          {{- with .Values.providers.kubernetesIngressNGINX }}
            {{- if .enabled }}
           - "--providers.kubernetesingressnginx"
-            {{- with .controllerClass }}
-          - "--providers.kubernetesingressnginx.controllerclass={{ . }}"
-            {{- end }}
-            {{- with .ingressClass }}
-          - "--providers.kubernetesingressnginx.ingressclass={{ . }}"
-            {{- end }}
-            {{- if .ingressClassByName }}
-          - "--providers.kubernetesingressnginx.ingressclassbyname=true"
-            {{- end }}
-            {{- if .watchIngressWithoutClass }}
-          - "--providers.kubernetesingressnginx.watchingresswithoutclass=true"
-            {{- end }}
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
-          - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNginx.namespaces" $ }}"
-            {{- end }}
-            {{- with .watchNamespaceSelector }}
-          - "--providers.kubernetesingressnginx.watchnamespaceselector={{ . }}"
+          - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNGINX.namespaces" $ }}"
             {{- end }}
             {{- if and $.Values.service.enabled .publishService.enabled }}
-          - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNginx.publishServicePath" $ }}"
+          - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
             {{- end }}
-            {{- with .publishStatusAddress }}
-          - "--providers.kubernetesingressnginx.publishstatusaddress={{ . }}"
-            {{- end }}
-            {{- with .defaultBackendService }}
-          - "--providers.kubernetesingressnginx.defaultbackendservice={{ . }}"
-            {{- end }}
-            {{- if .disableSvcExternalName }}
-          - "--providers.kubernetesingressnginx.disablesvcexternalname=true"
-            {{- end }}
-            {{- with .throttleDuration }}
-          - "--providers.kubernetesingressnginx.throttleduration={{ . }}"
-            {{- end }}
-            {{- with .certAuthFilePath }}
-          - "--providers.kubernetesingressnginx.certauthfilepath={{ . }}"
-            {{- end }}
-            {{- with .endpoint }}
-          - "--providers.kubernetesingressnginx.endpoint={{ . }}"
-            {{- end }}
-            {{- with .token }}
-          - "--providers.kubernetesingressnginx.token={{ . }}"
-            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
@@ -645,115 +616,116 @@
             {{- end }}
            {{- end }}
           {{- end }}
-          {{- range $entrypoint, $config := $.Values.ports }}
+          {{- range $name, $config := $.Values.ports }}
           {{- if $config }}
+            {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
             {{- with $config.http }}
-              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "entryPoints.%s.http.encodedCharacters" $entrypoint) "content" .encodedCharacters) | nindent 10 }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.%s.http.encodedCharacters" $entryPoints $name) "content" .encodedCharacters) | nindent 10 }}
               {{- with .maxHeaderBytes }}
-          - "--entryPoints.{{ $entrypoint }}.http.maxHeaderBytes={{ . | int64 }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderBytes={{ . | int64 }}"
               {{- end }}
               {{- with .middlewares }}
-          - "--entryPoints.{{ $entrypoint }}.http.middlewares={{ join "," . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.middlewares={{ join "," . }}"
               {{- end }}
               {{- with (.redirections).entryPoint }}
                {{- if not (hasKey $.Values.ports .to) }}
-                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $entrypoint .to }}
+                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $name .to }}
                  {{- fail $errorMsg }}
                {{- end }}
                {{- $toPort := index $.Values.ports .to }}
                {{- if and (((($toPort).http).tls).enabled) .scheme (ne .scheme "https") }}
-                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $entrypoint .to }}
+                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s without setting scheme to https" $name .to }}
                  {{- fail $errorMsg }}
                {{- end }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.redirections.entryPoint.to=:{{ $toPort.exposedPort }}"
                {{- with .scheme }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.scheme={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.redirections.entryPoint.scheme={{ . }}"
                {{- end }}
                {{- with .priority }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.priority={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.redirections.entryPoint.priority={{ . }}"
                {{- end }}
                {{- if hasKey . "permanent" }}
-          - "--entryPoints.{{ $entrypoint }}.http.redirections.entryPoint.permanent={{ .permanent }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.redirections.entryPoint.permanent={{ .permanent }}"
                {{- end }}
               {{- end }}
               {{- if ne .sanitizePath nil }}
                {{- with .sanitizePath | toString }}
-          - "--entryPoints.{{ $entrypoint }}.http.sanitizePath={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
               {{- end }}
               {{- if (.tls).enabled }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls=true"
+          - "--{{$entryPoints}}.{{ $name }}.http.tls=true"
                 {{- with .tls.options }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.options={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.tls.options={{ . }}"
                 {{- end }}
                 {{- with .tls.certResolver }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.certResolver={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.tls.certResolver={{ . }}"
                 {{- end }}
                 {{- range $index, $domain := .tls.domains }}
                   {{- with $domain.main }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].main={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.tls.domains[{{ $index }}].main={{ . }}"
                   {{- end }}
                   {{- with $domain.sans }}
-          - "--entryPoints.{{ $entrypoint }}.http.tls.domains[{{ $index }}].sans={{ join "," . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http.tls.domains[{{ $index }}].sans={{ join "," . }}"
                   {{- end }}
                 {{- end }}
               {{- end }}
             {{- end }}
             {{- with $config.http3 }}
               {{- if .enabled }}
-          - "--entryPoints.{{ $entrypoint }}.http3"
+          - "--{{$entryPoints}}.{{ $name }}.http3"
                 {{- with .advertisedPort }}
-          - "--entryPoints.{{ $entrypoint }}.http3.advertisedPort={{ . }}"
+          - "--{{$entryPoints}}.{{ $name }}.http3.advertisedPort={{ . }}"
                 {{- end }}
               {{- end }}
             {{- end }}
             {{- if $config.allowACMEByPass }}
-              {{- if (semverCompare "<v3.1.3-0" $version) }}
-                {{- fail "ERROR: allowACMEByPass has been introduced with Traefik v3.1.3+" -}}
-              {{- end }}
-          - "--entryPoints.{{ $entrypoint }}.allowACMEByPass=true"
+          - "--{{$entryPoints}}.{{ $name }}.allowACMEByPass=true"
             {{- end }}
             {{- if $config.forwardedHeaders }}
               {{- if $config.forwardedHeaders.trustedIPs }}
-          - "--entryPoints.{{ $entrypoint }}.forwardedHeaders.trustedIPs={{ join "," $config.forwardedHeaders.trustedIPs }}"
+          - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.trustedIPs={{ join "," $config.forwardedHeaders.trustedIPs }}"
               {{- end }}
               {{- if $config.forwardedHeaders.insecure }}
-          - "--entryPoints.{{ $entrypoint }}.forwardedHeaders.insecure"
+          - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.insecure"
+              {{- end }}
+              {{- if $config.forwardedHeaders.notAppendXForwardedFor }}
+          - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.notAppendXForwardedFor=true"
               {{- end }}
             {{- end }}
             {{- if $config.proxyProtocol }}
               {{- if $config.proxyProtocol.trustedIPs }}
-          - "--entryPoints.{{ $entrypoint }}.proxyProtocol.trustedIPs={{ join "," $config.proxyProtocol.trustedIPs }}"
+          - "--{{$entryPoints}}.{{ $name }}.proxyProtocol.trustedIPs={{ join "," $config.proxyProtocol.trustedIPs }}"
               {{- end }}
               {{- if $config.proxyProtocol.insecure }}
-          - "--entryPoints.{{ $entrypoint }}.proxyProtocol.insecure"
+          - "--{{$entryPoints}}.{{ $name }}.proxyProtocol.insecure"
               {{- end }}
             {{- end }}
             {{- with $config.transport }}
               {{- with .respondingTimeouts }}
                 {{- if and (ne .readTimeout nil) (toString .readTimeout) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.readTimeout={{ .readTimeout }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.respondingTimeouts.readTimeout={{ .readTimeout }}"
                 {{- end }}
                 {{- if and (ne .writeTimeout nil) (toString .writeTimeout) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.writeTimeout={{ .writeTimeout }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.respondingTimeouts.writeTimeout={{ .writeTimeout }}"
                 {{- end }}
                 {{- if and (ne .idleTimeout nil) (toString .idleTimeout) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.respondingTimeouts.idleTimeout={{ .idleTimeout }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.respondingTimeouts.idleTimeout={{ .idleTimeout }}"
                 {{- end }}
               {{- end }}
               {{- with .lifeCycle }}
                 {{- if and (ne .requestAcceptGraceTimeout nil) (toString .requestAcceptGraceTimeout) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.requestAcceptGraceTimeout={{ .requestAcceptGraceTimeout }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.lifeCycle.requestAcceptGraceTimeout={{ .requestAcceptGraceTimeout }}"
                 {{- end }}
                 {{- if and (ne .graceTimeOut nil) (toString .graceTimeOut) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.lifeCycle.graceTimeOut={{ .graceTimeOut }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.lifeCycle.graceTimeOut={{ .graceTimeOut }}"
                 {{- end }}
               {{- end }}
               {{- if and (ne .keepAliveMaxRequests nil) (toString .keepAliveMaxRequests) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxRequests={{ .keepAliveMaxRequests }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.keepAliveMaxRequests={{ .keepAliveMaxRequests }}"
               {{- end }}
               {{- if and (ne .keepAliveMaxTime nil) (toString .keepAliveMaxTime) }}
-          - "--entryPoints.{{ $entrypoint }}.transport.keepAliveMaxTime={{ .keepAliveMaxTime }}"
+          - "--{{$entryPoints}}.{{ $name }}.transport.keepAliveMaxTime={{ .keepAliveMaxTime }}"
               {{- end }}
             {{- end }}
           {{- end }}
@@ -784,6 +756,9 @@
               {{- end }}
               {{- if .access.addInternals }}
           - "--accesslog.addinternals"
+              {{- end }}
+              {{- if .access.dualOutput }}
+          - "--accesslog.dualOutput=true"
               {{- end }}
               {{- with .access.bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
@@ -866,11 +841,6 @@
               {{- end }}
              {{- end }}
             {{- end -}}
-            {{- if not .offline }}
-              {{- with .platformUrl }}
-          - "--hub.platformUrl={{ . }}"
-              {{- end -}}
-            {{- end }}
             {{- range $field, $value := .redis }}
              {{- if has $field (list "cluster" "database" "endpoints" "username" "password" "timeout") -}}
               {{- with $value }}
@@ -905,6 +875,23 @@
             {{- end }}
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.multicluster.enabled }}
+          - "--hub.providers.multicluster=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
+              {{- range $childName, $childCfg := .providers.multicluster.children }}
+                {{- $childPath := printf "hub.providers.multicluster.children.%s" $childName }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $childPath "content" (omit $childCfg "serversTransport")) | nindent 10 }}
+                {{- with get $childCfg "serversTransport" }}
+                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.serversTransport" $childPath) "content" (omit . "certificates")) | nindent 10 }}
+                  {{- with get . "certificates" }}
+                    {{- range $idx, $val := . }}
+                      {{- $certPath := printf "hub.providers.multicluster.children.%s.serversTransport.certificates[%d]" $childName $idx }}
+                      {{- include "traefik.yaml2CommandLineArgs" (dict "path" $certPath "content" $val) | nindent 10 }}
+                    {{- end }}
+                  {{- end }}
+                {{- end }}
+              {{- end }}
             {{- end }}
           {{- end }}
           {{- with .pluginRegistry.sources }}

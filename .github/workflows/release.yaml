@@ -77,7 +77,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@a34a8009a9588bb86b02a873cf592440e96a5da8 # v6.1.1
+        uses: mikepenz/release-changelog-builder-action@2cb9befdbc05f65b8354cc9873cd506509bd0782 # v6.2.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
@@ -87,7 +87,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Create release
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }}
@@ -214,7 +214,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@a34a8009a9588bb86b02a873cf592440e96a5da8 # v6.1.1
+        uses: mikepenz/release-changelog-builder-action@2cb9befdbc05f65b8354cc9873cd506509bd0782 # v6.2.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
@@ -224,7 +224,7 @@ jobs:
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Create release
-        uses: ncipollo/release-action@b7eabc95ff50cbeeedec83973935c8f306dfcd0b # v1.20.0
+        uses: ncipollo/release-action@339a81892b84b4eeb0f6e744e4574d79d0d9b8dd # v1.21.0
         with:
           tag: ${{ steps.tag_version.outputs.new_tag }}
           name: ${{ steps.tag_version.outputs.new_tag }}
