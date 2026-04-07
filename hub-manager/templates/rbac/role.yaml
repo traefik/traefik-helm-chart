@@ -3,7 +3,7 @@ kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
   name: {{ include "hub-manager.fullname" $ }}
-  namespace: {{ include "hub-manager.namespace" . }}
+  namespace: {{ .Release.Namespace }}
   labels:
     {{- include "hub-manager.labels" $ | nindent 4 }}
 rules:
