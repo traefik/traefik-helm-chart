@@ -70,15 +70,6 @@ Create the name of the service account to use
 {{- end }}
 
 {{/*
-The name of the ClusterRole and ClusterRoleBinding to use.
-Adds the namespace to name to prevent duplicate resource names when there
-are multiple namespaced releases with the same release name.
-*/}}
-{{- define "hub-manager.clusterRoleName" -}}
-{{- (printf "%s-%s" (include "hub-manager.fullname" .)) | trunc 63 | trimSuffix "-" }}
-{{- end -}}
-
-{{/*
 Change input to a valid name for a port.
 This is a best effort to convert input to a valid port name for Kubernetes,
 which per RFC 6335 only allows lowercase alphanumeric characters and '-',
