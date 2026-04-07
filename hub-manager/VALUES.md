@@ -25,16 +25,10 @@ A Helm chart for Kubernetes
 | deployment.replicas | int | `1` | Number of pods of the deployment |
 | deployment.revisionHistoryLimit | int | `10` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if shut down does not happen |
-| fullnameOverride | string | `""` | Overrides the resource name for templates (i.e deployment, service, etc..) |
-| hydra.issuerURL | string | `""` | URL of the Hydra issuer |
-| hydra.url | string | `""` | URL of the Hydra admin API |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
-| image.registry | string | `"gcr.io"` | Hub-manager image host registry |
-| image.repository | string | `"traefiklabs/hub-manager"` | Hub-manager image repository |
+| image.registry | string | `"ghcr.io"` | Hub-manager image host registry |
+| image.repository | string | `"traefik/hub-manager"` | Hub-manager image repository |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest- |
-| jwt.cert | string | `""` | Name of Secret with key 'jwt-cert' set to a valid JWT Cert |
-| jwt.iss | string | `""` | Name of Secret with key 'jwt-iss' set to a valid JWT Issuer |
-| jwt.sub | string | `""` | Name of Secret with key 'jwt-sub' set to a valid JWT Sub |
 | livenessProbe.failureThreshold | int | `2` | The number of consecutive failures allowed before considering the probe as failed |
 | livenessProbe.httpGet.path | string | `"/live"` |  |
 | livenessProbe.httpGet.port | int | `8080` |  |
@@ -42,8 +36,6 @@ A Helm chart for Kubernetes
 | livenessProbe.periodSeconds | int | `5` | The number of seconds to wait between consecutive probes |
 | logs.format | string | `"json"` | Set logs format |
 | logs.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC |
-| nameOverride | string | `""` | overrides the app.kubernetes.io/name label |
-| namespaceOverride | string | `""` | This field overrides the default Release Namespace for Helm |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint |
 | ports.http.port | int | `8080` |  |
 | ports.http.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
@@ -57,11 +49,8 @@ A Helm chart for Kubernetes
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
 | serviceAccount.annotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
-| serviceAccount.automount | bool | `true` | Whether to automatically mount a ServiceAccount's API credentials |
+| serviceAccount.automountServiceAccountToken | bool | `false` | Whether to automatically mount a ServiceAccount's API credentials |
 | serviceAccount.name | string | `""` |  |
-| services.offerURL | string | `""` | Base URL of the offer service |
-| services.traceURL | string | `""` | URL of the trace service |
-| services.workspaceURL | string | `""` | Base URL of the workspace service |
 | startupProbe | object | `{}` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |
 | token | string | `""` | Name of Secret with key 'token' set to a valid license token |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints |

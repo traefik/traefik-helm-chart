@@ -15,7 +15,7 @@
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "hub-manager.serviceAccountName" . }}
-      automountServiceAccountToken: false
+      automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
@@ -74,25 +74,6 @@
           - "--log-format={{ .format }}"
           {{- end }}
 
-          {{- with .Values.services.offerURL }}
-          - "--offer-service-url={{ . }}"
-          {{- end }}
-          {{- with .Values.services.workspaceURL }}
-          - "--workspace-service-url={{ . }}"
-          {{- end }}
-          {{- with .Values.services.traceURL }}
-          - "--trace-service-url={{ . }}"
-          {{- end }}
-
-          {{- with .Values.hydra }}
-            {{- with .url }}
-          - "--hydra-url={{ . }}"
-            {{- end }}
-            {{- with .issuerURL }}
-          - "--hydra-issuer-url={{ . }}"
-            {{- end }}
-          {{- end }}
-
           {{- with .Values.tracing }}
             {{- if .insecure }}
           - "--tracing-insecure"
@@ -138,23 +119,5 @@
             {{- end }}
           - name: TRACING_PROBABILITY
             value: {{ default "0" .probability }}
-          {{- end }}
-
-          {{- with .Values.jwt }}
-          - name: JWT_CERT
-            valueFrom:
-              secretKeyRef:
-                key: jwt-cert
-                name: {{ .cert }}
-          - name: JWT_ISS
-            valueFrom:
-              secretKeyRef:
-                key: jwt-iss
-                name: {{ .iss }}
-          - name: JWT_SUB
-            valueFrom:
-              secretKeyRef:
-                key: jwt-sub
-                name: {{ .sub }}
           {{- end }}
 {{ end -}}
