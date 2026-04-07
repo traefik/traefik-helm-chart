@@ -65,6 +65,10 @@
           - "serve"
           - "--addr={{ default ":80" .Values.address }}"
 
+          {{- with .Values.token }}
+          - "--hub.token=$(HUB_TOKEN)"
+          {{- end }}
+
           {{- with .Values.logs }}
           - "--log-level={{ .level }}"
           - "--log-format={{ .format }}"
@@ -95,6 +99,14 @@
             {{- end }}
           {{- end }}
         env:
+          {{- with .Values.token }}
+          - name: HUB_TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: {{ . }}
+          {{- end }}
+
           {{- with .Values.postgres }}
           - name: POSTGRES_URI
             valueFrom:
