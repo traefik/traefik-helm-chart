@@ -8,7 +8,7 @@ A Helm chart for Kubernetes
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| address | string | `":80"` | Address to listen on |
+| address | string | `":8080"` | Address to listen on |
 | affinity | object | `{}` |  |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively) |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object |
@@ -37,8 +37,6 @@ A Helm chart for Kubernetes
 | logs.format | string | `"json"` | Set logs format |
 | logs.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint |
-| ports.http.port | int | `8080` |  |
-| ports.http.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | postgres.encryptionKey | string | `""` | Name of Secret with key 'postgres-encryption-key' set to a valid encryption key |
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
 | readinessProbe.failureThreshold | int | `2` | The number of consecutive failures allowed before considering the probe as failed |

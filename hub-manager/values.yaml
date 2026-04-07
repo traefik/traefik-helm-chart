@@ -13,7 +13,7 @@ image:  # @schema additionalProperties: false
   pullPolicy: IfNotPresent
 
 # -- Address to listen on
-address: ":80"
+address: ":8080"
 
 # -- Name of Secret with key 'token' set to a valid license token
 token: ""
@@ -145,10 +145,3 @@ tracing:
   username: ""
   # -- Name of Secret with key 'tracing-password' set to a valid password
   password: ""
-
-ports:
-  # @schema additionalProperties: false
-  http:
-    port: 8080
-    # -- The port protocol (TCP/UDP)
-    protocol: TCP
