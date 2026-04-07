@@ -26,24 +26,19 @@
         name: {{ include "hub-manager.fullname" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
-        resources:
-          {{- toYaml . | nindent 10 }}
+        resources: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.deployment.readinessProbe }}
-        readinessProbe:
-          {{- toYaml . | nindent 10 }}
+        readinessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.deployment.livenessProbe }}
-        livenessProbe:
-          {{- toYaml . | nindent 10 }}
+        livenessProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.deployment.startupProbe}}
-        startupProbe:
-          {{- toYaml . | nindent 10 }}
+        startupProbe: {{- toYaml . | nindent 10 }}
         {{- end }}
         {{- with .Values.deployment.lifecycle }}
-        lifecycle:
-          {{- toYaml . | nindent 10 }}
+        lifecycle: {{- toYaml . | nindent 10 }}
         {{- end }}
         ports:
         {{- range $name, $config := .Values.ports }}
