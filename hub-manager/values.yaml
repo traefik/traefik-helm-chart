@@ -128,6 +128,8 @@ startupProbe: {}
 postgres:
   # -- Name of Secret with key 'postgres-uri' set to a valid Postgres connection string
   uri: ""
+  # -- Name of Secret with key 'postgres-encryption-key' set to a valid encryption key
+  encryptionKey: ""
 
 jwt:
   # -- Name of Secret with key 'jwt-iss' set to a valid JWT Issuer
