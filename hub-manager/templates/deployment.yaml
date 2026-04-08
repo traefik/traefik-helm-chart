@@ -22,7 +22,7 @@ spec:
   selector:
     matchLabels:
       {{- include "hub-manager.labelselector" . | nindent 6 }}
-  {{- with .Values.updateStrategy }}
+  {{- with .Values.deployment.updateStrategy }}
   strategy:
     type: {{ .type }}
     {{- if (eq .type "RollingUpdate") }}
