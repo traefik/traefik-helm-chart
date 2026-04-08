@@ -19,8 +19,6 @@ address: ":8080"
 token: ""
 
 logs:
-  # -- Set logs format
-  format: "json" # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
   # By default, the level is set to INFO
   # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC
   level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
@@ -44,13 +42,12 @@ deployment:
   imagePullSecrets: []
   # -- Pod lifecycle actions
   lifecycle: {}
-
-updateStrategy:  # @schema additionalProperties: false
-  # -- Customize updateStrategy of Deployment
-  type: RollingUpdate
-  rollingUpdate:
-    maxUnavailable: 0  # @schema type:[integer, string, null]
-    maxSurge: 1        # @schema type:[integer, string, null]
+  updateStrategy:  # @schema additionalProperties: false
+    # -- Customize updateStrategy of Deployment
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0  # @schema type:[integer, string, null]
+      maxSurge: 1        # @schema type:[integer, string, null]
 
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
