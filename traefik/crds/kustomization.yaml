@@ -15,6 +15,7 @@ resources:
   - hub.traefik.io_apiratelimits.yaml
   - hub.traefik.io_apis.yaml
   - hub.traefik.io_apiversions.yaml
+  - hub.traefik.io_contentitems.yaml
   - hub.traefik.io_managedapplications.yaml
   - hub.traefik.io_managedsubscriptions.yaml
   - traefik.io_ingressroutes.yaml
