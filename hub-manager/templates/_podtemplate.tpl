@@ -62,7 +62,6 @@
 
           {{- with .Values.logs }}
           - "--log-level={{ .level }}"
-          - "--log-format={{ .format }}"
           {{- end }}
 
           {{- with .Values.tracing }}
