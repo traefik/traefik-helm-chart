@@ -59,17 +59,6 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
-*/}}
-{{- define "hub-manager.serviceAccountName" -}}
-{{- if .Values.serviceAccount.create }}
-{{- default (include "hub-manager.fullname" .) .Values.serviceAccount.name }}
-{{- else }}
-{{- default "default" .Values.serviceAccount.name }}
-{{- end }}
-{{- end }}
-
-{{/*
 Change input to a valid name for a port.
 This is a best effort to convert input to a valid port name for Kubernetes,
 which per RFC 6335 only allows lowercase alphanumeric characters and '-',

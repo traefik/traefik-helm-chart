@@ -51,9 +51,6 @@ deployment:
 
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
   # -- Whether to automatically mount a ServiceAccount's API credentials
   automountServiceAccountToken: false
   # -- Additional serviceAccount annotations (e.g. for oidc authentication)

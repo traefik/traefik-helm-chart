@@ -14,7 +14,7 @@
       affinity:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "hub-manager.serviceAccountName" . }}
+      serviceAccountName: {{ include "hub-manager.fullname" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
       terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       {{- with .Values.deployment.imagePullSecrets }}
