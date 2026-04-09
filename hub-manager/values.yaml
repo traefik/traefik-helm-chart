@@ -26,10 +26,6 @@ logs:
 deployment:
   # -- Number of pods of the deployment
   replicas: 1
-  # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
-  revisionHistoryLimit: 10  # @schema type:[integer, null];minimum:0
-  # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if shut down does not happen
-  terminationGracePeriodSeconds: 60
   # -- Additional deployment annotations
   annotations: {}
   # -- Additional deployment labels (e.g. for filtering deployment by custom labels)
@@ -96,31 +92,6 @@ securityContext:
   capabilities:
     drop:
       - NET_RAW
-
-readinessProbe:  # @schema additionalProperties: false
-  httpGet:
-    path: /ready
-    port: 8080
-  # -- The number of consecutive failures allowed before considering the probe as failed
-  failureThreshold: 2
-  # -- The number of seconds to wait between consecutive probes
-  periodSeconds: 5
-  # -- The number of seconds to wait before starting the first probe
-  initialDelaySeconds: 5
-
-livenessProbe:  # @schema additionalProperties: false
-  httpGet:
-    path: /live
-    port: 8080
-  # -- The number of consecutive failures allowed before considering the probe as failed
-  failureThreshold: 2
-  # -- The number of seconds to wait before starting the first probe
-  initialDelaySeconds: 5
-  # -- The number of seconds to wait between consecutive probes
-  periodSeconds: 5
-
-# -- Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)
-startupProbe: {}
 
 postgres:
   # -- Name of Secret with key 'postgres-uri' set to a valid Postgres connection string
