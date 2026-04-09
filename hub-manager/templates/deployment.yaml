@@ -16,9 +16,6 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ default 1 .Values.deployment.replicas }}
   {{- end }}
-  {{- with .Values.deployment.revisionHistoryLimit }}
-  revisionHistoryLimit: {{ . }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "hub-manager.labelselector" . | nindent 6 }}
