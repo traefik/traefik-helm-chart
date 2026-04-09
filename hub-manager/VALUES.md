@@ -10,12 +10,8 @@ A Helm chart for Kubernetes
 |-----|------|---------|-------------|
 | address | string | `":8080"` | Address to listen on |
 | affinity | object | `{}` |  |
-| autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively) |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object |
-| autoscaling.maxReplicas | string | `nil` | maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas |
-| autoscaling.metrics | list | `[]` | metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used) |
-| autoscaling.minReplicas | string | `nil` | minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod |
-| autoscaling.scaleTargetRef | object | `{"apiVersion":"apps/v1","kind":"Deployment","name":"{{ template \"hub-manager.fullname\" . }}"}` | scaleTargetRef points to the target resource to scale, and is used for the pods for which metrics should be collected, as well as to actually change the replica count |
+| autoscaling.spec | object | See _values.yaml_ | Spec of the HPA |
 | deployment.annotations | object | `{}` | Additional deployment annotations |
 | deployment.imagePullSecrets | list | `[]` | Pull secret for fetching container image |
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |

@@ -55,19 +55,22 @@ serviceAccount:
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object
   enabled: false
-  # -- minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod
-  minReplicas:  # @schema type:[integer, null]; minimum:0
-  # -- maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas
-  maxReplicas:  # @schema type:[integer, null]; minimum:0
-  # -- metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used)
-  metrics: []
-  # -- behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively)
-  behavior: {}
-  # -- scaleTargetRef points to the target resource to scale, and is used for the pods for which metrics should be collected, as well as to actually change the replica count
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: "{{ template \"hub-manager.fullname\" . }}"
+  # -- Spec of the HPA
+  # @default -- See _values.yaml_
+  spec:
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: "{{ template \"hub-manager.fullname\" . }}"
+    minReplicas: 1
+    maxReplicas:  2
+    metrics:
+      - resource:
+          name: cpu
+          target:
+            averageUtilization: 70
+            type: Utilization
+        type: Resource
 
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container
 resources: {}
