@@ -26,13 +26,6 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{/*
-Create the chart image name.
-*/}}
-{{- define "hub-manager.image-name" -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
-{{- end -}}
-
 {{/* Shared labels used for selector*/}}
 {{- define "hub-manager.labelselector" -}}
 app.kubernetes.io/name: {{ template "hub-manager.name" . }}
