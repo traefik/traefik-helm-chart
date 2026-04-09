@@ -23,8 +23,6 @@ A Helm chart for Kubernetes
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
 | deployment.replicas | int | `1` | Number of pods of the deployment |
-| deployment.revisionHistoryLimit | int | `10` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
-| deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if shut down does not happen |
 | deployment.updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | deployment.updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | deployment.updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment |
@@ -32,26 +30,14 @@ A Helm chart for Kubernetes
 | image.registry | string | `"ghcr.io"` | Hub-manager image host registry |
 | image.repository | string | `"traefik/hub-manager"` | Hub-manager image repository |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest- |
-| livenessProbe.failureThreshold | int | `2` | The number of consecutive failures allowed before considering the probe as failed |
-| livenessProbe.httpGet.path | string | `"/live"` |  |
-| livenessProbe.httpGet.port | int | `8080` |  |
-| livenessProbe.initialDelaySeconds | int | `5` | The number of seconds to wait before starting the first probe |
-| livenessProbe.periodSeconds | int | `5` | The number of seconds to wait between consecutive probes |
 | logs.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint |
 | postgres.encryptionKey | string | `""` | Name of Secret with key 'postgres-encryption-key' set to a valid encryption key |
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
-| readinessProbe.failureThreshold | int | `2` | The number of consecutive failures allowed before considering the probe as failed |
-| readinessProbe.httpGet.path | string | `"/ready"` |  |
-| readinessProbe.httpGet.port | int | `8080` |  |
-| readinessProbe.initialDelaySeconds | int | `5` | The number of seconds to wait before starting the first probe |
-| readinessProbe.periodSeconds | int | `5` | The number of seconds to wait between consecutive probes |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
 | serviceAccount.annotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | serviceAccount.automountServiceAccountToken | bool | `false` | Whether to automatically mount a ServiceAccount's API credentials |
-| serviceAccount.name | string | `""` |  |
-| startupProbe | object | `{}` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |
 | token | string | `""` | Name of Secret with key 'token' set to a valid license token |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints |
 | tracing.address | string | `""` | Address to send traces |
