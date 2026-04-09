@@ -16,7 +16,6 @@
       {{- end }}
       serviceAccountName: {{ include "hub-manager.fullname" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automountServiceAccountToken }}
-      terminationGracePeriodSeconds: {{ default 60 .Values.deployment.terminationGracePeriodSeconds }}
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -28,15 +27,20 @@
         {{- with .Values.resources }}
         resources: {{- toYaml . | nindent 10 }}
         {{- end }}
-        {{- with .Values.readinessProbe }}
-        readinessProbe: {{- toYaml . | nindent 10 }}
-        {{- end }}
-        {{- with .Values.livenessProbe }}
-        livenessProbe: {{- toYaml . | nindent 10 }}
-        {{- end }}
-        {{- with .Values.startupProbe}}
-        startupProbe: {{- toYaml . | nindent 10 }}
-        {{- end }}
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8080
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        livenessProbe:
+          httpGet:
+            path: /live
+            port: 8080
+          failureThreshold: 2
+          initialDelaySeconds: 5
+          periodSeconds: 5
         {{- with .Values.deployment.lifecycle }}
         lifecycle: {{- toYaml . | nindent 10 }}
         {{- end }}
