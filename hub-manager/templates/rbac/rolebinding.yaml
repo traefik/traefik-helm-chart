@@ -12,5 +12,5 @@ roleRef:
   name: {{ include "hub-manager.fullname" $ }}
 subjects:
   - kind: ServiceAccount
-    name: {{ include "hub-manager.serviceAccountName" $ }}
+    name: {{ include "hub-manager.fullname" $ }}
     namespace: {{ .Release.Namespace }}
