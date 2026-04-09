@@ -21,7 +21,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      - image: {{ include "hub-manager.image-name" . }}
+      - image: {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
         name: {{ include "hub-manager.fullname" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
