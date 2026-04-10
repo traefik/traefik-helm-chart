@@ -63,6 +63,10 @@
           {{- with .Values.logs }}
           - "--log-level={{ .level }}"
           {{- end }}
+
+          {{- if .Values.tracing.insecure }}
+          - "--tracing-insecure"
+          {{- end }}
         env:
           {{- with .Values.token }}
           - name: HUB_TOKEN
@@ -88,10 +92,6 @@
           {{- with .Values.tracing }}
             {{- with .address }}
           - name: TRACING_ADDRESS
-            value: {{ . }}
-            {{- end }}
-            {{- with .insecure }}
-          - name: TRACING_INSECURE
             value: {{ . }}
             {{- end }}
             {{- with .username }}
