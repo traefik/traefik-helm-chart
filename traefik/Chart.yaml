@@ -22,6 +22,10 @@ maintainers:
   - name: jnoordsij
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
+  traefik.io/proxy-min-version: v3.6.0
+  traefik.io/proxy-max-version: v3.7.0-rc.1
+  traefik.io/hub-min-version: v3.19.3
+  traefik.io/hub-max-version: v3.20.0-rc.1
   artifacthub.io/changes: |
     - "feat: 🚀 upgrade traefik to v3.7.0-ea.3"
     - "chore(release): 🚀 publish v40.0.0-ea.3"

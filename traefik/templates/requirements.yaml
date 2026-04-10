@@ -1,7 +1,12 @@
 {{- $version := include "traefik.proxyVersion" $ }}
+{{- $proxyMinVersion := index .Chart.Annotations "traefik.io/proxy-min-version" }}
+{{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" }}
 {{- if (ne $version "experimental-v3.0") }}
-  {{- if (semverCompare "<v3.6.0-0" $version) }}
-    {{- fail "ERROR: This version of the Chart only supports Traefik Proxy v3.6+" -}}
+  {{- if (semverCompare (printf "<%s-0" $proxyMinVersion) $version) }}
+    {{- fail (printf "ERROR: This version of the Chart only supports Traefik Proxy %s+" $proxyMinVersion) -}}
+  {{- end }}
+  {{- if and (eq (include "traefik.isStableVersion" $version) "true") (semverCompare (printf ">%s" $proxyMaxVersion) $version) }}
+    {{- fail (printf "ERROR: This version of the Chart only supports Traefik Proxy up to %s." $proxyMaxVersion) -}}
   {{- end }}
 {{- end }}
 
@@ -118,8 +123,13 @@
     {{ $hubVersion = "v3.99" }}
   {{- end }}
 
-  {{- if semverCompare "<v3.19.3-0" $hubVersion }}
-    {{ fail "ERROR: this Chart supports *only* Traefik Hub >= v3.19.3."}}
+  {{- $hubMinVersion := index $.Chart.Annotations "traefik.io/hub-min-version" }}
+  {{- $hubMaxVersion := index $.Chart.Annotations "traefik.io/hub-max-version" }}
+  {{- if semverCompare (printf "<%s-0" $hubMinVersion) $hubVersion }}
+    {{ fail (printf "ERROR: this Chart supports *only* Traefik Hub >= %s." $hubMinVersion) }}
+  {{- end }}
+  {{- if and (eq (include "traefik.isStableVersion" $hubVersion) "true") (semverCompare (printf ">%s" $hubMaxVersion) $hubVersion) }}
+    {{ fail (printf "ERROR: this Chart only supports Traefik Hub up to %s." $hubMaxVersion) }}
   {{- end }}
 
   {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}
