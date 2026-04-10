@@ -65,7 +65,7 @@ autoscaling:  # @schema additionalProperties: false
             type: Utilization
         type: Resource
 
-# -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container
+# -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for container
 resources: {}
 
 affinity: {}
