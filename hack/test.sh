@@ -23,3 +23,4 @@ if [ "${HELM_MAJOR:-0}" -ge 4 ]; then
 fi
 
 helm unittest ${COLOR_FLAG} ./traefik
+helm unittest ${COLOR_FLAG} ./hub-manager

@@ -1,9 +1,4 @@
 {{- if .Values.autoscaling.enabled }}
-
-{{- if not .Values.autoscaling.maxReplicas }}
-  {{- fail "ERROR: maxReplicas is required on HPA" }}
-{{- end }}
-
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
