@@ -37,7 +37,7 @@ A Helm chart for Kubernetes
 | tracing.address | string | `""` | Address to send traces |
 | tracing.insecure | bool | `false` | use HTTP instead of HTTPS |
 | tracing.password | string | `""` | Name of Secret with key 'tracing-password' set to a valid password |
-| tracing.probability | float | `0` | Probability to send traces |
+| tracing.probability | string | `"0.0"` | Probability to send traces |
 | tracing.username | string | `""` | Username to connect to tracing address |
 
 ----------------------------------------------

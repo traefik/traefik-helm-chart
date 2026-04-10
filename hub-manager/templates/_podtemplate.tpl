@@ -106,6 +106,6 @@
                 name: {{ . }}
             {{- end }}
           - name: TRACING_PROBABILITY
-            value: {{ default "0" .probability }}
+            value: {{ default "0.0" .probability | quote }}
           {{- end }}
 {{ end -}}
