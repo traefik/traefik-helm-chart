@@ -1,0 +1,108 @@
+# Default values for hub-manager
+# This is a YAML-formatted file
+# Declare variables to be passed into templates
+
+image:  # @schema additionalProperties: false
+  # -- Hub-manager image host registry
+  registry: ghcr.io
+  # -- Hub-manager image repository
+  repository: traefik/hub-manager
+  # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-
+  tag:  # @schema type:[string, null]
+  # -- Hub-manager image pull policy
+  pullPolicy: IfNotPresent
+
+# -- Address to listen on
+address: ":8080"
+
+# -- Name of Secret with key 'token' set to a valid license token
+token: ""
+
+logs:
+  # By default, the level is set to INFO
+  # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC
+  level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
+
+deployment:
+  # -- Number of pods of the deployment
+  replicas: 1
+  # -- Additional deployment annotations
+  annotations: {}
+  # -- Additional deployment labels (e.g. for filtering deployment by custom labels)
+  labels: {}
+  # -- Additional pod annotations (e.g. for mesh injection or prometheus scraping)
+  podAnnotations: {}
+  # -- Additional Pod labels (e.g. for filtering Pod by custom labels)
+  podLabels: {}
+  # -- Pull secret for fetching container image
+  imagePullSecrets: []
+  # -- Pod lifecycle actions
+  lifecycle: {}
+  updateStrategy:  # @schema additionalProperties: false
+    # -- Customize updateStrategy of Deployment
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0  # @schema type:[integer, string, null]
+      maxSurge: 1        # @schema type:[integer, string, null]
+
+autoscaling:  # @schema additionalProperties: false
+  # -- Create HorizontalPodAutoscaler object
+  enabled: false
+  # -- Spec of the HPA
+  # @default -- See _values.yaml_
+  spec:
+    scaleTargetRef:
+      apiVersion: apps/v1
+      kind: Deployment
+      name: "{{ template \"hub-manager.fullname\" . }}"
+    minReplicas: 1
+    maxReplicas:  2
+    metrics:
+      - resource:
+          name: cpu
+          target:
+            averageUtilization: 70
+            type: Utilization
+        type: Resource
+
+# -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for container
+resources: {}
+
+affinity: {}
+
+# -- nodeSelector is the simplest recommended form of node selection constraint
+nodeSelector: {}
+
+# -- Tolerations allow the scheduler to schedule pods with matching taints
+tolerations: []
+
+# -- [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1)
+# @default -- See _values.yaml_
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  runAsUser: 65534
+  runAsGroup: 65534
+  seccompProfile:
+    type: RuntimeDefault
+  capabilities:
+    drop:
+      - NET_RAW
+
+postgres:
+  # -- Name of Secret with key 'postgres-uri' set to a valid Postgres connection string
+  uri: ""
+  # -- Name of Secret with key 'postgres-encryption-key' set to a valid encryption key
+  encryptionKey: ""
+
+tracing:
+  # -- Address to send traces
+  address: ""
+  # -- use HTTP instead of HTTPS
+  insecure: false
+  # -- Probability to send traces
+  probability: "0.0"
+  # -- Username to connect to tracing address
+  username: ""
+  # -- Name of Secret with key 'tracing-password' set to a valid password
+  password: ""

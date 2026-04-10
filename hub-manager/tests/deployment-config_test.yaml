@@ -1,0 +1,140 @@
+suite: Deployment configuration
+templates:
+  - deployment.yaml
+tests:
+  - it: should provide expected defaults
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.strategy.rollingUpdate.maxUnavailable
+          value: 0
+      - equal:
+          path: spec.strategy.rollingUpdate.maxSurge
+          value: 1
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+  - it: should have the specified amount of replicas when specified via values
+    set:
+      deployment:
+        replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+  - it: should not have replicas when autoscaling is enabled
+    set:
+      autoscaling:
+        enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+  - it: should not have replicas when autoscaling is enabled for the deployment
+    set:
+      autoscaling:
+        enabled: true
+    asserts:
+      - notExists:
+          path: spec.replicas
+  - it: should have a custom merged rollingUpdate strategy with specified values
+    set:
+      deployment:
+        updateStrategy:
+          rollingUpdate:
+            maxUnavailable: 4
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+      - equal:
+          path: spec.strategy.rollingUpdate.maxUnavailable
+          value: 4
+      - equal:
+          path: spec.strategy.rollingUpdate.maxSurge
+          value: 1
+  - it: should have annotations with specified values
+    set:
+      deployment:
+        annotations:
+          hub-manager/foo: annotations
+        podAnnotations:
+          hub-manager/foo: podAnnotations
+    asserts:
+      - equal:
+          path: metadata.annotations.hub-manager/foo
+          value: annotations
+      - equal:
+          path: spec.template.metadata.annotations.hub-manager/foo
+          value: podAnnotations
+  - it: should have podAnnotations with specified values
+    set:
+      deployment:
+        podAnnotations:
+          hub-manager/foo: podAnnotations
+          hub-manager/name: '{{ template "hub-manager.name" . }}'
+          hub-manager/{{ template "hub-manager.name" . }}.logs: 'log_processing_rules'
+          hub-manager/repository: '{{ .Values.image.repository }}'
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations.hub-manager/foo
+          value: podAnnotations
+      - equal:
+          path: spec.template.metadata.annotations.hub-manager/name
+          value: 'hub-manager'
+      - equal:
+          path: spec.template.metadata.annotations["hub-manager/hub-manager.logs"]
+          value: 'log_processing_rules'
+      - equal:
+          path: spec.template.metadata.annotations.hub-manager/repository
+          value: 'traefik/hub-manager'
+  - it: should have labels with specified values
+    set:
+      deployment:
+        labels:
+          traefik/powpow: labels
+        podLabels:
+          traefik/powpow: podLabels
+    asserts:
+      - equal:
+          path: metadata.labels.traefik/powpow
+          value: labels
+      - equal:
+          path: spec.template.metadata.labels.traefik/powpow
+          value: podLabels
+  - it: should have podLabels with templated values
+    set:
+      deployment:
+        podLabels:
+          hub-manager/foo: podLabels
+          hub-manager/name: '{{ template "hub-manager.name" . }}'
+          hub-manager/{{ template "hub-manager.name" . }}.logs: 'log_processing_rules'
+          hub-manager/repository: '{{ .Values.image.repository }}'
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels.hub-manager/foo
+          value: podLabels
+      - equal:
+          path: spec.template.metadata.labels.hub-manager/name
+          value: 'hub-manager'
+      - equal:
+          path: spec.template.metadata.labels["hub-manager/hub-manager.logs"]
+          value: 'log_processing_rules'
+      - equal:
+          path: spec.template.metadata.labels.hub-manager/repository
+          value: 'traefik/hub-manager'
+  - it: should have Recreate strategy when set
+    set:
+      deployment:
+        updateStrategy:
+          type: Recreate
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: Recreate
+      - notExists:
+          path: spec.strategy.rollingUpdate

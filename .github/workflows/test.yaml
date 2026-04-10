@@ -23,6 +23,13 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Check hub-manager if values schema is up-to-date
+        uses: losisin/helm-values-schema-json-action@02bda41b469ccfb3f0abb35f4211e598b0b6ea3e # v2.5.0
+        with:
+          working-directory: hub-manager
+          fail-on-diff: true
+          useHelmDocs: true
+
       - name: Check traefik if values schema is up-to-date
         uses: losisin/helm-values-schema-json-action@02bda41b469ccfb3f0abb35f4211e598b0b6ea3e # v2.5.0
         with:

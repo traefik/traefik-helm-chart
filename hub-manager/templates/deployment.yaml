@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "hub-manager.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "hub-manager.labels" . | nindent 4 }}
+    {{- with .Values.deployment.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ default 1 .Values.deployment.replicas }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "hub-manager.labelselector" . | nindent 6 }}
+  {{- with .Values.deployment.updateStrategy }}
+  strategy:
+    type: {{ .type }}
+    {{- if (eq .type "RollingUpdate") }}
+    rollingUpdate:
+      maxUnavailable: {{ .rollingUpdate.maxUnavailable }}
+      maxSurge: {{ .rollingUpdate.maxSurge }}
+    {{- end }}
+  {{- end }}
+  template: {{ include "hub-manager.podTemplate" . | fromYaml | toYaml | nindent 4 }}
