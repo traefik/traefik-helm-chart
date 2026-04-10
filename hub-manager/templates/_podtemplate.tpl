@@ -60,10 +60,6 @@
           - "serve"
           - "--addr={{ .Values.address }}"
 
-          {{- with .Values.token }}
-          - "--token=$(HUB_TOKEN)"
-          {{- end }}
-
           {{- with .Values.logs }}
           - "--log-level={{ .level }}"
           {{- end }}
