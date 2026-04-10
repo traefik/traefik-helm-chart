@@ -5,6 +5,7 @@ IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 
 traefik/tests/__snapshot__:
+	@mkdir hub-manager/tests/__snapshot__
 	@mkdir traefik/tests/__snapshot__
 	@mkdir traefik-crds/tests/__snapshot__
 
