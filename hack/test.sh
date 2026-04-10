@@ -15,3 +15,4 @@ fi
 
 helm unittest --color ./traefik
 helm unittest --color ./traefik-crds
+helm unittest --color ./hub-manager
