@@ -203,6 +203,18 @@ It requires a dict with "Version" and "Hub".
 
 
 {{/*
+Returns "true" if the given version is a stable release (vX.Y.Z or X.Y.Z), "false" otherwise.
+Non-standard versions include experimental, ea, rc, alpha, beta builds.
+*/}}
+{{- define "traefik.isStableVersion" -}}
+  {{- if regexMatch "^v?[0-9]+\\.[0-9]+\\.[0-9]+$" . -}}
+    true
+  {{- else -}}
+    false
+  {{- end -}}
+{{- end -}}
+
+{{/*
 The version can comes many sources: appVersion, image.tag, override, marketplace.
 */}}
 {{- define "traefik.proxyVersion" -}}
