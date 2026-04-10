@@ -6,6 +6,7 @@ IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 IMAGE_HELM_UNITTEST=docker.io/helmunittest/helm-unittest:3.19.0-1.0.1
 
 traefik/tests/__snapshot__:
+	@mkdir hub-manager/tests/__snapshot__
 	@mkdir traefik/tests/__snapshot__
 	@mkdir traefik-crds/tests/__snapshot__
 
