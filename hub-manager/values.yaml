@@ -101,7 +101,7 @@ tracing:
   # -- use HTTP instead of HTTPS
   insecure: false
   # -- Probability to send traces
-  probability: 0.0
+  probability: "0.0"
   # -- Username to connect to tracing address
   username: ""
   # -- Name of Secret with key 'tracing-password' set to a valid password
