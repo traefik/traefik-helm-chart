@@ -21,7 +21,7 @@
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-      - image: {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+      - image: {{ printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
         name: {{ include "hub-manager.fullname" . }}
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         {{- with .Values.resources }}
@@ -61,17 +61,11 @@
           - "--addr={{ .Values.address }}"
 
           {{- with .Values.token }}
-          - "--hub.token=$(HUB_TOKEN)"
+          - "--token=$(HUB_TOKEN)"
           {{- end }}
 
           {{- with .Values.logs }}
           - "--log-level={{ .level }}"
-          {{- end }}
-
-          {{- with .Values.tracing }}
-            {{- if .insecure }}
-          - "--tracing-insecure"
-            {{- end }}
           {{- end }}
         env:
           {{- with .Values.token }}
@@ -98,6 +92,10 @@
           {{- with .Values.tracing }}
             {{- with .address }}
           - name: TRACING_ADDRESS
+            value: {{ . }}
+            {{- end }}
+            {{- with .insecure }}
+          - name: TRACING_INSECURE
             value: {{ . }}
             {{- end }}
             {{- with .username }}

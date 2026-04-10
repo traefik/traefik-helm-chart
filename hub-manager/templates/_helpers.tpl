@@ -50,18 +50,3 @@ Selector labels
 app.kubernetes.io/name: {{ include "hub-manager.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
-
-{{/*
-Change input to a valid name for a port.
-This is a best effort to convert input to a valid port name for Kubernetes,
-which per RFC 6335 only allows lowercase alphanumeric characters and '-',
-and additionally imposes a limit of 15 characters on the length of the name.
-See also https://kubernetes.io/docs/concepts/services-networking/service/#multi-port-services
-and https://www.rfc-editor.org/rfc/rfc6335#section-5.1.
-*/}}
-{{- define "hub-manager.portname" -}}
-{{- $portName := . -}}
-{{- $portName = $portName | lower -}}
-{{- $portName = $portName | trimPrefix "-" | trunc 15 | trimSuffix "-" -}}
-{{- print $portName -}}
-{{- end -}}
