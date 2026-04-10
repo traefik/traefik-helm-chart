@@ -1,6 +1,6 @@
 # hub-manager
 
-![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 1.0.0](https://img.shields.io/badge/AppVersion-1.0.0-informational?style=flat-square)
+![Version: 1.0.0](https://img.shields.io/badge/Version-1.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v1.0.0](https://img.shields.io/badge/AppVersion-v1.0.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
@@ -22,7 +22,7 @@ A Helm chart for Kubernetes
 | deployment.updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | deployment.updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | deployment.updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment |
-| image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
+| image.pullPolicy | string | `"IfNotPresent"` | Hub-manager image pull policy |
 | image.registry | string | `"ghcr.io"` | Hub-manager image host registry |
 | image.repository | string | `"traefik/hub-manager"` | Hub-manager image repository |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest- |
