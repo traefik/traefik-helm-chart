@@ -9,7 +9,7 @@ image:  # @schema additionalProperties: false
   repository: traefik/hub-manager
   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-
   tag:  # @schema type:[string, null]
-  # -- Traefik image pull policy
+  # -- Hub-manager image pull policy
   pullPolicy: IfNotPresent
 
 # -- Address to listen on
