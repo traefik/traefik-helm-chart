@@ -32,6 +32,7 @@ test-%:
 # Requires to install schema generation plugin beforehand
 # $ helm plugin install https://github.com/losisin/helm-values-schema-json.git
 schema:
+	cd hub-manager && helm schema --use-helm-docs
 	cd traefik && helm schema --use-helm-docs
 	cd traefik-crds && helm schema
 
