@@ -32,14 +32,12 @@ A Helm chart for Kubernetes
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
-| serviceAccount.annotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
-| serviceAccount.automountServiceAccountToken | bool | `false` | Whether to automatically mount a ServiceAccount's API credentials |
 | token | string | `""` | Name of Secret with key 'token' set to a valid license token |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints |
 | tracing.address | string | `""` | Address to send traces |
 | tracing.insecure | bool | `false` | use HTTP instead of HTTPS |
 | tracing.password | string | `""` | Name of Secret with key 'tracing-password' set to a valid password |
-| tracing.probability | int | `0` | Probability to send traces |
+| tracing.probability | float | `0` | Probability to send traces |
 | tracing.username | string | `""` | Username to connect to tracing address |
 
 ----------------------------------------------
