@@ -38,10 +38,6 @@ tests:
     set:
       autoscaling:
         enabled: true
-        scaleTargetRef:
-          apiVersion: apps/v1
-          kind: Deployment
-          name: '{{ template "hub-manager.fullname" . }}'
     asserts:
       - notExists:
           path: spec.replicas
