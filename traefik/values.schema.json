@@ -151,7 +151,7 @@
                     "type": "boolean"
                 },
                 "goMemLimitPercentage": {
-                    "description": "Percentage of memory limit to set for GOMEMLIMIT",
+                    "description": "Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env)",
                     "type": "number"
                 },
                 "healthchecksHost": {

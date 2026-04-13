@@ -81,6 +81,19 @@ tests:
       - notEqual:
           path: spec.template.spec.containers[0].env[0].name
           value: GOMEMLIMIT
+  - it: should have not set GOMEMLIMIT when goMemLimitPercentage is 0
+    set:
+      resources:
+        limits:
+          memory: "512Mi"
+      deployment:
+        goMemLimitPercentage: 0
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GOMEMLIMIT
+          any: true
   - it: should have expected env + additional env with specified values
     set:
       env:

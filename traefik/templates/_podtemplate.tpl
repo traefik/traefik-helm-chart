@@ -938,7 +938,7 @@
                 resource: limits.cpu
                 divisor: '1'
           {{- end }}
-          {{- if ($.Values.resources.limits).memory }}
+          {{- if and ($.Values.resources.limits).memory $.Values.deployment.goMemLimitPercentage }}
           - name: GOMEMLIMIT
             value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}

@@ -50,7 +50,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
-| deployment.goMemLimitPercentage | float | `0.9` | only takes effect when resources.limits.memory is set |
+| deployment.goMemLimitPercentage | float | `0.9` | Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env) |
 | deployment.healthchecksHost | string | `""` |  |
 | deployment.healthchecksPort | string | `nil` |  |
 | deployment.healthchecksScheme | string | `nil` |  |
