@@ -181,6 +181,19 @@
                 }
             }
         },
+        "migration": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional migration job annotations",
+                    "type": "object"
+                },
+                "labels": {
+                    "description": "Additional migration job labels",
+                    "type": "object"
+                }
+            }
+        },
         "nodeSelector": {
             "description": "nodeSelector is the simplest recommended form of node selection constraint",
             "type": "object"
