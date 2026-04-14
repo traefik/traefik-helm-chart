@@ -2054,3 +2054,60 @@ ports:
 ```
 
 > **Note:** When using `hostPort`, you typically want to deploy Traefik as a `DaemonSet` (see the DaemonSet example above) so that each node binds the ports.
+
+<details>
+<summary>Running on privileged ports with host network</summary>
+
+If you need to run Traefik on host network and on privileged ports you'll need extra capabilities set on the `traefik` binary itself (cf. https://github.com/traefik/traefik/pull/12902#issuecomment-4160942102). Here's an init container approach that helps you achieve this:
+
+```yaml
+podSecurityContext:
+  runAsGroup: 65532
+  runAsNonRoot: false
+  runAsUser: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  allowPrivilegeEscalation: true
+  capabilities:
+    drop: [ALL]
+    add: [NET_BIND_SERVICE]
+
+hostNetwork: true
+
+service:
+  enabled: false
+
+deployment:
+  initContainers:
+    - name: copy-binary
+      image: traefik:v3.6.12
+      command: ["cp", "/usr/local/bin/traefik", "/shared/traefik"]
+      volumeMounts:
+        - name: traefik-bin
+          mountPath: /shared
+    - name: setcap
+      image: alpine:3.21
+      command:
+        - sh
+        - -c
+        - apk add --no-cache libcap && setcap cap_net_bind_service=+ep /shared/traefik
+      securityContext:
+        runAsUser: 0
+        runAsNonRoot: false
+      volumeMounts:
+        - name: traefik-bin
+          mountPath: /shared
+  additionalVolumes:
+    - name: traefik-bin
+      emptyDir: {}
+
+additionalVolumeMounts:
+  - name: traefik-bin
+    mountPath: /usr/local/bin
+```
+
+</details>
