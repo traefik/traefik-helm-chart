@@ -27,6 +27,8 @@ A Helm chart for Kubernetes
 | image.repository | string | `"traefik/hub-manager"` | Hub-manager image repository |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest- |
 | logs.level | string | `"INFO"` | Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC |
+| migration.annotations | object | `{}` | Additional migration job annotations |
+| migration.labels | object | `{}` | Additional migration job labels |
 | nodeSelector | object | `{}` | nodeSelector is the simplest recommended form of node selection constraint |
 | postgres.encryptionKey | string | `""` | Name of Secret with key 'postgres-encryption-key' set to a valid encryption key |
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
