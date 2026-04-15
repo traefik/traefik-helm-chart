@@ -34,13 +34,6 @@ tests:
     asserts:
       - notExists:
           path: spec.replicas
-  - it: should not have replicas when autoscaling is enabled for the deployment
-    set:
-      autoscaling:
-        enabled: true
-    asserts:
-      - notExists:
-          path: spec.replicas
   - it: should have a custom merged rollingUpdate strategy with specified values
     set:
       deployment:

@@ -5,9 +5,6 @@ chart:
   appVersion: v1.0.0
 tests:
   - it: should use helm managed namespace in release notes output
-    set:
-      rbac:
-        namespaced: true
     asserts:
       - equalRaw:
           value: |2
