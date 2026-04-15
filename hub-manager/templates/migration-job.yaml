@@ -21,8 +21,6 @@ spec:
         {{- include "hub-manager.labels" . | nindent 8 }}
     spec:
       restartPolicy: Never
-      serviceAccountName: {{ include "hub-manager.fullname" . }}
-      automountServiceAccountToken: false
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -40,8 +38,8 @@ spec:
         {{- end }}
         args:
           - "migrate"
+        {{- with .Values.postgres }}
         env:
-          {{- with .Values.postgres }}
           - name: POSTGRES_URI
             valueFrom:
               secretKeyRef:
@@ -52,4 +50,4 @@ spec:
               secretKeyRef:
                 key: postgres-encryption-key
                 name: {{ .encryptionKey }}
-          {{- end }}
+        {{- end }}
