@@ -14,8 +14,6 @@
       affinity:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
-      serviceAccountName: {{ include "hub-manager.fullname" . }}
-      automountServiceAccountToken: false
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
