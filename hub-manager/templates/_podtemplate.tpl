@@ -95,7 +95,7 @@
             valueFrom:
               secretKeyRef:
                 key: postgres-encryption-key
-                name: {{ .encryptionKey }}
+                name: {{ . }}
           {{- end }}
           {{- end }}
 
