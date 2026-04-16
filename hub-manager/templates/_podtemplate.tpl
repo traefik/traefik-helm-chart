@@ -14,6 +14,14 @@
       affinity:
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       {{- with .Values.deployment.imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
@@ -75,16 +83,20 @@
           {{- end }}
 
           {{- with .Values.postgres }}
+          {{- with .uri }}
           - name: POSTGRES_URI
             valueFrom:
               secretKeyRef:
                 key: postgres-uri
-                name: {{ .uri }}
+                name: {{ . }}
+          {{- end }}
+          {{- with .encryptionKey }}
           - name: POSTGRES_ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
                 key: postgres-encryption-key
                 name: {{ .encryptionKey }}
+          {{- end }}
           {{- end }}
 
           {{- with .Values.tracing }}
