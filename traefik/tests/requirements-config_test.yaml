@@ -429,6 +429,33 @@ tests:
                     writeTimeout: 10
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using nutanixPrismCentral provider on Traefik Hub < v3.20.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.19.3
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1."
+  - it: should pass when using nutanixPrismCentral provider on Traefik Hub >= v3.20.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.1
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:

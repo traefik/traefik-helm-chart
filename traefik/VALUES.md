@@ -177,6 +177,20 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
 | hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
 | hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
+| hub.providers.nutanixPrismCentral.allowedVpcs | list | `[]` | Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries. |
+| hub.providers.nutanixPrismCentral.apiKey | string | `""` | Prism Central API key. |
+| hub.providers.nutanixPrismCentral.enabled | bool | `false` | Enable Nutanix Prism Central provider. |
+| hub.providers.nutanixPrismCentral.endpoint | string | `""` | Prism Central endpoint. |
+| hub.providers.nutanixPrismCentral.filename | string | `""` | Base configuration file path. |
+| hub.providers.nutanixPrismCentral.password | string | `""` | Prism Central password. |
+| hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
+| hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
+| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
+| hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |

@@ -917,6 +917,73 @@
                                     "type": "integer"
                                 }
                             }
+                        },
+                        "nutanixPrismCentral": {
+                            "type": "object",
+                            "properties": {
+                                "allowedVpcs": {
+                                    "description": "Filter VMs by VPCs. List of `{ uuid: \"\u003cvpc-uuid\u003e\" }` entries.",
+                                    "type": "array"
+                                },
+                                "apiKey": {
+                                    "description": "Prism Central API key.",
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "description": "Enable Nutanix Prism Central provider.",
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "description": "Prism Central endpoint.",
+                                    "type": "string"
+                                },
+                                "filename": {
+                                    "description": "Base configuration file path.",
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "description": "Prism Central password.",
+                                    "type": "string"
+                                },
+                                "pollInterval": {
+                                    "description": "Polling interval for Nutanix Prism Central API.",
+                                    "type": "integer"
+                                },
+                                "pollTimeout": {
+                                    "description": "Polling timeout for Nutanix Prism Central API.",
+                                    "type": "integer"
+                                },
+                                "serviceNameCategoryKey": {
+                                    "description": "Category key used to derive the service name.",
+                                    "type": "string"
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ca": {
+                                            "description": "TLS CA",
+                                            "type": "string"
+                                        },
+                                        "cert": {
+                                            "description": "TLS cert",
+                                            "type": "string"
+                                        },
+                                        "insecureSkipVerify": {
+                                            "description": "TLS insecure skip verify",
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "description": "TLS key",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "description": "Prism Central username.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
                         }
                     }
                 },

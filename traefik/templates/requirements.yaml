@@ -161,4 +161,8 @@
     {{- end }}
   {{- end }}
 
+  {{- if and $.Values.hub.providers.nutanixPrismCentral.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
+  {{- end }}
+
 {{- end }}

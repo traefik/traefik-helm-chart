@@ -1444,6 +1444,37 @@ hub:  # @schema additionalProperties: false
               # @schema type:[string, integer, null]
               # -- SPIFFE trust domain.
               trustDomain: ""
+    # @schema additionalProperties: false
+    nutanixPrismCentral:
+      # -- Enable Nutanix Prism Central provider.
+      enabled: false
+      # -- Prism Central endpoint.
+      endpoint: ""
+      # -- Prism Central username.
+      username: ""
+      # -- Prism Central password.
+      password: ""
+      # -- Prism Central API key.
+      apiKey: ""
+      # -- Base configuration file path.
+      filename: ""
+      # -- Polling interval for Nutanix Prism Central API.
+      pollInterval: 30
+      # -- Polling timeout for Nutanix Prism Central API.
+      pollTimeout: 5
+      # -- Category key used to derive the service name.
+      serviceNameCategoryKey: "TraefikServiceName"
+      # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
+      allowedVpcs: []
+      tls:
+        # -- TLS CA
+        ca: ""
+        # -- TLS cert
+        cert: ""
+        # -- TLS key
+        key: ""
+        # -- TLS insecure skip verify
+        insecureSkipVerify: false
 
   redis:
     # -- Enable Redis Cluster. Default: true.
