@@ -777,6 +777,17 @@
                                                     "certificates": {
                                                         "type": "array"
                                                     },
+                                                    "cipherSuites": {
+                                                        "description": "List of supported cipher suites for TLS versions up to 1.2.",
+                                                        "type": "array"
+                                                    },
+                                                    "disableHTTP2": {
+                                                        "description": "Disable HTTP/2 for connections to this child.",
+                                                        "type": [
+                                                            "boolean",
+                                                            "null"
+                                                        ]
+                                                    },
                                                     "forwardingTimeouts": {
                                                         "type": "object",
                                                         "properties": {
@@ -796,8 +807,40 @@
                                                                     "null"
                                                                 ]
                                                             },
+                                                            "pingTimeout": {
+                                                                "description": "Timeout for HTTP/2 server ping frames.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "readIdleTimeout": {
+                                                                "description": "Timeout for HTTP/2 connection idle reads.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "readTimeout": {
+                                                                "description": "Timeout for reading the request body.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
                                                             "responseHeaderTimeout": {
                                                                 "description": "Timeout for reading response headers.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "writeTimeout": {
+                                                                "description": "Timeout for writing the response.",
                                                                 "type": [
                                                                     "string",
                                                                     "integer",
@@ -819,6 +862,18 @@
                                                             "integer",
                                                             "null"
                                                         ]
+                                                    },
+                                                    "maxVersion": {
+                                                        "description": "Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
+                                                        "type": "string"
+                                                    },
+                                                    "minVersion": {
+                                                        "description": "Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
+                                                        "type": "string"
+                                                    },
+                                                    "peerCertURI": {
+                                                        "description": "URI used to match against SAN URIs during the server's certificate verification.",
+                                                        "type": "string"
                                                     },
                                                     "rootCAs": {
                                                         "type": "array"

@@ -1398,6 +1398,18 @@ hub:  # @schema additionalProperties: false
             # -- Maximum idle connections per host.
             # @default -- 200
             maxIdleConnsPerHost:
+            # @schema type:[boolean, null]
+            # -- Disable HTTP/2 for connections to this child.
+            # @default -- false
+            disableHTTP2:
+            # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
+            minVersion: ""
+            # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
+            maxVersion: ""
+            # -- List of supported cipher suites for TLS versions up to 1.2.
+            cipherSuites: []
+            # -- URI used to match against SAN URIs during the server's certificate verification.
+            peerCertURI: ""
             forwardingTimeouts:
               # @schema type:[string, integer, null]
               # -- Timeout for establishing connections.
@@ -1411,6 +1423,22 @@ hub:  # @schema additionalProperties: false
               # -- Timeout for idle connections.
               # @default -- 90s
               idleConnTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for HTTP/2 server ping frames.
+              # @default -- 15s
+              pingTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for HTTP/2 connection idle reads.
+              # @default -- 0s
+              readIdleTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for reading the request body.
+              # @default -- 0s
+              readTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for writing the response.
+              # @default -- 0s
+              writeTimeout:
             spiffe:
               ids: []
               # @schema type:[string, integer, null]

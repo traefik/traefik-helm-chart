@@ -149,4 +149,16 @@
     {{ fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8." }}
   {{- end }}
 
+  {{- if and $.Values.hub.providers.multicluster.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.multicluster is only available for Traefik Hub >= v3.20.0-ea.1." }}
+  {{- end }}
+
+  {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}
+    {{- range $childName, $childConfig := $.Values.hub.providers.multicluster.children }}
+      {{- if or (($childConfig.serversTransport).forwardingTimeouts).readTimeout (($childConfig.serversTransport).forwardingTimeouts).writeTimeout }}
+        {{ fail "ERROR: hub.providers.multicluster.children.<name>.serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for Traefik Hub >= v3.20.0-ea.7." }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
 {{- end }}

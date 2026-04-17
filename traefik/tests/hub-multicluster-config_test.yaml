@@ -71,6 +71,58 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.multicluster.children.child2.serversTransport.certificates[1].keyFile=/certs/client2.key"
 
+  - it: should be possible to configure Traefik Hub multicluster provider serversTransport TLS and timeouts
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                address: https://foo
+                serversTransport:
+                  disableHTTP2: true
+                  minVersion: "VersionTLS12"
+                  maxVersion: "VersionTLS13"
+                  cipherSuites:
+                    - TLS_AES_128_GCM_SHA256
+                    - TLS_AES_256_GCM_SHA384
+                  peerCertURI: "spiffe://example.org/child1"
+                  forwardingTimeouts:
+                    pingTimeout: 20
+                    readIdleTimeout: 30
+                    readTimeout: 10
+                    writeTimeout: 10
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.disableHTTP2=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.minVersion=VersionTLS12"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.maxVersion=VersionTLS13"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.cipherSuites=TLS_AES_128_GCM_SHA256,TLS_AES_256_GCM_SHA384"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.peerCertURI=spiffe://example.org/child1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.forwardingTimeouts.pingTimeout=20"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.forwardingTimeouts.readIdleTimeout=30"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.forwardingTimeouts.readTimeout=10"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.multicluster.children.child1.serversTransport.forwardingTimeouts.writeTimeout=10"
+
   - it: should be possible to configure Traefik Hub uplinkEntryPoints
     set:
       ports:
