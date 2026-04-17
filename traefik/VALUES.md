@@ -158,11 +158,20 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
 | hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.cipherSuites | list | `[]` | List of supported cipher suites for TLS versions up to 1.2. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.disableHTTP2 | string | false | Disable HTTP/2 for connections to this child. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.pingTimeout | string | 15s | Timeout for HTTP/2 server ping frames. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.readIdleTimeout | string | 0s | Timeout for HTTP/2 connection idle reads. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.readTimeout | string | 0s | Timeout for reading the request body. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.writeTimeout | string | 0s | Timeout for writing the response. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** |
 | hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxVersion | string | `""` | Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
+| hub.providers.multicluster.children.cluster-1.serversTransport.minVersion | string | `""` | Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
+| hub.providers.multicluster.children.cluster-1.serversTransport.peerCertURI | string | `""` | URI used to match against SAN URIs during the server's certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
