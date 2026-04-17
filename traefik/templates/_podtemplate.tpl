@@ -880,6 +880,13 @@
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
+            {{- if .providers.nutanixPrismCentral.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.nutanixPrismCentral" "content" (omit $.Values.hub.providers.nutanixPrismCentral "enabled" "allowedVpcs")) | nindent 10 }}
+              {{- range $idx, $val := .providers.nutanixPrismCentral.allowedVpcs }}
+                {{- $vpcPath := printf "hub.providers.nutanixPrismCentral.allowedVpcs[%d]" $idx }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $vpcPath "content" $val) | nindent 10 }}
+              {{- end }}
+            {{- end }}
             {{- if .providers.multicluster.enabled }}
           - "--hub.providers.multicluster=true"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
