@@ -1,5 +1,32 @@
 # Change Log
 
+## 39.0.8  ![AppVersion: v3.6.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.13&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-04-17
+
+* feat(deps): update traefik docker tag to v3.6.13 (v39.0)
+* chore: :bento: merge back #1679 into v39.0
+* chore(release): 🚀 publish v39.0.8
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ef2993c..ab46bf5 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1203,6 +1203,8 @@ hub:
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
++  # -- Mount path for token secret.
++  tokenMountPath: "/etc/secrets"
+   # -- Disables all external network connections.
+   offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+```
+
+
 ## v39.0.7  ![AppVersion: v3.6.12](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.12&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-03-30

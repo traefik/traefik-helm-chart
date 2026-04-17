@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 39.0.7
+version: 39.0.8
 appVersion: v3.6.13
 kubeVersion: '>=1.22.0-0'
 keywords:
@@ -22,5 +22,6 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   artifacthub.io/changes: |
-    - "feat(deps): update traefik docker tag to v3.6.12 (v39.0)"
-    - "chore(release): 🚀 publish v39.0.7"
+    - "feat(deps): update traefik docker tag to v3.6.13 (v39.0)"
+    - "chore: :bento: merge back #1679 into v39.0"
+    - "chore(release): 🚀 publish v39.0.8"
