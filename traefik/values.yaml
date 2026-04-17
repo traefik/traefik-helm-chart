@@ -291,6 +291,8 @@ startupProbe: {}
 
 # @schema additionalProperties: false
 providers:
+  # -- Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order.
+  precedence: []
   # @schema additionalProperties: false
   kubernetesCRD:
     # -- Load Kubernetes IngressRoute provider
