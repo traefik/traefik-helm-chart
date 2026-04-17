@@ -375,17 +375,41 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when using kubernetesIngressNGINX modsec without Traefik Hub
+  - it: should fail when using multicluster provider on Traefik Hub < v3.20.0-ea.1
     set:
-      providers:
-        kubernetesIngressNGINX:
-          enabled: true
-          modsec:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.19.3
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
             enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub."
-  - it: should fail when using kubernetesIngressNGINX modsec on Traefik Hub < v3.20.0-ea.8
+          errorMessage: "ERROR: hub.providers.multicluster is only available for Traefik Hub >= v3.20.0-ea.1."
+  - it: should fail when using multicluster serversTransport readTimeout/writeTimeout on Traefik Hub < v3.20.0-ea.7
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.6
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+            children:
+              child1:
+                address: https://foo
+                serversTransport:
+                  forwardingTimeouts:
+                    readTimeout: 10
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.multicluster.children.<name>.serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for Traefik Hub >= v3.20.0-ea.7."
+  - it: should pass when using multicluster serversTransport readTimeout/writeTimeout on Traefik Hub >= v3.20.0-ea.7
     set:
       image:
         registry: "ghcr.io"
@@ -393,27 +417,16 @@ tests:
         tag: v3.20.0-ea.7
       hub:
         token: "xxx"
-      providers:
-        kubernetesIngressNGINX:
-          enabled: true
-          modsec:
+        providers:
+          multicluster:
             enabled: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8."
-  - it: should pass when using kubernetesIngressNGINX modsec on Traefik Hub >= v3.20.0-ea.8
-    set:
-      image:
-        registry: "ghcr.io"
-        repository: "traefik/traefik-hub"
-        tag: v3.20.0-ea.8
-      hub:
-        token: "xxx"
-      providers:
-        kubernetesIngressNGINX:
-          enabled: true
-          modsec:
-            enabled: true
+            children:
+              child1:
+                address: https://foo
+                serversTransport:
+                  forwardingTimeouts:
+                    readTimeout: 10
+                    writeTimeout: 10
     asserts:
       - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
