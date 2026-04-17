@@ -1066,6 +1066,8 @@ tlsStore: {}
 
 service:
   enabled: true
+  # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
+  nameOverride: ""  # @schema type:[string, null]
   ## -- Single service is using `MixedProtocolLBService` feature gate.
   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
