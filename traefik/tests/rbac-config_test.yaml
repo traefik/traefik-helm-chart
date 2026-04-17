@@ -832,6 +832,7 @@ tests:
               - apibundles/status
               - apiplans/status
               - apicatalogitems/status
+              - contentitems/status
               - managedsubscriptions/status
               - managedapplications/status
             verbs:
@@ -863,6 +864,7 @@ tests:
               - apibundles/status
               - apiplans/status
               - apicatalogitems/status
+              - contentitems/status
               - managedsubscriptions/status
               - managedapplications/status
             verbs:
