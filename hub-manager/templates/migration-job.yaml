@@ -15,6 +15,7 @@ metadata:
       {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
+  backoffLimit: 0
   template:
     metadata:
       labels:
@@ -48,14 +49,18 @@ spec:
           - "migrate"
         {{- with .Values.postgres }}
         env:
+          {{- with .uri }}
           - name: POSTGRES_URI
             valueFrom:
               secretKeyRef:
                 key: postgres-uri
-                name: {{ .uri }}
+                name: {{ . }}
+          {{- end }}
+          {{- with .encryptionKey }}
           - name: POSTGRES_ENCRYPTION_KEY
             valueFrom:
               secretKeyRef:
                 key: postgres-encryption-key
-                name: {{ .encryptionKey }}
+                name: {{ . }}
+          {{- end }}
         {{- end }}
