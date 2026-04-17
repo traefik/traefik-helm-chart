@@ -375,6 +375,47 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngressNGINX modsec without Traefik Hub
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          modsec:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub."
+  - it: should fail when using kubernetesIngressNGINX modsec on Traefik Hub < v3.20.0-ea.8
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.7
+      hub:
+        token: "xxx"
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          modsec:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8."
+  - it: should pass when using kubernetesIngressNGINX modsec on Traefik Hub >= v3.20.0-ea.8
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0-ea.8
+      hub:
+        token: "xxx"
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+          modsec:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:

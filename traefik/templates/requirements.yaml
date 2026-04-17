@@ -30,6 +30,10 @@
   {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 
+{{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (not $.Values.hub.token) }}
+  {{- fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub." }}
+{{- end }}
+
 {{- with .Values.providers.kubernetesIngressNGINX }}
   {{- if and (semverCompare "<v3.7.0-0" $version) .enabled (or
     (ne .proxyRequestBuffering nil)
@@ -139,6 +143,10 @@
         {{ fail "ERROR: uplink EntryPoints requires the hub multicluster provider" }}
       {{- end }}
     {{- end }}
+  {{- end }}
+
+  {{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (semverCompare "<v3.20.0-ea.8" $hubVersion) }}
+    {{ fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8." }}
   {{- end }}
 
 {{- end }}

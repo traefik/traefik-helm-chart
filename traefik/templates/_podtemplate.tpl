@@ -602,7 +602,11 @@
             {{- if and $.Values.service.enabled .publishService.enabled }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
             {{- end }}
-            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
+            {{- if .modsec.enabled }}
+          - "--providers.kubernetesingressnginx.modsec=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx.modsec" "content" (omit .modsec "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace" "modsec")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
