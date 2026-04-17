@@ -500,6 +500,7 @@ Kubernetes: `>=1.25.0-0`
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
 | service.enabled | bool | `true` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
+| service.nameOverride | string | `""` | Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller). |
 | service.single | bool | `true` |  |
 | service.spec | object | `{"type":"LoadBalancer"}` | Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core). Cannot contain selector or ports entries. |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |

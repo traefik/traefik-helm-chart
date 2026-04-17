@@ -2780,6 +2780,13 @@
                     "description": "Additional service labels (e.g. for filtering Service by custom labels)",
                     "type": "object"
                 },
+                "nameOverride": {
+                    "description": "Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "single": {
                     "type": "boolean"
                 },
