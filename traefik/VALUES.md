@@ -183,6 +183,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
+| hub.tokenMountPath | string | `"/etc/secrets"` | Mount path for token secret. |
 | hub.tracing.additionalTraceHeaders.enabled | bool | See below | Tracing headers to duplicate. To configure the following, tracing.otlp.enabled needs to be set to true. |
 | hub.tracing.additionalTraceHeaders.traceContext.parentId | string | `""` | Name of the header that will contain the parent-id header copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
