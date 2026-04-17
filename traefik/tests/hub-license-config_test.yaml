@@ -6,8 +6,6 @@ templates:
 set:
   image:
     tag: v3.16.0
-  hub:
-    token: "xxx"
 tests:
   - it: should not create secret by default
     asserts:
@@ -29,17 +27,22 @@ tests:
         token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
     asserts:
       - contains:
-          path: spec.template.spec.containers[0].env
+          path: spec.template.spec.volumes
           content:
-            name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: token
-                name: traefik-hub-license
+            name: hub-token
+            secret:
+              secretName: traefik-hub-license
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
         template: deployment.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.token=$(HUB_TOKEN)"
+          content: "--hub.tokenFilePath=/etc/secrets/token"
         template: deployment.yaml
       - containsDocument:
           kind: Secret
@@ -57,15 +60,50 @@ tests:
         token: "eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2"
     asserts:
       - contains:
-          path: spec.template.spec.containers[0].env
+          path: spec.template.spec.volumes
           content:
-            name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: token
-                name: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2
+            name: hub-token
+            secret:
+              secretName: eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
         template: deployment.yaml
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.token=$(HUB_TOKEN)"
+          content: "--hub.tokenFilePath=/etc/secrets/token"
         template: deployment.yaml
+  - it: it should mount secret to secretMountPath
+    set:
+      hub:
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"
+        tokenMountPath: "/custom/"
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+            secret:
+              secretName: traefik-hub-license
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /custom/
+            readOnly: true
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tokenFilePath=/custom/token"
+        template: deployment.yaml
+      - containsDocument:
+          kind: Secret
+          apiVersion: v1
+          name: traefik-hub-license
+          namespace: NAMESPACE
+        template: hub-license.yaml
