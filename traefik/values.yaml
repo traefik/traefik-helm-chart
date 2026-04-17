@@ -455,6 +455,14 @@ providers:
     httpEntryPoint: ""
     # -- Defines the EntryPoint to use for HTTPS requests
     httpsEntryPoint: ""
+    # @schema additionalProperties: false
+    modsec:
+      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
+      enabled: false
+      # -- Enable OWASP Core Rules.
+      owaspCoreRules: false
+      # -- Custom ModSec rules snippet.
+      snippet: ""
 
   # @schema additionalProperties: false
   knative:

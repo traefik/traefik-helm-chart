@@ -327,3 +327,32 @@ tests:
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.httpsEntryPoint=websecure"
+
+  - it: should add modsec flags when enabled
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          modsec:
+            enabled: true
+            owaspCoreRules: true
+            snippet: "SecRuleEngine On"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.owaspCoreRules=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.snippet=SecRuleEngine On"
+
+  - it: should not add modsec flags when disabled
+    asserts:
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"

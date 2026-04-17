@@ -2590,6 +2590,24 @@
                             "description": "Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class",
                             "type": "boolean"
                         },
+                        "modsec": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "description": "Enable ModSec engine. Requires Traefik Hub \u003e= v3.20.0-ea.8.",
+                                    "type": "boolean"
+                                },
+                                "owaspCoreRules": {
+                                    "description": "Enable OWASP Core Rules.",
+                                    "type": "boolean"
+                                },
+                                "snippet": {
+                                    "description": "Custom ModSec rules snippet.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
                         "proxyBodySize": {
                             "description": "Default maximum size of a client request body in bytes (default: 1048576)",
                             "type": "integer"
