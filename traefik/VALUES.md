@@ -460,6 +460,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
+| providers.kubernetesIngressNGINX.globalAuthUrl | string | `""` | URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option. |
 | providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
 | providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |

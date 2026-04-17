@@ -301,6 +301,17 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.strictValidatePathType=false"
 
+  - it: should add globalAuthUrl
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          globalAuthUrl: "http://auth.default.svc.cluster.local"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.globalAuthUrl=http://auth.default.svc.cluster.local"
+
   - it: should add httpEntryPoint & httpsEntryPoint
     set:
       providers:
