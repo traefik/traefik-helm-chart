@@ -117,8 +117,8 @@
     {{ $hubVersion = "v3.99" }}
   {{- end }}
 
-  {{- if semverCompare "<v3.19.0-0" $hubVersion }}
-    {{ fail "ERROR: this Chart supports *only* Traefik Hub >= v3.19.0."}}
+  {{- if semverCompare "<v3.19.3-0" $hubVersion }}
+    {{ fail "ERROR: this Chart supports *only* Traefik Hub >= v3.19.3."}}
   {{- end }}
 
   {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}

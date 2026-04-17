@@ -831,6 +831,10 @@
                     "description": "Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway.",
                     "type": "string"
                 },
+                "tokenMountPath": {
+                    "description": "Mount path for token secret.",
+                    "type": "string"
+                },
                 "tracing": {
                     "type": "object",
                     "properties": {
