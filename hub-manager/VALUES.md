@@ -8,7 +8,6 @@ A Helm chart for hub-manager
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| address | string | `":8080"` | Address to listen on |
 | affinity | object | `{}` |  |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object |
 | autoscaling.spec | object | See _values.yaml_ | Spec of the HPA |

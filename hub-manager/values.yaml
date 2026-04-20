@@ -12,9 +12,6 @@ image:  # @schema additionalProperties: false
   # -- Hub-manager image pull policy
   pullPolicy: IfNotPresent
 
-# -- Address to listen on
-address: ":8080"
-
 # -- Name of Secret with key 'token' set to a valid license token
 token: ""
 
