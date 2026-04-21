@@ -105,7 +105,7 @@ spec:
           {{- end }}
         env:
           {{- with .Values.token }}
-          - name: HUB_TOKEN
+          - name: TOKEN
             valueFrom:
               secretKeyRef:
                 key: token
