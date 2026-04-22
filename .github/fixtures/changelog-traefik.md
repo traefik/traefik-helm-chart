@@ -13,8 +13,6 @@
 - docs: 📚️ fix typo in Guidelines.md #1320 by @lbarnkow
 - chore(release): publish v34.2.0 #1323 by @darkweaver87
 
-
-
 ## 👌 Traefik version support
 
 * Traefik Proxy: v3.6.0 -> v3.6.12 (default)
