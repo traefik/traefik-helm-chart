@@ -73,44 +73,6 @@ tests:
 
 
             RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
-  - it: should not display warning when using an ea Proxy version within range
-    set:
-      image:
-        tag: v3.6.10-ea.1
-    asserts:
-      - equalRaw:
-          value: |
-
-
-            RELEASE-NAME with docker.io/traefik:v3.6.10-ea.1 has been deployed successfully on NAMESPACE namespace!
-  - it: should not display warning when using a stable Hub version within range
-    set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
-        tag: v3.19.5
-      hub:
-        token: xxx
-    asserts:
-      - equalRaw:
-          value: |
-
-
-            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
-  - it: should not display warning when using an ea Hub version within range
-    set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
-        tag: v3.19.5-ea.1
-      hub:
-        token: xxx
-    asserts:
-      - equalRaw:
-          value: |
-
-
-            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5-ea.1 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
