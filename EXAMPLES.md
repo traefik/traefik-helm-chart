@@ -1194,7 +1194,7 @@ spec:
 
 ## Use this Chart with FluxCD
 
-This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`. 
+This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`.
 Here is how to deploy it with [FluxCD](https://fluxcd.io/).
 
 Create a `HelmRepository` resource pointing to the OCI registry:
