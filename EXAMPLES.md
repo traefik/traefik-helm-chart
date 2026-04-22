@@ -1194,7 +1194,8 @@ spec:
 
 ## Use this Chart with FluxCD
 
-This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`. Here is how to deploy it with [FluxCD](https://fluxcd.io/).
+This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`. 
+Here is how to deploy it with [FluxCD](https://fluxcd.io/).
 
 Create a `HelmRepository` resource pointing to the OCI registry:
 
@@ -1236,7 +1237,8 @@ spec:
 
 > [!NOTE]
 > The `url` in `HelmRepository` should be `oci://ghcr.io/traefik/helm` (the registry path **without** the chart name). The chart name is specified in `HelmRelease.spec.chart.spec.chart`.
->
+
+> [!TIP]
 > Pin the chart `version` to avoid unexpected upgrades. FluxCD supports [semver ranges](https://fluxcd.io/flux/components/source/helmrepositories/#semver-example) like `">=39.0.0 <40.0.0"`.
 
 ## Configure TLS
