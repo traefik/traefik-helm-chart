@@ -133,7 +133,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: HUB_TOKEN
+            name: TOKEN
             valueFrom:
               secretKeyRef:
                 key: token
