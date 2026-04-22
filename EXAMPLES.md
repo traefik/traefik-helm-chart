@@ -515,6 +515,65 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
+## Install on Azure behind an Application Gateway (AGIC)
+
+When using the [Application Gateway Ingress Controller (AGIC)](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview),
+health probes need to reach Traefik's `/ping` endpoint.
+Enable the built-in healthcheck IngressRoute so that `/ping` is served on the `web` entrypoint,
+and create an Ingress with the AGIC health probe annotations:
+
+```yaml
+ingressRoute:
+  healthcheck:
+    enabled: true
+    entryPoints:
+      - web
+
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: traefik
+      annotations:
+        appgw.ingress.kubernetes.io/health-probe-path: "/ping"
+        appgw.ingress.kubernetes.io/health-probe-port: "8000"
+        appgw.ingress.kubernetes.io/backend-protocol: "http"
+    spec:
+      ingressClassName: azure-application-gateway
+      rules:
+        - http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: '{{ template "traefik.fullname" . }}'
+                    port:
+                      number: 80
+```
+
+## Install on Azure with Load Balancer health probes
+
+When using the Azure Load Balancer directly (without AGIC), configure the health probes to use Traefik's `/ping` endpoint. Enable the built-in healthcheck IngressRoute so that `/ping` is served on the `web` entrypoint (port 80) — this avoids exposing the management port (8080) on the Load Balancer:
+
+```yaml
+ingressRoute:
+  healthcheck:
+    enabled: true
+    entryPoints:
+      - web
+
+service:
+  single: true
+  spec:
+    externalTrafficPolicy: Local
+  annotations:
+    service.beta.kubernetes.io/port_80_health-probe_protocol: "http"
+    service.beta.kubernetes.io/port_80_health-probe_request-path: "/ping"
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "http"
+    service.beta.kubernetes.io/port_443_health-probe_request-path: "/ping"
+```
+
 ## Use ServiceMonitor on AKS (Azure Monitor / managed Prometheus)
 
 Enable the optional ServiceMonitor so managed Prometheus can scrape Traefik metrics on AKS. You may override the CRD apiVersion if your environment requires it.
