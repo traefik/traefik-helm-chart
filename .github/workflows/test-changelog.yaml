@@ -20,6 +20,13 @@ jobs:
         env:
           REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
         run: |
+          # Pin version-support annotations so the fixture stays stable across releases.
+          sed -i \
+            -e 's|traefik.io/proxy-min-version:.*|traefik.io/proxy-min-version: v3.6.0|' \
+            -e 's|traefik.io/proxy-max-version:.*|traefik.io/proxy-max-version: v3.6.12|' \
+            -e 's|traefik.io/hub-min-version:.*|traefik.io/hub-min-version: v3.19.0|' \
+            -e 's|traefik.io/hub-max-version:.*|traefik.io/hub-max-version: v3.20.0-ea.1|' \
+            traefik/Chart.yaml
           export DATE=2025-01-28
           PROXY_MIN=$(awk '/traefik.io\/proxy-min-version:/{print $2}' traefik/Chart.yaml)
           PROXY_MAX=$(awk '/traefik.io\/proxy-max-version:/{print $2}' traefik/Chart.yaml)
