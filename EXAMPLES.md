@@ -1192,6 +1192,55 @@ spec:
   maxReplicas: 3
 ```
 
+## Use this Chart with FluxCD
+
+This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`.
+Here is how to deploy it with [FluxCD](https://fluxcd.io/).
+
+Create a `HelmRepository` resource pointing to the OCI registry:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 5m
+  url: oci://ghcr.io/traefik/helm
+```
+
+Then create a `HelmRelease` referencing it:
+
+```yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: traefik
+      version: "39.0.7"
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: flux-system
+  values:
+    # Your Traefik values here
+    image:
+      tag: v3.6.12
+```
+
+> [!NOTE]
+> The `url` in `HelmRepository` should be `oci://ghcr.io/traefik/helm` (the registry path **without** the chart name). The chart name is specified in `HelmRelease.spec.chart.spec.chart`.
+
+> [!TIP]
+> Pin the chart `version` to avoid unexpected upgrades. FluxCD supports [semver ranges](https://fluxcd.io/flux/components/source/helmrepositories/#semver-example) like `">=39.0.0 <40.0.0"`.
+
 ## Configure TLS
 
 The [TLS options](https://doc.traefik.io/traefik/https/tls/#tls-options) allow one to configure some parameters of the TLS connection.
