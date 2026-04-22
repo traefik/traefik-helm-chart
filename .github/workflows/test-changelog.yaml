@@ -20,7 +20,14 @@ jobs:
         env:
           REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
         run: |
-          export DATE=2025-01-28; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+          export DATE=2025-01-28
+          PROXY_MIN=$(awk '/traefik.io\/proxy-min-version:/{print $2}' traefik/Chart.yaml)
+          PROXY_MAX=$(awk '/traefik.io\/proxy-max-version:/{print $2}' traefik/Chart.yaml)
+          HUB_MIN=$(awk '/traefik.io\/hub-min-version:/{print $2}' traefik/Chart.yaml)
+          HUB_MAX=$(awk '/traefik.io\/hub-max-version:/{print $2}' traefik/Chart.yaml)
+          export VERSION_SUPPORT="\n\n## 👌 Traefik version support\n\n* Traefik Proxy: ${PROXY_MIN} -> ${PROXY_MAX} (default)\n* Traefik Hub: ${HUB_MIN} -> ${HUB_MAX}"
+          cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json
+          cat /tmp/changelog.json
 
       - name: Build Changelog
         id: changelog
@@ -56,7 +63,10 @@ jobs:
         env:
           REGEXP: '\\((CRDs|CRDs-.+)\\)'
         run: |
-          export DATE=2025-01-13; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+          export DATE=2025-01-13
+          export VERSION_SUPPORT=""
+          cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json
+          cat /tmp/changelog.json
 
       - name: Build Changelog
         id: changelog

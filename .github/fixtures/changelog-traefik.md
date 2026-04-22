@@ -14,3 +14,8 @@
 - chore(release): publish v34.2.0 #1323 by @darkweaver87
 
 
+
+## 👌 Traefik version support
+
+* Traefik Proxy: v3.6.0 -> v3.6.12 (default)
+* Traefik Hub: v3.19.0 -> v3.20.0-ea.1

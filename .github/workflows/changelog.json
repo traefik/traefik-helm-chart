@@ -43,7 +43,7 @@
     }
   ],
   "pr_template": "- ${{TITLE}} ##{{NUMBER}} by @#{{AUTHOR}}",
-  "max_pull_requests": 300,
+  "max_pull_requests": 500,
   "empty_template": "- no changes",
   "transformers": [
     {
