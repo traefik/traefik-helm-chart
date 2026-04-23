@@ -37,6 +37,7 @@ jobs:
           fromTag: v34.1.0
           toTag: v34.2.0
           configuration: "/tmp/changelog.json"
+          fetchViaCommits: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -73,6 +74,7 @@ jobs:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0
           configuration: "/tmp/changelog.json"
+          fetchViaCommits: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
