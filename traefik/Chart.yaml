@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 40.0.0-ea.3
+version: 40.0.0-rc.2
 # renovate: image=traefik
 appVersion: v3.7.0-rc.2
 kubeVersion: ">=1.25.0-0"
@@ -27,5 +27,18 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.0-rc.1
   artifacthub.io/changes: |
-    - "feat: 🚀 upgrade traefik to v3.7.0-ea.3"
-    - "chore(release): 🚀 publish v40.0.0-ea.3"
+    - "fix(CRDs): content item admission webhook name"
+    - "feat: add service.nameOverride for adopting existing Services"
+    - "feat(providers): :sparkles: support precedence option"
+    - "feat(nginx): :sparkles: support modsec option"
+    - "feat(nginx): :sparkles: support globalAuthUrl option"
+    - "feat(hub): :sparkles: support Nutanix Prism Central provider"
+    - "feat(hub): :sparkles: expose multicluster serversTransport TLS and timeout options"
+    - "feat(hub): :bento: map Traefik Hub v3.20.0-ea.7+ to Traefik Proxy v3.7.0-rc.1"
+    - "feat(deps): update traefik docker tag to v3.7.0-rc.1"
+    - "feat(chart): :memo: version support with annotations"
+    - "feat(CRDs): update Traefik Hub to v1.29.0"
+    - "feat(CRDs): add traefik hub ContentItem"
+    - "chore: :bento: merge back #1679 into v40.0"
+    - "chore(release): 🚀 publish 40.0.0-rc.1 and CRDs v0.17.0"
+    - "chore(deps): :rocket: upgrade traefik and CRDs to v3.7.0-rc.2"

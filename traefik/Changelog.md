@@ -1,5 +1,321 @@
 # Change Log
 
+## 40.0.0-rc.2  ![AppVersion: v3.7.0-rc.2](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-rc.2&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-04-23
+
+* fix(CRDs): content item admission webhook name
+* feat: add service.nameOverride for adopting existing Services
+* feat(providers): :sparkles: support precedence option
+* feat(nginx): :sparkles: support modsec option
+* feat(nginx): :sparkles: support globalAuthUrl option
+* feat(hub): :sparkles: support Nutanix Prism Central provider
+* feat(hub): :sparkles: expose multicluster serversTransport TLS and timeout options
+* feat(hub): :bento: map Traefik Hub v3.20.0-ea.7+ to Traefik Proxy v3.7.0-rc.1
+* feat(deps): update traefik docker tag to v3.7.0-rc.1
+* feat(chart): :memo: version support with annotations
+* feat(CRDs): update Traefik Hub to v1.29.0
+* feat(CRDs): add traefik hub ContentItem
+* chore: :bento: merge back #1679 into v40.0
+* chore(release): 🚀 publish 40.0.0-rc.1 and CRDs v0.17.0
+* chore(deps): :rocket: upgrade traefik and CRDs to v3.7.0-rc.2
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 1a3b7eb..aea4846 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -291,6 +291,8 @@ startupProbe: {}
+ 
+ # @schema additionalProperties: false
+ providers:
++  # -- Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order.
++  precedence: []
+   # @schema additionalProperties: false
+   kubernetesCRD:
+     # -- Load Kubernetes IngressRoute provider
+@@ -443,6 +445,8 @@ providers:
+     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+     # -- List of allowed response headers inside the custom headers annotations
+     globalAllowedResponseHeaders: []
++    # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
++    globalAuthUrl: ""
+     # -- Enables parsing and adding -snippet annotations/directives (default: false)
+     allowSnippetAnnotations: null  # @schema type:[boolean, null]
+     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+@@ -451,6 +455,14 @@ providers:
+     httpEntryPoint: ""
+     # -- Defines the EntryPoint to use for HTTPS requests
+     httpsEntryPoint: ""
++    # @schema additionalProperties: false
++    modsec:
++      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
++      enabled: false
++      # -- Enable OWASP Core Rules.
++      owaspCoreRules: false
++      # -- Custom ModSec rules snippet.
++      snippet: ""
+ 
+   # @schema additionalProperties: false
+   knative:
+@@ -1066,6 +1078,8 @@ tlsStore: {}
+ 
+ service:
+   enabled: true
++  # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
++  nameOverride: ""  # @schema type:[string, null]
+   ## -- Single service is using `MixedProtocolLBService` feature gate.
+   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+@@ -1231,6 +1245,8 @@ hub:  # @schema additionalProperties: false
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
++  # -- Mount path for token secret.
++  tokenMountPath: "/etc/secrets"
+   # -- Disables all external network connections.
+   offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+@@ -1382,6 +1398,18 @@ hub:  # @schema additionalProperties: false
+             # -- Maximum idle connections per host.
+             # @default -- 200
+             maxIdleConnsPerHost:
++            # @schema type:[boolean, null]
++            # -- Disable HTTP/2 for connections to this child.
++            # @default -- false
++            disableHTTP2:
++            # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
++            minVersion: ""
++            # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
++            maxVersion: ""
++            # -- List of supported cipher suites for TLS versions up to 1.2.
++            cipherSuites: []
++            # -- URI used to match against SAN URIs during the server's certificate verification.
++            peerCertURI: ""
+             forwardingTimeouts:
+               # @schema type:[string, integer, null]
+               # -- Timeout for establishing connections.
+@@ -1395,11 +1423,58 @@ hub:  # @schema additionalProperties: false
+               # -- Timeout for idle connections.
+               # @default -- 90s
+               idleConnTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for HTTP/2 server ping frames.
++              # @default -- 15s
++              pingTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for HTTP/2 connection idle reads.
++              # @default -- 0s
++              readIdleTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for reading the request body.
++              # @default -- 0s
++              readTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for writing the response.
++              # @default -- 0s
++              writeTimeout:
+             spiffe:
+               ids: []
+               # @schema type:[string, integer, null]
+               # -- SPIFFE trust domain.
+               trustDomain: ""
++    # @schema additionalProperties: false
++    nutanixPrismCentral:
++      # -- Enable Nutanix Prism Central provider.
++      enabled: false
++      # -- Prism Central endpoint.
++      endpoint: ""
++      # -- Prism Central username.
++      username: ""
++      # -- Prism Central password.
++      password: ""
++      # -- Prism Central API key.
++      apiKey: ""
++      # -- Base configuration file path.
++      filename: ""
++      # -- Polling interval for Nutanix Prism Central API.
++      pollInterval: 30
++      # -- Polling timeout for Nutanix Prism Central API.
++      pollTimeout: 5
++      # -- Category key used to derive the service name.
++      serviceNameCategoryKey: "TraefikServiceName"
++      # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
++      allowedVpcs: []
++      tls:
++        # -- TLS CA
++        ca: ""
++        # -- TLS cert
++        cert: ""
++        # -- TLS key
++        key: ""
++        # -- TLS insecure skip verify
++        insecureSkipVerify: false
+ 
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+```
+
+
+## 40.0.0-rc.1  ![AppVersion: v3.7.0-rc.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-rc.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-04-22
+
+* fix(CRDs): content item admission webhook name
+* feat: add service.nameOverride for adopting existing Services
+* feat(providers): :sparkles: support precedence option
+* feat(nginx): :sparkles: support modsec option
+* feat(nginx): :sparkles: support globalAuthUrl option
+* feat(hub): :sparkles: support Nutanix Prism Central provider
+* feat(hub): :sparkles: expose multicluster serversTransport TLS and timeout options
+* feat(hub): :bento: map Traefik Hub v3.20.0-ea.7+ to Traefik Proxy v3.7.0-rc.1
+* feat(deps): update traefik docker tag to v3.7.0-rc.1
+* feat(CRDs): update Traefik Hub to v1.29.0
+* feat(CRDs): add traefik hub ContentItem
+* chore: :bento: merge back #1679 into v40.0
+* chore(release): 🚀 publish 40.0.0-rc.1 and CRDs v0.17.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 1a3b7eb..aea4846 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -291,6 +291,8 @@ startupProbe: {}
+ 
+ # @schema additionalProperties: false
+ providers:
++  # -- Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order.
++  precedence: []
+   # @schema additionalProperties: false
+   kubernetesCRD:
+     # -- Load Kubernetes IngressRoute provider
+@@ -443,6 +445,8 @@ providers:
+     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+     # -- List of allowed response headers inside the custom headers annotations
+     globalAllowedResponseHeaders: []
++    # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
++    globalAuthUrl: ""
+     # -- Enables parsing and adding -snippet annotations/directives (default: false)
+     allowSnippetAnnotations: null  # @schema type:[boolean, null]
+     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+@@ -451,6 +455,14 @@ providers:
+     httpEntryPoint: ""
+     # -- Defines the EntryPoint to use for HTTPS requests
+     httpsEntryPoint: ""
++    # @schema additionalProperties: false
++    modsec:
++      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
++      enabled: false
++      # -- Enable OWASP Core Rules.
++      owaspCoreRules: false
++      # -- Custom ModSec rules snippet.
++      snippet: ""
+ 
+   # @schema additionalProperties: false
+   knative:
+@@ -1066,6 +1078,8 @@ tlsStore: {}
+ 
+ service:
+   enabled: true
++  # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
++  nameOverride: ""  # @schema type:[string, null]
+   ## -- Single service is using `MixedProtocolLBService` feature gate.
+   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+@@ -1231,6 +1245,8 @@ hub:  # @schema additionalProperties: false
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+   # It enables API Gateway.
+   token: ""
++  # -- Mount path for token secret.
++  tokenMountPath: "/etc/secrets"
+   # -- Disables all external network connections.
+   offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+@@ -1382,6 +1398,18 @@ hub:  # @schema additionalProperties: false
+             # -- Maximum idle connections per host.
+             # @default -- 200
+             maxIdleConnsPerHost:
++            # @schema type:[boolean, null]
++            # -- Disable HTTP/2 for connections to this child.
++            # @default -- false
++            disableHTTP2:
++            # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
++            minVersion: ""
++            # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
++            maxVersion: ""
++            # -- List of supported cipher suites for TLS versions up to 1.2.
++            cipherSuites: []
++            # -- URI used to match against SAN URIs during the server's certificate verification.
++            peerCertURI: ""
+             forwardingTimeouts:
+               # @schema type:[string, integer, null]
+               # -- Timeout for establishing connections.
+@@ -1395,11 +1423,58 @@ hub:  # @schema additionalProperties: false
+               # -- Timeout for idle connections.
+               # @default -- 90s
+               idleConnTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for HTTP/2 server ping frames.
++              # @default -- 15s
++              pingTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for HTTP/2 connection idle reads.
++              # @default -- 0s
++              readIdleTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for reading the request body.
++              # @default -- 0s
++              readTimeout:
++              # @schema type:[string, integer, null]
++              # -- Timeout for writing the response.
++              # @default -- 0s
++              writeTimeout:
+             spiffe:
+               ids: []
+               # @schema type:[string, integer, null]
+               # -- SPIFFE trust domain.
+               trustDomain: ""
++    # @schema additionalProperties: false
++    nutanixPrismCentral:
++      # -- Enable Nutanix Prism Central provider.
++      enabled: false
++      # -- Prism Central endpoint.
++      endpoint: ""
++      # -- Prism Central username.
++      username: ""
++      # -- Prism Central password.
++      password: ""
++      # -- Prism Central API key.
++      apiKey: ""
++      # -- Base configuration file path.
++      filename: ""
++      # -- Polling interval for Nutanix Prism Central API.
++      pollInterval: 30
++      # -- Polling timeout for Nutanix Prism Central API.
++      pollTimeout: 5
++      # -- Category key used to derive the service name.
++      serviceNameCategoryKey: "TraefikServiceName"
++      # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
++      allowedVpcs: []
++      tls:
++        # -- TLS CA
++        ca: ""
++        # -- TLS cert
++        cert: ""
++        # -- TLS key
++        key: ""
++        # -- TLS insecure skip verify
++        insecureSkipVerify: false
+ 
+   redis:
+     # -- Enable Redis Cluster. Default: true.
+```
+
+
 ## 40.0.0-ea.3  ![AppVersion: v3.7.0-ea.3](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0-ea.3&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-03-27
