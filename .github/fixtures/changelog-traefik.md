@@ -1,4 +1,5 @@
-## [v34.2.0](https://github.com/traefik/traefik-helm-chart/compare/v34.1.0...v34.2.0) (2025-01-28)
+# [v34.2.0](https://github.com/traefik/traefik-helm-chart/compare/v34.1.0...v34.2.0) (2025-01-28)
+
 ## :rocket: Features
 
 - feat: :sparkles: add hub tracing capabilities #1322 by @darkweaver87

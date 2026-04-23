@@ -1,5 +1,5 @@
 {
-  "template": "## [#{{TO_TAG}}](#{{RELEASE_DIFF}}) (${DATE})\n#{{CHANGELOG}}${VERSION_SUPPORT}",
+  "template": "# [#{{TO_TAG}}](#{{RELEASE_DIFF}}) (${DATE})\n\n#{{CHANGELOG}}${VERSION_SUPPORT}",
   "categories": [
     {
       "title": "## :boom: BREAKING CHANGES",
