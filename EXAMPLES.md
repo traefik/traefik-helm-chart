@@ -2053,7 +2053,8 @@ ports:
     hostPort: 443
 ```
 
-> **Note:** When using `hostPort`, you typically want to deploy Traefik as a `DaemonSet` (see the DaemonSet example above) so that each node binds the ports.
+> [!NOTE]
+> When using `hostPort`, you typically want to deploy Traefik as a `DaemonSet` (see the DaemonSet example above) so that each node binds the ports.
 
 <details>
 <summary>Running on privileged ports with host network</summary>
