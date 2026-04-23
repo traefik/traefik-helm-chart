@@ -38,6 +38,10 @@
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
     },
+    {
+      matchPackageNames: ['helm-unittest/helm-unittest'],
+      extractVersion: '^v(?<version>.+)$',
+    },
   ],
   customManagers: [
     {
@@ -65,6 +69,14 @@
         '!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]',
         '\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)',
       ],
+    },
+    {
+      customType: 'regex',
+      managerFilePatterns: ['\\.github/workflows/.+\\.yaml$'],
+      matchStrings: [
+        '# renovate: datasource=(?<datasource>[^\\s]+) depName=(?<depName>[^\\s]+)( versioning=(?<versioning>[^\\s]+?))?\\s+.*(VERSION|version|rev): ["\']?(?<currentValue>[^"\'\\s]+)',
+      ],
+      versioningTemplate: '{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}',
     },
   ],
 }
