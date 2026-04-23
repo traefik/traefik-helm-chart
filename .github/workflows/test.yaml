@@ -39,6 +39,18 @@ jobs:
       - name: Lint Chart
         run: make lint
 
+      - name: Install Helm
+        uses: azure/setup-helm@dda3372f752e03dde6b3237bc9431cdc2f7a02a2 # v5.0.0
+        with:
+          # renovate: datasource=github-releases depName=helm/helm
+          version: v3.19.0
+
+      - name: Install helm-unittest plugin
+        env:
+          # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
+          HELM_UNITTEST_VERSION: 1.0.1
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version "$HELM_UNITTEST_VERSION"
+
       - name: Test Chart
         run: make test
 
