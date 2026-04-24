@@ -33,6 +33,7 @@ A Helm chart for hub-manager
 | postgres.uri | string | `""` | Name of Secret with key 'postgres-uri' set to a valid Postgres connection string |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for container |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
+| service.annotations | object | `{}` | Additional annotations |
 | token | string | `""` | Name of Secret with key 'token' set to a valid license token |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints |
 | tracing.address | string | `""` | Address to send traces |
