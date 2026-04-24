@@ -48,6 +48,10 @@ migration:
   # -- Additional migration job labels
   labels: {}
 
+service:
+  # -- Additional annotations
+  annotations: {}
+
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object
   enabled: false
