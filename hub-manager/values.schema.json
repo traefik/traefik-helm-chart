@@ -1,0 +1,294 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "type": "object",
+    "properties": {
+        "affinity": {
+            "type": "object"
+        },
+        "autoscaling": {
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "description": "Create HorizontalPodAutoscaler object",
+                    "type": "boolean"
+                },
+                "spec": {
+                    "description": "Spec of the HPA",
+                    "type": "object",
+                    "properties": {
+                        "maxReplicas": {
+                            "type": "integer"
+                        },
+                        "metrics": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "resource": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "target": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "averageUtilization": {
+                                                        "type": "integer"
+                                                    },
+                                                    "type": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    },
+                                    "type": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        },
+                        "minReplicas": {
+                            "type": "integer"
+                        },
+                        "scaleTargetRef": {
+                            "type": "object",
+                            "properties": {
+                                "apiVersion": {
+                                    "type": "string"
+                                },
+                                "kind": {
+                                    "type": "string"
+                                },
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "additionalProperties": false
+        },
+        "deployment": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional deployment annotations",
+                    "type": "object"
+                },
+                "imagePullSecrets": {
+                    "description": "Pull secret for fetching container image",
+                    "type": "array"
+                },
+                "labels": {
+                    "description": "Additional deployment labels (e.g. for filtering deployment by custom labels)",
+                    "type": "object"
+                },
+                "lifecycle": {
+                    "description": "Pod lifecycle actions",
+                    "type": "object"
+                },
+                "podAnnotations": {
+                    "description": "Additional pod annotations (e.g. for mesh injection or prometheus scraping)",
+                    "type": "object"
+                },
+                "podLabels": {
+                    "description": "Additional Pod labels (e.g. for filtering Pod by custom labels)",
+                    "type": "object"
+                },
+                "replicas": {
+                    "description": "Number of pods of the deployment",
+                    "type": "integer"
+                },
+                "updateStrategy": {
+                    "type": "object",
+                    "properties": {
+                        "rollingUpdate": {
+                            "type": "object",
+                            "properties": {
+                                "maxSurge": {
+                                    "type": [
+                                        "integer",
+                                        "string",
+                                        "null"
+                                    ]
+                                },
+                                "maxUnavailable": {
+                                    "type": [
+                                        "integer",
+                                        "string",
+                                        "null"
+                                    ]
+                                }
+                            }
+                        },
+                        "type": {
+                            "description": "Customize updateStrategy of Deployment",
+                            "type": "string"
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            }
+        },
+        "image": {
+            "type": "object",
+            "properties": {
+                "pullPolicy": {
+                    "description": "Hub-manager image pull policy",
+                    "type": "string"
+                },
+                "registry": {
+                    "description": "Hub-manager image host registry",
+                    "type": "string"
+                },
+                "repository": {
+                    "description": "Hub-manager image repository",
+                    "type": "string"
+                },
+                "tag": {
+                    "description": "defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                }
+            },
+            "additionalProperties": false
+        },
+        "logs": {
+            "type": "object",
+            "properties": {
+                "level": {
+                    "description": "Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC",
+                    "default": "INFO",
+                    "type": "string",
+                    "enum": [
+                        "TRACE",
+                        "DEBUG",
+                        "INFO",
+                        "WARN",
+                        "ERROR",
+                        "FATAL",
+                        "PANIC"
+                    ]
+                }
+            }
+        },
+        "migration": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional migration job annotations",
+                    "type": "object"
+                },
+                "labels": {
+                    "description": "Additional migration job labels",
+                    "type": "object"
+                }
+            }
+        },
+        "nodeSelector": {
+            "description": "nodeSelector is the simplest recommended form of node selection constraint",
+            "type": "object"
+        },
+        "postgres": {
+            "type": "object",
+            "properties": {
+                "encryptionKey": {
+                    "description": "Name of Secret with key 'postgres-encryption-key' set to a valid encryption key",
+                    "type": "string"
+                },
+                "uri": {
+                    "description": "Name of Secret with key 'postgres-uri' set to a valid Postgres connection string",
+                    "type": "string"
+                }
+            }
+        },
+        "resources": {
+            "description": "[Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for container",
+            "type": "object"
+        },
+        "securityContext": {
+            "description": "[SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1)",
+            "type": "object",
+            "properties": {
+                "allowPrivilegeEscalation": {
+                    "type": "boolean"
+                },
+                "capabilities": {
+                    "type": "object",
+                    "properties": {
+                        "drop": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "readOnlyRootFilesystem": {
+                    "type": "boolean"
+                },
+                "runAsGroup": {
+                    "type": "integer"
+                },
+                "runAsUser": {
+                    "type": "integer"
+                },
+                "seccompProfile": {
+                    "type": "object",
+                    "properties": {
+                        "type": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "service": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional annotations",
+                    "type": "object"
+                }
+            }
+        },
+        "token": {
+            "description": "Name of Secret with key 'token' set to a valid license token",
+            "type": "string"
+        },
+        "tolerations": {
+            "description": "Tolerations allow the scheduler to schedule pods with matching taints",
+            "type": "array"
+        },
+        "tracing": {
+            "type": "object",
+            "properties": {
+                "address": {
+                    "description": "Address to send traces",
+                    "type": "string"
+                },
+                "insecure": {
+                    "description": "use HTTP instead of HTTPS",
+                    "type": "boolean"
+                },
+                "password": {
+                    "description": "Name of Secret with key 'tracing-password' set to a valid password",
+                    "type": "string"
+                },
+                "probability": {
+                    "description": "Probability to send traces",
+                    "type": "string"
+                },
+                "username": {
+                    "description": "Username to connect to tracing address",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
