@@ -248,6 +248,15 @@
                 }
             }
         },
+        "service": {
+            "type": "object",
+            "properties": {
+                "annotations": {
+                    "description": "Additional annotations",
+                    "type": "object"
+                }
+            }
+        },
         "token": {
             "description": "Name of Secret with key 'token' set to a valid license token",
             "type": "string"
