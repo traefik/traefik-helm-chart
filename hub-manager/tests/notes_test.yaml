@@ -7,15 +7,10 @@ tests:
   - it: should use helm managed namespace in release notes output
     asserts:
       - equalRaw:
-          value: |2-
+          value: |2
 
 
             RELEASE-NAME with ghcr.io/traefik/hub-manager:v1.0.0 has been deployed successfully on NAMESPACE namespace!
-            1. Get the application URL by running these commands:
-              export POD_NAME=$(kubectl get pods --namespace NAMESPACE -l "app.kubernetes.io/name=RELEASE-NAME-hub-manager,app.kubernetes.io/instance=RELEASE-NAME" -o jsonpath="{.items[0].metadata.name}")
-              export CONTAINER_PORT=$(kubectl get pod --namespace NAMESPACE $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-              echo "Visit http://127.0.0.1:8080 to use your application"
-              kubectl --namespace NAMESPACE port-forward $POD_NAME 8080:$CONTAINER_PORT
 
   - it: should use tag version in release notes output if set
     set:
@@ -23,12 +18,7 @@ tests:
         tag: v1.0.1
     asserts:
       - equalRaw:
-          value: |2-
+          value: |2
 
 
             RELEASE-NAME with ghcr.io/traefik/hub-manager:v1.0.1 has been deployed successfully on NAMESPACE namespace!
-            1. Get the application URL by running these commands:
-              export POD_NAME=$(kubectl get pods --namespace NAMESPACE -l "app.kubernetes.io/name=RELEASE-NAME-hub-manager,app.kubernetes.io/instance=RELEASE-NAME" -o jsonpath="{.items[0].metadata.name}")
-              export CONTAINER_PORT=$(kubectl get pod --namespace NAMESPACE $POD_NAME -o jsonpath="{.spec.containers[0].ports[0].containerPort}")
-              echo "Visit http://127.0.0.1:8080 to use your application"
-              kubectl --namespace NAMESPACE port-forward $POD_NAME 8080:$CONTAINER_PORT
