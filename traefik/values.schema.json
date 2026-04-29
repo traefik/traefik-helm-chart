@@ -1126,7 +1126,7 @@
             "type": "object",
             "properties": {
                 "digest": {
-                    "description": "Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. The chart's version-aware logic falls back to `appVersion`; only set `versionOverride` if the digest corresponds to a different Traefik version than `appVersion`.",
+                    "description": "Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest).",
                     "type": [
                         "string",
                         "null"
@@ -3219,7 +3219,7 @@
             "additionalProperties": false
         },
         "versionOverride": {
-            "description": "This field overrides the default version extracted from image.tag (or `appVersion` when pinning by `image.digest`).",
+            "description": "This field overrides the default version extracted from image.tag. Required when pinning by `image.digest`, since the version cannot be derived from a digest.",
             "type": "string"
         },
         "volumes": {
