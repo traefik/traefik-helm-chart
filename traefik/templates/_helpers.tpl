@@ -30,6 +30,8 @@ Create the chart image name.
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
  {{- end -}}
+{{- else if .Values.image.digest -}}
+{{- printf "%s/%s@%s" .Values.image.registry .Values.image.repository .Values.image.digest }}
 {{- else -}}
 {{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
 {{- end -}}

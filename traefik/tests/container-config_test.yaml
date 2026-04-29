@@ -33,6 +33,44 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: example.org/traefik:v3.6.10
+  - it: should use digest when image.digest is specified
+    set:
+      image:
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+  - it: should let image.digest take precedence over image.tag
+    set:
+      image:
+        tag: v3.7.0
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+  - it: should fail validation for invalid image.digest format
+    set:
+      image:
+        digest: not-a-valid-digest
+    asserts:
+      - failedTemplate:
+          errorPattern: "image/digest.*does not match pattern"
+  - it: should fail validation when image.digest uses uppercase hex characters
+    set:
+      image:
+        digest: sha256:ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789ABCDEF0123456789
+    asserts:
+      - failedTemplate:
+          errorPattern: "image/digest.*does not match pattern"
+  - it: should fail validation when image.digest hex is not 64 chars
+    set:
+      image:
+        digest: sha256:abc123
+    asserts:
+      - failedTemplate:
+          errorPattern: "image/digest.*does not match pattern"
 
   - it: should have no resource limit by default
     asserts:

@@ -1125,6 +1125,14 @@
         "image": {
             "type": "object",
             "properties": {
+                "digest": {
+                    "description": "Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag` and `versionOverride` should be used to set the version.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^sha256:[a-f0-9]{64}$"
+                },
                 "pullPolicy": {
                     "description": "Traefik image pull policy",
                     "type": "string"
