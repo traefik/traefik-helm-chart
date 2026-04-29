@@ -213,7 +213,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
-| image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
+| image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. The chart's version-aware logic falls back to `appVersion`; only set `versionOverride` if the digest corresponds to a different Traefik version than `appVersion`. |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
@@ -578,7 +578,7 @@ Kubernetes: `>=1.25.0-0`
 | updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
 | updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
 | updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment or DaemonSet |
-| versionOverride | string | `""` | This field overrides the default version extracted from image.tag. Required when pinning by `image.digest`, since the version cannot be derived from a digest. |
+| versionOverride | string | `""` | This field overrides the default version extracted from image.tag (or `appVersion` when pinning by `image.digest`). |
 | volumes | list | `[]` | Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - "--providers.file.filename=/config/dynamic.toml" - "--ping" - "--ping.entrypoint=web"` |
 
 ----------------------------------------------

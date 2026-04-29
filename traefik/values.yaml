@@ -10,7 +10,7 @@ image:  # @schema additionalProperties: false
   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
   # To pin by digest instead of tag, use `image.digest`; it takes precedence over `tag`.
   tag:  # @schema type:[string, null]
-  # -- Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest).
+  # -- Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. The chart's version-aware logic falls back to `appVersion`; only set `versionOverride` if the digest corresponds to a different Traefik version than `appVersion`.
   digest:  # @schema type:[string, null]; pattern:^sha256:[a-f0-9]{64}$
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
@@ -1248,7 +1248,7 @@ namespaceOverride: ""
 # -- This field overrides the default app.kubernetes.io/instance label for all Objects.
 instanceLabelOverride: ""
 
-# -- This field overrides the default version extracted from image.tag. Required when pinning by `image.digest`, since the version cannot be derived from a digest.
+# -- This field overrides the default version extracted from image.tag (or `appVersion` when pinning by `image.digest`).
 versionOverride: ""
 
 # -- overrides the app.kubernetes.io/name label

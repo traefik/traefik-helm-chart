@@ -30,6 +30,13 @@ tests:
         tag: experimental-master
     asserts:
       - notFailedTemplate: {}
+  - it: should pass with image.digest alone — version-aware logic falls back to appVersion (no versionOverride needed)
+    set:
+      image:
+        tag: null
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - notFailedTemplate: {}
   - it: should not pass when trying to use this Chart with unknown tag
     set:
       image:
