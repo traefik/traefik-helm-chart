@@ -29,7 +29,7 @@ jobs:
       # a file within the cache, meaning there would never be any data to restore. actions/download-artifact
       # also doesn't work because it only handles artifacts uploaded in the same run, and we want to restore
       # from the previous successful run.
-      - uses: dawidd6/action-download-artifact@8305c0f1062bb0d184d09ef4493ecb9288447732 # v20
+      - uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         continue-on-error: true
         with:
           name: ${{ env.CACHE_KEY }}
