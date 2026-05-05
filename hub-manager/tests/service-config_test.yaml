@@ -46,4 +46,5 @@ tests:
       - equal:
           path: spec.selector
           value:
+            app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/name: hub-manager
