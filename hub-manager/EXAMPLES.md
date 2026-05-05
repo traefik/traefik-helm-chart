@@ -9,11 +9,11 @@ This example assumes a Secret named `hub-manager-config` already exists and cont
 - `postgres-uri`
 - `postgres-encryption-key`
 
-You can use an existing encryption key or generate a new one with the following command:
+    _You can use an existing encryption key or generate a new one with the following command:_
 
-```bash
-openssl rand -base64 32
-```
+    ```bash
+    openssl rand -base64 32
+    ```
 
 ```yaml
 token: hub-manager-config
