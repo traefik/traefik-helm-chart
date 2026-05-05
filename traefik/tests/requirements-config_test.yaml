@@ -91,6 +91,30 @@ tests:
         token: xxx
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using Traefik Hub with image.digest but no versionOverride
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: null
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
+  - it: should succeed when using Traefik Hub with image.digest and versionOverride
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: null
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      versionOverride: v3.19.3
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when trying to use this Chart with a stable Hub version above max
     set:
       image:
