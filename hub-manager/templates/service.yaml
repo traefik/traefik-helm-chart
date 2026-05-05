@@ -17,4 +17,4 @@ spec:
       protocol: TCP
       name: http
   selector:
-    {{- include "hub-manager.labelselector" . | nindent 4 }}
+    {{- include "hub-manager.selectorLabels" . | nindent 4 }}

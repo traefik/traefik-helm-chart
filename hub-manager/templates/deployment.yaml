@@ -18,7 +18,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "hub-manager.labelselector" . | nindent 6 }}
+      {{- include "hub-manager.selectorLabels" . | nindent 6 }}
   {{- with .Values.deployment.updateStrategy }}
   strategy:
     type: {{ .type }}
