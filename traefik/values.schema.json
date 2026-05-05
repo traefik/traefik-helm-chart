@@ -1146,7 +1146,7 @@
                     "type": "string"
                 },
                 "tag": {
-                    "description": "defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest instead of tag, use `image.digest`; it takes precedence over `tag`.",
+                    "description": "defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `\u003cversion\u003e@\u003cdigest\u003e` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).",
                     "type": [
                         "string",
                         "null"

@@ -8,7 +8,7 @@ image:  # @schema additionalProperties: false
   # -- Traefik image repository
   repository: traefik
   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
-  # To pin by digest instead of tag, use `image.digest`; it takes precedence over `tag`.
+  # To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).
   tag:  # @schema type:[string, null]
   # -- Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest).
   digest:  # @schema type:[string, null]; pattern:^sha256:[a-f0-9]{64}$

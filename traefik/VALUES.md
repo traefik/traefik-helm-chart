@@ -217,7 +217,7 @@ Kubernetes: `>=1.25.0-0`
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `"docker.io"` | Traefik image host registry |
 | image.repository | string | `"traefik"` | Traefik image repository |
-| image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest instead of tag, use `image.digest`; it takes precedence over `tag`. |
+| image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image). |
 | ingressClass.enabled | bool | `true` | Create a default IngressClass for Traefik |
 | ingressClass.isDefaultClass | bool | `true` |  |
 | ingressClass.name | string | `""` |  |

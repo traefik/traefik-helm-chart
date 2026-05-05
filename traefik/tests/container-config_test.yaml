@@ -50,6 +50,14 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: docker.io/traefik@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+  - it: should preserve the legacy tag@digest combo in image.tag
+    set:
+      image:
+        tag: v3.7.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.7.0@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
   - it: should fail validation for invalid image.digest format
     set:
       image:
