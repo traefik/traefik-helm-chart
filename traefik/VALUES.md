@@ -496,6 +496,10 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
+| providers.kubernetesIngressNGINX.ipAllowListStrategy | object | See below | When set, the strategy is applied to every generated IPAllowList middleware. |
+| providers.kubernetesIngressNGINX.ipAllowListStrategy.depth | int | `0` | Number of trusted proxy hops to skip when extracting the client IP from the X-Forwarded-For header. 0 disables depth-based extraction. (default: 0) |
+| providers.kubernetesIngressNGINX.ipAllowListStrategy.excludedIPS | list | `[]` | List of IPs to exclude when scanning the X-Forwarded-For header to find the client IP. |
+| providers.kubernetesIngressNGINX.ipAllowListStrategy.ipv6Subnet | int | `0` | IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping. |
 | providers.kubernetesIngressNGINX.modsec.enabled | bool | `false` | Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8. |
 | providers.kubernetesIngressNGINX.modsec.owaspCoreRules | bool | `false` | Enable OWASP Core Rules. |
 | providers.kubernetesIngressNGINX.modsec.snippet | string | `""` | Custom ModSec rules snippet. |

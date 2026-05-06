@@ -2725,6 +2725,24 @@
                             "description": "Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class",
                             "type": "boolean"
                         },
+                        "ipAllowListStrategy": {
+                            "description": "When set, the strategy is applied to every generated IPAllowList middleware.",
+                            "type": "object",
+                            "properties": {
+                                "depth": {
+                                    "description": "Number of trusted proxy hops to skip when extracting the client IP from the X-Forwarded-For header. 0 disables depth-based extraction. (default: 0)",
+                                    "type": "integer"
+                                },
+                                "excludedIPS": {
+                                    "description": "List of IPs to exclude when scanning the X-Forwarded-For header to find the client IP.",
+                                    "type": "array"
+                                },
+                                "ipv6Subnet": {
+                                    "description": "IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping.",
+                                    "type": "integer"
+                                }
+                            }
+                        },
                         "modsec": {
                             "type": "object",
                             "properties": {
