@@ -1125,6 +1125,14 @@
         "image": {
             "type": "object",
             "properties": {
+                "digest": {
+                    "description": "Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest).",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "pattern": "^sha256:[a-f0-9]{64}$"
+                },
                 "pullPolicy": {
                     "description": "Traefik image pull policy",
                     "type": "string"
@@ -1138,7 +1146,7 @@
                     "type": "string"
                 },
                 "tag": {
-                    "description": "defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. When a digest is required, `versionOverride` can be used to set the version.",
+                    "description": "defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `\u003cversion\u003e@\u003cdigest\u003e` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).",
                     "type": [
                         "string",
                         "null"
@@ -3211,7 +3219,7 @@
             "additionalProperties": false
         },
         "versionOverride": {
-            "description": "This field overrides the default version extracted from image.tag",
+            "description": "This field overrides the default version extracted from image.tag. Required when pinning by `image.digest`, since the version cannot be derived from a digest.",
             "type": "string"
         },
         "volumes": {

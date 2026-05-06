@@ -1,11 +1,12 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'config:recommended',
+    ':disableRateLimiting',
     ':semanticCommitTypeAll(chore)',
     'helpers:pinGitHubActionDigests',
     // Update appVersion in Chart.yaml
     'customManagers:helmChartYamlAppVersions'
+    'config:recommended',
   ],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
