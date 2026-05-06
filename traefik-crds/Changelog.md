@@ -1,5 +1,17 @@
 # Change Log
 
+## 1.18.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-06
+
+**Upgrade Notes**
+
+This release is the last release of this CRD Chart.
+See https://github.com/traefik/traefik-helm-chart/issues/1669#issuecomment-4096810602 for more details.
+
+* chore(release): 🚀 publish traefik 40.0.0 and crds 1.18.0
+
+
 ## 1.17.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-04-23
@@ -8,7 +20,6 @@
 * feat(CRDs): add traefik hub ContentItem
 * chore(release): 🚀 publish 40.0.0-rc.1 and CRDs v0.17.0
 * chore(deps): :rocket: upgrade traefik and CRDs to v3.7.0-rc.2
-
 
 
 ## 1.16.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)

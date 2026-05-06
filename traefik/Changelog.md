@@ -1,5 +1,122 @@
 # Change Log
 
+## 40.0.0  ![AppVersion: v3.7.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-06
+
+* fix(providers.kubernetesIngressNGINX): :bug: clarify int defaults
+* feat: add service.nameOverride for adopting existing Services
+* feat(chart): 📝 version support with annotations
+* feat(deps): update traefik docker tag to v3.7.0-rc.1
+* feat(CRDs): add traefik hub ContentItem
+* feat(CRDs): update Traefik Hub to v1.29.0
+* feat(hub): ✨ expose multicluster serversTransport TLS and timeout options
+* feat(hub): ✨ support Nutanix Prism Central provider
+* feat(hub): 🍱 map Traefik Hub v3.20.0-ea.7+ to Traefik Proxy v3.7.0-rc.1
+* feat(nginx): ✨ support globalAuthUrl option
+* feat(nginx): ✨ support modsec option
+* feat(providers): ✨ support precedence option
+* feat(proxy): add support of kubernetesIngressNGINX.ipAllowListStrategy
+* feat(image): add image.digest for digest-based pinning
+* feat(deps): support traefik v3.7.0 & hub v3.20.0
+* chore(release): 🚀 publish traefik 40.0.0 and crds 1.18.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index a26fc4e..aeedcc1 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -8,8 +8,10 @@ image:  # @schema additionalProperties: false
+   # -- Traefik image repository
+   repository: traefik
+   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
+-  # When a digest is required, `versionOverride` can be used to set the version.
++  # To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).
+   tag:  # @schema type:[string, null]
++  # -- Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest).
++  digest:  # @schema type:[string, null]; pattern:^sha256:[a-f0-9]{64}$
+   # -- Traefik image pull policy
+   pullPolicy: IfNotPresent
+ 
+@@ -420,37 +422,46 @@ providers:
+     # -- Defines whether to enable request buffering (default: false)
+     proxyRequestBuffering: null  # @schema type:[boolean, null]
+     # -- Default buffer size for reading client request body in bytes (default: 16384)
+-    clientBodyBufferSize: 0
++    clientBodyBufferSize:  # @schema type:[integer, null]
+     # -- Default maximum size of a client request body in bytes (default: 1048576)
+-    proxyBodySize: 0
++    proxyBodySize:  # @schema type:[integer, null]
+     # -- Defines whether to enable response buffering (default: false)
+     proxyBuffering: null  # @schema type:[boolean, null]
+     # -- Default buffer size for reading the response body in bytes (default: 8192)
+-    proxyBufferSize: 0
++    proxyBufferSize:  # @schema type:[integer, null]
+     # -- Default number of buffers for reading a response (default: 4)
+-    proxyBuffersNumber: 0
++    proxyBuffersNumber:  # @schema type:[integer, null]
+     # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
+-    proxyConnectTimeout: 0
++    proxyConnectTimeout:  # @schema type:[integer, null]
+     # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
+-    proxyReadTimeout: 0
++    proxyReadTimeout:  # @schema type:[integer, null]
+     # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
+-    proxySendTimeout: 0
++    proxySendTimeout:  # @schema type:[integer, null]
+     # -- Defines in which cases a request should be retried (default: "error timeout")
+     proxyNextUpstream: ""
+     # -- Limits the number of possible tries if the backend server does not reply (default: 3)
+-    proxyNextUpstreamTries: 0
++    proxyNextUpstreamTries:  # @schema type:[integer, null]
+     # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
+-    proxyNextUpstreamTimeout: 0
++    proxyNextUpstreamTimeout:  # @schema type:[integer, null]
+     # -- Defines which HTTP status codes should result in calling the default backend to return an error page
+     customHTTPErrors: []
+     # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
+-    upstreamKeepaliveTimeout: 0
++    upstreamKeepaliveTimeout:  # @schema type:[integer, null]
+     # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
+     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+     # -- List of allowed response headers inside the custom headers annotations
+     globalAllowedResponseHeaders: []
+     # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
+     globalAuthUrl: ""
++    # -- When set, the strategy is applied to every generated IPAllowList middleware.
++    # @default -- See below
++    ipAllowListStrategy:
++      # -- Number of trusted proxy hops to skip when extracting the client IP from the X-Forwarded-For header. 0 disables depth-based extraction. (default: 0)
++      depth: 0
++      # -- List of IPs to exclude when scanning the X-Forwarded-For header to find the client IP.
++      excludedIPS: []
++      # -- IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping.
++      ipv6Subnet: 0
+     # -- Enables parsing and adding -snippet annotations/directives (default: false)
+     allowSnippetAnnotations: null  # @schema type:[boolean, null]
+     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+@@ -1237,7 +1248,7 @@ namespaceOverride: ""
+ # -- This field overrides the default app.kubernetes.io/instance label for all Objects.
+ instanceLabelOverride: ""
+ 
+-# -- This field overrides the default version extracted from image.tag
++# -- This field overrides the default version extracted from image.tag. Required when pinning by `image.digest`, since the version cannot be derived from a digest.
+ versionOverride: ""
+ 
+ # -- overrides the app.kubernetes.io/name label
+@@ -1307,7 +1318,7 @@ hub:  # @schema additionalProperties: false
+         # -- Data center to use. If not provided, the default agent data center is used
+         datacenter: ""
+         # -- WaitTime limits how long a Watch will block. If not provided, the agent default
+-        endpointWaitTime: 0
++        endpointWaitTime:  # @schema type:[integer, null]
+         httpauth:
+           # -- Basic Auth password
+           password: ""
+```
+
 ## 39.0.9  ![AppVersion: v3.6.15](https://img.shields.io/static/v1?label=AppVersion&message=v3.6.15&color=success&logo=) ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-05-04
