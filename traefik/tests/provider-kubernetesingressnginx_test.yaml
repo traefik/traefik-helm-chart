@@ -356,3 +356,27 @@ tests:
         notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.modsec=true"
+
+  - it: should add ipAllowListStrategy flags when enabled
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          ipAllowListStrategy:
+            depth: 2
+            excludedIPs:
+              - "1.1.1.1"
+              - 2.2.2.2
+            ipv6subnet: "1.2.3.4/32"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.depth"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.excludedIPs=1.1.1.1,2.2.2.2"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.ipv6subnet=1.2.3.4/32"
