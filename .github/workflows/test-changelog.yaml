@@ -19,8 +19,16 @@ jobs:
       - name: Render traefik changelog configuration
         env:
           REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
+          DATE: '2025-01-28'
         run: |
-          export DATE=2025-01-28; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+          # Pin version-support annotations so the fixture stays stable across releases.
+          sed -i \
+            -e 's|traefik.io/proxy-min-version:.*|traefik.io/proxy-min-version: v3.6.0|' \
+            -e 's|traefik.io/proxy-max-version:.*|traefik.io/proxy-max-version: v3.6.12|' \
+            -e 's|traefik.io/hub-min-version:.*|traefik.io/hub-min-version: v3.19.0|' \
+            -e 's|traefik.io/hub-max-version:.*|traefik.io/hub-max-version: v3.20.0-ea.1|' \
+            traefik/Chart.yaml
+          ./hack/render-changelog-config.sh traefik
 
       - name: Build Changelog
         id: changelog
@@ -29,6 +37,7 @@ jobs:
           fromTag: v34.1.0
           toTag: v34.2.0
           configuration: "/tmp/changelog.json"
+          fetchViaCommits: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -55,8 +64,8 @@ jobs:
       - name: Render traefik changelog configuration
         env:
           REGEXP: '\\((CRDs|CRDs-.+)\\)'
-        run: |
-          export DATE=2025-01-13; cat .github/workflows/changelog.json | envsubst > /tmp/changelog.json; cat /tmp/changelog.json
+          DATE: '2025-01-13'
+        run: ./hack/render-changelog-config.sh traefik-crds
 
       - name: Build Changelog
         id: changelog
@@ -65,6 +74,7 @@ jobs:
           fromTag: crds_v1.0.0
           toTag: crds_v1.1.0
           configuration: "/tmp/changelog.json"
+          fetchViaCommits: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

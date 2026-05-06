@@ -290,6 +290,28 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.allowSnippetAnnotations=true"
 
+  - it: should add strictValidatePathType
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          strictValidatePathType: false
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.strictValidatePathType=false"
+
+  - it: should add globalAuthUrl
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          globalAuthUrl: "http://auth.default.svc.cluster.local"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.globalAuthUrl=http://auth.default.svc.cluster.local"
+
   - it: should add httpEntryPoint & httpsEntryPoint
     set:
       providers:
@@ -305,3 +327,32 @@ tests:
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.httpsEntryPoint=websecure"
+
+  - it: should add modsec flags when enabled
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          modsec:
+            enabled: true
+            owaspCoreRules: true
+            snippet: "SecRuleEngine On"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.owaspCoreRules=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.snippet=SecRuleEngine On"
+
+  - it: should not add modsec flags when disabled
+    asserts:
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"

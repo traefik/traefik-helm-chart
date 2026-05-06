@@ -784,6 +784,17 @@
                                                     "certificates": {
                                                         "type": "array"
                                                     },
+                                                    "cipherSuites": {
+                                                        "description": "List of supported cipher suites for TLS versions up to 1.2.",
+                                                        "type": "array"
+                                                    },
+                                                    "disableHTTP2": {
+                                                        "description": "Disable HTTP/2 for connections to this child.",
+                                                        "type": [
+                                                            "boolean",
+                                                            "null"
+                                                        ]
+                                                    },
                                                     "forwardingTimeouts": {
                                                         "type": "object",
                                                         "properties": {
@@ -803,8 +814,40 @@
                                                                     "null"
                                                                 ]
                                                             },
+                                                            "pingTimeout": {
+                                                                "description": "Timeout for HTTP/2 server ping frames.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "readIdleTimeout": {
+                                                                "description": "Timeout for HTTP/2 connection idle reads.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "readTimeout": {
+                                                                "description": "Timeout for reading the request body.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
                                                             "responseHeaderTimeout": {
                                                                 "description": "Timeout for reading response headers.",
+                                                                "type": [
+                                                                    "string",
+                                                                    "integer",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "writeTimeout": {
+                                                                "description": "Timeout for writing the response.",
                                                                 "type": [
                                                                     "string",
                                                                     "integer",
@@ -826,6 +869,18 @@
                                                             "integer",
                                                             "null"
                                                         ]
+                                                    },
+                                                    "maxVersion": {
+                                                        "description": "Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
+                                                        "type": "string"
+                                                    },
+                                                    "minVersion": {
+                                                        "description": "Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
+                                                        "type": "string"
+                                                    },
+                                                    "peerCertURI": {
+                                                        "description": "URI used to match against SAN URIs during the server's certificate verification.",
+                                                        "type": "string"
                                                     },
                                                     "rootCAs": {
                                                         "type": "array"
@@ -869,6 +924,73 @@
                                     "type": "integer"
                                 }
                             }
+                        },
+                        "nutanixPrismCentral": {
+                            "type": "object",
+                            "properties": {
+                                "allowedVpcs": {
+                                    "description": "Filter VMs by VPCs. List of `{ uuid: \"\u003cvpc-uuid\u003e\" }` entries.",
+                                    "type": "array"
+                                },
+                                "apiKey": {
+                                    "description": "Prism Central API key.",
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "description": "Enable Nutanix Prism Central provider.",
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "description": "Prism Central endpoint.",
+                                    "type": "string"
+                                },
+                                "filename": {
+                                    "description": "Base configuration file path.",
+                                    "type": "string"
+                                },
+                                "password": {
+                                    "description": "Prism Central password.",
+                                    "type": "string"
+                                },
+                                "pollInterval": {
+                                    "description": "Polling interval for Nutanix Prism Central API.",
+                                    "type": "integer"
+                                },
+                                "pollTimeout": {
+                                    "description": "Polling timeout for Nutanix Prism Central API.",
+                                    "type": "integer"
+                                },
+                                "serviceNameCategoryKey": {
+                                    "description": "Category key used to derive the service name.",
+                                    "type": "string"
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ca": {
+                                            "description": "TLS CA",
+                                            "type": "string"
+                                        },
+                                        "cert": {
+                                            "description": "TLS cert",
+                                            "type": "string"
+                                        },
+                                        "insecureSkipVerify": {
+                                            "description": "TLS insecure skip verify",
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "description": "TLS key",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "description": "Prism Central username.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
                         }
                     }
                 },
@@ -2577,6 +2699,10 @@
                             "description": "List of allowed response headers inside the custom headers annotations",
                             "type": "array"
                         },
+                        "globalAuthUrl": {
+                            "description": "URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.",
+                            "type": "string"
+                        },
                         "httpEntryPoint": {
                             "description": "Defines the EntryPoint to use for HTTP requests",
                             "type": "string"
@@ -2592,6 +2718,24 @@
                         "ingressClassByName": {
                             "description": "Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class",
                             "type": "boolean"
+                        },
+                        "modsec": {
+                            "type": "object",
+                            "properties": {
+                                "enabled": {
+                                    "description": "Enable ModSec engine. Requires Traefik Hub \u003e= v3.20.0-ea.8.",
+                                    "type": "boolean"
+                                },
+                                "owaspCoreRules": {
+                                    "description": "Enable OWASP Core Rules.",
+                                    "type": "boolean"
+                                },
+                                "snippet": {
+                                    "description": "Custom ModSec rules snippet.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "proxyBodySize": {
                             "description": "Default maximum size of a client request body in bytes (default: 1048576)",
@@ -2659,6 +2803,13 @@
                             "description": "Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies",
                             "type": "string"
                         },
+                        "strictValidatePathType": {
+                            "description": "Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
                         "throttleDuration": {
                             "description": "Ingress refresh throttle duration",
                             "type": "string"
@@ -2685,6 +2836,10 @@
                         }
                     },
                     "additionalProperties": false
+                },
+                "precedence": {
+                    "description": "Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order.",
+                    "type": "array"
                 }
             },
             "additionalProperties": false
@@ -2785,6 +2940,13 @@
                 "labels": {
                     "description": "Additional service labels (e.g. for filtering Service by custom labels)",
                     "type": "object"
+                },
+                "nameOverride": {
+                    "description": "Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "single": {
                     "type": "boolean"

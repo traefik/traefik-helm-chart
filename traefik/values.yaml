@@ -295,6 +295,8 @@ startupProbe: {}
 
 # @schema additionalProperties: false
 providers:
+  # -- Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order.
+  precedence: []
   # @schema additionalProperties: false
   kubernetesCRD:
     # -- Load Kubernetes IngressRoute provider
@@ -447,12 +449,24 @@ providers:
     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
     # -- List of allowed response headers inside the custom headers annotations
     globalAllowedResponseHeaders: []
+    # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
+    globalAuthUrl: ""
     # -- Enables parsing and adding -snippet annotations/directives (default: false)
     allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+    strictValidatePathType: null  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: ""
     # -- Defines the EntryPoint to use for HTTPS requests
     httpsEntryPoint: ""
+    # @schema additionalProperties: false
+    modsec:
+      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
+      enabled: false
+      # -- Enable OWASP Core Rules.
+      owaspCoreRules: false
+      # -- Custom ModSec rules snippet.
+      snippet: ""
 
   # @schema additionalProperties: false
   knative:
@@ -1069,6 +1083,8 @@ tlsStore: {}
 
 service:
   enabled: true
+  # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
+  nameOverride: ""  # @schema type:[string, null]
   ## -- Single service is using `MixedProtocolLBService` feature gate.
   ## -- When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
@@ -1387,6 +1403,18 @@ hub:  # @schema additionalProperties: false
             # -- Maximum idle connections per host.
             # @default -- 200
             maxIdleConnsPerHost:
+            # @schema type:[boolean, null]
+            # -- Disable HTTP/2 for connections to this child.
+            # @default -- false
+            disableHTTP2:
+            # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
+            minVersion: ""
+            # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
+            maxVersion: ""
+            # -- List of supported cipher suites for TLS versions up to 1.2.
+            cipherSuites: []
+            # -- URI used to match against SAN URIs during the server's certificate verification.
+            peerCertURI: ""
             forwardingTimeouts:
               # @schema type:[string, integer, null]
               # -- Timeout for establishing connections.
@@ -1400,11 +1428,58 @@ hub:  # @schema additionalProperties: false
               # -- Timeout for idle connections.
               # @default -- 90s
               idleConnTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for HTTP/2 server ping frames.
+              # @default -- 15s
+              pingTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for HTTP/2 connection idle reads.
+              # @default -- 0s
+              readIdleTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for reading the request body.
+              # @default -- 0s
+              readTimeout:
+              # @schema type:[string, integer, null]
+              # -- Timeout for writing the response.
+              # @default -- 0s
+              writeTimeout:
             spiffe:
               ids: []
               # @schema type:[string, integer, null]
               # -- SPIFFE trust domain.
               trustDomain: ""
+    # @schema additionalProperties: false
+    nutanixPrismCentral:
+      # -- Enable Nutanix Prism Central provider.
+      enabled: false
+      # -- Prism Central endpoint.
+      endpoint: ""
+      # -- Prism Central username.
+      username: ""
+      # -- Prism Central password.
+      password: ""
+      # -- Prism Central API key.
+      apiKey: ""
+      # -- Base configuration file path.
+      filename: ""
+      # -- Polling interval for Nutanix Prism Central API.
+      pollInterval: 30
+      # -- Polling timeout for Nutanix Prism Central API.
+      pollTimeout: 5
+      # -- Category key used to derive the service name.
+      serviceNameCategoryKey: "TraefikServiceName"
+      # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
+      allowedVpcs: []
+      tls:
+        # -- TLS CA
+        ca: ""
+        # -- TLS cert
+        cert: ""
+        # -- TLS key
+        key: ""
+        # -- TLS insecure skip verify
+        insecureSkipVerify: false
 
   redis:
     # -- Enable Redis Cluster. Default: true.

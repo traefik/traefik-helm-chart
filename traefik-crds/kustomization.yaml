@@ -16,6 +16,7 @@ resources:
   - crds-files/hub/hub.traefik.io_apiratelimits.yaml
   - crds-files/hub/hub.traefik.io_apis.yaml
   - crds-files/hub/hub.traefik.io_apiversions.yaml
+  - crds-files/hub/hub.traefik.io_contentitems.yaml
   - crds-files/hub/hub.traefik.io_managedapplications.yaml
   - crds-files/hub/hub.traefik.io_managedsubscriptions.yaml
   - crds-files/traefik/traefik.io_ingressroutes.yaml

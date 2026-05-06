@@ -193,6 +193,8 @@ It requires a dict with "Version" and "Hub".
    {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) }}
      {{- if semverCompare "<v3.19.0-0" $version }}
         {{- $hubProxyVersion = "v3.6.3" }}
+     {{- else if semverCompare ">=v3.20.0-ea.7" $version }}
+        {{- $hubProxyVersion = "v3.7.0-rc.1" }}
      {{- end -}}
    {{- end -}}
    {{- $hubProxyVersion }}
@@ -201,6 +203,18 @@ It requires a dict with "Version" and "Hub".
  {{- end -}}
 {{- end -}}
 
+
+{{/*
+Returns "true" if the given version is a stable release (vX.Y.Z or X.Y.Z), "false" otherwise.
+Non-standard versions include experimental, ea, rc, alpha, beta builds.
+*/}}
+{{- define "traefik.isStableVersion" -}}
+  {{- if regexMatch "^v?[0-9]+\\.[0-9]+\\.[0-9]+$" . -}}
+    true
+  {{- else -}}
+    false
+  {{- end -}}
+{{- end -}}
 
 {{/*
 The version can comes many sources: appVersion, image.tag, override, marketplace.

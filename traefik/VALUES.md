@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 39.0.5](https://img.shields.io/badge/Version-39.0.5-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.6.15](https://img.shields.io/badge/AppVersion-v3.6.15-informational?style=flat-square)
+![Version: 40.0.0-rc.2](https://img.shields.io/badge/Version-40.0.0--rc.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.0-rc.2](https://img.shields.io/badge/AppVersion-v3.7.0--rc.2-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -159,16 +159,39 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
 | hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.cipherSuites | list | `[]` | List of supported cipher suites for TLS versions up to 1.2. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.disableHTTP2 | string | false | Disable HTTP/2 for connections to this child. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.pingTimeout | string | 15s | Timeout for HTTP/2 server ping frames. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.readIdleTimeout | string | 0s | Timeout for HTTP/2 connection idle reads. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.readTimeout | string | 0s | Timeout for reading the request body. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.writeTimeout | string | 0s | Timeout for writing the response. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** |
 | hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxVersion | string | `""` | Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
+| hub.providers.multicluster.children.cluster-1.serversTransport.minVersion | string | `""` | Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
+| hub.providers.multicluster.children.cluster-1.serversTransport.peerCertURI | string | `""` | URI used to match against SAN URIs during the server's certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
 | hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
 | hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
+| hub.providers.nutanixPrismCentral.allowedVpcs | list | `[]` | Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries. |
+| hub.providers.nutanixPrismCentral.apiKey | string | `""` | Prism Central API key. |
+| hub.providers.nutanixPrismCentral.enabled | bool | `false` | Enable Nutanix Prism Central provider. |
+| hub.providers.nutanixPrismCentral.endpoint | string | `""` | Prism Central endpoint. |
+| hub.providers.nutanixPrismCentral.filename | string | `""` | Base configuration file path. |
+| hub.providers.nutanixPrismCentral.password | string | `""` | Prism Central password. |
+| hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
+| hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
+| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
+| hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
 | hub.redis.cluster | string | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -468,10 +491,14 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
+| providers.kubernetesIngressNGINX.globalAuthUrl | string | `""` | URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option. |
 | providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
 | providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
+| providers.kubernetesIngressNGINX.modsec.enabled | bool | `false` | Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8. |
+| providers.kubernetesIngressNGINX.modsec.owaspCoreRules | bool | `false` | Enable OWASP Core Rules. |
+| providers.kubernetesIngressNGINX.modsec.snippet | string | `""` | Custom ModSec rules snippet. |
 | providers.kubernetesIngressNGINX.proxyBodySize | int | `0` | Default maximum size of a client request body in bytes (default: 1048576) |
 | providers.kubernetesIngressNGINX.proxyBufferSize | int | `0` | Default buffer size for reading the response body in bytes (default: 8192) |
 | providers.kubernetesIngressNGINX.proxyBuffering | string | `nil` | Defines whether to enable response buffering (default: false) |
@@ -486,12 +513,14 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
+| providers.kubernetesIngressNGINX.strictValidatePathType | string | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
 | providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `0` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
 | providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
 | providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
+| providers.precedence | list | `[]` | Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order. |
 | rbac.aggregateTo | list | `[]` | Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | rbac.namespaced | bool | `false` | When set to true: <br /> 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br /> 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br /> **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br /> See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details. |
@@ -508,6 +537,7 @@ Kubernetes: `>=1.25.0-0`
 | service.annotationsUDP | object | `{}` | Additional annotations for UDP service only |
 | service.enabled | bool | `true` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
+| service.nameOverride | string | `""` | Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller). |
 | service.single | bool | `true` |  |
 | service.spec | object | `{"type":"LoadBalancer"}` | Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core). Cannot contain selector or ports entries. |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |

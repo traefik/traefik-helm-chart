@@ -1164,3 +1164,21 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.otlp.grpc.tls"
+
+  - it: should not add providers.precedence by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.precedence"
+
+  - it: should add providers.precedence when set
+    set:
+      providers:
+        precedence:
+          - kubernetescrd
+          - kubernetesingressnginx
+          - kubernetesgateway
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.precedence=kubernetescrd,kubernetesingressnginx,kubernetesgateway"

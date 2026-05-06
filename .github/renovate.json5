@@ -57,6 +57,10 @@
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
     },
+    {
+      matchPackageNames: ['helm-unittest/helm-unittest'],
+      extractVersion: '^v(?<version>.+)$',
+    },
   ],
   customManagers: [
     {

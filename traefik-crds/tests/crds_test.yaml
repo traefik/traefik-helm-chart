@@ -26,7 +26,7 @@ tests:
       hub: true
     asserts:
       - hasDocuments:
-          count: 14
+          count: 15
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -34,7 +34,7 @@ tests:
           value: hub.traefik.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(AccessControlPolicy|AIService|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription|ManagedApplication|APIAuth|APIPortalAuth|Uplink)$
+          pattern: ^(AccessControlPolicy|AIService|APIBundle|APICatalogItem|APIPlan|APIPortal|APIRateLimit|API|APIVersion|ManagedSubscription|ManagedApplication|APIAuth|APIPortalAuth|Uplink|ContentItem)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
@@ -45,7 +45,7 @@ tests:
       gatewayAPI: true
     asserts:
       - hasDocuments:
-          count: 6
+          count: 8
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -53,7 +53,7 @@ tests:
           value: gateway.networking.k8s.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant|BackendTLSPolicy)$
+          pattern: ^(BackendTLSPolicy|GatewayClass|Gateway|GRPCRoute|HTTPRoute|ListenerSet|ReferenceGrant|TLSRoute)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
@@ -65,7 +65,7 @@ tests:
       deleteOnUninstall: true
     asserts:
       - hasDocuments:
-          count: 6
+          count: 8
       - isKind:
           of: CustomResourceDefinition
       - equal:
@@ -73,7 +73,7 @@ tests:
           value: gateway.networking.k8s.io
       - matchRegex:
           path: spec.names.kind
-          pattern: ^(GatewayClass|Gateway|GRPCRoute|HTTPRoute|ReferenceGrant|BackendTLSPolicy)$
+          pattern: ^(BackendTLSPolicy|GatewayClass|Gateway|GRPCRoute|HTTPRoute|ListenerSet|ReferenceGrant|TLSRoute)$
       - notExists:
           path: metadata.annotations["helm.sh/resource-policy"]
 
@@ -83,12 +83,10 @@ tests:
       gatewayAPIExperimental: true
     asserts:
       - hasDocuments:
-          count: 12
-      - isKind:
-          of: CustomResourceDefinition
+          count: 14
       - matchRegex:
-          path: spec.group
-          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+          path: kind
+          pattern: ^(CustomResourceDefinition|ValidatingAdmissionPolicy|ValidatingAdmissionPolicyBinding)$
       - equal:
           path: metadata.annotations["helm.sh/resource-policy"]
           value: keep
@@ -100,12 +98,10 @@ tests:
       deleteOnUninstall: true
     asserts:
       - hasDocuments:
-          count: 12
-      - isKind:
-          of: CustomResourceDefinition
+          count: 14
       - matchRegex:
-          path: spec.group
-          pattern: ^gateway\.networking\.(k8s|x-k8s)\.io$
+          path: kind
+          pattern: ^(CustomResourceDefinition|ValidatingAdmissionPolicy|ValidatingAdmissionPolicyBinding)$
       - notExists:
           path: metadata.annotations["helm.sh/resource-policy"]
 
