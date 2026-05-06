@@ -69,7 +69,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub image tag needs to be specified!"
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.3
     set:
       image:
@@ -319,7 +319,7 @@ tests:
         token: "xxx"
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub image tag needs to be specified!"
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
   - it: should not fail when using Traefik Hub with tag set for OCI
     set:
       hub:
