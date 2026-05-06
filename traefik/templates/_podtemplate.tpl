@@ -479,6 +479,9 @@
           {{- if .Values.experimental.abortOnPluginFailure }}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
+          {{- with .Values.providers.precedence }}
+          - "--providers.precedence={{ join "," . }}"
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
            {{- if .Values.providers.kubernetesCRD.labelSelector }}
@@ -602,7 +605,11 @@
             {{- if and $.Values.service.enabled .publishService.enabled }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
             {{- end }}
-            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
+            {{- if .modsec.enabled }}
+          - "--providers.kubernetesingressnginx.modsec=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx.modsec" "content" (omit .modsec "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace" "modsec")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
@@ -875,6 +882,13 @@
             {{- end }}
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- if .providers.nutanixPrismCentral.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.nutanixPrismCentral" "content" (omit $.Values.hub.providers.nutanixPrismCentral "enabled" "allowedVpcs")) | nindent 10 }}
+              {{- range $idx, $val := .providers.nutanixPrismCentral.allowedVpcs }}
+                {{- $vpcPath := printf "hub.providers.nutanixPrismCentral.allowedVpcs[%d]" $idx }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $vpcPath "content" $val) | nindent 10 }}
+              {{- end }}
             {{- end }}
             {{- if .providers.multicluster.enabled }}
           - "--hub.providers.multicluster=true"

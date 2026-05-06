@@ -4,13 +4,15 @@
 {{- printf "\n" -}}
 
 
-{{/* Warn about experimental versions */}}
+{{/* Warn about non-standard versions (experimental, or pre-release outside supported range) */}}
 {{- $imageTag := (.Values.image.tag | default .Chart.AppVersion) -}}
-{{- if hasPrefix "experimental-" $imageTag -}}
+{{- $version := include "traefik.proxyVersion" $ -}}
+{{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" -}}
+{{- if or (hasPrefix "experimental-" $imageTag) (and (eq (include "traefik.isStableVersion" $version) "false") (semverCompare (printf ">%s-0" $proxyMaxVersion) $version)) -}}
 {{- printf "\n" -}}
-⚠️ WARNING: You are using an experimental image tag ({{ $imageTag }}). Experimental versions can
+⚠️ WARNING: You are using a non-standard image tag ({{ $imageTag }}). Non-standard versions can
 be unstable, may contain breaking changes, and are NOT recommended for production use.
-This version is not supported by this chart. Use at your own risk. ⚠️
+This version is not officially supported by this chart. Use at your own risk. ⚠️
 {{- printf "\n" -}}
 {{- end -}}
 
@@ -116,6 +118,16 @@ Migration example:
         #   volumeName: plugin-storage
     {{- printf "\n" -}}
   {{- end -}}
+
+
+{{/* Warn about Gateway API CRDs no longer shipped with this chart in future versions */}}
+{{- if .Values.providers.kubernetesGateway.enabled }}
+{{- printf "\n" -}}
+⚠️ DEPRECATION WARNING: Gateway API CRDs will no longer be shipped with this chart in a future major version.
+You will need to install them yourself before deploying Traefik v3.7:
+  kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+{{- printf "\n" -}}
+{{- end -}}
 
 
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}

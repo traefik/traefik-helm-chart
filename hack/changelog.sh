@@ -14,7 +14,7 @@ for chart in "./traefik" "./traefik-crds"; do
   echo "${changelog}"
 
   sed -i -r 's/^annotations: \{\}/annotations:/g' ${chart}/Chart.yaml
-  sed -i -e '/^  artifacthub.io\/changes: |/,$d' ${chart}/Chart.yaml
+  sed -i -e '/^  artifacthub.io\/changes:/,$d' ${chart}/Chart.yaml
   echo "  artifacthub.io/changes: |" >>${chart}/Chart.yaml
   echo "${changelog}" >>${chart}/Chart.yaml
 done

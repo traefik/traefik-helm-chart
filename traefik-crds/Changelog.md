@@ -1,5 +1,41 @@
 # Change Log
 
+## 1.17.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-04-23
+
+* feat(CRDs): update Traefik Hub to v1.29.0
+* feat(CRDs): add traefik hub ContentItem
+* chore(release): 🚀 publish 40.0.0-rc.1 and CRDs v0.17.0
+* chore(deps): :rocket: upgrade traefik and CRDs to v3.7.0-rc.2
+
+
+
+## 1.16.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-23
+
+* chore(release): :rocket: publish v40.0.0-ea.2 and CRDs v0.16.0
+* chore(CRDs): update gateway API CRDs to v1.5.1 (#1752)
+
+
+## 1.15.0  ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-03-16
+
+* feat(CRDs): support Traefik Hub v3.20.0-ea.1
+* feat(CRDs): :rocket: update CRDs to v3.7
+* chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0
+
+## 1.14.1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-04
+
+* fix(deps): bump traefik.io CRDs to release v3.6.14
+* chore(release): 🚀 publish traefik 39.0.9 and crds 1.14.1
+
+
+
 ## 1.14.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-01-23
