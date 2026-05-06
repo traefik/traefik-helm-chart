@@ -371,7 +371,7 @@ tests:
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.depth"
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.depth=2"
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
