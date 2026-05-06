@@ -50,8 +50,8 @@ Below is non-exhaustive compatibility list:
 
 | Traefik   | Chart | ArtifactHub   |
 |-----------|-------|---------------|
-| v2.x      | v27   | [latest v27](https://artifacthub.io/packages/helm/traefik/traefik/37.4.0)  |
-| v3.0-v3.5 | v39   | [latest v39](https://artifacthub.io/packages/helm/traefik/traefik/39.0.5)  |
+| v2.x      | v27   | [latest v27](https://artifacthub.io/packages/helm/traefik/traefik/27.0.2)  |
+| v3.0-v3.5 | v39   | [latest v39](https://artifacthub.io/packages/helm/traefik/traefik/39.0.9)  |
 
 ## Installing
 
