@@ -41,26 +41,14 @@ tests:
   - it: should fail when trying to use this Chart with a stable Proxy version above max
     set:
       image:
-        tag: v3.7.0
+        tag: v3.8.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.6.12."
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.0."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
-        tag: v3.7.0-ea.1
-    asserts:
-      - notFailedTemplate: {}
-  - it: should not fail when trying to use this Chart with a Proxy version within range
-    set:
-      image:
-        tag: v3.6.10
-    asserts:
-      - notFailedTemplate: {}
-  - it: should not fail when trying to use this Chart with an ea Proxy version within range
-    set:
-      image:
-        tag: v3.6.10-ea.1
+        tag: v3.8.0-ea.1
     asserts:
       - notFailedTemplate: {}
   - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
@@ -125,7 +113,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.0-ea.1."
+          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.0."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -136,17 +124,6 @@ tests:
         token: xxx
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when trying to use this Chart with the stable release above ea max Hub version
-    set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
-        tag: v3.20.0
-      hub:
-        token: xxx
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.0-ea.1."
   - it: should not fail when trying to use this Chart with a Hub version within range
     set:
       image:
