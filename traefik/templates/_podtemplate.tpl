@@ -238,6 +238,9 @@
           {{- end }}
           {{- with .Values.api }}
             {{- $apiConfig := . }}
+            {{- if eq $apiConfig.basePath "" }}
+              {{- $apiConfig = omit $apiConfig "basePath" }}
+            {{- end }}
             {{- if hasKey $apiConfig "dashboard" }}
               {{- if (and $.Values.ingressRoute.dashboard.enabled (not $apiConfig.dashboard)) }}
                 {{- fail "ERROR: Cannot create an IngressRoute for the dashboard without enabling api.dashboard" -}}

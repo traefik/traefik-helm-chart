@@ -27,10 +27,10 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--api.debug=true"
 
-  - it: should not generate basePath flag when set to null
+  - it: should not generate basePath flag when set to empty string
     set:
       api:
-        basePath: null
+        basePath: ""
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
