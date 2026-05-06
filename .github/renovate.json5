@@ -7,7 +7,6 @@
     // Update appVersion in Chart.yaml
     'customManagers:helmChartYamlAppVersions'
   ],
-  baseBranchPatterns: [ 'master', 'v40.0', 'v39.0'],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
   rebaseWhen: 'conflicted',
@@ -30,28 +29,7 @@
     // Stable update on master & stable branch
     {
       matchPackageNames: ['traefik'],
-      matchBaseBranches: [ 'master', 'v39.0'],
       extends: [':semanticCommitTypeAll(feat)'],
-    },
-    // Pre-release update on pre-release branch
-    {
-      matchPackageNames: ['traefik'],
-      matchBaseBranches: [ 'v40.0'],
-      extends: [':semanticCommitTypeAll(feat)'],
-      ignoreUnstable: false,
-    },
-    {
-      groupName: 'GitHub actions',
-      groupSlug: 'gh-actions',
-      matchManagers: ['github-actions'],
-      matchBaseBranches: ['master'],
-      rangeStrategy: 'pin',
-    },
-    // No GHA update on previous branches
-    {
-      matchManagers: ['github-actions'],
-      matchBaseBranches: ['v40.0', 'v39.0'],
-      enabled: false
     },
     {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
