@@ -7,7 +7,6 @@
     // Update appVersion in Chart.yaml
     'customManagers:helmChartYamlAppVersions'
   ],
-  baseBranchPatterns: [ 'master'],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
   rebaseWhen: 'conflicted',
@@ -30,7 +29,6 @@
     // Stable update on master & stable branch
     {
       matchPackageNames: ['traefik'],
-      matchBaseBranches: [ 'master'],
       extends: [':semanticCommitTypeAll(feat)'],
     },
     {
