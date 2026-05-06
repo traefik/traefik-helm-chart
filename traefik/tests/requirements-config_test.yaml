@@ -69,7 +69,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub image tag needs to be specified!"
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.3
     set:
       image:
@@ -87,6 +87,30 @@ tests:
         registry: ghcr.io
         repository: traefik/traefik-hub
         tag: v3.19.3
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using Traefik Hub with image.digest but no versionOverride
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: null
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
+  - it: should succeed when using Traefik Hub with image.digest and versionOverride
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: null
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+      versionOverride: v3.19.3
       hub:
         token: xxx
     asserts:
@@ -295,7 +319,7 @@ tests:
         token: "xxx"
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub image tag needs to be specified!"
+          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
   - it: should not fail when using Traefik Hub with tag set for OCI
     set:
       hub:
