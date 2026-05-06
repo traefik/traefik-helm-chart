@@ -27,6 +27,14 @@
 * feat(CRDs): :rocket: update CRDs to v3.7
 * chore(release): :rocket: publish Traefik v40.0.0-ea.1 and CRDs v1.15.0
 
+## 1.14.1  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-04
+
+* fix(deps): bump traefik.io CRDs to release v3.6.14
+* chore(release): 🚀 publish traefik 39.0.9 and crds 1.14.1
+
+
 
 ## 1.14.0  ![Kubernetes: >=1.22.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.22.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
