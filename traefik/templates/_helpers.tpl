@@ -271,6 +271,8 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
           {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
         {{- else if and (kindIs "bool" $value) (ne $value nil) }}
 --{{ join "." (list $path $key)}}={{ $value }}
+        {{- else if or (kindIs "int" $value) (kindIs "int64" $value) }}
+--{{ join "." (list $path $key)}}={{ $value }}
         {{- else if not (empty $value) }}
 --{{ join "." (list $path $key)}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else if kindIs "float64" $value }}{{ printf "%.0f" $value }}{{ else }}{{ $value }}{{ end }}
         {{- end -}}

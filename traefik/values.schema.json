@@ -613,7 +613,10 @@
                                         },
                                         "endpointWaitTime": {
                                             "description": "WaitTime limits how long a Watch will block. If not provided, the agent default",
-                                            "type": "integer"
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "httpauth": {
                                             "type": "object",
@@ -2669,7 +2672,10 @@
                         },
                         "clientBodyBufferSize": {
                             "description": "Default buffer size for reading client request body in bytes (default: 16384)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "controllerClass": {
                             "description": "Ingress Class Controller value this controller satisfies",
@@ -2757,11 +2763,17 @@
                         },
                         "proxyBodySize": {
                             "description": "Default maximum size of a client request body in bytes (default: 1048576)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyBufferSize": {
                             "description": "Default buffer size for reading the response body in bytes (default: 8192)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyBuffering": {
                             "description": "Defines whether to enable response buffering (default: false)",
@@ -2772,11 +2784,17 @@
                         },
                         "proxyBuffersNumber": {
                             "description": "Default number of buffers for reading a response (default: 4)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyConnectTimeout": {
                             "description": "Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyNextUpstream": {
                             "description": "Defines in which cases a request should be retried (default: \"error timeout\")",
@@ -2784,15 +2802,24 @@
                         },
                         "proxyNextUpstreamTimeout": {
                             "description": "Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyNextUpstreamTries": {
                             "description": "Limits the number of possible tries if the backend server does not reply (default: 3)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyReadTimeout": {
                             "description": "Amount of time between two successive read operations. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyRequestBuffering": {
                             "description": "Defines whether to enable request buffering (default: false)",
@@ -2803,7 +2830,10 @@
                         },
                         "proxySendTimeout": {
                             "description": "Amount of time between two successive write operations. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "publishService": {
                             "type": "object",
@@ -2838,7 +2868,10 @@
                         },
                         "upstreamKeepaliveTimeout": {
                             "description": "Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "watchIngressWithoutClass": {
                             "description": "Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified",

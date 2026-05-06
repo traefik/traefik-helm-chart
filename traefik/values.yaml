@@ -420,31 +420,31 @@ providers:
     # -- Defines whether to enable request buffering (default: false)
     proxyRequestBuffering: null  # @schema type:[boolean, null]
     # -- Default buffer size for reading client request body in bytes (default: 16384)
-    clientBodyBufferSize: 0
+    clientBodyBufferSize:  # @schema type:[integer, null]
     # -- Default maximum size of a client request body in bytes (default: 1048576)
-    proxyBodySize: 0
+    proxyBodySize:  # @schema type:[integer, null]
     # -- Defines whether to enable response buffering (default: false)
     proxyBuffering: null  # @schema type:[boolean, null]
     # -- Default buffer size for reading the response body in bytes (default: 8192)
-    proxyBufferSize: 0
+    proxyBufferSize:  # @schema type:[integer, null]
     # -- Default number of buffers for reading a response (default: 4)
-    proxyBuffersNumber: 0
+    proxyBuffersNumber:  # @schema type:[integer, null]
     # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
-    proxyConnectTimeout: 0
+    proxyConnectTimeout:  # @schema type:[integer, null]
     # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
-    proxyReadTimeout: 0
+    proxyReadTimeout:  # @schema type:[integer, null]
     # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
-    proxySendTimeout: 0
+    proxySendTimeout:  # @schema type:[integer, null]
     # -- Defines in which cases a request should be retried (default: "error timeout")
     proxyNextUpstream: ""
     # -- Limits the number of possible tries if the backend server does not reply (default: 3)
-    proxyNextUpstreamTries: 0
+    proxyNextUpstreamTries:  # @schema type:[integer, null]
     # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
-    proxyNextUpstreamTimeout: 0
+    proxyNextUpstreamTimeout:  # @schema type:[integer, null]
     # -- Defines which HTTP status codes should result in calling the default backend to return an error page
     customHTTPErrors: []
     # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
-    upstreamKeepaliveTimeout: 0
+    upstreamKeepaliveTimeout:  # @schema type:[integer, null]
     # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
     # -- List of allowed response headers inside the custom headers annotations
@@ -1316,7 +1316,7 @@ hub:  # @schema additionalProperties: false
         # -- Data center to use. If not provided, the default agent data center is used
         datacenter: ""
         # -- WaitTime limits how long a Watch will block. If not provided, the agent default
-        endpointWaitTime: 0
+        endpointWaitTime:  # @schema type:[integer, null]
         httpauth:
           # -- Basic Auth password
           password: ""

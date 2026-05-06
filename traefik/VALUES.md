@@ -125,7 +125,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.consulCatalogEnterprise.enabled | bool | `false` | Enable Consul Catalog Enterprise backend with default settings. |
 | hub.providers.consulCatalogEnterprise.endpoint.address | string | `""` | The address of the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.datacenter | string | `""` | Data center to use. If not provided, the default agent data center is used |
-| hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime | int | `0` | WaitTime limits how long a Watch will block. If not provided, the agent default |
+| hub.providers.consulCatalogEnterprise.endpoint.endpointWaitTime | string | `nil` | WaitTime limits how long a Watch will block. If not provided, the agent default |
 | hub.providers.consulCatalogEnterprise.endpoint.httpauth.password | string | `""` | Basic Auth password |
 | hub.providers.consulCatalogEnterprise.endpoint.httpauth.username | string | `""` | Basic Auth username |
 | hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
@@ -483,7 +483,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.allowCrossNamespaceResources | string | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
 | providers.kubernetesIngressNGINX.allowSnippetAnnotations | string | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |
 | providers.kubernetesIngressNGINX.certAuthFilePath | string | `""` | Kubernetes certificate authority file path (not needed for in-cluster client) |
-| providers.kubernetesIngressNGINX.clientBodyBufferSize | int | `0` | Default buffer size for reading client request body in bytes (default: 16384) |
+| providers.kubernetesIngressNGINX.clientBodyBufferSize | string | `nil` | Default buffer size for reading client request body in bytes (default: 16384) |
 | providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
 | providers.kubernetesIngressNGINX.customHTTPErrors | list | `[]` | Defines which HTTP status codes should result in calling the default backend to return an error page |
 | providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
@@ -503,24 +503,24 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.modsec.enabled | bool | `false` | Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8. |
 | providers.kubernetesIngressNGINX.modsec.owaspCoreRules | bool | `false` | Enable OWASP Core Rules. |
 | providers.kubernetesIngressNGINX.modsec.snippet | string | `""` | Custom ModSec rules snippet. |
-| providers.kubernetesIngressNGINX.proxyBodySize | int | `0` | Default maximum size of a client request body in bytes (default: 1048576) |
-| providers.kubernetesIngressNGINX.proxyBufferSize | int | `0` | Default buffer size for reading the response body in bytes (default: 8192) |
+| providers.kubernetesIngressNGINX.proxyBodySize | string | `nil` | Default maximum size of a client request body in bytes (default: 1048576) |
+| providers.kubernetesIngressNGINX.proxyBufferSize | string | `nil` | Default buffer size for reading the response body in bytes (default: 8192) |
 | providers.kubernetesIngressNGINX.proxyBuffering | string | `nil` | Defines whether to enable response buffering (default: false) |
-| providers.kubernetesIngressNGINX.proxyBuffersNumber | int | `0` | Default number of buffers for reading a response (default: 4) |
-| providers.kubernetesIngressNGINX.proxyConnectTimeout | int | `0` | Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.proxyBuffersNumber | string | `nil` | Default number of buffers for reading a response (default: 4) |
+| providers.kubernetesIngressNGINX.proxyConnectTimeout | string | `nil` | Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.proxyNextUpstream | string | `""` | Defines in which cases a request should be retried (default: "error timeout") |
-| providers.kubernetesIngressNGINX.proxyNextUpstreamTimeout | int | `0` | Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0) |
-| providers.kubernetesIngressNGINX.proxyNextUpstreamTries | int | `0` | Limits the number of possible tries if the backend server does not reply (default: 3) |
-| providers.kubernetesIngressNGINX.proxyReadTimeout | int | `0` | Amount of time between two successive read operations. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.proxyNextUpstreamTimeout | string | `nil` | Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0) |
+| providers.kubernetesIngressNGINX.proxyNextUpstreamTries | string | `nil` | Limits the number of possible tries if the backend server does not reply (default: 3) |
+| providers.kubernetesIngressNGINX.proxyReadTimeout | string | `nil` | Amount of time between two successive read operations. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.proxyRequestBuffering | string | `nil` | Defines whether to enable request buffering (default: false) |
-| providers.kubernetesIngressNGINX.proxySendTimeout | int | `0` | Amount of time between two successive write operations. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.proxySendTimeout | string | `nil` | Amount of time between two successive write operations. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
 | providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
 | providers.kubernetesIngressNGINX.strictValidatePathType | string | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
-| providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `0` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
+| providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | string | `nil` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
 | providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
 | providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
