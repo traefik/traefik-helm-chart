@@ -23,9 +23,9 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   traefik.io/proxy-min-version: v3.6.0
-  traefik.io/proxy-max-version: v3.7.0-rc.2
+  traefik.io/proxy-max-version: v3.7.0
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.0-rc.1
+  traefik.io/hub-max-version: v3.20.0
   artifacthub.io/changes: |
     - "fix(CRDs): content item admission webhook name"
     - "feat: add service.nameOverride for adopting existing Services"
