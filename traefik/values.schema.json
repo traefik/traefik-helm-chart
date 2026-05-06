@@ -590,7 +590,10 @@
                                 },
                                 "constraints": {
                                     "description": "Constraints is an expression that Traefik matches against the container's labels",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "defaultRule": {
                                     "description": "Default rule.",
@@ -605,43 +608,67 @@
                                     "properties": {
                                         "address": {
                                             "description": "The address of the Consul server",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "datacenter": {
                                             "description": "Data center to use. If not provided, the default agent data center is used",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "endpointWaitTime": {
                                             "description": "WaitTime limits how long a Watch will block. If not provided, the agent default",
-                                            "type": "integer"
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ]
                                         },
                                         "httpauth": {
                                             "type": "object",
                                             "properties": {
                                                 "password": {
                                                     "description": "Basic Auth password",
-                                                    "type": "string"
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "username": {
                                                     "description": "Basic Auth username",
-                                                    "type": "string"
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
                                                 }
                                             }
                                         },
                                         "scheme": {
                                             "description": "The URI scheme for the Consul server",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "tls": {
                                             "type": "object",
                                             "properties": {
                                                 "ca": {
                                                     "description": "TLS CA",
-                                                    "type": "string"
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "cert": {
                                                     "description": "TLS cert",
-                                                    "type": "string"
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "TLS insecure skip verify",
@@ -649,13 +676,19 @@
                                                 },
                                                 "key": {
                                                     "description": "TLS key",
-                                                    "type": "string"
+                                                    "type": [
+                                                        "string",
+                                                        "null"
+                                                    ]
                                                 }
                                             }
                                         },
                                         "token": {
                                             "description": "Token is used to provide a per-request ACL token which overrides the agent's",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 },
@@ -665,11 +698,17 @@
                                 },
                                 "namespaces": {
                                     "description": "Sets the namespaces used to discover services (Consul Enterprise only).",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "partition": {
                                     "description": "Sets the partition used to discover services (Consul Enterprise only).",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "prefix": {
                                     "description": "Prefix for consul service tags.",
@@ -709,19 +748,31 @@
                                     "properties": {
                                         "clientId": {
                                             "description": "Microcks API client ID.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "clientSecret": {
                                             "description": "Microcks API client secret.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "endpoint": {
                                             "description": "Microcks API endpoint.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "token": {
                                             "description": "Microcks API token.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 },
@@ -731,7 +782,10 @@
                                 },
                                 "endpoint": {
                                     "description": "Microcks API endpoint.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Microcks API.",
@@ -746,11 +800,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "TLS CA",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "TLS cert",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
@@ -758,7 +818,10 @@
                                         },
                                         "key": {
                                             "description": "TLS key",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -775,7 +838,10 @@
                                         "properties": {
                                             "address": {
                                                 "description": "URL of the child cluster's uplink entrypoint.",
-                                                "type": "string"
+                                                "type": [
+                                                    "string",
+                                                    "null"
+                                                ]
                                             },
                                             "serversTransport": {
                                                 "description": "TLS and transport configuration for connecting to this child.",
@@ -872,22 +938,34 @@
                                                     },
                                                     "maxVersion": {
                                                         "description": "Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
-                                                        "type": "string"
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
                                                     },
                                                     "minVersion": {
                                                         "description": "Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).",
-                                                        "type": "string"
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
                                                     },
                                                     "peerCertURI": {
                                                         "description": "URI used to match against SAN URIs during the server's certificate verification.",
-                                                        "type": "string"
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
                                                     },
                                                     "rootCAs": {
                                                         "type": "array"
                                                     },
                                                     "serverName": {
                                                         "description": "Server name used for SNI and certificate verification.",
-                                                        "type": "string"
+                                                        "type": [
+                                                            "string",
+                                                            "null"
+                                                        ]
                                                     },
                                                     "spiffe": {
                                                         "type": "object",
@@ -934,7 +1012,10 @@
                                 },
                                 "apiKey": {
                                     "description": "Prism Central API key.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "enabled": {
                                     "description": "Enable Nutanix Prism Central provider.",
@@ -942,15 +1023,24 @@
                                 },
                                 "endpoint": {
                                     "description": "Prism Central endpoint.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "filename": {
                                     "description": "Base configuration file path.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "password": {
                                     "description": "Prism Central password.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Nutanix Prism Central API.",
@@ -969,11 +1059,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "TLS CA",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "TLS cert",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
@@ -981,13 +1077,19 @@
                                         },
                                         "key": {
                                             "description": "TLS key",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 },
                                 "username": {
                                     "description": "Prism Central username.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "additionalProperties": false
@@ -1096,19 +1198,31 @@
                                     "properties": {
                                         "parentId": {
                                             "description": "Name of the header that will contain the parent-id header copy.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "traceId": {
                                             "description": "Name of the header that will contain the trace-id copy.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "traceParent": {
                                             "description": "Name of the header that will contain the traceparent copy.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "traceState": {
                                             "description": "Name of the header that will contain the tracestate copy.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -1698,7 +1812,10 @@
                                 },
                                 "endpoint": {
                                     "description": "Format: \u003chost\u003e:\u003cport\u003e. Default: \"localhost:4317\"",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "insecure": {
                                     "description": "Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.",
@@ -1709,11 +1826,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "The path to the certificate authority, it defaults to the system bundle.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "The path to the public certificate. When using this option, setting the key option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
@@ -1724,7 +1847,10 @@
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -1739,7 +1865,10 @@
                                 },
                                 "endpoint": {
                                     "description": "Format: \u003cscheme\u003e://\u003chost\u003e:\u003cport\u003e\u003cpath\u003e. Default: https://localhost:4318/v1/metrics",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "headers": {
                                     "description": "Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.",
@@ -1750,11 +1879,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "The path to the certificate authority, it defaults to the system bundle.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "The path to the public certificate. When using this option, setting the key option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
@@ -1765,7 +1900,10 @@
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -2665,11 +2803,17 @@
                         },
                         "certAuthFilePath": {
                             "description": "Kubernetes certificate authority file path (not needed for in-cluster client)",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "clientBodyBufferSize": {
                             "description": "Default buffer size for reading client request body in bytes (default: 16384)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "controllerClass": {
                             "description": "Ingress Class Controller value this controller satisfies",
@@ -2681,7 +2825,10 @@
                         },
                         "defaultBackendService": {
                             "description": "Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "disableSvcExternalName": {
                             "description": "Disable support for Services of type ExternalName",
@@ -2693,7 +2840,10 @@
                         },
                         "endpoint": {
                             "description": "Kubernetes server endpoint (required for external cluster client)",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "globalAllowedResponseHeaders": {
                             "description": "List of allowed response headers inside the custom headers annotations",
@@ -2701,15 +2851,24 @@
                         },
                         "globalAuthUrl": {
                             "description": "URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "httpEntryPoint": {
                             "description": "Defines the EntryPoint to use for HTTP requests",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "httpsEntryPoint": {
                             "description": "Defines the EntryPoint to use for HTTPS requests",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "ingressClass": {
                             "description": "Name of the ingress class this controller satisfies",
@@ -2732,18 +2891,27 @@
                                 },
                                 "snippet": {
                                     "description": "Custom ModSec rules snippet.",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             },
                             "additionalProperties": false
                         },
                         "proxyBodySize": {
                             "description": "Default maximum size of a client request body in bytes (default: 1048576)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyBufferSize": {
                             "description": "Default buffer size for reading the response body in bytes (default: 8192)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyBuffering": {
                             "description": "Defines whether to enable response buffering (default: false)",
@@ -2754,27 +2922,45 @@
                         },
                         "proxyBuffersNumber": {
                             "description": "Default number of buffers for reading a response (default: 4)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyConnectTimeout": {
                             "description": "Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyNextUpstream": {
                             "description": "Defines in which cases a request should be retried (default: \"error timeout\")",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "proxyNextUpstreamTimeout": {
                             "description": "Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyNextUpstreamTries": {
                             "description": "Limits the number of possible tries if the backend server does not reply (default: 3)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyReadTimeout": {
                             "description": "Amount of time between two successive read operations. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "proxyRequestBuffering": {
                             "description": "Defines whether to enable request buffering (default: false)",
@@ -2785,7 +2971,10 @@
                         },
                         "proxySendTimeout": {
                             "description": "Amount of time between two successive write operations. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "publishService": {
                             "type": "object",
@@ -2795,13 +2984,19 @@
                                     "type": "boolean"
                                 },
                                 "pathOverride": {
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
                         "publishStatusAddress": {
                             "description": "Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "strictValidatePathType": {
                             "description": "Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)",
@@ -2812,15 +3007,24 @@
                         },
                         "throttleDuration": {
                             "description": "Ingress refresh throttle duration",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "token": {
                             "description": "Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "upstreamKeepaliveTimeout": {
                             "description": "Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)",
-                            "type": "integer"
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "watchIngressWithoutClass": {
                             "description": "Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified",
@@ -2828,11 +3032,17 @@
                         },
                         "watchNamespace": {
                             "description": "Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         },
                         "watchNamespaceSelector": {
                             "description": "Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.",
-                            "type": "string"
+                            "type": [
+                                "string",
+                                "null"
+                            ]
                         }
                     },
                     "additionalProperties": false
@@ -3028,7 +3238,10 @@
                                 },
                                 "endpoint": {
                                     "description": "Format: \u003chost\u003e:\u003cport\u003e. Default: \"localhost:4317\"",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "insecure": {
                                     "description": "Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.",
@@ -3039,11 +3252,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "The path to the certificate authority, it defaults to the system bundle.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "The path to the public certificate. When using this option, setting the key option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
@@ -3054,7 +3273,10 @@
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }
@@ -3069,7 +3291,10 @@
                                 },
                                 "endpoint": {
                                     "description": "Format: \u003cscheme\u003e://\u003chost\u003e:\u003cport\u003e\u003cpath\u003e. Default: https://localhost:4318/v1/tracing",
-                                    "type": "string"
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ]
                                 },
                                 "headers": {
                                     "description": "Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.",
@@ -3080,11 +3305,17 @@
                                     "properties": {
                                         "ca": {
                                             "description": "The path to the certificate authority, it defaults to the system bundle.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "cert": {
                                             "description": "The path to the public certificate. When using this option, setting the key option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         },
                                         "insecureSkipVerify": {
                                             "description": "When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.",
@@ -3095,7 +3326,10 @@
                                         },
                                         "key": {
                                             "description": "The path to the private key. When using this option, setting the cert option is required.",
-                                            "type": "string"
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
                                         }
                                     }
                                 }

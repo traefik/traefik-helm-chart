@@ -204,13 +204,13 @@ api:  # @schema additionalProperties: false
   # -- Enable the dashboard
   dashboard: true
   # -- Custom name for the dashboard (v3.7+).
-  dashboardName: ""  # @schema type:[string, null]
+  dashboardName:  # @schema type:[string, null]
   # -- Enable the insecure API (HTTP)
   insecure:  # @schema type:[boolean, null]
   # -- Enable the debug API
   debug:  # @schema type:[boolean, null]
   # -- Configure API basePath
-  basePath: ""  # @schema type:[string, null]; default: "/"
+  basePath:  # @schema type:[string, null]; default: "/"
 
 # -- Only dashboard & healthcheck IngressRoute are supported.
 # It's recommended to create workloads CR outside of this Chart.
@@ -396,69 +396,69 @@ providers:
     # -- Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified
     watchIngressWithoutClass: false
     # -- Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector.
-    watchNamespace: ""
+    watchNamespace:  # @schema type:[string, null]
     # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
-    watchNamespaceSelector: ""
+    watchNamespaceSelector:  # @schema type:[string, null]
     publishService:
       # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
       enabled: false
-      pathOverride: ""
+      pathOverride:  # @schema type:[string, null]
     # -- Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies
-    publishStatusAddress: ""
+    publishStatusAddress:  # @schema type:[string, null]
     # -- Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'
-    defaultBackendService: ""
+    defaultBackendService:  # @schema type:[string, null]
     # -- Disable support for Services of type ExternalName
     disableSvcExternalName: false
     # -- Ingress refresh throttle duration
-    throttleDuration: ""
+    throttleDuration:  # @schema type:[string, null]
     # -- Kubernetes certificate authority file path (not needed for in-cluster client)
-    certAuthFilePath: ""
+    certAuthFilePath:  # @schema type:[string, null]
     # -- Kubernetes server endpoint (required for external cluster client)
-    endpoint: ""
+    endpoint:  # @schema type:[string, null]
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
-    token: ""
+    token:  # @schema type:[string, null]
     # -- Defines whether to enable request buffering (default: false)
-    proxyRequestBuffering: null  # @schema type:[boolean, null]
+    proxyRequestBuffering:  # @schema type:[boolean, null]
     # -- Default buffer size for reading client request body in bytes (default: 16384)
-    clientBodyBufferSize: 0
+    clientBodyBufferSize:  # @schema type:[integer, null]
     # -- Default maximum size of a client request body in bytes (default: 1048576)
-    proxyBodySize: 0
+    proxyBodySize:  # @schema type:[integer, null]
     # -- Defines whether to enable response buffering (default: false)
-    proxyBuffering: null  # @schema type:[boolean, null]
+    proxyBuffering:  # @schema type:[boolean, null]
     # -- Default buffer size for reading the response body in bytes (default: 8192)
-    proxyBufferSize: 0
+    proxyBufferSize:  # @schema type:[integer, null]
     # -- Default number of buffers for reading a response (default: 4)
-    proxyBuffersNumber: 0
+    proxyBuffersNumber:  # @schema type:[integer, null]
     # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
-    proxyConnectTimeout: 0
+    proxyConnectTimeout:  # @schema type:[integer, null]
     # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
-    proxyReadTimeout: 0
+    proxyReadTimeout:  # @schema type:[integer, null]
     # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
-    proxySendTimeout: 0
+    proxySendTimeout:  # @schema type:[integer, null]
     # -- Defines in which cases a request should be retried (default: "error timeout")
-    proxyNextUpstream: ""
+    proxyNextUpstream:  # @schema type:[string, null]
     # -- Limits the number of possible tries if the backend server does not reply (default: 3)
-    proxyNextUpstreamTries: 0
+    proxyNextUpstreamTries:  # @schema type:[integer, null]
     # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
-    proxyNextUpstreamTimeout: 0
+    proxyNextUpstreamTimeout:  # @schema type:[integer, null]
     # -- Defines which HTTP status codes should result in calling the default backend to return an error page
     customHTTPErrors: []
     # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
-    upstreamKeepaliveTimeout: 0
+    upstreamKeepaliveTimeout:  # @schema type:[integer, null]
     # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
-    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+    allowCrossNamespaceResources:  # @schema type:[boolean, null]
     # -- List of allowed response headers inside the custom headers annotations
     globalAllowedResponseHeaders: []
     # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
-    globalAuthUrl: ""
+    globalAuthUrl:  # @schema type:[string, null]
     # -- Enables parsing and adding -snippet annotations/directives (default: false)
-    allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    allowSnippetAnnotations:  # @schema type:[boolean, null]
     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
-    strictValidatePathType: null  # @schema type:[boolean, null]
+    strictValidatePathType:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
-    httpEntryPoint: ""
+    httpEntryPoint:  # @schema type:[string, null]
     # -- Defines the EntryPoint to use for HTTPS requests
-    httpsEntryPoint: ""
+    httpsEntryPoint:  # @schema type:[string, null]
     # @schema additionalProperties: false
     modsec:
       # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
@@ -466,7 +466,7 @@ providers:
       # -- Enable OWASP Core Rules.
       owaspCoreRules: false
       # -- Custom ModSec rules snippet.
-      snippet: ""
+      snippet:  # @schema type:[string, null]
 
   # @schema additionalProperties: false
   knative:
@@ -744,34 +744,34 @@ metrics:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
       enabled: false
       # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/metrics
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
       headers: {}
       ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
       tls:
         # -- The path to the certificate authority, it defaults to the system bundle.
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- The path to the public certificate. When using this option, setting the key option is required.
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- The path to the private key. When using this option, setting the cert option is required.
-        key: ""
+        key:  # @schema type:[string, null]
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
       enabled: false
       # -- Format: <host>:<port>. Default: "localhost:4317"
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
       insecure: false
       ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
       tls:
         # -- The path to the certificate authority, it defaults to the system bundle.
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- The path to the public certificate. When using this option, setting the key option is required.
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- The path to the private key. When using this option, setting the cert option is required.
-        key: ""
+        key:  # @schema type:[string, null]
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     # -- Defines additional resource attributes to be sent to the collector.
@@ -809,34 +809,34 @@ tracing:  # @schema additionalProperties: false
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using HTTP.
       enabled: false
       # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/tracing
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Additional headers sent with metrics by the reporter to the OpenTelemetry Collector.
       headers: {}
       ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
       tls:
         # -- The path to the certificate authority, it defaults to the system bundle.
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- The path to the public certificate. When using this option, setting the key option is required.
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- The path to the private key. When using this option, setting the cert option is required.
-        key: ""
+        key:  # @schema type:[string, null]
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
       enabled: false
       # -- Format: <host>:<port>. Default: "localhost:4317"
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Allows reporter to send metrics to the OpenTelemetry Collector without using a secured protocol.
       insecure: false
       ## Defines the TLS configuration used by the reporter to send metrics to the OpenTelemetry Collector.
       tls:
         # -- The path to the certificate authority, it defaults to the system bundle.
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- The path to the public certificate. When using this option, setting the key option is required.
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- The path to the private key. When using this option, setting the cert option is required.
-        key: ""
+        key:  # @schema type:[string, null]
         # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
 
@@ -1298,40 +1298,40 @@ hub:  # @schema additionalProperties: false
       # -- Consider every service as Connect capable by default.
       connectByDefault: false
       # -- Constraints is an expression that Traefik matches against the container's labels
-      constraints: ""
+      constraints:  # @schema type:[string, null]
       # -- Default rule.
       defaultRule: "Host(`{{ normalize .Name }}`)"
       endpoint:
         # -- The address of the Consul server
-        address: ""
+        address:  # @schema type:[string, null]
         # -- Data center to use. If not provided, the default agent data center is used
-        datacenter: ""
+        datacenter:  # @schema type:[string, null]
         # -- WaitTime limits how long a Watch will block. If not provided, the agent default
-        endpointWaitTime: 0
+        endpointWaitTime:  # @schema type:[integer, null]
         httpauth:
           # -- Basic Auth password
-          password: ""
+          password:  # @schema type:[string, null]
           # -- Basic Auth username
-          username: ""
+          username:  # @schema type:[string, null]
         # -- The URI scheme for the Consul server
-        scheme: ""
+        scheme:  # @schema type:[string, null]
         tls:
           # -- TLS CA
-          ca: ""
+          ca:  # @schema type:[string, null]
           # -- TLS cert
-          cert: ""
+          cert:  # @schema type:[string, null]
           # -- TLS insecure skip verify
           insecureSkipVerify: false
           # -- TLS key
-          key: ""
+          key:  # @schema type:[string, null]
         # -- Token is used to provide a per-request ACL token which overrides the agent's
-        token: ""
+        token:  # @schema type:[string, null]
       # -- Expose containers by default.
       exposedByDefault: true
       # -- Sets the namespaces used to discover services (Consul Enterprise only).
-      namespaces: ""
+      namespaces:  # @schema type:[string, null]
       # -- Sets the partition used to discover services (Consul Enterprise only).
-      partition: ""
+      partition:  # @schema type:[string, null]
       # -- Prefix for consul service tags.
       prefix: "traefik"
       # -- Interval for checking Consul API.
@@ -1351,28 +1351,28 @@ hub:  # @schema additionalProperties: false
       enabled: false
       auth:
         # -- Microcks API client ID.
-        clientId: ""
+        clientId:  # @schema type:[string, null]
         # -- Microcks API client secret.
-        clientSecret: ""
+        clientSecret:  # @schema type:[string, null]
         # -- Microcks API endpoint.
-        endpoint: ""
+        endpoint:  # @schema type:[string, null]
         # -- Microcks API token.
-        token: ""
+        token:  # @schema type:[string, null]
       # -- Microcks API endpoint.
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Polling interval for Microcks API.
       pollInterval: 30
       # -- Polling timeout for Microcks API.
       pollTimeout: 5
       tls:
         # -- TLS CA
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- TLS cert
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- TLS insecure skip verify
         insecureSkipVerify: false
         # -- TLS key
-        key: ""
+        key:  # @schema type:[string, null]
     multicluster:
       # -- Enable Multi-cluster provider.
       enabled: false
@@ -1387,7 +1387,7 @@ hub:  # @schema additionalProperties: false
         # @schema additionalProperties: false
         cluster-1:
           # -- URL of the child cluster's uplink entrypoint.
-          address: ""
+          address:  # @schema type:[string, null]
           # -- TLS and transport configuration for connecting to this child.
           # @default -- {}
           serversTransport:
@@ -1396,7 +1396,7 @@ hub:  # @schema additionalProperties: false
             # @default -- false
             insecureSkipVerify:
             # -- Server name used for SNI and certificate verification.
-            serverName: ""
+            serverName:  # @schema type:[string, null]
             rootCAs: []
             certificates: []
             # @schema type:[integer, null]
@@ -1408,13 +1408,13 @@ hub:  # @schema additionalProperties: false
             # @default -- false
             disableHTTP2:
             # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
-            minVersion: ""
+            minVersion:  # @schema type:[string, null]
             # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
-            maxVersion: ""
+            maxVersion:  # @schema type:[string, null]
             # -- List of supported cipher suites for TLS versions up to 1.2.
             cipherSuites: []
             # -- URI used to match against SAN URIs during the server's certificate verification.
-            peerCertURI: ""
+            peerCertURI:  # @schema type:[string, null]
             forwardingTimeouts:
               # @schema type:[string, integer, null]
               # -- Timeout for establishing connections.
@@ -1448,21 +1448,21 @@ hub:  # @schema additionalProperties: false
               ids: []
               # @schema type:[string, integer, null]
               # -- SPIFFE trust domain.
-              trustDomain: ""
+              trustDomain:
     # @schema additionalProperties: false
     nutanixPrismCentral:
       # -- Enable Nutanix Prism Central provider.
       enabled: false
       # -- Prism Central endpoint.
-      endpoint: ""
+      endpoint:  # @schema type:[string, null]
       # -- Prism Central username.
-      username: ""
+      username:  # @schema type:[string, null]
       # -- Prism Central password.
-      password: ""
+      password:  # @schema type:[string, null]
       # -- Prism Central API key.
-      apiKey: ""
+      apiKey:  # @schema type:[string, null]
       # -- Base configuration file path.
-      filename: ""
+      filename:  # @schema type:[string, null]
       # -- Polling interval for Nutanix Prism Central API.
       pollInterval: 30
       # -- Polling timeout for Nutanix Prism Central API.
@@ -1473,11 +1473,11 @@ hub:  # @schema additionalProperties: false
       allowedVpcs: []
       tls:
         # -- TLS CA
-        ca: ""
+        ca:  # @schema type:[string, null]
         # -- TLS cert
-        cert: ""
+        cert:  # @schema type:[string, null]
         # -- TLS key
-        key: ""
+        key:  # @schema type:[string, null]
         # -- TLS insecure skip verify
         insecureSkipVerify: false
 
@@ -1521,13 +1521,13 @@ hub:  # @schema additionalProperties: false
       enabled: false
       traceContext:
         # -- Name of the header that will contain the parent-id header copy.
-        parentId: ""
+        parentId:  # @schema type:[string, null]
         # -- Name of the header that will contain the trace-id copy.
-        traceId: ""
+        traceId:  # @schema type:[string, null]
         # -- Name of the header that will contain the traceparent copy.
-        traceParent: ""
+        traceParent:  # @schema type:[string, null]
         # -- Name of the header that will contain the tracestate copy.
-        traceState: ""
+        traceState:  # @schema type:[string, null]
 
   # Define private plugin sources
   pluginRegistry:
