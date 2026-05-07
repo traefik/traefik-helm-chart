@@ -26,20 +26,13 @@ Create chart name and version as used by the chart label.
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
-{{/* Shared labels used for selector*/}}
-{{- define "hub-manager.labelselector" -}}
-app.kubernetes.io/name: {{ template "hub-manager.name" . }}
-{{- end }}
-
 {{/*
 Common labels
 */}}
 {{- define "hub-manager.labels" -}}
 helm.sh/chart: {{ include "hub-manager.chart" . }}
 {{ include "hub-manager.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 
