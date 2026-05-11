@@ -5,8 +5,8 @@
     ':semanticCommitTypeAll(chore)',
     'helpers:pinGitHubActionDigests',
     // Update appVersion in Chart.yaml
-    'customManagers:helmChartYamlAppVersions'
-    'config:recommended',
+    'customManagers:helmChartYamlAppVersions',
+    'config:recommended'
   ],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
