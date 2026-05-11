@@ -113,7 +113,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.0."
+          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.1."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
