@@ -493,8 +493,8 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
 | providers.kubernetesIngressNGINX.globalAuthUrl | string | `""` | URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option. |
-| providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
-| providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
+| providers.kubernetesIngressNGINX.httpEntryPoint | string | `"web"` | Defines the EntryPoint to use for HTTP requests |
+| providers.kubernetesIngressNGINX.httpsEntryPoint | string | `"websecure"` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
 | providers.kubernetesIngressNGINX.ipAllowListStrategy | object | See below | When set, the strategy is applied to every generated IPAllowList middleware. |
