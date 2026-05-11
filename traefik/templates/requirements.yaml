@@ -58,8 +58,9 @@
     (ne .allowCrossNamespaceResources nil)
     (not (empty .globalAllowedResponseHeaders))
     (ne .allowSnippetAnnotations nil)
-    (not (empty .httpEntryPoint))
-    (not (empty .httpsEntryPoint)) )}}
+    (ne .httpEntryPoint "web")
+    (ne .httpsEntryPoint "websecure")
+    )}}
     {{- fail "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0." }}
   {{- end }}
 {{- end }}

@@ -467,9 +467,9 @@ providers:
     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
     strictValidatePathType: null  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
-    httpEntryPoint: ""
+    httpEntryPoint: "web"
     # -- Defines the EntryPoint to use for HTTPS requests
-    httpsEntryPoint: ""
+    httpsEntryPoint: "websecure"
     # @schema additionalProperties: false
     modsec:
       # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
