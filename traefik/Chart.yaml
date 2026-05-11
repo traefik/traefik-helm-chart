@@ -2,8 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 40.0.0
-# renovate: image=traefik
+version: 40.0.1
 appVersion: v3.7.0
 kubeVersion: ">=1.25.0-0"
 keywords:
@@ -27,19 +26,5 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.1
   artifacthub.io/changes: |
-    - "fix(providers.kubernetesIngressNGINX): :bug: clarify int defaults"
-    - "feat: add service.nameOverride for adopting existing Services"
-    - "feat(chart): 📝 version support with annotations"
-    - "feat(deps): update traefik docker tag to v3.7.0-rc.1"
-    - "feat(CRDs): add traefik hub ContentItem"
-    - "feat(CRDs): update Traefik Hub to v1.29.0"
-    - "feat(hub): ✨ expose multicluster serversTransport TLS and timeout options"
-    - "feat(hub): ✨ support Nutanix Prism Central provider"
-    - "feat(hub): 🍱 map Traefik Hub v3.20.0-ea.7+ to Traefik Proxy v3.7.0-rc.1"
-    - "feat(nginx): ✨ support globalAuthUrl option"
-    - "feat(nginx): ✨ support modsec option"
-    - "feat(providers): ✨ support precedence option"
-    - "feat(proxy): add support of kubernetesIngressNGINX.ipAllowListStrategy"
-    - "feat(image): add image.digest for digest-based pinning"
-    - "feat(deps): support traefik v3.7.0 & hub v3.20.0"
-    - "chore(release): 🚀 publish traefik 40.0.0 and crds 1.18.0"
+    - "feat(hub): :rocket: support traefik hub v3.20.1"
+    - "chore(release): 🚀 publish 40.0.1"
