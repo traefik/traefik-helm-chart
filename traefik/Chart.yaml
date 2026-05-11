@@ -25,7 +25,7 @@ annotations:
   traefik.io/proxy-min-version: v3.6.0
   traefik.io/proxy-max-version: v3.7.0
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.0
+  traefik.io/hub-max-version: v3.20.1
   artifacthub.io/changes: |
     - "fix(providers.kubernetesIngressNGINX): :bug: clarify int defaults"
     - "feat: add service.nameOverride for adopting existing Services"
