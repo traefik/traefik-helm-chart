@@ -188,7 +188,7 @@ tests:
       providers:
         kubernetesIngressNGINX:
           enabled: true
-          httpEntryPoint: "web"
+          httpEntryPoint: "metrics"
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0."
