@@ -34,6 +34,7 @@ Kubernetes: `>=1.25.0-0`
 | api.dashboard | bool | `true` | Enable the dashboard |
 | api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
 | api.debug | string | `nil` | Enable the debug API |
+| api.disableDashboardAd | string | `nil` | Disable the advertisement from the dashboard. |
 | api.insecure | string | `nil` | Enable the insecure API (HTTP) |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |

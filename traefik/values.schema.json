@@ -46,6 +46,13 @@
                         "null"
                     ]
                 },
+                "disableDashboardAd": {
+                    "description": "Disable the advertisement from the dashboard.",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "insecure": {
                     "description": "Enable the insecure API (HTTP)",
                     "type": [
