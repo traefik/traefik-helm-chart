@@ -44,7 +44,7 @@ tests:
         tag: v3.8.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.0."
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.1."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
