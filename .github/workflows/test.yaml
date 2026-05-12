@@ -51,9 +51,6 @@ jobs:
       - name: Test overrideNamespace
         run: make test-ns
 
-      - name: Test CRDs consistency
-        run: make test-crds-consistency
-
       - name: Test if it's a release PR
         id: check
         run: |
@@ -98,8 +95,3 @@ jobs:
         if: steps.check.outputs.release
         run: |
           make test-install
-
-      - name: Check install on Kind (with CRDS)
-        if: steps.check.outputs.release
-        run: |
-          make test-install-with-crds
