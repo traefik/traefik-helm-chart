@@ -42,7 +42,7 @@ jobs:
       - name: Install helm-unittest plugin
         env:
           # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
-          HELM_UNITTEST_VERSION: 1.0.1
+          HELM_UNITTEST_VERSION: 1.1.0
         run: helm plugin install https://github.com/helm-unittest/helm-unittest --version "$HELM_UNITTEST_VERSION"
 
       - name: Test Chart

@@ -11,8 +11,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should use helm managed namespace in release notes output
     set:
@@ -20,8 +18,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on traefik-ns-override namespace!
   - it: should use tag version in release notes output if set
     set:
@@ -30,8 +26,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:v3.7.0 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when using an experimental image tag
     set:
@@ -40,8 +34,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:experimental-v3.6 has been deployed successfully on NAMESPACE namespace!
 
             ⚠️ WARNING: You are using a non-standard image tag (experimental-v3.6). Non-standard versions can
@@ -55,8 +47,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3.8.0-ea.1 has been deployed successfully on NAMESPACE namespace!
 
             ⚠️ WARNING: You are using a non-standard image tag (v3.8.0-ea.1). Non-standard versions can
@@ -70,8 +60,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
@@ -88,8 +76,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when enabling persistence without initContainer
     set:
@@ -98,8 +84,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
@@ -118,8 +102,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider. 🚨
@@ -137,8 +119,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Port name `web-http-too-long-name` does not comply with Kubernetes standards and will be renamed to `web-http-too-lo` in services. 🚨
@@ -167,8 +147,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
             WARNING: kubernetesCRD provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
@@ -194,8 +172,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
             WARNING: kubernetesCRD provider is configured to watch all namespaces but Hub provider only watches [ns1].
             WARNING: kubernetesGateway provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
@@ -226,6 +202,4 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!

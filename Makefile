@@ -19,6 +19,7 @@ lint:
 docs:
 	docker run --rm -v "$(CURDIR):/helm-docs" $(IMAGE_HELM_DOCS) -o VALUES.md
 
+# $ helm plugin install https://github.com/helm-unittest/helm-unittest.git
 # To launch only one test
 # $ helm unittest -f 'tests/oci-config_test.yaml' traefik
 test-%:
