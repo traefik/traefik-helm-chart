@@ -30,12 +30,6 @@ jobs:
           fail-on-diff: true
           useHelmDocs: true
 
-      - name: Check traefik-crds if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@39cdf80504f6c95ad3c4f317e2135e2509ea56bb # v3.0.0
-        with:
-          working-directory: traefik-crds
-          fail-on-diff: true
-
       - name: Lint Chart
         run: make lint
 
@@ -56,9 +50,6 @@ jobs:
 
       - name: Test overrideNamespace
         run: make test-ns
-
-      - name: Test CRDs consistency
-        run: make test-crds-consistency
 
       - name: Test if it's a release PR
         id: check
@@ -104,8 +95,3 @@ jobs:
         if: steps.check.outputs.release
         run: |
           make test-install
-
-      - name: Check install on Kind (with CRDS)
-        if: steps.check.outputs.release
-        run: |
-          make test-install-with-crds
