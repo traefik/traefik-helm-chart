@@ -1,5 +1,46 @@
 # Change Log
 
+## 40.1.0  ![AppVersion: v3.7.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-12
+
+* fix(ingressroute): :bug: use spec.ingressClassName with Proxy v3.7+
+* feat(provider/kubernetesIngressNGINX): set default values on httpentrypoint & httpsentrypoint
+* feat(deps): update traefik docker tag to v3.7.1
+* feat(api): support disableDashboardAd option
+* chore(release): publish 40.1.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index aeedcc1..cc45373 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -207,6 +207,8 @@ api:  # @schema additionalProperties: false
+   dashboard: true
+   # -- Custom name for the dashboard (v3.7+).
+   dashboardName: ""  # @schema type:[string, null]
++  # -- Disable the advertisement from the dashboard.
++  disableDashboardAd:  # @schema type:[boolean, null]
+   # -- Enable the insecure API (HTTP)
+   insecure:  # @schema type:[boolean, null]
+   # -- Enable the debug API
+@@ -467,9 +469,9 @@ providers:
+     # -- Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+     strictValidatePathType: null  # @schema type:[boolean, null]
+     # -- Defines the EntryPoint to use for HTTP requests
+-    httpEntryPoint: ""
++    httpEntryPoint: "web"
+     # -- Defines the EntryPoint to use for HTTPS requests
+-    httpsEntryPoint: ""
++    httpsEntryPoint: "websecure"
+     # @schema additionalProperties: false
+     modsec:
+       # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
+```
+
+
 ## 40.0.1  ![AppVersion: v3.7.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.0&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-05-11
