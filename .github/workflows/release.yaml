@@ -67,7 +67,7 @@ jobs:
 
       - name: Render changelog configuration
         env:
-          REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
+          REGEXP: '(\\(.+\\))?'
         run: ./hack/render-changelog-config.sh traefik
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 

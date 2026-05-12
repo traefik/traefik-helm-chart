@@ -7,6 +7,7 @@ on:
       - .github/fixtures/changelog-traefik.md
       - .github/workflows/changelog.json
       - .github/workflows/release.yml
+      - .github/workflows/test-changelog.yaml
 
 jobs:
   test:
@@ -17,7 +18,7 @@ jobs:
 
       - name: Render traefik changelog configuration
         env:
-          REGEXP: '(\\(.+\\)|(?!\\(CRDs-.+\\)))'
+          REGEXP: '(\\(.+\\))?'
           DATE: '2025-01-28'
         run: |
           # Pin version-support annotations so the fixture stays stable across releases.
