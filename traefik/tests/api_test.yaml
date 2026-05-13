@@ -58,6 +58,14 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--api.dashboardName=My Traefik"
+  - it: should disable the dashboard advertisement when configured
+    set:
+      api:
+        disableDashboardAd: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--api.disableDashboardAd=true"
   - it: should fail if ingressRoute.dashboard is enabled but api.dashboard is false
     set:
       api:

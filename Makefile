@@ -6,8 +6,7 @@ IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 
 traefik/tests/__snapshot__:
 	@mkdir -p hub-manager/tests/__snapshot__
-	@mkdir -p traefik/tests/__snapshot__
-	@mkdir -p traefik-crds/tests/__snapshot__
+	@mkdir traefik/tests/__snapshot__
 
 test: traefik/tests/__snapshot__
 	./hack/test.sh
@@ -15,15 +14,13 @@ test: traefik/tests/__snapshot__
 test-ns:
 	./hack/check-ns.sh
 
-test-crds-consistency:
-	./hack/check-crds-consistency.sh
-
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
 
 docs:
 	docker run --rm -v "$(CURDIR):/helm-docs" $(IMAGE_HELM_DOCS) -o VALUES.md
 
+# $ helm plugin install https://github.com/helm-unittest/helm-unittest.git
 # To launch only one test
 # $ helm unittest -f 'tests/oci-config_test.yaml' traefik
 test-%:
@@ -34,7 +31,6 @@ test-%:
 schema:
 	cd hub-manager && helm schema --use-helm-docs
 	cd traefik && helm schema --use-helm-docs
-	cd traefik-crds && helm schema
 
 changelog:
 	@echo "== Updating Changelogs..."

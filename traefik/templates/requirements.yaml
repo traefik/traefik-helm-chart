@@ -58,8 +58,9 @@
     (ne .allowCrossNamespaceResources nil)
     (not (empty .globalAllowedResponseHeaders))
     (ne .allowSnippetAnnotations nil)
-    (not (empty .httpEntryPoint))
-    (not (empty .httpsEntryPoint)) )}}
+    (ne .httpEntryPoint "web")
+    (ne .httpsEntryPoint "websecure")
+    )}}
     {{- fail "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0." }}
   {{- end }}
 {{- end }}
@@ -86,6 +87,14 @@
 
 {{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
   {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.1-0" $version) (or
+    (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
+    (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
+    (not (empty .Values.providers.kubernetesGateway.crossProviderNamespaces))
+    ) }}
+  {{- fail "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1" }}
 {{- end }}
 
 {{- range $name, $config := .Values.ports }}

@@ -19,7 +19,7 @@ jobs:
         uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         with:
           private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_APP_CLIENT_ID }}
 
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -50,7 +50,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@79dc0ba74dc3de28db0a7aeb1d0b95d5bf5fde2a # v46.1.13
+        uses: renovatebot/github-action@693b9ef15eec82123529a37c782242f091365961 # v46.1.14
         with:
           configurationFile: .github/renovate.json5
           token: ${{ steps.get_token.outputs.token }}

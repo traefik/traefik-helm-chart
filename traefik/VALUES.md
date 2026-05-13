@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 40.0.0](https://img.shields.io/badge/Version-40.0.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.0](https://img.shields.io/badge/AppVersion-v3.7.0-informational?style=flat-square)
+![Version: 40.1.0](https://img.shields.io/badge/Version-40.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.1](https://img.shields.io/badge/AppVersion-v3.7.1-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -34,6 +34,7 @@ Kubernetes: `>=1.25.0-0`
 | api.dashboard | bool | `true` | Enable the dashboard |
 | api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
 | api.debug | string | `nil` | Enable the debug API |
+| api.disableDashboardAd | string | `nil` | Disable the advertisement from the dashboard. |
 | api.insecure | string | `nil` | Enable the insecure API (HTTP) |
 | autoscaling.behavior | object | `{}` | behavior configures the scaling behavior of the target in both Up and Down directions (scaleUp and scaleDown fields respectively). |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object. See EXAMPLES.md for more details. |
@@ -453,11 +454,13 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesCRD.allowCrossNamespace | bool | `false` | Allows IngressRoute to reference resources in namespace other than theirs |
 | providers.kubernetesCRD.allowEmptyServices | bool | `true` | Allows to return 503 when there are no endpoints available |
 | providers.kubernetesCRD.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in IngressRoute |
+| providers.kubernetesCRD.crossProviderNamespaces | list | `[]` | List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+. |
 | providers.kubernetesCRD.enabled | bool | `true` | Load Kubernetes IngressRoute provider |
 | providers.kubernetesCRD.ingressClass | string | `""` | When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled. |
 | providers.kubernetesCRD.labelSelector | string | `""` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-labelselector) |
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesCRD.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
+| providers.kubernetesGateway.crossProviderNamespaces | list | `[]` | List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+. |
 | providers.kubernetesGateway.enabled | bool | `false` | Enable Traefik Gateway provider for Gateway API |
 | providers.kubernetesGateway.experimentalChannel | bool | `false` | Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute. |
 | providers.kubernetesGateway.labelSelector | string | `""` | A label selector can be defined to filter on specific GatewayClass objects only. |
@@ -470,6 +473,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesGateway.statusAddress.service.namespace | string | `""` |  |
 | providers.kubernetesIngress.allowEmptyServices | bool | `true` | Allows to return 503 when there are no endpoints available |
 | providers.kubernetesIngress.allowExternalNameServices | bool | `false` | Allows to reference ExternalName services in Ingress |
+| providers.kubernetesIngress.crossProviderNamespaces | list | `[]` | List of namespaces from which Ingresses or Services are allowed to declare Middlewares, TLSOptions, or ServersTransport references. Requires traefik v3.7.1+. |
 | providers.kubernetesIngress.disableIngressClassLookup | bool | `false` | Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup) |
 | providers.kubernetesIngress.enabled | bool | `true` | Load Kubernetes Ingress provider |
 | providers.kubernetesIngress.ingressClass | string | `nil` | When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed. |
@@ -493,8 +497,8 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
 | providers.kubernetesIngressNGINX.globalAllowedResponseHeaders | list | `[]` | List of allowed response headers inside the custom headers annotations |
 | providers.kubernetesIngressNGINX.globalAuthUrl | string | `""` | URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option. |
-| providers.kubernetesIngressNGINX.httpEntryPoint | string | `""` | Defines the EntryPoint to use for HTTP requests |
-| providers.kubernetesIngressNGINX.httpsEntryPoint | string | `""` | Defines the EntryPoint to use for HTTPS requests |
+| providers.kubernetesIngressNGINX.httpEntryPoint | string | `"web"` | Defines the EntryPoint to use for HTTP requests |
+| providers.kubernetesIngressNGINX.httpsEntryPoint | string | `"websecure"` | Defines the EntryPoint to use for HTTPS requests |
 | providers.kubernetesIngressNGINX.ingressClass | string | `"nginx"` | Name of the ingress class this controller satisfies |
 | providers.kubernetesIngressNGINX.ingressClassByName | bool | `false` | Define if Ingress Controller should watch for Ingress Class by Name together with Controller Class |
 | providers.kubernetesIngressNGINX.ipAllowListStrategy | object | See below | When set, the strategy is applied to every generated IPAllowList middleware. |

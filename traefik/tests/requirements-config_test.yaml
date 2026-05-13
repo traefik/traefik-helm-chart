@@ -44,7 +44,7 @@ tests:
         tag: v3.8.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.0."
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.1."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -113,7 +113,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.0."
+          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.1."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -188,7 +188,7 @@ tests:
       providers:
         kubernetesIngressNGINX:
           enabled: true
-          httpEntryPoint: "web"
+          httpEntryPoint: "metrics"
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0."
@@ -240,6 +240,17 @@ tests:
           - kubernetesCRD
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using crossProviderNamespaces on Traefik Proxy < v3.7.1
+    set:
+      image:
+        tag: v3.7.0
+      providers:
+        kubernetesCRD:
+          crossProviderNamespaces:
+            - ns1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1"
   - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.3
     set:
       image:

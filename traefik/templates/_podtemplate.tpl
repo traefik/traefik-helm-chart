@@ -493,6 +493,9 @@
            {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
            {{- end }}
+           {{- with .Values.providers.kubernetesCRD.crossProviderNamespaces }}
+          - "--providers.kubernetescrd.crossProviderNamespaces={{ join "," . }}"
+           {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
            {{- end }}
@@ -512,6 +515,9 @@
           - "--providers.kubernetesingress"
            {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
+           {{- end }}
+           {{- with .Values.providers.kubernetesIngress.crossProviderNamespaces }}
+          - "--providers.kubernetesingress.crossProviderNamespaces={{ join "," . }}"
            {{- end }}
            {{- if ne .Values.providers.kubernetesIngress.allowEmptyServices nil }}
             {{- with .Values.providers.kubernetesIngress.allowEmptyServices | toString }}
@@ -571,6 +577,9 @@
             {{- end }}
             {{- if .nativeLBByDefault }}
           - "--providers.kubernetesgateway.nativeLBByDefault=true"
+            {{- end }}
+            {{- with .crossProviderNamespaces }}
+          - "--providers.kubernetesgateway.crossProviderNamespaces={{ join "," . }}"
             {{- end }}
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
