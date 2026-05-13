@@ -2508,7 +2508,7 @@
                             "type": "boolean"
                         },
                         "crossProviderNamespaces": {
-                            "description": "List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+ (hub v3.20.2+).",
+                            "description": "List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+.",
                             "type": "array"
                         },
                         "enabled": {
@@ -2538,7 +2538,7 @@
                     "type": "object",
                     "properties": {
                         "crossProviderNamespaces": {
-                            "description": "List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+ (hub v3.20.2+).",
+                            "description": "List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.",
                             "type": "array"
                         },
                         "enabled": {
@@ -2604,7 +2604,7 @@
                             "type": "boolean"
                         },
                         "crossProviderNamespaces": {
-                            "description": "List of namespaces from which Ingresses or Services are allowed to declare Middlewares, TLSOptions, or ServersTransport references. Requires traefik v3.7.1+ (hub v3.20.2+).",
+                            "description": "List of namespaces from which Ingresses or Services are allowed to declare Middlewares, TLSOptions, or ServersTransport references. Requires traefik v3.7.1+.",
                             "type": "array"
                         },
                         "disableIngressClassLookup": {
