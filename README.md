@@ -34,7 +34,9 @@ Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_be
 
 ### Gateway API CRDs
 
-⚠️ Gateway API CRDs will no longer be shipped with this chart in a future major version. If you use the Kubernetes Gateway API provider, you will need to install them yourself before deploying Traefik v3.7:
+⚠️  Gateway API CRDs are no longer shipped with this chart.
+
+If you use the Kubernetes Gateway API provider, you will need to install them yourself before deploying Traefik v3.7:
 
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml

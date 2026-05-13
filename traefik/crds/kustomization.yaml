@@ -2,8 +2,6 @@
 kind: Kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 resources:
-  # curl -L https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml -o - | sed -z 's/\n---\n#\n# config\/crd\/[^\n]*_vap_[^\n]*\n#\n[^\n]*.*/\n/' > gateway-standard-install.yaml
-  - gateway-standard-install.yaml
   - hub.traefik.io_accesscontrolpolicies.yaml
   - hub.traefik.io_aiservices.yaml
   - hub.traefik.io_apiauths.yaml

@@ -1327,6 +1327,13 @@ providers:
     enabled: true
 ```
 
+and deploy Gateway API CRDs:
+
+```
+# Install Gateway API CRDs from the Standard channel.
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+```
+
 <details>
 
 <summary>With those values, a whoami service can be exposed with an HTTPRoute</summary>
