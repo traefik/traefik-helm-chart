@@ -1,0 +1,116 @@
+suite: Migration job hook
+templates:
+  - migration-job.yaml
+chart:
+  appVersion: v1.0.0
+
+tests:
+  - it: should render the migration job hook by default
+    asserts:
+      - isKind:
+          of: Job
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-hub-manager-migration
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: metadata.annotations["helm.sh/hook"]
+          value: pre-install,pre-upgrade
+      - equal:
+          path: metadata.annotations["helm.sh/hook-delete-policy"]
+          value: before-hook-creation,hook-succeeded
+      - equal:
+          path: spec.template.spec.restartPolicy
+          value: Never
+      - equal:
+          path: spec.backoffLimit
+          value: 0
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/hub-manager:v1.0.0
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value:
+            - migrate
+  - it: should render migration annotations and labels when specified
+    set:
+      migration:
+        annotations:
+          helm.sh/foo: "bar"
+        labels:
+          app.kubernetes.io/baz: qux
+    asserts:
+      - equal:
+          path: metadata.annotations["helm.sh/foo"]
+          value: "bar"
+      - equal:
+          path: metadata.labels["app.kubernetes.io/baz"]
+          value: qux
+  - it: should have specified values for env
+    set:
+      postgres:
+        uri: "foo"
+        encryptionKey: "bar"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POSTGRES_URI
+            valueFrom:
+              secretKeyRef:
+                key: postgres-uri
+                name: foo
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POSTGRES_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                key: postgres-encryption-key
+                name: bar
+  - it: should render scheduling and image pull options when specified
+    set:
+      nodeSelector:
+        kubernetes.io/os: linux
+      tolerations:
+        - key: dedicated
+          operator: Equal
+          value: apps
+          effect: NoSchedule
+      deployment:
+        imagePullSecrets:
+          - name: regcred
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector["kubernetes.io/os"]
+          value: linux
+      - equal:
+          path: spec.template.spec.tolerations[0].key
+          value: dedicated
+      - equal:
+          path: spec.template.spec.imagePullSecrets[0].name
+          value: regcred
+  - it: should have a custom resource limit when specified
+    set:
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "50Mi"
+        limits:
+          cpu: "300m"
+          memory: "150Mi"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: "100m"
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: "50Mi"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.cpu
+          value: "300m"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: "150Mi"

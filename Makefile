@@ -5,6 +5,7 @@ IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 
 traefik/tests/__snapshot__:
+	@mkdir -p hub-manager/tests/__snapshot__
 	@mkdir traefik/tests/__snapshot__
 
 test: traefik/tests/__snapshot__
@@ -28,6 +29,7 @@ test-%:
 # Requires to install schema generation plugin beforehand
 # $ helm plugin install https://github.com/losisin/helm-values-schema-json.git
 schema:
+	cd hub-manager && helm schema --use-helm-docs
 	cd traefik && helm schema --use-helm-docs
 
 changelog:
