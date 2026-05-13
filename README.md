@@ -155,8 +155,10 @@ To upgrade the Traefik chart and its CRDs:
 helm repo update
 # Check current chart & Traefik version
 helm search repo traefik/traefik
-# Update CRDs
+# Update Traefik CRDs
 helm show crds traefik/traefik | kubectl apply --server-side --force-conflicts -f -
+# Update Gateway API CRDs, if needed
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
 # Upgrade Traefik release
 helm upgrade traefik traefik/traefik
 ```
