@@ -2,10 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 40.1.0
-# renovate: image=traefik
+version: 40.2.0
 appVersion: v3.7.1
-kubeVersion: ">=1.25.0-0"
+kubeVersion: '>=1.25.0-0'
 keywords:
   - traefik
   - ingress
@@ -27,8 +26,7 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.2
   artifacthub.io/changes: |
-    - "fix(ingressroute): :bug: use spec.ingressClassName with Proxy v3.7+"
-    - "feat(provider/kubernetesIngressNGINX): set default values on httpentrypoint & httpsentrypoint"
-    - "feat(deps): update traefik docker tag to v3.7.1"
-    - "feat(api): support disableDashboardAd option"
-    - "chore(release): publish 40.1.0"
+    - "fix: remove Gateway API CRDs"
+    - "feat(provider): :sparkles: support crossProviderNamespaces on kubernetes providers"
+    - "feat(hub): :rocket: support traefik hub v3.20.2"
+    - "chore(release): 🚀 publish 40.2.0"

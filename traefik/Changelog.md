@@ -1,5 +1,50 @@
 # Change Log
 
+## 40.2.0  ![AppVersion: v3.7.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-05-13
+
+* fix: remove Gateway API CRDs
+* feat(provider): :sparkles: support crossProviderNamespaces on kubernetes providers
+* feat(hub): :rocket: support traefik hub v3.20.2
+* chore(release): 🚀 publish 40.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index cc45373..6afcb96 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -311,6 +311,8 @@ providers:
+     allowExternalNameServices: false
+     # -- Allows to return 503 when there are no endpoints available
+     allowEmptyServices: true
++    # -- List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+.
++    crossProviderNamespaces: []
+     # -- When the parameter is set, only resources containing an annotation with the same value are processed. Otherwise, resources missing the annotation, having an empty value, or the value traefik are processed. It will also set required annotation on Dashboard and Healthcheck IngressRoute when enabled.
+     ingressClass: ""
+     # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-labelselector)
+@@ -328,6 +330,8 @@ providers:
+     allowExternalNameServices: false
+     # -- Allows to return 503 when there are no endpoints available
+     allowEmptyServices: true
++    # -- List of namespaces from which Ingresses or Services are allowed to declare Middlewares, TLSOptions, or ServersTransport references. Requires traefik v3.7.1+.
++    crossProviderNamespaces: []
+     # -- Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup)
+     disableIngressClassLookup: false
+     # -- When ingressClass is set, only Ingresses containing an annotation with the same value are processed. Otherwise, Ingresses missing the annotation, having an empty value, or the value traefik are processed.
+@@ -358,6 +362,8 @@ providers:
+   kubernetesGateway:
+     # -- Enable Traefik Gateway provider for Gateway API
+     enabled: false
++    # -- List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.
++    crossProviderNamespaces: []
+     # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+     # This option currently enables support for TCPRoute and TLSRoute.
+     experimentalChannel: false
+```
+
 ## 40.1.0  ![AppVersion: v3.7.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-05-12
