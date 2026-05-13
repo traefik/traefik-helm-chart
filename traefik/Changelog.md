@@ -2,6 +2,11 @@
 
 ## 40.2.0  ![AppVersion: v3.7.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
+**Upgrade guide**
+
+> [!IMPORTANT]
+> This release is the first release without Gateway API v1.5.1 CRDs. See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v370).
+
 **Release date:** 2026-05-13
 
 * fix: remove Gateway API CRDs
