@@ -113,7 +113,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.1."
+          errorMessage: "ERROR: this Chart only supports Traefik Hub up to v3.20.2."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -251,6 +251,35 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1"
+  - it: should fail when using crossProviderNamespaces on Traefik Hub < v3.20.2 (proxy < v3.7.1)
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.1
+      hub:
+        token: "xxx"
+      providers:
+        kubernetesIngress:
+          crossProviderNamespaces:
+            - ns1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1"
+  - it: should pass when using crossProviderNamespaces on Traefik Hub >= v3.20.2 (proxy >= v3.7.1)
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.2
+      hub:
+        token: "xxx"
+      providers:
+        kubernetesCRD:
+          crossProviderNamespaces:
+            - ns1
+    asserts:
+      - notFailedTemplate: {}
   - it: should not fail when using traefik-hub API management with namespaced RBACs after v3.19.3
     set:
       image:
