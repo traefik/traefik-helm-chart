@@ -227,6 +227,44 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.allowCrossNamespace=true"
+  - it: should set crossProviderNamespaces for kubernetes providers when specified
+    set:
+      image:
+        tag: v3.7.1
+      providers:
+        kubernetesCRD:
+          crossProviderNamespaces:
+            - ns1
+            - ns2
+        kubernetesIngress:
+          crossProviderNamespaces:
+            - ns3
+        kubernetesGateway:
+          enabled: true
+          crossProviderNamespaces:
+            - ns4
+            - ns5
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.crossProviderNamespaces=ns1,ns2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.crossProviderNamespaces=ns3"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.crossProviderNamespaces=ns4,ns5"
+  - it: should not set crossProviderNamespaces by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.crossProviderNamespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.crossProviderNamespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.crossProviderNamespaces"
   - it: should allow external name services when specified in configuration
     set:
       providers:

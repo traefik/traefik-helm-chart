@@ -2507,6 +2507,10 @@
                             "description": "Allows to reference ExternalName services in IngressRoute",
                             "type": "boolean"
                         },
+                        "crossProviderNamespaces": {
+                            "description": "List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+.",
+                            "type": "array"
+                        },
                         "enabled": {
                             "description": "Load Kubernetes IngressRoute provider",
                             "type": "boolean"
@@ -2533,6 +2537,10 @@
                 "kubernetesGateway": {
                     "type": "object",
                     "properties": {
+                        "crossProviderNamespaces": {
+                            "description": "List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.",
+                            "type": "array"
+                        },
                         "enabled": {
                             "description": "Enable Traefik Gateway provider for Gateway API",
                             "type": "boolean"
@@ -2594,6 +2602,10 @@
                         "allowExternalNameServices": {
                             "description": "Allows to reference ExternalName services in Ingress",
                             "type": "boolean"
+                        },
+                        "crossProviderNamespaces": {
+                            "description": "List of namespaces from which Ingresses or Services are allowed to declare Middlewares, TLSOptions, or ServersTransport references. Requires traefik v3.7.1+.",
+                            "type": "array"
                         },
                         "disableIngressClassLookup": {
                             "description": "Only for Traefik v3.0, Deprecated since v3.1. See [upstream documentation](https://doc.traefik.io/traefik/v3.0/providers/kubernetes-ingress/#disableingressclasslookup)",
