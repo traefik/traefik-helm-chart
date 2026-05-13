@@ -33,7 +33,9 @@ While encouraging contributions, the philosophy leads to avoid introducing:
 
 Commits messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification and should specify a scope.
 
-All commits will appear in traefik helm chart changelog.
+All commits will appear in traefik helm chart changelog with one exception:
+
+* hub-manager-.*: commits with `hub-manager-` prefixed scope will appear only on the `hub-manager` chart changelog (e.g. `docs(hub-manager-values): update values documentation`)
 
 ## About Renovate
 
