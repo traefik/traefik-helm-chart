@@ -5,7 +5,8 @@
 **Upgrade guide**
 
 > [!IMPORTANT]
-> This release is the first release without Gateway API v1.5.1 CRDs. The reason why it has been removed is detailed in [#1169](https://github.com/traefik/traefik-helm-chart/issues/1669). See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v370).
+> This release is the first release without Gateway API v1.5.1 CRDs. The reason why it has been removed is detailed in [#1169](https://github.com/traefik/traefik-helm-chart/issues/1669). 
+> See [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v370).
 
 **Release date:** 2026-05-13
 
