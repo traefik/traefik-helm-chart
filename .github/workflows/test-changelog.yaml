@@ -62,7 +62,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      - name: Render traefik changelog configuration
+      - name: Render hub-manager changelog configuration
         env:
           REGEXP: '\\((hub-manager-.+)\\)'
           DATE: '2025-01-13'
@@ -73,7 +73,7 @@ jobs:
         uses: mikepenz/release-changelog-builder-action@bcae7115752d4ed746ff92feb666574428a79415 # v6.2.1
         with:
           fromTag: hub-manager_1.0.0-rc
-          toTag: hub-manager_v1.0.0
+          toTag: hub-manager_1.0.0-rc
           configuration: "/tmp/changelog.json"
           fetchViaCommits: true
         env:
