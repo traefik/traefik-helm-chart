@@ -1329,7 +1329,7 @@ providers:
 
 and deploy Gateway API CRDs:
 
-```
+```sh
 # Install Gateway API CRDs from the Standard channel.
 kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
 ```
