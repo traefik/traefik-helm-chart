@@ -9,9 +9,13 @@ on:
 env:
   tag_prefix: v
 
+permissions: {}
+
 jobs:
   traefik:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
 
       - name: Checkout
