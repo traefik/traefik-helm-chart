@@ -9,6 +9,9 @@ on:
 env:
   tag_prefix: v
 
+permissions:
+  contents: write
+
 jobs:
   traefik:
     runs-on: ubuntu-latest
