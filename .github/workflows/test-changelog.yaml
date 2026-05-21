@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - .github/fixtures/changelog-traefik.md
+      - .github/fixtures/changelog-hub-manager.md
       - .github/workflows/changelog.json
       - .github/workflows/release.yml
       - .github/workflows/test-changelog.yaml
@@ -51,6 +52,43 @@ jobs:
         uses: LouisBrunner/diff-action@ab382b451dbb2333cbb4db158d211d07fb5c82c6 # v3.0.0
         with:
           old: .github/fixtures/changelog-traefik.md
+          new: /tmp/changelog.md
+          mode: strict
+          tolerance: same
+
+  test-hub-manager:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Render hub-manager changelog configuration
+        env:
+          REGEXP: '\\((hub-manager-.+)\\)'
+          DATE: '2025-01-13'
+        run: ./hack/render-changelog-config.sh hub-manager
+
+      - name: Build Changelog
+        id: changelog
+        uses: mikepenz/release-changelog-builder-action@bcae7115752d4ed746ff92feb666574428a79415 # v6.2.1
+        with:
+          fromTag: hub-manager_1.0.0-rc
+          toTag: hub-manager_1.0.0-rc
+          configuration: "/tmp/changelog.json"
+          fetchViaCommits: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Write changelog
+        run: |
+          cat <<EOF > /tmp/changelog.md
+          ${{ steps.changelog.outputs.changelog }}
+          EOF
+
+      - name: Check that the files are the exact same
+        uses: LouisBrunner/diff-action@ab382b451dbb2333cbb4db158d211d07fb5c82c6 # v3.0.0
+        with:
+          old: .github/fixtures/changelog-hub-manager.md
           new: /tmp/changelog.md
           mode: strict
           tolerance: same
