@@ -445,7 +445,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.transport.respondingTimeouts.readTimeout | string | `nil` |  |
 | ports.websecure.transport.respondingTimeouts.writeTimeout | string | `nil` |  |
 | priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
-| providers.file.content | string | `""` | File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/) |
+| providers.file.content | object | `{}` | File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
 | providers.file.watch | bool | `true` | Allows Traefik to automatically watch for file changes |
 | providers.knative.enabled | bool | `false` | Enable Knative provider |

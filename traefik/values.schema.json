@@ -2460,8 +2460,8 @@
                     "type": "object",
                     "properties": {
                         "content": {
-                            "description": "File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)",
-                            "type": "string"
+                            "description": "File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)",
+                            "type": "object"
                         },
                         "enabled": {
                             "description": "Create a file provider",

@@ -1980,7 +1980,7 @@ hub:
 providers:
   file:
     enabled: true
-    content: |
+    content:
       http:
         uplinks:
           whoami:
