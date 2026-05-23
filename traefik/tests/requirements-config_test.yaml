@@ -689,3 +689,18 @@ tests:
               baseModuleName: "gitlab.company.com"
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when an ingressRoute key contains uppercase characters
+    set:
+      ingressRoute:
+        kubernetesCRD:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: ingressRoute key "kubernetesCRD" contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase). If you meant to enable a provider, use providers.kubernetesCRD instead.'
+  - it: should not fail when all ingressRoute keys are lowercase
+    set:
+      ingressRoute:
+        dashboard:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
