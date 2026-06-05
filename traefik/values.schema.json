@@ -1380,6 +1380,23 @@
                                             "type": "object"
                                         }
                                     }
+                                },
+                                "queryParameters": {
+                                    "type": "object",
+                                    "properties": {
+                                        "defaultmode": {
+                                            "description": "Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).",
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ],
+                                            "enum": [
+                                                "keep",
+                                                "drop",
+                                                null
+                                            ]
+                                        }
+                                    }
                                 }
                             }
                         },
