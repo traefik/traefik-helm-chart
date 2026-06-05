@@ -590,6 +590,12 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- with .qps }}
+          - "--providers.kubernetesgateway.qps={{ . }}"
+            {{- end }}
+            {{- with .burst }}
+          - "--providers.kubernetesgateway.burst={{ . }}"
+            {{- end }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
