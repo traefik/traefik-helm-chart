@@ -41,7 +41,7 @@ tests:
   - it: should fail when trying to use this Chart with a stable Proxy version above max
     set:
       image:
-        tag: v3.8.0
+        tag: v99.0.0
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy up to v3.7.4."
@@ -108,7 +108,7 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: v3.21.0
+        tag: v99.0.0
       hub:
         token: xxx
     asserts:
