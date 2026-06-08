@@ -77,34 +77,21 @@
         "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
       ]
     },
-    // Update traefik.io/proxy-max-version annotation (and the matching test assertion) with the latest stable Traefik Proxy release.
+    // Update traefik.io/{proxy,hub}-max-version annotations (and the matching test
+    // assertions) with the latest stable Traefik Proxy / Hub releases. The captured
+    // `product` routes each match to the right datasource depName.
     {
       customType: 'regex',
       datasourceTemplate: 'docker',
-      depNameTemplate: 'traefik',
+      depNameTemplate: '{{#if (equals (lowercase product) "hub")}}ghcr.io/traefik/traefik-hub{{else}}traefik{{/if}}',
       managerFilePatterns: [
         '/^traefik/Chart\\.yaml$/',
         '/^traefik/tests/requirements-config_test\\.yaml$/',
       ],
       versioningTemplate: 'docker',
       matchStrings: [
-        'traefik\\.io/proxy-max-version:\\s*(?<currentValue>\\S+)',
-        'only supports Traefik Proxy up to (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
-      ],
-    },
-    // Update traefik.io/hub-max-version annotation (and the matching test assertion) with the latest stable Traefik Hub release.
-    {
-      customType: 'regex',
-      datasourceTemplate: 'docker',
-      depNameTemplate: 'ghcr.io/traefik/traefik-hub',
-      managerFilePatterns: [
-        '/^traefik/Chart\\.yaml$/',
-        '/^traefik/tests/requirements-config_test\\.yaml$/',
-      ],
-      versioningTemplate: 'docker',
-      matchStrings: [
-        'traefik\\.io/hub-max-version:\\s*(?<currentValue>\\S+)',
-        'only supports Traefik Hub up to (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+        'traefik\\.io/(?<product>proxy|hub)-max-version:\\s*(?<currentValue>\\S+)',
+        'only supports Traefik (?<product>Proxy|Hub) up to (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
       ],
     }
   ],
