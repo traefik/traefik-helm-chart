@@ -8,5 +8,9 @@ metadata:
   {{- include "traefik.labels" . | nindent 4 }}
 data:
   config.yml:
+  {{- if kindIs "string" .Values.providers.file.content }}
+    {{ .Values.providers.file.content | quote | nindent 4 }}
+  {{- else }}
     {{ toYaml .Values.providers.file.content | quote | nindent 4 }}
+  {{- end }}
 {{- end -}}
