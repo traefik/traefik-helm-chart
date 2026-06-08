@@ -395,6 +395,30 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.statusaddress.service.namespace=foo"
+  - it: should not set kubernetesGateway qps and burst by default
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--providers.kubernetesgateway.qps="
+      - notMatchRegexRaw:
+          pattern: "--providers.kubernetesgateway.burst="
+  - it: should set kubernetesGateway qps and burst when configured
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          qps: 20
+          burst: 40
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.qps=20"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.burst=40"
 
   - it: should be able to enable knative provider
     set:
