@@ -1,4 +1,4 @@
-{{- if ge (len .Values.hub.token) 65 }}
+{{- if ge (len (.Values.hub.token | default "")) 65 }}
 ---
 apiVersion: v1
 kind: Secret
