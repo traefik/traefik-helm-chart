@@ -1064,6 +1064,27 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.fields.names.StartUTC=drop"
+  - it: should not set accesslog query parameters defaultmode by default
+    set:
+      logs:
+        access:
+          enabled: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.fields.queryparameters.defaultmode=keep"
+  - it: should set accesslog query parameters defaultmode when configured
+    set:
+      logs:
+        access:
+          enabled: true
+          fields:
+            queryParameters:
+              defaultmode: drop
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--accesslog.fields.queryparameters.defaultmode=drop"
   - it: "should set traefik as user in env by default"
     asserts:
       - contains:

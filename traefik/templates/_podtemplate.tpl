@@ -807,6 +807,9 @@
               {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
               {{- end }}
+              {{- with .access.fields.queryParameters.defaultmode }}
+          - "--accesslog.fields.queryparameters.defaultmode={{ . }}"
+              {{- end }}
               {{- with .access.otlp }}
                 {{- include "traefik.oltpCommonParams" (dict "path" "accesslog.otlp" "oltp" .) | nindent 8 }}
               {{- end }}

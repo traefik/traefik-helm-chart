@@ -85,6 +85,10 @@
   {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.3-0" $version) .Values.logs.access.fields.queryParameters.defaultmode }}
+  {{- fail "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
   {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
 {{- end }}

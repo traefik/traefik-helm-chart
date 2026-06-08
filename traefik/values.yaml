@@ -607,6 +607,9 @@ logs:
         # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
+      queryParameters:
+        # -- Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).
+        defaultmode:  # @schema enum:[keep, drop, null]; type:[string, null]; default: null
     otlp:
       # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
       enabled: false

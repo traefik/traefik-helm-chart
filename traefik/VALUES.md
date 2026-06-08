@@ -253,6 +253,7 @@ Kubernetes: `>=1.25.0-0`
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization) |
 | logs.access.fields.headers.names | object | `{}` |  |
+| logs.access.fields.queryParameters.defaultmode | string | `nil` | Keep or drop all query parameters in the RequestPath access log field (v3.7.3+). |
 | logs.access.filters | object | See below | Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters) |
 | logs.access.filters.minduration | string | `""` | Set minDuration, to keep access logs when requests take longer than the specified duration |
 | logs.access.filters.retryattempts | bool | `false` | Set retryAttempts, to keep the access logs when at least one retry has happened |
