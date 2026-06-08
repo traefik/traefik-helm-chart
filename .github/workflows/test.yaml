@@ -43,7 +43,9 @@ jobs:
         env:
           # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
           HELM_UNITTEST_VERSION: 1.1.0
-        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version "$HELM_UNITTEST_VERSION"
+        # --verify=false: Helm v4 verifies plugins by default, but the GitHub-release
+        # source ships no verification data, so the install fails without it.
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version "$HELM_UNITTEST_VERSION" --verify=false
 
       - name: Test Chart
         run: make test
