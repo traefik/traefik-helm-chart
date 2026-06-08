@@ -373,6 +373,10 @@ providers:
     labelSelector: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
+    # -- Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
+    qps:  # @schema type:[integer, null]
+    # -- Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
+    burst:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
       ip: ""
