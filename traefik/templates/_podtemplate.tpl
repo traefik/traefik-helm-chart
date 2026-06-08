@@ -124,7 +124,7 @@
           hostPort: {{ $config.hostPort }}
           {{- end }}
           {{- if $config.hostIP }}
-          hostIP: {{ $config.hostIP }}
+          hostIP: {{ $config.hostIP | quote }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
@@ -216,7 +216,7 @@
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
-          - "--{{$entryPoints}}.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+          - "--{{$entryPoints}}.{{$name}}.address={{ if $config.hostIP }}{{ if contains ":" $config.hostIP }}[{{ $config.hostIP }}]{{ else }}{{ $config.hostIP }}{{ end }}{{ end }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
             {{- with $config.asDefault }}
           - "--{{$entryPoints}}.{{$name}}.asDefault={{ . }}"
             {{- end }}

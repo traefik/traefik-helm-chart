@@ -187,6 +187,46 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.traefik.address=:8080/tcp"
 
+  - it: should bracket-wrap IPv6 hostIP in entrypoint address (unspecified)
+    template: deployment.yaml
+    set:
+      ports:
+        web:
+          hostIP: "::"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=[::]:8000/tcp"
+
+  - it: should bracket-wrap IPv6 hostIP in entrypoint address (specific)
+    template: deployment.yaml
+    set:
+      ports:
+        websecure:
+          hostIP: "2a01:4f8:1c19:7c12::1"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.address=[2a01:4f8:1c19:7c12::1]:8443/tcp"
+
+  - it: should quote hostIP in pod spec so IPv6 values render as valid YAML
+    template: daemonset.yaml
+    set:
+      deployment:
+        kind: DaemonSet
+      ports:
+        websecure:
+          hostIP: "::"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: websecure
+            containerPort: 8443
+            hostPort: 443
+            hostIP: "::"
+            protocol: TCP
+
   - it: should set probes host when hostIP is configured
     template: deployment.yaml
     set:
