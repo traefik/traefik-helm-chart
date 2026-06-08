@@ -590,6 +590,12 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- with .qps }}
+          - "--providers.kubernetesgateway.qps={{ . }}"
+            {{- end }}
+            {{- with .burst }}
+          - "--providers.kubernetesgateway.burst={{ . }}"
+            {{- end }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
@@ -800,6 +806,9 @@
           - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
               {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
+              {{- end }}
+              {{- with .access.fields.queryParameters.defaultmode }}
+          - "--accesslog.fields.queryparameters.defaultmode={{ . }}"
               {{- end }}
               {{- with .access.otlp }}
                 {{- include "traefik.oltpCommonParams" (dict "path" "accesslog.otlp" "oltp" .) | nindent 8 }}

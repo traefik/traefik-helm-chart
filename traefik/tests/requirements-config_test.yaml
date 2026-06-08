@@ -448,6 +448,40 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
+  - it: should fail when using accesslog query parameters defaultmode on traefik < 3.7.3
+    set:
+      image:
+        tag: v3.7.1
+      logs:
+        access:
+          fields:
+            queryParameters:
+              defaultmode: drop
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3."
+  - it: should fail when using kubernetesGateway qps on traefik < 3.7.3
+    set:
+      image:
+        tag: v3.7.1
+      providers:
+        kubernetesGateway:
+          enabled: true
+          qps: 20
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when using kubernetesGateway burst on traefik < 3.7.3
+    set:
+      image:
+        tag: v3.7.1
+      providers:
+        kubernetesGateway:
+          enabled: true
+          burst: 40
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
   - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:

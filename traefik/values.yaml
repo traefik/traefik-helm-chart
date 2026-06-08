@@ -373,6 +373,10 @@ providers:
     labelSelector: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
+    # -- Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
+    qps:  # @schema type:[integer, null]
+    # -- Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
+    burst:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
       ip: ""
@@ -603,6 +607,9 @@ logs:
         # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
         names: {}
+      queryParameters:
+        # -- Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).
+        defaultmode:  # @schema enum:[keep, drop, null]; type:[string, null]; default: null
     otlp:
       # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
       enabled: false
