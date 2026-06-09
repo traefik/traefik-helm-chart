@@ -53,6 +53,19 @@ tests:
             be unstable, may contain breaking changes, and are NOT recommended for production use.
             This version is not officially supported by this chart. Use at your own risk. ⚠️
 
+  - it: should display warning when using a stable minor/patch version above max
+    set:
+      image:
+        tag: v3.99.0
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.99.0 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard image tag (v3.99.0). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+
   - it: should not display warning when using a stable Proxy version within range
     set:
       image:
