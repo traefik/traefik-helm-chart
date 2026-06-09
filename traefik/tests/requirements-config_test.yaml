@@ -64,13 +64,15 @@ tests:
         tag: v3.8.0-ea.1
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when trying to use this Chart with Traefik Proxy v3 and Hub enabled
+  - it: should default to the hub-max-version when Hub is enabled and no tag is set
     set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
       hub:
         token: xxx
     asserts:
-      - failedTemplate:
-          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
+      - notFailedTemplate: {}
   - it: should fail when trying to use this Chart with Traefik Hub < v3.19.3
     set:
       image:
@@ -103,7 +105,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
+          errorMessage: "When using Traefik Hub with image.digest, versionOverride must be set."
   - it: should succeed when using Traefik Hub with image.digest and versionOverride
     set:
       image:
@@ -353,13 +355,12 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should fail when using Traefik Hub without image registry and repository specified.
+  - it: should default to the hub-max-version when Traefik Hub is enabled and no tag is set
     set:
       hub:
         token: "xxx"
     asserts:
-      - failedTemplate:
-          errorMessage: "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride."
+      - notFailedTemplate: {}
   - it: should not fail when using Traefik Hub with tag set for OCI
     set:
       hub:

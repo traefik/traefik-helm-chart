@@ -15,6 +15,42 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Image registry: defaults to ghcr.io for Traefik Hub (where the traefik-hub image lives)
+when left at the Proxy default, otherwise the user-provided value.
+*/}}
+{{- define "traefik.imageRegistry" -}}
+{{- if and .Values.hub.token (eq .Values.image.registry "docker.io") -}}
+ghcr.io
+{{- else -}}
+{{- .Values.image.registry -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Image repository: defaults to traefik/traefik-hub for Traefik Hub when left at the Proxy
+default, otherwise the user-provided value.
+*/}}
+{{- define "traefik.imageRepository" -}}
+{{- if and .Values.hub.token (eq .Values.image.repository "traefik") -}}
+traefik/traefik-hub
+{{- else -}}
+{{- .Values.image.repository -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Default image tag: the latest (max) supported Hub version when Traefik Hub is enabled,
+otherwise the chart's appVersion (the latest supported Traefik Proxy version).
+*/}}
+{{- define "traefik.defaultTag" -}}
+{{- if .Values.hub.token -}}
+{{- index .Chart.Annotations "traefik.io/hub-max-version" -}}
+{{- else -}}
+{{- .Chart.AppVersion -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
@@ -31,9 +67,9 @@ Create the chart image name.
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
  {{- end -}}
 {{- else if .Values.image.digest -}}
-{{- printf "%s/%s@%s" .Values.image.registry .Values.image.repository .Values.image.digest }}
+{{- printf "%s/%s@%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) .Values.image.digest }}
 {{- else -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- printf "%s/%s:%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) }}
 {{- end -}}
 {{- end -}}
 

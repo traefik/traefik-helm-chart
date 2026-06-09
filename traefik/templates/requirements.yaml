@@ -132,8 +132,12 @@
 
 {{- if $.Values.hub.token -}}
   {{- $hubVersion := include "traefik.hubVersion" $ }}
-  {{ if not $hubVersion }}
-    {{ fail "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride." }}
+  {{- if not $hubVersion }}
+    {{- if $.Values.image.digest }}
+      {{ fail "When using Traefik Hub with image.digest, versionOverride must be set." }}
+    {{- else }}
+      {{- $hubVersion = index $.Chart.Annotations "traefik.io/hub-max-version" }}
+    {{- end }}
   {{- end -}}
 
   {{/* Consider non semver versions as latest one  */}}

@@ -5,7 +5,7 @@
 
 
 {{/* Warn about non-standard versions (experimental, or pre-release outside supported range) */}}
-{{- $imageTag := (.Values.image.tag | default .Chart.AppVersion) -}}
+{{- $imageTag := (.Values.image.tag | default (include "traefik.defaultTag" .)) -}}
 {{- $version := include "traefik.proxyVersion" $ -}}
 {{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" -}}
 {{- if or (hasPrefix "experimental-" $imageTag) (eq (include "traefik.isAboveMaxVersion" (dict "version" $version "max" $proxyMaxVersion)) "true") -}}
