@@ -10,9 +10,13 @@ env:
   CACHE_DIR: /tmp/renovate/cache/renovate/repository
   CACHE_KEY: renovate-cache
 
+permissions: {}
+
 jobs:
   renovate:
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: read
     steps:
       - name: Get token
         id: get_token
