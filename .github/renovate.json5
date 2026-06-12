@@ -87,11 +87,14 @@
       managerFilePatterns: [
         '/^traefik/Chart\\.yaml$/',
         '/^traefik/tests/requirements-config_test\\.yaml$/',
+        '/^traefik/tests/container-config_test\\.yaml$/',
       ],
       versioningTemplate: 'docker',
       matchStrings: [
         'traefik\\.io/(?<product>proxy|hub)-max-version:\\s*(?<currentValue>\\S+)',
         'only supports Traefik (?<product>Proxy|Hub) up to (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+        // Default Hub image assertion (container-config_test.yaml) — bumped with hub-max-version.
+        'ghcr\\.io/traefik/traefik-(?<product>hub):(?<currentValue>v\\d+\\.\\d+\\.\\d+)',
       ],
     }
   ],

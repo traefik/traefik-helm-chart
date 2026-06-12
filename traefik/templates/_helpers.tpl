@@ -15,6 +15,22 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Image defaults. An explicit image value always wins; otherwise the chart picks the
+Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
+*/}}
+{{- define "traefik.imageRegistry" -}}
+{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
+{{- end -}}
+
+{{- define "traefik.imageRepository" -}}
+{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
+{{- end -}}
+
+{{- define "traefik.defaultTag" -}}
+{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (not (empty .Values.hub.token)) -}}
+{{- end -}}
+
+{{/*
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
@@ -31,9 +47,9 @@ Create the chart image name.
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
  {{- end -}}
 {{- else if .Values.image.digest -}}
-{{- printf "%s/%s@%s" .Values.image.registry .Values.image.repository .Values.image.digest }}
+{{- printf "%s/%s@%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) .Values.image.digest }}
 {{- else -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- printf "%s/%s:%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) }}
 {{- end -}}
 {{- end -}}
 
