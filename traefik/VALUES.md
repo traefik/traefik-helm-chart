@@ -216,8 +216,8 @@ Kubernetes: `>=1.25.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
 | image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
-| image.registry | string | `nil` | Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set) if left unset. |
-| image.repository | string | `nil` | Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set) if left unset. |
+| image.registry | string | `nil` | Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set). |
+| image.repository | string | `nil` | Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set). |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image). |
 | ingressClass.enabled | bool | `true` | Create a default IngressClass for Traefik |
 | ingressClass.isDefaultClass | bool | `true` |  |

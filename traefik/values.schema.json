@@ -1145,14 +1145,14 @@
                     "type": "string"
                 },
                 "registry": {
-                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set) if left unset.",
+                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set).",
                     "type": [
                         "string",
                         "null"
                     ]
                 },
                 "repository": {
-                    "description": "Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set) if left unset.",
+                    "description": "Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set).",
                     "type": [
                         "string",
                         "null"
