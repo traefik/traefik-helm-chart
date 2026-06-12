@@ -423,19 +423,17 @@ tests:
           errorPattern: "values don't meet the specifications of the schema"
   - it: should fail when using otlp logs without experimental flag
     set:
-      logs:
-        general:
-          otlp:
-            enabled: true
+      log:
+        otlp:
+          enabled: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
   - it: should fail when using otlp access logs without experimental flag
     set:
-      logs:
-        general:
-          otlp:
-            enabled: true
+      accessLog:
+        otlp:
+          enabled: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true."
@@ -466,9 +464,8 @@ tests:
     set:
       image:
         tag: v3.6.10
-      logs:
-        access:
-          dualOutput: true
+      accessLog:
+        dualOutput: true
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
@@ -476,11 +473,10 @@ tests:
     set:
       image:
         tag: v3.7.1
-      logs:
-        access:
-          fields:
-            queryParameters:
-              defaultmode: drop
+      accessLog:
+        fields:
+          queryParameters:
+            defaultMode: drop
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3."

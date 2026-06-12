@@ -978,15 +978,14 @@ tests:
           content: "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=42s"
   - it: should be possible to configure access logs
     set:
-      logs:
-        access:
-          enabled: true
-          format: json
-          filePath: "/data/log"
-          bufferingSize: 100
-          addInternals: true
-          filters:
-            statuscodes: "200,300-302"
+      accessLog:
+        enabled: true
+        format: json
+        filePath: "/data/log"
+        bufferingSize: 100
+        addInternals: true
+        filters:
+          statusCodes: "200,300-302"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1011,10 +1010,9 @@ tests:
           content: "--accesslog.dualOutput=true"
   - it: should be possible to enable access log dualOutput
     set:
-      logs:
-        access:
-          enabled: true
-          dualOutput: true
+      accessLog:
+        enabled: true
+        dualOutput: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args

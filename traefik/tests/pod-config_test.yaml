@@ -851,81 +851,75 @@ tests:
           content: "--core.defaultRuleSyntax=v2"
   - it: should fail when providing bad log format
     set:
-      logs:
-        general:
-          format: "test"
+      log:
+        format: "test"
     asserts:
       - failedTemplate:
           errorPattern: "format"
   - it: should set log filePath when configured
     set:
-      logs:
-        general:
-          filePath: "/var/log/traefik.log"
+      log:
+        filePath: "/var/log/traefik.log"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.filePath=/var/log/traefik.log"
   - it: should set log noColor when configured
     set:
-      logs:
-        general:
-          noColor: true
+      log:
+        noColor: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.noColor=true"
   - it: should set log noColor when configured to false as it's default
     set:
-      logs:
-        general:
-          noColor: false
+      log:
+        noColor: false
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--log.noColor=false"
   - it: should not set log noColor when configured and log format is not common
     set:
-      logs:
-        general:
-          format: json
-          noColor: true
+      log:
+        format: json
+        noColor: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--log.noColor=true"
   - it: should be possible to configure OTLP general logging
     set:
-      logs:
-        general:
-          otlp:
+      log:
+        otlp:
+          enabled: true
+          serviceName: traefikTest
+          http:
             enabled: true
-            serviceName: traefikTest
-            http:
-              enabled: true
-              endpoint: "http://localhost:4318/v1/metrics"
-              headers:
-                foo: http
-                test: http
-              tls:
-                ca: path/to/ca.crt
-                cert: path/to/foo.cert
-                key: path/to/foo.key
-                insecureSkipVerify: true
-            grpc:
-              enabled: true
-              endpoint: "http://localhost:4318/v1/metrics"
-              insecure: false
-              headers:
-                foo: grpc
-                test: grpc
-              tls:
-                ca: gpath/to/ca.crt
-                cert: gpath/to/foo.cert
-                key: gpath/to/foo.key
-                insecureSkipVerify: true
-            resourceAttributes:
-              foo: bar
+            endpoint: "http://localhost:4318/v1/metrics"
+            headers:
+              foo: http
+              test: http
+            tls:
+              ca: path/to/ca.crt
+              cert: path/to/foo.cert
+              key: path/to/foo.key
+              insecureSkipVerify: true
+          grpc:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/metrics"
+            insecure: false
+            headers:
+              foo: grpc
+              test: grpc
+            tls:
+              ca: gpath/to/ca.crt
+              cert: gpath/to/foo.cert
+              key: gpath/to/foo.key
+              insecureSkipVerify: true
+          resourceAttributes:
+            foo: bar
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -989,27 +983,24 @@ tests:
           content: "--log.otlp.resourceAttributes.foo=bar"
   - it: should be possible to set genericCLF accesslog format with Proxy v3.5.2
     set:
-      logs:
-        access:
-          enabled: true
-          format: genericCLF
+      accessLog:
+        enabled: true
+        format: genericCLF
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.format=genericCLF"
   - it: should fail on schema level when trying to set genericCLF log format
     set:
-      logs:
-        general:
-          format: genericCLF
+      log:
+        format: genericCLF
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications"
   - it: should fail when setting unknown log level
     set:
-      logs:
-        general:
-          level: test
+      log:
+        level: test
     asserts:
       - failedTemplate:
           errorPattern: "level"
@@ -1051,10 +1042,9 @@ tests:
           content: "--providers.kubernetesingress.allowEmptyServices=false"
   - it: should drop utc and set TZ env when access log timezone is set
     set:
-      logs:
-        access:
-          enabled: true
-          timezone: US/Alaska
+      accessLog:
+        enabled: true
+        timezone: US/Alaska
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -1066,21 +1056,19 @@ tests:
           content: "--accesslog.fields.names.StartUTC=drop"
   - it: should not set accesslog query parameters defaultmode by default
     set:
-      logs:
-        access:
-          enabled: true
+      accessLog:
+        enabled: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--accesslog.fields.queryparameters.defaultmode=keep"
   - it: should set accesslog query parameters defaultmode when configured
     set:
-      logs:
-        access:
-          enabled: true
-          fields:
-            queryParameters:
-              defaultmode: drop
+      accessLog:
+        enabled: true
+        fields:
+          queryParameters:
+            defaultMode: drop
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1094,37 +1082,36 @@ tests:
             value: traefik
   - it: should be possible to configure OTLP access logging
     set:
-      logs:
-        access:
+      accessLog:
+        enabled: true
+        otlp:
           enabled: true
-          otlp:
+          serviceName: traefikTest
+          http:
             enabled: true
-            serviceName: traefikTest
-            http:
-              enabled: true
-              endpoint: "http://localhost:4318/v1/metrics"
-              headers:
-                foo: http
-                test: http
-              tls:
-                ca: path/to/ca.crt
-                cert: path/to/foo.cert
-                key: path/to/foo.key
-                insecureSkipVerify: true
-            grpc:
-              enabled: true
-              endpoint: "http://localhost:4318/v1/metrics"
-              insecure: false
-              headers:
-                foo: grpc
-                test: grpc
-              tls:
-                ca: gpath/to/ca.crt
-                cert: gpath/to/foo.cert
-                key: gpath/to/foo.key
-                insecureSkipVerify: true
-            resourceAttributes:
-              foo: bar
+            endpoint: "http://localhost:4318/v1/metrics"
+            headers:
+              foo: http
+              test: http
+            tls:
+              ca: path/to/ca.crt
+              cert: path/to/foo.cert
+              key: path/to/foo.key
+              insecureSkipVerify: true
+          grpc:
+            enabled: true
+            endpoint: "http://localhost:4318/v1/metrics"
+            insecure: false
+            headers:
+              foo: grpc
+              test: grpc
+            tls:
+              ca: gpath/to/ca.crt
+              cert: gpath/to/foo.cert
+              key: gpath/to/foo.key
+              insecureSkipVerify: true
+          resourceAttributes:
+            foo: bar
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1188,14 +1175,13 @@ tests:
           content: "--accesslog.otlp.resourceAttributes.foo=bar"
   - it: should not render otlp tls options when insecure is true for access logging
     set:
-      logs:
-        access:
+      accessLog:
+        enabled: true
+        otlp:
           enabled: true
-          otlp:
+          grpc:
             enabled: true
-            grpc:
-              enabled: true
-              insecure: true
+            insecure: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
