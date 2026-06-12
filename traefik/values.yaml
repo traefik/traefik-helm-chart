@@ -394,8 +394,8 @@ providers:
     enabled: false
     # -- Allows Traefik to automatically watch for file changes
     watch: true
-    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)
-    content: ""
+    # -- File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)
+    content: {}
 
   # @schema additionalProperties: false
   kubernetesIngressNGINX:
