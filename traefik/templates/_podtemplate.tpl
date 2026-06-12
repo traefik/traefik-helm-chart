@@ -752,65 +752,67 @@
             {{- end }}
           {{- end }}
           {{- end }}
-          {{- with .Values.logs }}
-            {{- with .general.format }}
+          {{- with .Values.log }}
+            {{- with .format }}
           - "--log.format={{ . }}"
             {{- end }}
-            {{- with .general.filePath }}
+            {{- with .filePath }}
           - "--log.filePath={{ . }}"
             {{- end }}
-            {{- if and (or (eq .general.format "common") (not .general.format)) (eq .general.noColor true) }}
-          - "--log.noColor={{ .general.noColor }}"
+            {{- if and (or (eq .format "common") (not .format)) (eq .noColor true) }}
+          - "--log.noColor={{ .noColor }}"
             {{- end }}
-            {{- with .general.level }}
+            {{- with .level }}
           - "--log.level={{ . | upper }}"
             {{- end }}
-            {{- with .general.otlp }}
+            {{- with .otlp }}
              {{- include "traefik.oltpCommonParams" (dict "path" "log.otlp" "oltp" .) | nindent 8 }}
             {{- end }}
-            {{- if .access.enabled }}
+          {{- end }}
+          {{- with .Values.accessLog }}
+            {{- if .enabled }}
           - "--accesslog=true"
-              {{- with .access.format }}
+              {{- with .format }}
           - "--accesslog.format={{ . }}"
               {{- end }}
-              {{- with .access.filePath }}
+              {{- with .filePath }}
           - "--accesslog.filepath={{ . }}"
               {{- end }}
-              {{- if .access.addInternals }}
+              {{- if .addInternals }}
           - "--accesslog.addinternals"
               {{- end }}
-              {{- if .access.dualOutput }}
+              {{- if .dualOutput }}
           - "--accesslog.dualOutput=true"
               {{- end }}
-              {{- with .access.bufferingSize }}
+              {{- with .bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
               {{- end }}
-              {{- if .access.timezone }}
+              {{- if .timezone }}
           - "--accesslog.fields.names.StartUTC=drop"
               {{- end }}
-              {{- with .access.filters }}
-                {{- with .statuscodes }}
+              {{- with .filters }}
+                {{- with .statusCodes }}
           - "--accesslog.filters.statuscodes={{ . }}"
                 {{- end }}
-                {{- if .retryattempts }}
+                {{- if .retryAttempts }}
           - "--accesslog.filters.retryattempts"
                 {{- end }}
-                {{- with .minduration }}
+                {{- with .minDuration }}
           - "--accesslog.filters.minduration={{ . }}"
                 {{- end }}
               {{- end }}
-          - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
-              {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+          - "--accesslog.fields.defaultmode={{ .fields.defaultMode }}"
+              {{- range $fieldname, $fieldaction := .fields.names }}
           - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
               {{- end }}
-          - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
-              {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+          - "--accesslog.fields.headers.defaultmode={{ .fields.headers.defaultMode }}"
+              {{- range $fieldname, $fieldaction := .fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
               {{- end }}
-              {{- with .access.fields.queryParameters.defaultmode }}
+              {{- with .fields.queryParameters.defaultMode }}
           - "--accesslog.fields.queryparameters.defaultmode={{ . }}"
               {{- end }}
-              {{- with .access.otlp }}
+              {{- with .otlp }}
                 {{- include "traefik.oltpCommonParams" (dict "path" "accesslog.otlp" "oltp" .) | nindent 8 }}
               {{- end }}
             {{- end }}
@@ -974,9 +976,9 @@
           - name: GOMEMLIMIT
             value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}
-          {{- if .Values.logs.access.timezone }}
+          {{- if .Values.accessLog.timezone }}
           - name: TZ
-            value: {{ .Values.logs.access.timezone }}
+            value: {{ .Values.accessLog.timezone }}
           {{- end }}
         {{- with .Values.env }}
           {{- toYaml . | nindent 10 }}

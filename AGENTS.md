@@ -49,10 +49,9 @@ Traefik can run as a `Deployment` or `DaemonSet` — controlled by `deployment.k
 
 Example pattern:
 ```yaml
-logs:
-  general:
-    # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+log:
+  # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+  format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
 ```
 
 ## Templating Conventions

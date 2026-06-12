@@ -78,15 +78,15 @@
   {{- fail "ERROR: Kubernetes Ingress NGINX provider globalAuthUrl option requires traefik >= v3.7.0-rc.1." }}
 {{- end }}
 
-{{- if and (not .Values.experimental.otlpLogs) (or (.Values.logs.general.otlp.enabled) (.Values.logs.access.otlp.enabled))}}
+{{- if and (not .Values.experimental.otlpLogs) (or (.Values.log.otlp.enabled) (.Values.accessLog.otlp.enabled))}}
   {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
 {{- end }}
 
-{{- if and (semverCompare "<v3.7.0-0" $version) .Values.logs.access.dualOutput }}
+{{- if and (semverCompare "<v3.7.0-0" $version) .Values.accessLog.dualOutput }}
   {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
 {{- end }}
 
-{{- if and (semverCompare "<v3.7.3-0" $version) .Values.logs.access.fields.queryParameters.defaultmode }}
+{{- if and (semverCompare "<v3.7.3-0" $version) .Values.accessLog.fields.queryParameters.defaultMode }}
   {{- fail "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3." }}
 {{- end }}
 

@@ -9,10 +9,9 @@ It comes with a JSON schema generated from values with [helm schema](https://git
 ## Feature Example
 
 ```yaml
-logs:
-  general:
-    # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+log:
+  # -- Set [logs format](https://doc.traefik.io/traefik/observability/logs/#format)
+  format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
 ```
 
 Documention is on the first comment, starting with `# --`
