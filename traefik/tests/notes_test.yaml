@@ -260,3 +260,30 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
+  - it: should display the OCI image in release notes when oci_meta and Hub are enabled
+    set:
+      oci_meta:
+        enabled: true
+        repo: myrepo
+        images:
+          hub:
+            image: traefik-hub
+            tag: v3.20.4
+
+      rbac:
+        enabled: true
+        namespaced: true
+
+      hub:
+        token: "token"
+        namespaces: []
+        apimanagement:
+          enabled: true
+
+      providers:
+        kubernetesCRD:
+          namespaces: [ns1, ns2]
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!
