@@ -53,6 +53,19 @@ tests:
             be unstable, may contain breaking changes, and are NOT recommended for production use.
             This version is not officially supported by this chart. Use at your own risk. ⚠️
 
+  - it: should display warning when using a stable minor/patch version above max
+    set:
+      image:
+        tag: v3.99.0
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.99.0 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard image tag (v3.99.0). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+
   - it: should not display warning when using a stable Proxy version within range
     set:
       image:
@@ -61,6 +74,50 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
+  - it: should display warning when using a stable Hub minor/patch version above max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.99.0
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.99.0 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard Traefik Hub image tag (v3.99.0). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+  - it: should display warning when using an ea Hub version above max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-ea.1
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.0-ea.1 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard Traefik Hub image tag (v3.21.0-ea.1). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+  - it: should not display warning when using a stable Hub version within range
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.19.5
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
