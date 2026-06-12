@@ -66,9 +66,6 @@ tests:
       - notFailedTemplate: {}
   - it: should default to the hub-max-version when Hub is enabled and no tag is set
     set:
-      image:
-        registry: ghcr.io
-        repository: traefik/traefik-hub
       hub:
         token: xxx
     asserts:
