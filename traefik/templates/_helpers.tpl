@@ -15,43 +15,19 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Image registry: when left unset, defaults to ghcr.io for Traefik Hub (where the
-traefik-hub image lives) and docker.io for Traefik Proxy. Any explicit value is respected.
+Image defaults. An explicit image value always wins; otherwise the chart picks the
+Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- if .Values.image.registry -}}
-{{- .Values.image.registry -}}
-{{- else if .Values.hub.token -}}
-ghcr.io
-{{- else -}}
-docker.io
-{{- end -}}
+{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
 {{- end -}}
 
-{{/*
-Image repository: when left unset, defaults to traefik/traefik-hub for Traefik Hub and
-traefik for Traefik Proxy. Any explicit value is respected.
-*/}}
 {{- define "traefik.imageRepository" -}}
-{{- if .Values.image.repository -}}
-{{- .Values.image.repository -}}
-{{- else if .Values.hub.token -}}
-traefik/traefik-hub
-{{- else -}}
-traefik
-{{- end -}}
+{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
 {{- end -}}
 
-{{/*
-Default image tag: the latest (max) supported Hub version when Traefik Hub is enabled,
-otherwise the chart's appVersion (the latest supported Traefik Proxy version).
-*/}}
 {{- define "traefik.defaultTag" -}}
-{{- if .Values.hub.token -}}
-{{- index .Chart.Annotations "traefik.io/hub-max-version" -}}
-{{- else -}}
-{{- .Chart.AppVersion -}}
-{{- end -}}
+{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (not (empty .Values.hub.token)) -}}
 {{- end -}}
 
 {{/*
