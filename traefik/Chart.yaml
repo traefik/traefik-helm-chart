@@ -3,7 +3,8 @@ name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
 version: 40.3.0
-appVersion: v3.7.4
+# renovate: image=traefik
+appVersion: v3.7.5
 kubeVersion: '>=1.25.0-0'
 keywords:
   - traefik
