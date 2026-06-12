@@ -167,6 +167,34 @@ spec:
                     required:
                     - groups
                     type: object
+                  clientConfig:
+                    description: ClientConfig configures the HTTP client used to communicate
+                      with the OIDC provider.
+                    properties:
+                      maxRetries:
+                        default: 3
+                        description: MaxRetries defines the maximum number of retry
+                          attempts for failed requests.
+                        type: integer
+                      timeoutSeconds:
+                        default: 5
+                        description: TimeoutSeconds configures the maximum amount
+                          of seconds to wait before giving up on requests.
+                        type: integer
+                      tls:
+                        description: TLS configures TLS for the HTTP client.
+                        properties:
+                          ca:
+                            description: CA sets the CA bundle used to verify the
+                              server certificate.
+                            type: string
+                          insecureSkipVerify:
+                            description: |-
+                              InsecureSkipVerify skips the server certificate validation.
+                              For testing purposes only, do not use in production.
+                            type: boolean
+                        type: object
+                    type: object
                   issuerUrl:
                     description: IssuerURL is the OIDC provider issuer URL.
                     type: string

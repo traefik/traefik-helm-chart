@@ -1380,6 +1380,23 @@
                                             "type": "object"
                                         }
                                     }
+                                },
+                                "queryParameters": {
+                                    "type": "object",
+                                    "properties": {
+                                        "defaultmode": {
+                                            "description": "Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).",
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ],
+                                            "enum": [
+                                                "keep",
+                                                "drop",
+                                                null
+                                            ]
+                                        }
+                                    }
                                 }
                             }
                         },
@@ -2537,6 +2554,13 @@
                 "kubernetesGateway": {
                     "type": "object",
                     "properties": {
+                        "burst": {
+                            "description": "Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
                         "crossProviderNamespaces": {
                             "description": "List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.",
                             "type": "array"
@@ -2560,6 +2584,13 @@
                         "nativeLBByDefault": {
                             "description": "Defines whether to use Native Kubernetes load-balancing mode by default.",
                             "type": "boolean"
+                        },
+                        "qps": {
+                            "description": "Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
                         },
                         "statusAddress": {
                             "type": "object",

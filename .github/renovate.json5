@@ -13,6 +13,17 @@
   rebaseWhen: 'conflicted',
   labels: ['📌 dependencies'],
   enabledManagers: ['github-actions', 'custom.regex'],
+  // config:recommended ignores **/tests/** by default; keep the rest of that list but
+  // allow traefik/tests so the *-max-version assertions can be kept in sync by Renovate.
+  ignorePaths: [
+    '**/node_modules/**',
+    '**/bower_components/**',
+    '**/vendor/**',
+    '**/examples/**',
+    '**/__tests__/**',
+    '**/test/**',
+    '**/__fixtures__/**',
+  ],
   hostRules: [
     {
       abortIgnoreStatusCodes: [404],
@@ -31,6 +42,12 @@
     {
       matchPackageNames: ['traefik'],
       extends: [':semanticCommitTypeAll(feat)'],
+    },
+    {
+      matchPackageNames: ['ghcr.io/traefik/traefik-hub'],
+      extends: [':semanticCommitTypeAll(feat)'],
+      // Only track stable Hub releases for hub-max-version (exclude -ea / -rc).
+      allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
@@ -59,6 +76,23 @@
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
         "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
       ]
+    },
+    // Update traefik.io/{proxy,hub}-max-version annotations (and the matching test
+    // assertions) with the latest stable Traefik Proxy / Hub releases. The captured
+    // `product` routes each match to the right datasource depName.
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      depNameTemplate: '{{#if (equals (lowercase product) "hub")}}ghcr.io/traefik/traefik-hub{{else}}traefik{{/if}}',
+      managerFilePatterns: [
+        '/^traefik/Chart\\.yaml$/',
+        '/^traefik/tests/requirements-config_test\\.yaml$/',
+      ],
+      versioningTemplate: 'docker',
+      matchStrings: [
+        'traefik\\.io/(?<product>proxy|hub)-max-version:\\s*(?<currentValue>\\S+)',
+        'only supports Traefik (?<product>Proxy|Hub) up to (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+      ],
     }
   ],
 }

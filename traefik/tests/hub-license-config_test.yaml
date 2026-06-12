@@ -107,3 +107,15 @@ tests:
           name: traefik-hub-license
           namespace: NAMESPACE
         template: hub-license.yaml
+
+  - it: should not crash when hub.token is explicitly null
+    set:
+      hub:
+        token: null
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-license.yaml
+      - hasDocuments:
+          count: 1
+        template: deployment.yaml

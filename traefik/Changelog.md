@@ -1,5 +1,50 @@
 # Change Log
 
+## 40.3.0  ![AppVersion: v3.7.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.4&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-06-08
+
+* fix(hub): :bug: guard nil hub.token in hub-license template
+* feat(proxy): :rocket: support traefik v3.7.4
+* feat(provider): :sparkles: support qps and burst on kubernetesGateway
+* feat(logs): :sparkles: support accesslog query parameters defaultmode
+* feat(hub): :rocket: support traefik hub v3.20.4
+* feat(CRDs): update Traefik Hub CRDs to v1.31.0
+* chore(release): 🚀 publish 40.3.0
+* chore(deps): support traefik v3.7.3 & hub v3.20.3
+* chore(ci): track proxy & hub max-version annotations with renovate
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 6afcb96..cc6e3a4 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -373,6 +373,10 @@ providers:
+     labelSelector: ""
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
++    # -- Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
++    qps:  # @schema type:[integer, null]
++    # -- Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
++    burst:  # @schema type:[integer, null]
+     statusAddress:
+       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
+       ip: ""
+@@ -603,6 +607,9 @@ logs:
+         # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
+         defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
+         names: {}
++      queryParameters:
++        # -- Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).
++        defaultmode:  # @schema enum:[keep, drop, null]; type:[string, null]; default: null
+     otlp:
+       # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
+       enabled: false
+```
+
+
 ## 40.2.0  ![AppVersion: v3.7.1](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Upgrade guide**

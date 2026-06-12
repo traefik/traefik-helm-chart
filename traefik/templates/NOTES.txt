@@ -1,6 +1,6 @@
 {{/* Print release information */}}
 {{- printf "\n\n" -}}
-{{ .Release.Name }} with {{ .Values.image.registry }}/{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace!
+{{ .Release.Name }} with {{ include "traefik.image-name" . }} has been deployed successfully on {{ template "traefik.namespace" . }} namespace!
 {{- printf "\n" -}}
 
 

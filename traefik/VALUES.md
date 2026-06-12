@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 40.2.0](https://img.shields.io/badge/Version-40.2.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.1](https://img.shields.io/badge/AppVersion-v3.7.1-informational?style=flat-square)
+![Version: 40.3.0](https://img.shields.io/badge/Version-40.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.4](https://img.shields.io/badge/AppVersion-v3.7.4-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -253,6 +253,7 @@ Kubernetes: `>=1.25.0-0`
 | logs.access.fields.general.names | object | `{}` | Names of the fields to limit. |
 | logs.access.fields.headers.defaultmode | string | `"drop"` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization) |
 | logs.access.fields.headers.names | object | `{}` |  |
+| logs.access.fields.queryParameters.defaultmode | string | `nil` | Keep or drop all query parameters in the RequestPath access log field (v3.7.3+). |
 | logs.access.filters | object | See below | Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters) |
 | logs.access.filters.minduration | string | `""` | Set minDuration, to keep access logs when requests take longer than the specified duration |
 | logs.access.filters.retryattempts | bool | `false` | Set retryAttempts, to keep the access logs when at least one retry has happened |
@@ -460,12 +461,14 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesCRD.labelSelector | string | `""` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-labelselector) |
 | providers.kubernetesCRD.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. . When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | providers.kubernetesCRD.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
+| providers.kubernetesGateway.burst | string | `nil` | Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100. |
 | providers.kubernetesGateway.crossProviderNamespaces | list | `[]` | List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+. |
 | providers.kubernetesGateway.enabled | bool | `false` | Enable Traefik Gateway provider for Gateway API |
 | providers.kubernetesGateway.experimentalChannel | bool | `false` | Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute. |
 | providers.kubernetesGateway.labelSelector | string | `""` | A label selector can be defined to filter on specific GatewayClass objects only. |
 | providers.kubernetesGateway.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported. |
 | providers.kubernetesGateway.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
+| providers.kubernetesGateway.qps | string | `nil` | Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50. |
 | providers.kubernetesGateway.statusAddress.hostname | string | `""` | This Hostname will get copied to the Gateway status.addresses. |
 | providers.kubernetesGateway.statusAddress.ip | string | `""` | This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6). |
 | providers.kubernetesGateway.statusAddress.service.enabled | bool | `true` | The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart. |
