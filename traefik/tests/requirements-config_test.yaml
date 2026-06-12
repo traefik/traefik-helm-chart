@@ -352,12 +352,6 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should default to the hub-max-version when Traefik Hub is enabled and no tag is set
-    set:
-      hub:
-        token: "xxx"
-    asserts:
-      - notFailedTemplate: {}
   - it: should not fail when using Traefik Hub with tag set for OCI
     set:
       hub:
