@@ -223,6 +223,36 @@ Non-standard versions include experimental, ea, rc, alpha, beta builds.
 {{- end -}}
 
 {{/*
+Returns "true" when version is above max but shares the same major (the "use at your own
+risk" warning case). Pre-releases compare against "max-0" to also flag pre-releases of a
+version above max. Expects a dict: version, max.
+*/}}
+{{- define "traefik.isAboveMaxVersion" -}}
+  {{- if eq (include "traefik.isStableVersion" .version) "true" -}}
+    {{- semverCompare (printf ">%s" .max) .version -}}
+  {{- else -}}
+    {{- semverCompare (printf ">%s-0" .max) .version -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Returns "true" when version's major is strictly above max's major (the hard-fail case).
+Expects a dict: version, max.
+*/}}
+{{- define "traefik.isMajorAboveMax" -}}
+  {{- semverCompare (printf ">=%d.0.0-0" (add1 (int (semver .max).Major))) .version -}}
+{{- end -}}
+
+{{/*
+Renders the non-standard version warning shown in NOTES.txt. Expects a dict: label, tag.
+*/}}
+{{- define "traefik.nonStandardVersionWarning" -}}
+⚠️ WARNING: You are using a non-standard {{ .label }} ({{ .tag }}). Non-standard versions can
+be unstable, may contain breaking changes, and are NOT recommended for production use.
+This version is not officially supported by this chart. Use at your own risk. ⚠️
+{{- end -}}
+
+{{/*
 The version can comes many sources: appVersion, image.tag, override, marketplace.
 */}}
 {{- define "traefik.proxyVersion" -}}

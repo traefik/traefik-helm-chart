@@ -6,8 +6,8 @@
     {{- fail (printf "ERROR: This version of the Chart only supports Traefik Proxy %s+" $proxyMinVersion) -}}
   {{- end }}
   {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
-  {{- if semverCompare (printf ">=%d.0.0-0" (add1 (int (semver $proxyMaxVersion).Major))) $version }}
-    {{- fail (printf "ERROR: This version of the Chart does not support Traefik Proxy %s, which is a major version above the supported %s." $version $proxyMaxVersion) -}}
+  {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $version "max" $proxyMaxVersion)) "true" }}
+    {{- fail (printf "ERROR: This Chart does not support Traefik Proxy %s, which is a major version above the supported %s." $version $proxyMaxVersion) -}}
   {{- end }}
 {{- end }}
 
@@ -147,8 +147,8 @@
     {{ fail (printf "ERROR: this Chart supports *only* Traefik Hub >= %s." $hubMinVersion) }}
   {{- end }}
   {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
-  {{- if semverCompare (printf ">=%d.0.0-0" (add1 (int (semver $hubMaxVersion).Major))) $hubVersion }}
-    {{ fail (printf "ERROR: this Chart does not support Traefik Hub %s, which is a major version above the supported %s." $hubVersion $hubMaxVersion) }}
+  {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $hubVersion "max" $hubMaxVersion)) "true" }}
+    {{ fail (printf "ERROR: This Chart does not support Traefik Hub %s, which is a major version above the supported %s." $hubVersion $hubMaxVersion) }}
   {{- end }}
 
   {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}

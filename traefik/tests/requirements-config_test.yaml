@@ -50,14 +50,14 @@ tests:
         tag: v99.0.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.4."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.4."
   - it: should fail when trying to use this Chart with a Proxy major pre-release above max
     set:
       image:
         tag: v4.0.0-rc.1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This version of the Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.4."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.4."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -136,7 +136,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: this Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.4."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.4."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
