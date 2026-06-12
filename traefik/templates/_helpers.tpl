@@ -243,6 +243,21 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
  {{- end -}}
 {{- end -}}
 
+{{/*
+Resolve the Traefik Hub image version from its sources (oci_meta, azure marketplace,
+image.tag, versionOverride), stripping any digest suffix.
+Returns an empty string when no version can be determined. Callers apply their own
+fallback policy (e.g. "v3.99" for floating tags, or skipping non-semver tags).
+*/}}
+{{- define "traefik.hubVersion" -}}
+ {{- $hubVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
+ {{- $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) -}}
+ {{- if and (not $hubVersion) $.Values.versionOverride -}}
+   {{- $hubVersion = $.Values.versionOverride -}}
+ {{- end -}}
+ {{- (split "@" (default "" $hubVersion))._0 -}}
+{{- end -}}
+
 {{/* Generate/load self-signed certificate for admission webhooks */}}
 {{- define "traefik-hub.webhook_cert" -}}
 {{- if $.Values.hub.apimanagement.admission.customWebhookCertificate }}

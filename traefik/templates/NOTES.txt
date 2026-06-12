@@ -17,6 +17,20 @@ This version is not officially supported by this chart. Use at your own risk. �
 {{- end -}}
 
 
+{{/* Warn about non-standard Traefik Hub versions (pre-release or minor/patch above supported range) */}}
+{{- if .Values.hub.token -}}
+{{- $hubVersion := include "traefik.hubVersion" $ -}}
+{{- $hubMaxVersion := index .Chart.Annotations "traefik.io/hub-max-version" -}}
+{{- if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" $hubVersion) (or (and (eq (include "traefik.isStableVersion" $hubVersion) "false") (semverCompare (printf ">%s-0" $hubMaxVersion) $hubVersion)) (and (eq (include "traefik.isStableVersion" $hubVersion) "true") (semverCompare (printf ">%s" $hubMaxVersion) $hubVersion))) -}}
+{{- printf "\n" -}}
+⚠️ WARNING: You are using a non-standard Traefik Hub image tag ({{ $hubVersion }}). Non-standard versions can
+be unstable, may contain breaking changes, and are NOT recommended for production use.
+This version is not officially supported by this chart. Use at your own risk. ⚠️
+{{- printf "\n" -}}
+{{- end -}}
+{{- end -}}
+
+
 {{/* Warn about potential permission issue with persistence */}}
 {{- if .Values.persistence -}}
   {{- if and .Values.persistence.enabled (empty .Values.deployment.initContainers) -}}

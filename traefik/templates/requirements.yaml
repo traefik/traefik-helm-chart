@@ -131,16 +131,10 @@
 {{- end }}
 
 {{- if $.Values.hub.token -}}
-  {{ $hubVersion := $.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag }}
-  {{ $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) }}
-  {{- if and (not $hubVersion) $.Values.versionOverride }}
-    {{- $hubVersion = $.Values.versionOverride }}
-  {{- end }}
+  {{- $hubVersion := include "traefik.hubVersion" $ }}
   {{ if not $hubVersion }}
     {{ fail "When using Traefik Hub, image.tag must be set, or image.digest with versionOverride." }}
   {{- end -}}
-
-  {{ $hubVersion = (split "@" (default "v3" $hubVersion))._0 }}
 
   {{/* Consider non semver versions as latest one  */}}
   {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $hubVersion)) -}}
