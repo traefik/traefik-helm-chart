@@ -727,7 +727,7 @@ tests:
     set:
       additionalVolumeMounts:
         - name: foo-logs
-          mountPath: /var/log/{{ .Values.image.repository }}
+          mountPath: /var/log/{{ include "traefik.imageRepository" . }}
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[2].mountPath

@@ -54,7 +54,7 @@ tests:
           traefik/powpow: podLabels
           traefik/name: '{{ template "traefik.name" . }}'
           traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/repository: '{{ .Values.image.repository }}'
+          traefik/repository: '{{ include "traefik.imageRepository" . }}'
     asserts:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow

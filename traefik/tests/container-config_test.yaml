@@ -99,6 +99,16 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: registry.example.com/acme/traefik-hub:v3.20.1
+  - it: should respect an explicit registry equal to the Proxy default when Hub is enabled
+    set:
+      hub:
+        token: xxx
+      image:
+        registry: docker.io
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik/traefik-hub:v3.20.4
   - it: should respect user-provided registry, repository and tag for a Proxy install
     set:
       image:

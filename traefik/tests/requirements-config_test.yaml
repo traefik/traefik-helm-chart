@@ -372,6 +372,15 @@ tests:
             tag: v3.19.3
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using Traefik Hub with a non-hub image repository
+    set:
+      hub:
+        token: "xxx"
+      image:
+        repository: traefik
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: traefik-hub image is required when enabling Traefik Hub"
   - it: should fail when using hub.tracing.additionalTraceHeaders without tracing.otlp enabled
     set:
       image:

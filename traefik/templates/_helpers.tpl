@@ -15,26 +15,30 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Image registry: defaults to ghcr.io for Traefik Hub (where the traefik-hub image lives)
-when left at the Proxy default, otherwise the user-provided value.
+Image registry: when left unset, defaults to ghcr.io for Traefik Hub (where the
+traefik-hub image lives) and docker.io for Traefik Proxy. Any explicit value is respected.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- if and .Values.hub.token (eq .Values.image.registry "docker.io") -}}
+{{- if .Values.image.registry -}}
+{{- .Values.image.registry -}}
+{{- else if .Values.hub.token -}}
 ghcr.io
 {{- else -}}
-{{- .Values.image.registry -}}
+docker.io
 {{- end -}}
 {{- end -}}
 
 {{/*
-Image repository: defaults to traefik/traefik-hub for Traefik Hub when left at the Proxy
-default, otherwise the user-provided value.
+Image repository: when left unset, defaults to traefik/traefik-hub for Traefik Hub and
+traefik for Traefik Proxy. Any explicit value is respected.
 */}}
 {{- define "traefik.imageRepository" -}}
-{{- if and .Values.hub.token (eq .Values.image.repository "traefik") -}}
+{{- if .Values.image.repository -}}
+{{- .Values.image.repository -}}
+{{- else if .Values.hub.token -}}
 traefik/traefik-hub
 {{- else -}}
-{{- .Values.image.repository -}}
+traefik
 {{- end -}}
 {{- end -}}
 

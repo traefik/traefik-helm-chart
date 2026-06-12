@@ -3,10 +3,10 @@
 # Declare variables to be passed into templates
 
 image:  # @schema additionalProperties: false
-  # -- Traefik image host registry
-  registry: docker.io
-  # -- Traefik image repository
-  repository: traefik
+  # -- Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set) if left unset.
+  registry:  # @schema type:[string, null]
+  # -- Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set) if left unset.
+  repository:  # @schema type:[string, null]
   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
   # To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).
   tag:  # @schema type:[string, null]
