@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 40.3.0
+version: 41.0.0
 # renovate: image=traefik
 appVersion: v3.7.5
 kubeVersion: '>=1.25.0-0'
@@ -27,12 +27,12 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.4
   artifacthub.io/changes: |
-    - "fix(hub): :bug: guard nil hub.token in hub-license template"
-    - "feat(proxy): :rocket: support traefik v3.7.4"
-    - "feat(provider): :sparkles: support qps and burst on kubernetesGateway"
-    - "feat(logs): :sparkles: support accesslog query parameters defaultmode"
-    - "feat(hub): :rocket: support traefik hub v3.20.4"
-    - "feat(CRDs): update Traefik Hub CRDs to v1.31.0"
-    - "chore(release): 🚀 publish 40.3.0"
-    - "chore(deps): support traefik v3.7.3 & hub v3.20.3"
-    - "chore(ci): track proxy & hub max-version annotations with renovate"
+    - "fix(notes): :memo: use traefik.image-name so NOTES match deployed image"
+    - "fix(logs)!: align syntax with upstream (#1887)"
+    - "fix(deployment): omit spec.replicas when replicas is null"
+    - "feat(version): :sparkles: relax max-version guard to warn on minor/patch, fail only on major mismatch"
+    - "feat(providers.file)!: switch content to an object"
+    - "feat(hub): :sparkles: install out-of-box with only hub.token set"
+    - "feat(deps): update traefik docker tag to v3.7.5"
+    - "ci(renovate): restore update on appVersion"
+    - "chore(release): publish 41.0.0"

@@ -1,5 +1,330 @@
 # Change Log
 
+## 41.0.0  ![AppVersion: v3.7.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.5&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-06-15
+
+* fix(notes): :memo: use traefik.image-name so NOTES match deployed image
+* fix(logs)!: align syntax with upstream (#1887)
+* fix(deployment): omit spec.replicas when replicas is null
+* feat(version): :sparkles: relax max-version guard to warn on minor/patch, fail only on major mismatch
+* feat(providers.file)!: switch content to an object
+* feat(hub): :sparkles: install out-of-box with only hub.token set
+* feat(deps): update traefik docker tag to v3.7.5
+* ci(renovate): restore update on appVersion
+* chore(release): publish 41.0.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index cc6e3a4..2820e2f 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -3,10 +3,10 @@
+ # Declare variables to be passed into templates
+ 
+ image:  # @schema additionalProperties: false
+-  # -- Traefik image host registry
+-  registry: docker.io
+-  # -- Traefik image repository
+-  repository: traefik
++  # -- Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set).
++  registry:  # @schema type:[string, null]
++  # -- Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set).
++  repository:  # @schema type:[string, null]
+   # -- defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-.
+   # To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image).
+   tag:  # @schema type:[string, null]
+@@ -23,8 +23,9 @@ deployment:
+   enabled: true
+   # -- Deployment or DaemonSet
+   kind: Deployment
+-  # -- Number of pods of the deployment (only applies when kind == Deployment)
+-  replicas: 1
++  # -- Number of pods of the deployment (only applies when kind == Deployment).
++  # Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling.
++  replicas: 1  # @schema type:[integer, null];minimum:0
+   # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+   revisionHistoryLimit:  # @schema type:[integer, null];minimum:0
+   # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
+@@ -394,8 +395,8 @@ providers:
+     enabled: false
+     # -- Allows Traefik to automatically watch for file changes
+     watch: true
+-    # -- File content (YAML format, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)
+-    content: ""
++    # -- File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/)
++    content: {}
+ 
+   # @schema additionalProperties: false
+   kubernetesIngressNGINX:
+@@ -521,136 +522,136 @@ additionalVolumeMounts: []
+ # - name: traefik-logs
+ #   mountPath: /var/log/traefik
+ 
+-logs:
+-  general:
+-    # -- Set [logs format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-log-format)
+-    format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
+-    # By default, the level is set to INFO.
+-    # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
+-    level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
+-    # -- To write the logs into a log file, use the filePath option.
+-    filePath: ""
+-    # -- When set to true and format is common, it disables the colorized output.
+-    noColor: false
+-    otlp:
+-      # -- Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled.
++# -- See [logs reference](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/)
++log:
++  # -- Set [logs format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-log-format)
++  format:  # @schema enum:["common", "json", null]; type:[string, null]; default: "common"
++  # By default, the level is set to INFO.
++  # -- Alternative logging levels are TRACE, DEBUG, INFO, WARN, ERROR, FATAL, and PANIC.
++  level: "INFO"  # @schema enum:[TRACE,DEBUG,INFO,WARN,ERROR,FATAL,PANIC]; default: "INFO"
++  # -- To write the logs into a log file, use the filePath option.
++  filePath: ""
++  # -- When set to true and format is common, it disables the colorized output.
++  noColor: false
++  otlp:
++    # -- Set to true in order to enable OpenTelemetry on logs. Note that experimental.otlpLogs needs to be enabled.
++    enabled: false
++    # -- Service name used in OTLP backend. Default: traefik.
++    serviceName:  # @schema type:[string, null]
++    http:
++      # -- Set to true in order to send logs to the OpenTelemetry Collector using HTTP.
+       enabled: false
+-      # -- Service name used in OTLP backend. Default: traefik.
+-      serviceName:  # @schema type:[string, null]
+-      http:
+-        # -- Set to true in order to send logs to the OpenTelemetry Collector using HTTP.
+-        enabled: false
+-        # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
+-        endpoint: ""
+-        # -- Additional headers sent with logs by the reporter to the OpenTelemetry Collector.
+-        headers: {}
+-        ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
+-        tls:
+-          # -- The path to the certificate authority, it defaults to the system bundle.
+-          ca: ""
+-          # -- The path to the public certificate. When using this option, setting the key option is required.
+-          cert: ""
+-          # -- The path to the private key. When using this option, setting the cert option is required.
+-          key: ""
+-          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify:  # @schema type:[boolean, null]
+-      grpc:
+-        # -- Set to true in order to send logs  to the OpenTelemetry Collector using gRPC
+-        enabled: false
+-        # -- Format: <host>:<port>. Default: "localhost:4317"
+-        endpoint: ""
+-        # -- Allows reporter to send logs to the OpenTelemetry Collector without using a secured protocol.
+-        insecure: false
+-        ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
+-        tls:
+-          # -- The path to the certificate authority, it defaults to the system bundle.
+-          ca: ""
+-          # -- The path to the public certificate. When using this option, setting the key option is required.
+-          cert: ""
+-          # -- The path to the private key. When using this option, setting the cert option is required.
+-          key: ""
+-          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify:  # @schema type:[boolean, null]
+-      # -- Defines additional resource attributes to be sent to the collector.
+-      resourceAttributes: {}
++      # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
++      endpoint: ""
++      # -- Additional headers sent with logs by the reporter to the OpenTelemetry Collector.
++      headers: {}
++      ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca: ""
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert: ""
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key: ""
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:  # @schema type:[boolean, null]
++    grpc:
++      # -- Set to true in order to send logs  to the OpenTelemetry Collector using gRPC
++      enabled: false
++      # -- Format: <host>:<port>. Default: "localhost:4317"
++      endpoint: ""
++      # -- Allows reporter to send logs to the OpenTelemetry Collector without using a secured protocol.
++      insecure: false
++      ## Defines the TLS configuration used by the reporter to send logs to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca: ""
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert: ""
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key: ""
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:  # @schema type:[boolean, null]
++    # -- Defines additional resource attributes to be sent to the collector.
++    resourceAttributes: {}
+ 
+-  access:
+-    # -- To enable access logs
++# -- See [access logs reference](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/)
++accessLog:
++  # -- To enable access logs
++  enabled: false
++  # -- Set [access log format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-format)
++  format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
++  # filePath: "/var/log/traefik/access.log
++  # -- Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)
++  bufferingSize:  # @schema type:[integer, null]
++  # -- Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones)
++  timezone: ""
++  # -- Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters)
++  # @default -- See below
++  filters:  # @schema additionalProperties: false
++    # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
++    statusCodes: ""
++    # -- Set retryAttempts, to keep the access logs when at least one retry has happened
++    retryAttempts: false
++    # -- Set minDuration, to keep access logs when requests take longer than the specified duration
++    minDuration: ""
++  # -- Enables accessLogs for internal resources. Default: false.
++  addInternals: false
++  # -- Enables access log output alongside OTLP (v3.7+).
++  dualOutput: false
++  fields:
++    # -- Set default mode for fields.names
++    defaultMode: keep  # @schema enum:[keep, drop, redact]; default: keep
++    # -- Names of the fields to limit.
++    names: {}
++    headers:
++      # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
++      defaultMode: drop  # @schema enum:[keep, drop, redact]; default: drop
++      names: {}
++    queryParameters:
++      # -- Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).
++      defaultMode:  # @schema enum:[keep, drop, null]; type:[string, null]; default: null
++  otlp:
++    # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
+     enabled: false
+-    # -- Set [access log format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-format)
+-    format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
+-    # filePath: "/var/log/traefik/access.log
+-    # -- Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)
+-    bufferingSize:  # @schema type:[integer, null]
+-    # -- Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones)
+-    timezone: ""
+-    # -- Set [filtering](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#access-log-filters)
+-    # @default -- See below
+-    filters:  # @schema additionalProperties: false
+-      # -- Set statusCodes, to limit the access logs to requests with a status codes in the specified range
+-      statuscodes: ""
+-      # -- Set retryAttempts, to keep the access logs when at least one retry has happened
+-      retryattempts: false
+-      # -- Set minDuration, to keep access logs when requests take longer than the specified duration
+-      minduration: ""
+-    # -- Enables accessLogs for internal resources. Default: false.
+-    addInternals: false
+-    # -- Enables access log output alongside OTLP (v3.7+).
+-    dualOutput: false
+-    fields:
+-      general:
+-        # -- Set default mode for fields.names
+-        defaultmode: keep  # @schema enum:[keep, drop, redact]; default: keep
+-        # -- Names of the fields to limit.
+-        names: {}
+-      headers:
+-        # -- [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization)
+-        defaultmode: drop  # @schema enum:[keep, drop, redact]; default: drop
+-        names: {}
+-      queryParameters:
+-        # -- Keep or drop all query parameters in the RequestPath access log field (v3.7.3+).
+-        defaultmode:  # @schema enum:[keep, drop, null]; type:[string, null]; default: null
+-    otlp:
+-      # -- Set to true in order to enable OpenTelemetry on access logs. Note that experimental.otlpLogs needs to be enabled.
++    # -- Service name used in OTLP backend. Default: traefik.
++    serviceName:  # @schema type:[string, null]
++    http:
++      # -- Set to true in order to send access logs to the OpenTelemetry Collector using HTTP.
+       enabled: false
+-      # -- Service name used in OTLP backend. Default: traefik.
+-      serviceName:  # @schema type:[string, null]
+-      http:
+-        # -- Set to true in order to send access logs to the OpenTelemetry Collector using HTTP.
+-        enabled: false
+-        # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
+-        endpoint: ""
+-        # -- Additional headers sent with access logs by the reporter to the OpenTelemetry Collector.
+-        headers: {}
+-        ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
+-        tls:
+-          # -- The path to the certificate authority, it defaults to the system bundle.
+-          ca: ""
+-          # -- The path to the public certificate. When using this option, setting the key option is required.
+-          cert: ""
+-          # -- The path to the private key. When using this option, setting the cert option is required.
+-          key: ""
+-          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify:  # @schema type:[boolean, null]
+-      grpc:
+-        # -- Set to true in order to send access logs to the OpenTelemetry Collector using gRPC
+-        enabled: false
+-        # -- Format: <host>:<port>. Default: "localhost:4317"
+-        endpoint: ""
+-        # -- Allows reporter to send access logs to the OpenTelemetry Collector without using a secured protocol.
+-        insecure: false
+-        ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
+-        tls:
+-          # -- The path to the certificate authority, it defaults to the system bundle.
+-          ca: ""
+-          # -- The path to the public certificate. When using this option, setting the key option is required.
+-          cert: ""
+-          # -- The path to the private key. When using this option, setting the cert option is required.
+-          key: ""
+-          # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+-          insecureSkipVerify:  # @schema type:[boolean, null]
+-      # -- Defines additional resource attributes to be sent to the collector.
+-      resourceAttributes: {}
++      # -- Format: <scheme>://<host>:<port><path>. Default: https://localhost:4318/v1/logs
++      endpoint: ""
++      # -- Additional headers sent with access logs by the reporter to the OpenTelemetry Collector.
++      headers: {}
++      ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca: ""
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert: ""
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key: ""
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:  # @schema type:[boolean, null]
++    grpc:
++      # -- Set to true in order to send access logs to the OpenTelemetry Collector using gRPC
++      enabled: false
++      # -- Format: <host>:<port>. Default: "localhost:4317"
++      endpoint: ""
++      # -- Allows reporter to send access logs to the OpenTelemetry Collector without using a secured protocol.
++      insecure: false
++      ## Defines the TLS configuration used by the reporter to send access logs to the OpenTelemetry Collector.
++      tls:
++        # -- The path to the certificate authority, it defaults to the system bundle.
++        ca: ""
++        # -- The path to the public certificate. When using this option, setting the key option is required.
++        cert: ""
++        # -- The path to the private key. When using this option, setting the cert option is required.
++        key: ""
++        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
++        insecureSkipVerify:  # @schema type:[boolean, null]
++    # -- Defines additional resource attributes to be sent to the collector.
++    resourceAttributes: {}
+ 
+ metrics:
+   # -- Enable metrics for internal resources. Default: false
+```
+
+
 ## 40.3.0  ![AppVersion: v3.7.4](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.4&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-06-08
