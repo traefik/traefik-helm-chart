@@ -99,7 +99,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.readinessPath | string | `""` |  |
-| deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment) |
+| deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment). Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling. |
 | deployment.revisionHistoryLimit | string | `nil` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |

@@ -452,8 +452,12 @@
                     "type": "string"
                 },
                 "replicas": {
-                    "description": "Number of pods of the deployment (only applies when kind == Deployment)",
-                    "type": "integer"
+                    "description": "Number of pods of the deployment (only applies when kind == Deployment). Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling.",
+                    "type": [
+                        "integer",
+                        "null"
+                    ],
+                    "minimum": 0
                 },
                 "revisionHistoryLimit": {
                     "description": "Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)",

@@ -85,6 +85,20 @@ autoscaling:
         averageUtilization: 80
 ```
 
+## Install with an external scaler (KEDA)
+
+When an external controller like [KEDA](https://keda.sh/) brings its own
+`ScaledObject` (and HPA), the chart's HPA stays disabled and `spec.replicas` must
+be omitted. Otherwise a GitOps tool like Argo CD reconciles the Deployment back to
+the chart value, fighting the scaler.
+
+```yaml
+deployment:
+  replicas: null
+autoscaling:
+  enabled: false
+```
+
 ## Install with Argo Rollouts
 
 When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
