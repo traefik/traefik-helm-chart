@@ -136,8 +136,6 @@ git commit -m "chore(release): publish $VERSION" traefik/Chart.yaml
 # Generate first version of Changelog
 make changelog
 make docs
-# Copy the Changelog for current version, and put it on a clean version
-git checkout traefik/Chart.yaml
 # Amend the commit and open the PR
 git commit --amend traefik/Changelog.md traefik/Chart.yaml traefik/VALUES.md
 git push -u origin HEAD
