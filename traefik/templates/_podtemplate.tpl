@@ -524,8 +524,10 @@
           - "--providers.kubernetesingress.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if or (and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled) (and .Values.providers.kubernetesIngress.publishedService.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride)}}
+           {{- if .Values.providers.kubernetesIngress.publishedService.enabled }}
+            {{- if or .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
+            {{- end }}
            {{- end }}
            {{- with .Values.providers.kubernetesIngress.ingressEndpoint.hostname }}
           - "--providers.kubernetesingress.ingressendpoint.hostname={{ . }}"
@@ -617,8 +619,10 @@
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNGINX.namespaces" $ }}"
             {{- end }}
-            {{- if and $.Values.service.enabled .publishService.enabled }}
+            {{- if .publishService.enabled }}
+             {{- if or $.Values.service.enabled .publishService.pathOverride }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
+             {{- end }}
             {{- end }}
             {{- if .modsec.enabled }}
           - "--providers.kubernetesingressnginx.modsec=true"

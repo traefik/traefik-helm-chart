@@ -523,8 +523,8 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.proxyReadTimeout | string | `nil` | Amount of time between two successive read operations. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.proxyRequestBuffering | string | `nil` | Defines whether to enable request buffering (default: false) |
 | providers.kubernetesIngressNGINX.proxySendTimeout | string | `nil` | Amount of time between two successive write operations. Unitless, in seconds (default: 60) |
-| providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Service fronting the Ingress controller. Takes the form 'namespace/name' |
-| providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` |  |
+| providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Enable publishService. Service fronting the Ingress controller, used to set the load-balancer status of Ingress objects. Usually the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
+| providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
 | providers.kubernetesIngressNGINX.strictValidatePathType | string | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
