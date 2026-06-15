@@ -30,6 +30,15 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
+  - it: should not have replicas when replicas is null and autoscaling is disabled
+    set:
+      deployment:
+        replicas: null
+      autoscaling:
+        enabled: false
+    asserts:
+      - notExists:
+          path: spec.replicas
   - it: should not have replicas when autoscaling is enabled
     set:
       autoscaling:

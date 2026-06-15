@@ -23,8 +23,9 @@ deployment:
   enabled: true
   # -- Deployment or DaemonSet
   kind: Deployment
-  # -- Number of pods of the deployment (only applies when kind == Deployment)
-  replicas: 1
+  # -- Number of pods of the deployment (only applies when kind == Deployment).
+  # Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling.
+  replicas: 1  # @schema type:[integer, null];minimum:0
   # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
   revisionHistoryLimit:  # @schema type:[integer, null];minimum:0
   # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
