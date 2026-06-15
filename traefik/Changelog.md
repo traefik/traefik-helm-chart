@@ -14,6 +14,21 @@
 * ci(renovate): restore update on appVersion
 * chore(release): publish 41.0.0
 
+**Upgrade Notes**
+
+There are 2 breaking changes in this release:
+
+1. **Logs & access logs syntax**: The chart now aligns its logging keys with the upstream Traefik syntax with PR https://github.com/traefik/traefik-helm-chart/pull/1887.
+   * `logs.general` is renamed to `log` (e.g. `logs.general.level` → `log.level`).
+   * `logs.access` is renamed to `accessLog` (e.g. `logs.access.format` → `accessLog.format`).
+   * Filter and field keys are now camelCased: `filters.statuscodes` → `filters.statusCodes`, `filters.retryattempts` → `filters.retryAttempts`, `filters.minduration` → `filters.minDuration`, and `fields.*.defaultmode` → `fields.*.defaultMode`.
+   * The `accessLog.fields.general` nesting level is removed: `fields.general.defaultmode` → `fields.defaultMode`.
+2. **File provider content**: `providers.file.content` is now an object (`{}`) instead of a string (`""`).
+   * Migrate your inline YAML string to a structured object.
+
+> [!TIP]
+> Image `registry` and `repository` now default to `null` and are auto-detected for Traefik Proxy & for Traefik Hub.
+
 ### Default value changes
 
 ```diff
