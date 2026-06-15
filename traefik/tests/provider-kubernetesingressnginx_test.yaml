@@ -94,6 +94,21 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.publishservice=custom-namespace/custom-service"
 
+  - it: should add publishService with pathOverride when chart service is disabled
+    set:
+      service:
+        enabled: false
+      providers:
+        kubernetesIngressNGINX:
+          publishService:
+            enabled: true
+            pathOverride: "kube-system/rke2-nginx-ingress"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.publishservice=kube-system/rke2-nginx-ingress"
+
   - it: should add publishStatusAddress
     set:
       providers:
