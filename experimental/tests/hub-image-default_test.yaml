@@ -1,0 +1,34 @@
+suite: Hub image auto-default
+templates:
+  - deployment.yaml
+tests:
+  - it: default image is OSS traefik when Hub is not in use
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^docker\\.io/traefik:"
+
+  - it: default image switches to traefik-hub when traefik.hub.token is set
+    set:
+      traefik.hub.token: "x"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^ghcr\\.io/traefik/traefik-hub:"
+
+  - it: default Hub image tag follows the Chart.yaml hub-max-version annotation
+    set:
+      traefik.hub.token: "x"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/traefik-hub:v3.19.4
+
+  - it: explicit image override wins over the Hub auto-default
+    set:
+      traefik.hub.token: "x"
+      image: my-registry/traefik-hub:custom
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: my-registry/traefik-hub:custom

@@ -1,0 +1,112 @@
+suite: cross-field validation rules
+templates:
+  - validation.yaml
+tests:
+  - it: traefik.hub.apimanagement requires a license token
+    set:
+      traefik.hub.apimanagement: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "traefik.hub.apimanagement requires a license token: set traefik.hub.token (see EXAMPLES.md \"Install Traefik Hub API Management\")"
+
+  - it: admission requires the hub-admission Secret
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+      secret:
+        hub-admission: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "traefik.hub.apimanagement.admission requires secret.hub-admission to be rendered (do not set it to null, or BYO Secret + patch admission.secretname)"
+
+  - it: admission requires mutatingWebhookConfigurations
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+      mutatingWebhookConfigurations: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "traefik.hub.apimanagement.admission requires mutatingWebhookConfigurations to be rendered (do not set it to null)"
+
+  - it: default install (no Hub) passes validation
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: hub-gateway-only install passes validation (no apimanagement)
+    set:
+      traefik.hub.token: "x"
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: deployment and daemonset cannot both be set
+    set:
+      daemonset: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "deployment and daemonset are mutually exclusive — set one to null (typically `deployment: null` when enabling daemonset, see EXAMPLES.md \"Install as a DaemonSet\")"
+
+  - it: at least one pod controller must be set
+    set:
+      deployment: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "no pod controller would be rendered — set `deployment: {}` (default) or `daemonset: {}` (see EXAMPLES.md \"Install as a DaemonSet\")"
+
+  - it: clusterRole rendered without clusterRoleBinding fails
+    set:
+      clusterRoleBinding: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "clusterRole is rendered but clusterRoleBinding is null — bindings are required for the ClusterRole to grant permissions"
+
+  - it: clusterRoleBinding rendered without clusterRole fails
+    set:
+      clusterRole: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "clusterRoleBinding is rendered but clusterRole is null — the binding has nothing to point at"
+
+  - it: role rendered without roleBinding fails
+    set:
+      role: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "role is rendered but roleBinding is null — bindings are required for the Role to grant permissions"
+
+  - it: roleBinding rendered without role fails
+    set:
+      roleBinding: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "roleBinding is rendered but role is null — the binding has nothing to point at"
+
+  - it: a Service targetPort that is not a defined entryPoint fails
+    set:
+      service.default.spec.ports:
+        - { name: web, port: 80, targetPort: nope }
+    asserts:
+      - failedTemplate:
+          errorMessage: "service.default: port targetPort \"nope\" is not a defined traefik.entryPoints entry (defined: metrics, traefik, web, websecure) — add the entryPoint or point targetPort at an existing one"
+
+  - it: dropping an entryPoint the default Service still targets fails
+    set:
+      traefik.entryPoints.web: null
+    asserts:
+      - failedTemplate:
+          errorPattern: 'service\.default: port targetPort "web" is not a defined traefik\.entryPoints entry'
+
+  - it: an integer targetPort is accepted (custom container port)
+    set:
+      service.default.spec.ports:
+        - { name: web, port: 80, targetPort: 8000 }
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: exposing a defined entryPoint by name passes
+    set:
+      service.default.spec.ports:
+        - { name: traefik, port: 9000, targetPort: traefik }
+    asserts:
+      - hasDocuments: { count: 0 }

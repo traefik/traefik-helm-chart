@@ -1,0 +1,8 @@
+{{- range $obj := .Values.extraObjects }}
+---
+{{- if kindIs "string" $obj }}
+{{ tpl $obj $ }}
+{{- else }}
+{{ tpl (toYaml $obj) $ }}
+{{- end }}
+{{- end }}

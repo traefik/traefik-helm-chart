@@ -1,0 +1,99 @@
+suite: DaemonSet (alternate workload kind)
+tests:
+  - it: daemonset is absent by default
+    template: daemonset.yaml
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: daemonset={} renders a DaemonSet with the chart-default spec
+    template: daemonset.yaml
+    set:
+      deployment: null
+      daemonset: {}
+    asserts:
+      - isKind: { of: DaemonSet }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: traefik
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: web, containerPort: 8000, protocol: TCP }
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.7.5
+
+  - it: namespaced example pattern works for daemonset (deployment.yaml renders 0 docs)
+    template: deployment.yaml
+    set:
+      deployment: null
+      daemonset: {}
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: container-level shortcuts apply to daemonset too (resources)
+    template: daemonset.yaml
+    set:
+      deployment: null
+      daemonset:
+        resources:
+          requests: { cpu: 100m, memory: 128Mi }
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value:
+            requests: { cpu: 100m, memory: 128Mi }
+
+  - it: daemonset.spec hatch works the same as deployment.spec
+    template: daemonset.yaml
+    set:
+      deployment: null
+      daemonset:
+        spec:
+          template:
+            spec:
+              hostNetwork: true
+              dnsPolicy: ClusterFirstWithHostNet
+    asserts:
+      - equal:
+          path: spec.template.spec.hostNetwork
+          value: true
+      - equal:
+          path: spec.template.spec.dnsPolicy
+          value: ClusterFirstWithHostNet
+
+  - it: daemonset.metadata.annotations land on the manifest
+    template: daemonset.yaml
+    set:
+      deployment: null
+      daemonset:
+        metadata:
+          annotations:
+            owned-by: gitops
+    asserts:
+      - equal:
+          path: metadata.annotations["owned-by"]
+          value: gitops
+
+  - it: daemonset picks up Hub mounts/env when traefik.hub.token is set
+    template: daemonset.yaml
+    set:
+      deployment: null
+      daemonset: {}
+      traefik.hub.token: "x"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name

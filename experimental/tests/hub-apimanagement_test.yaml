@@ -1,0 +1,232 @@
+suite: Hub API Management — admission webhook + portal + MWCs
+tests:
+  - it: admissionWebhookSecret is absent without traefik.hub.apimanagement.admission
+    template: admission-webhook-secret.yaml
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: admissionWebhookSecret renders with TLS cert when admission is set
+    template: admission-webhook-secret.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+    asserts:
+      - isKind: { of: Secret }
+      - equal:
+          path: type
+          value: kubernetes.io/tls
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-hub-admission-cert
+      - exists:
+          path: data["tls.crt"]
+      - exists:
+          path: data["tls.key"]
+
+  - it: service.hub-admission renders when admission is set
+    template: service.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-admission
+    asserts:
+      - isKind: { of: Service }
+      - equal:
+          path: spec.ports[0].port
+          value: 443
+      - equal:
+          path: spec.ports[0].targetPort
+          value: admission
+
+  - it: service.hub-apiportal renders on apimanagement (no admission needed)
+    template: service.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-apiportal
+    asserts:
+      - isKind: { of: Service }
+      - equal:
+          path: spec.ports[0].port
+          value: 9903
+      - equal:
+          path: spec.ports[0].targetPort
+          value: apiportal
+
+  - it: the Hub services are absent when apimanagement is not enabled (only the default Service)
+    template: service.yaml
+    asserts:
+      - hasDocuments: { count: 1 }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+
+  - it: validation fails when admission is set but service.hub-admission is null
+    template: validation.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+      service:
+        hub-admission: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "traefik.hub.apimanagement.admission requires service.hub-admission to be rendered (do not set it to null)"
+
+  - it: admission and apiportal containerPorts land on the pod when enabled
+    template: deployment.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: admission, containerPort: 9943, protocol: TCP }
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: apiportal, containerPort: 9903, protocol: TCP }
+
+  - it: custom admission listenaddr drives the container port
+    template: deployment.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission:
+        listenaddr: "0.0.0.0:11443"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: admission, containerPort: 11443, protocol: TCP }
+
+  - it: rendered traefik.yaml auto-sets admission.secretname
+    template: configmap.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission: {}
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "secretname:\\s*RELEASE-NAME-traefik-hub-admission-cert"
+
+  - it: user override of admission.secretname wins over the chart default
+    template: configmap.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      traefik.hub.apimanagement.admission:
+        secretname: my-custom-cert
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "secretname:\\s*my-custom-cert"
+
+  - it: chart ships two default MWCs (hub-acp + hub-api)
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+    asserts:
+      - hasDocuments: { count: 2 }
+
+  - it: hub-acp MWC has a single webhook for accesscontrolpolicies
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-acp
+    asserts:
+      - lengthEqual:
+          path: webhooks
+          count: 1
+      - equal:
+          path: webhooks[0].rules[0].resources
+          value: [accesscontrolpolicies]
+      - equal:
+          path: webhooks[0].clientConfig.service.name
+          value: RELEASE-NAME-traefik-hub-admission
+
+  - it: hub-api MWC has 7 webhooks for the api resources
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-api
+    asserts:
+      - lengthEqual:
+          path: webhooks
+          count: 7
+
+  - it: disabling hub-acp leaves only hub-api
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      mutatingWebhookConfigurations.hub-acp: null
+    asserts:
+      - hasDocuments: { count: 1 }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-hub-api
+
+  - it: user-defined MWC requires its own webhooks (chart has no defaults)
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      mutatingWebhookConfigurations.custom: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "mutatingWebhookConfigurations.custom: webhooks is required (chart has no defaults for this entry)"
+
+  - it: per-entry metadata.annotations land on the MWC
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      mutatingWebhookConfigurations.hub-acp.metadata.annotations:
+        cert-manager.io/inject-ca-from: my-ns/my-cert
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-acp
+    asserts:
+      - equal:
+          path: metadata.annotations["cert-manager.io/inject-ca-from"]
+          value: my-ns/my-cert
+
+  - it: user webhooks override replaces the chart-default array
+    template: mutating-webhook-configurations.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.apimanagement: {}
+      mutatingWebhookConfigurations.hub-acp.webhooks:
+        - name: my.custom.svc
+          clientConfig: { service: { name: my-svc, namespace: ns, path: /custom }, caBundle: "" }
+          sideEffects: None
+          admissionReviewVersions: [v1]
+          rules:
+            - operations: [CREATE]
+              apiGroups: [hub.traefik.io]
+              apiVersions: [v1alpha1]
+              resources: [accesscontrolpolicies]
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-hub-acp
+    asserts:
+      - lengthEqual:
+          path: webhooks
+          count: 1
+      - equal:
+          path: webhooks[0].name
+          value: my.custom.svc
