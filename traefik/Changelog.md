@@ -15,10 +15,10 @@
 * ci(renovate): restore update on appVersion
 * chore(release): publish 41.0.0
 
-**Upgrade Notes**
-
 > [!IMPORTANT]
 > There are 2 breaking changes in this release:
+
+**Upgrade Notes**
 
 1. **Logs & access logs syntax**: The chart now aligns its logging keys with the upstream Traefik syntax with PR https://github.com/traefik/traefik-helm-chart/pull/1887.
    * `logs.general` is renamed to `log` (e.g. `logs.general.level` → `log.level`).
