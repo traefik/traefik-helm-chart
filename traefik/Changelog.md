@@ -25,7 +25,6 @@ There are 2 breaking changes in this release:
    * Filter and field keys are now camelCased: `filters.statuscodes` → `filters.statusCodes`, `filters.retryattempts` → `filters.retryAttempts`, `filters.minduration` → `filters.minDuration`, and `fields.*.defaultmode` → `fields.*.defaultMode`.
    * The `accessLog.fields.general` nesting level is removed: `fields.general.defaultmode` → `fields.defaultMode`.
 2. **File provider content**: `providers.file.content` is now an object (`{}`) instead of a string (`""`).
-   * Migrate your inline YAML string to a structured object.
 
 > [!TIP]
 > Image `registry` and `repository` now default to `null`.
