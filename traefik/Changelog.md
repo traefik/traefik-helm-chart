@@ -16,7 +16,7 @@
 * chore(release): publish 41.0.0
 
 > [!IMPORTANT]
-> There are 2 breaking changes in this release:
+> There are 2 breaking changes in this release
 
 **Upgrade Notes**
 
