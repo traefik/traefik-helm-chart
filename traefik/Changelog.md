@@ -4,6 +4,7 @@
 
 **Release date:** 2026-06-15
 
+* fix(provider): :bug: emit kubernetesIngressNGINX publishService for external service
 * fix(notes): :memo: use traefik.image-name so NOTES match deployed image
 * fix(logs)!: align syntax with upstream (#1887)
 * fix(deployment): omit spec.replicas when replicas is null
@@ -33,7 +34,7 @@ There are 2 breaking changes in this release:
 
 ```diff
 diff --git a/traefik/values.yaml b/traefik/values.yaml
-index cc6e3a4..2820e2f 100644
+index cc6e3a4..50a1629 100644
 --- a/traefik/values.yaml
 +++ b/traefik/values.yaml
 @@ -3,10 +3,10 @@
@@ -74,7 +75,20 @@ index cc6e3a4..2820e2f 100644
  
    # @schema additionalProperties: false
    kubernetesIngressNGINX:
-@@ -521,136 +522,136 @@ additionalVolumeMounts: []
+@@ -414,8 +415,11 @@ providers:
+     # -- Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.
+     watchNamespaceSelector: ""
+     publishService:
+-      # -- Service fronting the Ingress controller. Takes the form 'namespace/name'
++      # -- Enable publishService. Service fronting the Ingress controller, used to set the load-balancer status of Ingress objects.
++      # Usually the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.
+       enabled: false
++      # -- Override path of Kubernetes Service used to copy status from. Format: namespace/servicename.
++      # Default to Service deployed with this Chart.
+       pathOverride: ""
+     # -- Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies
+     publishStatusAddress: ""
+@@ -521,136 +525,136 @@ additionalVolumeMounts: []
  # - name: traefik-logs
  #   mountPath: /var/log/traefik
  

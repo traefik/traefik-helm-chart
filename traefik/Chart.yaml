@@ -27,6 +27,7 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.4
   artifacthub.io/changes: |
+    - "fix(provider): :bug: emit kubernetesIngressNGINX publishService for external service"
     - "fix(notes): :memo: use traefik.image-name so NOTES match deployed image"
     - "fix(logs)!: align syntax with upstream (#1887)"
     - "fix(deployment): omit spec.replicas when replicas is null"
