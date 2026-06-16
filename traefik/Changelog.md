@@ -28,7 +28,8 @@ There are 2 breaking changes in this release:
    * Migrate your inline YAML string to a structured object.
 
 > [!TIP]
-> Image `registry` and `repository` now default to `null` and are auto-detected for Traefik Proxy & for Traefik Hub.
+> Image `registry` and `repository` now default to `null`.
+> The chart now automatically resolves the full official image URI for both Traefik Proxy and Traefik Hub.
 
 ### Default value changes
 
