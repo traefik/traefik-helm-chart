@@ -15,8 +15,8 @@
 * ci(renovate): restore update on appVersion
 * chore(release): publish 41.0.0
 
-> [!IMPORTANT]
-> There are 2 breaking changes in this release
+## :warning: Breaking changes
+There are 2 breaking changes in this release
 
 **Upgrade Notes**
 
