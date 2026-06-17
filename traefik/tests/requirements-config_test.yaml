@@ -696,7 +696,7 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: 'ERROR: ingressRoute key "kubernetesCRD" contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase). If you meant to enable a provider, use providers.kubernetesCRD instead.'
+          errorMessage: 'ERROR: ingressRoute key "kubernetesCRD" contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase).'
   - it: should not fail when all ingressRoute keys are lowercase
     set:
       ingressRoute:
