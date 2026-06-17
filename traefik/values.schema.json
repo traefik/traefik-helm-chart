@@ -2899,10 +2899,11 @@
                             "type": "object",
                             "properties": {
                                 "enabled": {
-                                    "description": "Service fronting the Ingress controller. Takes the form 'namespace/name'",
+                                    "description": "Enable publishService. Service fronting the Ingress controller, used to set the load-balancer status of Ingress objects. Usually the Service provided by this Chart. It's possible to use it with an external Service using pathOverride.",
                                     "type": "boolean"
                                 },
                                 "pathOverride": {
+                                    "description": "Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart.",
                                     "type": "string"
                                 }
                             }
