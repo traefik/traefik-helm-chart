@@ -100,7 +100,7 @@ rules:
     verbs:
       - update
 {{- end }}
-{{- if (and (has . $hubNamespaces) $.Values.hub.token) }}
+{{- if (and (has . $hubNamespaces) (include "traefik-hub.enabled" $)) }}
   - apiGroups:
       - ""
     resources:

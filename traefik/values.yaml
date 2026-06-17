@@ -1274,8 +1274,17 @@ fullnameOverride: ""
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:  # @schema additionalProperties: false
-  # -- Name of `Secret` with key 'token' set to a valid license token.
-  # It enables API Gateway.
+  # -- Name of an existing `Secret` with a 'token' key holding the license token (enables Hub).
+  # This is the **recommended** way to provide the license: keep the token in a `Secret` you
+  # manage, not in cleartext in your values. Takes precedence over `hub.token`.
+  existingSecret: ""
+  # -- Traefik Hub license token (enables Hub).
+  # NOT RECOMMENDED: an inline literal token here ends up stored in cleartext in your values
+  # and release — prefer `hub.existingSecret` and reference a `Secret` you manage instead.
+  # When set to an inline literal token, the chart creates and mounts the `traefik-hub-license`
+  # Secret for you.
+  # DEPRECATED: a value of 64 characters or fewer is still treated as the name of an
+  # existing `Secret` holding the token — migrate that usage to `hub.existingSecret`.
   token: ""
   # -- Mount path for token secret.
   tokenMountPath: "/etc/secrets"
