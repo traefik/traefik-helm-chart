@@ -1,0 +1,258 @@
+# -- Override the chart name used in `metadata.name`, selector labels,
+# and the `app.kubernetes.io/name` label. Defaults to `Chart.Name`.
+nameOverride: traefik  # default keeps resources named <release>-traefik (chart name is traefik-experimental)  # @schema type:[string, null]
+
+# -- Override the fully-qualified name used in `metadata.name` of every
+# rendered manifest. Defaults to `<Release.Name>-<chartName>`.
+fullnameOverride: ""  # @schema type:[string, null]
+
+# -- Override the namespace stamped into `metadata.namespace` of every
+# namespaced manifest. Defaults to the release namespace
+# (`helm install/upgrade -n <ns>`).
+namespaceOverride: ""  # @schema type:[string, null]
+
+# -- Container image. Defaults to `docker.io/traefik:<Chart.AppVersion>`,
+# or `ghcr.io/traefik/traefik-hub:<traefik.io/hub-max-version>` when
+# `traefik.hub.token` is set (Hub binary required for any Hub feature).
+# A `repo:tag` is version-checked against the supported range; a digest
+# pin (`repo@sha256:...`, no tag) skips that check — pin a known version.
+image: ""  # @schema type:[string, null]
+
+# -- Image pull secrets, applied to every Pod the chart renders. List of
+# `{name: <secret>}` entries, mirroring the k8s-native field name.
+imagePullSecrets: []
+
+# -- Labels merged into every rendered manifest's `metadata.labels`
+# (and into pod-template metadata for Deployment/DaemonSet). User keys
+# override chart-info labels but are themselves overridable per-object
+# via `<object>.metadata.labels`.
+commonLabels: {}       # @schema additionalProperties: { type: string }
+
+# -- Annotations merged into every rendered manifest's
+# `metadata.annotations` (and into pod-template metadata). Override
+# per-object via `<object>.metadata.annotations`.
+commonAnnotations: {}  # @schema additionalProperties: { type: string }
+
+# -- Traefik Proxy static configuration, verbatim. Rendered into a
+# ConfigMap mounted at `/config/traefik.yaml`. User keys merge on top
+# via Helm native merge — `key: null` removes a default. Anything Traefik
+# accepts in `traefik.yaml` is reachable here without a chart update.
+traefik:  # @schema additionalProperties:true; type:[object, null]
+  entryPoints:
+    traefik:   { address: ":8080/tcp" }
+    web:       { address: ":8000/tcp" }
+    websecure:
+      address: ":8443/tcp"
+      http:
+        tls: {}  # terminate TLS on websecure by default (like the legacy chart)
+    metrics:   { address: ":9100/tcp" }
+  providers:
+    kubernetesCRD:     { allowEmptyServices: true }
+    kubernetesIngress: { allowEmptyServices: true }
+  api:
+    dashboard: true
+  ping: {}
+  metrics:
+    prometheus:
+      entryPoint: metrics
+  log:
+    level: INFO
+
+# -- Pod controller. The chart renders one of `deployment` (default) or
+# `daemonset` (opt-in); they're mutually exclusive (validation fails the render
+# if both are set, or if both are null). Set `deployment: null` and
+# `daemonset: {}` to switch (see EXAMPLES.md "Install as a DaemonSet").
+#
+# Subkeys:
+#   resources: {}  # traefik container CPU/memory shortcut
+#   metadata: {}   # object-level annotations / labels (chart owns
+#                  # metadata.name; user attempts are silently ignored)
+#   spec: {}       # the whole workload spec, strategic-merged over the
+#                  # chart's. Lists merge by key (add an env var / volume /
+#                  # sidecar without redeclaring the container); maps
+#                  # deep-merge; `key: null` deletes; a list opts into
+#                  # wholesale replace with a `{$patch: replace}` element.
+#                  # See README "Customizing the chart".
+deployment: {}  # @schema additionalProperties:false; type:[object, null]
+
+# -- DaemonSet alternative to `deployment`. Same shortcuts and hatches;
+# pick one. See EXAMPLES.md "Install as a DaemonSet".
+daemonset:  # @schema additionalProperties:false; type:[object, null]
+
+# -- PodDisruptionBudget for the Traefik pods. Disabled by default (`null`);
+# enable by providing a `spec:` with `maxUnavailable` **or** `minAvailable`
+# (exactly one is required). The chart owns the `selector` (it targets the
+# Traefik pods); `metadata: {}` and `spec: {}` are escape hatches.
+podDisruptionBudget:  # @schema additionalProperties:false; type:[object, null]
+
+# -- IngressClass for the Traefik kubernetesIngress provider. Enabled by
+# default (as the cluster-default class, like the legacy chart); disable with
+# `null`. The chart owns `spec.controller` (`traefik.io/ingress-controller`).
+# Drop the default-class annotation to make it non-default. `metadata: {}` and
+# `spec: {}` are escape hatches.
+ingressClass:  # @schema additionalProperties:false; type:[object, null]
+  metadata:
+    annotations:
+      ingressclass.kubernetes.io/is-default-class: "true"
+
+# -- HorizontalPodAutoscaler for the Traefik Deployment. Disabled by default
+# (`null`); enable by providing a `spec:` with at least `maxReplicas` (plus
+# `minReplicas`/`metrics`/`behavior` as needed). The chart owns
+# `spec.scaleTargetRef` (the Deployment); override it (e.g. an Argo `Rollout`)
+# via the `spec` hatch. Requires `deployment` (not `daemonset`).
+autoscaling:  # @schema additionalProperties:false; type:[object, null]
+
+# -- Traefik TLSOption CRDs. Map of name → `{metadata, spec}` (the object
+# name is the map key, e.g. `default`). `spec` is the TLSOption spec
+# (minVersion, cipherSuites, sniStrict, …). Empty by default.
+tlsOptions:  # @schema type:[object, null]
+
+# -- Traefik TLSStore CRDs. Map of name → `{metadata, spec}` (the `default`
+# store is the one Traefik uses for the default certificate). `spec` is the
+# TLSStore spec (defaultCertificate, …). Empty by default.
+tlsStore:  # @schema type:[object, null]
+
+# -- Gateway API GatewayClass (cluster-scoped). Disabled by default (`null`);
+# enable with `{}`. The chart owns `spec.controllerName`
+# (`traefik.io/gateway-controller`). Needs `traefik.providers.kubernetesGateway`.
+# `metadata: {}` and `spec: {}` are escape hatches.
+gatewayClass:  # @schema additionalProperties:false; type:[object, null]
+
+# -- Gateway API Gateway. Disabled by default (`null`); enable with a `spec:`
+# providing `listeners` (verbatim Gateway API spec). The chart owns
+# `spec.gatewayClassName` (the chart's GatewayClass). `metadata: {}` and
+# `spec: {}` are escape hatches.
+gateway:  # @schema additionalProperties:false; type:[object, null]
+
+# -- Persistent storage for the Traefik pods (e.g. ACME storage). Disabled by
+# default (`null`); enable with `{}`. The chart renders a PersistentVolumeClaim
+# (named `<fullname>`) and mounts it as the `data` volume at `mountPath`. Subkeys:
+#   spec: {}            # PersistentVolumeClaimSpec hatch (accessModes,
+#                       # resources.requests.storage, storageClassName, …);
+#                       # chart defaults to ReadWriteOnce + 128Mi
+#   metadata: {}        # PVC annotations/labels
+#   existingClaim: ""   # mount this claim instead of creating a PVC
+#   mountPath: /data    # where to mount it in the container
+#   subPath: ""         # optional subpath within the volume
+persistence:  # @schema additionalProperties:false; type:[object, null]
+
+# -- Kubernetes Services rendered by the chart. Map of name →
+# Service body. The chart owns the `default` entry's `selector` (it
+# targets the workload); everything else — `type`, `ports` — is plain
+# values. The shipped `default` ports expose `web` on 80 and `websecure`
+# on 443, each targeting its entryPoint container port by name; `traefik`
+# (9000) stays container-only, like the legacy chart. To change the
+# exposed ports, redeclare `ports` (a list, so it replaces the default
+# wholesale). Any other entry must provide its own `spec:`. Each entry
+# supports `metadata: {}` and `spec: {}`. Disable an entry with
+# `<name>: null`. The `default` entry uses `<fullname>` as the Service
+# name; others get `<fullname>-<entry>`.
+#
+# The `hub-admission` and `hub-apiportal` entries are chart-managed (the
+# chart fills their `spec`); they render only when the matching Hub API
+# Management feature is enabled. Disable with `<name>: null`.
+service:  # @schema type:[object, null]
+  default:
+    spec:
+      type: LoadBalancer
+      ports:
+        - name: web
+          port: 80
+          targetPort: web
+          protocol: TCP
+        - name: websecure
+          port: 443
+          targetPort: websecure
+          protocol: TCP
+  hub-admission: {}   # → <fullname>-hub-admission (443 → admission); when apimanagement.admission set
+  hub-apiportal: {}   # → <fullname>-hub-apiportal (9903 → apiportal); when apimanagement set
+
+# -- Chart-managed Secrets (kind: Secret), as a map of logical name →
+# body — same idiom as `service`/`ingressRoute`. The chart fills each
+# entry's `data`; you own `metadata`, and `<entry>: null` disables it.
+#   hub-license:   Traefik Hub license Secret. Rendered when
+#                  `traefik.hub.token` is set; the chart mounts it and
+#                  auto-sets `traefik.hub.tokenfilepath`. Set to `null`
+#                  to BYO an existing Secret (then patch the `hub-token`
+#                  volume via `deployment.spec.template.spec.volumes`).
+#   hub-admission: TLS cert Secret for the API-Management admission
+#                  webhook. Rendered when `traefik.hub.apimanagement`
+#                  `.admission` is set; cert auto-generated (stable
+#                  across upgrades via Helm `lookup`).
+secret:  # @schema additionalProperties:false; type:[object, null]
+  hub-license: {}    # @schema additionalProperties:false; type:[object, null]
+  hub-admission: {}  # @schema additionalProperties:false; type:[object, null]
+
+# -- Hub API Management — MutatingWebhookConfigurations as a map of
+# name → MWC body. Rendered when `traefik.hub.apimanagement` is set.
+# Chart ships defaults for `hub-acp` (accesscontrolpolicies) and
+# `hub-api` (apis, apibundles, apicatalogitems, managedsubscriptions,
+# apiplans, apiportals, apiversions). Each entry: `metadata` +
+# `webhooks`. Disable an entry with `<name>: null`.
+mutatingWebhookConfigurations:  # @schema type:[object, null]
+  hub-acp: {}
+  hub-api: {}
+
+# -- ServiceAccount the pod runs as. Rendered by default. Set to `null`
+# to BYO via `deployment.spec.template.spec.serviceAccountName`.
+serviceAccount: {}      # @schema additionalProperties:false; type:[object, null]
+
+# -- ClusterRole granting the ServiceAccount cluster-wide access.
+# Default rules are derived from active providers under
+# `traefik.providers.*` (kubernetesCRD, kubernetesIngress,
+# kubernetesGateway) plus `traefik.hub.apimanagement` when set; the
+# layer composition lives in `templates/_helpers_rbac.tpl`. For
+# namespaced installs, see EXAMPLES.md "Install in a dedicated
+# namespace, with limited RBAC" (nulls this + clusterRoleBinding,
+# enables role + roleBinding). Subkeys:
+# `metadata: {}`, `rules: []` (replaces chart defaults wholesale —
+# Hub APIM rules are NOT auto-appended on top of a custom list).
+clusterRole: {}         # @schema additionalProperties:false; type:[object, null]
+
+# -- ClusterRoleBinding wiring the ServiceAccount to the ClusterRole.
+# Subkeys: `metadata: {}`, `roleRef: {}` (deep-merge), `subjects: []`
+# (replaces chart default).
+clusterRoleBinding: {}  # @schema additionalProperties:false; type:[object, null]
+
+# -- Namespaced Role — opt-in alternative to `clusterRole`. Set to
+# `{}` to enable. The chart renders one Role + RoleBinding per
+# namespace listed under `traefik.providers.<p>.namespaces` (union of
+# all providers); each Role's rules are scoped to the providers that
+# watch its namespace (per-namespace precision). Hub APIM rules are appended when
+# enabled. Subkeys: `metadata: {}` (applied to every rendered Role),
+# `rules: []` (replaces chart defaults wholesale, applied identically
+# to every rendered Role). See EXAMPLES.md "Install in a dedicated
+# namespace, with limited RBAC".
+role:         # @schema additionalProperties:false; type:[object, null]
+
+# -- Namespaced RoleBinding — opt-in alongside `role`. Same multi-ns
+# rendering as `role`. Subjects default to the chart ServiceAccount
+# in the release namespace (cross-namespace binding).
+roleBinding:  # @schema additionalProperties:false; type:[object, null]
+
+# -- Traefik IngressRoutes rendered by the chart. Map of name →
+# IngressRoute body. None are created by default (like the legacy chart —
+# `api.dashboard: true` enables the dashboard in Traefik, but exposing it
+# via an IngressRoute is opt-in). Each entry must provide `spec:` and
+# supports `metadata: {}` (loose — IngressRoute is a CRD). To expose the
+# dashboard, add the `dashboard` entry shown commented below.
+ingressRoute: {}  # @schema type:[object, null]
+  # dashboard:
+  #   spec:
+  #     entryPoints:
+  #       - traefik
+  #     routes:
+  #       - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+  #         kind: Rule
+  #         services:
+  #           - name: api@internal
+  #             kind: TraefikService
+
+# -- Arbitrary extra Kubernetes objects to deploy with the release. List
+# of full manifests, each evaluated as a template (`tpl`), so they can
+# reference release values and chart helpers (e.g.
+# `{{ .Release.Namespace }}`). This is the "add a whole new object"
+# escape hatch (tier 2) — for *patching* chart-rendered objects, use the
+# `<object>.spec` hatch or a post-renderer. See README "Customizing the
+# chart".
+extraObjects: []  # @schema type:[array, null]

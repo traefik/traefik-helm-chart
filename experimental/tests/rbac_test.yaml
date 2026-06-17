@@ -1,0 +1,263 @@
+suite: RBAC objects (cluster-wide)
+tests:
+  - it: ServiceAccount renders with chart-owned name and labels
+    template: serviceaccount.yaml
+    asserts:
+      - isKind: { of: ServiceAccount }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: ClusterRole ships default rules covering Traefik's needs
+    template: clusterrole.yaml
+    asserts:
+      - isKind: { of: ClusterRole }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [pods]
+            verbs: [get]
+
+  - it: ClusterRole does NOT grant leases by default (only with Hub, like legacy)
+    template: clusterrole.yaml
+    asserts:
+      - notContains:
+          path: rules
+          content:
+            apiGroups: [coordination.k8s.io]
+            resources: [leases]
+            verbs: [get, list, watch, create, update]
+
+  - it: ClusterRole grants leases when Hub is enabled
+    template: clusterrole.yaml
+    set:
+      traefik.hub.token: x
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [coordination.k8s.io]
+            resources: [leases]
+            verbs: [get, list, watch, create, update, patch, delete]
+
+  - it: ClusterRole core layer grants endpointslices (needed by every k8s provider for backend resolution)
+    template: clusterrole.yaml
+    set:
+      traefik.providers.kubernetesCRD: null
+      traefik.providers.kubernetesIngress: null
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [discovery.k8s.io]
+            resources: [endpointslices]
+            verbs: [list, watch]
+
+  - it: ClusterRole includes kubernetesCRD layer (traefik.io CRDs) by default
+    template: clusterrole.yaml
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [traefik.io]
+            resources: [ingressroutes, ingressroutetcps, ingressrouteudps, middlewares, middlewaretcps, serverstransports, serverstransporttcps, tlsoptions, tlsstores, traefikservices]
+            verbs: [get, list, watch]
+
+  - it: ClusterRole includes kubernetesIngress layer (networking.k8s.io ingresses) by default
+    template: clusterrole.yaml
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [networking.k8s.io]
+            resources: [ingresses, ingressclasses]
+            verbs: [get, list, watch]
+
+  - it: disabling kubernetesIngress provider drops the networking.k8s.io rules
+    template: clusterrole.yaml
+    set:
+      traefik.providers.kubernetesIngress: null
+    asserts:
+      - notContains:
+          path: rules
+          content:
+            apiGroups: [networking.k8s.io]
+            resources: [ingresses, ingressclasses]
+            verbs: [get, list, watch]
+      # core stays
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [pods]
+            verbs: [get]
+
+  - it: enabling kubernetesGateway provider adds the gateway.networking.k8s.io rules
+    template: clusterrole.yaml
+    set:
+      traefik.providers.kubernetesGateway: {}
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [gateway.networking.k8s.io]
+            resources: [gatewayclasses, gateways, httproutes, grpcroutes, tcproutes, tlsroutes, udproutes, referencegrants, backendtlspolicies]
+            verbs: [get, list, watch]
+
+  - it: enabling Hub APIM appends the hub.traefik.io rules to the ClusterRole
+    template: clusterrole.yaml
+    set:
+      traefik.hub.token: dummy-token
+      traefik.hub.apimanagement: {}
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [hub.traefik.io]
+            resources: [aiservices]
+            verbs: [get, list, watch]
+
+  - it: overlapping resource grants merge cleanly across layers
+    template: clusterrole.yaml
+    set:
+      traefik.hub.token: dummy-token
+      traefik.hub.apimanagement: {}
+    asserts:
+      # Hub grants secrets write-back as its own rule (verbs differ from core,
+      # union applied) — proves verb-aware coalescing.
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [secrets]
+            verbs: [get, list, watch, create, update, delete, deletecollection]
+      # the standalone pods (get) entry from core is gone (pods merged into the
+      # get/list/watch group once Hub adds list/watch) — proves coalescing.
+      - notContains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [pods]
+            verbs: [get]
+
+  - it: ClusterRoleBinding wires the chart ServiceAccount to the chart ClusterRole
+    template: clusterrolebinding.yaml
+    asserts:
+      - isKind: { of: ClusterRoleBinding }
+      - equal:
+          path: roleRef.name
+          value: RELEASE-NAME-traefik-NAMESPACE
+      - equal:
+          path: roleRef.kind
+          value: ClusterRole
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: subjects[0].kind
+          value: ServiceAccount
+
+  - it: serviceAccount=null skips rendering
+    template: serviceaccount.yaml
+    set:
+      serviceAccount: null
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: clusterRole + clusterRoleBinding both null skips both
+    template: clusterrole.yaml
+    set:
+      clusterRole: null
+      clusterRoleBinding: null
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: clusterRole.rules user array replaces chart defaults wholesale
+    template: clusterrole.yaml
+    set:
+      clusterRole.rules:
+        - apiGroups: [""]
+          resources: [services]
+          verbs: [get]
+    asserts:
+      - lengthEqual:
+          path: rules
+          count: 1
+      - equal:
+          path: rules[0].resources
+          value: [services]
+
+  - it: clusterRoleBinding.subjects user array replaces chart default
+    template: clusterrolebinding.yaml
+    set:
+      clusterRoleBinding.subjects:
+        - kind: Group
+          name: my-group
+          apiGroup: rbac.authorization.k8s.io
+    asserts:
+      - lengthEqual:
+          path: subjects
+          count: 1
+      - equal:
+          path: subjects[0].kind
+          value: Group
+
+  - it: clusterRoleBinding.roleRef deep-merges with chart default
+    template: clusterrolebinding.yaml
+    set:
+      clusterRoleBinding.roleRef:
+        name: my-custom-role
+    asserts:
+      - equal:
+          path: roleRef.name
+          value: my-custom-role
+      - equal:
+          path: roleRef.kind
+          value: ClusterRole
+      - equal:
+          path: roleRef.apiGroup
+          value: rbac.authorization.k8s.io
+
+  - it: RBAC objects pick up commonLabels via the shared metadata helper
+    set:
+      commonLabels:
+        team: platform
+    asserts:
+      - template: serviceaccount.yaml
+        equal:
+          path: metadata.labels.team
+          value: platform
+      - template: clusterrole.yaml
+        equal:
+          path: metadata.labels.team
+          value: platform
+      - template: clusterrolebinding.yaml
+        equal:
+          path: metadata.labels.team
+          value: platform
+
+  - it: per-object metadata.annotations land on RBAC manifests
+    template: serviceaccount.yaml
+    set:
+      serviceAccount.metadata.annotations:
+        eks.amazonaws.com/role-arn: arn:aws:iam::123:role/traefik
+    asserts:
+      - equal:
+          path: metadata.annotations["eks.amazonaws.com/role-arn"]
+          value: arn:aws:iam::123:role/traefik
+
+  - it: metadata.name is chart-owned on RBAC objects
+    template: clusterrole.yaml
+    set:
+      clusterRole.metadata.name: my-custom-role
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE

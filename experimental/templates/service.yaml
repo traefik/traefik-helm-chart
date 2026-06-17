@@ -1,0 +1,27 @@
+{{- range $name, $config := (.Values.service | default dict) }}
+{{- $config = $config | default dict -}}
+{{/* Hub-managed entries render only when their feature is enabled. */}}
+{{- $gated := or
+    (and (eq $name "hub-admission") (not (include "traefik.hubAdmissionEnabled" $)))
+    (and (eq $name "hub-apiportal") (not (include "traefik.hubAPIManagementEnabled" $)))
+-}}
+{{- if not $gated }}
+{{- $fullname := include "traefik.fullname" $ -}}
+{{- $manifestName := $fullname -}}
+{{- if ne $name "default" -}}
+  {{- $manifestName = printf "%s-%s" $fullname $name -}}
+{{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  {{- include "traefik.objectMeta" (dict
+      "ctx" $
+      "name" $manifestName
+      "namespace" (include "traefik.namespace" $)
+      "userMetadata" ($config.metadata | default dict)
+  ) | nindent 2 }}
+spec:
+  {{- include "traefik.serviceSpec" (dict "ctx" $ "name" $name "config" $config) | nindent 2 }}
+{{- end }}
+{{- end }}

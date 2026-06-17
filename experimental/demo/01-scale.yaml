@@ -1,0 +1,3 @@
+deployment:
+  spec:
+    replicas: 3
