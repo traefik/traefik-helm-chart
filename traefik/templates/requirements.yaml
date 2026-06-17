@@ -34,7 +34,7 @@
 
 {{- range $name, $config := .Values.ingressRoute }}
   {{- if regexMatch "[A-Z]" $name }}
-    {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase). If you meant to enable a provider, use providers.%s instead." $name $name) }}
+    {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase)." $name) }}
   {{- end }}
 {{- end }}
 
