@@ -27,6 +27,9 @@ There are 2 breaking changes in this release
    * The `accessLog.fields.general` nesting level is removed: `fields.general.defaultmode` → `fields.defaultMode`.
 2. **File provider content**: `providers.file.content` is now an object (`{}`) instead of a string (`""`).
 
+> [!NOTE]
+> A cross-platform helper migrates breaking change #1 in your values override automatically. See [hack/migrate/README.md](../hack/migrate/README.md).
+
 > [!TIP]
 > Image `registry` and `repository` now default to `null`.
 > The chart now automatically resolves the full official image URI for both Traefik Proxy and Traefik Hub.
