@@ -119,3 +119,47 @@ tests:
       - hasDocuments:
           count: 1
         template: deployment.yaml
+
+  - it: existingSecret enables Hub and mounts the BYO secret without creating one
+    set:
+      hub:
+        existingSecret: my-hub-license
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-license.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+            secret:
+              secretName: my-hub-license
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tokenFilePath=/etc/secrets/token"
+        template: deployment.yaml
+
+  - it: existingSecret takes precedence over an inline hub.token
+    set:
+      hub:
+        existingSecret: my-hub-license
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-license.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+            secret:
+              secretName: my-hub-license
+        template: deployment.yaml

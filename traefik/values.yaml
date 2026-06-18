@@ -1277,9 +1277,15 @@ fullnameOverride: ""
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:  # @schema additionalProperties: false
-  # -- Name of `Secret` with key 'token' set to a valid license token.
-  # It enables API Gateway.
+  # -- Traefik Hub license token (enables Hub). Provide the **inline literal token**
+  # here and the chart creates and mounts the `traefik-hub-license` Secret for you.
+  # For an existing Secret (BYO), use `hub.existingSecret` instead.
+  # DEPRECATED: a value of 64 characters or fewer is still treated as the name of an
+  # existing Secret holding the token — migrate that usage to `hub.existingSecret`.
   token: ""
+  # -- Name of an existing `Secret` with a 'token' key holding the license token (BYO).
+  # Takes precedence over `hub.token`; also enables Hub.
+  existingSecret: ""
   # -- Mount path for token secret.
   tokenMountPath: "/etc/secrets"
   # -- Disables all external network connections.

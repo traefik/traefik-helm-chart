@@ -12,6 +12,27 @@ tests:
       - equalRaw:
           value: |2
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+  - it: should warn that a short hub.token (<=64) is the deprecated secret-name path
+    set:
+      hub:
+        token: "my-hub-license"
+    asserts:
+      - matchRegexRaw:
+          pattern: 'DEPRECATION: `hub.token` is set to a value of 64 characters or fewer'
+  - it: should not warn about the deprecated path when using hub.existingSecret
+    set:
+      hub:
+        existingSecret: my-hub-license
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION: .hub.token"
+  - it: should not warn about the deprecated path for an inline literal token
+    set:
+      hub:
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION: .hub.token"
   - it: should use helm managed namespace in release notes output
     set:
       namespaceOverride: "traefik-ns-override"
@@ -81,7 +102,7 @@ tests:
         repository: traefik/traefik-hub
         tag: v3.99.0
       hub:
-        token: "xxx"
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     asserts:
       - equalRaw:
           value: |
@@ -97,7 +118,7 @@ tests:
         repository: traefik/traefik-hub
         tag: v3.21.0-ea.1
       hub:
-        token: "xxx"
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     asserts:
       - equalRaw:
           value: |
@@ -113,7 +134,7 @@ tests:
         repository: traefik/traefik-hub
         tag: v3.19.5
       hub:
-        token: "xxx"
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
     asserts:
       - equalRaw:
           value: |
@@ -193,7 +214,7 @@ tests:
         namespaced: true
 
       hub:
-        token: "token"
+        token: "tokentokentokentokentokentokentokentokentokentokentokentokentoken"
         namespaces: [ns1]
         apimanagement:
           enabled: true
@@ -217,7 +238,7 @@ tests:
         namespaced: true
 
       hub:
-        token: "token"
+        token: "tokentokentokentokentokentokentokentokentokentokentokentokentoken"
         namespaces: [ns1]
         apimanagement:
           enabled: true
@@ -248,7 +269,7 @@ tests:
         namespaced: true
 
       hub:
-        token: "token"
+        token: "tokentokentokentokentokentokentokentokentokentokentokentokentoken"
         namespaces: []
         apimanagement:
           enabled: true
@@ -275,7 +296,7 @@ tests:
         namespaced: true
 
       hub:
-        token: "token"
+        token: "tokentokentokentokentokentokentokentokentokentokentokentokentoken"
         namespaces: []
         apimanagement:
           enabled: true

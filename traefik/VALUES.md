@@ -145,6 +145,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.apimanagement.admission.selfManagedCertificate | bool | `false` | By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
+| hub.existingSecret | string | `""` | Name of an existing `Secret` with a 'token' key holding the license token (BYO). Takes precedence over `hub.token`; also enables Hub. |
 | hub.mcpgateway.enabled | bool | `false` | Set to true in order to enable AI MCP Gateway. Requires a valid license token. |
 | hub.mcpgateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
@@ -239,7 +240,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.redis.tls.key | string | `""` | Path to the private key used for the secure connection. |
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
 | hub.sendlogs | string | `nil` |  |
-| hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
+| hub.token | string | `""` | Traefik Hub license token (enables Hub). Provide the **inline literal token** here and the chart creates and mounts the `traefik-hub-license` Secret for you. For an existing Secret (BYO), use `hub.existingSecret` instead. DEPRECATED: a value of 64 characters or fewer is still treated as the name of an existing Secret holding the token — migrate that usage to `hub.existingSecret`. |
 | hub.tokenMountPath | string | `"/etc/secrets"` | Mount path for token secret. |
 | hub.tracing.additionalTraceHeaders.enabled | bool | See below | Tracing headers to duplicate. To configure the following, tracing.otlp.enabled needs to be set to true. |
 | hub.tracing.additionalTraceHeaders.traceContext.parentId | string | `""` | Name of the header that will contain the parent-id header copy. |
