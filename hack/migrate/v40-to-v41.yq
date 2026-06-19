@@ -1,7 +1,6 @@
 # mikefarah yq v4 expression: migrate Traefik Helm chart values v40 -> v41
 # Breaking change #1 (PR #1887): logs.* -> log.* / accessLog.*, camelCase keys.
-# Breaking change #2 (file.content string -> object) is NOT auto-converted here:
-# it is a type change, not a rename. The wrapper script warns instead.
+# Breaking change #2: providers.file.content string -> object. Parsed via from_yaml.
 
 # logs.general -> log ; logs.access -> accessLog
 with(select(.logs.general != null); .log = .logs.general) |
@@ -22,4 +21,7 @@ del(.accessLog.fields.general) |
 # accessLog.fields.headers / queryParameters: defaultmode -> defaultMode
 with(select(.accessLog.fields.headers.defaultmode         != null); .accessLog.fields.headers.defaultMode         = .accessLog.fields.headers.defaultmode) |
 with(select(.accessLog.fields.queryParameters.defaultmode != null); .accessLog.fields.queryParameters.defaultMode = .accessLog.fields.queryParameters.defaultmode) |
-del(.accessLog.fields.headers.defaultmode, .accessLog.fields.queryParameters.defaultmode)
+del(.accessLog.fields.headers.defaultmode, .accessLog.fields.queryParameters.defaultmode) |
+
+# providers.file.content: string -> object. Parse the embedded YAML into a real object.
+with(select(.providers.file.content | tag == "!!str"); .providers.file.content |= from_yaml)

@@ -16,33 +16,49 @@ rewrites your own `values.yaml` override accordingly.
 | `logs.access.fields.headers.defaultmode` | `accessLog.fields.headers.defaultMode` |
 | `logs.access.fields.queryParameters.defaultmode` | `accessLog.fields.queryParameters.defaultMode` |
 
+It also converts `providers.file.content` from a string to an object.
+
 ## Usage
 
-Run against **your override file** (the one you pass with `helm -f`), not the chart's `values.yaml`.
+All mapping logic lives in a single file, [`v40-to-v41.yq`](./v40-to-v41.yq), run with
+[mikefarah `yq` v4](https://github.com/mikefarah/yq). Run it against **your override file**
+(the one you pass with `helm -f`), not the chart's `values.yaml`.
 
-**macOS / Linux / WSL / Git Bash**
+Back up first, since `-i` rewrites in place:
+
 ```sh
-./migrate-v40-to-v41.sh myvalues.yaml        # dry-run: prints migrated YAML
-./migrate-v40-to-v41.sh myvalues.yaml -i     # rewrite in place (backup: myvalues.yaml.bak)
+cp myvalues.yaml myvalues.yaml.bak
 ```
 
-**Windows (PowerShell)**
-```powershell
-.\migrate-v40-to-v41.ps1 myvalues.yaml
-.\migrate-v40-to-v41.ps1 myvalues.yaml -InPlace
+**With a local `yq`**
+
+```sh
+yq --from-file v40-to-v41.yq myvalues.yaml       # dry-run: prints migrated YAML
+yq --from-file v40-to-v41.yq -i myvalues.yaml    # rewrite in place
 ```
 
-The launchers run [mikefarah `yq` v4](https://github.com/mikefarah/yq) via
-`docker run mikefarah/yq:4` — Docker is the only requirement, no other local install.
-All mapping logic lives in a single file, [`v40-to-v41.yq`](./v40-to-v41.yq).
+**With Docker** (no local install, only Docker required)
+
+```sh
+docker run --rm -v "$PWD":/w -w /w mikefarah/yq:4 \
+  --from-file /w/v40-to-v41.yq myvalues.yaml      # add -i after --from-file to rewrite in place
+```
 
 ## Known limitations
 
-- **`providers.file.content`** changed from a string to an object in v41. That is a
-  type change, not a rename — the script **warns** but does not convert it. Migrate by
-  hand (inline your routers/services as YAML under `providers.file`).
 - Comments are preserved by `yq`, but comments attached to keys that move
   (`logs.*`) may shift. Review the diff before applying with `-i`.
-- The script is idempotent: running it on an already-migrated file is a no-op.
+- The expression is idempotent: running it on an already-migrated file is a no-op.
 
-Test fixture: [`sample-v40-values.yaml`](./sample-v40-values.yaml) exercises every mapped key.
+## Fixtures
+
+- [`sample-v40-values.yaml`](./sample-v40-values.yaml) — input, exercises every mapped key.
+- [`expected-v41-values.yaml`](./expected-v41-values.yaml) — expected output. Regenerate after
+  changing `v40-to-v41.yq`, do not hand-edit.
+
+Regression check (output must match the golden file):
+
+```sh
+docker run --rm -v "$PWD":/w -w /w mikefarah/yq:4 \
+  --from-file /w/v40-to-v41.yq sample-v40-values.yaml | diff - expected-v41-values.yaml
+```
