@@ -1,4 +1,4 @@
-# Sample v40 user override — exercises every breaking key from #1887 + file.content
+# Migration fixture — exercises every breaking key from #1887 + file.content type change.
 logs:
   general:
     level: DEBUG
