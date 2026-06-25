@@ -42,7 +42,7 @@ rules:
       - get
       - list
       - watch
-    {{- if and .Values.hub.token }}
+    {{- if (.Values.hub).token }}
       - update
       - create
       - delete
@@ -156,7 +156,7 @@ rules:
     verbs:
       - update
   {{- end }}
-  {{- if .Values.hub.token }}
+  {{- if (.Values.hub).token }}
   - apiGroups:
       - coordination.k8s.io
     resources:

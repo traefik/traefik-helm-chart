@@ -11,7 +11,7 @@
   {{- end }}
 {{- end }}
 
-{{- if and .Values.hub.token (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
+{{- if and (.Values.hub).token (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
 
@@ -130,7 +130,7 @@
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
-{{- if $.Values.hub.token -}}
+{{- if ($.Values.hub).token -}}
   {{- $hubVersion := include "traefik.hubVersion" $ }}
   {{- if not $hubVersion }}
     {{- if $.Values.image.digest }}
