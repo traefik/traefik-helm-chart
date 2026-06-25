@@ -16,7 +16,7 @@
 
 
 {{/* Warn about non-standard Traefik Hub versions (pre-release or minor/patch above supported range) */}}
-{{- if .Values.hub.token -}}
+{{- if (.Values.hub).token -}}
 {{- $hubVersion := include "traefik.hubVersion" $ -}}
 {{- $hubMaxVersion := index .Chart.Annotations "traefik.io/hub-max-version" -}}
 {{- if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" $hubVersion) (eq (include "traefik.isAboveMaxVersion" (dict "version" $hubVersion "max" $hubMaxVersion)) "true") -}}
@@ -41,7 +41,7 @@ for more info. 🚨
 
 
 {{/* Warn about non-matching potential labelSelector mismatch for CRD provider */}}
-{{- with .Values.providers.kubernetesCRD.labelSelector -}}
+{{- with (.Values.providers.kubernetesCRD).labelSelector -}}
   {{- $labelsApplied := include "traefik.labels" $ -}}
   {{- $labelSelectors := regexSplit "," . -1 }}
   {{- range $labelSelectors -}}
@@ -57,7 +57,7 @@ for more info. 🚨
 
 
 {{/* Warn about non-matching potential labelSelector mismatch for Ingress provider */}}
-{{- with .Values.providers.kubernetesIngress.labelSelector -}}
+{{- with (.Values.providers.kubernetesIngress).labelSelector -}}
   {{- $labelsApplied := include "traefik.labels" $ -}}
   {{- $labelSelectors := regexSplit "," . -1 -}}
   {{- range $labelSelectors -}}
@@ -85,7 +85,7 @@ for more info. 🚨
 
 
 {{/* Warn about hub not watching namespaces configured in providers */}}
-{{- if and .Values.hub.token (and .Values.rbac.enabled .Values.rbac.namespaced) }}
+{{- if and (.Values.hub).token (and .Values.rbac.enabled .Values.rbac.namespaced) }}
     {{- if .Values.hub.namespaces -}}
         {{- range (list "kubernetesCRD" "kubernetesGateway" "kubernetesIngress") }}
             {{- $provider := . -}}
@@ -141,7 +141,7 @@ You will need to install them yourself before deploying Traefik v3.7:
 
 
 {{/* Warn about missing secret when enabling managed certificate with Hub admission controller */}}
-{{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.selfManagedCertificate }}
+{{- if and (.Values.hub).token ((.Values.hub).apimanagement).enabled (((.Values.hub).apimanagement).admission).selfManagedCertificate }}
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and was not found in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}

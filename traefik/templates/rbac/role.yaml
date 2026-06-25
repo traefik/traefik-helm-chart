@@ -47,7 +47,7 @@ rules:
       - get
       - list
       - watch
-{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNGINX.enabled) }}
+{{- if or (and (has . $ingressNamespaces) ($.Values.providers.kubernetesIngress).enabled) (($.Values.providers.kubernetesIngressNGINX).enabled) }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -65,7 +65,7 @@ rules:
     verbs:
       - update
 {{- end -}}
-{{- if (and (has . $CRDNamespaces) $.Values.providers.kubernetesCRD.enabled) }}
+{{- if (and (has . $CRDNamespaces) ($.Values.providers.kubernetesCRD).enabled) }}
   - apiGroups:
       - traefik.io
     resources:
@@ -84,7 +84,7 @@ rules:
       - list
       - watch
 {{- end -}}
-{{- if (and (has . $knativeNamespaces) $.Values.providers.knative.enabled) }}
+{{- if (and (has . $knativeNamespaces) ($.Values.providers.knative).enabled) }}
   - apiGroups:
       - networking.internal.knative.dev
     resources:
