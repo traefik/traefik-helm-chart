@@ -1100,3 +1100,19 @@ tests:
       - hasDocuments:
           count: 1
         template: rbac/rolebinding.yaml
+  - it: should render when optional provider and hub blocks are nil
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesGateway: ~
+        knative: ~
+        file: ~
+        kubernetesIngressNGINX: ~
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
