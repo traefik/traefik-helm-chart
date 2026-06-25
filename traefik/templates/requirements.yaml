@@ -19,15 +19,15 @@
   {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
 {{- end }}
 
-{{- if and (.Values.providers.kubernetesGateway.enabled) (.Values.gateway.defaultScope) (not .Values.providers.kubernetesGateway.experimentalChannel) }}
+{{- if and ((.Values.providers.kubernetesGateway).enabled) (.Values.gateway.defaultScope) (not (.Values.providers.kubernetesGateway).experimentalChannel) }}
   {{- fail "ERROR: The Gateway 'defaultScope' field is experimental. Enable it by setting providers.kubernetesGateway.experimentalChannel=true" }}
 {{- end }}
 
 {{- if .Values.rbac.namespaced }}
-  {{- if .Values.providers.kubernetesGateway.enabled }}
+  {{- if (.Values.providers.kubernetesGateway).enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
   {{- end }}
-  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) }}
+  {{- if and (not (.Values.providers.kubernetesIngress).enabled) (not (.Values.providers.kubernetesCRD).enabled) }}
     {{- fail "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider." }}
   {{- end }}
 {{- end }}
@@ -36,7 +36,7 @@
   {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
 {{- end }}
 
-{{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (not $.Values.hub.token) }}
+{{- if and ((.Values.providers.kubernetesIngressNGINX).modsec).enabled (not $.Values.hub.token) }}
   {{- fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub." }}
 {{- end }}
 
@@ -95,16 +95,16 @@
 {{- end }}
 
 {{- if and (semverCompare "<v3.7.1-0" $version) (or
-    (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
-    (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
-    (not (empty .Values.providers.kubernetesGateway.crossProviderNamespaces))
+    (not (empty (.Values.providers.kubernetesCRD).crossProviderNamespaces))
+    (not (empty (.Values.providers.kubernetesIngress).crossProviderNamespaces))
+    (not (empty (.Values.providers.kubernetesGateway).crossProviderNamespaces))
     ) }}
   {{- fail "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1" }}
 {{- end }}
 
 {{- if and (semverCompare "<v3.7.3-0" $version) (or
-    (not (empty .Values.providers.kubernetesGateway.qps))
-    (not (empty .Values.providers.kubernetesGateway.burst))
+    (not (empty (.Values.providers.kubernetesGateway).qps))
+    (not (empty (.Values.providers.kubernetesGateway).burst))
     ) }}
   {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
 {{- end }}
