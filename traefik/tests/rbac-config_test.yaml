@@ -1074,3 +1074,45 @@ tests:
               - get
               - list
               - watch
+  - it: should render Role and RoleBinding when provider namespaces are nil
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesIngress:
+          namespaces: ~
+        kubernetesCRD:
+          namespaces: ~
+        kubernetesGateway:
+          namespaces: ~
+        knative:
+          namespaces: ~
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 1
+        template: rbac/role.yaml
+      - hasDocuments:
+          count: 1
+        template: rbac/rolebinding.yaml
+  - it: should render when optional provider and hub blocks are nil
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesGateway: ~
+        knative: ~
+        file: ~
+        kubernetesIngressNGINX: ~
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
