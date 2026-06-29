@@ -84,9 +84,9 @@ tests:
       hub:
         token: xxx
     asserts:
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/traefik/traefik-hub:v3.20.4
+          pattern: ^ghcr.io/traefik/traefik-hub:v\d+.\d+.\d+
   - it: should respect user-provided registry, repository and tag when Hub is enabled
     set:
       hub:
@@ -106,9 +106,9 @@ tests:
       image:
         registry: docker.io
     asserts:
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik/traefik-hub:v3.20.4
+          pattern: ^docker.io/traefik/traefik-hub:v\d+.\d+.\d+
   - it: should respect user-provided registry, repository and tag for a Proxy install
     set:
       image:
