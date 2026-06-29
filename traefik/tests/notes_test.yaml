@@ -27,6 +27,20 @@ tests:
       - equalRaw:
           value: |2
             RELEASE-NAME with docker.io/traefik:v3.7.0 has been deployed successfully on NAMESPACE namespace!
+  - it: should warn that an inline literal hub.token in values is deprecated
+    set:
+      hub:
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    asserts:
+      - matchRegexRaw:
+          pattern: 'DEPRECATION: providing the Traefik Hub license token inline in values'
+  - it: should not warn about inline token when hub.token references an existing Secret name
+    set:
+      hub:
+        token: "my-hub-license"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION: providing the Traefik Hub license token inline"
   - it: should display warning when using an experimental image tag
     set:
       image:

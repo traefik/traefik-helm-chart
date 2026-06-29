@@ -15,6 +15,17 @@
 {{- end -}}
 
 
+{{/* Deprecation: inline literal hub.token in values (chart creates the license Secret). */}}
+{{- if ge (len (.Values.hub.token | default "")) 65 -}}
+{{- printf "\n" -}}
+⚠️ DEPRECATION: providing the Traefik Hub license token inline in values is deprecated and will
+be removed in a future release. A token in `values.yaml` is a sensitive value that leaks into
+release state, version control and CI logs. Instead, create a `Secret` yourself (with a 'token'
+key) and set `hub.token` to that Secret's name. ⚠️
+{{- printf "\n" -}}
+{{- end -}}
+
+
 {{/* Warn about non-standard Traefik Hub versions (pre-release or minor/patch above supported range) */}}
 {{- if .Values.hub.token -}}
 {{- $hubVersion := include "traefik.hubVersion" $ -}}
