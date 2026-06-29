@@ -1,5 +1,16 @@
 # Change Log
 
+## 41.0.1  ![AppVersion: v3.7.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.5&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-06-29
+
+* fix(ingressroute): fail fast on uppercase ingressRoute keys (RFC 1123)
+* feat(hub): support traefik hub v3.20.5
+* docs(hub): deprecate inline literal token in values
+* chore(release): publish 41.0.1
+
+
+
 ## 41.0.0  ![AppVersion: v3.7.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.5&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-06-15
