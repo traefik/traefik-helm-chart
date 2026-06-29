@@ -19,15 +19,42 @@ Image defaults. An explicit image value always wins; otherwise the chart picks t
 Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
+{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (eq (include "traefik-hub.enabled" .) "true")) -}}
 {{- end -}}
 
 {{- define "traefik.imageRepository" -}}
-{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
+{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (eq (include "traefik-hub.enabled" .) "true")) -}}
 {{- end -}}
 
 {{- define "traefik.defaultTag" -}}
-{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (not (empty .Values.hub.token)) -}}
+{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (eq (include "traefik-hub.enabled" .) "true") -}}
+{{- end -}}
+
+{{/* Hub is enabled by an inline `hub.token` or a BYO `hub.existingSecret`. */}}
+{{- define "traefik-hub.enabled" -}}
+{{- if or .Values.hub.token .Values.hub.existingSecret -}}true{{- end -}}
+{{- end -}}
+
+{{/* Secret name for the license token: existingSecret (BYO), else the chart-managed
+traefik-hub-license for an inline token (>=65), else (DEPRECATED) hub.token as a Secret name (<=64). */}}
+{{- define "traefik-hub.tokenSecretName" -}}
+{{- if .Values.hub.existingSecret -}}
+{{- .Values.hub.existingSecret -}}
+{{- else if ge (len (.Values.hub.token | default "")) 65 -}}
+traefik-hub-license
+{{- else -}}
+{{- .Values.hub.token -}}
+{{- end -}}
+{{- end -}}
+
+{{/* True when the chart must create the license Secret from an inline literal token. */}}
+{{- define "traefik-hub.createLicenseSecret" -}}
+{{- if and (not .Values.hub.existingSecret) (ge (len (.Values.hub.token | default "")) 65) -}}true{{- end -}}
+{{- end -}}
+
+{{/* True when the DEPRECATED <= 64-char `hub.token`-as-Secret-name path is in use. */}}
+{{- define "traefik-hub.usesLegacyTokenSecretName" -}}
+{{- if and (not .Values.hub.existingSecret) .Values.hub.token (le (len .Values.hub.token) 64) -}}true{{- end -}}
 {{- end -}}
 
 {{/*
@@ -35,13 +62,13 @@ Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
 {{- if .Values.oci_meta.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if (include "traefik-hub.enabled" .) -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
  {{- end -}}
 {{- else if .Values.global.azure.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if (include "traefik-hub.enabled" .) -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
@@ -273,8 +300,8 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 */}}
 {{- define "traefik.proxyVersion" -}}
  {{- if $.Values.versionOverride }}
-  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" $.Values.hub.token) }}
- {{- else if $.Values.hub.token -}}
+  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" (include "traefik-hub.enabled" $)) }}
+ {{- else if (include "traefik-hub.enabled" $) -}}
   {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
   {{- $version = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $version) -}}
   {{- include "traefik.proxyVersionFromHub" (dict "Version" $version "Hub" true) }}

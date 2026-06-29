@@ -1,4 +1,4 @@
-{{- if ge (len (.Values.hub.token | default "")) 65 }}
+{{- if eq (include "traefik-hub.createLicenseSecret" .) "true" }}
 ---
 apiVersion: v1
 kind: Secret

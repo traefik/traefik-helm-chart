@@ -763,6 +763,10 @@
                         }
                     }
                 },
+                "existingSecret": {
+                    "description": "Name of an existing `Secret` with a 'token' key holding the license token (BYO). Takes precedence over `hub.token`; also enables Hub.",
+                    "type": "string"
+                },
                 "mcpgateway": {
                     "type": "object",
                     "properties": {
@@ -1306,7 +1310,7 @@
                     ]
                 },
                 "token": {
-                    "description": "Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway.",
+                    "description": "Traefik Hub license token (enables Hub). Provide the **inline literal token** here and the chart creates and mounts the `traefik-hub-license` Secret for you. For an existing Secret (BYO), use `hub.existingSecret` instead. DEPRECATED: a value of 64 characters or fewer is still treated as the name of an existing Secret holding the token — migrate that usage to `hub.existingSecret`.",
                     "type": "string"
                 },
                 "tokenMountPath": {
