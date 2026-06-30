@@ -18,3 +18,14 @@ tests:
       - equal:
           path: data.something
           value: "templated"
+  - it: should render extraValues in extra objects
+    values:
+      - ./values/extra.yaml
+    documentIndex: 2
+    asserts:
+      - equal:
+          path: data.myKey
+          value: "myValue"
+      - equal:
+          path: data.nested
+          value: "nestedValue"
