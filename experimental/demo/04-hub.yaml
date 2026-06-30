@@ -1,0 +1,12 @@
+deployment:
+  spec:
+    replicas: 3
+
+traefik:
+  providers:
+    kubernetesGateway: {}
+  metrics:
+    prometheus: {}
+  accessLog: {}
+  hub:
+    token: REPLACE-WITH-LICENSE-TOKEN

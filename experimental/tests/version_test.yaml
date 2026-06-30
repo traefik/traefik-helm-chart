@@ -1,0 +1,154 @@
+suite: version guard (warn on minor/patch above max, fail on major mismatch)
+tests:
+  # --- NOTES.txt warnings ---------------------------------------------------
+  - it: default Proxy install prints no version warning
+    templates:
+      - NOTES.txt
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING"
+
+  - it: default Hub install prints no version warning
+    templates:
+      - NOTES.txt
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING"
+
+  - it: a stable Proxy minor/patch above max warns (no failure)
+    templates:
+      - NOTES.txt
+    set:
+      image: docker.io/traefik:v3.99.0
+    asserts:
+      - matchRegexRaw:
+          pattern: 'non-standard image tag \(v3\.99\.0\)'
+
+  - it: an experimental Proxy tag warns
+    templates:
+      - NOTES.txt
+    set:
+      image: docker.io/traefik:experimental-v3.7.0
+    asserts:
+      - matchRegexRaw:
+          pattern: 'non-standard image tag \(experimental-v3\.7\.0\)'
+
+  - it: a non-semver Proxy tag is left alone (no warning)
+    templates:
+      - NOTES.txt
+    set:
+      image: docker.io/traefik:latest
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING"
+
+  - it: a Hub minor/patch above max warns
+    templates:
+      - NOTES.txt
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      image: ghcr.io/traefik/traefik-hub:v3.99.0
+    asserts:
+      - matchRegexRaw:
+          pattern: 'Traefik Hub image tag \(v3\.99\.0\)'
+
+  # --- hard failures --------------------------------------------------------
+  - it: default Proxy install passes the guard
+    templates:
+      - validation.yaml
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: a major-above-max Proxy image fails
+    templates:
+      - validation.yaml
+    set:
+      image: docker.io/traefik:v4.0.0
+    asserts:
+      - failedTemplate:
+          errorPattern: "does not support Traefik Proxy v4.0.0 — a major version above"
+
+  - it: a below-minimum Proxy image fails
+    templates:
+      - validation.yaml
+    set:
+      image: docker.io/traefik:v3.5.0
+    asserts:
+      - failedTemplate:
+          errorPattern: "supports Traefik Proxy >= "
+
+  - it: a major-above-max Hub image fails
+    templates:
+      - validation.yaml
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      image: ghcr.io/traefik/traefik-hub:v4.0.0
+    asserts:
+      - failedTemplate:
+          errorPattern: "does not support Traefik Hub v4.0.0 — a major version above"
+
+  - it: Hub with a non-Hub image fails
+    templates:
+      - validation.yaml
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      image: docker.io/traefik:v3.20.0
+    asserts:
+      - failedTemplate:
+          errorPattern: "requires a traefik-hub image"
+
+  - it: a non-semver Proxy tag does not fail the guard
+    templates:
+      - validation.yaml
+    set:
+      image: docker.io/traefik:latest
+    asserts:
+      - notFailedTemplate: {}
+
+  # --- digest-pinned images (no parseable tag → guard skipped) --------------
+  - it: a digest-only Proxy image is not guarded (no warning)
+    templates:
+      - NOTES.txt
+    set:
+      image: docker.io/traefik@sha256:1111111111111111111111111111111111111111111111111111111111111111
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING"
+
+  - it: a digest-only Proxy image does not fail the guard
+    templates:
+      - validation.yaml
+    set:
+      image: docker.io/traefik@sha256:1111111111111111111111111111111111111111111111111111111111111111
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: a digest-only Hub image warns nothing (no v3.99 fabrication)
+    templates:
+      - NOTES.txt
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      image: ghcr.io/traefik/traefik-hub@sha256:1111111111111111111111111111111111111111111111111111111111111111
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "WARNING"
+
+  - it: a digest-only Hub image does not fail the guard
+    templates:
+      - validation.yaml
+    set:
+      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      image: ghcr.io/traefik/traefik-hub@sha256:1111111111111111111111111111111111111111111111111111111111111111
+    asserts:
+      - notFailedTemplate: {}
+
+  - it: a tag+digest image is still guarded on its tag (major above max fails)
+    templates:
+      - validation.yaml
+    set:
+      image: docker.io/traefik:v4.0.0@sha256:1111111111111111111111111111111111111111111111111111111111111111
+    asserts:
+      - failedTemplate:
+          errorPattern: "does not support Traefik Proxy v4.0.0 — a major version above"

@@ -1,0 +1,159 @@
+suite: Hub licenseSecret + token mount
+tests:
+  - it: licenseSecret is absent when traefik.hub.token is empty
+    template: license-secret.yaml
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: licenseSecret renders with the token base64-encoded
+    template: license-secret.yaml
+    set:
+      traefik.hub.token: "my-traefik-hub-token"
+    asserts:
+      - isKind: { of: Secret }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-hub-license
+      - equal:
+          path: type
+          value: Opaque
+      - equal:
+          path: data.token
+          value: bXktdHJhZWZpay1odWItdG9rZW4=
+
+  - it: licenseSecret picks up commonLabels via the shared metadata helper
+    template: license-secret.yaml
+    set:
+      traefik.hub.token: "x"
+      commonLabels:
+        team: platform
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+
+  - it: user metadata.annotations land on the hub-license Secret
+    template: license-secret.yaml
+    set:
+      traefik.hub.token: "x"
+      secret:
+        hub-license:
+          metadata:
+            annotations:
+              external-secrets.io/owner: gitops
+    asserts:
+      - equal:
+          path: metadata.annotations["external-secrets.io/owner"]
+          value: gitops
+
+  - it: secret.hub-license=null skips rendering even when token is set (BYO Secret)
+    template: license-secret.yaml
+    set:
+      traefik.hub.token: "x"
+      secret:
+        hub-license: null
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: rendered traefik.yaml strips the inline token and sets tokenfilepath
+    template: configmap.yaml
+    set:
+      traefik.hub.token: "my-traefik-hub-token"
+    asserts:
+      - notMatchRegex:
+          path: data["traefik.yaml"]
+          pattern: "token:\\s*my-traefik-hub-token"
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "tokenfilepath:\\s*/etc/secrets/token"
+
+  - it: user-provided tokenfilepath overrides the chart default
+    template: configmap.yaml
+    set:
+      traefik.hub.token: "my-traefik-hub-token"
+      traefik.hub.tokenfilepath: "/custom/path/token"
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "tokenfilepath:\\s*/custom/path/token"
+
+  - it: token mount + volume land on the pod when token is set
+    template: deployment.yaml
+    set:
+      traefik.hub.token: "x"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+            secret:
+              secretName: RELEASE-NAME-traefik-hub-license
+
+  - it: no hub-token volume when token is empty
+    template: deployment.yaml
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+
+  - it: POD_NAME + POD_NAMESPACE downward-API env vars land when Hub is in use
+    template: deployment.yaml
+    set:
+      traefik.hub.token: "x"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+
+  - it: the downward-API env vars are present even without Hub (parity with the legacy chart)
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: USER, value: traefik }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+
+  - it: traefik.hub.namespaces and other hub keys flow verbatim into the config
+    template: configmap.yaml
+    set:
+      traefik.hub.token: "x"
+      traefik.hub.namespaces:
+        - app-ns
+      traefik.hub.apimanagement: {}
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "namespaces:\\s*\n\\s*- app-ns"
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "apimanagement:\\s*\\{\\s*\\}"

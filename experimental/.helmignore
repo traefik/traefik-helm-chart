@@ -1,0 +1,11 @@
+# Patterns to ignore when packaging/loading the chart.
+.git/
+.gitignore
+.DS_Store
+.vscode/
+.idea/
+*.bak
+*.tmproj
+# Editor / tooling dotfiles that are not chart content.
+.mcp.json
+__pycache__/

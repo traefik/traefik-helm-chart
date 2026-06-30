@@ -1,0 +1,163 @@
+suite: RBAC objects (namespaced)
+tests:
+  - it: Role is absent by default
+    template: role.yaml
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: RoleBinding is absent by default
+    template: rolebinding.yaml
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: role={} renders one Role per provider namespace
+    template: role.yaml
+    set:
+      role: {}
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [my-ns]
+      traefik.providers.kubernetesIngress.namespaces: [my-ns]
+    asserts:
+      - hasDocuments: { count: 1 }
+      - isKind: { of: Role }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: metadata.namespace
+          value: my-ns
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [pods]
+            verbs: [get]
+
+  - it: role enabled without provider namespaces fails fast
+    template: validation.yaml
+    set:
+      role: {}
+      roleBinding: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "role is enabled but no traefik.providers.<p>.namespaces is set — namespaced RBAC requires at least one provider with a `namespaces:` list (see EXAMPLES.md \"Install in a dedicated namespace, with limited RBAC\")"
+
+  - it: roleBinding={} wires the chart ServiceAccount to the chart Role
+    template: rolebinding.yaml
+    set:
+      role: {}
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [my-ns]
+    asserts:
+      - hasDocuments: { count: 1 }
+      - isKind: { of: RoleBinding }
+      - equal:
+          path: roleRef.kind
+          value: Role
+      - equal:
+          path: roleRef.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: subjects[0].namespace
+          value: NAMESPACE
+      - equal:
+          path: metadata.namespace
+          value: my-ns
+
+  - it: role.rules user array replaces chart defaults wholesale (applied to every rendered Role)
+    template: role.yaml
+    set:
+      role.rules:
+        - apiGroups: [""]
+          resources: [services]
+          verbs: [get]
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [ns-a, ns-b]
+    asserts:
+      - hasDocuments: { count: 2 }
+      - lengthEqual:
+          path: rules
+          count: 1
+
+  - it: role picks up commonLabels via shared metadata helper
+    template: role.yaml
+    set:
+      role: {}
+      roleBinding: {}
+      commonLabels:
+        team: platform
+      traefik.providers.kubernetesCRD.namespaces: [my-ns]
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+
+  - it: multi-ns provider list renders one Role per ns with per-ns rule scoping
+    template: role.yaml
+    set:
+      role: {}
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [ns-a, ns-b]
+      traefik.providers.kubernetesIngress.namespaces: [ns-b, ns-c]
+    asserts:
+      - hasDocuments: { count: 3 }
+      # ns-a: only kubernetesCRD layer (traefik.io CRDs) + core
+      - documentIndex: 0
+        equal:
+          path: metadata.namespace
+          value: ns-a
+      - documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups: [traefik.io]
+            resources: [ingressroutes, ingressroutetcps, ingressrouteudps, middlewares, middlewaretcps, serverstransports, serverstransporttcps, tlsoptions, tlsstores, traefikservices]
+            verbs: [get, list, watch]
+      - documentIndex: 0
+        notContains:
+          path: rules
+          content:
+            apiGroups: [networking.k8s.io]
+            resources: [ingresses, ingressclasses]
+            verbs: [get, list, watch]
+      # ns-b: both providers active
+      - documentIndex: 1
+        equal:
+          path: metadata.namespace
+          value: ns-b
+      - documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups: [traefik.io]
+            resources: [ingressroutes, ingressroutetcps, ingressrouteudps, middlewares, middlewaretcps, serverstransports, serverstransporttcps, tlsoptions, tlsstores, traefikservices]
+            verbs: [get, list, watch]
+      - documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups: [networking.k8s.io]
+            resources: [ingresses, ingressclasses]
+            verbs: [get, list, watch]
+      # ns-c: only kubernetesIngress layer
+      - documentIndex: 2
+        equal:
+          path: metadata.namespace
+          value: ns-c
+      - documentIndex: 2
+        notContains:
+          path: rules
+          content:
+            apiGroups: [traefik.io]
+            resources: [ingressroutes, ingressroutetcps, ingressrouteudps, middlewares, middlewaretcps, serverstransports, serverstransporttcps, tlsoptions, tlsstores, traefikservices]
+            verbs: [get, list, watch]
+      - documentIndex: 2
+        contains:
+          path: rules
+          content:
+            apiGroups: [networking.k8s.io]
+            resources: [ingresses, ingressclasses]
+            verbs: [get, list, watch]
