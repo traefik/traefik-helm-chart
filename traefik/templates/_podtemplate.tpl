@@ -20,7 +20,7 @@
       {{- if .Values.global.azure.enabled }}
         azure-extensions-usage-release-identifier: {{ .Release.Name }}
       {{- end }}
-      {{- if and .Values.hub.token .Values.hub.apimanagement.enabled .Values.hub.apimanagement.admission.restartOnCertificateChange }}
+      {{- if and (.Values.hub).token ((.Values.hub).apimanagement).enabled (((.Values.hub).apimanagement).admission).restartOnCertificateChange }}
         {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
@@ -137,7 +137,7 @@
           {{- end }}
          {{- end }}
         {{- end }}
-        {{- if .Values.hub.token }}
+        {{- if (.Values.hub).token }}
           {{- if not .Values.hub.offline }}
           {{- $listenAddr := default ":9943" .Values.hub.apimanagement.admission.listenAddr }}
         - name: admission
@@ -162,7 +162,7 @@
             {{- end }}
           - name: tmp
             mountPath: /tmp
-          {{- if .Values.hub.token }}
+          {{- if (.Values.hub).token }}
           - name: hub-token
             mountPath: {{ .Values.hub.tokenMountPath }}
             readOnly: true
@@ -176,7 +176,7 @@
           - name: plugins
             mountPath: "/plugins-storage"
           {{- end }}
-          {{- if .Values.providers.file.enabled }}
+          {{- if (.Values.providers.file).enabled }}
           - name: traefik-extra-config
             mountPath: "/etc/traefik/dynamic"
           {{- end }}
@@ -482,7 +482,7 @@
           {{- with .Values.providers.precedence }}
           - "--providers.precedence={{ join "," . }}"
           {{- end }}
-          {{- if .Values.providers.kubernetesCRD.enabled }}
+          {{- if (.Values.providers.kubernetesCRD).enabled }}
           - "--providers.kubernetescrd"
            {{- if .Values.providers.kubernetesCRD.labelSelector }}
           - "--providers.kubernetescrd.labelSelector={{ .Values.providers.kubernetesCRD.labelSelector }}"
@@ -511,7 +511,7 @@
           - "--providers.kubernetescrd.nativeLBByDefault=true"
            {{- end }}
           {{- end }}
-          {{- if .Values.providers.kubernetesIngress.enabled }}
+          {{- if (.Values.providers.kubernetesIngress).enabled }}
           - "--providers.kubernetesingress"
            {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
@@ -1004,7 +1004,7 @@
           {{- end }}
         - name: tmp
           emptyDir: {}
-        {{- if .Values.hub.token }}
+        {{- if (.Values.hub).token }}
         - name: hub-token
           secret:
             secretName: {{ le (len .Values.hub.token) 64 | ternary .Values.hub.token "traefik-hub-license" }}
@@ -1046,7 +1046,7 @@
         - name: plugins
           emptyDir: {}
         {{- end }}
-        {{- if .Values.providers.file.enabled }}
+        {{- if (.Values.providers.file).enabled }}
         - name: traefik-extra-config
           configMap:
             name: {{ template "traefik.fullname" . }}-file-provider

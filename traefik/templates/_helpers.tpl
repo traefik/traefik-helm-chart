@@ -19,15 +19,15 @@ Image defaults. An explicit image value always wins; otherwise the chart picks t
 Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
+{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty (.Values.hub).token))) -}}
 {{- end -}}
 
 {{- define "traefik.imageRepository" -}}
-{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
+{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty (.Values.hub).token))) -}}
 {{- end -}}
 
 {{- define "traefik.defaultTag" -}}
-{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (not (empty .Values.hub.token)) -}}
+{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (not (empty (.Values.hub).token)) -}}
 {{- end -}}
 
 {{/*
@@ -35,13 +35,13 @@ Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
 {{- if .Values.oci_meta.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if (.Values.hub).token -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
  {{- end -}}
 {{- else if .Values.global.azure.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if (.Values.hub).token -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
@@ -275,8 +275,8 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
 */}}
 {{- define "traefik.proxyVersion" -}}
  {{- if $.Values.versionOverride }}
-  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" $.Values.hub.token) }}
- {{- else if $.Values.hub.token -}}
+  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" ($.Values.hub).token) }}
+ {{- else if ($.Values.hub).token -}}
   {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
   {{- $version = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $version) -}}
   {{- include "traefik.proxyVersionFromHub" (dict "Version" $version "Hub" true) }}
