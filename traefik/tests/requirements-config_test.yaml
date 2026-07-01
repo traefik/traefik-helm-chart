@@ -135,7 +135,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.4."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.5."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -687,5 +687,20 @@ tests:
           sources:
             plugin1:
               baseModuleName: "gitlab.company.com"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when an ingressRoute key contains uppercase characters
+    set:
+      ingressRoute:
+        kubernetesCRD:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: ingressRoute key "kubernetesCRD" contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase).'
+  - it: should not fail when all ingressRoute keys are lowercase
+    set:
+      ingressRoute:
+        dashboard:
+          enabled: true
     asserts:
       - notFailedTemplate: {}

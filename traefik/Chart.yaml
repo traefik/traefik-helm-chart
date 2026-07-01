@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.0.0
+version: 41.0.1
 # renovate: image=traefik
 appVersion: v3.7.5
 kubeVersion: '>=1.25.0-0'
@@ -25,15 +25,9 @@ annotations:
   traefik.io/proxy-min-version: v3.6.0
   traefik.io/proxy-max-version: v3.7.5
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.4
+  traefik.io/hub-max-version: v3.20.5
   artifacthub.io/changes: |
-    - "fix(provider): :bug: emit kubernetesIngressNGINX publishService for external service"
-    - "fix(notes): :memo: use traefik.image-name so NOTES match deployed image"
-    - "fix(logs)!: align syntax with upstream (#1887)"
-    - "fix(deployment): omit spec.replicas when replicas is null"
-    - "feat(version): :sparkles: relax max-version guard to warn on minor/patch, fail only on major mismatch"
-    - "feat(providers.file)!: switch content to an object"
-    - "feat(hub): :sparkles: install out-of-box with only hub.token set"
-    - "feat(deps): update traefik docker tag to v3.7.5"
-    - "ci(renovate): restore update on appVersion"
-    - "chore(release): publish 41.0.0"
+    - "fix(ingressroute): fail fast on uppercase ingressRoute keys (RFC 1123)"
+    - "feat(hub): support traefik hub v3.20.5"
+    - "docs(hub): deprecate inline literal token in values"
+    - "chore(release): publish 41.0.1"

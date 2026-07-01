@@ -57,6 +57,19 @@
       matchPackageNames: ['helm-unittest/helm-unittest'],
       extractVersion: '^v(?<version>.+)$',
     },
+    // We need to group all GH actions PRs to reduce number of PRs to review
+    {
+      "groupName": "GitHub actions",
+      "groupSlug": "gh-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "groupName": "GitHub actions",
+      "groupSlug": "gh-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"]
+    },
   ],
   customManagers: [
     {
