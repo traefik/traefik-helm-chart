@@ -3,4 +3,4 @@ name: hub-manager
 description: A Helm chart for hub-manager
 type: application
 version: 1.0.0-rc.1
-appVersion: 1.0.0-rc.1
+appVersion: v0.44.0
