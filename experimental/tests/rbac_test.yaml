@@ -38,7 +38,7 @@ tests:
   - it: ClusterRole grants leases when Hub is enabled
     template: clusterrole.yaml
     set:
-      traefik.hub.token: x
+      traefik.hub: {}
     asserts:
       - contains:
           path: rules
@@ -114,7 +114,6 @@ tests:
   - it: enabling Hub APIM appends the hub.traefik.io rules to the ClusterRole
     template: clusterrole.yaml
     set:
-      traefik.hub.token: dummy-token
       traefik.hub.apimanagement: {}
     asserts:
       - contains:
@@ -127,7 +126,6 @@ tests:
   - it: overlapping resource grants merge cleanly across layers
     template: clusterrole.yaml
     set:
-      traefik.hub.token: dummy-token
       traefik.hub.apimanagement: {}
     asserts:
       # Hub grants secrets write-back as its own rule (verbs differ from core,

@@ -8,25 +8,25 @@ ghcr.io/traefik/traefik-hub:{{ $tag }}
 {{- end -}}
 
 {{/*
-Mount path for the Hub token Secret. Chart auto-sets `traefik.hub.tokenfilepath`
-to <hubTokenMountPath>/token so traefik.yaml never holds the inline token.
+Mount path for the Hub license Secret. Chart auto-sets `traefik.hub.tokenfilepath`
+to <hubTokenMountPath>/token so traefik-hub reads the token from the mounted file.
 */}}
 {{- define "traefik.hubTokenMountPath" -}}/etc/secrets{{- end -}}
 
 {{- define "traefik.hubTokenFilePath" -}}{{- include "traefik.hubTokenMountPath" . -}}/token{{- end -}}
 
 {{/*
-Non-empty when an inline Hub license token is set (.Values.traefik.hub.token).
-Gates the hub-license Secret, its volumeMount, and the auto-injected tokenfilepath.
+Name of the BYO Hub license Secret the chart mounts. The user creates this Secret
+out-of-band (with a `token` key); the chart never holds the token in values.
 */}}
-{{- define "traefik.hubTokenInline" -}}
-{{- $hub := (.Values.traefik | default dict).hub | default dict -}}
-{{- $hub.token | default "" -}}
+{{- define "traefik.hubLicenseSecretName" -}}
+{{- printf "%s-hub-license" (include "traefik.fullname" .) -}}
 {{- end -}}
 
 {{/*
-True when a `traefik.hub` block is present (inline token or BYO Secret).
-Gates Hub-wide concerns like the extra RBAC.
+True when a `traefik.hub` block is present. Hub is BYO-only: presence enables the
+Hub image default, the license-Secret mount, the auto-injected tokenfilepath, and
+the extra RBAC. The token itself lives in the BYO Secret, never in values.
 */}}
 {{- define "traefik.hubEnabled" -}}
 {{- if hasKey (.Values.traefik | default dict) "hub" -}}true{{- end -}}

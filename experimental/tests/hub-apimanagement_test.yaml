@@ -8,7 +8,6 @@ tests:
   - it: admissionWebhookSecret renders with TLS cert when admission is set
     template: admission-webhook-secret.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
     asserts:
@@ -27,7 +26,6 @@ tests:
   - it: service.hub-admission renders when admission is set
     template: service.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
     documentSelector:
@@ -45,7 +43,6 @@ tests:
   - it: service.hub-apiportal renders on apimanagement (no admission needed)
     template: service.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
     documentSelector:
       path: metadata.name
@@ -70,7 +67,6 @@ tests:
   - it: validation fails when admission is set but service.hub-admission is null
     template: validation.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
       service:
@@ -82,7 +78,6 @@ tests:
   - it: admission and apiportal containerPorts land on the pod when enabled
     template: deployment.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
     asserts:
@@ -96,7 +91,6 @@ tests:
   - it: custom admission listenaddr drives the container port
     template: deployment.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission:
         listenaddr: "0.0.0.0:11443"
@@ -108,7 +102,6 @@ tests:
   - it: rendered traefik.yaml auto-sets admission.secretname
     template: configmap.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
     asserts:
@@ -119,7 +112,6 @@ tests:
   - it: user override of admission.secretname wins over the chart default
     template: configmap.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission:
         secretname: my-custom-cert
@@ -131,7 +123,6 @@ tests:
   - it: chart ships two default MWCs (hub-acp + hub-api)
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
     asserts:
       - hasDocuments: { count: 2 }
@@ -139,7 +130,6 @@ tests:
   - it: hub-acp MWC has a single webhook for accesscontrolpolicies
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
     documentSelector:
       path: metadata.name
@@ -158,7 +148,6 @@ tests:
   - it: hub-api MWC has 7 webhooks for the api resources
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
     documentSelector:
       path: metadata.name
@@ -171,7 +160,6 @@ tests:
   - it: disabling hub-acp leaves only hub-api
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       mutatingWebhookConfigurations.hub-acp: null
     asserts:
@@ -183,7 +171,6 @@ tests:
   - it: user-defined MWC requires its own webhooks (chart has no defaults)
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       mutatingWebhookConfigurations.custom: {}
     asserts:
@@ -193,7 +180,6 @@ tests:
   - it: per-entry metadata.annotations land on the MWC
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       mutatingWebhookConfigurations.hub-acp.metadata.annotations:
         cert-manager.io/inject-ca-from: my-ns/my-cert
@@ -208,7 +194,6 @@ tests:
   - it: user webhooks override replaces the chart-default array
     template: mutating-webhook-configurations.yaml
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       mutatingWebhookConfigurations.hub-acp.webhooks:
         - name: my.custom.svc

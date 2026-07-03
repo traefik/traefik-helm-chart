@@ -2,13 +2,13 @@
 {{- $merged := deepCopy (.Values.traefik | default dict) -}}
 
 {{/*
-Hub: an inline token is stripped from the config (it lands in the hub-license
-Secret) and tokenfilepath is auto-set so traefik-hub reads it from the mounted
-file. User can still override tokenfilepath under traefik.hub.
+Hub is BYO-only: the license token lives in a Secret the user creates, mounted by
+the chart. tokenfilepath is auto-set so traefik-hub reads it from the mounted file.
+User can still override tokenfilepath under traefik.hub. An inline token is rejected
+by traefik.validate.hub, so it never reaches the config.
 */}}
-{{- if include "traefik.hubTokenInline" . -}}
+{{- if include "traefik.hubEnabled" . -}}
   {{- $hub := $merged.hub | default dict -}}
-  {{- $_ := unset $hub "token" -}}
   {{- if not (hasKey $hub "tokenfilepath") -}}
     {{- $_ := set $hub "tokenfilepath" (include "traefik.hubTokenFilePath" .) -}}
   {{- end -}}

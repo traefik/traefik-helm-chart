@@ -8,9 +8,9 @@ tests:
           path: spec.template.spec.containers[0].image
           pattern: "^docker\\.io/traefik:"
 
-  - it: default image switches to traefik-hub when traefik.hub.token is set
+  - it: default image switches to traefik-hub when a traefik.hub block is set
     set:
-      traefik.hub.token: "x"
+      traefik.hub: {}
     asserts:
       - matchRegex:
           path: spec.template.spec.containers[0].image
@@ -18,7 +18,7 @@ tests:
 
   - it: default Hub image tag follows the Chart.yaml hub-max-version annotation
     set:
-      traefik.hub.token: "x"
+      traefik.hub: {}
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
@@ -26,7 +26,7 @@ tests:
 
   - it: explicit image override wins over the Hub auto-default
     set:
-      traefik.hub.token: "x"
+      traefik.hub: {}
       image: my-registry/traefik-hub:custom
     asserts:
       - equal:

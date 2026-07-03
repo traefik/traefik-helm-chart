@@ -168,19 +168,27 @@ via your license token. From there you can enable any Hub feature (MCP gateway,
 AI gateway, extra providers, Redis backend, tracing, …) by adding keys under
 `traefik.hub.*` — they pass through verbatim into `traefik.yaml`.
 
-When `traefik.hub.token` is set, the chart auto-defaults `image:` to
+Setting a `traefik.hub` block enables Hub: the chart auto-defaults `image:` to
 `ghcr.io/traefik/traefik-hub:<traefik.io/hub-max-version>` (annotation in
-`Chart.yaml`). Override `image:` to pin a specific version or registry.
+`Chart.yaml`), grants the extra RBAC, mounts the license Secret, and sets
+`tokenfilepath` so traefik-hub reads the token from the mounted file. Override
+`image:` to pin a specific version or registry.
 
-The inline token is managed for you: the chart creates a Secret, mounts it, and
-sets `tokenfilepath` so the rendered `traefik.yaml` never contains the token.
-Replace it via `--set` or a separate values file.
+**Bring your own license Secret.** The token is never placed in values (an inline
+`traefik.hub.token` is rejected). Create a Secret named `<release>-traefik-hub-license`
+with a `token` key yourself — out-of-band, via your secret manager (External
+Secrets, Sealed Secrets, `kubectl`, …):
+
+```shell
+kubectl create secret generic traefik-traefik-hub-license \
+  --from-literal=token='<your-license-token>'
+```
+
+Then enable Hub (no token in values) — the presence of the `hub` block is enough:
 
 ```yaml
 traefik:
   hub:
-    token: "REPLACE-WITH-LICENSE-TOKEN"
-
     # Limit the namespaces Hub watches. When unset, Hub watches all.
     # namespaces:
     #   - default
@@ -203,30 +211,26 @@ traefik:
 ```
 
 ```shell
-helm install traefik ./traefik \
-  -f your-hub-gateway-values.yaml \
-  --set 'traefik.hub.token=<your-license-token>'
+helm install traefik ./traefik -f your-hub-gateway-values.yaml
 ```
 
 ## Install Traefik Hub API Management
 
-Builds on the Hub Gateway install (token + auto-defaulted image) and adds API
-Management: admission webhook, mutating webhook configurations, and the API
-portal Service. The chart renders all five Hub k8s objects automatically when
-`traefik.hub.apimanagement` is present.
+Builds on the Hub Gateway install (BYO license Secret + auto-defaulted image) and
+adds API Management: admission webhook, mutating webhook configurations, and the
+API portal Service. The chart renders all five Hub k8s objects automatically when
+`traefik.hub.apimanagement` is present. Create the `<release>-traefik-hub-license`
+Secret first (see above).
 
 ```yaml
 traefik:
   hub:
-    token: "REPLACE-WITH-LICENSE-TOKEN"
     apimanagement:
       admission: {}
 ```
 
 ```shell
-helm install traefik ./traefik \
-  -f your-hub-apimanagement-values.yaml \
-  --set 'traefik.hub.token=<your-license-token>'
+helm install traefik ./traefik -f your-hub-apimanagement-values.yaml
 ```
 
 ## Install with auto-scaling

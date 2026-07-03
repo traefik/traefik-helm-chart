@@ -19,13 +19,15 @@ helm upgrade traefik ./experimental -n traefik \
 helm upgrade traefik ./experimental -n traefik \
   -f experimental/demo/03-config.yaml
 
-helm upgrade traefik ./experimental -n traefik \
-  -f experimental/demo/04-hub.yaml \
-  --set "traefik.hub.token=$HUB_TOKEN"
+# Hub is BYO-only: create the license Secret out-of-band, then enable Hub.
+kubectl create secret generic traefik-traefik-hub-license -n traefik \
+  --from-literal=token="$HUB_TOKEN"
 
 helm upgrade traefik ./experimental -n traefik \
-  -f experimental/demo/05-apim.yaml \
-  --set "traefik.hub.token=$HUB_TOKEN"
+  -f experimental/demo/04-hub.yaml
+
+helm upgrade traefik ./experimental -n traefik \
+  -f experimental/demo/05-apim.yaml
 
 
 helm uninstall traefik -n traefik

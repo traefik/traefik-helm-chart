@@ -7,11 +7,11 @@ the hard-fail guard in _helpers_validate.tpl.
 
 {{/*
 Effective traefik container image. Explicit `image:` wins; else the Hub default
-(when `traefik.hub.token` is set) or Proxy default (`docker.io/traefik:<appVersion>`).
+(when a `traefik.hub` block is set) or Proxy default (`docker.io/traefik:<appVersion>`).
 */}}
 {{- define "traefik.imageName" -}}
 {{- $default := printf "docker.io/traefik:%s" .Chart.AppVersion -}}
-{{- if include "traefik.hubTokenInline" . -}}
+{{- if include "traefik.hubEnabled" . -}}
   {{- $default = include "traefik.hubImageDefault" . -}}
 {{- end -}}
 {{- .Values.image | default $default -}}
@@ -39,7 +39,7 @@ Hub tag is treated as latest in-range (v3.99), per legacy chart.
 {{- $imageRef := include "traefik.imageName" . -}}
 {{- $tag := include "traefik.imageTag" $imageRef -}}
 {{- $digestNoTag := and (contains "@" $imageRef) (eq $tag "") -}}
-{{- if include "traefik.hubTokenInline" . -}}
+{{- if include "traefik.hubEnabled" . -}}
   {{- $v := $tag -}}
   {{- if not (regexMatch "v[0-9]+\\.[0-9]+\\.[0-9]+" (default "" $v)) -}}{{- $v = "v3.99" -}}{{- end -}}
   {{- dict "version" $v "tag" (default "v3.99" $tag) "min" (index $ann "traefik.io/hub-min-version") "max" (index $ann "traefik.io/hub-max-version") "label" "Traefik Hub image tag" "isHub" true "skip" $digestNoTag | toYaml -}}

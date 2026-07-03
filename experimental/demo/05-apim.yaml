@@ -8,7 +8,7 @@ traefik:
   metrics:
     prometheus: {}
   accessLog: {}
+  # BYO license Secret `<release>-traefik-hub-license` (see demo/README.md).
   hub:
-    token: REPLACE-WITH-LICENSE-TOKEN
     apimanagement:
       admission: {}

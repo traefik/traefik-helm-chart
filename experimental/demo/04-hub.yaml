@@ -2,11 +2,13 @@ deployment:
   spec:
     replicas: 3
 
+# Hub is BYO-only: create a Secret named `<release>-traefik-hub-license` with a
+# `token` key out-of-band (e.g. `kubectl create secret generic <release>-traefik-hub-license
+# --from-literal=token=<your-license-token>`). Setting the `hub` block enables Hub.
 traefik:
   providers:
     kubernetesGateway: {}
   metrics:
     prometheus: {}
   accessLog: {}
-  hub:
-    token: REPLACE-WITH-LICENSE-TOKEN
+  hub: {}

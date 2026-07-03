@@ -77,12 +77,12 @@ tests:
           path: metadata.annotations["owned-by"]
           value: gitops
 
-  - it: daemonset picks up Hub mounts/env when traefik.hub.token is set
+  - it: daemonset picks up Hub mounts/env when a traefik.hub block is set
     template: daemonset.yaml
     set:
       deployment: null
       daemonset: {}
-      traefik.hub.token: "x"
+      traefik.hub: {}
     asserts:
       - contains:
           path: spec.template.spec.containers[0].volumeMounts

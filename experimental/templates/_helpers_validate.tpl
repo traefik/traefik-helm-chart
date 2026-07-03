@@ -142,22 +142,22 @@ Hub composition rules.
 {{- define "traefik.validate.hub" -}}
 
 {{/*
-Hub needs the traefik-hub image (defaulted when traefik.hub.token is set);
-fires only if `image:` was overridden with a non-Hub ref (traefik-helm-chart#1885).
+Hub is BYO-only: an inline `traefik.hub.token` in values is rejected. The license
+token must live in a Secret named <fullname>-hub-license (key `token`) that you
+create; the chart mounts it and sets tokenfilepath.
 */}}
-{{- if include "traefik.hubTokenInline" . -}}
-  {{- if not (contains "traefik-hub" (include "traefik.imageName" .)) -}}
-    {{- fail "ERROR: Traefik Hub (traefik.hub.token set) requires a traefik-hub image — leave `image` unset to use the default, or point it at a traefik-hub repository" -}}
-  {{- end -}}
+{{- $hub := (.Values.traefik | default dict).hub | default dict -}}
+{{- if and (kindIs "map" $hub) (hasKey $hub "token") -}}
+  {{- fail (printf "ERROR: inline traefik.hub.token is not supported — create a Secret named %s with a `token` key and let the chart mount it (BYO). See EXAMPLES.md \"Install Traefik Hub\"" (include "traefik.hubLicenseSecretName" .)) -}}
 {{- end -}}
 
 {{/*
-API Management requires a license token (the binary refuses to start without
-it); failing at template time beats the deferred runtime failure.
+Hub needs the traefik-hub image (defaulted when a traefik.hub block is set);
+fires only if `image:` was overridden with a non-Hub ref (traefik-helm-chart#1885).
 */}}
-{{- if include "traefik.hubAPIManagementEnabled" . -}}
-  {{- if not (include "traefik.hubTokenInline" .) -}}
-    {{- fail "traefik.hub.apimanagement requires a license token: set traefik.hub.token (see EXAMPLES.md \"Install Traefik Hub API Management\")" -}}
+{{- if include "traefik.hubEnabled" . -}}
+  {{- if not (contains "traefik-hub" (include "traefik.imageName" .)) -}}
+    {{- fail "ERROR: Traefik Hub (traefik.hub set) requires a traefik-hub image — leave `image` unset to use the default, or point it at a traefik-hub repository" -}}
   {{- end -}}
 {{- end -}}
 

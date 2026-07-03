@@ -390,18 +390,6 @@
               "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
             }
           }
-        },
-        "hub-license": {
-          "type": [
-            "object",
-            "null"
-          ],
-          "additionalProperties": false,
-          "properties": {
-            "metadata": {
-              "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
-            }
-          }
         }
       },
       "additionalProperties": {

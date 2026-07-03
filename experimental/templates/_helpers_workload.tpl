@@ -38,7 +38,7 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
     (dict "name" "config" "mountPath" "/config")
     (dict "name" "tmp" "mountPath" "/tmp")
 -}}
-{{- if include "traefik.hubTokenInline" $ctx -}}
+{{- if include "traefik.hubEnabled" $ctx -}}
   {{- $volumeMounts = append $volumeMounts (dict
       "name" "hub-token"
       "mountPath" (include "traefik.hubTokenMountPath" $ctx)
@@ -117,10 +117,10 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
     (dict "name" "config" "configMap" (dict "name" $fullname))
     (dict "name" "tmp" "emptyDir" (dict))
 -}}
-{{- if include "traefik.hubTokenInline" $ctx -}}
+{{- if include "traefik.hubEnabled" $ctx -}}
   {{- $volumes = append $volumes (dict
       "name" "hub-token"
-      "secret" (dict "secretName" (printf "%s-hub-license" $fullname))
+      "secret" (dict "secretName" (include "traefik.hubLicenseSecretName" $ctx))
   ) -}}
 {{- end -}}
 {{- if kindIs "map" $ctx.Values.persistence -}}

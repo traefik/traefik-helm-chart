@@ -2,16 +2,15 @@ suite: cross-field validation rules
 templates:
   - validation.yaml
 tests:
-  - it: traefik.hub.apimanagement requires a license token
+  - it: inline traefik.hub.token is rejected (BYO-only)
     set:
-      traefik.hub.apimanagement: {}
+      traefik.hub.token: "x"
     asserts:
       - failedTemplate:
-          errorMessage: "traefik.hub.apimanagement requires a license token: set traefik.hub.token (see EXAMPLES.md \"Install Traefik Hub API Management\")"
+          errorMessage: "ERROR: inline traefik.hub.token is not supported — create a Secret named RELEASE-NAME-traefik-hub-license with a `token` key and let the chart mount it (BYO). See EXAMPLES.md \"Install Traefik Hub\""
 
   - it: admission requires the hub-admission Secret
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
       secret:
@@ -22,7 +21,6 @@ tests:
 
   - it: admission requires mutatingWebhookConfigurations
     set:
-      traefik.hub.token: "x"
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
       mutatingWebhookConfigurations: null
@@ -36,7 +34,7 @@ tests:
 
   - it: hub-gateway-only install passes validation (no apimanagement)
     set:
-      traefik.hub.token: "x"
+      traefik.hub: {}
     asserts:
       - hasDocuments: { count: 0 }
 

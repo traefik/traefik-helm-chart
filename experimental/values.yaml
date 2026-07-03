@@ -13,7 +13,7 @@ namespaceOverride: ""  # @schema type:[string, null]
 
 # -- Container image. Defaults to `docker.io/traefik:<Chart.AppVersion>`,
 # or `ghcr.io/traefik/traefik-hub:<traefik.io/hub-max-version>` when
-# `traefik.hub.token` is set (Hub binary required for any Hub feature).
+# a `traefik.hub` block is set (Hub binary required for any Hub feature).
 # A `repo:tag` is version-checked against the supported range; a digest
 # pin (`repo@sha256:...`, no tag) skips that check — pin a known version.
 image: ""  # @schema type:[string, null]
@@ -170,17 +170,15 @@ service:  # @schema type:[object, null]
 # -- Chart-managed Secrets (kind: Secret), as a map of logical name →
 # body — same idiom as `service`/`ingressRoute`. The chart fills each
 # entry's `data`; you own `metadata`, and `<entry>: null` disables it.
-#   hub-license:   Traefik Hub license Secret. Rendered when
-#                  `traefik.hub.token` is set; the chart mounts it and
-#                  auto-sets `traefik.hub.tokenfilepath`. Set to `null`
-#                  to BYO an existing Secret (then patch the `hub-token`
-#                  volume via `deployment.spec.template.spec.volumes`).
 #   hub-admission: TLS cert Secret for the API-Management admission
 #                  webhook. Rendered when `traefik.hub.apimanagement`
 #                  `.admission` is set; cert auto-generated (stable
 #                  across upgrades via Helm `lookup`).
+# Note: the Traefik Hub *license* is BYO — the chart never holds the token.
+# When a `traefik.hub` block is set, create a Secret named
+# `<fullname>-hub-license` (with a `token` key) yourself; the chart mounts
+# it and auto-sets `traefik.hub.tokenfilepath`. See EXAMPLES.md.
 secret:  # @schema additionalProperties:false; type:[object, null]
-  hub-license: {}    # @schema additionalProperties:false; type:[object, null]
   hub-admission: {}  # @schema additionalProperties:false; type:[object, null]
 
 # -- Hub API Management — MutatingWebhookConfigurations as a map of

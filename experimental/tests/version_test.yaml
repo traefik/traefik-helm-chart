@@ -12,7 +12,7 @@ tests:
     templates:
       - NOTES.txt
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
     asserts:
       - notMatchRegexRaw:
           pattern: "WARNING"
@@ -48,7 +48,7 @@ tests:
     templates:
       - NOTES.txt
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
       image: ghcr.io/traefik/traefik-hub:v3.99.0
     asserts:
       - matchRegexRaw:
@@ -83,7 +83,7 @@ tests:
     templates:
       - validation.yaml
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
       image: ghcr.io/traefik/traefik-hub:v4.0.0
     asserts:
       - failedTemplate:
@@ -93,7 +93,7 @@ tests:
     templates:
       - validation.yaml
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
       image: docker.io/traefik:v3.20.0
     asserts:
       - failedTemplate:
@@ -129,7 +129,7 @@ tests:
     templates:
       - NOTES.txt
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
       image: ghcr.io/traefik/traefik-hub@sha256:1111111111111111111111111111111111111111111111111111111111111111
     asserts:
       - notMatchRegexRaw:
@@ -139,7 +139,7 @@ tests:
     templates:
       - validation.yaml
     set:
-      traefik.hub.token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+      traefik.hub: {}
       image: ghcr.io/traefik/traefik-hub@sha256:1111111111111111111111111111111111111111111111111111111111111111
     asserts:
       - notFailedTemplate: {}
