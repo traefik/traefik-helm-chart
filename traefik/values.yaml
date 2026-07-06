@@ -1033,6 +1033,9 @@ ports:
       middlewares: []  # @schema type: [array, null]
       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
       sanitizePath:  # @schema type:[boolean, null]
+      # -- Defines how request headers with underscores in their names are handled (v3.7.6+).
+      # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)
+      underscoreHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
       tls:
         # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
         # @default -- true

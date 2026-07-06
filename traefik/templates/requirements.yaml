@@ -117,7 +117,10 @@
 
 {{- range $name, $config := .Values.ports }}
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
-  {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+    {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+  {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
+    {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
   {{- end }}
   {{- if and $config.uplink (empty $.Values.hub.token) }}
     {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}

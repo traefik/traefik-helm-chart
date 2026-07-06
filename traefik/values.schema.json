@@ -2295,6 +2295,19 @@
                                         "type": "string"
                                     }
                                 }
+                            },
+                            "underscoreHeadersStrategy": {
+                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "keep",
+                                    "delete",
+                                    "reject",
+                                    null
+                                ]
                             }
                         }
                     },

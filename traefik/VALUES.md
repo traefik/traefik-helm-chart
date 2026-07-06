@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 41.0.1](https://img.shields.io/badge/Version-41.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.5](https://img.shields.io/badge/AppVersion-v3.7.5-informational?style=flat-square)
+![Version: 41.0.1](https://img.shields.io/badge/Version-41.0.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.6](https://img.shields.io/badge/AppVersion-v3.7.6-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -427,6 +427,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.http.tls.domains | list | `[]` |  |
 | ports.websecure.http.tls.enabled | bool | true | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls) |
 | ports.websecure.http.tls.options | string | `""` |  |
+| ports.websecure.http.underscoreHeadersStrategy | string | `nil` | Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy) |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
 | ports.websecure.http3.enabled | bool | `false` |  |
 | ports.websecure.nodePort | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
