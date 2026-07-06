@@ -4,6 +4,7 @@
 
 **Release date:** 2026-07-06
 
+* fix(crds): add missing hub.traefik.io_uplinks to kustomization
 * feat(deps): update traefik docker tag to v3.7.6
 * feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6
 * chore(release): 🚀 publish 41.0.2

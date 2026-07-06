@@ -27,6 +27,7 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.6
   artifacthub.io/changes: |
+    - "fix(crds): add missing hub.traefik.io_uplinks to kustomization"
     - "feat(deps): update traefik docker tag to v3.7.6"
     - "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6"
     - "chore(release): 🚀 publish 41.0.2"
