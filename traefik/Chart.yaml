@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.0.1
+version: 41.0.2
 # renovate: image=traefik
 appVersion: v3.7.6
 kubeVersion: '>=1.25.0-0'
@@ -27,7 +27,7 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.6
   artifacthub.io/changes: |
-    - "fix(ingressroute): fail fast on uppercase ingressRoute keys (RFC 1123)"
-    - "feat(hub): support traefik hub v3.20.5"
-    - "docs(hub): deprecate inline literal token in values"
-    - "chore(release): publish 41.0.1"
+    - "fix(crds): add missing hub.traefik.io_uplinks to kustomization"
+    - "feat(deps): update traefik docker tag to v3.7.6"
+    - "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6"
+    - "chore(release): 🚀 publish 41.0.2"

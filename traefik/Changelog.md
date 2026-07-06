@@ -1,5 +1,34 @@
 # Change Log
 
+## 41.0.2  ![AppVersion: v3.7.6](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.6&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-07-06
+
+* fix(crds): add missing hub.traefik.io_uplinks to kustomization
+* feat(deps): update traefik docker tag to v3.7.6
+* feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6
+* chore(release): 🚀 publish 41.0.2
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 50a1629..e3eb6af 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1033,6 +1033,9 @@ ports:
+       middlewares: []  # @schema type: [array, null]
+       # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+       sanitizePath:  # @schema type:[boolean, null]
++      # -- Defines how request headers with underscores in their names are handled (v3.7.6+).
++      # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)
++      underscoreHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+       tls:
+         # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
+         # @default -- true
+```
+
+
 ## 41.0.1  ![AppVersion: v3.7.5](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.5&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-06-29
