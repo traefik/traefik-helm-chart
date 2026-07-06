@@ -16,6 +16,7 @@ resources:
   - hub.traefik.io_contentitems.yaml
   - hub.traefik.io_managedapplications.yaml
   - hub.traefik.io_managedsubscriptions.yaml
+  - hub.traefik.io_uplinks.yaml
   - traefik.io_ingressroutes.yaml
   - traefik.io_ingressroutetcps.yaml
   - traefik.io_ingressrouteudps.yaml
