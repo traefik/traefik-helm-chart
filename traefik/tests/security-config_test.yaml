@@ -47,6 +47,19 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.underscoreHeadersStrategy=keep"
+  - it: should be possible to set underscoreHeadersStrategy on websecure
+    set:
+      ports:
+        websecure:
+          http:
+            underscoreHeadersStrategy: reject
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.underscoreHeadersStrategy=reject"
   - it: should be possible to customize security arguments on websecure
     set:
       ports:

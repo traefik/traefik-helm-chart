@@ -679,6 +679,9 @@
           - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
               {{- end }}
+              {{- with .underscoreHeadersStrategy }}
+          - "--{{$entryPoints}}.{{ $name }}.http.underscoreHeadersStrategy={{ . }}"
+              {{- end }}
               {{- if (.tls).enabled }}
           - "--{{$entryPoints}}.{{ $name }}.http.tls=true"
                 {{- with .tls.options }}
