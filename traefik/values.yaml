@@ -167,6 +167,9 @@ gateway:
   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
   defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
+  # -- Configure which namespaces can attach [ListenerSets](https://gateway-api.sigs.k8s.io/guides/user-guides/listener-set/) to this Gateway.
+  # See [AllowedListeners](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.AllowedListeners).
+  allowedListeners: null  # @schema type:[object, null]
   listeners:
     web:
       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
