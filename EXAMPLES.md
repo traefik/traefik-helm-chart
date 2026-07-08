@@ -101,7 +101,7 @@ autoscaling:
 
 ## Install with Argo Rollouts
 
-When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
+When using [Argo Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
 To delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
 
 ```yaml
