@@ -323,9 +323,9 @@ tests:
       providers:
         kubernetesCRD:
           enabled: false
-        kubernetesIngress:
-          enabled: false
         kubernetesIngressNGINX:
+          enabled: false
+        kubernetesIngress:
           enabled: false
     asserts:
       - failedTemplate:
