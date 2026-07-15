@@ -688,6 +688,18 @@ tests:
               - pods
             verbs:
               - get
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
 
   - it: should provide expected role rbac
     set:
@@ -717,6 +729,18 @@ tests:
       hub:
         token: xxx
     asserts:
+      - template: rbac/clusterrole.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
@@ -849,6 +873,18 @@ tests:
         apimanagement:
           enabled: true
     asserts:
+      - template: rbac/clusterrole.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
       - template: rbac/clusterrole.yaml
         contains:
           path: rules

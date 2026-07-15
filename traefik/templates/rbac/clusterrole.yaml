@@ -188,6 +188,14 @@ rules:
     verbs:
       - list
       - watch
+  - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+      - patch
+      - delete
     {{- end }}
   - apiGroups:
       - ""
