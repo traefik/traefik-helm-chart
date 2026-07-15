@@ -1,4 +1,4 @@
-{{- if .Values.hub.token -}}
+{{- if (.Values.hub).token -}}
 {{- if and .Values.hub.apimanagement.enabled (not .Values.hub.offline) }}
 {{- $cert := include "traefik-hub.webhook_cert" . | fromYaml }}
 {{- if or (not .Values.hub.apimanagement.admission.selfManagedCertificate) .Values.hub.apimanagement.admission.customWebhookCertificate}}

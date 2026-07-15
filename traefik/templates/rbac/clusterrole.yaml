@@ -42,13 +42,13 @@ rules:
       - get
       - list
       - watch
-    {{- if and .Values.hub.token }}
+    {{- if (.Values.hub).token }}
       - update
       - create
       - delete
       - deletecollection
     {{- end }}
-  {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNGINX.enabled }}
+  {{- if or (.Values.providers.kubernetesIngress).enabled (.Values.providers.kubernetesIngressNGINX).enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -74,8 +74,8 @@ rules:
       - list
       - watch
   {{- end -}}
-  {{- if .Values.providers.kubernetesCRD.enabled }}
-   {{- if not .Values.providers.kubernetesIngress.enabled }}
+  {{- if (.Values.providers.kubernetesCRD).enabled }}
+   {{- if not (.Values.providers.kubernetesIngress).enabled }}
   - apiGroups:
       - extensions
       - networking.k8s.io
@@ -156,7 +156,7 @@ rules:
     verbs:
       - update
   {{- end }}
-  {{- if .Values.hub.token }}
+  {{- if (.Values.hub).token }}
   - apiGroups:
       - coordination.k8s.io
     resources:
