@@ -95,6 +95,31 @@ tests:
           count: 0
         template: rbac/clusterrolebinding.yaml
 
+  - it: rbac.namespaced should not fail when only KubernetesIngressNGINX provider is enabled
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesIngressNGINX:
+          enabled: true
+        kubernetesIngress:
+          enabled: false
+        kubernetesCRD:
+          enabled: false
+    asserts:
+      - isKind:
+          of: Role
+        template: rbac/role.yaml
+      - isKind:
+          of: RoleBinding
+        template: rbac/rolebinding.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/clusterrole.yaml
+      - hasDocuments:
+          count: 0
+        template: rbac/clusterrolebinding.yaml
+
   - it: should use existing ServiceAccount
     set:
       serviceAccount:
