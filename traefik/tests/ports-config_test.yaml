@@ -187,7 +187,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.traefik.address=:8080/tcp"
 
-  - it: should quote IPv6 hostIP and bracket the entrypoint address
+  - it: should render IPv6 hostIP in ports and bracket the entrypoint address
     template: deployment.yaml
     set:
       ports:
@@ -205,7 +205,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.address=[::]:8000/tcp"
 
-  - it: should quote IPv6 hostIP when used as the probes host
+  - it: should render IPv6 hostIP as the probes host
     template: deployment.yaml
     set:
       ports:
