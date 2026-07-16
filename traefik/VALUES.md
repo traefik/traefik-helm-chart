@@ -322,9 +322,9 @@ Kubernetes: `>=1.25.0-0`
 | metrics.otlp.pushInterval | string | `""` | Interval at which metrics are sent to the OpenTelemetry Collector. Default: 10s |
 | metrics.otlp.resourceAttributes | object | `{}` | Defines additional resource attributes to be sent to the collector. |
 | metrics.otlp.serviceName | string | `nil` | Service name used in OTLP backend. Default: traefik. |
-| metrics.prometheus.addEntryPointsLabels | string | `nil` | Enable metrics on entry points. Default: true |
-| metrics.prometheus.addRoutersLabels | string | `nil` | Enable metrics on routers. Default: false |
-| metrics.prometheus.addServicesLabels | string | `nil` | Enable metrics on services. Default: true |
+| metrics.prometheus.addEntryPointsLabels | bool | `nil` | Enable metrics on entry points. Default: true |
+| metrics.prometheus.addRoutersLabels | bool | `nil` | Enable metrics on routers. Default: false |
+| metrics.prometheus.addServicesLabels | bool | `nil` | Enable metrics on services. Default: true |
 | metrics.prometheus.buckets | string | `""` | Buckets for latency metrics. Default="0.1,0.3,1.2,5.0" |
 | metrics.prometheus.disableAPICheck | string | `nil` | When set to true, it won't check if Prometheus Operator CRDs are deployed |
 | metrics.prometheus.entryPoint | string | `"metrics"` | Entry point used to expose metrics. |
