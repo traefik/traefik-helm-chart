@@ -86,7 +86,7 @@
         readinessProbe:
           httpGet:
             {{- with $healthchecksHost }}
-            host: {{ . }}
+            host: {{ . | quote }}
             {{- end }}
             path: {{ $readinessPath }}
             port: {{ $healthchecksPort }}
@@ -95,7 +95,7 @@
         livenessProbe:
           httpGet:
             {{- with $healthchecksHost }}
-            host: {{ . }}
+            host: {{ . | quote }}
             {{- end }}
             path: {{ $livenessPath }}
             port: {{ $healthchecksPort }}
@@ -124,7 +124,7 @@
           hostPort: {{ $config.hostPort }}
           {{- end }}
           {{- if $config.hostIP }}
-          hostIP: {{ $config.hostIP }}
+          hostIP: {{ $config.hostIP | quote }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
@@ -216,7 +216,11 @@
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
-          - "--{{$entryPoints}}.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+            {{- $hostIP := default "" $config.hostIP }}
+            {{- if contains ":" $hostIP }}
+              {{- $hostIP = printf "[%s]" $hostIP }}
+            {{- end }}
+          - "--{{$entryPoints}}.{{$name}}.address={{ $hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
             {{- with $config.asDefault }}
           - "--{{$entryPoints}}.{{$name}}.asDefault={{ . }}"
             {{- end }}
