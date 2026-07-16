@@ -22,6 +22,18 @@ tests:
           path: spec.template.spec.containers[0].image
           value: registry.traefik.io/traefik-hub:v3.21.0-ea.1-hardened
 
+  - it: should use the hardened image in proxy mode
+    set:
+      hub:
+        enabled: true
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.traefik.io/traefik-hub:v3.21.0-ea.1-hardened
+
   - it: should append -hardened to a FIPS tag when enabled
     set:
       hub:

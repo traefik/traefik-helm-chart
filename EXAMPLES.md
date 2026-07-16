@@ -864,6 +864,31 @@ experimental:
 > - **Scalable**: Centralized plugin storage, no per-node requirements
 > - **Consistent**: Uses existing Helm chart patterns (`additionalVolumes`)
 
+## Install Traefik Hub without a license (proxy mode)
+
+Traefik Hub can run without a license token. In this _proxy mode_, it behaves as a Traefik Proxy:
+no commercial feature is enabled, and no external connection is made. It requires Traefik Hub
+>= `v3.21.0-ea`, which is above the version this chart defaults to, so `image.tag` must be set:
+
+```yaml
+hub:
+  enabled: true
+image:
+  tag: v3.21.0-ea.1
+```
+
+This installs `ghcr.io/traefik/traefik-hub` instead of `docker.io/traefik`. To enable API Gateway
+later, set `hub.token` to the name of a `Secret` holding your license, on the same release and
+without changing the image:
+
+```yaml
+hub:
+  enabled: true
+  token: traefik-hub-license
+```
+
+Setting `hub.token` alone is enough: `hub.enabled` defaults to `true` when a token is set.
+
 ## Using Traefik-Hub with private plugin registries
 
 With Traefik Hub, it's possible to use plugins deployed on both public or private registries.

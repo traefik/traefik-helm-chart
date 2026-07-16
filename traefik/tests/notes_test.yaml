@@ -64,6 +64,25 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "hardened images are hosted on a private registry"
+  - it: should inform about proxy mode when hub is enabled without a token
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: 'Traefik Hub is running in proxy mode'
+      - matchRegexRaw:
+          pattern: 'Set `hub.token` to a Secret containing your license to enable API Gateway'
+  - it: should not inform about proxy mode when a token is set
+    set:
+      hub:
+        enabled: true
+        token: "my-hub-license"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "Traefik Hub is running in proxy mode"
   - it: should display warning when using an experimental image tag
     set:
       image:
