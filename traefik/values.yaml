@@ -26,7 +26,7 @@ deployment:
   # -- Number of pods of the deployment (only applies when kind == Deployment).
   # Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling.
   replicas: 1  # @schema type:[integer, null];minimum:0
-  # -- Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
+  # -- (int) Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10)
   revisionHistoryLimit:  # @schema type:[integer, null];minimum:0
   # -- Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down
   terminationGracePeriodSeconds: 60
@@ -208,11 +208,11 @@ api:  # @schema additionalProperties: false
   dashboard: true
   # -- Custom name for the dashboard (v3.7+).
   dashboardName: ""  # @schema type:[string, null]
-  # -- Disable the advertisement from the dashboard.
+  # -- (bool) Disable the advertisement from the dashboard.
   disableDashboardAd:  # @schema type:[boolean, null]
-  # -- Enable the insecure API (HTTP)
+  # -- (bool) Enable the insecure API (HTTP)
   insecure:  # @schema type:[boolean, null]
-  # -- Enable the debug API
+  # -- (bool) Enable the debug API
   debug:  # @schema type:[boolean, null]
   # -- Configure API basePath
   basePath: ""  # @schema type:[string, null]; default: "/"
@@ -374,9 +374,9 @@ providers:
     labelSelector: ""
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
-    # -- Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
+    # -- (int) Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
     qps:  # @schema type:[integer, null]
-    # -- Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
+    # -- (int) Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
     burst:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
@@ -438,31 +438,31 @@ providers:
     token: ""
     # -- Defines whether to enable request buffering (default: false)
     proxyRequestBuffering: null  # @schema type:[boolean, null]
-    # -- Default buffer size for reading client request body in bytes (default: 16384)
+    # -- (int) Default buffer size for reading client request body in bytes (default: 16384)
     clientBodyBufferSize:  # @schema type:[integer, null]
-    # -- Default maximum size of a client request body in bytes (default: 1048576)
+    # -- (int) Default maximum size of a client request body in bytes (default: 1048576)
     proxyBodySize:  # @schema type:[integer, null]
     # -- Defines whether to enable response buffering (default: false)
     proxyBuffering: null  # @schema type:[boolean, null]
-    # -- Default buffer size for reading the response body in bytes (default: 8192)
+    # -- (int) Default buffer size for reading the response body in bytes (default: 8192)
     proxyBufferSize:  # @schema type:[integer, null]
-    # -- Default number of buffers for reading a response (default: 4)
+    # -- (int) Default number of buffers for reading a response (default: 4)
     proxyBuffersNumber:  # @schema type:[integer, null]
-    # -- Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
+    # -- (int) Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60)
     proxyConnectTimeout:  # @schema type:[integer, null]
-    # -- Amount of time between two successive read operations. Unitless, in seconds (default: 60)
+    # -- (int) Amount of time between two successive read operations. Unitless, in seconds (default: 60)
     proxyReadTimeout:  # @schema type:[integer, null]
-    # -- Amount of time between two successive write operations. Unitless, in seconds (default: 60)
+    # -- (int) Amount of time between two successive write operations. Unitless, in seconds (default: 60)
     proxySendTimeout:  # @schema type:[integer, null]
     # -- Defines in which cases a request should be retried (default: "error timeout")
     proxyNextUpstream: ""
-    # -- Limits the number of possible tries if the backend server does not reply (default: 3)
+    # -- (int) Limits the number of possible tries if the backend server does not reply (default: 3)
     proxyNextUpstreamTries:  # @schema type:[integer, null]
-    # -- Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
+    # -- (int) Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0)
     proxyNextUpstreamTimeout:  # @schema type:[integer, null]
     # -- Defines which HTTP status codes should result in calling the default backend to return an error page
     customHTTPErrors: []
-    # -- Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
+    # -- (int) Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
     upstreamKeepaliveTimeout:  # @schema type:[integer, null]
     # -- Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
     allowCrossNamespaceResources: null  # @schema type:[boolean, null]
@@ -557,7 +557,7 @@ log:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send logs  to the OpenTelemetry Collector using gRPC
@@ -574,7 +574,7 @@ log:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     # -- Defines additional resource attributes to be sent to the collector.
     resourceAttributes: {}
@@ -586,7 +586,7 @@ accessLog:
   # -- Set [access log format](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-format)
   format:  # @schema enum:["common", "genericCLF", "json", null]; type:[string, null]; default: "common"
   # filePath: "/var/log/traefik/access.log
-  # -- Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)
+  # -- (int) Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize)
   bufferingSize:  # @schema type:[integer, null]
   # -- Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones)
   timezone: ""
@@ -635,7 +635,7 @@ accessLog:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send access logs to the OpenTelemetry Collector using gRPC
@@ -652,7 +652,7 @@ accessLog:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     # -- Defines additional resource attributes to be sent to the collector.
     resourceAttributes: {}
@@ -684,7 +684,7 @@ metrics:
       enabled: false
       labels: {}
       annotations: {}
-    # -- When set to true, it won't check if Prometheus Operator CRDs are deployed
+    # -- (bool) When set to true, it won't check if Prometheus Operator CRDs are deployed
     disableAPICheck:  # @schema type:[boolean, null]
     serviceMonitor:
       # -- Enable optional CR for Prometheus Operator. See EXAMPLES.md for more details.
@@ -759,11 +759,11 @@ metrics:
   otlp:
     # -- Set to true in order to enable the OpenTelemetry metrics
     enabled: false
-    # -- Enable metrics on entry points. Default: true
+    # -- (bool) Enable metrics on entry points. Default: true
     addEntryPointsLabels:  # @schema type:[boolean, null]
-    # -- Enable metrics on routers. Default: false
+    # -- (bool) Enable metrics on routers. Default: false
     addRoutersLabels:  # @schema type:[boolean, null]
-    # -- Enable metrics on services. Default: true
+    # -- (bool) Enable metrics on services. Default: true
     addServicesLabels:  # @schema type:[boolean, null]
     # -- Explicit boundaries for Histogram data points. Default: [.005, .01, .025, .05, .1, .25, .5, 1, 2.5, 5, 10]
     explicitBoundaries: []
@@ -786,7 +786,7 @@ metrics:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
@@ -803,7 +803,7 @@ metrics:
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     # -- Defines additional resource attributes to be sent to the collector.
     resourceAttributes: {}
@@ -831,7 +831,7 @@ tracing:  # @schema additionalProperties: false
   capturedResponseHeaders: []
   # -- By default, all query parameters are redacted. Defines the list of query parameters to not redact.
   safeQueryParams: []
-  # -- The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0.
+  # -- (float) The proportion of requests to trace, specified between 0.0 and 1.0. Default: 1.0.
   sampleRate:  # @schema type:[number, null]; minimum:0; maximum:1
   otlp:
     # -- See https://doc.traefik.io/traefik/reference/install-configuration/observability/tracing/#configuration-options
@@ -851,7 +851,7 @@ tracing:  # @schema additionalProperties: false
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
     grpc:
       # -- Set to true in order to send metrics to the OpenTelemetry Collector using gRPC
@@ -868,7 +868,7 @@ tracing:  # @schema additionalProperties: false
         cert: ""
         # -- The path to the private key. When using this option, setting the cert option is required.
         key: ""
-        # -- When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
+        # -- (bool) When set to true, the TLS connection accepts any certificate presented by the server regardless of the hostnames it covers.
         insecureSkipVerify:  # @schema type:[boolean, null]
 
 global:
@@ -911,7 +911,7 @@ ports:
   # @schema additionalProperties: false
   traefik:
     port: 8080
-    # -- Use hostPort if set.
+    # -- (int) Use hostPort if set.
     hostPort:  # @schema type:[integer, null]; minimum:0
     # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
     # means it's listening on all your interfaces and all your IPs. You may want
@@ -932,11 +932,11 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
     observability:  # @schema additionalProperties: false
-      # -- Defines whether a router attached to this EntryPoint produces metrics by default.
+      # -- (bool) Defines whether a router attached to this EntryPoint produces metrics by default.
       metrics:  # @schema type:[boolean, null]; default: true
-      # -- Defines whether a router attached to this EntryPoint produces access-logs by default.
+      # -- (bool) Defines whether a router attached to this EntryPoint produces access-logs by default.
       accessLogs:  # @schema type:[boolean, null]; default: true
-      # -- Defines whether a router attached to this EntryPoint produces traces by default.
+      # -- (bool) Defines whether a router attached to this EntryPoint produces traces by default.
       tracing:  # @schema type:[boolean, null]; default: true
       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
@@ -953,7 +953,7 @@ ports:
     targetPort:  # @schema type:[string, integer, null]; minimum:0
     # The port protocol (TCP/UDP)
     protocol: TCP
-    # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+    # -- (int) See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
     # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass)
     allowACMEByPass: false
@@ -990,11 +990,11 @@ ports:
     # ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription.
     uplink:  # @schema type: [boolean, null]; default: null
     observability:  # @schema additionalProperties: false
-      # -- Enables metrics for this entryPoint.
+      # -- (bool) Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
-      # -- Enables access-logs for this entryPoint.
+      # -- (bool) Enables access-logs for this entryPoint.
       accessLogs:  # @schema type:[boolean, null]; default: true
-      # -- Enables tracing for this entryPoint.
+      # -- (bool) Enables tracing for this entryPoint.
       tracing:  # @schema type:[boolean, null]; default: true
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
@@ -1011,7 +1011,7 @@ ports:
     targetPort:  # @schema type:[string, integer, null]; minimum:0
     ## -- The port protocol (TCP/UDP)
     protocol: TCP
-    # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
+    # -- (int) See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
     # -- See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol)
     appProtocol:  # @schema type:[string, null]
@@ -1028,11 +1028,11 @@ ports:
         allowEncodedPercent:  # @schema type:[boolean, null]
         allowEncodedQuestionMark:  # @schema type:[boolean, null]
         allowEncodedHash:  # @schema type:[boolean, null]
-      # -- Maximum size of request headers in bytes. Default: 1048576 (1 MB)
+      # -- (int) Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
       middlewares: []  # @schema type: [array, null]
-      # -- See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+      # -- (bool) See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
       sanitizePath:  # @schema type:[boolean, null]
       # -- Defines how request headers with underscores in their names are handled (v3.7.6+).
       # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)
@@ -1075,11 +1075,11 @@ ports:
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
     observability:  # @schema additionalProperties: false
-      # -- Enables metrics for this entryPoint.
+      # -- (bool) Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
-      # -- Enables access-logs for this entryPoint.
+      # -- (bool) Enables access-logs for this entryPoint.
       accessLogs:  # @schema type:[boolean, null]; default: true
-      # -- Enables tracing for this entryPoint.
+      # -- (bool) Enables tracing for this entryPoint.
       tracing:  # @schema type:[boolean, null]; default: true
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
@@ -1097,11 +1097,11 @@ ports:
     # -- The port protocol (TCP/UDP)
     protocol: TCP
     observability:  # @schema additionalProperties: false
-      # -- Enables metrics for this entryPoint.
+      # -- (bool) Enables metrics for this entryPoint.
       metrics:  # @schema type:[boolean, null]; default: true
-      # -- Enables access-logs for this entryPoint.
+      # -- (bool) Enables access-logs for this entryPoint.
       accessLogs:  # @schema type:[boolean, null]; default: true
-      # -- Enables tracing for this entryPoint.
+      # -- (bool) Enables tracing for this entryPoint.
       tracing:  # @schema type:[boolean, null]; default: true
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
@@ -1142,9 +1142,9 @@ autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object.
   # See EXAMPLES.md for more details.
   enabled: false
-  # -- minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod.
+  # -- (int) minReplicas is the lower limit for the number of replicas to which the autoscaler can scale down. It defaults to 1 pod.
   minReplicas:  # @schema type:[integer, null]; minimum:0
-  # -- maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
+  # -- (int) maxReplicas is the upper limit for the number of pods that can be set by the autoscaler; cannot be smaller than MinReplicas.
   maxReplicas:  # @schema type:[integer, null]; minimum:0
   # -- metrics contains the specifications for which to use to calculate the desired replica count (the maximum replica count across all metrics will be used).
   metrics: []
@@ -1293,7 +1293,7 @@ hub:  # @schema additionalProperties: false
   # -- Use the hardened image variant. It appends `-hardened` to the tag and defaults the image
   # to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub >= v3.21.0-ea.
   hardened: false
-  # -- Disables all external network connections.
+  # -- (bool) Disables all external network connections.
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
@@ -1320,13 +1320,13 @@ hub:  # @schema additionalProperties: false
   mcpgateway:
     # -- Set to true in order to enable AI MCP Gateway. Requires a valid license token.
     enabled: false
-    # -- Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
+    # -- (int) Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
     maxRequestBodySize:  # @schema type:[integer, null]; minimum:0
 
   aigateway:
     # -- Set to true in order to enable AI Gateway. Requires a valid license token.
     enabled: false
-    # -- Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
+    # -- (int) Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB).
     maxRequestBodySize:  # @schema type:[integer, null]; minimum:0
   providers:
     consulCatalogEnterprise:
@@ -1347,7 +1347,7 @@ hub:  # @schema additionalProperties: false
         address: ""
         # -- Data center to use. If not provided, the default agent data center is used
         datacenter: ""
-        # -- WaitTime limits how long a Watch will block. If not provided, the agent default
+        # -- (int) WaitTime limits how long a Watch will block. If not provided, the agent default
         endpointWaitTime:  # @schema type:[integer, null]
         httpauth:
           # -- Basic Auth password
@@ -1523,7 +1523,7 @@ hub:  # @schema additionalProperties: false
         insecureSkipVerify: false
 
   redis:
-    # -- Enable Redis Cluster. Default: true.
+    # -- (bool) Enable Redis Cluster. Default: true.
     cluster:    # @schema type:[boolean, null]
     # -- Database used to store information. Default: "0".
     database:   # @schema type:[string, null]
