@@ -665,11 +665,11 @@ metrics:
   prometheus:
     # -- Entry point used to expose metrics.
     entryPoint: metrics
-    # -- Enable metrics on entry points. Default: true
+    # -- (bool) Enable metrics on entry points. Default: true
     addEntryPointsLabels:  # @schema type:[boolean, null]
-    # -- Enable metrics on routers. Default: false
+    # -- (bool) Enable metrics on routers. Default: false
     addRoutersLabels:  # @schema type:[boolean, null]
-    # -- Enable metrics on services. Default: true
+    # -- (bool) Enable metrics on services. Default: true
     addServicesLabels:  # @schema type:[boolean, null]
     # -- Buckets for latency metrics. Default="0.1,0.3,1.2,5.0"
     buckets: ""
