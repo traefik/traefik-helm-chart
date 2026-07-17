@@ -36,17 +36,17 @@ deployment:
   # with an external Load Balancer that performs healthchecks.
   # @default -- `ports.traefik.port`
   healthchecksPort:  # @schema type:[string, integer, null]; minimum:0
-  ## -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
-  ## Default: ports.traefik.hostIP if set, otherwise Pod IP
+  # -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
+  # @default -- `ports.traefik.hostIP` if set, otherwise Pod IP
   healthchecksHost: ""
-  ## -- Override the liveness/readiness scheme. Useful for getting ping to
-  ## respond on websecure entryPoint.
+  # -- Override the liveness/readiness scheme. Useful for getting ping to
+  # respond on websecure entryPoint.
   healthchecksScheme:   # @schema enum:[HTTP, HTTPS, null]; type:[string, null]; default: HTTP
-  ## -- Override the readiness path.
-  ## Default: /ping
+  # -- Override the readiness path.
+  # @default -- `/ping`
   readinessPath: ""
   # -- Override the liveness path.
-  # Default: /ping
+  # @default -- `/ping`
   livenessPath: ""
   # -- Additional deployment annotations (e.g. for jaeger-operator sidecar injection)
   annotations: {}
@@ -941,7 +941,7 @@ ports:
       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
-    ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+    # -- (bool) Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     asDefault:  # @schema type: [boolean, null]; default: null
     port: 8000
     # hostPort: 8000
@@ -949,9 +949,9 @@ ports:
     expose:
       default: true
     exposedPort: 80
-    ## -- Different target traefik port on the cluster, useful for IP type LB
+    # -- (string/int) Different target traefik port on the cluster, useful for IP type LB
     targetPort:  # @schema type:[string, integer, null]; minimum:0
-    # The port protocol (TCP/UDP)
+    # -- The port protocol (TCP/UDP)
     protocol: TCP
     # -- (int) See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
@@ -1007,9 +1007,9 @@ ports:
     expose:
       default: true
     exposedPort: 443
-    ## -- Different target traefik port on the cluster, useful for IP type LB
+    # -- (string/int) Different target traefik port on the cluster, useful for IP type LB
     targetPort:  # @schema type:[string, integer, null]; minimum:0
-    ## -- The port protocol (TCP/UDP)
+    # -- The port protocol (TCP/UDP)
     protocol: TCP
     # -- (int) See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport)
     nodePort:  # @schema type:[integer, null]; minimum:0
@@ -1045,12 +1045,9 @@ ports:
         certResolver: ""
         domains: []
     http3:
-      ## -- Enable HTTP/3 on the entrypoint
-      ## Enabling it will also enable http3 experimental feature
-      ## https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3
-      ## There are known limitations when trying to listen on same ports for
-      ## TCP & UDP (Http3). There is a workaround in this chart using dual Service.
-      ## https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741
+      # -- Enable HTTP/3 on the entrypoint. It also enables the http3 experimental feature.
+      # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3).
+      # There are known limitations when trying to listen on same ports for TCP & UDP ([kubernetes#47249](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)): this chart works around it using a dual Service.
       enabled: false
       advertisedPort:  # @schema type:[integer, null]; minimum:0
     forwardedHeaders:
@@ -1063,6 +1060,7 @@ ports:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
       insecure: false
+    # -- Set transport settings for the entrypoint
     # @default -- nil
     transport:
       respondingTimeouts:
@@ -1119,8 +1117,8 @@ service:
   enabled: true
   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
   nameOverride: ""  # @schema type:[string, null]
-  ## -- Single service is using `MixedProtocolLBService` feature gate.
-  ## -- When set to false, it will create two Service, one for TCP and one for UDP.
+  # -- Single service is using `MixedProtocolLBService` feature gate.
+  # When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
   annotations: {}

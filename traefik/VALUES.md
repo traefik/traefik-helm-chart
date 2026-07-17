@@ -84,9 +84,9 @@ Kubernetes: `>=1.25.0-0`
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
 | deployment.goMemLimitPercentage | float | `0.9` | Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env) |
-| deployment.healthchecksHost | string | `""` |  |
+| deployment.healthchecksHost | string | `ports.traefik.hostIP` if set, otherwise Pod IP | Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint. |
 | deployment.healthchecksPort | string/int | `ports.traefik.port` | Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks. |
-| deployment.healthchecksScheme | string | `nil` |  |
+| deployment.healthchecksScheme | string | `nil` | Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint. |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
 | deployment.hostUsers | string | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
 | deployment.imagePullSecrets | list | `[]` | Pull secret for fetching traefik container image |
@@ -94,11 +94,11 @@ Kubernetes: `>=1.25.0-0`
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |
 | deployment.lifecycle | object | `{}` | Pod lifecycle actions |
-| deployment.livenessPath | string | `""` | Override the liveness path. Default: /ping |
+| deployment.livenessPath | string | `/ping` | Override the liveness path. |
 | deployment.minReadySeconds | int | `0` | The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available |
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) It supports templating. One can set it with values like traefik/name: '{{ template "traefik.name" . }}' |
-| deployment.readinessPath | string | `""` |  |
+| deployment.readinessPath | string | `/ping` | Override the readiness path. |
 | deployment.replicas | int | `1` | Number of pods of the deployment (only applies when kind == Deployment). Set to null to omit spec.replicas, e.g. when an external controller (HPA/KEDA) owns scaling. |
 | deployment.revisionHistoryLimit | int | `nil` | Number of old history to retain to allow rollback (If not set, default Kubernetes value is set to 10) |
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
@@ -393,7 +393,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.traefik.port | int | `8080` |  |
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
-| ports.web.asDefault | string | `nil` |  |
+| ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
@@ -406,10 +406,10 @@ Kubernetes: `>=1.25.0-0`
 | ports.web.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
 | ports.web.observability.tracing | bool | `nil` | Enables tracing for this entryPoint. |
 | ports.web.port | int | `8000` |  |
-| ports.web.protocol | string | `"TCP"` |  |
+| ports.web.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.proxyProtocol.insecure | bool | `false` |  |
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
-| ports.web.targetPort | string | `nil` |  |
+| ports.web.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.web.transport | object | nil | Set transport settings for the entrypoint |
 | ports.web.uplink | string | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
@@ -431,24 +431,18 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.http.tls.options | string | `""` |  |
 | ports.websecure.http.underscoreHeadersStrategy | string | `nil` | Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy) |
 | ports.websecure.http3.advertisedPort | string | `nil` |  |
-| ports.websecure.http3.enabled | bool | `false` |  |
+| ports.websecure.http3.enabled | bool | `false` | Enable HTTP/3 on the entrypoint. It also enables the http3 experimental feature. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3). There are known limitations when trying to listen on same ports for TCP & UDP ([kubernetes#47249](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)): this chart works around it using a dual Service. |
 | ports.websecure.nodePort | int | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | ports.websecure.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
 | ports.websecure.observability.metrics | bool | `nil` | Enables metrics for this entryPoint. |
 | ports.websecure.observability.traceVerbosity | string | `nil` | Defines the tracing verbosity level for this entryPoint. |
 | ports.websecure.observability.tracing | bool | `nil` | Enables tracing for this entryPoint. |
 | ports.websecure.port | int | `8443` |  |
-| ports.websecure.protocol | string | `"TCP"` |  |
+| ports.websecure.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.websecure.proxyProtocol.insecure | bool | `false` |  |
 | ports.websecure.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
-| ports.websecure.targetPort | string | `nil` |  |
-| ports.websecure.transport.keepAliveMaxRequests | string | `nil` |  |
-| ports.websecure.transport.keepAliveMaxTime | string | `nil` |  |
-| ports.websecure.transport.lifeCycle.graceTimeOut | string | `nil` |  |
-| ports.websecure.transport.lifeCycle.requestAcceptGraceTimeout | string | `nil` |  |
-| ports.websecure.transport.respondingTimeouts.idleTimeout | string | `nil` |  |
-| ports.websecure.transport.respondingTimeouts.readTimeout | string | `nil` |  |
-| ports.websecure.transport.respondingTimeouts.writeTimeout | string | `nil` |  |
+| ports.websecure.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
+| ports.websecure.transport | object | nil | Set transport settings for the entrypoint |
 | priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
 | providers.file.content | object | `{}` | File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
@@ -554,7 +548,7 @@ Kubernetes: `>=1.25.0-0`
 | service.enabled | bool | `true` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
 | service.nameOverride | string | `""` | Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller). |
-| service.single | bool | `true` |  |
+| service.single | bool | `true` | Single service is using `MixedProtocolLBService` feature gate. When set to false, it will create two Service, one for TCP and one for UDP. |
 | service.spec | object | `{"type":"LoadBalancer"}` | Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core). Cannot contain selector or ports entries. |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
