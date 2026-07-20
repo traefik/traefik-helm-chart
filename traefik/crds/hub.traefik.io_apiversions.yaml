@@ -204,6 +204,9 @@ spec:
                       specification is refreshed.
                     format: duration
                     type: string
+                    x-kubernetes-validations:
+                    - message: must be at least 1m
+                      rule: self >= duration('1m')
                   url:
                     description: |-
                       URL is a Traefik Hub agent accessible URL for obtaining the OpenAPI specification.
