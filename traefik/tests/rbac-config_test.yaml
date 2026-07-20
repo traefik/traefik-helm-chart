@@ -1039,6 +1039,8 @@ tests:
           enabled: false
         kubernetesIngressNGINX:
           enabled: true
+        kubernetesCRD:
+          enabled: false
       rbac:
         namespaced: true
     asserts:

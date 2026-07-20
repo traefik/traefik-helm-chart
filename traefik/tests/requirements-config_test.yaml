@@ -323,11 +323,26 @@ tests:
       providers:
         kubernetesCRD:
           enabled: false
+        kubernetesIngressNGINX:
+          enabled: false
         kubernetesIngress:
           enabled: false
     asserts:
       - failedTemplate:
-        errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD or Kubernetes Ingress provider"
+        errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, or Kubernetes Ingress provider."
+  - it: should be possible to namespace rbac with only kubernetesIngressNGINX provider
+    set:
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesCRD:
+          enabled: false
+        kubernetesIngress:
+          enabled: false
+        kubernetesIngressNGINX:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when enabling Kubernete Gateway provider with namespaced RBACs
     set:
       providers:
