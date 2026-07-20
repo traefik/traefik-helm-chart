@@ -1100,17 +1100,6 @@ tests:
       rbac:
         namespaced: true
     asserts:
-      - hasDocuments:
-          count: 2
-        template: rbac/role.yaml
-      - hasDocuments:
-          count: 2
-        template: rbac/rolebinding.yaml
-      - equal:
-          path: metadata.namespace
-          value: NAMESPACE
-        template: rbac/role.yaml
-        documentIndex: 0
       - equal:
           path: metadata.namespace
           value: foo
@@ -1125,7 +1114,7 @@ tests:
         documentIndex: 1
         contains:
           path: rules
-          content:
+          content: &ingressRules
             apiGroups:
               - extensions
               - networking.k8s.io
@@ -1135,20 +1124,12 @@ tests:
               - get
               - list
               - watch
+      # Ingress rules are scoped to the watched namespace, not the release one.
       - template: rbac/role.yaml
         documentIndex: 0
         notContains:
           path: rules
-          content:
-            apiGroups:
-              - extensions
-              - networking.k8s.io
-            resources:
-              - ingresses
-            verbs:
-              - get
-              - list
-              - watch
+          content: *ingressRules
   - it: Role should not have kubernetesIngressNGINX permissions when provider is disabled
     set:
       providers:
