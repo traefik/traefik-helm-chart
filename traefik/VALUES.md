@@ -535,7 +535,7 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | string | `nil` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.watchIngressWithoutClass | bool | `false` | Define if Ingress Controller should also watch for Ingresses without an IngressClass or the annotation specified |
 | providers.kubernetesIngressNGINX.watchNamespace | string | `""` | Single namespace the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespaceSelector. |
-| providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. |
+| providers.kubernetesIngressNGINX.watchNamespaceSelector | string | `""` | Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. It requires a ClusterRole to list and watch namespaces, and is therefore incompatible with `rbac.namespaced`. |
 | providers.precedence | list | `[]` | Defines the routing precedence between providers. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/overview/#routing-precedence) for the default order. |
 | rbac.aggregateTo | list | `[]` | Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
