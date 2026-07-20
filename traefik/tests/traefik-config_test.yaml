@@ -766,6 +766,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping.entrypoint=web"
+  - it: should support a named probe port
+    set:
+      deployment:
+        healthchecksPort: traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: traefik
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: traefik
   - it: should set custom probe scheme
     set:
       additionalArguments:

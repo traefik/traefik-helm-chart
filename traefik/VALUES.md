@@ -85,7 +85,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.enabled | bool | `true` | Enable deployment |
 | deployment.goMemLimitPercentage | float | `0.9` | Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env) |
 | deployment.healthchecksHost | string | `""` |  |
-| deployment.healthchecksPort | string | `nil` |  |
+| deployment.healthchecksPort | string/int | `ports.traefik.port` | Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks. |
 | deployment.healthchecksScheme | string | `nil` |  |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
 | deployment.hostUsers | string | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
