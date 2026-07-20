@@ -3,7 +3,9 @@
 {{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
 {{- $knativeNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.knative.namespaces -}}
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces)) -}}
+{{/* Mirrors the --providers.kubernetesingressnginx.watchnamespace arg: a single namespace, defaulting to the release one. */}}
+{{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces $ingressNGINXNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
 {{- range $allNamespaces }}
@@ -47,7 +49,7 @@ rules:
       - get
       - list
       - watch
-{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) ($.Values.providers.kubernetesIngressNGINX.enabled) }}
+{{- if or (and (has . $ingressNamespaces) $.Values.providers.kubernetesIngress.enabled) (and (has . $ingressNGINXNamespaces) $.Values.providers.kubernetesIngressNGINX.enabled) }}
   - apiGroups:
       - extensions
       - networking.k8s.io
