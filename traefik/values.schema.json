@@ -765,6 +765,23 @@
                         }
                     }
                 },
+                "hardened": {
+                    "type": "object",
+                    "properties": {
+                        "enabled": {
+                            "description": "Set to true to use the hardened image variant.",
+                            "type": "boolean"
+                        },
+                        "registry": {
+                            "description": "Registry hosting the hardened images.",
+                            "type": "string"
+                        },
+                        "repository": {
+                            "description": "Repository of the hardened images.",
+                            "type": "string"
+                        }
+                    }
+                },
                 "mcpgateway": {
                     "type": "object",
                     "properties": {

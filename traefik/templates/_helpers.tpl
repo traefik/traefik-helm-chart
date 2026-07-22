@@ -34,7 +34,9 @@ Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwi
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
-{{- if .Values.oci_meta.enabled -}}
+{{- if .Values.hub.hardened.enabled -}}
+{{- printf "%s/%s:%s-hardened" .Values.hub.hardened.registry .Values.hub.hardened.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- else if .Values.oci_meta.enabled -}}
  {{- if .Values.hub.token -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
  {{- else -}}
@@ -370,7 +372,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Validate localPlugin configuration and determine plugin type
 Returns: hostPath, inline, or localPath
 */}}
@@ -393,7 +395,7 @@ Returns: hostPath, inline, or localPath
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get hostPath for a plugin (handles both old and new structure)
 */}}
 {{- define "traefik.getLocalPluginHostPath" -}}
@@ -407,7 +409,7 @@ Get hostPath for a plugin (handles both old and new structure)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get inline plugin files (new structure only)
 */}}
 {{- define "traefik.getLocalPluginInlineFiles" -}}
@@ -417,7 +419,7 @@ Get inline plugin files (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get localPath plugin configuration (new structure only)
 */}}
 {{- define "traefik.getLocalPluginLocalPath" -}}
@@ -433,7 +435,7 @@ Get localPath plugin configuration (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if a volume name exists in additionalVolumes
 */}}
 {{- define "traefik.volumeExistsInAdditionalVolumes" -}}
@@ -448,7 +450,7 @@ Check if a volume name exists in additionalVolumes
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if using old localPlugin hostPath structure (for deprecation warning)
 */}}
 {{- define "traefik.hasDeprecatedLocalPlugins" -}}
