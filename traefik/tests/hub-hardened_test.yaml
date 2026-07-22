@@ -11,65 +11,64 @@ tests:
           value: docker.io/traefik:v3.3.0
 
   - it: should use the hardened registry and repository when enabled
-    chart:
-      appVersion: v3.3.0
     set:
       hub:
-        hardened:
-          enabled: true
+        token: my-token
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:v3.3.0-hardened
+          value: registry.traefik.io/traefik-hub:v3.21.0-ea.1-hardened
 
   - it: should append -hardened to a FIPS tag when enabled
     set:
       hub:
-        hardened:
-          enabled: true
+        token: my-token
+        hardened: true
       image:
-        tag: v3.3.0-fips
+        tag: v3.21.0-fips
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:v3.3.0-fips-hardened
+          value: registry.traefik.io/traefik-hub:v3.21.0-fips-hardened
 
-  - it: should let the hardened registry be overridden
-    chart:
-      appVersion: v3.3.0
+  - it: should let the registry be overridden
     set:
       hub:
-        hardened:
-          enabled: true
-          registry: myregistry.example.com
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].image
-          value: myregistry.example.com/traefik-hub:v3.3.0-hardened
-
-  - it: should let the hardened repository be overridden
-    chart:
-      appVersion: v3.3.0
-    set:
-      hub:
-        hardened:
-          enabled: true
-          repository: acme/traefik-hub
-    asserts:
-      - equal:
-          path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/acme/traefik-hub:v3.3.0-hardened
-
-  - it: should ignore image registry and repository when hardened
-    set:
-      hub:
-        hardened:
-          enabled: true
+        token: my-token
+        hardened: true
       image:
-        registry: europe-west9-docker.pkg.dev/traefiklabs
-        repository: traefik-hub/traefik-hub
-        tag: latest-v3
+        registry: myregistry.example.com
+        tag: v3.21.0-ea.1
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:latest-v3-hardened
+          value: myregistry.example.com/traefik-hub:v3.21.0-ea.1-hardened
+
+  - it: should let the repository be overridden
+    set:
+      hub:
+        token: my-token
+        hardened: true
+      image:
+        repository: acme/traefik-hub
+        tag: v3.21.0-ea.1
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.traefik.io/acme/traefik-hub:v3.21.0-ea.1-hardened
+
+  - it: should not append -hardened when pinning by digest
+    set:
+      hub:
+        token: my-token
+        hardened: true
+      image:
+        digest: sha256:1c5b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2
+      versionOverride: v3.21.0-ea.1
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: registry.traefik.io/traefik-hub@sha256:1c5b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2

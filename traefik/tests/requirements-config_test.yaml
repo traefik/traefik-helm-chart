@@ -30,6 +30,32 @@ tests:
         tag: experimental-master
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when hub.hardened is set without a Traefik Hub license token
+    set:
+      hub:
+        hardened: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.hardened requires a Traefik Hub license token, set hub.token."
+  - it: should fail when hub.hardened is set on a Traefik Hub older than v3.21.0-ea
+    set:
+      hub:
+        token: my-token
+        hardened: true
+      image:
+        tag: v3.20.6
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
+  - it: should pass when hub.hardened is set with a supported Traefik Hub version
+    set:
+      hub:
+        token: my-token
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - notFailedTemplate: {}
   - it: should not pass when trying to use this Chart with unknown tag
     set:
       image:

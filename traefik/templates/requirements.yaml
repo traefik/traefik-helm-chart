@@ -139,6 +139,10 @@
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
+{{- if and $.Values.hub.hardened (not $.Values.hub.token) }}
+  {{ fail "ERROR: hub.hardened requires a Traefik Hub license token, set hub.token." }}
+{{- end }}
+
 {{- if $.Values.hub.token -}}
   {{- $hubVersion := include "traefik.hubVersion" $ }}
   {{- if not $hubVersion }}
@@ -193,6 +197,10 @@
 
   {{- if and $.Values.hub.providers.multicluster.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
     {{ fail "ERROR: hub.providers.multicluster is only available for Traefik Hub >= v3.20.0-ea.1." }}
+  {{- end }}
+
+  {{- if and $.Values.hub.hardened (semverCompare "<v3.21.0-ea" $hubVersion) }}
+    {{ fail "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
   {{- end }}
 
   {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}

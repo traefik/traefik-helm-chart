@@ -41,6 +41,29 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "DEPRECATION: providing the Traefik Hub license token inline"
+  - it: should warn about missing pull credentials when using the hardened image
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      deployment:
+        imagePullSecrets:
+          - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
   - it: should display warning when using an experimental image tag
     set:
       image:

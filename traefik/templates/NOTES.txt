@@ -38,6 +38,15 @@ key) and set `hub.token` to that Secret's name. ⚠️
 {{- end -}}
 
 
+{{/* Warn about missing pull credentials for the hardened image (SA-attached secrets are not visible here) */}}
+{{- if and .Values.hub.hardened (empty .Values.deployment.imagePullSecrets) -}}
+{{- printf "\n" -}}
+🚨 hardened images are hosted on a private registry: pulling {{ include "traefik.image-name" . }} needs
+credentials, from `deployment.imagePullSecrets` or from the ServiceAccount used by Traefik. 🚨
+{{- printf "\n" -}}
+{{- end -}}
+
+
 {{/* Warn about potential permission issue with persistence */}}
 {{- if .Values.persistence -}}
   {{- if and .Values.persistence.enabled (empty .Values.deployment.initContainers) -}}

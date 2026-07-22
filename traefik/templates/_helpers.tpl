@@ -15,15 +15,17 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Image defaults. An explicit image value always wins; otherwise the chart picks the
-Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
+Image defaults. An explicit image value always wins; otherwise the chart picks the hardened
+default, then the Traefik Hub one when hub.token is set, then Traefik Proxy.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
+{{- $default := ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token)) -}}
+{{- .Values.image.registry | default (ternary "registry.traefik.io" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.imageRepository" -}}
-{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
+{{- $default := ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token)) -}}
+{{- .Values.image.repository | default (ternary "traefik-hub" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.defaultTag" -}}
@@ -34,9 +36,7 @@ Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwi
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
-{{- if .Values.hub.hardened.enabled -}}
-{{- printf "%s/%s:%s-hardened" .Values.hub.hardened.registry .Values.hub.hardened.repository (.Values.image.tag | default .Chart.AppVersion) }}
-{{- else if .Values.oci_meta.enabled -}}
+{{- if .Values.oci_meta.enabled -}}
  {{- if .Values.hub.token -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
  {{- else -}}
@@ -51,7 +51,7 @@ Create the chart image name.
 {{- else if .Values.image.digest -}}
 {{- printf "%s/%s@%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) .Values.image.digest }}
 {{- else -}}
-{{- printf "%s/%s:%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) }}
+{{- printf "%s/%s:%s%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) (ternary "-hardened" "" .Values.hub.hardened) }}
 {{- end -}}
 {{- end -}}
 

@@ -1285,13 +1285,9 @@ hub:  # @schema additionalProperties: false
   token: ""
   # -- Mount path for token secret.
   tokenMountPath: "/etc/secrets"
-  hardened:
-    # -- Set to true to use the hardened image variant.
-    enabled: false
-    # -- Registry hosting the hardened images.
-    registry: registry.traefik.io
-    # -- Repository of the hardened images.
-    repository: traefik-hub
+  # -- Use the hardened image variant. It appends `-hardened` to the tag and defaults the image
+  # to `registry.traefik.io/traefik-hub`. Requires a valid license token and Traefik Hub >= v3.21.0-ea.
+  hardened: false
   # -- Disables all external network connections.
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
