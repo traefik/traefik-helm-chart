@@ -145,6 +145,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.apimanagement.admission.selfManagedCertificate | bool | `false` | By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
+| hub.hardened | bool | `false` | Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires a valid license token and Traefik Hub >= v3.21.0-ea. |
 | hub.mcpgateway.enabled | bool | `false` | Set to true in order to enable AI MCP Gateway. Requires a valid license token. |
 | hub.mcpgateway.maxRequestBodySize | string | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |

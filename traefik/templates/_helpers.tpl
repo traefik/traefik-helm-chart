@@ -15,15 +15,17 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Image defaults. An explicit image value always wins; otherwise the chart picks the
-Traefik Hub default when hub.token is set, and the Traefik Proxy default otherwise.
+Image defaults. An explicit image value always wins; otherwise the chart picks the hardened
+default, then the Traefik Hub one when hub.token is set, then Traefik Proxy.
 */}}
 {{- define "traefik.imageRegistry" -}}
-{{- .Values.image.registry | default (ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token))) -}}
+{{- $default := ternary "ghcr.io" "docker.io" (not (empty .Values.hub.token)) -}}
+{{- .Values.image.registry | default (ternary "registry.traefik.io" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.imageRepository" -}}
-{{- .Values.image.repository | default (ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token))) -}}
+{{- $default := ternary "traefik/traefik-hub" "traefik" (not (empty .Values.hub.token)) -}}
+{{- .Values.image.repository | default (ternary "traefik-hub" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.defaultTag" -}}
@@ -49,7 +51,7 @@ Create the chart image name.
 {{- else if .Values.image.digest -}}
 {{- printf "%s/%s@%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) .Values.image.digest }}
 {{- else -}}
-{{- printf "%s/%s:%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) }}
+{{- printf "%s/%s:%s%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) (ternary "-hardened" "" .Values.hub.hardened) }}
 {{- end -}}
 {{- end -}}
 
@@ -370,7 +372,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Validate localPlugin configuration and determine plugin type
 Returns: hostPath, inline, or localPath
 */}}
@@ -393,7 +395,7 @@ Returns: hostPath, inline, or localPath
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get hostPath for a plugin (handles both old and new structure)
 */}}
 {{- define "traefik.getLocalPluginHostPath" -}}
@@ -407,7 +409,7 @@ Get hostPath for a plugin (handles both old and new structure)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get inline plugin files (new structure only)
 */}}
 {{- define "traefik.getLocalPluginInlineFiles" -}}
@@ -417,7 +419,7 @@ Get inline plugin files (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get localPath plugin configuration (new structure only)
 */}}
 {{- define "traefik.getLocalPluginLocalPath" -}}
@@ -433,7 +435,7 @@ Get localPath plugin configuration (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if a volume name exists in additionalVolumes
 */}}
 {{- define "traefik.volumeExistsInAdditionalVolumes" -}}
@@ -448,7 +450,7 @@ Check if a volume name exists in additionalVolumes
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if using old localPlugin hostPath structure (for deprecation warning)
 */}}
 {{- define "traefik.hasDeprecatedLocalPlugins" -}}

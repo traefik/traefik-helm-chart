@@ -765,6 +765,10 @@
                         }
                     }
                 },
+                "hardened": {
+                    "description": "Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires a valid license token and Traefik Hub \u003e= v3.21.0-ea.",
+                    "type": "boolean"
+                },
                 "mcpgateway": {
                     "type": "object",
                     "properties": {
