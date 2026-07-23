@@ -1316,6 +1316,7 @@
                     }
                 },
                 "sendlogs": {
+                    "description": "Enable export of error logs to the platform. Default: true.",
                     "type": [
                         "boolean",
                         "null"
@@ -2162,6 +2163,7 @@
                         ]
                     },
                     "containerPort": {
+                        "description": "Use containerPort if set.",
                         "type": [
                             "integer",
                             "null"
@@ -2332,6 +2334,7 @@
                         "type": "object",
                         "properties": {
                             "advertisedPort": {
+                                "description": "Defines the UDP port to advertise as the HTTP/3 authority.",
                                 "type": [
                                     "integer",
                                     "null"

@@ -240,7 +240,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.redis.tls.insecureSkipVerify | bool | `false` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
 | hub.redis.tls.key | string | `""` | Path to the private key used for the secure connection. |
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
-| hub.sendlogs | string | `nil` |  |
+| hub.sendlogs | bool | `nil` | Enable export of error logs to the platform. Default: true. |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
 | hub.tokenMountPath | string | `"/etc/secrets"` | Mount path for token secret. |
 | hub.tracing.additionalTraceHeaders.enabled | bool | See below | Tracing headers to duplicate. To configure the following, tracing.otlp.enabled needs to be set to true. |
@@ -411,16 +411,16 @@ Kubernetes: `>=1.25.0-0`
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.web.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.web.transport | object | nil | Set transport settings for the entrypoint |
-| ports.web.uplink | string | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
+| ports.web.uplink | bool | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
-| ports.websecure.containerPort | string | `nil` |  |
+| ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
-| ports.websecure.hostPort | string | `nil` |  |
+| ports.websecure.hostPort | int | `nil` | Use hostPort if set. |
 | ports.websecure.http.encodedCharacters | object | nil | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
 | ports.websecure.http.maxHeaderBytes | int | `nil` | Maximum size of request headers in bytes. Default: 1048576 (1 MB) |
 | ports.websecure.http.middlewares | list | `[]` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares) |
@@ -430,7 +430,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.http.tls.enabled | bool | true | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls) |
 | ports.websecure.http.tls.options | string | `""` |  |
 | ports.websecure.http.underscoreHeadersStrategy | string | `nil` | Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy) |
-| ports.websecure.http3.advertisedPort | string | `nil` |  |
+| ports.websecure.http3.advertisedPort | int | `nil` | Defines the UDP port to advertise as the HTTP/3 authority. |
 | ports.websecure.http3.enabled | bool | `false` | Enable HTTP/3 on the entrypoint. It also enables the http3 experimental feature. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3). There are known limitations when trying to listen on same ports for TCP & UDP ([kubernetes#47249](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)): this chart works around it using a dual Service. |
 | ports.websecure.nodePort | int | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
 | ports.websecure.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
@@ -486,8 +486,8 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
-| providers.kubernetesIngressNGINX.allowCrossNamespaceResources | string | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
-| providers.kubernetesIngressNGINX.allowSnippetAnnotations | string | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |
+| providers.kubernetesIngressNGINX.allowCrossNamespaceResources | bool | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
+| providers.kubernetesIngressNGINX.allowSnippetAnnotations | bool | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |
 | providers.kubernetesIngressNGINX.certAuthFilePath | string | `""` | Kubernetes certificate authority file path (not needed for in-cluster client) |
 | providers.kubernetesIngressNGINX.clientBodyBufferSize | int | `nil` | Default buffer size for reading client request body in bytes (default: 16384) |
 | providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
@@ -511,19 +511,19 @@ Kubernetes: `>=1.25.0-0`
 | providers.kubernetesIngressNGINX.modsec.snippet | string | `""` | Custom ModSec rules snippet. |
 | providers.kubernetesIngressNGINX.proxyBodySize | int | `nil` | Default maximum size of a client request body in bytes (default: 1048576) |
 | providers.kubernetesIngressNGINX.proxyBufferSize | int | `nil` | Default buffer size for reading the response body in bytes (default: 8192) |
-| providers.kubernetesIngressNGINX.proxyBuffering | string | `nil` | Defines whether to enable response buffering (default: false) |
+| providers.kubernetesIngressNGINX.proxyBuffering | bool | `nil` | Defines whether to enable response buffering (default: false) |
 | providers.kubernetesIngressNGINX.proxyBuffersNumber | int | `nil` | Default number of buffers for reading a response (default: 4) |
 | providers.kubernetesIngressNGINX.proxyConnectTimeout | int | `nil` | Amount of time to wait until a connection to a server can be established. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.proxyNextUpstream | string | `""` | Defines in which cases a request should be retried (default: "error timeout") |
 | providers.kubernetesIngressNGINX.proxyNextUpstreamTimeout | int | `nil` | Limits the total elapsed time to retry the request. Unitless, in seconds (default: 0) |
 | providers.kubernetesIngressNGINX.proxyNextUpstreamTries | int | `nil` | Limits the number of possible tries if the backend server does not reply (default: 3) |
 | providers.kubernetesIngressNGINX.proxyReadTimeout | int | `nil` | Amount of time between two successive read operations. Unitless, in seconds (default: 60) |
-| providers.kubernetesIngressNGINX.proxyRequestBuffering | string | `nil` | Defines whether to enable request buffering (default: false) |
+| providers.kubernetesIngressNGINX.proxyRequestBuffering | bool | `nil` | Defines whether to enable request buffering (default: false) |
 | providers.kubernetesIngressNGINX.proxySendTimeout | int | `nil` | Amount of time between two successive write operations. Unitless, in seconds (default: 60) |
 | providers.kubernetesIngressNGINX.publishService.enabled | bool | `false` | Enable publishService. Service fronting the Ingress controller, used to set the load-balancer status of Ingress objects. Usually the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngressNGINX.publishService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
 | providers.kubernetesIngressNGINX.publishStatusAddress | string | `""` | Customized address (or addresses, separated by comma) to set as the load-balancer status of Ingress objects this controller satisfies |
-| providers.kubernetesIngressNGINX.strictValidatePathType | string | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
+| providers.kubernetesIngressNGINX.strictValidatePathType | bool | `nil` | Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true) |
 | providers.kubernetesIngressNGINX.throttleDuration | string | `""` | Ingress refresh throttle duration |
 | providers.kubernetesIngressNGINX.token | string | `""` | Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token |
 | providers.kubernetesIngressNGINX.upstreamKeepaliveTimeout | int | `nil` | Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60) |
