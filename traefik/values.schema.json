@@ -383,7 +383,9 @@
                     "type": "string"
                 },
                 "healthchecksPort": {
+                    "description": "Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks.",
                     "type": [
+                        "string",
                         "integer",
                         "null"
                     ],

@@ -32,10 +32,10 @@ deployment:
   terminationGracePeriodSeconds: 60
   # -- The minimum number of seconds Traefik needs to be up and running before the DaemonSet/Deployment controller considers it available
   minReadySeconds: 0
-  ## -- Override the liveness/readiness port. This is useful to integrate traefik
-  ## with an external Load Balancer that performs healthchecks.
-  ## Default: ports.traefik.port
-  healthchecksPort:  # @schema type:[integer, null];minimum:0
+  # -- (string/int) Override the liveness/readiness port. This is useful to integrate traefik
+  # with an external Load Balancer that performs healthchecks.
+  # @default -- `ports.traefik.port`
+  healthchecksPort:  # @schema type:[string, integer, null]; minimum:0
   ## -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
   ## Default: ports.traefik.hostIP if set, otherwise Pod IP
   healthchecksHost: ""
