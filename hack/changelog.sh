@@ -8,11 +8,14 @@ fi
 
 repo="https://github.com/traefik/traefik-helm-chart"
 
-# Commit line -> Artifact Hub change kind.
+# Commit line -> Artifact Hub change kind. No conventional-commit type maps to
+# the remaining kinds (deprecated, security), so they are never emitted.
 kind_for() {
   case "$1" in
     feat*) echo "added" ;;
     fix*) echo "fixed" ;;
+    perf*) echo "changed" ;;
+    revert*) echo "removed" ;;
     *) echo "changed" ;;
   esac
 }
@@ -38,11 +41,18 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   else
     # Patch/minor: structured list so Artifact Hub renders per-kind badges.
-    rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md | grep '^\* ' | sed -e 's/^\* //' -e 's/:[a-z0-9_]*: //g' -e 's/[[:space:]]*$//')"
+    # The release commit only ever says "publish <version>": noise in its own changelog.
+    # Gitmoji is dropped in both forms, shortcode and rendered: descriptions are plain text.
+    rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
+      grep '^\* ' |
+      grep -v '^\* chore(release)' |
+      sed -e 's/^\* //' -e 's/[[:space:]]*$//' |
+      perl -CSD -pe 's/:[a-z0-9_]+:\s*//g; s/\p{Extended_Pictographic}\x{FE0F}?\s*//g')"
     changelog="$(
       while IFS= read -r line; do
         [ -z "${line}" ] && continue
-        esc="${line//\"/\\\"}"
+        esc="${line//\\/\\\\}"
+        esc="${esc//\"/\\\"}"
         printf '    - kind: %s\n' "$(kind_for "${line}")"
         printf '      description: "%s"\n' "${esc}"
       done <<<"${rawlist}"
