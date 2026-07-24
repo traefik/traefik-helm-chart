@@ -51,6 +51,8 @@ spec:
                 description: |-
                   ExposeName is the name of the service to expose.
                   By default it uses <namespace>-<name>.
+                maxLength: 253
+                pattern: ^[a-z0-9]([-a-z0-9.]*[a-z0-9])?$
                 type: string
               healthCheck:
                 description: HealthCheck configures the active health check on the

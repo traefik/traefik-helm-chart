@@ -161,6 +161,14 @@ spec:
                       lastname:
                         description: Lastname is the JWT claim for user last name.
                         type: string
+                      organizationId:
+                        description: OrganizationID is the JWT claim for the ID of
+                          the organization the user belongs to.
+                        type: string
+                      organizationName:
+                        description: OrganizationName is the JWT claim for the name
+                          of the organization the user belongs to.
+                        type: string
                       userId:
                         description: UserID is the JWT claim for user ID mapping.
                         type: string

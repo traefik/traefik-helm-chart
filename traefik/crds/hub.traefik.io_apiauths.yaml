@@ -197,6 +197,9 @@ spec:
                 - message: only one entry in trustedIssuers may omit the issuer field
                   rule: '!has(self.trustedIssuers) || self.trustedIssuers.filter(x,
                     !has(x.issuer) || x.issuer == "").size() <= 1'
+              keyless:
+                description: Keyless configures keyless authentication.
+                type: object
               ldap:
                 description: LDAP configures LDAP authentication.
                 properties:
@@ -256,8 +259,8 @@ spec:
             type: object
             x-kubernetes-validations:
             - message: exactly one authentication method must be specified
-              rule: '[has(self.apiKey), has(self.jwt), has(self.ldap)].filter(x, x).size()
-                == 1'
+              rule: '[has(self.apiKey), has(self.jwt), has(self.ldap), has(self.keyless)].filter(x,
+                x).size() == 1'
           status:
             description: The current status of this APIAuth.
             properties:
