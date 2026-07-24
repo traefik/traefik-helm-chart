@@ -11,7 +11,11 @@
   {{- end }}
 {{- end }}
 
-{{- if and .Values.hub.token (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
+{{- if and .Values.hub.token (eq (include "traefik.hub.enabled" .) "false") }}
+  {{- fail "ERROR: hub.enabled cannot be false when hub.token is set." -}}
+{{- end }}
+
+{{- if and (eq (include "traefik.hub.enabled" .) "true") (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
   {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
 {{- end }}
 
@@ -139,11 +143,11 @@
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
-{{- if and $.Values.hub.hardened (not $.Values.hub.token) }}
-  {{ fail "ERROR: hub.hardened requires a Traefik Hub license token, set hub.token." }}
+{{- if and $.Values.hub.hardened (eq (include "traefik.hub.enabled" $) "false") }}
+  {{ fail "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled." }}
 {{- end }}
 
-{{- if $.Values.hub.token -}}
+{{- if eq (include "traefik.hub.enabled" $) "true" -}}
   {{- $hubVersion := include "traefik.hubVersion" $ }}
   {{- if not $hubVersion }}
     {{- if $.Values.image.digest }}
@@ -166,6 +170,10 @@
   {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
   {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $hubVersion "max" $hubMaxVersion)) "true" }}
     {{ fail (printf "ERROR: This Chart does not support Traefik Hub %s, which is a major version above the supported %s." $hubVersion $hubMaxVersion) }}
+  {{- end }}
+
+  {{- if and (not $.Values.hub.token) (semverCompare "<v3.21.0-ea" $hubVersion) }}
+    {{ fail "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
   {{- end }}
 
   {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}

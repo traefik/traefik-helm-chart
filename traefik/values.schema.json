@@ -765,8 +765,15 @@
                         }
                     }
                 },
+                "enabled": {
+                    "description": "Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy, which requires Traefik Hub \u003e= v3.21.0-ea.",
+                    "type": [
+                        "boolean",
+                        "null"
+                    ]
+                },
                 "hardened": {
-                    "description": "Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires a valid license token and Traefik Hub \u003e= v3.21.0-ea.",
+                    "description": "Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub \u003e= v3.21.0-ea.",
                     "type": "boolean"
                 },
                 "mcpgateway": {
@@ -1373,14 +1380,14 @@
                     "type": "string"
                 },
                 "registry": {
-                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.token` is set).",
+                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
                     "type": [
                         "string",
                         "null"
                     ]
                 },
                 "repository": {
-                    "description": "Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.token` is set).",
+                    "description": "Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true).",
                     "type": [
                         "string",
                         "null"

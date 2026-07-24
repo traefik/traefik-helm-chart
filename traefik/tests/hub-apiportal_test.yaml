@@ -19,6 +19,14 @@ tests:
     asserts:
       - hasDocuments:
           count: 0
+  - it: should not provide api portal service in proxy mode
+    set:
+      hub:
+        enabled: true
+        token: ""
+    asserts:
+      - hasDocuments:
+          count: 0
   - it: should expose the required apiportal port on a ClusterIP service
     asserts:
       - notExists:

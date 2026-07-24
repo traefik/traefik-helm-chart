@@ -26,8 +26,18 @@ key) and set `hub.token` to that Secret's name. ⚠️
 {{- end -}}
 
 
+{{/* Inform about Traefik Hub running in proxy mode */}}
+{{- if and (eq (include "traefik.hub.enabled" .) "true") (not .Values.hub.token) -}}
+{{- printf "\n" -}}
+ℹ️ Traefik Hub is running in proxy mode: it behaves as a Traefik Proxy and no commercial
+feature is enabled. Set `hub.token` to a Secret containing your license to enable API Gateway,
+without changing the image. ℹ️
+{{- printf "\n" -}}
+{{- end -}}
+
+
 {{/* Warn about non-standard Traefik Hub versions (pre-release or minor/patch above supported range) */}}
-{{- if .Values.hub.token -}}
+{{- if eq (include "traefik.hub.enabled" .) "true" -}}
 {{- $hubVersion := include "traefik.hubVersion" $ -}}
 {{- $hubMaxVersion := index .Chart.Annotations "traefik.io/hub-max-version" -}}
 {{- if and (regexMatch "v[0-9]+.[0-9]+.[0-9]+" $hubVersion) (eq (include "traefik.isAboveMaxVersion" (dict "version" $hubVersion "max" $hubMaxVersion)) "true") -}}

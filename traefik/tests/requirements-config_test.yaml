@@ -30,13 +30,30 @@ tests:
         tag: experimental-master
     asserts:
       - notFailedTemplate: {}
-  - it: should fail when hub.hardened is set without a Traefik Hub license token
+  - it: should fail when hub.hardened is set without the Traefik Hub distribution
     set:
       hub:
         hardened: true
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: hub.hardened requires a Traefik Hub license token, set hub.token."
+          errorMessage: "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled."
+  - it: should fail when hub.hardened is set with hub explicitly disabled
+    set:
+      hub:
+        enabled: false
+        hardened: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled."
+  - it: should pass when hub.hardened is set in proxy mode
+    set:
+      hub:
+        enabled: true
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when hub.hardened is set on a Traefik Hub older than v3.21.0-ea
     set:
       hub:
@@ -756,3 +773,64 @@ tests:
           enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should not fail when enabling Traefik Hub without a token
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using proxy mode with Traefik Hub < v3.21.0-ea
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.20.6
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
+  - it: should fail when using proxy mode with the default Traefik Hub version
+    set:
+      hub:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
+  - it: should not gate on proxy mode version when a token is set
+    set:
+      hub:
+        enabled: true
+        token: "my-hub-license"
+      image:
+        tag: v3.20.5
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when hub is explicitly disabled with a token
+    set:
+      hub:
+        enabled: false
+        token: "my-hub-license"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.enabled cannot be false when hub.token is set."
+  - it: should enforce Traefik Hub version bounds in proxy mode
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.18.0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: this Chart supports *only* Traefik Hub >= v3.19.3."
+  - it: should resolve the Traefik Proxy version from the Traefik Hub tag in proxy mode
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.19.3
+      accessLog:
+        dualOutput: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
