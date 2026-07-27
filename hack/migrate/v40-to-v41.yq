@@ -1,0 +1,27 @@
+# mikefarah yq v4 expression: migrate Traefik Helm chart values v40 -> v41
+# Breaking change #1 (PR #1887): logs.* -> log.* / accessLog.*, camelCase keys.
+# Breaking change #2: providers.file.content string -> object. Parsed via from_yaml.
+
+# logs.general -> log ; logs.access -> accessLog
+with(select(.logs.general != null); .log = .logs.general) |
+with(select(.logs.access  != null); .accessLog = .logs.access) |
+del(.logs) |
+
+# accessLog.filters: camelCase
+with(select(.accessLog.filters.statuscodes   != null); .accessLog.filters.statusCodes   = .accessLog.filters.statuscodes) |
+with(select(.accessLog.filters.retryattempts != null); .accessLog.filters.retryAttempts = .accessLog.filters.retryattempts) |
+with(select(.accessLog.filters.minduration   != null); .accessLog.filters.minDuration   = .accessLog.filters.minduration) |
+del(.accessLog.filters.statuscodes, .accessLog.filters.retryattempts, .accessLog.filters.minduration) |
+
+# accessLog.fields.general.* collapses up one level
+with(select(.accessLog.fields.general.defaultmode != null); .accessLog.fields.defaultMode = .accessLog.fields.general.defaultmode) |
+with(select(.accessLog.fields.general.names       != null); .accessLog.fields.names       = .accessLog.fields.general.names) |
+del(.accessLog.fields.general) |
+
+# accessLog.fields.headers / queryParameters: defaultmode -> defaultMode
+with(select(.accessLog.fields.headers.defaultmode         != null); .accessLog.fields.headers.defaultMode         = .accessLog.fields.headers.defaultmode) |
+with(select(.accessLog.fields.queryParameters.defaultmode != null); .accessLog.fields.queryParameters.defaultMode = .accessLog.fields.queryParameters.defaultmode) |
+del(.accessLog.fields.headers.defaultmode, .accessLog.fields.queryParameters.defaultmode) |
+
+# providers.file.content: string -> object. Parse the embedded YAML into a real object.
+with(select(.providers.file.content | tag == "!!str"); .providers.file.content |= from_yaml)
