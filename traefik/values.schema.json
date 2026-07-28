@@ -949,6 +949,77 @@
                                 }
                             }
                         },
+                        "ec2": {
+                            "type": "object",
+                            "properties": {
+                                "accessKeyID": {
+                                    "type": "string"
+                                },
+                                "constraints": {
+                                    "type": "string"
+                                },
+                                "defaultRule": {
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "type": "boolean"
+                                },
+                                "exposedByDefault": {
+                                    "type": "boolean"
+                                },
+                                "filters": {
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "values": {
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "type": "array"
+                                            }
+                                        }
+                                    },
+                                    "type": "array"
+                                },
+                                "ipMode": {
+                                    "enum": [
+                                        "",
+                                        "private",
+                                        "public",
+                                        "ipv6"
+                                    ],
+                                    "type": "string"
+                                },
+                                "refreshSeconds": {
+                                    "type": "integer"
+                                },
+                                "region": {
+                                    "type": "string"
+                                },
+                                "secretAccessKey": {
+                                    "type": "string"
+                                },
+                                "securityGroupPortDiscovery": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "type": "boolean"
+                                        },
+                                        "excludedPorts": {
+                                            "items": {
+                                                "type": "integer"
+                                            },
+                                            "type": "array"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
+                        },
                         "microcks": {
                             "type": "object",
                             "properties": {
