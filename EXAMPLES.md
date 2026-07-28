@@ -85,9 +85,23 @@ autoscaling:
         averageUtilization: 80
 ```
 
+## Install with an external scaler (KEDA)
+
+When an external controller like [KEDA](https://keda.sh/) brings its own
+`ScaledObject` (and HPA), the chart's HPA stays disabled and `spec.replicas` must
+be omitted. Otherwise a GitOps tool like Argo CD reconciles the Deployment back to
+the chart value, fighting the scaler.
+
+```yaml
+deployment:
+  replicas: null
+autoscaling:
+  enabled: false
+```
+
 ## Install with Argo Rollouts
 
-When using [ArgoCD Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
+When using [Argo Rollouts](https://argoproj.github.io/rollouts/), one can delegate replica management to a `Rollout` resource, enabling progressive delivery strategies like canary and blue-green deployments.
 To delegate replica management, `deployment.replicas` should be set to `0` and the `Rollout` resource can be defined in a separate YAML or in `extraObjects`.
 
 ```yaml
@@ -515,6 +529,65 @@ extraObjects:
       client-secret: "{{ azure_dns_challenge_application_secret }}"
 ```
 
+## Install on Azure behind an Application Gateway (AGIC)
+
+When using the [Application Gateway Ingress Controller (AGIC)](https://learn.microsoft.com/en-us/azure/application-gateway/ingress-controller-overview),
+health probes need to reach Traefik's `/ping` endpoint.
+Enable the built-in healthcheck IngressRoute so that `/ping` is served on the `web` entrypoint,
+and create an Ingress with the AGIC health probe annotations:
+
+```yaml
+ingressRoute:
+  healthcheck:
+    enabled: true
+    entryPoints:
+      - web
+
+extraObjects:
+  - apiVersion: networking.k8s.io/v1
+    kind: Ingress
+    metadata:
+      name: traefik
+      annotations:
+        appgw.ingress.kubernetes.io/health-probe-path: "/ping"
+        appgw.ingress.kubernetes.io/health-probe-port: "8000"
+        appgw.ingress.kubernetes.io/backend-protocol: "http"
+    spec:
+      ingressClassName: azure-application-gateway
+      rules:
+        - http:
+            paths:
+              - path: /
+                pathType: Prefix
+                backend:
+                  service:
+                    name: '{{ template "traefik.fullname" . }}'
+                    port:
+                      number: 80
+```
+
+## Install on Azure with Load Balancer health probes
+
+When using the Azure Load Balancer directly (without AGIC), configure the health probes to use Traefik's `/ping` endpoint. Enable the built-in healthcheck IngressRoute so that `/ping` is served on the `web` entrypoint (port 80) — this avoids exposing the management port (8080) on the Load Balancer:
+
+```yaml
+ingressRoute:
+  healthcheck:
+    enabled: true
+    entryPoints:
+      - web
+
+service:
+  single: true
+  spec:
+    externalTrafficPolicy: Local
+  annotations:
+    service.beta.kubernetes.io/port_80_health-probe_protocol: "http"
+    service.beta.kubernetes.io/port_80_health-probe_request-path: "/ping"
+    service.beta.kubernetes.io/port_443_health-probe_protocol: "http"
+    service.beta.kubernetes.io/port_443_health-probe_request-path: "/ping"
+```
+
 ## Use ServiceMonitor on AKS (Azure Monitor / managed Prometheus)
 
 Enable the optional ServiceMonitor so managed Prometheus can scrape Traefik metrics on AKS. You may override the CRD apiVersion if your environment requires it.
@@ -790,6 +863,31 @@ experimental:
 > - **Secure**: Works with CSI drivers for cloud storage (S3, Azure Blob, GCS)
 > - **Scalable**: Centralized plugin storage, no per-node requirements
 > - **Consistent**: Uses existing Helm chart patterns (`additionalVolumes`)
+
+## Install Traefik Hub without a license (proxy mode)
+
+Traefik Hub can run without a license token. In this _proxy mode_, it behaves as a Traefik Proxy:
+no commercial feature is enabled, and no external connection is made. It requires Traefik Hub
+>= `v3.21.0-ea`, which is above the version this chart defaults to, so `image.tag` must be set:
+
+```yaml
+hub:
+  enabled: true
+image:
+  tag: v3.21.0-ea.1
+```
+
+This installs `ghcr.io/traefik/traefik-hub` instead of `docker.io/traefik`. To enable API Gateway
+later, set `hub.token` to the name of a `Secret` holding your license, on the same release and
+without changing the image:
+
+```yaml
+hub:
+  enabled: true
+  token: traefik-hub-license
+```
+
+Setting `hub.token` alone is enough: `hub.enabled` defaults to `true` when a token is set.
 
 ## Using Traefik-Hub with private plugin registries
 
@@ -1133,6 +1231,55 @@ spec:
   maxReplicas: 3
 ```
 
+## Use this Chart with FluxCD
+
+This chart is published to an OCI registry at `oci://ghcr.io/traefik/helm`.
+Here is how to deploy it with [FluxCD](https://fluxcd.io/).
+
+Create a `HelmRepository` resource pointing to the OCI registry:
+
+```yaml
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: traefik
+  namespace: flux-system
+spec:
+  type: oci
+  interval: 5m
+  url: oci://ghcr.io/traefik/helm
+```
+
+Then create a `HelmRelease` referencing it:
+
+```yaml
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 10m
+  chart:
+    spec:
+      chart: traefik
+      version: "39.0.7"
+      sourceRef:
+        kind: HelmRepository
+        name: traefik
+        namespace: flux-system
+  values:
+    # Your Traefik values here
+    image:
+      tag: v3.6.12
+```
+
+> [!NOTE]
+> The `url` in `HelmRepository` should be `oci://ghcr.io/traefik/helm` (the registry path **without** the chart name). The chart name is specified in `HelmRelease.spec.chart.spec.chart`.
+
+> [!TIP]
+> Pin the chart `version` to avoid unexpected upgrades. FluxCD supports [semver ranges](https://fluxcd.io/flux/components/source/helmrepositories/#semver-example) like `">=39.0.0 <40.0.0"`.
+
 ## Configure TLS
 
 The [TLS options](https://doc.traefik.io/traefik/https/tls/#tls-options) allow one to configure some parameters of the TLS connection.
@@ -1217,6 +1364,13 @@ One can use the new stable Kubernetes gateway API provider by setting the follow
 providers:
   kubernetesGateway:
     enabled: true
+```
+
+and deploy Gateway API CRDs:
+
+```sh
+# Install Gateway API CRDs from the Standard channel.
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
 ```
 
 <details>
@@ -1865,7 +2019,7 @@ hub:
 providers:
   file:
     enabled: true
-    content: |
+    content:
       http:
         uplinks:
           whoami:
@@ -1907,3 +2061,100 @@ For an uplink named `whoami`, the parent exposes:
 
 - `whoami@multicluster` (weighted across all children)
 - `whoami-child1@multicluster` (direct to a specific child)
+
+## Bind to privileged ports (80 and 443)
+
+By default, Traefik listens on high ports (8000/8443) because binding to ports below 1024 requires extra privileges. To bind directly to ports 80 and 443, add the `NET_BIND_SERVICE` capability and configure the port numbers:
+
+```yaml
+ports:
+  web:
+    port: 80
+    containerPort: 80
+  websecure:
+    port: 443
+    containerPort: 443
+
+securityContext:
+  capabilities:
+    drop: [ALL]
+    add: [NET_BIND_SERVICE]
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+```
+
+This keeps the container running as a non-root user while allowing it to bind to privileged ports. No changes to `podSecurityContext` are needed.
+
+If you also want the host to listen on ports 80 and 443 directly (bypassing the Service), combine with `hostPort`:
+
+```yaml
+ports:
+  web:
+    port: 80
+    containerPort: 80
+    hostPort: 80
+  websecure:
+    port: 443
+    containerPort: 443
+    hostPort: 443
+```
+
+> [!NOTE]
+> When using `hostPort`, you typically want to deploy Traefik as a `DaemonSet` (see the DaemonSet example above) so that each node binds the ports.
+
+<details>
+<summary>Running on privileged ports with host network</summary>
+
+If you need to run Traefik on host network and on privileged ports you'll need extra capabilities set on the `traefik` binary itself (cf. https://github.com/traefik/traefik/pull/12902#issuecomment-4160942102). Here's an init container approach that helps you achieve this:
+
+```yaml
+podSecurityContext:
+  runAsGroup: 65532
+  runAsNonRoot: false
+  runAsUser: 65532
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  allowPrivilegeEscalation: true
+  capabilities:
+    drop: [ALL]
+    add: [NET_BIND_SERVICE]
+
+hostNetwork: true
+
+service:
+  enabled: false
+
+deployment:
+  initContainers:
+    - name: copy-binary
+      image: traefik:v3.6.12
+      command: ["cp", "/usr/local/bin/traefik", "/shared/traefik"]
+      volumeMounts:
+        - name: traefik-bin
+          mountPath: /shared
+    - name: setcap
+      image: alpine:3.21
+      command:
+        - sh
+        - -c
+        - apk add --no-cache libcap && setcap cap_net_bind_service=+ep /shared/traefik
+      securityContext:
+        runAsUser: 0
+        runAsNonRoot: false
+      volumeMounts:
+        - name: traefik-bin
+          mountPath: /shared
+  additionalVolumes:
+    - name: traefik-bin
+      emptyDir: {}
+
+additionalVolumeMounts:
+  - name: traefik-bin
+    mountPath: /usr/local/bin
+```
+
+</details>

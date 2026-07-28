@@ -33,10 +33,7 @@ While encouraging contributions, the philosophy leads to avoid introducing:
 
 Commits messages should follow [conventional commits](https://www.conventionalcommits.org/en/v1.0.0/) specification and should specify a scope.
 
-All commits will appear in traefik helm chart changelog with two exceptions:
-
-* CRDs: CRDs are shared between Traefik and CRDs charts, thus, commits with this scope will appear in both charts changelog (e.g. `feat(CRDs): update Traefik Proxy CRDs to v3.x`)
-* CRDs-.*: commits with `CRDs-` prefixed scope will appear only on CRDs chart changelog (e.g. `docs(CRDs-values): update values documentation`)
+All commits will appear in traefik helm chart changelog.
 
 ## About Renovate
 
@@ -139,8 +136,6 @@ git commit -m "chore(release): publish $VERSION" traefik/Chart.yaml
 # Generate first version of Changelog
 make changelog
 make docs
-# Copy the Changelog for current version, and put it on a clean version
-git checkout traefik/Chart.yaml
 # Amend the commit and open the PR
 git commit --amend traefik/Changelog.md traefik/Chart.yaml traefik/VALUES.md
 git push -u origin HEAD

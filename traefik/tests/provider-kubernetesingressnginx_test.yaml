@@ -94,6 +94,21 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.publishservice=custom-namespace/custom-service"
 
+  - it: should add publishService with pathOverride when chart service is disabled
+    set:
+      service:
+        enabled: false
+      providers:
+        kubernetesIngressNGINX:
+          publishService:
+            enabled: true
+            pathOverride: "kube-system/rke2-nginx-ingress"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.publishservice=kube-system/rke2-nginx-ingress"
+
   - it: should add publishStatusAddress
     set:
       providers:
@@ -290,6 +305,28 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.allowSnippetAnnotations=true"
 
+  - it: should add strictValidatePathType
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          strictValidatePathType: false
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.strictValidatePathType=false"
+
+  - it: should add globalAuthUrl
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          globalAuthUrl: "http://auth.default.svc.cluster.local"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.globalAuthUrl=http://auth.default.svc.cluster.local"
+
   - it: should add httpEntryPoint & httpsEntryPoint
     set:
       providers:
@@ -305,3 +342,56 @@ tests:
         contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.httpsEntryPoint=websecure"
+
+  - it: should add modsec flags when enabled
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          modsec:
+            enabled: true
+            owaspCoreRules: true
+            snippet: "SecRuleEngine On"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.owaspCoreRules=true"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec.snippet=SecRuleEngine On"
+
+  - it: should not add modsec flags when disabled
+    asserts:
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.modsec=true"
+
+  - it: should add ipAllowListStrategy flags when enabled
+    set:
+      providers:
+        kubernetesIngressNGINX:
+          ipAllowListStrategy:
+            depth: 2
+            excludedIPs:
+              - "1.1.1.1"
+              - 2.2.2.2
+            ipv6subnet: "1.2.3.4/32"
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.depth=2"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.excludedIPs=1.1.1.1,2.2.2.2"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.ipAllowListStrategy.ipv6subnet=1.2.3.4/32"

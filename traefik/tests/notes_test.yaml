@@ -11,8 +11,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should use helm managed namespace in release notes output
     set:
@@ -20,8 +18,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on traefik-ns-override namespace!
   - it: should use tag version in release notes output if set
     set:
@@ -30,9 +26,63 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:v3.7.0 has been deployed successfully on NAMESPACE namespace!
+  - it: should warn that an inline literal hub.token in values is deprecated
+    set:
+      hub:
+        token: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    asserts:
+      - matchRegexRaw:
+          pattern: 'DEPRECATION: providing the Traefik Hub license token inline in values'
+  - it: should not warn about inline token when hub.token references an existing Secret name
+    set:
+      hub:
+        token: "my-hub-license"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION: providing the Traefik Hub license token inline"
+  - it: should warn about missing pull credentials when using the hardened image
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      deployment:
+        imagePullSecrets:
+          - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should inform about proxy mode when hub is enabled without a token
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: 'Traefik Hub is running in proxy mode'
+      - matchRegexRaw:
+          pattern: 'Set `hub.token` to a Secret containing your license to enable API Gateway'
+  - it: should not inform about proxy mode when a token is set
+    set:
+      hub:
+        enabled: true
+        token: "my-hub-license"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "Traefik Hub is running in proxy mode"
   - it: should display warning when using an experimental image tag
     set:
       image:
@@ -40,24 +90,90 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:experimental-v3.6 has been deployed successfully on NAMESPACE namespace!
 
-            ⚠️ WARNING: You are using an experimental image tag (experimental-v3.6). Experimental versions can
+            ⚠️ WARNING: You are using a non-standard image tag (experimental-v3.6). Non-standard versions can
             be unstable, may contain breaking changes, and are NOT recommended for production use.
-            This version is not supported by this chart. Use at your own risk. ⚠️
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
 
-  - it: should not display experimental warning when using a stable image tag
+  - it: should display warning when using an ea version just above max
+    set:
+      image:
+        tag: v3.8.0-ea.1
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.8.0-ea.1 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard image tag (v3.8.0-ea.1). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+
+  - it: should display warning when using a stable minor/patch version above max
+    set:
+      image:
+        tag: v3.99.0
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.99.0 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard image tag (v3.99.0). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+
+  - it: should not display warning when using a stable Proxy version within range
     set:
       image:
         tag: v3.6.8
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
+  - it: should display warning when using a stable Hub minor/patch version above max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.99.0
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.99.0 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard Traefik Hub image tag (v3.99.0). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+  - it: should display warning when using an ea Hub version above max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-ea.1
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.0-ea.1 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ WARNING: You are using a non-standard Traefik Hub image tag (v3.21.0-ea.1). Non-standard versions can
+            be unstable, may contain breaking changes, and are NOT recommended for production use.
+            This version is not officially supported by this chart. Use at your own risk. ⚠️
+  - it: should not display warning when using a stable Hub version within range
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.19.5
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
@@ -73,8 +189,6 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when enabling persistence without initContainer
     set:
@@ -83,8 +197,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
@@ -103,8 +215,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider. 🚨
@@ -122,8 +232,6 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
             RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Port name `web-http-too-long-name` does not comply with Kubernetes standards and will be renamed to `web-http-too-lo` in services. 🚨
@@ -152,9 +260,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
-            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3 has been deployed successfully on NAMESPACE namespace!
             WARNING: kubernetesCRD provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
   - it: should display warning when hub namespaces doesn't match kubernetesGateway namespaces
@@ -179,12 +285,14 @@ tests:
     asserts:
       - equalRaw:
           value: |
-
-
-            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3 has been deployed successfully on NAMESPACE namespace!
             WARNING: kubernetesCRD provider is configured to watch all namespaces but Hub provider only watches [ns1].
             WARNING: kubernetesGateway provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
+
+            ⚠️ DEPRECATION WARNING: Gateway API CRDs will no longer be shipped with this chart in a future major version.
+            You will need to install them yourself before deploying Traefik v3.7:
+              kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
 
   - it: should not display any warning when hub watch all namespaces
     set:
@@ -207,6 +315,31 @@ tests:
     asserts:
       - equalRaw:
           value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3 has been deployed successfully on NAMESPACE namespace!
+  - it: should display the OCI image in release notes when oci_meta and Hub are enabled
+    set:
+      oci_meta:
+        enabled: true
+        repo: myrepo
+        images:
+          hub:
+            image: traefik-hub
+            tag: v3.20.4
 
+      rbac:
+        enabled: true
+        namespaced: true
 
-            RELEASE-NAME with docker.io/traefik:v3 has been deployed successfully on NAMESPACE namespace!
+      hub:
+        token: "token"
+        namespaces: []
+        apimanagement:
+          enabled: true
+
+      providers:
+        kubernetesCRD:
+          namespaces: [ns1, ns2]
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!

@@ -8,16 +8,14 @@ tests:
   - it: should set minimal required parameters when enabling Traefik Hub API Gateway
     asserts:
       - contains:
-          path: spec.template.spec.containers[0].env
+          path: spec.template.spec.volumes
           content:
-            name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: token
-                name: xxx
+            name: hub-token
+            secret:
+              secretName: xxx
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.token=$(HUB_TOKEN)"
+          content: "--hub.tokenFilePath=/etc/secrets/token"
   - it: should set the offline flag when offline is enabled
     set:
       hub:
@@ -41,13 +39,11 @@ tests:
           enabled: true
     asserts:
       - contains:
-          path: spec.template.spec.containers[0].env
+          path: spec.template.spec.volumes
           content:
-            name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                key: token
-                name: xxx
+            name: hub-token
+            secret:
+              secretName: xxx
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apimanagement"

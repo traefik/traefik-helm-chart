@@ -67,6 +67,7 @@ webhooks:
       (dict "name" "hub-agent.traefik.api"                  "endpoint" "/api"                   "resource" "apis")
       (dict "name" "hub-agent.traefik.bundle"               "endpoint" "/api-bundle"            "resource" "apibundles")
       (dict "name" "hub-agent.traefik.catalog-item"         "endpoint" "/api-catalog-item"      "resource" "apicatalogitems")
+      (dict "name" "hub-agent.traefik.content-item"         "endpoint" "/content-item"          "resource" "contentitems")
       (dict "name" "hub-agent.traefik.managed-subscription" "endpoint" "/managed-subscription"  "resource" "managedsubscriptions")
       (dict "name" "hub-agent.traefik.plan"                 "endpoint" "/api-plan"              "resource" "apiplans")
       (dict "name" "hub-agent.traefik.portal"               "endpoint" "/api-portal"            "resource" "apiportals")

@@ -6,12 +6,16 @@ on:
   workflow_dispatch:
   pull_request:
 
+permissions: {}
+
 jobs:
   test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           fetch-depth: 0
 
@@ -24,29 +28,34 @@ jobs:
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
       - name: Check traefik if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@02bda41b469ccfb3f0abb35f4211e598b0b6ea3e # v2.5.0
+        uses: losisin/helm-values-schema-json-action@cfefdf4241da6dbe17f3378e3cd0e863d4a4c3c8 # v3.0.1
         with:
           working-directory: traefik
           fail-on-diff: true
           useHelmDocs: true
 
-      - name: Check traefik-crds if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@02bda41b469ccfb3f0abb35f4211e598b0b6ea3e # v2.5.0
-        with:
-          working-directory: traefik-crds
-          fail-on-diff: true
-
       - name: Lint Chart
         run: make lint
+
+      - name: Install Helm
+        uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
+        with:
+          # renovate: datasource=github-releases depName=helm/helm
+          version: v4.2.3
+
+      - name: Install helm-unittest plugin
+        env:
+          # renovate: datasource=github-releases depName=helm-unittest/helm-unittest
+          HELM_UNITTEST_VERSION: 1.1.0
+        # --verify=false: Helm v4 verifies plugins by default, but the GitHub-release
+        # source ships no verification data, so the install fails without it.
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version "$HELM_UNITTEST_VERSION" --verify=false
 
       - name: Test Chart
         run: make test
 
       - name: Test overrideNamespace
         run: make test-ns
-
-      - name: Test CRDs consistency
-        run: make test-crds-consistency
 
       - name: Test if it's a release PR
         id: check
@@ -92,8 +101,3 @@ jobs:
         if: steps.check.outputs.release
         run: |
           make test-install
-
-      - name: Check install on Kind (with CRDS)
-        if: steps.check.outputs.release
-        run: |
-          make test-install-with-crds

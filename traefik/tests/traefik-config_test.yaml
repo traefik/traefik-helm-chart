@@ -227,6 +227,44 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.allowCrossNamespace=true"
+  - it: should set crossProviderNamespaces for kubernetes providers when specified
+    set:
+      image:
+        tag: v3.7.1
+      providers:
+        kubernetesCRD:
+          crossProviderNamespaces:
+            - ns1
+            - ns2
+        kubernetesIngress:
+          crossProviderNamespaces:
+            - ns3
+        kubernetesGateway:
+          enabled: true
+          crossProviderNamespaces:
+            - ns4
+            - ns5
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.crossProviderNamespaces=ns1,ns2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.crossProviderNamespaces=ns3"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.crossProviderNamespaces=ns4,ns5"
+  - it: should not set crossProviderNamespaces by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.crossProviderNamespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.crossProviderNamespaces"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.crossProviderNamespaces"
   - it: should allow external name services when specified in configuration
     set:
       providers:
@@ -689,7 +727,7 @@ tests:
     set:
       additionalVolumeMounts:
         - name: foo-logs
-          mountPath: /var/log/{{ .Values.image.repository }}
+          mountPath: /var/log/{{ include "traefik.imageRepository" . }}
     asserts:
       - equal:
           path: spec.template.spec.containers[0].volumeMounts[2].mountPath
@@ -728,6 +766,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping.entrypoint=web"
+  - it: should support a named probe port
+    set:
+      deployment:
+        healthchecksPort: traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: traefik
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: traefik
   - it: should set custom probe scheme
     set:
       additionalArguments:
@@ -940,15 +989,14 @@ tests:
           content: "--entryPoints.websecure.transport.respondingTimeouts.readTimeout=42s"
   - it: should be possible to configure access logs
     set:
-      logs:
-        access:
-          enabled: true
-          format: json
-          filePath: "/data/log"
-          bufferingSize: 100
-          addInternals: true
-          filters:
-            statuscodes: "200,300-302"
+      accessLog:
+        enabled: true
+        format: json
+        filePath: "/data/log"
+        bufferingSize: 100
+        addInternals: true
+        filters:
+          statusCodes: "200,300-302"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -973,10 +1021,9 @@ tests:
           content: "--accesslog.dualOutput=true"
   - it: should be possible to enable access log dualOutput
     set:
-      logs:
-        access:
-          enabled: true
-          dualOutput: true
+      accessLog:
+        enabled: true
+        dualOutput: true
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args

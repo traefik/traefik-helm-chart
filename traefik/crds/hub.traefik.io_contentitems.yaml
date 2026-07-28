@@ -4,21 +4,20 @@ kind: CustomResourceDefinition
 metadata:
   annotations:
     controller-gen.kubebuilder.io/version: v0.17.1
-  name: apiportals.hub.traefik.io
+  name: contentitems.hub.traefik.io
 spec:
   group: hub.traefik.io
   names:
-    kind: APIPortal
-    listKind: APIPortalList
-    plural: apiportals
-    singular: apiportal
+    kind: ContentItem
+    listKind: ContentItemList
+    plural: contentitems
+    singular: contentitem
   scope: Namespaced
   versions:
   - name: v1alpha1
     schema:
       openAPIV3Schema:
-        description: APIPortal defines a developer portal for accessing the documentation
-          of APIs.
+        description: ContentItem defines additional documentation for given resource.
         properties:
           apiVersion:
             description: |-
@@ -38,48 +37,65 @@ spec:
           metadata:
             type: object
           spec:
-            description: The desired behavior of this APIPortal.
+            description: Defines the documentation to attach to the referenced resource.
             properties:
-              auth:
-                description: Auth references the APIPortalAuth resource for authentication
-                  configuration.
+              content:
+                description: Content is the valid markdown content.
+                maxLength: 1500000
+                type: string
+              link:
+                description: Link is the link to the content.
                 properties:
+                  href:
+                    description: Href is the public URL of the content.
+                    type: string
+                    x-kubernetes-validations:
+                    - message: must be a valid URL
+                      rule: isURL(self)
+                required:
+                - href
+                type: object
+              order:
+                description: Order defines the order of the content in the UI.
+                format: int32
+                minimum: 0
+                type: integer
+              parentRef:
+                description: ParentRef is the reference to the resource that this
+                  content belongs to.
+                properties:
+                  kind:
+                    description: Kind is the kind of the resource that this content
+                      belongs to.
+                    enum:
+                    - APIPortal
+                    - API
+                    - APIBundle
+                    type: string
                   name:
-                    description: Name is the name of the APIPortalAuth resource.
+                    description: Name is the name of the resource that this content
+                      belongs to.
                     maxLength: 253
                     type: string
                 required:
+                - kind
                 - name
                 type: object
-              description:
-                description: Description of the APIPortal.
-                type: string
               title:
-                description: Title is the public facing name of the APIPortal.
+                description: Title is the public-facing name of the ContentItem.
+                maxLength: 253
+                minLength: 1
                 type: string
-              trustedUrls:
-                description: TrustedURLs are the urls that are trusted by the OAuth
-                  2.0 authorization server.
-                items:
-                  type: string
-                maxItems: 1
-                minItems: 1
-                type: array
-                x-kubernetes-validations:
-                - message: must be a valid URLs
-                  rule: self.all(x, isURL(x))
-              ui:
-                description: UI holds the UI customization options.
-                properties:
-                  logoUrl:
-                    description: LogoURL is the public URL of the logo.
-                    type: string
-                type: object
             required:
-            - trustedUrls
+            - order
+            - parentRef
+            - title
             type: object
+            x-kubernetes-validations:
+            - message: exactly one of content or link must be specified
+              rule: '[has(self.content), has(self.link)].filter(x, x).size() == 1'
           status:
-            description: The current status of this APIPortal.
+            description: The current status of this ContentItem.
             properties:
               conditions:
                 items:
@@ -138,63 +154,8 @@ spec:
                   type: object
                 type: array
               hash:
-                description: Hash is a hash representing the APIPortal.
+                description: Hash is a hash representing the ContentItem.
                 type: string
-              oidc:
-                description: OIDC is the OIDC configuration for accessing the exposed
-                  APIPortal WebUI.
-                properties:
-                  clientId:
-                    description: ClientID is the OIDC ClientID for accessing the exposed
-                      APIPortal WebUI.
-                    type: string
-                  companyClaim:
-                    description: CompanyClaim is the name of the JWT claim containing
-                      the user company.
-                    type: string
-                  emailClaim:
-                    description: EmailClaim is the name of the JWT claim containing
-                      the user email.
-                    type: string
-                  firstnameClaim:
-                    description: FirstnameClaim is the name of the JWT claim containing
-                      the user firstname.
-                    type: string
-                  generic:
-                    description: Generic indicates whether or not the APIPortal authentication
-                      relies on Generic OIDC.
-                    type: boolean
-                  groupsClaim:
-                    description: GroupsClaim is the name of the JWT claim containing
-                      the user groups.
-                    type: string
-                  issuer:
-                    description: Issuer is the OIDC issuer for accessing the exposed
-                      APIPortal WebUI.
-                    type: string
-                  lastnameClaim:
-                    description: LastnameClaim is the name of the JWT claim containing
-                      the user lastname.
-                    type: string
-                  scopes:
-                    description: Scopes is the OIDC scopes for getting user attributes
-                      during the authentication to the exposed APIPortal WebUI.
-                    type: string
-                  secretName:
-                    description: SecretName is the name of the secret containing the
-                      OIDC ClientSecret for accessing the exposed APIPortal WebUI.
-                    type: string
-                  syncedAttributes:
-                    description: SyncedAttributes configure the user attributes to
-                      sync.
-                    items:
-                      type: string
-                    type: array
-                  userIdClaim:
-                    description: UserIDClaim is the name of the JWT claim containing
-                      the user ID.
-                    type: string
-                type: object
               syncedAt:
                 format: date-time
                 type: string

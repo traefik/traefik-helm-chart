@@ -15,23 +15,54 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
+Install the Traefik Hub distribution. Enabled without a token means proxy mode. Returns "true" or "false".
+*/}}
+{{- define "traefik.hub.enabled" -}}
+{{- if kindIs "invalid" .Values.hub.enabled -}}
+{{- not (empty .Values.hub.token) -}}
+{{- else -}}
+{{- .Values.hub.enabled -}}
+{{- end -}}
+{{- end -}}
+
+{{/*
+Image defaults. An explicit image value always wins; otherwise the chart picks the hardened
+default, then the Traefik Hub one when hub is enabled, then Traefik Proxy.
+*/}}
+{{- define "traefik.imageRegistry" -}}
+{{- $default := ternary "ghcr.io" "docker.io" (eq (include "traefik.hub.enabled" .) "true") -}}
+{{- .Values.image.registry | default (ternary "registry.traefik.io" $default .Values.hub.hardened) -}}
+{{- end -}}
+
+{{- define "traefik.imageRepository" -}}
+{{- $default := ternary "traefik/traefik-hub" "traefik" (eq (include "traefik.hub.enabled" .) "true") -}}
+{{- .Values.image.repository | default (ternary "traefik-hub" $default .Values.hub.hardened) -}}
+{{- end -}}
+
+{{- define "traefik.defaultTag" -}}
+{{- ternary (index .Chart.Annotations "traefik.io/hub-max-version") .Chart.AppVersion (eq (include "traefik.hub.enabled" .) "true") -}}
+{{- end -}}
+
+{{/*
 Create the chart image name.
 */}}
 {{- define "traefik.image-name" -}}
 {{- if .Values.oci_meta.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if eq (include "traefik.hub.enabled" .) "true" -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.hub.image .Values.oci_meta.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.oci_meta.repo .Values.oci_meta.images.proxy.image .Values.oci_meta.images.proxy.tag }}
  {{- end -}}
 {{- else if .Values.global.azure.enabled -}}
- {{- if .Values.hub.token -}}
+ {{- if eq (include "traefik.hub.enabled" .) "true" -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.hub.registry .Values.global.azure.images.hub.image .Values.global.azure.images.hub.tag }}
  {{- else -}}
 {{- printf "%s/%s:%s" .Values.global.azure.images.proxy.registry .Values.global.azure.images.proxy.image .Values.global.azure.images.proxy.tag }}
  {{- end -}}
+{{- else if .Values.image.digest -}}
+{{- printf "%s/%s@%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) .Values.image.digest }}
 {{- else -}}
-{{- printf "%s/%s:%s" .Values.image.registry .Values.image.repository (.Values.image.tag | default .Chart.AppVersion) }}
+{{- printf "%s/%s:%s%s" (include "traefik.imageRegistry" .) (include "traefik.imageRepository" .) (.Values.image.tag | default (include "traefik.defaultTag" .)) (ternary "-hardened" "" .Values.hub.hardened) }}
 {{- end -}}
 {{- end -}}
 
@@ -189,10 +220,20 @@ It requires a dict with "Version" and "Hub".
 {{- define "traefik.proxyVersionFromHub" -}}
  {{- $version := .Version -}}
  {{- if .Hub -}}
-   {{- $hubProxyVersion := "v3.6.7" }}
+   {{- $hubProxyVersion := "v3.7.6" }}
    {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) }}
      {{- if semverCompare "<v3.19.0-0" $version }}
         {{- $hubProxyVersion = "v3.6.3" }}
+     {{- else if semverCompare "<v3.20.0-ea.7" $version }}
+        {{- $hubProxyVersion = "v3.6.7" }}
+     {{- else if semverCompare "<v3.20.0-0" $version }}
+        {{- $hubProxyVersion = "v3.7.0-rc.1" }}
+     {{- else if semverCompare "<v3.20.2-0" $version }}
+        {{- $hubProxyVersion = "v3.7.0" }}
+     {{- else if semverCompare "<v3.20.5-0" $version }}
+        {{- $hubProxyVersion = "v3.7.1" }}
+     {{- else if semverCompare "<v3.20.6-0" $version }}
+        {{- $hubProxyVersion = "v3.7.5" }}
      {{- end -}}
    {{- end -}}
    {{- $hubProxyVersion }}
@@ -203,12 +244,55 @@ It requires a dict with "Version" and "Hub".
 
 
 {{/*
+Returns "true" if the given version is a stable release (vX.Y.Z or X.Y.Z), "false" otherwise.
+Non-standard versions include experimental, ea, rc, alpha, beta builds.
+*/}}
+{{- define "traefik.isStableVersion" -}}
+  {{- if regexMatch "^v?[0-9]+\\.[0-9]+\\.[0-9]+$" . -}}
+    true
+  {{- else -}}
+    false
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Returns "true" when version is above max but shares the same major (the "use at your own
+risk" warning case). Pre-releases compare against "max-0" to also flag pre-releases of a
+version above max. Expects a dict: version, max.
+*/}}
+{{- define "traefik.isAboveMaxVersion" -}}
+  {{- if eq (include "traefik.isStableVersion" .version) "true" -}}
+    {{- semverCompare (printf ">%s" .max) .version -}}
+  {{- else -}}
+    {{- semverCompare (printf ">%s-0" .max) .version -}}
+  {{- end -}}
+{{- end -}}
+
+{{/*
+Returns "true" when version's major is strictly above max's major (the hard-fail case).
+Expects a dict: version, max.
+*/}}
+{{- define "traefik.isMajorAboveMax" -}}
+  {{- semverCompare (printf ">=%d.0.0-0" (add1 (int (semver .max).Major))) .version -}}
+{{- end -}}
+
+{{/*
+Renders the non-standard version warning shown in NOTES.txt. Expects a dict: label, tag.
+*/}}
+{{- define "traefik.nonStandardVersionWarning" -}}
+⚠️ WARNING: You are using a non-standard {{ .label }} ({{ .tag }}). Non-standard versions can
+be unstable, may contain breaking changes, and are NOT recommended for production use.
+This version is not officially supported by this chart. Use at your own risk. ⚠️
+{{- end -}}
+
+{{/*
 The version can comes many sources: appVersion, image.tag, override, marketplace.
 */}}
 {{- define "traefik.proxyVersion" -}}
+ {{- $hubEnabled := eq (include "traefik.hub.enabled" $) "true" -}}
  {{- if $.Values.versionOverride }}
-  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" $.Values.hub.token) }}
- {{- else if $.Values.hub.token -}}
+  {{- include "traefik.proxyVersionFromHub" (dict "Version" $.Values.versionOverride "Hub" $hubEnabled) }}
+ {{- else if $hubEnabled -}}
   {{- $version := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
   {{- $version = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $version) -}}
   {{- include "traefik.proxyVersionFromHub" (dict "Version" $version "Hub" true) }}
@@ -221,6 +305,21 @@ The version can comes many sources: appVersion, image.tag, override, marketplace
   {{- end -}}
   {{- $version -}}
  {{- end -}}
+{{- end -}}
+
+{{/*
+Resolve the Traefik Hub image version from its sources (oci_meta, azure marketplace,
+image.tag, versionOverride), stripping any digest suffix.
+Returns an empty string when no version can be determined. Callers apply their own
+fallback policy (e.g. "v3.99" for floating tags, or skipping non-semver tags).
+*/}}
+{{- define "traefik.hubVersion" -}}
+ {{- $hubVersion := ($.Values.oci_meta.enabled | ternary $.Values.oci_meta.images.hub.tag $.Values.image.tag) -}}
+ {{- $hubVersion = ($.Values.global.azure.enabled | ternary $.Values.global.azure.images.hub.tag $hubVersion) -}}
+ {{- if and (not $hubVersion) $.Values.versionOverride -}}
+   {{- $hubVersion = $.Values.versionOverride -}}
+ {{- end -}}
+ {{- (split "@" (default "" $hubVersion))._0 -}}
 {{- end -}}
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
@@ -257,6 +356,8 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
           {{- include "traefik.yaml2CommandLineArgsRec" (dict "path" (printf "%s.%s" $path $key) "content" $value) -}}
         {{- else if and (kindIs "bool" $value) (ne $value nil) }}
 --{{ join "." (list $path $key)}}={{ $value }}
+        {{- else if or (kindIs "int" $value) (kindIs "int64" $value) }}
+--{{ join "." (list $path $key)}}={{ $value }}
         {{- else if not (empty $value) }}
 --{{ join "." (list $path $key)}}={{ if kindIs "slice" $value }}{{ join "," $value }}{{ else if kindIs "float64" $value }}{{ printf "%.0f" $value }}{{ else }}{{ $value }}{{ end }}
         {{- end -}}
@@ -283,7 +384,7 @@ Hash: {{ sha1sum ($cert.Cert | b64enc) }}
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Validate localPlugin configuration and determine plugin type
 Returns: hostPath, inline, or localPath
 */}}
@@ -306,7 +407,7 @@ Returns: hostPath, inline, or localPath
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get hostPath for a plugin (handles both old and new structure)
 */}}
 {{- define "traefik.getLocalPluginHostPath" -}}
@@ -320,7 +421,7 @@ Get hostPath for a plugin (handles both old and new structure)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get inline plugin files (new structure only)
 */}}
 {{- define "traefik.getLocalPluginInlineFiles" -}}
@@ -330,7 +431,7 @@ Get inline plugin files (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Get localPath plugin configuration (new structure only)
 */}}
 {{- define "traefik.getLocalPluginLocalPath" -}}
@@ -346,7 +447,7 @@ Get localPath plugin configuration (new structure only)
     {{- end -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if a volume name exists in additionalVolumes
 */}}
 {{- define "traefik.volumeExistsInAdditionalVolumes" -}}
@@ -361,7 +462,7 @@ Check if a volume name exists in additionalVolumes
     {{- $found -}}
 {{- end -}}
 
-{{/* 
+{{/*
 Check if using old localPlugin hostPath structure (for deprecation warning)
 */}}
 {{- define "traefik.hasDeprecatedLocalPlugins" -}}
@@ -459,3 +560,10 @@ Check if using old localPlugin hostPath structure (for deprecation warning)
    {{- end }}
   {{- end }}
 {{- end }}
+
+{{/*
+Define hub token mount path
+*/}}
+{{- define "traefik.hubTokenFilePath" }}
+{{- printf "%s/%s" (.Values.hub.tokenMountPath | trimSuffix "/") "token" -}}
+{{- end -}}

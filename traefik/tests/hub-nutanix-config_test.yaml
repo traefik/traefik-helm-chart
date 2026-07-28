@@ -1,0 +1,93 @@
+suite: Traefik Hub Nutanix Prism Central provider
+templates:
+  - deployment.yaml
+set:
+  image:
+    registry: ghcr.io
+    repository: traefik/traefik-hub
+    tag: v3.20.0-rc.1
+  hub:
+    token: "xxx"
+tests:
+  - it: should not configure nutanixPrismCentral by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.endpoint="
+
+  - it: should configure nutanixPrismCentral when enabled
+    set:
+      hub:
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            endpoint: "https://prism.example.com"
+            username: "admin"
+            password: "secret"
+            apiKey: "api-xxx"
+            filename: "/etc/nx.yaml"
+            pollInterval: 30
+            pollTimeout: 5
+            serviceNameCategoryKey: "TraefikServiceName"
+            allowedVpcs:
+              - uuid: "vpc-1"
+              - uuid: "vpc-2"
+            tls:
+              ca: "/tls/ca.crt"
+              cert: "/tls/client.crt"
+              key: "/tls/client.key"
+              insecureSkipVerify: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.endpoint=https://prism.example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.username=admin"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.password=secret"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.apiKey=api-xxx"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.filename=/etc/nx.yaml"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.pollInterval=30"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.pollTimeout=5"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.serviceNameCategoryKey=TraefikServiceName"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.allowedVpcs[0].uuid=vpc-1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.allowedVpcs[1].uuid=vpc-2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.tls.ca=/tls/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.tls.cert=/tls/client.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.tls.key=/tls/client.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.tls.insecureSkipVerify=true"
+
+  - it: should fail on typo when configuring nutanixPrismCentral
+    set:
+      hub:
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            endpoints: "https://prism.example.com" # <=== typo: endpoints instead of endpoint
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

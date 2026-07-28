@@ -1,4 +1,5 @@
-## [v34.2.0](https://github.com/traefik/traefik-helm-chart/compare/v34.1.0...v34.2.0) (2025-01-28)
+# [v34.2.0](https://github.com/traefik/traefik-helm-chart/compare/v34.1.0...v34.2.0) (2025-01-28)
+
 ## :rocket: Features
 
 - feat: :sparkles: add hub tracing capabilities #1322 by @darkweaver87
@@ -13,4 +14,7 @@
 - docs: 📚️ fix typo in Guidelines.md #1320 by @lbarnkow
 - chore(release): publish v34.2.0 #1323 by @darkweaver87
 
+## 👌 Traefik version support
 
+* Traefik Proxy: v3.6.0 -> v3.6.12 (default)
+* Traefik Hub: v3.19.0 -> v3.20.0-ea.1

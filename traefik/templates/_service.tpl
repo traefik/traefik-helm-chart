@@ -1,7 +1,7 @@
 {{- define "traefik.service-name" -}}
 {{- $fullname := printf "%s-%s" (include "traefik.fullname" .root) .name -}}
 {{- if eq .name "default" -}}
-{{- $fullname = include "traefik.fullname" .root -}}
+{{- $fullname = default (include "traefik.fullname" .root) .root.Values.service.nameOverride -}}
 {{- end -}}
 
 {{- if ge (len $fullname) 60 -}} # 64 - 4 (udp-postfix) = 60

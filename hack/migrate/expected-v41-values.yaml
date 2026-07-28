@@ -1,0 +1,35 @@
+# Migration fixture — exercises every breaking key from #1887 + file.content type change.
+providers:
+  file:
+    enabled: true
+    content:
+      http:
+        routers:
+          my-router:
+            rule: "Host(`example.com`)"
+# unrelated key, must pass through untouched
+service:
+  type: LoadBalancer
+log:
+  level: DEBUG
+  format: json
+  filePath: "/var/log/traefik.log"
+  noColor: true
+  otlp:
+    enabled: true
+accessLog:
+  enabled: true
+  format: json
+  timezone: "Europe/Paris"
+  filters:
+    statusCodes: "200,300-302"
+    retryAttempts: true
+    minDuration: "10ms"
+  fields:
+    headers:
+      defaultMode: drop
+    queryParameters:
+      defaultMode: drop
+    defaultMode: keep
+    names:
+      ClientUsername: drop

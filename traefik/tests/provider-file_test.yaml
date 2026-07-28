@@ -75,7 +75,7 @@ tests:
         file:
           enabled: true
           watch: false
-          content: &x-providers-file-content |-
+          content:
             middlewares:
               Middleware00:
                 addPrefix:
@@ -84,7 +84,11 @@ tests:
       - template: provider-file-cm.yaml
         equal:
           path: data["config.yml"]
-          value: *x-providers-file-content
+          value: |-
+            middlewares:
+              Middleware00:
+                addPrefix:
+                  prefix: foobar
       - template: deployment.yaml
         isNotEmpty:
           path: metadata.annotations["checksum/traefik-dynamic-conf"]

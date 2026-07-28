@@ -30,6 +30,15 @@ tests:
       - equal:
           path: spec.replicas
           value: 3
+  - it: should not have replicas when replicas is null and autoscaling is disabled
+    set:
+      deployment:
+        replicas: null
+      autoscaling:
+        enabled: false
+    asserts:
+      - notExists:
+          path: spec.replicas
   - it: should not have replicas when autoscaling is enabled
     set:
       autoscaling:
@@ -132,7 +141,7 @@ tests:
           traefik/powpow: podAnnotations
           traefik/name: '{{ template "traefik.name" . }}'
           traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/repository: '{{ .Values.image.repository }}'
+          traefik/repository: '{{ include "traefik.imageRepository" . }}'
     asserts:
       - equal:
           path: spec.template.metadata.annotations.traefik/powpow
@@ -167,7 +176,7 @@ tests:
           traefik/powpow: podLabels
           traefik/name: '{{ template "traefik.name" . }}'
           traefik/{{ template "traefik.name" . }}.logs: 'log_processing_rules'
-          traefik/repository: '{{ .Values.image.repository }}'
+          traefik/repository: '{{ include "traefik.imageRepository" . }}'
     asserts:
       - equal:
           path: spec.template.metadata.labels.traefik/powpow

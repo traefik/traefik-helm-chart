@@ -187,6 +187,41 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.traefik.address=:8080/tcp"
 
+  - it: should render IPv6 hostIP in ports and bracket the entrypoint address
+    template: deployment.yaml
+    set:
+      ports:
+        web:
+          hostIP: "::"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 8000
+            hostIP: "::"
+            protocol: TCP
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=[::]:8000/tcp"
+
+  - it: should render IPv6 hostIP as the probes host
+    template: deployment.yaml
+    set:
+      ports:
+        traefik:
+          hostIP: "::"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.traefik.address=[::]:8080/tcp"
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.host
+          value: "::"
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.host
+          value: "::"
+
   - it: should set probes host when hostIP is configured
     template: deployment.yaml
     set:

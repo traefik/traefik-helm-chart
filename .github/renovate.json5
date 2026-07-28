@@ -1,18 +1,29 @@
 {
   $schema: 'https://docs.renovatebot.com/renovate-schema.json',
   extends: [
-    'config:recommended',
+    ':disableRateLimiting',
     ':semanticCommitTypeAll(chore)',
     'helpers:pinGitHubActionDigests',
     // Update appVersion in Chart.yaml
-    'customManagers:helmChartYamlAppVersions'
+    'customManagers:helmChartYamlAppVersions',
+    'config:recommended'
   ],
-  baseBranchPatterns: [ 'master', 'v40.0', 'v39.0'],
   semanticCommits: 'enabled',
   gitAuthor: 'traefiker <30906710+traefiker@users.noreply.github.com>',
   rebaseWhen: 'conflicted',
   labels: ['📌 dependencies'],
   enabledManagers: ['github-actions', 'custom.regex'],
+  // config:recommended ignores **/tests/** by default; keep the rest of that list but
+  // allow traefik/tests so the *-max-version assertions can be kept in sync by Renovate.
+  ignorePaths: [
+    '**/node_modules/**',
+    '**/bower_components/**',
+    '**/vendor/**',
+    '**/examples/**',
+    '**/__tests__/**',
+    '**/test/**',
+    '**/__fixtures__/**',
+  ],
   hostRules: [
     {
       abortIgnoreStatusCodes: [404],
@@ -30,32 +41,34 @@
     // Stable update on master & stable branch
     {
       matchPackageNames: ['traefik'],
-      matchBaseBranches: [ 'master', 'v39.0'],
       extends: [':semanticCommitTypeAll(feat)'],
     },
-    // Pre-release update on pre-release branch
     {
-      matchPackageNames: ['traefik'],
-      matchBaseBranches: [ 'v40.0'],
+      matchPackageNames: ['ghcr.io/traefik/traefik-hub'],
       extends: [':semanticCommitTypeAll(feat)'],
-      ignoreUnstable: false,
-    },
-    {
-      groupName: 'GitHub actions',
-      groupSlug: 'gh-actions',
-      matchManagers: ['github-actions'],
-      matchBaseBranches: ['master'],
-      rangeStrategy: 'pin',
-    },
-    // No GHA update on previous branches
-    {
-      matchManagers: ['github-actions'],
-      matchBaseBranches: ['v40.0', 'v39.0'],
-      enabled: false
+      // Only track stable Hub releases for hub-max-version (exclude -ea / -rc).
+      allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
+    },
+    {
+      matchPackageNames: ['helm-unittest/helm-unittest'],
+      extractVersion: '^v(?<version>.+)$',
+    },
+    // We need to group all GH actions PRs to reduce number of PRs to review
+    {
+      "groupName": "GitHub actions",
+      "groupSlug": "gh-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["major"]
+    },
+    {
+      "groupName": "GitHub actions",
+      "groupSlug": "gh-actions",
+      "matchManagers": ["github-actions"],
+      "matchUpdateTypes": ["minor", "patch"]
     },
   ],
   customManagers: [
@@ -76,6 +89,26 @@
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
         "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
       ]
+    },
+    // Update traefik.io/{proxy,hub}-max-version annotations (and the matching test
+    // assertions) with the latest stable Traefik Proxy / Hub releases. The captured
+    // `product` routes each match to the right datasource depName.
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      depNameTemplate: '{{#if (equals (lowercase product) "hub")}}ghcr.io/traefik/traefik-hub{{else}}traefik{{/if}}',
+      managerFilePatterns: [
+        '/^traefik/Chart\\.yaml$/',
+        '/^traefik/tests/requirements-config_test\\.yaml$/',
+        '/^traefik/tests/container-config_test\\.yaml$/',
+      ],
+      versioningTemplate: 'docker',
+      matchStrings: [
+        'traefik\\.io/(?<product>proxy|hub)-max-version:\\s*(?<currentValue>\\S+)',
+        'support Traefik (?<product>Proxy|Hub) \\S+, which is a major version above the supported (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+        // Default Hub image assertion (container-config_test.yaml) — bumped with hub-max-version.
+        'ghcr\\.io/traefik/traefik-(?<product>hub):(?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+      ],
     }
   ],
 }

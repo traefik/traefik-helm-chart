@@ -10,26 +10,30 @@ env:
   CACHE_DIR: /tmp/renovate/cache/renovate/repository
   CACHE_KEY: renovate-cache
 
+permissions: {}
+
 jobs:
   renovate:
     runs-on: 'ubuntu-latest'
+    permissions:
+      contents: read
     steps:
       - name: Get token
         id: get_token
-        uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859 # v3.0.0
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         with:
           private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
-          app-id: ${{ secrets.RENOVATE_APP_ID }}
+          client-id: ${{ secrets.RENOVATE_APP_CLIENT_ID }}
 
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
       # This third party action allows you to download the cache artifact from different workflow runs
       # Note that actions/cache doesn't work well because the cache key would need to be computed from
       # a file within the cache, meaning there would never be any data to restore. actions/download-artifact
       # also doesn't work because it only handles artifacts uploaded in the same run, and we want to restore
       # from the previous successful run.
-      - uses: dawidd6/action-download-artifact@8305c0f1062bb0d184d09ef4493ecb9288447732 # v20
+      - uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
         continue-on-error: true
         with:
           name: ${{ env.CACHE_KEY }}
@@ -50,7 +54,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@b67590ea780158ccd13192c22a3655a5231f869d # v46.1.8
+        uses: renovatebot/github-action@3064367f740a1a91cca218698a63902689cce200 # v46.1.20
         with:
           configurationFile: .github/renovate.json5
           token: ${{ steps.get_token.outputs.token }}
@@ -65,7 +69,7 @@ jobs:
           ls $CACHE_DIR
           tar -czvf $CACHE_ARCHIVE -C $CACHE_DIR .
 
-      - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: ${{ env.CACHE_KEY }}
           path: ${{ env.CACHE_ARCHIVE }}

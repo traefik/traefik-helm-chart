@@ -86,7 +86,7 @@
         readinessProbe:
           httpGet:
             {{- with $healthchecksHost }}
-            host: {{ . }}
+            host: {{ . | quote }}
             {{- end }}
             path: {{ $readinessPath }}
             port: {{ $healthchecksPort }}
@@ -95,7 +95,7 @@
         livenessProbe:
           httpGet:
             {{- with $healthchecksHost }}
-            host: {{ . }}
+            host: {{ . | quote }}
             {{- end }}
             path: {{ $livenessPath }}
             port: {{ $healthchecksPort }}
@@ -124,7 +124,7 @@
           hostPort: {{ $config.hostPort }}
           {{- end }}
           {{- if $config.hostIP }}
-          hostIP: {{ $config.hostIP }}
+          hostIP: {{ $config.hostIP | quote }}
           {{- end }}
           protocol: {{ default "TCP" $config.protocol }}
           {{- if ($config.http3).enabled }}
@@ -162,6 +162,11 @@
             {{- end }}
           - name: tmp
             mountPath: /tmp
+          {{- if .Values.hub.token }}
+          - name: hub-token
+            mountPath: {{ .Values.hub.tokenMountPath }}
+            readOnly: true
+          {{- end }}
           {{- range .Values.volumes }}
           - name: {{ tpl (.name) $ | replace "." "-" }}
             mountPath: {{ .mountPath }}
@@ -211,7 +216,11 @@
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
-          - "--{{$entryPoints}}.{{$name}}.address={{ $config.hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
+            {{- $hostIP := default "" $config.hostIP }}
+            {{- if contains ":" $hostIP }}
+              {{- $hostIP = printf "[%s]" $hostIP }}
+            {{- end }}
+          - "--{{$entryPoints}}.{{$name}}.address={{ $hostIP }}:{{ $config.port }}/{{ default "tcp" $config.protocol | lower }}"
             {{- with $config.asDefault }}
           - "--{{$entryPoints}}.{{$name}}.asDefault={{ . }}"
             {{- end }}
@@ -474,6 +483,9 @@
           {{- if .Values.experimental.abortOnPluginFailure }}
           - "--experimental.abortonpluginfailure={{ .Values.experimental.abortOnPluginFailure }}"
           {{- end }}
+          {{- with .Values.providers.precedence }}
+          - "--providers.precedence={{ join "," . }}"
+          {{- end }}
           {{- if .Values.providers.kubernetesCRD.enabled }}
           - "--providers.kubernetescrd"
            {{- if .Values.providers.kubernetesCRD.labelSelector }}
@@ -484,6 +496,9 @@
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowCrossNamespace }}
           - "--providers.kubernetescrd.allowCrossNamespace=true"
+           {{- end }}
+           {{- with .Values.providers.kubernetesCRD.crossProviderNamespaces }}
+          - "--providers.kubernetescrd.crossProviderNamespaces={{ join "," . }}"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
@@ -505,13 +520,18 @@
            {{- if .Values.providers.kubernetesIngress.allowExternalNameServices }}
           - "--providers.kubernetesingress.allowExternalNameServices=true"
            {{- end }}
+           {{- with .Values.providers.kubernetesIngress.crossProviderNamespaces }}
+          - "--providers.kubernetesingress.crossProviderNamespaces={{ join "," . }}"
+           {{- end }}
            {{- if ne .Values.providers.kubernetesIngress.allowEmptyServices nil }}
             {{- with .Values.providers.kubernetesIngress.allowEmptyServices | toString }}
           - "--providers.kubernetesingress.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if or (and .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.enabled) (and .Values.providers.kubernetesIngress.publishedService.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride)}}
+           {{- if .Values.providers.kubernetesIngress.publishedService.enabled }}
+            {{- if or .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
+            {{- end }}
            {{- end }}
            {{- with .Values.providers.kubernetesIngress.ingressEndpoint.hostname }}
           - "--providers.kubernetesingress.ingressendpoint.hostname={{ . }}"
@@ -564,6 +584,9 @@
             {{- if .nativeLBByDefault }}
           - "--providers.kubernetesgateway.nativeLBByDefault=true"
             {{- end }}
+            {{- with .crossProviderNamespaces }}
+          - "--providers.kubernetesgateway.crossProviderNamespaces={{ join "," . }}"
+            {{- end }}
             {{- if or .namespaces (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesgateway.namespaces={{ template "providers.kubernetesGateway.namespaces" $ }}"
             {{- end }}
@@ -572,6 +595,12 @@
             {{- end }}
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
+            {{- end }}
+            {{- with .qps }}
+          - "--providers.kubernetesgateway.qps={{ . }}"
+            {{- end }}
+            {{- with .burst }}
+          - "--providers.kubernetesgateway.burst={{ . }}"
             {{- end }}
            {{- end }}
           {{- end }}
@@ -594,10 +623,16 @@
             {{- if or .watchNamespace (and $.Values.rbac.enabled $.Values.rbac.namespaced) }}
           - "--providers.kubernetesingressnginx.watchnamespace={{ template "providers.kubernetesIngressNGINX.namespaces" $ }}"
             {{- end }}
-            {{- if and $.Values.service.enabled .publishService.enabled }}
+            {{- if .publishService.enabled }}
+             {{- if or $.Values.service.enabled .publishService.pathOverride }}
           - "--providers.kubernetesingressnginx.publishservice={{ template "providers.kubernetesIngressNGINX.publishServicePath" $ }}"
+             {{- end }}
             {{- end }}
-            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace")) | nindent 10 }}
+            {{- if .modsec.enabled }}
+          - "--providers.kubernetesingressnginx.modsec=true"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx.modsec" "content" (omit .modsec "enabled")) | nindent 10 }}
+            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace" "modsec")) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
@@ -647,6 +682,9 @@
                {{- with .sanitizePath | toString }}
           - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
+              {{- end }}
+              {{- with .underscoreHeadersStrategy }}
+          - "--{{$entryPoints}}.{{ $name }}.http.underscoreHeadersStrategy={{ . }}"
               {{- end }}
               {{- if (.tls).enabled }}
           - "--{{$entryPoints}}.{{ $name }}.http.tls=true"
@@ -725,62 +763,67 @@
             {{- end }}
           {{- end }}
           {{- end }}
-          {{- with .Values.logs }}
-            {{- with .general.format }}
+          {{- with .Values.log }}
+            {{- with .format }}
           - "--log.format={{ . }}"
             {{- end }}
-            {{- with .general.filePath }}
+            {{- with .filePath }}
           - "--log.filePath={{ . }}"
             {{- end }}
-            {{- if and (or (eq .general.format "common") (not .general.format)) (eq .general.noColor true) }}
-          - "--log.noColor={{ .general.noColor }}"
+            {{- if and (or (eq .format "common") (not .format)) (eq .noColor true) }}
+          - "--log.noColor={{ .noColor }}"
             {{- end }}
-            {{- with .general.level }}
+            {{- with .level }}
           - "--log.level={{ . | upper }}"
             {{- end }}
-            {{- with .general.otlp }}
+            {{- with .otlp }}
              {{- include "traefik.oltpCommonParams" (dict "path" "log.otlp" "oltp" .) | nindent 8 }}
             {{- end }}
-            {{- if .access.enabled }}
+          {{- end }}
+          {{- with .Values.accessLog }}
+            {{- if .enabled }}
           - "--accesslog=true"
-              {{- with .access.format }}
+              {{- with .format }}
           - "--accesslog.format={{ . }}"
               {{- end }}
-              {{- with .access.filePath }}
+              {{- with .filePath }}
           - "--accesslog.filepath={{ . }}"
               {{- end }}
-              {{- if .access.addInternals }}
+              {{- if .addInternals }}
           - "--accesslog.addinternals"
               {{- end }}
-              {{- if .access.dualOutput }}
+              {{- if .dualOutput }}
           - "--accesslog.dualOutput=true"
               {{- end }}
-              {{- with .access.bufferingSize }}
+              {{- with .bufferingSize }}
           - "--accesslog.bufferingsize={{ . }}"
               {{- end }}
-              {{- if .access.timezone }}
+              {{- if .timezone }}
           - "--accesslog.fields.names.StartUTC=drop"
               {{- end }}
-              {{- with .access.filters }}
-                {{- with .statuscodes }}
+              {{- with .filters }}
+                {{- with .statusCodes }}
           - "--accesslog.filters.statuscodes={{ . }}"
                 {{- end }}
-                {{- if .retryattempts }}
+                {{- if .retryAttempts }}
           - "--accesslog.filters.retryattempts"
                 {{- end }}
-                {{- with .minduration }}
+                {{- with .minDuration }}
           - "--accesslog.filters.minduration={{ . }}"
                 {{- end }}
               {{- end }}
-          - "--accesslog.fields.defaultmode={{ .access.fields.general.defaultmode }}"
-              {{- range $fieldname, $fieldaction := .access.fields.general.names }}
+          - "--accesslog.fields.defaultmode={{ .fields.defaultMode }}"
+              {{- range $fieldname, $fieldaction := .fields.names }}
           - "--accesslog.fields.names.{{ $fieldname }}={{ $fieldaction }}"
               {{- end }}
-          - "--accesslog.fields.headers.defaultmode={{ .access.fields.headers.defaultmode }}"
-              {{- range $fieldname, $fieldaction := .access.fields.headers.names }}
+          - "--accesslog.fields.headers.defaultmode={{ .fields.headers.defaultMode }}"
+              {{- range $fieldname, $fieldaction := .fields.headers.names }}
           - "--accesslog.fields.headers.names.{{ $fieldname }}={{ $fieldaction }}"
               {{- end }}
-              {{- with .access.otlp }}
+              {{- with .fields.queryParameters.defaultMode }}
+          - "--accesslog.fields.queryparameters.defaultmode={{ . }}"
+              {{- end }}
+              {{- with .otlp }}
                 {{- include "traefik.oltpCommonParams" (dict "path" "accesslog.otlp" "oltp" .) | nindent 8 }}
               {{- end }}
             {{- end }}
@@ -795,7 +838,7 @@
           {{- end }}
           {{- with .Values.hub }}
            {{- if .token }}
-          - "--hub.token=$(HUB_TOKEN)"
+          - "--hub.tokenFilePath={{ include "traefik.hubTokenFilePath" $ }}"
             {{- if and (not .apimanagement.enabled) ($.Values.hub.apimanagement.admission.listenAddr) }}
                {{- fail "ERROR: Cannot configure admission without enabling hub.apimanagement" }}
             {{- end }}
@@ -871,6 +914,13 @@
             {{- if .providers.microcks.enabled }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
+            {{- if .providers.nutanixPrismCentral.enabled }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.nutanixPrismCentral" "content" (omit $.Values.hub.providers.nutanixPrismCentral "enabled" "allowedVpcs")) | nindent 10 }}
+              {{- range $idx, $val := .providers.nutanixPrismCentral.allowedVpcs }}
+                {{- $vpcPath := printf "hub.providers.nutanixPrismCentral.allowedVpcs[%d]" $idx }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $vpcPath "content" $val) | nindent 10 }}
+              {{- end }}
+            {{- end }}
             {{- if .providers.multicluster.enabled }}
           - "--hub.providers.multicluster=true"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
@@ -933,20 +983,13 @@
                 resource: limits.cpu
                 divisor: '1'
           {{- end }}
-          {{- if ($.Values.resources.limits).memory }}
+          {{- if and ($.Values.resources.limits).memory $.Values.deployment.goMemLimitPercentage }}
           - name: GOMEMLIMIT
             value: {{ include "traefik.gomemlimit" (dict "memory" .Values.resources.limits.memory "percentage" .Values.deployment.goMemLimitPercentage) | quote }}
           {{- end }}
-          {{- with .Values.hub.token }}
-          - name: HUB_TOKEN
-            valueFrom:
-              secretKeyRef:
-                name: {{ le (len .) 64 | ternary . "traefik-hub-license" }}
-                key: token
-          {{- end }}
-          {{- if .Values.logs.access.timezone }}
+          {{- if .Values.accessLog.timezone }}
           - name: TZ
-            value: {{ .Values.logs.access.timezone }}
+            value: {{ .Values.accessLog.timezone }}
           {{- end }}
         {{- with .Values.env }}
           {{- toYaml . | nindent 10 }}
@@ -968,6 +1011,11 @@
           {{- end }}
         - name: tmp
           emptyDir: {}
+        {{- if .Values.hub.token }}
+        - name: hub-token
+          secret:
+            secretName: {{ le (len .Values.hub.token) 64 | ternary .Values.hub.token "traefik-hub-license" }}
+        {{- end }}
         {{- range .Values.volumes }}
         - name: {{ tpl (.name) $ | replace "." "-" }}
           {{- if eq .type "secret" }}

@@ -32,6 +32,16 @@ Starting with v34.x, to work around [Helm caveats](https://helm.sh/docs/chart_be
 
 ⚠️ This has been deprecated since v38.0.2.
 
+### Gateway API CRDs
+
+⚠️  Gateway API CRDs are no longer shipped with this chart.
+
+If you use the Kubernetes Gateway API provider, you will need to install them yourself before deploying Traefik v3.7:
+
+```bash
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+```
+
 ### Support for unmaintained versions of Traefik Proxy
 
 This chart's support policy aligns with the [upstream support policy](https://doc.traefik.io/traefik/deprecation/releases/) of Traefik Proxy.
@@ -42,8 +52,8 @@ Below is non-exhaustive compatibility list:
 
 | Traefik   | Chart | ArtifactHub   |
 |-----------|-------|---------------|
-| v2.x      | v27   | [latest v27](https://artifacthub.io/packages/helm/traefik/traefik/37.4.0)  |
-| v3.0-v3.5 | v39   | [latest v39](https://artifacthub.io/packages/helm/traefik/traefik/39.0.5)  |
+| v2.x      | v27   | [latest v27](https://artifacthub.io/packages/helm/traefik/traefik/27.0.2)  |
+| v3.0-v3.5 | v39   | [latest v39](https://artifacthub.io/packages/helm/traefik/traefik/39.0.9)  |
 
 ## Installing
 
@@ -78,22 +88,6 @@ helm install -f myvalues.yaml traefik traefik/traefik
 To see example values files, refer to the provided [EXAMPLES](./EXAMPLES.md).
 
 For complete documentation on all available parameters, check the [default values file](./traefik/values.yaml).
-
-#### With Additional CRDs Chart (⚠️  deprecated)
-
-> [!Caution]
-> The `traefik-crds` chart is deprecated. It will be removed soon
-
-To manage CRDs separately, use the optional CRDs chart. When using it, the CRDs from the regular Traefik chart are not required.
-For more details, see [here](./CONTRIBUTING.md#about-crds).
-
-To install with the CRDs chart:
-
-```bash
-helm install traefik-crds traefik/traefik-crds
-helm install traefik traefik/traefik --skip-crds
-helm list # should display two charts installed
-```
 
 ## Verification
 
@@ -161,51 +155,10 @@ To upgrade the Traefik chart and its CRDs:
 helm repo update
 # Check current chart & Traefik version
 helm search repo traefik/traefik
-# Update CRDs
+# Update Traefik CRDs
 helm show crds traefik/traefik | kubectl apply --server-side --force-conflicts -f -
-# Upgrade Traefik release
-helm upgrade traefik traefik/traefik
-```
-
-### Upgrade from the Standard Traefik Chart to Traefik + Opt-In CRDs Chart
-
-> [!Caution]
-> The `traefik-crds` chart is deprecated. It will be removed soon
-
-> [!WARNING]
-> To avoid conflicts, **you must change the ownership of CRDs before installing the CRDs chart**.
-
-To migrate to the setup with the additional CRDs chart:
-
-```bash
-# Update the chart repository
-helm repo update
-# Update CRD ownership
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep traefik.io | \
-  xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
-# If you use gateway API, also change Gateway API ownership
-kubectl get customresourcedefinitions.apiextensions.k8s.io -o name | grep gateway.networking.k8s.io | \
-  xargs kubectl patch --type='json' -p='[{"op": "add", "path": "/metadata/labels", "value": {"app.kubernetes.io/managed-by":"Helm"}},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-name", "value":"traefik-crds"},{"op": "add", "path": "/metadata/annotations/meta.helm.sh~1release-namespace", "value":"default"}]'
-# Deploy the optional CRDs chart
-helm install traefik-crds traefik/traefik-crds
-# Upgrade Traefik release
-helm upgrade traefik traefik/traefik
-```
-
-### Upgrade When Using Both Traefik and Opt-In CRDs Chart
-
-> [!Caution]
-> The `traefik-crds` chart is deprecated. It will be removed soon
-
-To upgrade both Traefik and CRDs charts:
-
-```bash
-# Update the chart repository
-helm repo update
-# Check the current chart & Traefik version
-helm search repo traefik/traefik
-# Upgrade CRDs (Traefik Proxy v3 CRDs)
-helm upgrade traefik-crds traefik/traefik
+# Update Gateway API CRDs, if needed
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
 # Upgrade Traefik release
 helm upgrade traefik traefik/traefik
 ```
