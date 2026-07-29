@@ -31,6 +31,9 @@
   {{- if .Values.providers.kubernetesGateway.enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
   {{- end }}
+  {{- if and .Values.providers.kubernetesIngressNGINX.enabled .Values.providers.kubernetesIngressNGINX.watchNamespaceSelector }}
+    {{- fail "ERROR: Kubernetes Ingress NGINX watchNamespaceSelector requires ClusterRole. RBAC cannot be namespaced." }}
+  {{- end }}
   {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngressNGINX.enabled) }}
     {{- fail "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, or Kubernetes Ingress provider." }}
   {{- end }}

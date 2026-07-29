@@ -2969,7 +2969,7 @@
                             "type": "string"
                         },
                         "watchNamespaceSelector": {
-                            "description": "Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.",
+                            "description": "Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. It requires a ClusterRole to list and watch namespaces, and is therefore incompatible with `rbac.namespaced`.",
                             "type": "string"
                         }
                     },

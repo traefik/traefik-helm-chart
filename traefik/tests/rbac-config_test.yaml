@@ -1089,6 +1089,47 @@ tests:
               - ingresses/status
             verbs:
               - update
+  - it: should create a Role in the namespace watched by kubernetesIngressNGINX
+    set:
+      providers:
+        kubernetesIngress:
+          enabled: false
+        kubernetesIngressNGINX:
+          enabled: true
+          watchNamespace: foo
+      rbac:
+        namespaced: true
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/role.yaml
+        documentIndex: 1
+      - equal:
+          path: metadata.namespace
+          value: foo
+        template: rbac/rolebinding.yaml
+        documentIndex: 1
+      - template: rbac/role.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content: &ingressRules
+            apiGroups:
+              - extensions
+              - networking.k8s.io
+            resources:
+              - ingresses
+            verbs:
+              - get
+              - list
+              - watch
+      # Ingress rules are scoped to the watched namespace, not the release one.
+      - template: rbac/role.yaml
+        documentIndex: 0
+        notContains:
+          path: rules
+          content: *ingressRules
   - it: Role should not have kubernetesIngressNGINX permissions when provider is disabled
     set:
       providers:
