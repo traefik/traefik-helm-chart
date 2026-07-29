@@ -2,7 +2,7 @@ apiVersion: v2
 name: hub-manager
 description: A Helm chart for hub-manager
 type: application
-version: 1.0.0-rc.1
+version: 1.0.0
 appVersion: v0.45.1
 kubeVersion: '>=1.25.0-0'
 keywords:
@@ -20,4 +20,7 @@ maintainers:
   - name: darkweaver87
     email: remi.buisson@traefik.io
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
-annotations: {}
+annotations:
+  artifacthub.io/changes: |
+    - "docs(hub-manager): 📚 rewrite EXAMPLES into a README install guide"
+    - "chore(release): 🚀 publish 41.1.0 and hub-manager 1.0.0"
