@@ -10,6 +10,8 @@ env:
   tag_prefix: v
   hub_manager_tag_prefix: hub-manager_v
 
+permissions: {}
+
 jobs:
   traefik:
     runs-on: ubuntu-latest
