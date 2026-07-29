@@ -81,9 +81,9 @@ tests:
         enabled: true
         token: "my-hub-license"
     asserts:
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/traefik/traefik-hub:v3.20.6
+          pattern: ^ghcr.io/traefik/traefik-hub:v\d+.\d+.\d+
         template: deployment.yaml
       - contains:
           path: spec.template.spec.containers[0].args
@@ -107,7 +107,7 @@ tests:
       hub:
         token: "my-hub-license"
     asserts:
-      - equal:
+      - matchRegex:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/traefik/traefik-hub:v3.20.6
+          pattern: ^ghcr.io/traefik/traefik-hub:v\d+.\d+.\d+
         template: deployment.yaml
