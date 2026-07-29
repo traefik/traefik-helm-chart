@@ -62,9 +62,11 @@ jobs:
 
   test-hub-manager:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
         with:
           persist-credentials: 'false'
 
@@ -74,9 +76,12 @@ jobs:
           DATE: '2025-01-13'
         run: ./hack/render-changelog-config.sh hub-manager
 
+      # TODO: hub-manager has no released tag yet, so this range is empty and the
+      # fixture is a placeholder. Once two hub-manager tags exist, set a real range
+      # and regenerate .github/fixtures/changelog-hub-manager.md.
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@bcae7115752d4ed746ff92feb666574428a79415 # v6.2.1
+        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
         with:
           fromTag: hub-manager_1.0.0-rc
           toTag: hub-manager_1.0.0-rc
