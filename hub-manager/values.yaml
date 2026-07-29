@@ -39,7 +39,9 @@ deployment:
     # -- Customize updateStrategy of Deployment
     type: RollingUpdate
     rollingUpdate:
+      # -- Maximum number of Pods that can be unavailable during the update
       maxUnavailable: 0  # @schema type:[integer, string, null]
+      # -- Maximum number of Pods that can be created over the desired number of Pods
       maxSurge: 1        # @schema type:[integer, string, null]
 
 migration:
@@ -63,7 +65,7 @@ autoscaling:  # @schema additionalProperties: false
       kind: Deployment
       name: "{{ template \"hub-manager.fullname\" . }}"
     minReplicas: 1
-    maxReplicas:  2
+    maxReplicas: 2
     metrics:
       - resource:
           name: cpu
@@ -75,6 +77,7 @@ autoscaling:  # @schema additionalProperties: false
 # -- [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for container
 resources: {}
 
+# -- [Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) applied to both the Deployment and the migration job
 affinity: {}
 
 # -- nodeSelector is the simplest recommended form of node selection constraint

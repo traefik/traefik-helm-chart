@@ -3,6 +3,7 @@
     "type": "object",
     "properties": {
         "affinity": {
+            "description": "[Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) applied to both the Deployment and the migration job",
             "type": "object"
         },
         "autoscaling": {
@@ -109,6 +110,7 @@
                             "type": "object",
                             "properties": {
                                 "maxSurge": {
+                                    "description": "Maximum number of Pods that can be created over the desired number of Pods",
                                     "type": [
                                         "integer",
                                         "string",
@@ -116,6 +118,7 @@
                                     ]
                                 },
                                 "maxUnavailable": {
+                                    "description": "Maximum number of Pods that can be unavailable during the update",
                                     "type": [
                                         "integer",
                                         "string",

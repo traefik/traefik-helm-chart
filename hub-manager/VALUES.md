@@ -4,11 +4,29 @@
 
 A Helm chart for hub-manager
 
+**Homepage:** <https://traefik.io/>
+
+## Maintainers
+
+| Name | Email | Url |
+| ---- | ------ | --- |
+| bpsoraggi | <108243062+bpsoraggi@users.noreply.github.com> |  |
+| mloiseleur | <michel.loiseleur@traefik.io> |  |
+| darkweaver87 | <remi.buisson@traefik.io> |  |
+
+## Source Code
+
+* <https://github.com/traefik/traefik-helm-chart>
+
+## Requirements
+
+Kubernetes: `>=1.25.0-0`
+
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| affinity | object | `{}` |  |
+| affinity | object | `{}` | [Affinity](https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#affinity-and-anti-affinity) applied to both the Deployment and the migration job |
 | autoscaling.enabled | bool | `false` | Create HorizontalPodAutoscaler object |
 | autoscaling.spec | object | See _values.yaml_ | Spec of the HPA |
 | deployment.annotations | object | `{}` | Additional deployment annotations |
@@ -18,8 +36,8 @@ A Helm chart for hub-manager
 | deployment.podAnnotations | object | `{}` | Additional pod annotations (e.g. for mesh injection or prometheus scraping) |
 | deployment.podLabels | object | `{}` | Additional Pod labels (e.g. for filtering Pod by custom labels) |
 | deployment.replicas | int | `1` | Number of pods of the deployment |
-| deployment.updateStrategy.rollingUpdate.maxSurge | int | `1` |  |
-| deployment.updateStrategy.rollingUpdate.maxUnavailable | int | `0` |  |
+| deployment.updateStrategy.rollingUpdate.maxSurge | int | `1` | Maximum number of Pods that can be created over the desired number of Pods |
+| deployment.updateStrategy.rollingUpdate.maxUnavailable | int | `0` | Maximum number of Pods that can be unavailable during the update |
 | deployment.updateStrategy.type | string | `"RollingUpdate"` | Customize updateStrategy of Deployment |
 | image.pullPolicy | string | `"IfNotPresent"` | Hub-manager image pull policy |
 | image.registry | string | `"ghcr.io"` | Hub-manager image host registry |
