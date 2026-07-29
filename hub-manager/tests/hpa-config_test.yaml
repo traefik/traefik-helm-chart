@@ -1,0 +1,50 @@
+suite: HPA configuration
+templates:
+  - hpa.yaml
+tests:
+  - it: should set default spec
+    set:
+      autoscaling:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.minReplicas
+          value: 1
+      - equal:
+          path: spec.maxReplicas
+          value: 2
+      - equal:
+          path: spec.scaleTargetRef.apiVersion
+          value: apps/v1
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-hub-manager
+      - equal:
+          path: spec.metrics[0].resource.name
+          value: cpu
+      - equal:
+          path: spec.metrics[0].type
+          value: Resource
+  - it: should set specified values
+    set:
+      autoscaling:
+        enabled: true
+        spec:
+          maxReplicas: 2
+          scaleTargetRef:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Rollout
+            name: "{{ template \"hub-manager.fullname\" . }}"
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef.apiVersion
+          value: argoproj.io/v1alpha1
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Rollout
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-hub-manager

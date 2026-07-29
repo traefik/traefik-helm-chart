@@ -1,0 +1,177 @@
+suite: Main Container configuration
+templates:
+  - deployment.yaml
+chart:
+  appVersion: v1.0.0
+tests:
+  - it: should have the default ghcr image when no value is specified
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/hub-manager:v1.0.0
+  - it: should change image when image.tag value is specified
+    set:
+      image:
+        tag: v1.0.1
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/hub-manager:v1.0.1
+  - it: should change image when image.repository value is specified
+    set:
+      image:
+        repository: traefik/traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/traefik:v1.0.0
+  - it: should change image when image.registry value is specified
+    set:
+      image:
+        registry: example.org
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: example.org/traefik/hub-manager:v1.0.0
+
+  - it: should have a custom resource limit when specified
+    set:
+      resources:
+        requests:
+          cpu: "100m"
+          memory: "50Mi"
+        limits:
+          cpu: "300m"
+          memory: "150Mi"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.cpu
+          value: "100m"
+      - equal:
+          path: spec.template.spec.containers[0].resources.requests.memory
+          value: "50Mi"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.cpu
+          value: "300m"
+      - equal:
+          path: spec.template.spec.containers[0].resources.limits.memory
+          value: "150Mi"
+  - it: should set a podAntiaffinity with specified values
+    set:
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchLabels:
+                app.kubernetes.io/name: '{{ template "hub-manager.name" . }}'
+              matchExpressions:
+              - key: app
+                operator: In
+                values:
+                - whatever
+            topologyKey: kubernetes.io/hostname
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].topologyKey
+          value: kubernetes.io/hostname
+      - equal:
+          path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].key
+          value: app
+      - equal:
+          path: spec.template.spec.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution[0].labelSelector.matchExpressions[0].values[0]
+          value: whatever
+  - it: should have default securityContext
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.allowPrivilegeEscalation
+          value: false
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.readOnlyRootFilesystem
+          value: true
+      - equal:
+          path: spec.template.spec.containers[0].securityContext.runAsUser
+          value: 65534
+
+  - it: should set default values for args
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].args
+          value:
+            - serve
+            - --addr=:8080
+            - --log-level=INFO
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing-insecure"
+  - it: should have specified values for args
+    set:
+      tracing:
+        insecure: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing-insecure"
+  - it: should set default values for env
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TRACING_PROBABILITY
+            value: "0.0"
+  - it: should have specified values for env
+    set:
+      token: "foo"
+      postgres:
+        uri: "bar"
+        encryptionKey: "baz"
+      tracing:
+        address: "qux"
+        insecure: true
+        username: "corge"
+        password: "grault"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TOKEN
+            valueFrom:
+              secretKeyRef:
+                key: token
+                name: foo
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POSTGRES_URI
+            valueFrom:
+              secretKeyRef:
+                key: postgres-uri
+                name: bar
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POSTGRES_ENCRYPTION_KEY
+            valueFrom:
+              secretKeyRef:
+                key: postgres-encryption-key
+                name: baz
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TRACING_ADDRESS
+            value: qux
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TRACING_USERNAME
+            value: corge
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TRACING_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: tracing-password
+                name: grault
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--tracing-insecure"

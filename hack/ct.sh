@@ -10,6 +10,6 @@ install)
   ct "${ACTION}" --config=.github/chart-testing.yaml --charts traefik/
   ;;
 *)
-  ct "${ACTION}" --config=.github/chart-testing.yaml --charts traefik/
+  ct "${ACTION}" --config=.github/chart-testing.yaml --charts traefik/,hub-manager/
   ;;
 esac

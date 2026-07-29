@@ -1,13 +1,14 @@
-.PHONY: lint test
+.PHONY: lint test snapshots
 
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.14.0
 IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 
-traefik/tests/__snapshot__:
-	@mkdir traefik/tests/__snapshot__
+snapshots:
+	@mkdir -p hub-manager/tests/__snapshot__
+	@mkdir -p traefik/tests/__snapshot__
 
-test: traefik/tests/__snapshot__
+test: snapshots
 	./hack/test.sh
 
 test-ns:
@@ -28,6 +29,7 @@ test-%:
 # Requires to install schema generation plugin beforehand
 # $ helm plugin install https://github.com/losisin/helm-values-schema-json.git
 schema:
+	cd hub-manager && helm schema --use-helm-docs
 	cd traefik && helm schema --use-helm-docs
 
 changelog:
