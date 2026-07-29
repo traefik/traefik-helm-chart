@@ -34,6 +34,10 @@ tests:
           path: spec.template.spec.containers[0].args
           value:
             - migrate
+  - it: should not render an env section when postgres is not configured
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].env
   - it: should render migration annotations and labels when specified
     set:
       migration:

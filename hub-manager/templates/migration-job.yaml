@@ -52,6 +52,7 @@ spec:
         args:
           - "migrate"
         {{- with .Values.postgres }}
+        {{- if or .uri .encryptionKey }}
         env:
           {{- with .uri }}
           - name: POSTGRES_URI
@@ -67,4 +68,5 @@ spec:
                 key: postgres-encryption-key
                 name: {{ . }}
           {{- end }}
+        {{- end }}
         {{- end }}
