@@ -7,6 +7,12 @@ if ! sed --version 2>/dev/null | grep -q "GNU sed"; then
 fi
 
 for chart in "./traefik" "./hub-manager"; do
+  # A chart without any release yet has no Changelog.md to extract changes from.
+  if [ ! -f "${chart}/Changelog.md" ]; then
+    echo "Skipping ${chart}: no Changelog.md"
+    continue
+  fi
+
   version=$(yq -r '.version' <"${chart}/Chart.yaml")
   changelog="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' -e 's/^* /- /' -e 's/^/    /' ${chart}/Changelog.md | grep '^    - ' | sed -e 's/\ *$//g' | sed 's/    - \(.*\)/    - "\1"/g')"
 
