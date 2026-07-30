@@ -1253,9 +1253,9 @@
                             ]
                         },
                         "database": {
-                            "description": "Database used to store information. Default: \"0\".",
+                            "description": "Database used to store information. Default: 0.",
                             "type": [
-                                "string",
+                                "integer",
                                 "null"
                             ]
                         },

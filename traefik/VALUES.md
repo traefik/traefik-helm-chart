@@ -228,7 +228,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
 | hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
 | hub.redis.cluster | bool | `nil` | Enable Redis Cluster. Default: true. |
-| hub.redis.database | string | `nil` | Database used to store information. Default: "0". |
+| hub.redis.database | int | `nil` | Database used to store information. Default: 0. |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
 | hub.redis.password | string | `""` | The password to use when connecting to Redis endpoints. Default: "". |
 | hub.redis.sentinel.masterset | string | `""` | Name of the set of main nodes to use for main selection. Required when using Sentinel. Default: "". |

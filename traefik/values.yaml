@@ -1526,8 +1526,8 @@ hub:  # @schema additionalProperties: false
   redis:
     # -- (bool) Enable Redis Cluster. Default: true.
     cluster:    # @schema type:[boolean, null]
-    # -- Database used to store information. Default: "0".
-    database:   # @schema type:[string, null]
+    # -- (int) Database used to store information. Default: 0.
+    database:   # @schema type:[integer, null]
     # -- Endpoints of the Redis instances to connect to. Default: "".
     endpoints: ""
     # -- The username to use when connecting to Redis endpoints. Default: "".
