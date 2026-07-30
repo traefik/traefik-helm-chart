@@ -152,7 +152,7 @@ tests:
       hub:
         redis:
           cluster: true
-          database: "database"
+          database: 1
           endpoints: "localhost:7000"
           username: "user"
           password: "pass"
@@ -173,7 +173,7 @@ tests:
           content: "--hub.redis.cluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.redis.database=database"
+          content: "--hub.redis.database=1"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.redis.endpoints=localhost:7000"
