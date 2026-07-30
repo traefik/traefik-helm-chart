@@ -84,12 +84,11 @@ deployment:
   #       mountPath: /data
   # -- Use process namespace sharing
   shareProcessNamespace: false
-  # @schema type: [boolean, null]
-  # -- Whether to use the host user namespace. Setting this to false enables user namespaces,
+  # -- (bool) Whether to use the host user namespace. Setting this to false enables user namespaces,
   # which can improve security by isolating the pod's users from the host.
   # See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/
   # @default -- unset (inherits cluster default)
-  hostUsers:
+  hostUsers:  # @schema type:[boolean, null]
   # -- Custom pod DNS policy. Apply if `hostNetwork: true`
   dnsPolicy: ""
   # -- Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core)
@@ -1433,22 +1432,19 @@ hub:  # @schema additionalProperties: false
           # -- TLS and transport configuration for connecting to this child.
           # @default -- {}
           serversTransport:
-            # @schema type:[boolean, null]
-            # -- Disable TLS certificate verification. **Not recommended for production.**
+            # -- (bool) Disable TLS certificate verification. **Not recommended for production.**
             # @default -- false
-            insecureSkipVerify:
+            insecureSkipVerify:  # @schema type:[boolean, null]
             # -- Server name used for SNI and certificate verification.
             serverName: ""
             rootCAs: []
             certificates: []
-            # @schema type:[integer, null]
-            # -- Maximum idle connections per host.
+            # -- (int) Maximum idle connections per host.
             # @default -- 200
-            maxIdleConnsPerHost:
-            # @schema type:[boolean, null]
-            # -- Disable HTTP/2 for connections to this child.
+            maxIdleConnsPerHost:  # @schema type:[integer, null]
+            # -- (bool) Disable HTTP/2 for connections to this child.
             # @default -- false
-            disableHTTP2:
+            disableHTTP2:  # @schema type:[boolean, null]
             # -- Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).
             minVersion: ""
             # -- Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`).

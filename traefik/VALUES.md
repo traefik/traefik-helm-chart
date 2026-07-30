@@ -88,7 +88,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.healthchecksPort | string/int | `ports.traefik.port` | Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks. |
 | deployment.healthchecksScheme | string | `nil` | Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint. |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
-| deployment.hostUsers | string | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
+| deployment.hostUsers | bool | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
 | deployment.imagePullSecrets | list | `[]` | Pull secret for fetching traefik container image |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
@@ -195,7 +195,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
 | hub.providers.multicluster.children.cluster-1.serversTransport | object | {} | TLS and transport configuration for connecting to this child. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.cipherSuites | list | `[]` | List of supported cipher suites for TLS versions up to 1.2. |
-| hub.providers.multicluster.children.cluster-1.serversTransport.disableHTTP2 | string | false | Disable HTTP/2 for connections to this child. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.disableHTTP2 | bool | false | Disable HTTP/2 for connections to this child. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.dialTimeout | string | 30s | Timeout for establishing connections. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.idleConnTimeout | string | 90s | Timeout for idle connections. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.pingTimeout | string | 15s | Timeout for HTTP/2 server ping frames. |
@@ -203,8 +203,8 @@ Kubernetes: `>=1.25.0-0`
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.readTimeout | string | 0s | Timeout for reading the request body. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.responseHeaderTimeout | string | 0s | Timeout for reading response headers. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.forwardingTimeouts.writeTimeout | string | 0s | Timeout for writing the response. |
-| hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | string | false | Disable TLS certificate verification. **Not recommended for production.** |
-| hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | string | 200 | Maximum idle connections per host. |
+| hub.providers.multicluster.children.cluster-1.serversTransport.insecureSkipVerify | bool | false | Disable TLS certificate verification. **Not recommended for production.** |
+| hub.providers.multicluster.children.cluster-1.serversTransport.maxIdleConnsPerHost | int | 200 | Maximum idle connections per host. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.maxVersion | string | `""` | Maximum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
 | hub.providers.multicluster.children.cluster-1.serversTransport.minVersion | string | `""` | Minimum TLS version (e.g. `VersionTLS12`, `VersionTLS13`). |
 | hub.providers.multicluster.children.cluster-1.serversTransport.peerCertURI | string | `""` | URI used to match against SAN URIs during the server's certificate verification. |
