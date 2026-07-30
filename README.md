@@ -59,7 +59,7 @@ Below is non-exhaustive compatibility list:
 
 ### Prerequisites
 
-1. Kubernetes (server) version **v1.22.0 or higher**: `kubectl version`
+1. Kubernetes (server) version **v1.25.0 or higher**: `kubectl version`
 1. Helm **v3.9.0 or higher** [installed](https://helm.sh/docs/using_helm/#installing-helm): `helm version`
 1. Traefik's chart repository: `helm repo add traefik https://traefik.github.io/charts`
 
