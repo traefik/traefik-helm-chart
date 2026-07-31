@@ -139,6 +139,30 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
+  - it: should set the OpenAPI refresh interval
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-ea.1
+      hub:
+        apimanagement:
+          enabled: true
+          openApi:
+            refreshInterval: "5m"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apiManagement.openApi.refreshInterval=5m"
+  - it: should not set the OpenAPI refresh interval by default
+    set:
+      hub:
+        apimanagement:
+          enabled: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apiManagement.openApi.refreshInterval="
   - it: api management and ai gateway should not be enabled by default
     asserts:
       - notContains:

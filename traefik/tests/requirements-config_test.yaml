@@ -866,6 +866,35 @@ tests:
                   - "prod"
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using apiManagement openApi refreshInterval on Traefik Hub < v3.21.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.7
+      hub:
+        token: "xxx"
+        apimanagement:
+          enabled: true
+          openApi:
+            refreshInterval: "5m"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.apimanagement.openApi.refreshInterval is only available for Traefik Hub >= v3.21.0."
+  - it: should pass when using apiManagement openApi refreshInterval on Traefik Hub >= v3.21.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0-ea.1
+      hub:
+        token: "xxx"
+        apimanagement:
+          enabled: true
+          openApi:
+            refreshInterval: "5m"
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:
