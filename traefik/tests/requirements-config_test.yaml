@@ -752,6 +752,56 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when an ec2 filter is missing a name
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+            filters:
+              - values:
+                  - "x"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.filters[0] requires a non-empty name."
+  - it: should fail when an ec2 filter is missing values
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+            filters:
+              - name: "tag:env"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.filters[0] requires a non-empty values list."
+  - it: should pass when ec2 filters define a name
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+            filters:
+              - name: "tag:env"
+                values:
+                  - "prod"
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using pluginRegistry sources with unused plugin
     set:
       image:

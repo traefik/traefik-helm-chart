@@ -953,65 +953,63 @@
                             "type": "object",
                             "properties": {
                                 "accessKeyID": {
+                                    "description": "AWS access key ID used for requests. Set together with secretAccessKey to use static credentials.",
                                     "type": "string"
                                 },
                                 "constraints": {
+                                    "description": "Expression matched against instance tags to determine whether to create routes for an instance.",
                                     "type": "string"
                                 },
                                 "defaultRule": {
+                                    "description": "Default rule applied to instances that do not define a router rule tag.",
                                     "type": "string"
                                 },
                                 "enabled": {
+                                    "description": "Enable AWS EC2 provider.",
                                     "type": "boolean"
                                 },
                                 "exposedByDefault": {
+                                    "description": "Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.",
                                     "type": "boolean"
                                 },
                                 "filters": {
+                                    "description": "EC2 API filters used to scope instance discovery. List of `{ name: \"\u003cfilter\u003e\", values: [\"\u003cvalue\u003e\"] }` entries.",
+                                    "type": "array",
                                     "items": {
-                                        "type": "object",
-                                        "properties": {
-                                            "name": {
-                                                "type": "string"
-                                            },
-                                            "values": {
-                                                "items": {
-                                                    "type": "string"
-                                                },
-                                                "type": "array"
-                                            }
-                                        }
-                                    },
-                                    "type": "array"
+                                        "type": "object"
+                                    }
                                 },
                                 "ipMode": {
+                                    "description": "Default backend IP mode: private, public or ipv6. Overridable per instance with the `traefik.ec2.ipmode` tag.",
+                                    "type": "string",
                                     "enum": [
                                         "",
                                         "private",
                                         "public",
                                         "ipv6"
-                                    ],
-                                    "type": "string"
+                                    ]
                                 },
                                 "refreshSeconds": {
+                                    "description": "Polling interval, in seconds, for the EC2 API.",
                                     "type": "integer"
                                 },
                                 "region": {
+                                    "description": "AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.",
                                     "type": "string"
                                 },
                                 "secretAccessKey": {
+                                    "description": "AWS secret access key used for requests. Set together with accessKeyID.",
                                     "type": "string"
                                 },
                                 "securityGroupPortDiscovery": {
                                     "type": "object",
                                     "properties": {
                                         "enabled": {
+                                            "description": "Derive the backend port from the instance security-group rules when no port tag is set.",
                                             "type": "boolean"
                                         },
                                         "excludedPorts": {
-                                            "items": {
-                                                "type": "integer"
-                                            },
+                                            "description": "Ports excluded from security-group port discovery. When empty, the provider excludes privileged ports except 80 and 443.",
                                             "type": "array"
                                         }
                                     },
