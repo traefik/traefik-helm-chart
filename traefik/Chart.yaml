@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.1.0
+version: 41.1.1
 appVersion: v3.7.9
 kubeVersion: '>=1.25.0-0'
 keywords:
@@ -26,19 +26,5 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.7
   artifacthub.io/changes: |
-    - "fix: support enabling only kubernetesIngressNGINX with rbac.namespaced"
-    - "fix(rbac): :bug: align namespaced RBAC with kubernetesIngressNGINX namespace scoping"
-    - "fix(ports): support IPv6 hostIP values"
-    - "fix(deployment): :bug: accept named port for healthchecksPort"
-    - "feat(rbac): grant configmaps write for hub api management"
-    - "feat(hub): add hardened image variant"
-    - "feat(hub): :sparkles: add hub.enabled to run Traefik Hub in proxy mode"
-    - "feat(deps): update traefik docker tag to v3.7.9"
-    - "feat(deps): update traefik docker tag to v3.7.8"
-    - "feat(deps): update traefik docker tag to v3.7.7"
-    - "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.7"
-    - "feat(CRDs): update Traefik Hub to v1.33.0"
-    - "docs: :books: change metrics.prometheus labels types from string to bool"
-    - "docs(values): :books: fix rendered types for nullable fields"
-    - "chore: :art: file provider scrambled output"
-    - "chore(release): 🚀 publish 41.1.0 and hub-manager 1.0.0"
+    - "fix: update hardened image regitry"
+    - "chore: release traefik-helm-chart v41.1.1"
