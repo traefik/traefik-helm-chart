@@ -4,7 +4,7 @@
 
 **Release date:** 2026-08-03
 
-* fix: update hardened image regitry
+* fix: update hardened image registry
 * chore: release traefik-helm-chart v41.1.1
 
 
