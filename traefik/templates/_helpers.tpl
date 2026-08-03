@@ -36,7 +36,7 @@ default, then the Traefik Hub one when hub is enabled, then Traefik Proxy.
 
 {{- define "traefik.imageRepository" -}}
 {{- $default := ternary "traefik/traefik-hub" "traefik" (eq (include "traefik.hub.enabled" .) "true") -}}
-{{- .Values.image.repository | default (ternary "traefik-hub" $default .Values.hub.hardened) -}}
+{{- .Values.image.repository | default (ternary "traefik-hub/traefik-hub" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.defaultTag" -}}
