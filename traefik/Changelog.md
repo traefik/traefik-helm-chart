@@ -1,5 +1,14 @@
 # Change Log
 
+## 41.1.1  ![AppVersion: v3.7.9](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.9&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-08-03
+
+* fix: update hardened image registry
+* chore: release traefik-helm-chart v41.1.1
+
+
+
 ## 41.1.0  ![AppVersion: v3.7.9](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.9&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-07-29
