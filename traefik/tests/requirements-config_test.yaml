@@ -372,7 +372,24 @@ tests:
           enabled: false
     asserts:
       - failedTemplate:
-        errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, or Kubernetes Ingress provider."
+        errorMessage: "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, Kubernetes Ingress, or Knative provider."
+  - it: should be possible to namespace rbac with only knative provider
+    set:
+      experimental:
+        knative: true
+      rbac:
+        namespaced: true
+      providers:
+        kubernetesCRD:
+          enabled: false
+        kubernetesIngress:
+          enabled: false
+        kubernetesIngressNGINX:
+          enabled: false
+        knative:
+          enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should be possible to namespace rbac with only kubernetesIngressNGINX provider
     set:
       rbac:
