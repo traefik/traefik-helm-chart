@@ -909,12 +909,15 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
             {{- end }}
             {{- if .providers.consulCatalogEnterprise.enabled }}
+          - "--hub.providers.consulCatalogEnterprise"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.consulCatalogEnterprise" "content" (omit $.Values.hub.providers.consulCatalogEnterprise "enabled")) | nindent 10 }}
             {{- end }}
             {{- if .providers.microcks.enabled }}
+          - "--hub.providers.microcks"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
             {{- if .providers.nutanixPrismCentral.enabled }}
+          - "--hub.providers.nutanixPrismCentral"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.nutanixPrismCentral" "content" (omit $.Values.hub.providers.nutanixPrismCentral "enabled" "allowedVpcs")) | nindent 10 }}
               {{- range $idx, $val := .providers.nutanixPrismCentral.allowedVpcs }}
                 {{- $vpcPath := printf "hub.providers.nutanixPrismCentral.allowedVpcs[%d]" $idx }}
