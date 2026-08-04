@@ -283,6 +283,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.tracing.additionalTraceHeaders.traceContext.traceState=traceState"
+  - it: should be possible to enable Traefik Hub microcks provider with default config
+    set:
+      hub:
+        providers:
+          microcks:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks"
   - it: should be possible to configure Traefik Hub microcks provider
     set:
       hub:
@@ -293,7 +303,30 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks"
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks.endpoint=http://microcks.svc"
+  - it: should be possible to enable Traefik Hub nutanixPrismCentral provider with default config
+    set:
+      hub:
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral"
+  - it: should be possible to enable Traefik Hub consulCatalogEnterprise provider with default config
+    set:
+      hub:
+        providers:
+          consulCatalogEnterprise:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise"
   - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
     set:
       hub:
