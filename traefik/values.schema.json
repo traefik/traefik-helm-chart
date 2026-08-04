@@ -953,7 +953,7 @@
                             "type": "object",
                             "properties": {
                                 "accessKeyID": {
-                                    "description": "AWS access key ID used for requests. Set together with secretAccessKey to use static credentials.",
+                                    "description": "AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
                                     "type": "string"
                                 },
                                 "constraints": {
@@ -998,7 +998,7 @@
                                     "type": "string"
                                 },
                                 "secretAccessKey": {
-                                    "description": "AWS secret access key used for requests. Set together with accessKeyID.",
+                                    "description": "AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
                                     "type": "string"
                                 },
                                 "securityGroupPortDiscovery": {

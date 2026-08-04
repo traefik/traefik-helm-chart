@@ -234,6 +234,14 @@
       {{- if not $filter.values }}
         {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty values list." $idx) }}
       {{- end }}
+      {{- if eq $filter.name "instance-state-name" }}
+        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] uses instance-state-name, which is reserved by the provider." $idx) }}
+      {{- end }}
+      {{- range $field, $_ := $filter }}
+        {{- if not (has $field (list "name" "values")) }}
+          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] does not support field %s, only name and values are allowed." $idx $field) }}
+        {{- end }}
+      {{- end }}
     {{- end }}
   {{- end }}
 

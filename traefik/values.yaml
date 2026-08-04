@@ -1393,9 +1393,9 @@ hub:  # @schema additionalProperties: false
       enabled: false
       # -- AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.
       region: ""
-      # -- AWS access key ID used for requests. Set together with secretAccessKey to use static credentials.
+      # -- AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
       accessKeyID: ""
-      # -- AWS secret access key used for requests. Set together with accessKeyID.
+      # -- AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
       secretAccessKey: ""
       # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
       exposedByDefault: true

@@ -812,6 +812,43 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: hub.providers.ec2.filters[0] requires a non-empty values list."
+  - it: should fail when an ec2 filter uses an unsupported field
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+            filters:
+              - name: "tag:env"
+                values:
+                  - "prod"
+                unsupported: "x"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.filters[0] does not support field unsupported, only name and values are allowed."
+  - it: should fail when an ec2 filter uses the reserved instance-state-name
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+            filters:
+              - name: "instance-state-name"
+                values:
+                  - "running"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.filters[0] uses instance-state-name, which is reserved by the provider."
   - it: should pass when ec2 filters define a name
     set:
       image:
