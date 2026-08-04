@@ -13,7 +13,21 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
+      - notContains:
+          path: spec.template.spec.containers[0].args
           content: "--hub.providers.ec2.region="
+
+  - it: should be possible to enable ec2 with default config
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
 
   - it: should configure ec2 when enabled
     set:
@@ -30,6 +44,9 @@ tests:
             constraints: "Tag(`env=prod`)"
             ipMode: "public"
     asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.ec2.region=us-east-1"

@@ -913,6 +913,7 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.consulCatalogEnterprise" "content" (omit $.Values.hub.providers.consulCatalogEnterprise "enabled")) | nindent 10 }}
             {{- end }}
             {{- if .providers.ec2.enabled }}
+          - "--hub.providers.ec2"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.ec2" "content" (omit $.Values.hub.providers.ec2 "enabled" "filters" "securityGroupPortDiscovery")) | nindent 10 }}
               {{- range $idx, $val := .providers.ec2.filters }}
                 {{- $filterPath := printf "hub.providers.ec2.filters[%d]" $idx }}

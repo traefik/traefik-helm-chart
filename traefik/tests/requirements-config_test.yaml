@@ -752,6 +752,33 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using ec2 provider on Traefik Hub < v3.21.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.20.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2 is only available for Traefik Hub >= v3.21.0."
+  - it: should pass when using ec2 provider on Traefik Hub >= v3.21.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.0
+      hub:
+        token: "xxx"
+        providers:
+          ec2:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when an ec2 filter is missing a name
     set:
       image:
