@@ -8,14 +8,11 @@ fi
 
 repo="https://github.com/traefik/traefik-helm-chart"
 
-# Commit line -> Artifact Hub change kind. No conventional-commit type maps to
-# the remaining kinds (deprecated, security), so they are never emitted.
+# Commit line -> Artifact Hub change kind. Nothing maps to deprecated/security.
 kind_for() {
   case "$1" in
     feat*) echo "added" ;;
     fix*) echo "fixed" ;;
-    perf*) echo "changed" ;;
-    revert*) echo "removed" ;;
     *) echo "changed" ;;
   esac
 }
@@ -36,13 +33,11 @@ for chart in "./traefik" "./hub-manager"; do
   fi
 
   version=$(yq -r '.version' <"${chart}/Chart.yaml")
-  # A chart's very first release matches the X.0.0 pattern without being a
-  # breaking change, so it takes the regular structured-list path.
+  # A chart's first release is X.0.0 without being breaking.
   release_count=$(grep -c '^## ' "${chart}/Changelog.md")
 
   if [[ "${version}" =~ ^[0-9]+\.0\.0$ ]] && [ "${release_count}" -gt 1 ]; then
-    # Major release: collapse to a single entry linking to the upgrade notes, so
-    # the breaking-change signal is impossible to miss in a long commit list.
+    # Major: one entry pointing at the upgrade notes, impossible to miss.
     changelog="$(
       printf '    - kind: changed\n'
       printf '      description: "This is a major release with breaking changes. Read the upgrade notes before upgrading."\n'
@@ -51,11 +46,8 @@ for chart in "./traefik" "./hub-manager"; do
       printf '          url: %s/releases/tag/%s%s\n' "${repo}" "$(tag_prefix_for "${chart}")" "${version}"
     )"
   else
-    # Patch/minor: structured list so Artifact Hub renders per-kind badges.
-    # The release commit only ever announces the version: noise in its own
-    # changelog. It is written both as "chore(release):" and plain "chore:",
-    # and is dropped after gitmoji stripping so the prefix is easy to match.
-    # Gitmoji is dropped in both forms, shortcode and rendered: descriptions are plain text.
+    # Patch/minor: per-kind entries. Drop the release commit (own changelog
+    # noise) and gitmoji in both shortcode and rendered form.
     rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
       grep '^\* ' |
       sed -e 's/^\* //' -e 's/[[:space:]]*$//' |
@@ -70,6 +62,13 @@ for chart in "./traefik" "./hub-manager"; do
         printf '      description: "%s"\n' "${esc}"
       done <<<"${rawlist}"
     )"
+  fi
+
+  # Every commit filtered out would leave an empty annotation, which is not a
+  # valid Artifact Hub change list.
+  if [ -z "${changelog}" ]; then
+    echo "Skipping ${chart}: no changes for ${version}"
+    continue
   fi
 
   echo "${version}"
