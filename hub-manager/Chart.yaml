@@ -3,6 +3,7 @@ name: hub-manager
 description: A Helm chart for hub-manager
 type: application
 version: 1.0.0
+# renovate: image=ghcr.io/traefik/hub-manager
 appVersion: v0.45.1
 kubeVersion: '>=1.25.0-0'
 keywords:

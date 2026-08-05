@@ -50,6 +50,12 @@
       allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
+      matchPackageNames: ['ghcr.io/traefik/hub-manager'],
+      extends: [':semanticCommitTypeAll(feat)'],
+      // Only track stable hub-manager releases (exclude commit-sha and master-* tags).
+      allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
+    },
+    {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
     },
@@ -86,6 +92,17 @@
       // Anchored: an unanchored `/VALUES.md/` regex also matches hub-manager/VALUES.md,
       // which would get the Traefik Proxy version written into its AppVersion badge.
       managerFilePatterns: ['/^traefik/VALUES\\.md$/'],
+      versioningTemplate: 'docker',
+      matchStrings: [
+        "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
+        "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
+      ]
+    },
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      depNameTemplate: 'ghcr.io/traefik/hub-manager',
+      managerFilePatterns: ['/^hub-manager/VALUES\\.md$/'],
       versioningTemplate: 'docker',
       matchStrings: [
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
