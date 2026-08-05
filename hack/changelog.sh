@@ -47,12 +47,12 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   else
     # Patch/minor: per-kind entries. Drop the release commit (own changelog
-    # noise) and gitmoji in both shortcode and rendered form.
+    # noise) and gitmoji shortcodes, which Artifact Hub shows verbatim.
+    # Rendered gitmoji is kept: Artifact Hub displays it fine.
     rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
       grep '^\* ' |
-      sed -e 's/^\* //' -e 's/[[:space:]]*$//' |
-      perl -CSD -pe 's/:[a-z0-9_]+:\s*//g; s/\p{Extended_Pictographic}\x{FE0F}?\s*//g' |
-      grep -viE '^chore(\([^)]*\))?: *(release|publish)')"
+      sed -e 's/^\* //' -e 's/:[a-z0-9_]\+:[[:space:]]*//g' -e 's/[[:space:]]*$//' |
+      grep -viE '^chore(\([^)]*\))?: *([^[:space:]]+ +)?(release|publish)\b')"
     changelog="$(
       while IFS= read -r line; do
         [ -z "${line}" ] && continue
@@ -64,8 +64,7 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   fi
 
-  # Every commit filtered out would leave an empty annotation, which is not a
-  # valid Artifact Hub change list.
+  # An empty annotation is not valid for artifact hub.
   if [ -z "${changelog}" ]; then
     echo "Skipping ${chart}: no changes for ${version}"
     continue
