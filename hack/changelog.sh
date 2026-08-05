@@ -20,6 +20,14 @@ kind_for() {
   esac
 }
 
+# Chart -> git tag prefix, so release links resolve for both charts.
+tag_prefix_for() {
+  case "$1" in
+    *hub-manager) echo "hub-manager_v" ;;
+    *) echo "v" ;;
+  esac
+}
+
 for chart in "./traefik" "./hub-manager"; do
   # A chart without any release yet has no Changelog.md to extract changes from.
   if [ ! -f "${chart}/Changelog.md" ]; then
@@ -28,8 +36,11 @@ for chart in "./traefik" "./hub-manager"; do
   fi
 
   version=$(yq -r '.version' <"${chart}/Chart.yaml")
+  # A chart's very first release matches the X.0.0 pattern without being a
+  # breaking change, so it takes the regular structured-list path.
+  release_count=$(grep -c '^## ' "${chart}/Changelog.md")
 
-  if [[ "${version}" =~ ^[0-9]+\.0\.0$ ]]; then
+  if [[ "${version}" =~ ^[0-9]+\.0\.0$ ]] && [ "${release_count}" -gt 1 ]; then
     # Major release: collapse to a single entry linking to the upgrade notes, so
     # the breaking-change signal is impossible to miss in a long commit list.
     changelog="$(
@@ -37,17 +48,19 @@ for chart in "./traefik" "./hub-manager"; do
       printf '      description: "This is a major release with breaking changes. Read the upgrade notes before upgrading."\n'
       printf '      links:\n'
       printf '        - name: Upgrade Notes\n'
-      printf '          url: %s/releases/tag/v%s\n' "${repo}" "${version}"
+      printf '          url: %s/releases/tag/%s%s\n' "${repo}" "$(tag_prefix_for "${chart}")" "${version}"
     )"
   else
     # Patch/minor: structured list so Artifact Hub renders per-kind badges.
-    # The release commit only ever says "publish <version>": noise in its own changelog.
+    # The release commit only ever announces the version: noise in its own
+    # changelog. It is written both as "chore(release):" and plain "chore:",
+    # and is dropped after gitmoji stripping so the prefix is easy to match.
     # Gitmoji is dropped in both forms, shortcode and rendered: descriptions are plain text.
     rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
       grep '^\* ' |
-      grep -v '^\* chore(release)' |
       sed -e 's/^\* //' -e 's/[[:space:]]*$//' |
-      perl -CSD -pe 's/:[a-z0-9_]+:\s*//g; s/\p{Extended_Pictographic}\x{FE0F}?\s*//g')"
+      perl -CSD -pe 's/:[a-z0-9_]+:\s*//g; s/\p{Extended_Pictographic}\x{FE0F}?\s*//g' |
+      grep -viE '^chore(\([^)]*\))?: *(release|publish)')"
     changelog="$(
       while IFS= read -r line; do
         [ -z "${line}" ] && continue
