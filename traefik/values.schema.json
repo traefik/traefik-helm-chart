@@ -2138,7 +2138,7 @@
                     "type": "object"
                 },
                 "emptyDir": {
-                    "description": "Options for the emptyDir volume when persistence is disabled",
+                    "description": "[EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options when persistence is disabled",
                     "type": "object"
                 },
                 "enabled": {
