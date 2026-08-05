@@ -83,7 +83,9 @@
       customType: 'regex',
       datasourceTemplate: 'docker',
       depNameTemplate: 'traefik',
-      managerFilePatterns: ['/VALUES.md/'],
+      // Anchored: an unanchored `/VALUES.md/` regex also matches hub-manager/VALUES.md,
+      // which would get the Traefik Proxy version written into its AppVersion badge.
+      managerFilePatterns: ['/^traefik/VALUES\\.md$/'],
       versioningTemplate: 'docker',
       matchStrings: [
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
