@@ -1024,10 +1024,12 @@
           persistentVolumeClaim:
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
-          emptyDir: {}
+          emptyDir:
+            {{- toYaml .Values.persistence.emptyDir | nindent 12 }}
           {{- end }}
         - name: tmp
-          emptyDir: {}
+          emptyDir:
+            {{- toYaml .Values.deployment.tmpVolume.emptyDir | nindent 12 }}
         {{- if .Values.hub.token }}
         - name: hub-token
           secret:
