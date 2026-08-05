@@ -1,0 +1,13 @@
+apiVersion: v2
+name: traefik
+description: A Traefik based Kubernetes ingress controller
+type: application
+version: 42.0.0
+appVersion: v3.8.0
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "This is a major release with breaking changes. Read the upgrade notes before upgrading."
+      links:
+        - name: Upgrade Notes
+          url: https://github.com/traefik/traefik-helm-chart/releases/tag/v42.0.0
