@@ -52,7 +52,7 @@
     {
       matchPackageNames: ['ghcr.io/traefik/hub-manager'],
       extends: [':semanticCommitTypeAll(feat)'],
-      // Only track stable hub-manager releases (exclude commit-sha and master-* tags).
+      // Only track stable releases (exclude sha and master-* tags).
       allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
@@ -89,8 +89,7 @@
       customType: 'regex',
       datasourceTemplate: 'docker',
       depNameTemplate: 'traefik',
-      // Anchored: an unanchored `/VALUES.md/` regex also matches hub-manager/VALUES.md,
-      // which would get the Traefik Proxy version written into its AppVersion badge.
+      // Anchored, else it also matches hub-manager/VALUES.md.
       managerFilePatterns: ['/^traefik/VALUES\\.md$/'],
       versioningTemplate: 'docker',
       matchStrings: [

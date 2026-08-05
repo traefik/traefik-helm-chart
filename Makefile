@@ -1,4 +1,4 @@
-.PHONY: lint test snapshots test-changelog
+.PHONY: lint test snapshots test-changelog check-renovate
 
 IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.14.0
 IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
@@ -16,6 +16,9 @@ test-ns:
 
 test-changelog:
 	./hack/test-changelog.sh
+
+check-renovate:
+	./hack/check-renovate-hints.sh
 
 lint:
 	docker run ${DOCKER_ARGS} --env GIT_SAFE_DIR="true" --entrypoint /bin/sh --rm -v $(CURDIR):/charts -w /charts $(IMAGE_CHART_TESTING) /charts/hack/ct.sh lint
