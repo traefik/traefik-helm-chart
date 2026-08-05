@@ -11,6 +11,8 @@ repo="https://github.com/traefik/traefik-helm-chart"
 # Commit line -> Artifact Hub change kind. Nothing maps to deprecated/security.
 kind_for() {
   case "$1" in
+    # No breaking kind either, so a breaking marker falls back to changed.
+    feat\!:*|feat\(*\)\!:*|fix\!:*|fix\(*\)\!:*) echo "changed" ;;
     feat*) echo "added" ;;
     fix*) echo "fixed" ;;
     *) echo "changed" ;;
@@ -47,12 +49,16 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   else
     # Patch/minor: per-kind entries. Drop the release commit (own changelog
-    # noise) and gitmoji shortcodes, which Artifact Hub shows verbatim.
-    # Rendered gitmoji is kept: Artifact Hub displays it fine.
+    # noise) and gitmoji shortcodes, which Artifact Hub shows verbatim. Only
+    # strip them where gitmoji sits, to spare a colon pair in a URL or a
+    # description. Rendered gitmoji is kept: Artifact Hub displays it fine.
     rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
       grep '^\* ' |
-      sed -e 's/^\* //' -e 's/:[a-z0-9_]\+:[[:space:]]*//g' -e 's/[[:space:]]*$//' |
-      grep -viE '^chore(\([^)]*\))?: *([^[:space:]]+ +)?(release|publish)\b')"
+      sed -E -e 's/^\* //' \
+        -e 's/^(:[a-z0-9_]+:[[:space:]]*)+//' \
+        -e 's/^([a-z]+(\([^)]*\))?!?:[[:space:]]*)(:[a-z0-9_]+:[[:space:]]*)+/\1/' \
+        -e 's/[[:space:]]*$//' |
+      grep -viE '^chore(\([^)]*\))?:[[:space:]]*([^[:alnum:][:space:]]+[[:space:]]+)?(release|publish)\b')"
     changelog="$(
       while IFS= read -r line; do
         [ -z "${line}" ] && continue
@@ -64,10 +70,10 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   fi
 
-  # An empty annotation is not valid for artifact hub.
+  # An empty annotation is not valid for artifact hub, and skipping the rewrite
+  # would leave the previous version's changes advertised on this one.
   if [ -z "${changelog}" ]; then
-    echo "Skipping ${chart}: no changes for ${version}"
-    continue
+    changelog="$(printf '    - kind: changed\n      description: "Release %s"' "${version}")"
   fi
 
   echo "${version}"
