@@ -1174,6 +1174,23 @@ spec:
     protocol: TCP
 ```
 
+## Disable LoadBalancer node port allocation
+
+Kubernetes allocates node ports for `LoadBalancer` Services by default. If your
+load balancer routes directly to Pods, you can opt out by setting
+`service.spec.allocateLoadBalancerNodePorts` to `false`:
+
+```yaml
+service:
+  spec:
+    type: LoadBalancer
+    allocateLoadBalancerNodePorts: false
+```
+
+This is passed through to the generated Service spec. See the Kubernetes
+[Service documentation](https://kubernetes.io/docs/concepts/services-networking/service/#load-balancer-nodeport-allocation)
+for the routing requirements and feature details.
+
 ## Use this Chart as a dependency of your own chart
 
 First, let's create a default Helm Chart, with Traefik as a dependency.
