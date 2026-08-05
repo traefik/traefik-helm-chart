@@ -13,6 +13,7 @@ make test-ns       # Check namespace handling
 make docs          # Regenerate traefik/VALUES.md via helm-docs
 make schema        # Regenerate values.schema.json (requires helm-schema plugin: helm plugin install https://github.com/losisin/helm-values-schema-json.git)
 make changelog     # Update Changelogs
+make test-changelog # Golden tests for the artifacthub.io/changes annotation
 ```
 
 Run a single unit test file:

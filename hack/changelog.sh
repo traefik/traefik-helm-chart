@@ -28,18 +28,19 @@ tag_prefix_for() {
 }
 
 for chart in "./traefik" "./hub-manager"; do
-  # A chart without any release yet has no Changelog.md to extract changes from.
+  # A chart without any release yet has nothing to extract.
   if [ ! -f "${chart}/Changelog.md" ]; then
     echo "Skipping ${chart}: no Changelog.md"
     continue
   fi
 
-  version=$(yq -r '.version' <"${chart}/Chart.yaml")
+  # Read the version with sed: yq -r is python-yq only, mikefarah yq has no -r.
+  version=$(sed -nE 's/^version:[[:space:]]*"?([^"]*)"?[[:space:]]*$/\1/p' "${chart}/Chart.yaml" | head -1)
   # A chart's first release is X.0.0 without being breaking.
   release_count=$(grep -c '^## ' "${chart}/Changelog.md")
 
   if [[ "${version}" =~ ^[0-9]+\.0\.0$ ]] && [ "${release_count}" -gt 1 ]; then
-    # Major: one entry pointing at the upgrade notes, impossible to miss.
+    # Major: one entry pointing at the upgrade notes.
     changelog="$(
       printf '    - kind: changed\n'
       printf '      description: "This is a major release with breaking changes. Read the upgrade notes before upgrading."\n'
@@ -48,9 +49,8 @@ for chart in "./traefik" "./hub-manager"; do
       printf '          url: %s/releases/tag/%s%s\n' "${repo}" "$(tag_prefix_for "${chart}")" "${version}"
     )"
   else
-    # Patch/minor: per-kind entries. Drop the release commit (own changelog
-    # noise) and gitmoji shortcodes, which Artifact Hub shows verbatim. Only
-    # strip them where gitmoji sits, to spare a colon pair in a URL or a
+    # Patch/minor: per-kind entries, without the release commit. Shortcodes are
+    # stripped only where gitmoji sits, sparing a colon pair in a URL or a
     # description. Rendered gitmoji is kept: Artifact Hub displays it fine.
     rawlist="$(sed -e "1,/^## ${version}/d" -e "/^##/,\$d" -e '/^$/d' ${chart}/Changelog.md |
       grep '^\* ' |
@@ -70,8 +70,8 @@ for chart in "./traefik" "./hub-manager"; do
     )"
   fi
 
-  # An empty annotation is not valid for artifact hub, and skipping the rewrite
-  # would leave the previous version's changes advertised on this one.
+  # An empty annotation is invalid, and skipping the rewrite would leave the
+  # previous version's changes advertised on this one.
   if [ -z "${changelog}" ]; then
     changelog="$(printf '    - kind: changed\n      description: "Release %s"' "${version}")"
   fi

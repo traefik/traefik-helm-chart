@@ -64,6 +64,9 @@ jobs:
       - name: Test overrideNamespace
         run: make test-ns
 
+      - name: Test changelog annotations
+        run: make test-changelog
+
       - name: Test if it's a release PR
         id: check
         run: |
