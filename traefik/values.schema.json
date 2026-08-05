@@ -483,6 +483,15 @@
                 "terminationGracePeriodSeconds": {
                     "description": "Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down",
                     "type": "integer"
+                },
+                "tmpVolume": {
+                    "type": "object",
+                    "properties": {
+                        "emptyDir": {
+                            "description": "[EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options for the tmp volume.",
+                            "type": "object"
+                        }
+                    }
                 }
             }
         },
@@ -2126,6 +2135,10 @@
                     "type": "string"
                 },
                 "annotations": {
+                    "type": "object"
+                },
+                "emptyDir": {
+                    "description": "Options for the emptyDir volume when persistence is disabled",
                     "type": "object"
                 },
                 "enabled": {

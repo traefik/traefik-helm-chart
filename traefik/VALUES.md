@@ -104,6 +104,7 @@ Kubernetes: `>=1.25.0-0`
 | deployment.runtimeClassName | string | `""` | Set a runtimeClassName on pod |
 | deployment.shareProcessNamespace | bool | `false` | Use process namespace sharing |
 | deployment.terminationGracePeriodSeconds | int | `60` | Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down |
+| deployment.tmpVolume.emptyDir | object | `{}` | [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options for the tmp volume. |
 | enabled | bool | `true` | Allow the Helm chart to be used as optional subchart. |
 | env | list | `[]` | Additional Environment variables to be passed to Traefik's binary |
 | envFrom | list | `[]` | Environment variables to be passed to Traefik's binary from configMaps or secrets |
@@ -376,6 +377,7 @@ Kubernetes: `>=1.25.0-0`
 | offering_version | string | `""` | Required for IBM Cloud Marketplace integration. Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart. |
 | persistence.accessMode | string | `"ReadWriteOnce"` |  |
 | persistence.annotations | object | `{}` |  |
+| persistence.emptyDir | object | `{}` | Options for the emptyDir volume when persistence is disabled |
 | persistence.enabled | bool | `false` | Enable persistence using Persistent Volume Claims ref: http://kubernetes.io/docs/user-guide/persistent-volumes/. It can be used to store TLS certificates along with `certificatesResolvers.<name>.acme.storage`  option |
 | persistence.existingClaim | string | `""` |  |
 | persistence.name | string | `"data"` |  |
