@@ -39,6 +39,15 @@ tests:
       - equal:
           path: spec.type
           value: NodePort
+  - it: should allow disabling LoadBalancer node port allocation
+    set:
+      service:
+        spec:
+          allocateLoadBalancerNodePorts: false
+    asserts:
+      - equal:
+          path: spec.allocateLoadBalancerNodePorts
+          value: false
   - it: should have no annotations by default
     asserts:
       - isNullOrEmpty:
