@@ -1175,7 +1175,7 @@ persistence:
   annotations: {}
   # -- Only mount a subpath of the Volume into the pod
   subPath: ""
-  # -- Options for the emptyDir volume when persistence is disabled
+  # -- [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options when persistence is disabled
   emptyDir: {}
 
 # -- Certificates resolvers configuration.

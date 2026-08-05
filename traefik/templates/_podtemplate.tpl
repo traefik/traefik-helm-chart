@@ -1025,11 +1025,11 @@
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
           emptyDir:
-            {{- toYaml .Values.persistence.emptyDir | nindent 12 }}
+            {{- toYaml (default dict .Values.persistence.emptyDir) | nindent 12 }}
           {{- end }}
         - name: tmp
           emptyDir:
-            {{- toYaml .Values.deployment.tmpVolume.emptyDir | nindent 12 }}
+            {{- toYaml (default dict (.Values.deployment.tmpVolume).emptyDir) | nindent 12 }}
         {{- if .Values.hub.token }}
         - name: hub-token
           secret:
