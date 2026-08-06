@@ -25,7 +25,7 @@ annotations:
   traefik.io/proxy-min-version: v3.6.0
   traefik.io/proxy-max-version: v3.7.10
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.7
+  traefik.io/hub-max-version: v3.20.8
   artifacthub.io/changes: |
     - "fix: update hardened image registry"
     - "chore: release traefik-helm-chart v41.1.1"
