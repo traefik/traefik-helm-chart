@@ -1,0 +1,10 @@
+apiVersion: v2
+name: hub-manager
+description: A Helm chart for hub-manager
+type: application
+version: 1.0.0
+appVersion: v0.45.1
+annotations:
+  artifacthub.io/changes: |
+    - kind: changed
+      description: "docs(hub-manager): 📚 rewrite EXAMPLES into a README install guide"

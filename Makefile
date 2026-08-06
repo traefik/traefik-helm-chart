@@ -41,5 +41,7 @@ schema:
 changelog:
 	@echo "== Updating Changelogs..."
 	@docker run -it --rm -v $(CURDIR):/data $(IMAGE_HELM_CHANGELOG) /app/helm-changelog --update
+# helm-changelog rewrites every chart under /data, golden test fixtures included.
+	@git checkout -- .github/fixtures
 	@./hack/changelog.sh
 	@echo "== Updating finished"
