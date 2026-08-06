@@ -67,6 +67,9 @@ jobs:
       - name: Test changelog annotations
         run: make test-changelog
 
+      - name: Check Renovate appVersion hints
+        run: make check-renovate
+
       - name: Test if it's a release PR
         id: check
         run: |
