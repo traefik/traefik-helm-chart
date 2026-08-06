@@ -550,3 +550,30 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.observability.traceVerbosity=detailed"
+  - it: should be possible to configure tmp emptyDir volume
+    set:
+      deployment:
+        tmpVolume:
+          emptyDir:
+            sizeLimit: 50Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[1].name
+          value: "tmp"
+      - equal:
+          path: spec.template.spec.volumes[1].emptyDir.sizeLimit
+          value: 50Mi
+  - it: should be possible to configure data emptyDir volume when persistence is not enabled
+    set:
+      persistence:
+        enabled: false
+        name: data
+        emptyDir:
+          sizeLimit: 50Mi
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].name
+          value: "data"
+      - equal:
+          path: spec.template.spec.volumes[0].emptyDir.sizeLimit
+          value: 50Mi

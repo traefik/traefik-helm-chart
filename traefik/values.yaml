@@ -112,6 +112,9 @@ deployment:
   runtimeClassName: ""
   # -- Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env)
   goMemLimitPercentage: 0.9
+  tmpVolume:
+    # -- [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options for the tmp volume.
+    emptyDir: {}
 
 # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
 # @default -- See _values.yaml_
@@ -1172,6 +1175,8 @@ persistence:
   annotations: {}
   # -- Only mount a subpath of the Volume into the pod
   subPath: ""
+  # -- [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options when persistence is disabled
+  emptyDir: {}
 
 # -- Certificates resolvers configuration.
 # Ref: https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/
