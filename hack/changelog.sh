@@ -37,6 +37,16 @@ for chart in "./traefik" "./hub-manager"; do
 
   # sed, not yq: mikefarah yq has no -r and python-yq is not on the runner.
   version=$(sed -nE 's/^version:[[:space:]]*"?([^"]*)"?[[:space:]]*$/\1/p' "${chart}/Chart.yaml" | head -1)
+  # A release bumps Chart.yaml, so helm-changelog titles the top section with it.
+  # Anything else on top means no release here: keep the published annotation.
+  top_section=$(sed -nE '/^## /{s/^## //; s/[[:space:]]*!\[.*//; s/[[:space:]]+$//; p; q}' "${chart}/Changelog.md")
+  if [ "${top_section}" != "${version}" ]; then
+    echo "Skipping ${chart}: ${version} already released, top section is '${top_section}'"
+    # helm-changelog opens a "Next Release" section on every chart it touched.
+    # No-op in the golden tests, which run outside a work tree.
+    git checkout -- "${chart}/Changelog.md" 2>/dev/null || true
+    continue
+  fi
   # A chart's first release is X.0.0 without being breaking.
   release_count=$(grep -c '^## ' "${chart}/Changelog.md")
 
