@@ -1,5 +1,84 @@
 # Change Log
 
+## 41.2.0  ![AppVersion: v3.7.10](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.10&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-08-07
+
+* test(service): LoadBalancer node port opt-out
+* fix(rbac): allow namespaced rbac with only the knative provider
+* fix(hub): 🐛 enable providers with default config
+* fix(crds/middleware): add missing ErrorRequestHeaders field
+* feat: allow setting emptyDir options for data and tmp volumes
+* feat(hub): :sparkles: support AWS EC2 provider
+* feat(deps): update traefik docker tag to v3.7.10
+* feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.8
+* ci(renovate): scope updates per chart on VALUES.md & AppVersion
+* chore(release): 🚀 publish 41.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c662063..86ab414 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -112,6 +112,9 @@ deployment:
+   runtimeClassName: ""
+   # -- Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env)
+   goMemLimitPercentage: 0.9
++  tmpVolume:
++    # -- [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options for the tmp volume.
++    emptyDir: {}
+ 
+ # -- [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/)
+ # @default -- See _values.yaml_
+@@ -1172,6 +1175,8 @@ persistence:
+   annotations: {}
+   # -- Only mount a subpath of the Volume into the pod
+   subPath: ""
++  # -- [EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options when persistence is disabled
++  emptyDir: {}
+ 
+ # -- Certificates resolvers configuration.
+ # Ref: https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/
+@@ -1387,6 +1392,34 @@ hub:  # @schema additionalProperties: false
+       strictChecks: "passing, warning"
+       # -- Watch Consul API events.
+       watch: false
++    # @schema additionalProperties: false
++    ec2:
++      # -- Enable AWS EC2 provider.
++      enabled: false
++      # -- AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.
++      region: ""
++      # -- AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
++      accessKeyID: ""
++      # -- AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
++      secretAccessKey: ""
++      # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
++      exposedByDefault: true
++      # -- Polling interval, in seconds, for the EC2 API.
++      refreshSeconds: 15
++      # -- Default rule applied to instances that do not define a router rule tag.
++      defaultRule: ""
++      # -- Expression matched against instance tags to determine whether to create routes for an instance.
++      constraints: ""
++      # -- Default backend IP mode: private, public or ipv6. Overridable per instance with the `traefik.ec2.ipmode` tag.
++      ipMode: ""  # @schema enum:["", "private", "public", "ipv6"]
++      # -- EC2 API filters used to scope instance discovery. List of `{ name: "<filter>", values: ["<value>"] }` entries.
++      filters: []  # @schema item:object
++      # @schema additionalProperties: false
++      securityGroupPortDiscovery:
++        # -- Derive the backend port from the instance security-group rules when no port tag is set.
++        enabled: false
++        # -- Ports excluded from security-group port discovery. When empty, the provider excludes privileged ports except 80 and 443.
++        excludedPorts: []
+     microcks:
+       # -- Enable Microcks provider.
+       enabled: false
+```
+
+
 ## 41.1.1  ![AppVersion: v3.7.9](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.9&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-08-03
