@@ -1201,6 +1201,8 @@ rbac:  # @schema additionalProperties: false
   # -- Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
   aggregateTo: []
+  # -- List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules.
+  secretResourceNames: []
 
 # -- The service account the pods will use to interact with the Kubernetes API
 serviceAccount:  # @schema additionalProperties: false
