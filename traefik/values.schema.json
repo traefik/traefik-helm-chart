@@ -344,6 +344,10 @@
                 "defaultRuleSyntax": {
                     "description": "Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes",
                     "type": "string"
+                },
+                "strictTLSOptions": {
+                    "description": "Disables the unsafe fallback to default TLS options on conflict, mitigating [GHSA-g55h-rg46-x9c5](https://github.com/traefik/traefik/security/advisories/GHSA-g55h-rg46-x9c5). Requires traefik v3.7.11+.",
+                    "type": "boolean"
                 }
             },
             "additionalProperties": false
@@ -2647,6 +2651,10 @@
                             "description": "List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+.",
                             "type": "array"
                         },
+                        "defaultTLSResourcesNamespace": {
+                            "description": "Restricts the namespace where the cluster-wide TLSOption and TLSStore named `default` can be defined. When empty, any namespace is allowed. Requires traefik v3.7.11+.",
+                            "type": "string"
+                        },
                         "enabled": {
                             "description": "Load Kubernetes IngressRoute provider",
                             "type": "boolean"
@@ -2665,6 +2673,10 @@
                         },
                         "nativeLBByDefault": {
                             "description": "Defines whether to use Native Kubernetes load-balancing mode by default.",
+                            "type": "boolean"
+                        },
+                        "safeNaming": {
+                            "description": "Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.",
                             "type": "boolean"
                         }
                     },
