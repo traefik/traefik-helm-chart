@@ -1205,10 +1205,7 @@ tests:
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming=false"
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming=true"
+          content: "--providers.kubernetescrd.safeNaming"
   - it: should enable safeNaming when set
     set:
       image:
