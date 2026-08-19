@@ -1198,10 +1198,10 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should not set safeNaming on Traefik Proxy < v3.7.11
+  - it: should not set safeNaming by default
     set:
       image:
-        tag: v3.7.10
+        tag: v3.7.11
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
@@ -1209,14 +1209,6 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=true"
-  - it: should silence the safeNaming startup warning by default on Traefik Proxy >= v3.7.11
-    set:
-      image:
-        tag: v3.7.11
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming=false"
   - it: should enable safeNaming when set
     set:
       image:
@@ -1228,20 +1220,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=true"
-  - it: should leave safeNaming unset when set to null
+  - it: should disable safeNaming when explicitly set to false
     set:
       image:
         tag: v3.7.11
       providers:
         kubernetesCRD:
-          safeNaming: null
+          safeNaming: false
     asserts:
-      - notContains:
+      - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=false"
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming=true"
   - it: should not set safeNaming when the kubernetesCRD provider is disabled
     set:
       image:
@@ -1249,10 +1238,11 @@ tests:
       providers:
         kubernetesCRD:
           enabled: false
+          safeNaming: true
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming=false"
+          content: "--providers.kubernetescrd.safeNaming=true"
   - it: should set defaultTLSResourcesNamespace when specified
     set:
       image:
