@@ -424,6 +424,23 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced."
+  - it: should fail when setting rbac.secretResourceNames without namespaced RBAC
+    set:
+      rbac:
+        namespaced: false
+        secretResourceNames:
+          - traefik-tls-cert
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules."
+  - it: should not fail when setting rbac.secretResourceNames with namespaced RBAC
+    set:
+      rbac:
+        namespaced: true
+        secretResourceNames:
+          - traefik-tls-cert
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when trying to use certResolvers
     set:
       certResolvers:

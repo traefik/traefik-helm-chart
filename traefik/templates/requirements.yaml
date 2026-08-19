@@ -39,6 +39,10 @@
   {{- end }}
 {{- end }}
 
+{{- if and (not .Values.rbac.namespaced) (not (empty .Values.rbac.secretResourceNames)) }}
+  {{- fail "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules." }}
+{{- end }}
+
 {{- range $name, $config := .Values.ingressRoute }}
   {{- if regexMatch "[A-Z]" $name }}
     {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase)." $name) }}
