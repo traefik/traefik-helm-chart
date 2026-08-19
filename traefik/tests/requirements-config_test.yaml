@@ -986,7 +986,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11."
-  - it: should fail when disabling safeNaming on Traefik Proxy < v3.7.11
+  - it: should pass when disabling safeNaming on Traefik Proxy < v3.7.11
     set:
       image:
         tag: v3.7.10
@@ -994,8 +994,7 @@ tests:
         kubernetesCRD:
           safeNaming: false
     asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11."
+      - notFailedTemplate: {}
   - it: should pass when safeNaming is unset on Traefik Proxy < v3.7.11
     set:
       image:

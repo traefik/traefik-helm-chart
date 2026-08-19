@@ -507,7 +507,7 @@
           - "--providers.kubernetescrd.defaultTLSResourcesNamespace={{ . }}"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.safeNaming }}
-          - "--providers.kubernetescrd.safeNaming={{ . }}"
+          - "--providers.kubernetescrd.safeNaming=true"
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"

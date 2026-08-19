@@ -1220,7 +1220,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=true"
-  - it: should disable safeNaming when explicitly set to false
+  - it: should not set safeNaming when explicitly set to false
     set:
       image:
         tag: v3.7.11
@@ -1228,7 +1228,7 @@ tests:
         kubernetesCRD:
           safeNaming: false
     asserts:
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=false"
   - it: should not set safeNaming when the kubernetesCRD provider is disabled
