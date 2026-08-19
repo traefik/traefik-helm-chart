@@ -122,6 +122,19 @@
   {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
 {{- end }}
 
+{{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
+{{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
+  {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.11-0" $version) (not (empty .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace)) }}
+  {{- fail "ERROR: providers.kubernetesCRD.defaultTLSResourcesNamespace is only available for traefik >= v3.7.11." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.11-0" $version) .Values.core.strictTLSOptions }}
+  {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
+{{- end }}
+
 {{- range $name, $config := .Values.ports }}
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}

@@ -258,6 +258,9 @@
            {{- with .defaultRuleSyntax }}
           - "--core.defaultRuleSyntax={{ . }}"
            {{- end }}
+           {{- if .strictTLSOptions }}
+          - "--core.strictTLSOptions=true"
+           {{- end }}
           {{- end }}
 
           {{- if .Values.metrics }}
@@ -499,6 +502,17 @@
            {{- end }}
            {{- with .Values.providers.kubernetesCRD.crossProviderNamespaces }}
           - "--providers.kubernetescrd.crossProviderNamespaces={{ join "," . }}"
+           {{- end }}
+           {{- with .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace }}
+          - "--providers.kubernetescrd.defaultTLSResourcesNamespace={{ . }}"
+           {{- end }}
+           {{/* Rendered only from v3.7.11 on, since the default value makes it unconditional. */}}
+           {{- if semverCompare ">=v3.7.11-0" $version }}
+            {{- if ne .Values.providers.kubernetesCRD.safeNaming nil }}
+             {{- with .Values.providers.kubernetesCRD.safeNaming | toString }}
+          - "--providers.kubernetescrd.safeNaming={{ . }}"
+             {{- end }}
+            {{- end }}
            {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"

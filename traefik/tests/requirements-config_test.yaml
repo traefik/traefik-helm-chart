@@ -976,3 +976,44 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0."
+  - it: should fail when enabling safeNaming on Traefik Proxy < v3.7.11
+    set:
+      image:
+        tag: v3.7.10
+      providers:
+        kubernetesCRD:
+          safeNaming: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11."
+  - it: should fail when using defaultTLSResourcesNamespace on Traefik Proxy < v3.7.11
+    set:
+      image:
+        tag: v3.7.10
+      providers:
+        kubernetesCRD:
+          defaultTLSResourcesNamespace: traefik
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesCRD.defaultTLSResourcesNamespace is only available for traefik >= v3.7.11."
+  - it: should fail when using strictTLSOptions on Traefik Proxy < v3.7.11
+    set:
+      image:
+        tag: v3.7.10
+      core:
+        strictTLSOptions: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11."
+  - it: should pass when using the v3.7.11 CRD naming and TLS options on Traefik Proxy >= v3.7.11
+    set:
+      image:
+        tag: v3.7.11
+      core:
+        strictTLSOptions: true
+      providers:
+        kubernetesCRD:
+          safeNaming: true
+          defaultTLSResourcesNamespace: traefik
+    asserts:
+      - notFailedTemplate: {}
