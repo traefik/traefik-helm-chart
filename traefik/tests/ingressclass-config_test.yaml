@@ -42,3 +42,24 @@ tests:
       - equal:
           path: metadata.name
           value: nondefaultname
+  - it: should use default controller value
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - equal:
+          path: spec.controller
+          value: traefik.io/ingress-controller
+  - it: should be possible to provide a custom controller value
+    set:
+      ingressClass:
+        controller: traefik.io/ingress-controller-internal
+    asserts:
+      - isKind:
+          of: IngressClass
+      - isAPIVersion:
+          of: networking.k8s.io/v1
+      - equal:
+          path: spec.controller
+          value: traefik.io/ingress-controller-internal

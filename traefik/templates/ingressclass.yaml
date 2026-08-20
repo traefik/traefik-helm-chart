@@ -8,5 +8,5 @@ metadata:
     {{- include "traefik.labels" . | nindent 4 }}
   name: {{ .Values.ingressClass.name | default (include "traefik.fullname" .) }}
 spec:
-  controller: traefik.io/ingress-controller
+  controller: {{ .Values.ingressClass.controller }}
 {{- end -}}

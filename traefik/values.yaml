@@ -128,6 +128,9 @@ ingressClass:  # @schema additionalProperties: false
   enabled: true
   isDefaultClass: true
   name: ""
+  # -- The controller value for the IngressClass. This allows running multiple Traefik instances with different IngressClasses.
+  # @default -- `traefik.io/ingress-controller`
+  controller: traefik.io/ingress-controller
 
 core:  # @schema additionalProperties: false
   # -- Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\.
