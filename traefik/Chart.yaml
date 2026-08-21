@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.2.0
+version: 41.3.0
 # renovate: image=traefik
 appVersion: v3.7.11
 kubeVersion: '>=1.25.0-0'
@@ -27,21 +27,9 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.20.11
   artifacthub.io/changes: |
-    - kind: changed
-      description: "test(service): LoadBalancer node port opt-out"
-    - kind: fixed
-      description: "fix(rbac): allow namespaced rbac with only the knative provider"
-    - kind: fixed
-      description: "fix(hub): 🐛 enable providers with default config"
-    - kind: fixed
-      description: "fix(crds/middleware): add missing ErrorRequestHeaders field"
     - kind: added
-      description: "feat: allow setting emptyDir options for data and tmp volumes"
+      description: "feat: add new options for traefik v3.7.11"
     - kind: added
-      description: "feat(hub): support AWS EC2 provider"
+      description: "feat(deps): ✨ update traefik-hub to v3.20.11"
     - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.10"
-    - kind: added
-      description: "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.8"
-    - kind: changed
-      description: "ci(renovate): scope updates per chart on VALUES.md & AppVersion"
+      description: "feat(deps): update traefik to v3.7.11 and traefik-hub to v3.20.10"
