@@ -551,6 +551,7 @@ Kubernetes: `>=1.25.0-0`
 | rbac.aggregateTo | list | `[]` | Enable user-facing roles https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles |
 | rbac.enabled | bool | `true` | Whether Role Based Access Control objects like roles and rolebindings should be created |
 | rbac.namespaced | bool | `false` | When set to true: <br /> 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br /> 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br /> **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br /> See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details. |
+| rbac.secretResourceNames | list | `[]` | List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules. |
 | readinessProbe.failureThreshold | int | `1` | The number of consecutive failures allowed before considering the probe as failed. |
 | readinessProbe.initialDelaySeconds | int | `2` | The number of seconds to wait before starting the first probe. |
 | readinessProbe.periodSeconds | int | `10` | The number of seconds to wait between consecutive probes. |
