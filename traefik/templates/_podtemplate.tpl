@@ -870,6 +870,9 @@
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
               {{- end }}
+              {{- with .openApi.refreshInterval }}
+          - "--hub.apiManagement.openApi.refreshInterval={{ . }}"
+              {{- end }}
              {{- end }}
             {{- end }}
             {{- with .aigateway }}

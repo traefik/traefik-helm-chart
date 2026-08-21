@@ -146,6 +146,7 @@ Kubernetes: `>=1.25.0-0`
 | hub.apimanagement.admission.secretName | string | `"hub-agent-cert"` | Certificate name of the WebHook admission server. Default: "hub-agent-cert". |
 | hub.apimanagement.admission.selfManagedCertificate | bool | `false` | By default, this chart handles directly the tls certificate required for the admission webhook. It's possible to disable this behavior and handle it outside of the chart. See EXAMPLES.md for more details. |
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
+| hub.apimanagement.openApi.refreshInterval | string | `""` | Interval to refresh the OpenAPI specification, as a Go duration. When empty, the provider default (`0`, disabled) applies. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
 | hub.enabled | bool | `true` when `hub.token` is set | Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy, which requires Traefik Hub >= v3.21.0-ea. |
 | hub.hardened | bool | `false` | Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub >= v3.21.0-ea. |
