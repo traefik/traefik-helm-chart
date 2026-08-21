@@ -1,0 +1,84 @@
+suite: persistence (PVC + volume wiring)
+templates:
+  - persistent-volume-claim.yaml
+  - deployment.yaml
+tests:
+  - it: no PVC and no data volume by default
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: persistent-volume-claim.yaml
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+        template: deployment.yaml
+
+  - it: renders a PVC with chart defaults and wires the volume + mount
+    set:
+      persistence: {}
+    asserts:
+      - isKind:
+          of: PersistentVolumeClaim
+        template: persistent-volume-claim.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+        template: persistent-volume-claim.yaml
+      - equal:
+          path: spec.accessModes[0]
+          value: ReadWriteOnce
+        template: persistent-volume-claim.yaml
+      - equal:
+          path: spec.resources.requests.storage
+          value: 128Mi
+        template: persistent-volume-claim.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-traefik
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /data
+        template: deployment.yaml
+
+  - it: existingClaim skips the PVC and points the volume at it
+    set:
+      persistence:
+        existingClaim: my-claim
+        mountPath: /custom
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: persistent-volume-claim.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            persistentVolumeClaim:
+              claimName: my-claim
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /custom
+        template: deployment.yaml
+
+  - it: spec hatch overrides the storage size
+    set:
+      persistence:
+        spec:
+          resources:
+            requests:
+              storage: 1Gi
+    asserts:
+      - equal:
+          path: spec.resources.requests.storage
+          value: 1Gi
+        template: persistent-volume-claim.yaml

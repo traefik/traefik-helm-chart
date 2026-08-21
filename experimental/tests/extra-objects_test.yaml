@@ -1,0 +1,50 @@
+suite: extraObjects (tier 2)
+templates:
+  - extra-objects.yaml
+tests:
+  - it: renders an arbitrary object with tpl evaluation
+    set:
+      extraObjects:
+        - apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: "{{ .Release.Name }}-extra"
+          data:
+            key: value
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-extra
+      - equal:
+          path: data.key
+          value: value
+
+  - it: renders a templated string entry (legacy form)
+    set:
+      extraObjects:
+        - |
+          apiVersion: v1
+          kind: ConfigMap
+          metadata:
+            name: {{ .Release.Name }}-templated
+          data:
+            k: v
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-templated
+
+  - it: renders nothing when extraObjects is empty
+    set:
+      extraObjects: []
+    asserts:
+      - hasDocuments:
+          count: 0

@@ -1,0 +1,61 @@
+suite: deployment.metadata escape hatch (JSON Merge Patch over chart-rendered metadata)
+templates:
+  - deployment.yaml
+tests:
+  - it: chart-rendered metadata is the default (no user metadata)
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+      - notExists:
+          path: metadata.annotations
+
+  - it: user annotations are added without losing chart labels
+    set:
+      deployment.metadata.annotations:
+        deployment.kubernetes.io/owner: platform
+    asserts:
+      - equal:
+          path: metadata.annotations["deployment.kubernetes.io/owner"]
+          value: platform
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: user labels deep-merge with chart labels
+    set:
+      deployment.metadata.labels:
+        team: platform
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: Helm
+
+  - it: user attempt to set metadata.name is ignored (chart-owned)
+    set:
+      deployment.metadata.name: my-custom-deployment
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+
+  - it: user can override a chart-rendered label
+    set:
+      deployment.metadata.labels:
+        app.kubernetes.io/managed-by: argocd
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/managed-by"]
+          value: argocd
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik

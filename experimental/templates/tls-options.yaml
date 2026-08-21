@@ -1,0 +1,15 @@
+{{- range $name, $entry := (.Values.tlsOptions | default dict) }}
+{{- $entry = $entry | default dict }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: TLSOption
+metadata:
+  {{- include "traefik.objectMeta" (dict
+      "ctx" $
+      "name" $name
+      "namespace" (include "traefik.namespace" $)
+      "userMetadata" ($entry.metadata | default dict)
+  ) | nindent 2 }}
+spec:
+  {{- toYaml ($entry.spec | default dict) | nindent 2 }}
+{{- end }}

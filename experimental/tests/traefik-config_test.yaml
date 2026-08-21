@@ -1,0 +1,56 @@
+suite: traefik config merge semantics
+templates:
+  - configmap.yaml
+tests:
+  - it: ships default entryPoints and providers when user overrides nothing
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "entryPoints:[\\s\\S]*web:[\\s\\S]*address:"
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "providers:[\\s\\S]*kubernetesCRD:"
+
+  - it: override replaces the default scalar (log.level)
+    set:
+      traefik.log.level: DEBUG
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "level: DEBUG"
+
+  - it: added key merges alongside defaults (accessLog.format)
+    set:
+      traefik.accessLog.format: json
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "accessLog:[\\s\\S]*format: json"
+      # default log.level=INFO still present
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "level: INFO"
+
+  - it: null removes a default entryPoint
+    set:
+      traefik.entryPoints.web: null
+    asserts:
+      # web entryPoint's address is gone …
+      - notMatchRegex:
+          path: data["traefik.yaml"]
+          pattern: ":8000/tcp"
+      # … peers still present
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: ":8443/tcp"
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: ":8080/tcp"
+
+  - it: null removes ping entirely
+    set:
+      traefik.ping: null
+    asserts:
+      - notMatchRegex:
+          path: data["traefik.yaml"]
+          pattern: "ping:"

@@ -1,0 +1,8 @@
+{{- if kindIs "map" .Values.deployment -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "deployment" "name" (include "traefik.fullname" .) "namespaced" true) | nindent 2 }}
+spec:
+  {{- include "traefik.workloadSpec" (dict "ctx" . "key" "deployment") | nindent 2 }}
+{{- end -}}

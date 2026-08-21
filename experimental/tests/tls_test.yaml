@@ -1,0 +1,50 @@
+suite: TLSOption / TLSStore CRDs
+templates:
+  - tls-options.yaml
+  - tls-store.yaml
+tests:
+  - it: nothing rendered by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a TLSOption named by the map key
+    template: tls-options.yaml
+    set:
+      tlsOptions:
+        default:
+          spec:
+            sniStrict: true
+    asserts:
+      - isKind:
+          of: TLSOption
+      - equal:
+          path: metadata.name
+          value: default
+      - equal:
+          path: spec.sniStrict
+          value: true
+
+  - it: renders a TLSStore with the metadata hatch
+    template: tls-store.yaml
+    set:
+      tlsStore:
+        default:
+          metadata:
+            labels:
+              team: net
+          spec:
+            defaultCertificate:
+              secretName: wildcard-tls
+    asserts:
+      - isKind:
+          of: TLSStore
+      - equal:
+          path: metadata.name
+          value: default
+      - equal:
+          path: metadata.labels.team
+          value: net
+      - equal:
+          path: spec.defaultCertificate.secretName
+          value: wildcard-tls

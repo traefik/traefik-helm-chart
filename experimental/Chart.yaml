@@ -1,0 +1,26 @@
+apiVersion: v2
+name: traefik-experimental
+description: EXPERIMENTAL Traefik chart (simplification proposal) — unreleased, not for production
+type: application
+version: 0.1.0
+appVersion: "v3.7.5"
+# Matches the Kubernetes OpenAPI version values.schema.json is built
+# against (hack/build_schema.py K8S_VERSION) so the schema's validation
+# surface and the declared support window stay in lockstep.
+kubeVersion: ">=1.32.0-0"
+keywords:
+  - traefik
+  - ingress
+home: https://traefik.io
+sources:
+  - https://github.com/traefik/traefik-helm-chart
+icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
+# Supported Traefik Proxy + Hub version ranges. Templates read these
+# via `index .Chart.Annotations "..."` (matches the upstream chart's
+# convention from PR traefik/traefik-helm-chart#1791) so version bumps
+# happen here, not buried in helpers.
+annotations:
+  traefik.io/proxy-min-version: v3.6.0
+  traefik.io/proxy-max-version: v3.7.5
+  traefik.io/hub-min-version: v3.19.0
+  traefik.io/hub-max-version: v3.19.4
