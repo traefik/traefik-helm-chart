@@ -599,6 +599,18 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when allowedListeners is set without experimentalChannel
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: Same
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: The Gateway 'allowedListeners' field is experimental. Enable it by setting providers.kubernetesGateway.experimentalChannel=true"
   - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
