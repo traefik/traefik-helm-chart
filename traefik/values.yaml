@@ -1047,9 +1047,10 @@ ports:
       # -- Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+).
       # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
       aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
-      # -- Defines how request headers with underscores in their names are handled (v3.7.6+).
+      # -- Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11).
+      # Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+.
       # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)
-      underscoreHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+      underscoreHeadersStrategy:  # @schema deprecated; enum:[keep, delete, reject, null]; type:[string, null]
       tls:
         # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
         # @default -- true

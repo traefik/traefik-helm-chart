@@ -445,7 +445,7 @@ Kubernetes: `>=1.25.0-0`
 | ports.websecure.http.tls.domains | list | `[]` |  |
 | ports.websecure.http.tls.enabled | bool | true | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls) |
 | ports.websecure.http.tls.options | string | `""` |  |
-| ports.websecure.http.underscoreHeadersStrategy | string | `nil` | Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy) |
+| ports.websecure.http.underscoreHeadersStrategy | string | `nil` | Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11). Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy) |
 | ports.websecure.http3.advertisedPort | int | `nil` | Defines the UDP port to advertise as the HTTP/3 authority. |
 | ports.websecure.http3.enabled | bool | `false` | Enable HTTP/3 on the entrypoint. It also enables the http3 experimental feature. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3). There are known limitations when trying to listen on same ports for TCP & UDP ([kubernetes#47249](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)): this chart works around it using a dual Service. |
 | ports.websecure.nodePort | int | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |

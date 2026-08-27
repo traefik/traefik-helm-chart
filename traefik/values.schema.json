@@ -2415,7 +2415,8 @@
                                 }
                             },
                             "underscoreHeadersStrategy": {
-                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11). Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "deprecated": true,
                                 "type": [
                                     "string",
                                     "null"
