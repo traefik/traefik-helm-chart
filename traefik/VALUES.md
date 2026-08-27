@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 41.3.0](https://img.shields.io/badge/Version-41.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.11](https://img.shields.io/badge/AppVersion-v3.7.11-informational?style=flat-square)
+![Version: 41.3.0](https://img.shields.io/badge/Version-41.3.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.12](https://img.shields.io/badge/AppVersion-v3.7.12-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
