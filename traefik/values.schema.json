@@ -2303,6 +2303,19 @@
                     "http": {
                         "type": "object",
                         "properties": {
+                            "aliasHeadersStrategy": {
+                                "description": "Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "keep",
+                                    "delete",
+                                    "reject",
+                                    null
+                                ]
+                            },
                             "encodedCharacters": {
                                 "description": "See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)",
                                 "type": "object",

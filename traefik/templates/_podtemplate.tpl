@@ -692,6 +692,9 @@
           - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
               {{- end }}
+              {{- with .aliasHeadersStrategy }}
+          - "--{{$entryPoints}}.{{ $name }}.http.aliasHeadersStrategy={{ . }}"
+              {{- end }}
               {{- with .underscoreHeadersStrategy }}
           - "--{{$entryPoints}}.{{ $name }}.http.underscoreHeadersStrategy={{ . }}"
               {{- end }}

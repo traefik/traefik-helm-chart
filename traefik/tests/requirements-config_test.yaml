@@ -534,6 +534,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using aliasHeadersStrategy on traefik < 3.7.12
+    set:
+      image:
+        tag: v3.7.5
+      ports:
+        websecure:
+          http:
+            aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12."
   - it: should fail when using underscoreHeadersStrategy on traefik < 3.7.6
     set:
       image:

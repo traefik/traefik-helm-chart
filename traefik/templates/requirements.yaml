@@ -139,6 +139,9 @@
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
   {{- end }}
+  {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
+    {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
+  {{- end }}
   {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
   {{- end }}
