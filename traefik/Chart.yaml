@@ -25,7 +25,7 @@ annotations:
   traefik.io/proxy-min-version: v3.6.0
   traefik.io/proxy-max-version: v3.7.12
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.11
+  traefik.io/hub-max-version: v3.20.12
   artifacthub.io/changes: |
     - kind: added
       description: "feat: add new options for traefik v3.7.11"
