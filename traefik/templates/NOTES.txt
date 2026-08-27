@@ -175,5 +175,5 @@ You will need to install them yourself before deploying Traefik v3.7:
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and was not found in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}
-  {{- end -}}        
+  {{- end -}}
 {{- end -}}
