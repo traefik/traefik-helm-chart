@@ -343,3 +343,19 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!
+
+  - it: should warn when using underscoreHeadersStrategy on traefik >= 3.7.12
+    set:
+      image:
+        tag: v3.7.12
+      ports:
+        websecure:
+          http:
+            underscoreHeadersStrategy: reject
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.7.12 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ DEPRECATION WARNING: 'http.underscoreHeadersStrategy' is deprecated and replaced with 'http.aliasHeadersStrategy' for traefik >= v3.7.12.
+            This option will be dropped from this chart in a future major version.

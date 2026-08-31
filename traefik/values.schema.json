@@ -344,6 +344,10 @@
                 "defaultRuleSyntax": {
                     "description": "Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes",
                     "type": "string"
+                },
+                "strictTLSOptions": {
+                    "description": "Disables the unsafe fallback to default TLS options on conflict, mitigating [GHSA-g55h-rg46-x9c5](https://github.com/traefik/traefik/security/advisories/GHSA-g55h-rg46-x9c5). Requires traefik v3.7.11+.",
+                    "type": "boolean"
                 }
             },
             "additionalProperties": false
@@ -380,6 +384,7 @@
                     "type": "number"
                 },
                 "healthchecksHost": {
+                    "description": "Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.",
                     "type": "string"
                 },
                 "healthchecksPort": {
@@ -392,6 +397,7 @@
                     "minimum": 0
                 },
                 "healthchecksScheme": {
+                    "description": "Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint.",
                     "default": "HTTP",
                     "type": [
                         "string",
@@ -435,7 +441,7 @@
                     "type": "object"
                 },
                 "livenessPath": {
-                    "description": "Override the liveness path. Default: /ping",
+                    "description": "Override the liveness path.",
                     "type": "string"
                 },
                 "minReadySeconds": {
@@ -451,6 +457,7 @@
                     "type": "object"
                 },
                 "readinessPath": {
+                    "description": "Override the readiness path.",
                     "type": "string"
                 },
                 "replicas": {
@@ -480,6 +487,15 @@
                 "terminationGracePeriodSeconds": {
                     "description": "Amount of time (in seconds) before Kubernetes will send the SIGKILL signal if Traefik does not shut down",
                     "type": "integer"
+                },
+                "tmpVolume": {
+                    "type": "object",
+                    "properties": {
+                        "emptyDir": {
+                            "description": "[EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options for the tmp volume.",
+                            "type": "object"
+                        }
+                    }
                 }
             }
         },
@@ -757,6 +773,10 @@
                         "openApi": {
                             "type": "object",
                             "properties": {
+                                "refreshInterval": {
+                                    "description": "Interval to refresh the OpenAPI specification, as a Go duration. Must be at least `1m`.",
+                                    "type": "string"
+                                },
                                 "validateRequestMethodAndPath": {
                                     "description": "When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification",
                                     "type": "boolean"
@@ -945,6 +965,75 @@
                                     "type": "boolean"
                                 }
                             }
+                        },
+                        "ec2": {
+                            "type": "object",
+                            "properties": {
+                                "accessKeyID": {
+                                    "description": "AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
+                                },
+                                "constraints": {
+                                    "description": "Expression matched against instance tags to determine whether to create routes for an instance.",
+                                    "type": "string"
+                                },
+                                "defaultRule": {
+                                    "description": "Default rule applied to instances that do not define a router rule tag.",
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "description": "Enable AWS EC2 provider.",
+                                    "type": "boolean"
+                                },
+                                "exposedByDefault": {
+                                    "description": "Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.",
+                                    "type": "boolean"
+                                },
+                                "filters": {
+                                    "description": "EC2 API filters used to scope instance discovery. List of `{ name: \"\u003cfilter\u003e\", values: [\"\u003cvalue\u003e\"] }` entries.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                },
+                                "ipMode": {
+                                    "description": "Default backend IP mode: private, public or ipv6. Overridable per instance with the `traefik.ec2.ipmode` tag.",
+                                    "type": "string",
+                                    "enum": [
+                                        "",
+                                        "private",
+                                        "public",
+                                        "ipv6"
+                                    ]
+                                },
+                                "refreshSeconds": {
+                                    "description": "Polling interval, in seconds, for the EC2 API.",
+                                    "type": "integer"
+                                },
+                                "region": {
+                                    "description": "AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.",
+                                    "type": "string"
+                                },
+                                "secretAccessKey": {
+                                    "description": "AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
+                                },
+                                "securityGroupPortDiscovery": {
+                                    "type": "object",
+                                    "properties": {
+                                        "enabled": {
+                                            "description": "Derive the backend port from the instance security-group rules when no port tag is set.",
+                                            "type": "boolean"
+                                        },
+                                        "excludedPorts": {
+                                            "description": "Ports excluded from security-group port discovery. When empty, the provider excludes privileged ports except 80 and 443.",
+                                            "type": "array"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
                         },
                         "microcks": {
                             "type": "object",
@@ -1250,9 +1339,9 @@
                             ]
                         },
                         "database": {
-                            "description": "Database used to store information. Default: \"0\".",
+                            "description": "Database used to store information. Default: 0.",
                             "type": [
-                                "string",
+                                "integer",
                                 "null"
                             ]
                         },
@@ -1313,6 +1402,7 @@
                     }
                 },
                 "sendlogs": {
+                    "description": "Enable export of error logs to the platform. Default: true.",
                     "type": [
                         "boolean",
                         "null"
@@ -2055,6 +2145,10 @@
                 "annotations": {
                     "type": "object"
                 },
+                "emptyDir": {
+                    "description": "[EmptyDir](https://kubernetes.io/docs/concepts/storage/volumes/#emptydir) options when persistence is disabled",
+                    "type": "object"
+                },
                 "enabled": {
                     "description": "Enable persistence using Persistent Volume Claims ref: http://kubernetes.io/docs/user-guide/persistent-volumes/. It can be used to store TLS certificates along with `certificatesResolvers.\u003cname\u003e.acme.storage`  option",
                     "type": "boolean"
@@ -2152,12 +2246,14 @@
                         ]
                     },
                     "asDefault": {
+                        "description": "Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.",
                         "type": [
                             "boolean",
                             "null"
                         ]
                     },
                     "containerPort": {
+                        "description": "Use containerPort if set.",
                         "type": [
                             "integer",
                             "null"
@@ -2211,6 +2307,19 @@
                     "http": {
                         "type": "object",
                         "properties": {
+                            "aliasHeadersStrategy": {
+                                "description": "Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "keep",
+                                    "delete",
+                                    "reject",
+                                    null
+                                ]
+                            },
                             "encodedCharacters": {
                                 "description": "See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)",
                                 "type": "object",
@@ -2310,7 +2419,8 @@
                                 }
                             },
                             "underscoreHeadersStrategy": {
-                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11). Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "deprecated": true,
                                 "type": [
                                     "string",
                                     "null"
@@ -2328,6 +2438,7 @@
                         "type": "object",
                         "properties": {
                             "advertisedPort": {
+                                "description": "Defines the UDP port to advertise as the HTTP/3 authority.",
                                 "type": [
                                     "integer",
                                     "null"
@@ -2335,6 +2446,7 @@
                                 "minimum": 0
                             },
                             "enabled": {
+                                "description": "Enable HTTP/3 on the entrypoint. It also enables the http3 experimental feature. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http3). There are known limitations when trying to listen on same ports for TCP \u0026 UDP ([kubernetes#47249](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741)): this chart works around it using a dual Service.",
                                 "type": "boolean"
                             }
                         }
@@ -2411,6 +2523,7 @@
                         }
                     },
                     "targetPort": {
+                        "description": "Different target traefik port on the cluster, useful for IP type LB",
                         "type": [
                             "string",
                             "integer",
@@ -2556,6 +2669,10 @@
                             "description": "List of namespaces from which IngressRoute, IngressRouteTCP, IngressRouteUDP, and TraefikService are allowed to declare cross-provider references. Requires traefik v3.7.1+.",
                             "type": "array"
                         },
+                        "defaultTLSResourcesNamespace": {
+                            "description": "Restricts the namespace where the cluster-wide TLSOption and TLSStore named `default` can be defined. When empty, any namespace is allowed. Requires traefik v3.7.11+.",
+                            "type": "string"
+                        },
                         "enabled": {
                             "description": "Load Kubernetes IngressRoute provider",
                             "type": "boolean"
@@ -2574,6 +2691,10 @@
                         },
                         "nativeLBByDefault": {
                             "description": "Defines whether to use Native Kubernetes load-balancing mode by default.",
+                            "type": "boolean"
+                        },
+                        "safeNaming": {
+                            "description": "Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.",
                             "type": "boolean"
                         }
                     },
@@ -2969,7 +3090,7 @@
                             "type": "string"
                         },
                         "watchNamespaceSelector": {
-                            "description": "Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace.",
+                            "description": "Select namespaces the controller watches for updates to Kubernetes objects. Mutually exclusive with watchNamespace. It requires a ClusterRole to list and watch namespaces, and is therefore incompatible with `rbac.namespaced`.",
                             "type": "string"
                         }
                     },
@@ -2996,6 +3117,10 @@
                 "namespaced": {
                     "description": "When set to true: \u003cbr /\u003e 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.\u003cbr /\u003e 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers\u003cbr /\u003e **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. \u003cbr /\u003e See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.",
                     "type": "boolean"
+                },
+                "secretResourceNames": {
+                    "description": "List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules.",
+                    "type": "array"
                 }
             },
             "additionalProperties": false
@@ -3087,6 +3212,7 @@
                     ]
                 },
                 "single": {
+                    "description": "Single service is using `MixedProtocolLBService` feature gate. When set to false, it will create two Service, one for TCP and one for UDP.",
                     "type": "boolean"
                 },
                 "spec": {

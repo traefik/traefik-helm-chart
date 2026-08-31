@@ -50,6 +50,12 @@
       allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
+      matchPackageNames: ['ghcr.io/traefik/hub-manager'],
+      extends: [':semanticCommitTypeAll(feat)'],
+      // Only track stable releases (exclude sha and master-* tags).
+      allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
+    },
+    {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
     },
@@ -83,7 +89,19 @@
       customType: 'regex',
       datasourceTemplate: 'docker',
       depNameTemplate: 'traefik',
-      managerFilePatterns: ['/VALUES.md/'],
+      // Anchored, else it also matches hub-manager/VALUES.md.
+      managerFilePatterns: ['/^traefik/VALUES\\.md$/'],
+      versioningTemplate: 'docker',
+      matchStrings: [
+        "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
+        "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
+      ]
+    },
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      depNameTemplate: 'ghcr.io/traefik/hub-manager',
+      managerFilePatterns: ['/^hub-manager/VALUES\\.md$/'],
       versioningTemplate: 'docker',
       matchStrings: [
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
@@ -101,13 +119,14 @@
         '/^traefik/Chart\\.yaml$/',
         '/^traefik/tests/requirements-config_test\\.yaml$/',
         '/^traefik/tests/container-config_test\\.yaml$/',
+        '/^traefik/tests/hub-proxy-mode_test\\.yaml$/',
       ],
       versioningTemplate: 'docker',
       matchStrings: [
         'traefik\\.io/(?<product>proxy|hub)-max-version:\\s*(?<currentValue>\\S+)',
         'support Traefik (?<product>Proxy|Hub) \\S+, which is a major version above the supported (?<currentValue>v\\d+\\.\\d+\\.\\d+)',
-        // Default Hub image assertion (container-config_test.yaml) — bumped with hub-max-version.
-        'ghcr\\.io/traefik/traefik-(?<product>hub):(?<currentValue>v\\d+\\.\\d+\\.\\d+)',
+        // Trailing newline required, else `:v3.21.0-ea.1` is captured as `v3.21.0` and rewritten.
+        'ghcr\\.io/traefik/traefik-(?<product>hub):(?<currentValue>v\\d+\\.\\d+\\.\\d+)\\s*\\n',
       ],
     }
   ],

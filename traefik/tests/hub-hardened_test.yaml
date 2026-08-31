@@ -20,7 +20,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:v3.21.0-ea.1-hardened
+          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
 
   - it: should use the hardened image in proxy mode
     set:
@@ -32,7 +32,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:v3.21.0-ea.1-hardened
+          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
 
   - it: should append -hardened to a FIPS tag when enabled
     set:
@@ -44,7 +44,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub:v3.21.0-fips-hardened
+          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-fips-hardened
 
   - it: should let the registry be overridden
     set:
@@ -57,7 +57,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: myregistry.example.com/traefik-hub:v3.21.0-ea.1-hardened
+          value: myregistry.example.com/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
 
   - it: should let the repository be overridden
     set:
@@ -83,4 +83,4 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub@sha256:1c5b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2
+          value: registry.traefik.io/traefik-hub/traefik-hub@sha256:1c5b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2

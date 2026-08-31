@@ -15,7 +15,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
@@ -27,8 +27,15 @@ jobs:
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
 
+      - name: Check hub-manager if values schema is up-to-date
+        uses: losisin/helm-values-schema-json-action@9f555986124362af978a9861cf0f81e1956300ad # v3.1.0
+        with:
+          working-directory: hub-manager
+          fail-on-diff: true
+          useHelmDocs: true
+
       - name: Check traefik if values schema is up-to-date
-        uses: losisin/helm-values-schema-json-action@cfefdf4241da6dbe17f3378e3cd0e863d4a4c3c8 # v3.0.1
+        uses: losisin/helm-values-schema-json-action@9f555986124362af978a9861cf0f81e1956300ad # v3.1.0
         with:
           working-directory: traefik
           fail-on-diff: true
@@ -41,7 +48,7 @@ jobs:
         uses: azure/setup-helm@9bc31f4ebc9c6b171d7bfbaa5d006ae7abdb4310 # v5.0.1
         with:
           # renovate: datasource=github-releases depName=helm/helm
-          version: v4.2.3
+          version: v4.2.4
 
       - name: Install helm-unittest plugin
         env:
@@ -56,6 +63,12 @@ jobs:
 
       - name: Test overrideNamespace
         run: make test-ns
+
+      - name: Test changelog annotations
+        run: make test-changelog
+
+      - name: Check Renovate appVersion hints
+        run: make check-renovate
 
       - name: Test if it's a release PR
         id: check
@@ -83,7 +96,7 @@ jobs:
       - name: Lint markdown
         uses: nosborn/github-action-markdown-cli@508d6cefd8f0cc99eab5d2d4685b1d5f470042c1 # v3.5.0
         with:
-          files: "{EXAMPLES,README,CONTRIBUTING}.md"
+          files: "{EXAMPLES,README,CONTRIBUTING}.md hub-manager/README.md"
           config_file: .markdownlint.json
 
       - name: Create kind cluster

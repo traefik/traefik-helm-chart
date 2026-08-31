@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.0.2
+version: 41.4.0
 # renovate: image=traefik
-appVersion: v3.7.8
+appVersion: v3.7.12
 kubeVersion: '>=1.25.0-0'
 keywords:
   - traefik
@@ -23,11 +23,21 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   traefik.io/proxy-min-version: v3.6.0
-  traefik.io/proxy-max-version: v3.7.8
+  traefik.io/proxy-max-version: v3.7.12
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.6
+  traefik.io/hub-max-version: v3.20.12
   artifacthub.io/changes: |
-    - "fix(crds): add missing hub.traefik.io_uplinks to kustomization"
-    - "feat(deps): update traefik docker tag to v3.7.6"
-    - "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6"
-    - "chore(release): 🚀 publish 41.0.2"
+    - kind: fixed
+      description: "fix: hub/proxy mapping"
+    - kind: fixed
+      description: "fix(rbac): restore secretResourceNames for namespaced role"
+    - kind: added
+      description: "feat: deprecate `underscoreHeadersStrategy` value"
+    - kind: added
+      description: "feat: add `aliasHeadersStrategy` value"
+    - kind: added
+      description: "feat(hub): support apiManagement OpenAPI refresh interval"
+    - kind: added
+      description: "feat(deps): update traefik docker tag to v3.7.12"
+    - kind: added
+      description: "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.12"

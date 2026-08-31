@@ -1,0 +1,136 @@
+suite: Traefik Hub EC2 provider
+templates:
+  - deployment.yaml
+set:
+  image:
+    registry: ghcr.io
+    repository: traefik/traefik-hub
+    tag: v3.21.0
+  hub:
+    token: "xxx"
+tests:
+  - it: should not configure ec2 by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.region="
+
+  - it: should be possible to enable ec2 with default config
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
+
+  - it: should configure ec2 when enabled
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+            region: "us-east-1"
+            accessKeyID: "AKIAEXAMPLE"
+            secretAccessKey: "secret"
+            exposedByDefault: false
+            refreshSeconds: 30
+            defaultRule: "Host(`{{ normalize .Name }}`)"
+            constraints: "Tag(`env=prod`)"
+            ipMode: "public"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.region=us-east-1"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.accessKeyID=AKIAEXAMPLE"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.secretAccessKey=secret"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.exposedByDefault=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.refreshSeconds=30"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.ipMode=public"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.constraints=Tag(`env=prod`)"
+
+  - it: should render each filter with its index
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+            region: "eu-west-1"
+            filters:
+              - name: "tag:env"
+                values:
+                  - "production"
+                  - "staging"
+              - name: "vpc-id"
+                values:
+                  - "vpc-0123456789abcdef0"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.filters[0].name=tag:env"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.filters[0].values=production,staging"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.filters[1].name=vpc-id"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.filters[1].values=vpc-0123456789abcdef0"
+
+  - it: should enable security group port discovery with its defaults
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+            region: "us-east-1"
+            securityGroupPortDiscovery:
+              enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.securityGroupPortDiscovery"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.securityGroupPortDiscovery.excludedPorts="
+
+  - it: should render explicit excludedPorts
+    set:
+      hub:
+        providers:
+          ec2:
+            enabled: true
+            region: "us-east-1"
+            securityGroupPortDiscovery:
+              enabled: true
+              excludedPorts:
+                - 22
+                - 3389
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.securityGroupPortDiscovery"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.ec2.securityGroupPortDiscovery.excludedPorts=22,3389"

@@ -31,9 +31,16 @@
   {{- if .Values.providers.kubernetesGateway.enabled }}
     {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
   {{- end }}
-  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngressNGINX.enabled) }}
-    {{- fail "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, or Kubernetes Ingress provider." }}
+  {{- if and .Values.providers.kubernetesIngressNGINX.enabled .Values.providers.kubernetesIngressNGINX.watchNamespaceSelector }}
+    {{- fail "ERROR: Kubernetes Ingress NGINX watchNamespaceSelector requires ClusterRole. RBAC cannot be namespaced." }}
   {{- end }}
+  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngressNGINX.enabled) (not .Values.providers.knative.enabled) }}
+    {{- fail "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, Kubernetes Ingress, or Knative provider." }}
+  {{- end }}
+{{- end }}
+
+{{- if and (not .Values.rbac.namespaced) (not (empty .Values.rbac.secretResourceNames)) }}
+  {{- fail "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules." }}
 {{- end }}
 
 {{- range $name, $config := .Values.ingressRoute }}
@@ -119,9 +126,25 @@
   {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
 {{- end }}
 
+{{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
+{{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
+  {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.11-0" $version) (not (empty .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace)) }}
+  {{- fail "ERROR: providers.kubernetesCRD.defaultTLSResourcesNamespace is only available for traefik >= v3.7.11." }}
+{{- end }}
+
+{{- if and (semverCompare "<v3.7.11-0" $version) .Values.core.strictTLSOptions }}
+  {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
+{{- end }}
+
 {{- range $name, $config := .Values.ports }}
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+  {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
+    {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
   {{- end }}
   {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
@@ -211,10 +234,37 @@
     {{ fail "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
   {{- end }}
 
+  {{- if and $.Values.hub.apimanagement.openApi.refreshInterval (semverCompare "<v3.21.0-0" $hubVersion) }}
+    {{ fail "ERROR: hub.apimanagement.openApi.refreshInterval is only available for Traefik Hub >= v3.21.0." }}
+  {{- end }}
+
   {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}
     {{- range $childName, $childConfig := $.Values.hub.providers.multicluster.children }}
       {{- if or (($childConfig.serversTransport).forwardingTimeouts).readTimeout (($childConfig.serversTransport).forwardingTimeouts).writeTimeout }}
         {{ fail "ERROR: hub.providers.multicluster.children.<name>.serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for Traefik Hub >= v3.20.0-ea.7." }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
+  {{- if and $.Values.hub.providers.ec2.enabled (semverCompare "<v3.21.0-0" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.ec2 is only available for Traefik Hub >= v3.21.0." }}
+  {{- end }}
+
+  {{- if $.Values.hub.providers.ec2.enabled }}
+    {{- range $idx, $filter := $.Values.hub.providers.ec2.filters }}
+      {{- if not $filter.name }}
+        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty name." $idx) }}
+      {{- end }}
+      {{- if not $filter.values }}
+        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty values list." $idx) }}
+      {{- end }}
+      {{- if eq $filter.name "instance-state-name" }}
+        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] uses instance-state-name, which is reserved by the provider." $idx) }}
+      {{- end }}
+      {{- range $field, $_ := $filter }}
+        {{- if not (has $field (list "name" "values")) }}
+          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] does not support field %s, only name and values are allowed." $idx $field) }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}

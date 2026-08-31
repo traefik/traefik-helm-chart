@@ -258,6 +258,9 @@
            {{- with .defaultRuleSyntax }}
           - "--core.defaultRuleSyntax={{ . }}"
            {{- end }}
+           {{- if .strictTLSOptions }}
+          - "--core.strictTLSOptions=true"
+           {{- end }}
           {{- end }}
 
           {{- if .Values.metrics }}
@@ -500,6 +503,12 @@
            {{- with .Values.providers.kubernetesCRD.crossProviderNamespaces }}
           - "--providers.kubernetescrd.crossProviderNamespaces={{ join "," . }}"
            {{- end }}
+           {{- with .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace }}
+          - "--providers.kubernetescrd.defaultTLSResourcesNamespace={{ . }}"
+           {{- end }}
+           {{- if .Values.providers.kubernetesCRD.safeNaming }}
+          - "--providers.kubernetescrd.safeNaming=true"
+           {{- end }}
            {{- if .Values.providers.kubernetesCRD.allowExternalNameServices }}
           - "--providers.kubernetescrd.allowExternalNameServices=true"
            {{- end }}
@@ -683,6 +692,9 @@
           - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
               {{- end }}
+              {{- with .aliasHeadersStrategy }}
+          - "--{{$entryPoints}}.{{ $name }}.http.aliasHeadersStrategy={{ . }}"
+              {{- end }}
               {{- with .underscoreHeadersStrategy }}
           - "--{{$entryPoints}}.{{ $name }}.http.underscoreHeadersStrategy={{ . }}"
               {{- end }}
@@ -861,6 +873,9 @@
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
               {{- end }}
+              {{- with .openApi.refreshInterval }}
+          - "--hub.apiManagement.openApi.refreshInterval={{ . }}"
+              {{- end }}
              {{- end }}
             {{- end }}
             {{- with .aigateway }}
@@ -909,12 +924,29 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.tracing.additionalTraceHeaders.traceContext" "content" $.Values.hub.tracing.additionalTraceHeaders.traceContext) | nindent 10 }}
             {{- end }}
             {{- if .providers.consulCatalogEnterprise.enabled }}
+          - "--hub.providers.consulCatalogEnterprise"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.consulCatalogEnterprise" "content" (omit $.Values.hub.providers.consulCatalogEnterprise "enabled")) | nindent 10 }}
             {{- end }}
+            {{- if .providers.ec2.enabled }}
+          - "--hub.providers.ec2"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.ec2" "content" (omit $.Values.hub.providers.ec2 "enabled" "filters" "securityGroupPortDiscovery")) | nindent 10 }}
+              {{- range $idx, $val := .providers.ec2.filters }}
+                {{- $filterPath := printf "hub.providers.ec2.filters[%d]" $idx }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" $filterPath "content" $val) | nindent 10 }}
+              {{- end }}
+              {{- if .providers.ec2.securityGroupPortDiscovery.enabled }}
+          - "--hub.providers.ec2.securityGroupPortDiscovery"
+                {{- if .providers.ec2.securityGroupPortDiscovery.excludedPorts }}
+                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.ec2.securityGroupPortDiscovery" "content" (omit $.Values.hub.providers.ec2.securityGroupPortDiscovery "enabled")) | nindent 10 }}
+                {{- end }}
+              {{- end }}
+            {{- end }}
             {{- if .providers.microcks.enabled }}
+          - "--hub.providers.microcks"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.microcks" "content" (omit $.Values.hub.providers.microcks "enabled")) | nindent 10 }}
             {{- end }}
             {{- if .providers.nutanixPrismCentral.enabled }}
+          - "--hub.providers.nutanixPrismCentral"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.nutanixPrismCentral" "content" (omit $.Values.hub.providers.nutanixPrismCentral "enabled" "allowedVpcs")) | nindent 10 }}
               {{- range $idx, $val := .providers.nutanixPrismCentral.allowedVpcs }}
                 {{- $vpcPath := printf "hub.providers.nutanixPrismCentral.allowedVpcs[%d]" $idx }}
@@ -1007,10 +1039,12 @@
           persistentVolumeClaim:
             claimName: {{ default (include "traefik.fullname" .) .Values.persistence.existingClaim }}
           {{- else }}
-          emptyDir: {}
+          emptyDir:
+            {{- toYaml (default dict .Values.persistence.emptyDir) | nindent 12 }}
           {{- end }}
         - name: tmp
-          emptyDir: {}
+          emptyDir:
+            {{- toYaml (default dict (.Values.deployment.tmpVolume).emptyDir) | nindent 12 }}
         {{- if .Values.hub.token }}
         - name: hub-token
           secret:

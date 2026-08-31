@@ -26,14 +26,14 @@ jobs:
           client-id: ${{ secrets.RENOVATE_APP_CLIENT_ID }}
 
       - name: Checkout
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       # This third party action allows you to download the cache artifact from different workflow runs
       # Note that actions/cache doesn't work well because the cache key would need to be computed from
       # a file within the cache, meaning there would never be any data to restore. actions/download-artifact
       # also doesn't work because it only handles artifacts uploaded in the same run, and we want to restore
       # from the previous successful run.
-      - uses: dawidd6/action-download-artifact@b6e2e70617bc3265edd6dab6c906732b2f1ae151 # v21
+      - uses: dawidd6/action-download-artifact@d63b86af1b34672e53c440b1b83979861906bad7 # v24
         continue-on-error: true
         with:
           name: ${{ env.CACHE_KEY }}
@@ -54,7 +54,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@3064367f740a1a91cca218698a63902689cce200 # v46.1.20
+        uses: renovatebot/github-action@5402b206248e5a8c8427a15102702eb9c1793efc # v46.2.4
         with:
           configurationFile: .github/renovate.json5
           token: ${{ steps.get_token.outputs.token }}

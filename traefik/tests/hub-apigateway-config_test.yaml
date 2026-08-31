@@ -139,6 +139,29 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
+  - it: should set the OpenAPI refresh interval
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-ea.1
+      hub:
+        apimanagement:
+          enabled: true
+          openApi:
+            refreshInterval: "5m"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.apiManagement.openApi.refreshInterval=5m"
+  - it: should not set the OpenAPI refresh interval by default
+    set:
+      hub:
+        apimanagement:
+          enabled: true
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--hub\\.apiManagement\\.openApi\\.refreshInterval"
   - it: api management and ai gateway should not be enabled by default
     asserts:
       - notContains:
@@ -152,7 +175,7 @@ tests:
       hub:
         redis:
           cluster: true
-          database: "database"
+          database: 1
           endpoints: "localhost:7000"
           username: "user"
           password: "pass"
@@ -173,7 +196,7 @@ tests:
           content: "--hub.redis.cluster=true"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.redis.database=database"
+          content: "--hub.redis.database=1"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.redis.endpoints=localhost:7000"
@@ -283,6 +306,16 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.tracing.additionalTraceHeaders.traceContext.traceState=traceState"
+  - it: should be possible to enable Traefik Hub microcks provider with default config
+    set:
+      hub:
+        providers:
+          microcks:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks"
   - it: should be possible to configure Traefik Hub microcks provider
     set:
       hub:
@@ -293,7 +326,30 @@ tests:
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
+          content: "--hub.providers.microcks"
+      - contains:
+          path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks.endpoint=http://microcks.svc"
+  - it: should be possible to enable Traefik Hub nutanixPrismCentral provider with default config
+    set:
+      hub:
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral"
+  - it: should be possible to enable Traefik Hub consulCatalogEnterprise provider with default config
+    set:
+      hub:
+        providers:
+          consulCatalogEnterprise:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.consulCatalogEnterprise"
   - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
     set:
       hub:

@@ -175,5 +175,15 @@ You will need to install them yourself before deploying Traefik v3.7:
   {{- $cert := lookup "v1" "Secret" (include "traefik.namespace" .) $.Values.hub.apimanagement.admission.secretName -}}
   {{- if not $cert }}
     {{- printf "\nWARNING: webhook secret %s for Traefik hub is self managed and was not found in %s namespace.\n" $.Values.hub.apimanagement.admission.secretName (include "traefik.namespace" .) -}}
-  {{- end -}}        
+  {{- end -}}
+{{- end -}}
+
+{{/* Warn about deprecated underscoreHeadersStrategy option */}}
+{{- range $name, $config := .Values.ports }}
+  {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare ">=v3.7.12-0" $version) }}
+    {{- printf "\n" -}}
+⚠️ DEPRECATION WARNING: 'http.underscoreHeadersStrategy' is deprecated and replaced with 'http.aliasHeadersStrategy' for traefik >= v3.7.12.
+This option will be dropped from this chart in a future major version.
+    {{- printf "\n" -}}
+  {{- end -}}
 {{- end -}}
