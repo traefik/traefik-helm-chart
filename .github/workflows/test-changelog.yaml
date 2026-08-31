@@ -37,7 +37,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@cb021f9b36a51a7c6f18e4679b6fa2cb77a1260c # v6.3.0
         with:
           fromTag: v34.1.0
           toTag: v34.2.0
@@ -81,7 +81,7 @@ jobs:
       # and regenerate .github/fixtures/changelog-hub-manager.md.
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@cb021f9b36a51a7c6f18e4679b6fa2cb77a1260c # v6.3.0
         with:
           fromTag: hub-manager_1.0.0-rc
           toTag: hub-manager_1.0.0-rc
