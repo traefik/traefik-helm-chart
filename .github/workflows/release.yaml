@@ -78,7 +78,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@cb021f9b36a51a7c6f18e4679b6fa2cb77a1260c # v6.3.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
@@ -210,13 +210,13 @@ jobs:
 
       - name: Render changelog configuration
         env:
-          REGEXP: '\\((hub-manager-.+)\\)'
+          REGEXP: '\\((hub-manager.*)\\)'
         run: ./hack/render-changelog-config.sh hub-manager
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@cb021f9b36a51a7c6f18e4679b6fa2cb77a1260c # v6.3.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
