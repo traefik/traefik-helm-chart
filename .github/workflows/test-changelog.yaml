@@ -72,19 +72,16 @@ jobs:
 
       - name: Render hub-manager changelog configuration
         env:
-          REGEXP: '\\((hub-manager-.+)\\)'
-          DATE: '2025-01-13'
+          REGEXP: '\\((hub-manager.*)\\)'
+          DATE: '2026-07-30'
         run: ./hack/render-changelog-config.sh hub-manager
 
-      # TODO: hub-manager has no released tag yet, so this range is empty and the
-      # fixture is a placeholder. Once two hub-manager tags exist, set a real range
-      # and regenerate .github/fixtures/changelog-hub-manager.md.
       - name: Build Changelog
         id: changelog
         uses: mikepenz/release-changelog-builder-action@cb021f9b36a51a7c6f18e4679b6fa2cb77a1260c # v6.3.0
         with:
-          fromTag: hub-manager_1.0.0-rc
-          toTag: hub-manager_1.0.0-rc
+          fromTag: hub-manager_v1.0.0-rc.1
+          toTag: hub-manager_v1.0.0
           configuration: "/tmp/changelog.json"
           fetchViaCommits: true
         env:
