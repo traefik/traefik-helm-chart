@@ -1,276 +1,278 @@
-{{- $version := include "traefik.proxyVersion" $ }}
-{{- $proxyMinVersion := index .Chart.Annotations "traefik.io/proxy-min-version" }}
-{{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" }}
-{{- if (ne $version "experimental-v3.0") }}
-  {{- if (semverCompare (printf "<%s-0" $proxyMinVersion) $version) }}
-    {{- fail (printf "ERROR: This version of the Chart only supports Traefik Proxy %s+" $proxyMinVersion) -}}
-  {{- end }}
-  {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
-  {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $version "max" $proxyMaxVersion)) "true" }}
-    {{- fail (printf "ERROR: This Chart does not support Traefik Proxy %s, which is a major version above the supported %s." $version $proxyMaxVersion) -}}
-  {{- end }}
-{{- end }}
-
-{{- if and .Values.hub.token (eq (include "traefik.hub.enabled" .) "false") }}
-  {{- fail "ERROR: hub.enabled cannot be false when hub.token is set." -}}
-{{- end }}
-
-{{- if and (eq (include "traefik.hub.enabled" .) "true") (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
-  {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
-{{- end }}
-
-{{- if and (.Values.providers.knative).enabled (not .Values.experimental.knative) }}
-  {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
-{{- end }}
-
-{{- if and (.Values.providers.kubernetesGateway.enabled) (.Values.gateway.defaultScope) (not .Values.providers.kubernetesGateway.experimentalChannel) }}
-  {{- fail "ERROR: The Gateway 'defaultScope' field is experimental. Enable it by setting providers.kubernetesGateway.experimentalChannel=true" }}
-{{- end }}
-
-{{- if .Values.rbac.namespaced }}
-  {{- if .Values.providers.kubernetesGateway.enabled }}
-    {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
-  {{- end }}
-  {{- if and .Values.providers.kubernetesIngressNGINX.enabled .Values.providers.kubernetesIngressNGINX.watchNamespaceSelector }}
-    {{- fail "ERROR: Kubernetes Ingress NGINX watchNamespaceSelector requires ClusterRole. RBAC cannot be namespaced." }}
-  {{- end }}
-  {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngressNGINX.enabled) (not .Values.providers.knative.enabled) }}
-    {{- fail "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, Kubernetes Ingress, or Knative provider." }}
-  {{- end }}
-{{- end }}
-
-{{- if and (not .Values.rbac.namespaced) (not (empty .Values.rbac.secretResourceNames)) }}
-  {{- fail "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules." }}
-{{- end }}
-
-{{- range $name, $config := .Values.ingressRoute }}
-  {{- if regexMatch "[A-Z]" $name }}
-    {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase)." $name) }}
-  {{- end }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNGINX).enabled}}
-  {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
-{{- end }}
-
-{{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (not $.Values.hub.token) }}
-  {{- fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub." }}
-{{- end }}
-
-{{- with .Values.providers.kubernetesIngressNGINX }}
-  {{- if and (semverCompare "<v3.7.0-0" $version) .enabled (or
-    (ne .proxyRequestBuffering nil)
-    (gt (.clientBodyBufferSize | int) 0)
-    (gt (.proxyBodySize | int) 0)
-    (ne .proxyBuffering nil)
-    (gt (.proxyBufferSize | int) 0)
-    (gt (.proxyBuffersNumber | int) 0)
-    (gt (.proxyConnectTimeout | int) 0)
-    (gt (.proxyReadTimeout | int) 0)
-    (gt (.proxySendTimeout | int) 0)
-    (not (empty .proxyNextUpstream))
-    (gt (.proxyNextUpstreamTries | int) 0)
-    (gt (.proxyNextUpstreamTimeout | int) 0)
-    (not (empty .customHTTPErrors))
-    (gt (.upstreamKeepaliveTimeout | int) 0)
-    (ne .allowCrossNamespaceResources nil)
-    (not (empty .globalAllowedResponseHeaders))
-    (ne .allowSnippetAnnotations nil)
-    (ne .httpEntryPoint "web")
-    (ne .httpsEntryPoint "websecure")
-    )}}
-    {{- fail "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0." }}
-  {{- end }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.0-ea.2" $version) (ne (.Values.providers.kubernetesIngressNGINX).strictValidatePathType nil) }}
-  {{- fail "ERROR: Kubernetes Ingress NGINX provider strictValidatePathType option requires traefik >= v3.7.0-ea.2." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.0-rc.1" $version) (not (empty .Values.providers.precedence)) }}
-  {{- fail "ERROR: providers.precedence option requires traefik >= v3.7.0-rc.1." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.0-rc.1" $version) (not (empty (.Values.providers.kubernetesIngressNGINX).globalAuthUrl)) }}
-  {{- fail "ERROR: Kubernetes Ingress NGINX provider globalAuthUrl option requires traefik >= v3.7.0-rc.1." }}
-{{- end }}
-
-{{- if and (not .Values.experimental.otlpLogs) (or (.Values.log.otlp.enabled) (.Values.accessLog.otlp.enabled))}}
-  {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.0-0" $version) .Values.accessLog.dualOutput }}
-  {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.3-0" $version) .Values.accessLog.fields.queryParameters.defaultMode }}
-  {{- fail "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
-  {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.1-0" $version) (or
-    (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
-    (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
-    (not (empty .Values.providers.kubernetesGateway.crossProviderNamespaces))
-    ) }}
-  {{- fail "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1" }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.3-0" $version) (or
-    (not (empty .Values.providers.kubernetesGateway.qps))
-    (not (empty .Values.providers.kubernetesGateway.burst))
-    ) }}
-  {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
-{{- end }}
-
-{{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
-{{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
-  {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.11-0" $version) (not (empty .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace)) }}
-  {{- fail "ERROR: providers.kubernetesCRD.defaultTLSResourcesNamespace is only available for traefik >= v3.7.11." }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.7.11-0" $version) .Values.core.strictTLSOptions }}
-  {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
-{{- end }}
-
-{{- range $name, $config := .Values.ports }}
-  {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
-    {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
-  {{- end }}
-  {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
-    {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
-  {{- end }}
-  {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
-    {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
-  {{- end }}
-  {{- if and $config.uplink (empty $.Values.hub.token) }}
-    {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}
-  {{- end }}
-{{- end }}
-
-{{- if and (semverCompare "<v3.6.4-0" $version) (or
-    (eq .Values.ports.websecure.http.sanitizePath false)
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedBackSlash
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedNullCharacter
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedSemicolon
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedPercent
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedQuestionMark
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedHash )}}
-  {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
-{{- end }}
-
-{{- if and $.Values.hub.hardened (eq (include "traefik.hub.enabled" $) "false") }}
-  {{ fail "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled." }}
-{{- end }}
-
-{{- if eq (include "traefik.hub.enabled" $) "true" -}}
-  {{- $hubVersion := include "traefik.hubVersion" $ }}
-  {{- if not $hubVersion }}
-    {{- if $.Values.image.digest }}
-      {{ fail "When using Traefik Hub with image.digest, versionOverride must be set." }}
-    {{- else }}
-      {{- $hubVersion = index $.Chart.Annotations "traefik.io/hub-max-version" }}
+{{- if .Values.strictValidation.enabled }}
+  {{- $version := include "traefik.proxyVersion" $ }}
+  {{- $proxyMinVersion := index .Chart.Annotations "traefik.io/proxy-min-version" }}
+  {{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" }}
+  {{- if (ne $version "experimental-v3.0") }}
+    {{- if (semverCompare (printf "<%s-0" $proxyMinVersion) $version) }}
+      {{- fail (printf "ERROR: This version of the Chart only supports Traefik Proxy %s+" $proxyMinVersion) -}}
     {{- end }}
-  {{- end -}}
-
-  {{/* Consider non semver versions as latest one  */}}
-  {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $hubVersion)) -}}
-    {{ $hubVersion = "v3.99" }}
-  {{- end }}
-
-  {{- $hubMinVersion := index $.Chart.Annotations "traefik.io/hub-min-version" }}
-  {{- $hubMaxVersion := index $.Chart.Annotations "traefik.io/hub-max-version" }}
-  {{- if semverCompare (printf "<%s-0" $hubMinVersion) $hubVersion }}
-    {{ fail (printf "ERROR: this Chart supports *only* Traefik Hub >= %s." $hubMinVersion) }}
-  {{- end }}
-  {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
-  {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $hubVersion "max" $hubMaxVersion)) "true" }}
-    {{ fail (printf "ERROR: This Chart does not support Traefik Hub %s, which is a major version above the supported %s." $hubVersion $hubMaxVersion) }}
-  {{- end }}
-
-  {{- if and (not $.Values.hub.token) (semverCompare "<v3.21.0-ea" $hubVersion) }}
-    {{ fail "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
-  {{- end }}
-
-  {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}
-    {{ fail "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."}}
-  {{- end }}
-
-  {{- with .Values.hub.pluginRegistry.sources }}
-    {{- range $pluginName, $pluginConf := . }}
-      {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
-         {{ fail (printf "ERROR: pluginRegistry source %s is not used in experimental.plugins." $pluginName) }}
-      {{- end }}
+    {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
+    {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $version "max" $proxyMaxVersion)) "true" }}
+      {{- fail (printf "ERROR: This Chart does not support Traefik Proxy %s, which is a major version above the supported %s." $version $proxyMaxVersion) -}}
     {{- end }}
   {{- end }}
 
-  {{- range $portName, $config := .Values.ports }}
-    {{- if $config.uplink }}
-      {{- if semverCompare "<v3.20.0-0" $hubVersion }}
-        {{ fail "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."}}
-      {{- end }}
-      {{- if (not $.Values.hub.providers.multicluster.enabled) }}
-        {{ fail "ERROR: uplink EntryPoints requires the hub multicluster provider" }}
-      {{- end }}
+  {{- if and .Values.hub.token (eq (include "traefik.hub.enabled" .) "false") }}
+    {{- fail "ERROR: hub.enabled cannot be false when hub.token is set." -}}
+  {{- end }}
+
+  {{- if and (eq (include "traefik.hub.enabled" .) "true") (not (contains "traefik-hub" (include "traefik.imageRepository" .))) }}
+    {{- fail "ERROR: traefik-hub image is required when enabling Traefik Hub" -}}
+  {{- end }}
+
+  {{- if and (.Values.providers.knative).enabled (not .Values.experimental.knative) }}
+    {{- fail "ERROR: Knative is experimental. Enable it by setting experimental.knative to true" -}}
+  {{- end }}
+
+  {{- if and (.Values.providers.kubernetesGateway.enabled) (.Values.gateway.defaultScope) (not .Values.providers.kubernetesGateway.experimentalChannel) }}
+    {{- fail "ERROR: The Gateway 'defaultScope' field is experimental. Enable it by setting providers.kubernetesGateway.experimentalChannel=true" }}
+  {{- end }}
+
+  {{- if .Values.rbac.namespaced }}
+    {{- if .Values.providers.kubernetesGateway.enabled }}
+      {{- fail "ERROR: Kubernetes Gateway provider requires ClusterRole. RBAC cannot be namespaced." }}
+    {{- end }}
+    {{- if and .Values.providers.kubernetesIngressNGINX.enabled .Values.providers.kubernetesIngressNGINX.watchNamespaceSelector }}
+      {{- fail "ERROR: Kubernetes Ingress NGINX watchNamespaceSelector requires ClusterRole. RBAC cannot be namespaced." }}
+    {{- end }}
+    {{- if and (not .Values.providers.kubernetesIngress.enabled) (not .Values.providers.kubernetesCRD.enabled) (not .Values.providers.kubernetesIngressNGINX.enabled) (not .Values.providers.knative.enabled) }}
+      {{- fail "ERROR: namespaced rbac requires Kubernetes CRD, Kubernetes Ingress NGINX, Kubernetes Ingress, or Knative provider." }}
     {{- end }}
   {{- end }}
 
-  {{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (semverCompare "<v3.20.0-ea.8" $hubVersion) }}
-    {{ fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8." }}
+  {{- if and (not .Values.rbac.namespaced) (not (empty .Values.rbac.secretResourceNames)) }}
+    {{- fail "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules." }}
   {{- end }}
 
-  {{- if and $.Values.hub.providers.multicluster.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
-    {{ fail "ERROR: hub.providers.multicluster is only available for Traefik Hub >= v3.20.0-ea.1." }}
-  {{- end }}
-
-  {{- if and $.Values.hub.hardened (semverCompare "<v3.21.0-ea" $hubVersion) }}
-    {{ fail "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
-  {{- end }}
-
-  {{- if and $.Values.hub.apimanagement.openApi.refreshInterval (semverCompare "<v3.21.0-0" $hubVersion) }}
-    {{ fail "ERROR: hub.apimanagement.openApi.refreshInterval is only available for Traefik Hub >= v3.21.0." }}
-  {{- end }}
-
-  {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}
-    {{- range $childName, $childConfig := $.Values.hub.providers.multicluster.children }}
-      {{- if or (($childConfig.serversTransport).forwardingTimeouts).readTimeout (($childConfig.serversTransport).forwardingTimeouts).writeTimeout }}
-        {{ fail "ERROR: hub.providers.multicluster.children.<name>.serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for Traefik Hub >= v3.20.0-ea.7." }}
-      {{- end }}
+  {{- range $name, $config := .Values.ingressRoute }}
+    {{- if regexMatch "[A-Z]" $name }}
+      {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase)." $name) }}
     {{- end }}
   {{- end }}
 
-  {{- if and $.Values.hub.providers.ec2.enabled (semverCompare "<v3.21.0-0" $hubVersion) }}
-    {{ fail "ERROR: hub.providers.ec2 is only available for Traefik Hub >= v3.21.0." }}
+  {{- if and (semverCompare "<v3.6.2-0" $version) (.Values.providers.kubernetesIngressNGINX).enabled}}
+    {{- fail "ERROR: Kubernetes Ingress NGINX provider is only available for traefik >= v3.6.2." }}
   {{- end }}
 
-  {{- if $.Values.hub.providers.ec2.enabled }}
-    {{- range $idx, $filter := $.Values.hub.providers.ec2.filters }}
-      {{- if not $filter.name }}
-        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty name." $idx) }}
+  {{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (not $.Values.hub.token) }}
+    {{- fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub." }}
+  {{- end }}
+
+  {{- with .Values.providers.kubernetesIngressNGINX }}
+    {{- if and (semverCompare "<v3.7.0-0" $version) .enabled (or
+      (ne .proxyRequestBuffering nil)
+      (gt (.clientBodyBufferSize | int) 0)
+      (gt (.proxyBodySize | int) 0)
+      (ne .proxyBuffering nil)
+      (gt (.proxyBufferSize | int) 0)
+      (gt (.proxyBuffersNumber | int) 0)
+      (gt (.proxyConnectTimeout | int) 0)
+      (gt (.proxyReadTimeout | int) 0)
+      (gt (.proxySendTimeout | int) 0)
+      (not (empty .proxyNextUpstream))
+      (gt (.proxyNextUpstreamTries | int) 0)
+      (gt (.proxyNextUpstreamTimeout | int) 0)
+      (not (empty .customHTTPErrors))
+      (gt (.upstreamKeepaliveTimeout | int) 0)
+      (ne .allowCrossNamespaceResources nil)
+      (not (empty .globalAllowedResponseHeaders))
+      (ne .allowSnippetAnnotations nil)
+      (ne .httpEntryPoint "web")
+      (ne .httpsEntryPoint "websecure")
+      )}}
+      {{- fail "ERROR: some Kubernetes Ingress NGINX provider options require traefik >= v3.7.0." }}
+    {{- end }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0-ea.2" $version) (ne (.Values.providers.kubernetesIngressNGINX).strictValidatePathType nil) }}
+    {{- fail "ERROR: Kubernetes Ingress NGINX provider strictValidatePathType option requires traefik >= v3.7.0-ea.2." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0-rc.1" $version) (not (empty .Values.providers.precedence)) }}
+    {{- fail "ERROR: providers.precedence option requires traefik >= v3.7.0-rc.1." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0-rc.1" $version) (not (empty (.Values.providers.kubernetesIngressNGINX).globalAuthUrl)) }}
+    {{- fail "ERROR: Kubernetes Ingress NGINX provider globalAuthUrl option requires traefik >= v3.7.0-rc.1." }}
+  {{- end }}
+
+  {{- if and (not .Values.experimental.otlpLogs) (or (.Values.log.otlp.enabled) (.Values.accessLog.otlp.enabled))}}
+    {{- fail "ERROR: otlp on logs or access logs is an experimental feature and needs experimental.otlpLogs=true." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0-0" $version) .Values.accessLog.dualOutput }}
+    {{- fail "ERROR: accesslog.dualOutput is only available for traefik >= v3.7.0." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.3-0" $version) .Values.accessLog.fields.queryParameters.defaultMode }}
+    {{- fail "ERROR: accesslog.fields.queryParameters.defaultmode is only available for traefik >= v3.7.3." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.0-0" $version) .Values.global.notAppendXForwardedFor }}
+    {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.1-0" $version) (or
+      (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
+      (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
+      (not (empty .Values.providers.kubernetesGateway.crossProviderNamespaces))
+      ) }}
+    {{- fail "ERROR: providers.kubernetes{CRD,Ingress,Gateway}.crossProviderNamespaces is only available for traefik >= v3.7.1" }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.3-0" $version) (or
+      (not (empty .Values.providers.kubernetesGateway.qps))
+      (not (empty .Values.providers.kubernetesGateway.burst))
+      ) }}
+    {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
+  {{- end }}
+
+  {{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
+  {{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
+    {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.11-0" $version) (not (empty .Values.providers.kubernetesCRD.defaultTLSResourcesNamespace)) }}
+    {{- fail "ERROR: providers.kubernetesCRD.defaultTLSResourcesNamespace is only available for traefik >= v3.7.11." }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.7.11-0" $version) .Values.core.strictTLSOptions }}
+    {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
+  {{- end }}
+
+  {{- range $name, $config := .Values.ports }}
+    {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
+      {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+    {{- end }}
+    {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
+      {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
+    {{- end }}
+    {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
+      {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
+    {{- end }}
+    {{- if and $config.uplink (empty $.Values.hub.token) }}
+      {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}
+    {{- end }}
+  {{- end }}
+
+  {{- if and (semverCompare "<v3.6.4-0" $version) (or
+      (eq .Values.ports.websecure.http.sanitizePath false)
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedBackSlash
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedNullCharacter
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedSemicolon
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedPercent
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedQuestionMark
+      .Values.ports.websecure.http.encodedCharacters.allowEncodedHash )}}
+    {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
+  {{- end }}
+
+  {{- if and $.Values.hub.hardened (eq (include "traefik.hub.enabled" $) "false") }}
+    {{ fail "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled." }}
+  {{- end }}
+
+  {{- if eq (include "traefik.hub.enabled" $) "true" -}}
+    {{- $hubVersion := include "traefik.hubVersion" $ }}
+    {{- if not $hubVersion }}
+      {{- if $.Values.image.digest }}
+        {{ fail "When using Traefik Hub with image.digest, versionOverride must be set." }}
+      {{- else }}
+        {{- $hubVersion = index $.Chart.Annotations "traefik.io/hub-max-version" }}
       {{- end }}
-      {{- if not $filter.values }}
-        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty values list." $idx) }}
-      {{- end }}
-      {{- if eq $filter.name "instance-state-name" }}
-        {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] uses instance-state-name, which is reserved by the provider." $idx) }}
-      {{- end }}
-      {{- range $field, $_ := $filter }}
-        {{- if not (has $field (list "name" "values")) }}
-          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] does not support field %s, only name and values are allowed." $idx $field) }}
+    {{- end -}}
+
+    {{/* Consider non semver versions as latest one  */}}
+    {{- if not (regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $hubVersion)) -}}
+      {{ $hubVersion = "v3.99" }}
+    {{- end }}
+
+    {{- $hubMinVersion := index $.Chart.Annotations "traefik.io/hub-min-version" }}
+    {{- $hubMaxVersion := index $.Chart.Annotations "traefik.io/hub-max-version" }}
+    {{- if semverCompare (printf "<%s-0" $hubMinVersion) $hubVersion }}
+      {{ fail (printf "ERROR: this Chart supports *only* Traefik Hub >= %s." $hubMinVersion) }}
+    {{- end }}
+    {{/* Only a major-version jump is a hard failure; minor/patch above max is just a warning (see NOTES.txt). */}}
+    {{- if eq (include "traefik.isMajorAboveMax" (dict "version" $hubVersion "max" $hubMaxVersion)) "true" }}
+      {{ fail (printf "ERROR: This Chart does not support Traefik Hub %s, which is a major version above the supported %s." $hubVersion $hubMaxVersion) }}
+    {{- end }}
+
+    {{- if and (not $.Values.hub.token) (semverCompare "<v3.21.0-ea" $hubVersion) }}
+      {{ fail "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
+    {{- end }}
+
+    {{- if and (not $.Values.tracing.otlp.enabled) .Values.hub.tracing.additionalTraceHeaders.enabled }}
+      {{ fail "ERROR: additionalTraceHeaders needs tracing.otlp to be enabled."}}
+    {{- end }}
+
+    {{- with .Values.hub.pluginRegistry.sources }}
+      {{- range $pluginName, $pluginConf := . }}
+        {{- if not (hasKey $.Values.experimental.plugins $pluginName) }}
+           {{ fail (printf "ERROR: pluginRegistry source %s is not used in experimental.plugins." $pluginName) }}
         {{- end }}
       {{- end }}
     {{- end }}
-  {{- end }}
 
-  {{- if and $.Values.hub.providers.nutanixPrismCentral.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
-    {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
-  {{- end }}
+    {{- range $portName, $config := .Values.ports }}
+      {{- if $config.uplink }}
+        {{- if semverCompare "<v3.20.0-0" $hubVersion }}
+          {{ fail "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."}}
+        {{- end }}
+        {{- if (not $.Values.hub.providers.multicluster.enabled) }}
+          {{ fail "ERROR: uplink EntryPoints requires the hub multicluster provider" }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
 
+    {{- if and (.Values.providers.kubernetesIngressNGINX.modsec).enabled (semverCompare "<v3.20.0-ea.8" $hubVersion) }}
+      {{ fail "ERROR: Kubernetes Ingress NGINX provider modsec option requires Traefik Hub >= v3.20.0-ea.8." }}
+    {{- end }}
+
+    {{- if and $.Values.hub.providers.multicluster.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
+      {{ fail "ERROR: hub.providers.multicluster is only available for Traefik Hub >= v3.20.0-ea.1." }}
+    {{- end }}
+
+    {{- if and $.Values.hub.hardened (semverCompare "<v3.21.0-ea" $hubVersion) }}
+      {{ fail "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
+    {{- end }}
+
+    {{- if and $.Values.hub.apimanagement.openApi.refreshInterval (semverCompare "<v3.21.0-0" $hubVersion) }}
+      {{ fail "ERROR: hub.apimanagement.openApi.refreshInterval is only available for Traefik Hub >= v3.21.0." }}
+    {{- end }}
+
+    {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}
+      {{- range $childName, $childConfig := $.Values.hub.providers.multicluster.children }}
+        {{- if or (($childConfig.serversTransport).forwardingTimeouts).readTimeout (($childConfig.serversTransport).forwardingTimeouts).writeTimeout }}
+          {{ fail "ERROR: hub.providers.multicluster.children.<name>.serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for Traefik Hub >= v3.20.0-ea.7." }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
+    {{- if and $.Values.hub.providers.ec2.enabled (semverCompare "<v3.21.0-0" $hubVersion) }}
+      {{ fail "ERROR: hub.providers.ec2 is only available for Traefik Hub >= v3.21.0." }}
+    {{- end }}
+
+    {{- if $.Values.hub.providers.ec2.enabled }}
+      {{- range $idx, $filter := $.Values.hub.providers.ec2.filters }}
+        {{- if not $filter.name }}
+          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty name." $idx) }}
+        {{- end }}
+        {{- if not $filter.values }}
+          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] requires a non-empty values list." $idx) }}
+        {{- end }}
+        {{- if eq $filter.name "instance-state-name" }}
+          {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] uses instance-state-name, which is reserved by the provider." $idx) }}
+        {{- end }}
+        {{- range $field, $_ := $filter }}
+          {{- if not (has $field (list "name" "values")) }}
+            {{ fail (printf "ERROR: hub.providers.ec2.filters[%d] does not support field %s, only name and values are allowed." $idx $field) }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
+
+    {{- if and $.Values.hub.providers.nutanixPrismCentral.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
+      {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
+    {{- end }}
+
+  {{- end }}
 {{- end }}

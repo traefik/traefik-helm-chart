@@ -1089,3 +1089,11 @@ tests:
           defaultTLSResourcesNamespace: traefik
     asserts:
       - notFailedTemplate: {}
+  - it: should pass when using an unsupported tag but strict validation is disabled
+    set:
+      image:
+        tag: v0.0.1
+      strictValidation:
+        enabled: false
+    asserts:
+      - notFailedTemplate: {}

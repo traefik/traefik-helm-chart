@@ -3244,6 +3244,16 @@
             "description": "Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes)",
             "type": "object"
         },
+        "strictValidation": {
+            "description": "Validate chart against the given traefik version",
+            "type": "object",
+            "properties": {
+                "enabled": {
+                    "description": "Enable strict validation. If disabled no hard requirements are checked.",
+                    "type": "boolean"
+                }
+            }
+        },
         "tlsOptions": {
             "description": "TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsoption/) When using `labelSelector`, you'll need to set labels on tlsOption accordingly. See EXAMPLE.md for details.",
             "type": "object"

@@ -573,6 +573,8 @@ Kubernetes: `>=1.25.0-0`
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |
 | startupProbe | object | `{}` | Define [Startup Probe](https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/#define-startup-probes) |
+| strictValidation | object | `{"enabled":true}` | Validate chart against the given traefik version |
+| strictValidation.enabled | bool | `true` | Enable strict validation. If disabled no hard requirements are checked. |
 | tlsOptions | object | `{}` | TLS Options are created as [TLSOption CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsoption/) When using `labelSelector`, you'll need to set labels on tlsOption accordingly. See EXAMPLE.md for details. |
 | tlsStore | object | `{}` | TLS Store are created as [TLSStore CRDs](https://doc.traefik.io/traefik/reference/routing-configuration/kubernetes/crd/tls/tlsstore/). This is useful if you want to set a default certificate. See EXAMPLE.md for details. |
 | tolerations | list | `[]` | Tolerations allow the scheduler to schedule pods with matching taints. |

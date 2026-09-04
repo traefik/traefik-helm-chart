@@ -1296,6 +1296,11 @@ nameOverride: ""
 # -- Overrides the resource name for templates (i.e deployment, service, etc..)
 fullnameOverride: ""
 
+# -- Validate chart against the given traefik version
+strictValidation:
+  # -- Enable strict validation. If disabled no hard requirements are checked.
+  enabled: true
+
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:  # @schema additionalProperties: false
   # -- (bool) Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik
