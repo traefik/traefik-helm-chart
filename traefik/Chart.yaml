@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.4.0
+version: 41.5.0
 # renovate: image=traefik
 appVersion: v3.7.13
 kubeVersion: '>=1.25.0-0'
@@ -28,16 +28,10 @@ annotations:
   traefik.io/hub-max-version: v3.20.13
   artifacthub.io/changes: |
     - kind: fixed
-      description: "fix: hub/proxy mapping"
-    - kind: fixed
-      description: "fix(rbac): restore secretResourceNames for namespaced role"
+      description: "fix: grant ConfigMap write verbs to namespaced role"
     - kind: added
-      description: "feat: deprecate `underscoreHeadersStrategy` value"
+      description: "feat(deps): update traefik docker tag to v3.7.13"
     - kind: added
-      description: "feat: add `aliasHeadersStrategy` value"
+      description: "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.13"
     - kind: added
-      description: "feat(hub): support apiManagement OpenAPI refresh interval"
-    - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.12"
-    - kind: added
-      description: "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.12"
+      description: "feat(CRDs): update Traefik Hub to v1.34.0"
