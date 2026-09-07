@@ -1,5 +1,17 @@
 # Change Log
 
+## 41.5.0  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-09-07
+
+* fix: grant ConfigMap write verbs to namespaced role
+* feat(deps): update traefik docker tag to v3.7.13
+* feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.13
+* feat(CRDs): update Traefik Hub to v1.34.0
+* chore(release): 🚀 publish 41.5.0
+
+
+
 ## 41.4.0  ![AppVersion: v3.7.12](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.12&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-08-27
