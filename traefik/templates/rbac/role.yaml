@@ -152,6 +152,14 @@ rules:
       - watch
   {{- if $.Values.hub.apimanagement.enabled }}
   - apiGroups:
+      - ""
+    resources:
+      - configmaps
+    verbs:
+      - create
+      - patch
+      - delete
+  - apiGroups:
       - networking.k8s.io
     resources:
       - ingresses

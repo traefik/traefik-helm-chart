@@ -946,6 +946,91 @@ tests:
               - update
               - patch
 
+  - it: should contain ConfigMap write permissions for hub API management in namespaced mode
+    set:
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+
+  - it: should contain ConfigMap write permissions in every hub namespace
+    set:
+      hub:
+        token: xxx
+        namespaces:
+          - bar
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 2
+        template: rbac/role.yaml
+      - template: rbac/role.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+      - template: rbac/role.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+
+  - it: should not contain ConfigMap write permissions in namespaced mode without hub API management
+    set:
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: false
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+
   - it: should provide expected RBACS for Hub version >3.3.2 and <3.7.0
     set:
       image:
