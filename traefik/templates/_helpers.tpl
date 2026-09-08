@@ -575,3 +575,17 @@ Define hub token mount path
 {{- define "traefik.hubTokenFilePath" }}
 {{- printf "%s/%s" (.Values.hub.tokenMountPath | trimSuffix "/") "token" -}}
 {{- end -}}
+
+{{/*
+Names of the hub.transparencyLogs drivers holding at least one value, space-separated.
+A driver is what enables transparency logs, so this doubles as the feature switch.
+*/}}
+{{- define "traefik.hub.transparencyLogsDrivers" -}}
+    {{- $drivers := list -}}
+    {{- range $name, $config := (.Values.hub.transparencyLogs).driver -}}
+        {{- if and (kindIs "map" $config) (compact (values $config)) -}}
+            {{- $drivers = append $drivers $name -}}
+        {{- end -}}
+    {{- end -}}
+    {{- join " " $drivers -}}
+{{- end -}}
