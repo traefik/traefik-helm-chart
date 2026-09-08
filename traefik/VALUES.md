@@ -119,6 +119,7 @@ Kubernetes: `>=1.25.0-0`
 | experimental.plugins | object | `{}` | Enable experimental plugins |
 | extraObjects | list | `[]` | Extra objects to deploy (value evaluated as a template)  In some cases, it can avoid the need for additional, extended or adhoc deployments. See #595 for more details and traefik/tests/values/extra.yaml for example. |
 | fullnameOverride | string | `""` | Overrides the resource name for templates (i.e deployment, service, etc..) |
+| gateway.allowedListeners | string | `nil` | Configure which namespaces can attach [ListenerSets](https://gateway-api.sigs.k8s.io/guides/user-guides/listener-set/) to this Gateway. See [AllowedListeners](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.AllowedListeners). |
 | gateway.annotations | object | `{}` | Additional gateway annotations (e.g. for cert-manager.io/issuer) |
 | gateway.defaultScope | string | `nil` | Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways) by setting the `defaultScope` field (e.g. `All` or `Namespace`). |
 | gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
