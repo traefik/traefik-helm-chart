@@ -1450,6 +1450,119 @@
                             }
                         }
                     }
+                },
+                "transparencyLogs": {
+                    "description": "Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token and Traefik Hub \u003e= v3.21.",
+                    "type": "object",
+                    "properties": {
+                        "checkpointInterval": {
+                            "description": "Interval between checkpoint writes, as a Go duration. Must be at least `100ms`.",
+                            "type": "string"
+                        },
+                        "debug": {
+                            "description": "Also store the full rendered log line, not only its hash. Not recommended in production. Default: false.",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "driver": {
+                            "description": "Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set.",
+                            "type": "object",
+                            "properties": {
+                                "aws": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bucket": {
+                                            "description": "Name of the S3 bucket used to store log state.",
+                                            "type": "string"
+                                        },
+                                        "bucketPrefix": {
+                                            "description": "Prefix prepended to all log resource paths, to store multiple logs in one bucket.",
+                                            "type": "string"
+                                        },
+                                        "dsn": {
+                                            "description": "DSN of the MySQL instance to use. It carries the database password: treat it as a secret.",
+                                            "type": "string"
+                                        },
+                                        "maxIdleConns": {
+                                            "description": "Maximum number of idle connections in the MySQL connection pool.",
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "minimum": 0
+                                        },
+                                        "maxOpenConns": {
+                                            "description": "Maximum number of open connections to the MySQL database.",
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "gcp": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bucket": {
+                                            "description": "Name of the GCS bucket used to store log state.",
+                                            "type": "string"
+                                        },
+                                        "bucketPrefix": {
+                                            "description": "Prefix prepended to all log resource paths, to store multiple logs in one bucket.",
+                                            "type": "string"
+                                        },
+                                        "spanner": {
+                                            "description": "GCP resource URI of the Spanner database instance to use.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "posix": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {
+                                            "description": "Local filesystem path where the transparency log is stored.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "signerPrivateKey": {
+                            "description": "Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md.",
+                            "type": "string"
+                        },
+                        "witnessGroup": {
+                            "description": "Witnesses cosigning each checkpoint.",
+                            "type": "object",
+                            "properties": {
+                                "threshold": {
+                                    "description": "Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.",
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ],
+                                    "minimum": 0
+                                },
+                                "witnesses": {
+                                    "description": "Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: \"\u003curl\u003e\", key: \"\u003cpath-or-content\u003e\" }` entries.",
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
                 }
             },
             "additionalProperties": false

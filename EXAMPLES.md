@@ -946,6 +946,57 @@ extraObjects:
 > This code is only written for demonstration purpose.
 > The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
 
+## Use Traefik Hub transparency logs
+
+Transparency logs keep a tamper-evident record of logs and access logs. They are enabled as soon as
+a `hub.transparencyLogs.driver` is set, and require a license token and Traefik Hub
+>= `v3.21.0-ea.3`: they are not supported in proxy mode.
+
+`signerPrivateKey` and each witness `key` are file paths: the keys, generated with
+`traefik-hub keygen`, need to be mounted in the pod. With the `posix` driver, the tree also needs a
+writable volume.
+
+```yaml
+hub:
+  token: traefik-hub-license
+  transparencyLogs:
+    driver:
+      posix:
+        path: /data/transparency-logs
+    signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    checkpointInterval: 10s
+    witnessGroup:
+      threshold: 1
+      witnesses:
+        - url: https://witness.example.com
+          key: /etc/traefik-hub/transparency-logs/witness-public.key
+
+image:
+  registry: ghcr.io
+  repository: traefik/traefik-hub
+  tag: v3.21.0-ea.3
+
+# Mount the signing key and the witness public key from a Secret
+deployment:
+  additionalVolumes:
+    - name: transparency-logs-keys
+      secret:
+        secretName: transparency-logs-keys
+    - name: transparency-logs-data
+      persistentVolumeClaim:
+        claimName: transparency-logs-data
+
+additionalVolumeMounts:
+  - name: transparency-logs-keys
+    mountPath: /etc/traefik-hub/transparency-logs
+    readOnly: true
+  - name: transparency-logs-data
+    mountPath: /data/transparency-logs
+```
+
+> [!NOTE]
+> A wrong `signerPrivateKey` path makes Traefik Hub report `malformed verifier id` on startup.
+
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 
 In Traefik Proxy, ACME certificates are stored in a JSON file.

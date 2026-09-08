@@ -1089,3 +1089,93 @@ tests:
           defaultTLSResourcesNamespace: traefik
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using transparency logs on a Traefik Hub older than v3.21.0-ea.3
+    set:
+      image:
+        tag: v3.21.0-ea.2
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs is only available for Traefik Hub >= v3.21.0-ea.3, set image.tag accordingly."
+  - it: should pass when using transparency logs with a supported Traefik Hub version
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using transparency logs in proxy mode
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        enabled: true
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs requires a license, it is not supported in proxy mode. Set hub.token."
+  - it: should fail when more than one transparency logs driver is set
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+            aws:
+              bucket: my-bucket
+              dsn: "user:password@tcp(mysql:3306)/tlog"
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: only one hub.transparencyLogs.driver can be set, got: aws, posix."
+  - it: should fail when transparency logs are set without a signing key
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.signerPrivateKey must be set."
+  - it: should fail when the witness threshold exceeds the number of witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 2
+            witnesses:
+              - url: https://witness.example.com
+                key: /etc/traefik-hub/transparency-logs/witness-public.key
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold 2 exceeds the 1 configured witnesses."

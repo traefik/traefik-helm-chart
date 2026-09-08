@@ -273,4 +273,24 @@
     {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
   {{- end }}
 
+  {{- with (compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $))) }}
+    {{- if gt (len .) 1 }}
+      {{ fail (printf "ERROR: only one hub.transparencyLogs.driver can be set, got: %s." (join ", " .)) }}
+    {{- end }}
+    {{- if semverCompare "<v3.21.0-ea.3" $hubVersion }}
+      {{ fail "ERROR: hub.transparencyLogs is only available for Traefik Hub >= v3.21.0-ea.3, set image.tag accordingly." }}
+    {{- end }}
+    {{- if not $.Values.hub.token }}
+      {{ fail "ERROR: hub.transparencyLogs requires a license, it is not supported in proxy mode. Set hub.token." }}
+    {{- end }}
+    {{- with $.Values.hub.transparencyLogs }}
+      {{- if not .signerPrivateKey }}
+        {{ fail "ERROR: hub.transparencyLogs.signerPrivateKey must be set." }}
+      {{- end }}
+      {{- if and .witnessGroup .witnessGroup.threshold (gt (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
+        {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
 {{- end }}

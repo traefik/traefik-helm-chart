@@ -1,0 +1,152 @@
+suite: Traefik Hub transparency logs
+templates:
+  - deployment.yaml
+set:
+  image:
+    registry: ghcr.io
+    repository: traefik/traefik-hub
+    tag: v3.21.0-ea.3
+  hub:
+    token: "xxx"
+tests:
+  - it: should not configure transparency logs by default
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--hub.transparencyLogs"
+
+  - it: should not configure transparency logs without a driver
+    set:
+      hub:
+        transparencyLogs:
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          checkpointInterval: 10s
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--hub.transparencyLogs"
+
+  - it: should configure the posix driver
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          checkpointInterval: 10s
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.posix.path=/data/transparency-logs"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.signerPrivateKey=/etc/traefik-hub/transparency-logs/private.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.checkpointInterval=10s"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.debug=false"
+
+  - it: should configure the gcp driver
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            gcp:
+              bucket: my-bucket
+              bucketPrefix: my-prefix
+              spanner: projects/p/instances/i/databases/d
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.gcp.bucket=my-bucket"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.gcp.bucketPrefix=my-prefix"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.gcp.spanner=projects/p/instances/i/databases/d"
+
+  - it: should configure the aws driver
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            aws:
+              bucket: my-bucket
+              dsn: "user:password@tcp(mysql:3306)/tlog"
+              maxOpenConns: 10
+              maxIdleConns: 2
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.aws.bucket=my-bucket"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.aws.dsn=user:password@tcp(mysql:3306)/tlog"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.aws.maxOpenConns=10"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.driver.aws.maxIdleConns=2"
+
+  - it: should only render the configured driver
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--hub.transparencyLogs.driver.(gcp|aws)"
+
+  - it: should render debug when enabled
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          debug: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.debug=true"
+
+  - it: should render each witness with its index
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 2
+            witnesses:
+              - url: https://witness1.example.com
+                key: /etc/traefik-hub/transparency-logs/witness1-public.key
+              - url: https://witness2.example.com
+                key: /etc/traefik-hub/transparency-logs/witness2-public.key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.threshold=2"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.witnesses[0].url=https://witness1.example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.witnesses[0].key=/etc/traefik-hub/transparency-logs/witness1-public.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.witnesses[1].url=https://witness2.example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.witnesses[1].key=/etc/traefik-hub/transparency-logs/witness2-public.key"
