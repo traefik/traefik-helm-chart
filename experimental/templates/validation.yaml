@@ -1,0 +1,6 @@
+{{- /*
+Renders nothing but always runs the validation rules — they fire on every
+install/upgrade regardless of which other templates are gated, and give tests
+a single canonical "validation fires" target.
+*/ -}}
+{{- include "traefik.validate" . -}}
