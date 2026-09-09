@@ -278,7 +278,9 @@ Kubernetes: `>=1.25.0-0`
 | hub.transparencyLogs.driver.posix.path | string | `""` | Local filesystem path where the transparency log is stored. |
 | hub.transparencyLogs.signerPrivateKey | string | `""` | Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md. |
 | hub.transparencyLogs.witnessGroup | object | See _values.yaml_ | Witnesses cosigning each checkpoint. |
+| hub.transparencyLogs.witnessGroup.failOpen | bool | `nil` | Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false. |
 | hub.transparencyLogs.witnessGroup.threshold | int | `nil` | Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1. |
+| hub.transparencyLogs.witnessGroup.timeout | string | `5s` when unset | Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration. |
 | hub.transparencyLogs.witnessGroup.witnesses | list | `[]` | Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries. |
 | image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
