@@ -952,9 +952,29 @@ Transparency logs keep a tamper-evident record of logs and access logs. They are
 a `hub.transparencyLogs.driver` is set, and require a license token and Traefik Hub
 >= `v3.21.0-ea.3`: they are not supported in proxy mode.
 
-`signerPrivateKey` and each witness `key` are file paths: the keys, generated with
-`traefik-hub keygen`, need to be mounted in the pod. With the `posix` driver, the tree also needs a
-writable volume.
+`signerPrivateKey` and each witness `key` are file paths, so the keys have to exist in a `Secret`
+before installing the chart. Generate the log's own keypair with the `keygen` command shipped in the
+Traefik Hub image:
+
+```bash
+mkdir -p keys
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
+  ghcr.io/traefik/traefik-hub:v3.21.0-ea.3 \
+  keygen --name my-log --outputDir /keys
+```
+
+This writes `keys/private.key` and `keys/public.key`. `--name` becomes the checkpoint origin, so
+anyone verifying the log later needs that exact value. Share `public.key` with your witness — it has
+to add your log to its own configuration before it cosigns anything — and use the witness public key
+it gives you back:
+
+```bash
+kubectl create secret generic transparency-logs-keys -n traefik \
+  --from-file=private.key=./keys/private.key \
+  --from-file=witness-public.key=./witness-public.key
+```
+
+Then mount that `Secret` in the pod. With the `posix` driver, the tree also needs a writable volume:
 
 ```yaml
 hub:
@@ -976,7 +996,6 @@ image:
   repository: traefik/traefik-hub
   tag: v3.21.0-ea.3
 
-# Mount the signing key and the witness public key from a Secret
 deployment:
   additionalVolumes:
     - name: transparency-logs-keys
