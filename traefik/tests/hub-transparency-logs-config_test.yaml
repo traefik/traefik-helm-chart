@@ -119,6 +119,44 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.transparencyLogs.debug=true"
 
+  - it: should render the witness group timeout and failOpen
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            timeout: 30s
+            failOpen: true
+            witnesses:
+              - url: https://witness.example.com
+                key: /etc/traefik-hub/transparency-logs/witness-public.key
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.timeout=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.transparencyLogs.witnessGroup.failOpen=true"
+
+  - it: should not render the witness group defaults
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            witnesses:
+              - url: https://witness.example.com
+                key: /etc/traefik-hub/transparency-logs/witness-public.key
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--hub.transparencyLogs.witnessGroup.(threshold|timeout|failOpen)="
+
   - it: should render each witness with its index
     set:
       hub:

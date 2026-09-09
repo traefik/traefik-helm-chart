@@ -1644,6 +1644,11 @@ hub:  # @schema additionalProperties: false
     witnessGroup:
       # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
       threshold:  # @schema type:[integer, null]; minimum:0
+      # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
+      # @default -- `5s` when unset
+      timeout: ""
+      # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
+      failOpen:  # @schema type:[boolean, null]
       # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
       witnesses: []  # @schema item:object
 
