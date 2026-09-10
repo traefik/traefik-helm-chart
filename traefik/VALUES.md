@@ -263,6 +263,25 @@ Kubernetes: `>=1.25.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
+| hub.transparencyLogs | object | See _values.yaml_ | Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token and Traefik Hub >= v3.21. |
+| hub.transparencyLogs.checkpointInterval | string | `1s` when unset | Interval between checkpoint writes, as a Go duration. Must be at least `100ms`. |
+| hub.transparencyLogs.debug | bool | `nil` | Also store the full rendered log line, not only its hash. Not recommended in production. Default: false. |
+| hub.transparencyLogs.driver | object | `{"aws":{"bucket":"","bucketPrefix":"","dsn":"","maxIdleConns":null,"maxOpenConns":null},"gcp":{"bucket":"","bucketPrefix":"","spanner":""},"posix":{"path":""}}` | Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set. |
+| hub.transparencyLogs.driver.aws.bucket | string | `""` | Name of the S3 bucket used to store log state. |
+| hub.transparencyLogs.driver.aws.bucketPrefix | string | `""` | Prefix prepended to all log resource paths, to store multiple logs in one bucket. |
+| hub.transparencyLogs.driver.aws.dsn | string | `""` | DSN of the MySQL instance to use. It carries the database password: treat it as a secret. |
+| hub.transparencyLogs.driver.aws.maxIdleConns | int | `nil` | Maximum number of idle connections in the MySQL connection pool. |
+| hub.transparencyLogs.driver.aws.maxOpenConns | int | `nil` | Maximum number of open connections to the MySQL database. |
+| hub.transparencyLogs.driver.gcp.bucket | string | `""` | Name of the GCS bucket used to store log state. |
+| hub.transparencyLogs.driver.gcp.bucketPrefix | string | `""` | Prefix prepended to all log resource paths, to store multiple logs in one bucket. |
+| hub.transparencyLogs.driver.gcp.spanner | string | `""` | GCP resource URI of the Spanner database instance to use. |
+| hub.transparencyLogs.driver.posix.path | string | `""` | Local filesystem path where the transparency log is stored. |
+| hub.transparencyLogs.signerPrivateKey | string | `""` | Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md. |
+| hub.transparencyLogs.witnessGroup | object | See _values.yaml_ | Witnesses cosigning each checkpoint. |
+| hub.transparencyLogs.witnessGroup.failOpen | bool | `nil` | Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false. |
+| hub.transparencyLogs.witnessGroup.threshold | int | `nil` | Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1. |
+| hub.transparencyLogs.witnessGroup.timeout | string | `5s` when unset | Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration. |
+| hub.transparencyLogs.witnessGroup.witnesses | list | `[]` | Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries. |
 | image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
 | image.registry | string | `nil` | Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true). |
