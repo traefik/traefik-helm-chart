@@ -1130,6 +1130,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: hub.transparencyLogs requires a license, it is not supported in proxy mode. Set hub.token."
+  - it: should fail when using transparency logs without Traefik Hub
+    set:
+      hub:
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs requires a license, it is not supported in proxy mode. Set hub.token."
   - it: should fail when more than one transparency logs driver is set
     set:
       image:
