@@ -1,5 +1,83 @@
 # Change Log
 
+## 41.6.0  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-09-16
+
+* fix: use kubeversion to determine PDB apiVersion
+* feat(hub): support transparency logs
+* chore(release): 🚀 publish 41.6.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 6bef216..d3132ec 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1599,6 +1599,59 @@ hub:  # @schema additionalProperties: false
+   # -- (bool) Enable export of error logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
+ 
++  # @schema additionalProperties: false
++  # -- Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured.
++  # Requires a valid license token and Traefik Hub >= v3.21.
++  # @default -- See _values.yaml_
++  transparencyLogs:
++    # @schema additionalProperties: false
++    # -- Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set.
++    driver:
++      # @schema additionalProperties: false
++      posix:
++        # -- Local filesystem path where the transparency log is stored.
++        path: ""
++      # @schema additionalProperties: false
++      gcp:
++        # -- Name of the GCS bucket used to store log state.
++        bucket: ""
++        # -- Prefix prepended to all log resource paths, to store multiple logs in one bucket.
++        bucketPrefix: ""
++        # -- GCP resource URI of the Spanner database instance to use.
++        spanner: ""
++      # @schema additionalProperties: false
++      aws:
++        # -- Name of the S3 bucket used to store log state.
++        bucket: ""
++        # -- Prefix prepended to all log resource paths, to store multiple logs in one bucket.
++        bucketPrefix: ""
++        # -- DSN of the MySQL instance to use. It carries the database password: treat it as a secret.
++        dsn: ""
++        # -- (int) Maximum number of open connections to the MySQL database.
++        maxOpenConns:  # @schema type:[integer, null]; minimum:0
++        # -- (int) Maximum number of idle connections in the MySQL connection pool.
++        maxIdleConns:  # @schema type:[integer, null]; minimum:0
++    # -- Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md.
++    signerPrivateKey: ""
++    # -- Interval between checkpoint writes, as a Go duration. Must be at least `100ms`.
++    # @default -- `1s` when unset
++    checkpointInterval: ""
++    # -- (bool) Also store the full rendered log line, not only its hash. Not recommended in production. Default: false.
++    debug:  # @schema type:[boolean, null]
++    # @schema additionalProperties: false
++    # -- Witnesses cosigning each checkpoint.
++    # @default -- See _values.yaml_
++    witnessGroup:
++      # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
++      threshold:  # @schema type:[integer, null]; minimum:0
++      # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
++      # @default -- `5s` when unset
++      timeout: ""
++      # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
++      failOpen:  # @schema type:[boolean, null]
++      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
++      witnesses: []  # @schema item:object
++
+   tracing:
+     additionalTraceHeaders:
+       # -- Tracing headers to duplicate.
+```
+
+
 ## 41.5.0  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-09-07

@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.5.0
+version: 41.6.0
 # renovate: image=traefik
 appVersion: v3.7.13
 kubeVersion: '>=1.25.0-0'
@@ -28,10 +28,6 @@ annotations:
   traefik.io/hub-max-version: v3.20.13
   artifacthub.io/changes: |
     - kind: fixed
-      description: "fix: grant ConfigMap write verbs to namespaced role"
+      description: "fix: use kubeversion to determine PDB apiVersion"
     - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.13"
-    - kind: added
-      description: "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.13"
-    - kind: added
-      description: "feat(CRDs): update Traefik Hub to v1.34.0"
+      description: "feat(hub): support transparency logs"
