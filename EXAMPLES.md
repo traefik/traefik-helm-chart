@@ -2003,12 +2003,13 @@ deployment:
   additionalContainers:
     - name: mcp-traefik
       image: traefik/mcp-server:v0.0.1
+      # The sidecar reads the Traefik API at its default address,
+      # http://localhost:8080, over the pod's shared network namespace.
       args:
-        - "-traefik.api-url=http://127.0.0.1:8080"
         # An address switches the transport from stdio to Streamable HTTP,
         # the only transport the MCP Gateway speaks.
         - "-mcp.address=:8090"
-        # The same file Traefik reads its own license from.
+        # The same file Traefik Hub reads its own license from.
         - "-license.token-file=/etc/secrets/token"
       ports:
         - name: mcp
@@ -2041,8 +2042,9 @@ deployment:
 > with a JSON-RPC error instead of exiting.
 
 The chart's Service does not publish port 8090, so add one, then route it through the MCP Gateway
-with a JWT middleware for authentication and an MCP middleware for authorization. Replace the issuer,
-the JWKS URL, the hostname, the certificate resolver and the group names with your own:
+with a JWT middleware for authentication and an MCP middleware for authorization. To try it without
+an identity provider, the JWT middleware below verifies tokens signed with a shared secret, and the
+route uses `mcp.docker.localhost` with the default self-signed certificate:
 
 ```yaml
 apiVersion: v1
@@ -2069,12 +2071,10 @@ metadata:
 spec:
   plugin:
     jwt:
-      trustedIssuers:
-        - issuer: https://auth.example.com
-          jwksUrl: https://auth.example.com/.well-known/jwks.json
-      wwwAuthenticate: >-
-        Bearer resource_metadata="https://mcp.example.com/.well-known/oauth-protected-resource/mcp"
-      forwardAuthorization: false
+      # /!\ Yes, you need to replace "changeme" with a better secret. /!\
+      # In production, use trustedIssuers with the jwksUrl of your identity
+      # provider instead.
+      signingSecret: changeme
 ---
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -2084,12 +2084,6 @@ metadata:
 spec:
   plugin:
     mcp:
-      resourceMetadata:
-        resource: https://mcp.example.com/mcp
-        authorizationServers:
-          - https://auth.example.com
-        scopesSupported:
-          - mcp:tools
       # Members of traefik-support may list and call every tool except
       # list_certificates, which is reserved to traefik-operators.
       defaultAction: deny
@@ -2121,33 +2115,38 @@ spec:
     - websecure
   routes:
     - kind: Rule
-      match: Host(`mcp.example.com`) && PathPrefix(`/mcp`)
+      match: Host(`mcp.docker.localhost`) && PathPrefix(`/mcp`)
       middlewares:
         - name: mcp-traefik-jwt
         - name: mcp-traefik-gateway
       services:
         - name: traefik-mcp
           port: 8090
-  tls:
-    certResolver: letsencrypt
+  tls: {}
 ```
 
-Check the sidecar from inside the cluster, then list the tools through the gateway with a token
-carrying the `traefik-support` group:
+Check the sidecar, mint a token carrying the `traefik-support` group with the shared secret, and
+list the tools through the gateway:
 
 ```bash
 kubectl logs -n traefik deploy/traefik -c mcp-traefik
 
-curl -H "Authorization: Bearer $TOKEN" \
+b64() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
+HEADER=$(printf '{"alg":"HS256","typ":"JWT"}' | b64)
+PAYLOAD=$(printf '{"sub":"me","groups":["traefik-support"],"exp":%s}' "$(( $(date +%s) + 3600 ))" | b64)
+SIGNATURE=$(printf '%s.%s' "$HEADER" "$PAYLOAD" | openssl dgst -sha256 -hmac changeme -binary | b64)
+TOKEN="$HEADER.$PAYLOAD.$SIGNATURE"
+
+curl -k -H "Authorization: Bearer $TOKEN" \
      -H 'Content-Type: application/json' \
      -H 'Accept: application/json, text/event-stream' \
      -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' \
-     https://mcp.example.com/mcp
+     https://mcp.docker.localhost/mcp
 ```
 
-Without a token the gateway answers 401 with a `WWW-Authenticate` header, a token from another
-group gets a `Forbidden` JSON-RPC error, and `traefik-support` gets every tool but `list_certificates`,
-which only `traefik-operators` can see and call.
+Without a token the gateway answers 401, a token from another group gets a `Forbidden` JSON-RPC
+error, and `traefik-support` gets every tool but `list_certificates`, which only `traefik-operators`
+can see and call.
 
 ## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 
