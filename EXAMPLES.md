@@ -1975,7 +1975,7 @@ hub:
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
 
-## Use Traefik Hub MCP Gateway with the Traefik MCP server as a sidecar
+## Use Traefik Hub Gateway with the Traefik MCP server as a sidecar
 
 The Traefik MCP server (`traefik/mcp-server` on Docker Hub and GHCR) exposes a live, read-only view
 of a running Traefik or Traefik Hub gateway to an AI agent: routers, services, middlewares, entry
@@ -1983,8 +1983,12 @@ points, certificates, and API Management resources. It reads the Traefik API and
 license token.
 
 This example runs it as a sidecar in the Traefik pod, listening on Streamable HTTP, and publishes it
-through the Traefik Hub MCP Gateway, which authenticates the caller with a JWT and authorizes each
-tool call. Both the sidecar and the MCP Gateway verify the same license, so `hub.token` is set once.
+through the Traefik Hub Gateway, whose MCP Gateway authenticates the caller with a JWT and authorizes
+each tool call. Both the sidecar and the MCP Gateway verify the same license, so `hub.token` is set
+once. The Service for port 8090, the two middlewares and the IngressRoute are shipped as
+`extraObjects`, so these values work as they are. To try it without an identity provider, the JWT
+middleware verifies tokens signed with a shared secret, and the route uses `mcp.docker.localhost`
+with the default self-signed certificate.
 
 ```yaml
 # The sidecar reads /api/rawdata, which is only served when the API is enabled.
@@ -2032,6 +2036,76 @@ deployment:
           memory: 48Mi
         limits:
           memory: 192Mi
+
+extraObjects:
+  # The chart's Service does not publish port 8090.
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-mcp
+    spec:
+      selector:
+        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+        app.kubernetes.io/instance: '{{ template "traefik.fullname" . }}-{{ .Release.Namespace }}'
+      ports:
+        - name: mcp
+          port: 8090
+          targetPort: mcp
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: mcp-traefik-jwt
+    spec:
+      plugin:
+        jwt:
+          # /!\ Yes, you need to replace "changeme" with a better secret. /!\
+          # In production, use trustedIssuers with the jwksUrl of your
+          # identity provider instead.
+          signingSecret: changeme
+  - apiVersion: traefik.io/v1alpha1
+    kind: Middleware
+    metadata:
+      name: mcp-traefik-gateway
+    spec:
+      plugin:
+        mcp:
+          # Members of traefik-support may list and call every tool except
+          # list_certificates, which is reserved to traefik-operators.
+          defaultAction: deny
+          policies:
+            - match: Contains(`mcp.method`, `/list`) && Contains(`jwt.groups`, `traefik-support`)
+              action: allow
+            - match: Equals(`mcp.method`, `tools/call`) && Equals(`mcp.params.name`, `list_certificates`) && Contains(`jwt.groups`, `traefik-operators`)
+              action: allow
+            - match: Equals(`mcp.method`, `tools/call`) && Equals(`mcp.params.name`, `list_certificates`)
+              action: deny
+            - match: Equals(`mcp.method`, `tools/call`) && Contains(`jwt.groups`, `traefik-support`)
+              action: allow
+          listDefaultAction: hide
+          listPolicies:
+            - match: Equals(`mcp.params.name`, `list_certificates`) && Contains(`jwt.groups`, `traefik-operators`)
+              action: show
+            - match: Equals(`mcp.params.name`, `list_certificates`)
+              action: hide
+            - match: Contains(`jwt.groups`, `traefik-support`)
+              action: show
+  - apiVersion: traefik.io/v1alpha1
+    kind: IngressRoute
+    metadata:
+      name: traefik-mcp
+    spec:
+      entryPoints:
+        - websecure
+      routes:
+        - kind: Rule
+          match: Host(`mcp.docker.localhost`) && PathPrefix(`/mcp`)
+          middlewares:
+            - name: mcp-traefik-jwt
+            - name: mcp-traefik-gateway
+          services:
+            - name: traefik-mcp
+              port: 8090
+      tls: {}
 ```
 
 > [!WARNING]
@@ -2041,89 +2115,9 @@ deployment:
 > human or an external check. For the same reason, an unlicensed sidecar stays up and refuses `/mcp`
 > with a JSON-RPC error instead of exiting.
 
-The chart's Service does not publish port 8090, so add one, then route it through the MCP Gateway
-with a JWT middleware for authentication and an MCP middleware for authorization. To try it without
-an identity provider, the JWT middleware below verifies tokens signed with a shared secret, and the
-route uses `mcp.docker.localhost` with the default self-signed certificate:
+<details>
 
-```yaml
-apiVersion: v1
-kind: Service
-metadata:
-  name: traefik-mcp
-  namespace: traefik
-spec:
-  # Same selector as the chart's own Service, for a release named "traefik"
-  # in the "traefik" namespace.
-  selector:
-    app.kubernetes.io/name: traefik
-    app.kubernetes.io/instance: traefik-traefik
-  ports:
-    - name: mcp
-      port: 8090
-      targetPort: mcp
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: mcp-traefik-jwt
-  namespace: traefik
-spec:
-  plugin:
-    jwt:
-      # /!\ Yes, you need to replace "changeme" with a better secret. /!\
-      # In production, use trustedIssuers with the jwksUrl of your identity
-      # provider instead.
-      signingSecret: changeme
----
-apiVersion: traefik.io/v1alpha1
-kind: Middleware
-metadata:
-  name: mcp-traefik-gateway
-  namespace: traefik
-spec:
-  plugin:
-    mcp:
-      # Members of traefik-support may list and call every tool except
-      # list_certificates, which is reserved to traefik-operators.
-      defaultAction: deny
-      policies:
-        - match: Contains(`mcp.method`, `/list`) && Contains(`jwt.groups`, `traefik-support`)
-          action: allow
-        - match: Equals(`mcp.method`, `tools/call`) && Equals(`mcp.params.name`, `list_certificates`) && Contains(`jwt.groups`, `traefik-operators`)
-          action: allow
-        - match: Equals(`mcp.method`, `tools/call`) && Equals(`mcp.params.name`, `list_certificates`)
-          action: deny
-        - match: Equals(`mcp.method`, `tools/call`) && Contains(`jwt.groups`, `traefik-support`)
-          action: allow
-      listDefaultAction: hide
-      listPolicies:
-        - match: Equals(`mcp.params.name`, `list_certificates`) && Contains(`jwt.groups`, `traefik-operators`)
-          action: show
-        - match: Equals(`mcp.params.name`, `list_certificates`)
-          action: hide
-        - match: Contains(`jwt.groups`, `traefik-support`)
-          action: show
----
-apiVersion: traefik.io/v1alpha1
-kind: IngressRoute
-metadata:
-  name: traefik-mcp
-  namespace: traefik
-spec:
-  entryPoints:
-    - websecure
-  routes:
-    - kind: Rule
-      match: Host(`mcp.docker.localhost`) && PathPrefix(`/mcp`)
-      middlewares:
-        - name: mcp-traefik-jwt
-        - name: mcp-traefik-gateway
-      services:
-        - name: traefik-mcp
-          port: 8090
-  tls: {}
-```
+<summary>With those values, an agent can list and call the tools through the gateway</summary>
 
 Check the sidecar, mint a token carrying the `traefik-support` group with the shared secret, and
 list the tools through the gateway:
@@ -2147,6 +2141,8 @@ curl -k -H "Authorization: Bearer $TOKEN" \
 Without a token the gateway answers 401, a token from another group gets a `Forbidden` JSON-RPC
 error, and `traefik-support` gets every tool but `list_certificates`, which only `traefik-operators`
 can see and call.
+
+</details>
 
 ## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 
