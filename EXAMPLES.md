@@ -1998,6 +1998,8 @@ each tool call.
 
 To try it without an identity provider, the JWT middleware verifies tokens signed with a shared secret,
 and the route uses `mcp.docker.localhost` with the default self-signed certificate.
+
+```yaml
 # The sidecar reads /api/rawdata, which is only served when the API is enabled.
 # The traefik entryPoint also carries /ping, which the kubelet probes from
 # outside the pod, so the API cannot be bound to loopback here: it listens on
