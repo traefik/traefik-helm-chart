@@ -1985,7 +1985,9 @@ license token.
 This example runs it as a sidecar in the Traefik pod, listening on Streamable HTTP, and publishes it
 through the Traefik Hub Gateway, whose MCP Gateway authenticates the caller with a JWT and authorizes
 each tool call. Both the sidecar and the MCP Gateway verify the same license, so `hub.token` is set
-once. The Service for port 8090, the two middlewares and the IngressRoute are shipped as
+once.
+
+The Service for port 8090, the two middlewares and the IngressRoute are shipped as
 `extraObjects`, so these values work as they are. To try it without an identity provider, the JWT
 middleware verifies tokens signed with a shared secret, and the route uses `mcp.docker.localhost`
 with the default self-signed certificate.
