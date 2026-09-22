@@ -2013,8 +2013,7 @@ deployment:
   additionalContainers:
     - name: mcp-traefik
       image: traefik/mcp-server:v0.0.1
-      # The sidecar reads the Traefik API at its default address,
-      # http://localhost:8080, over the pod's shared network namespace.
+      # The sidecar reads API on http://localhost:8080, over the pod's shared network namespace.
       args:
         # An address switches the transport from stdio to Streamable HTTP,
         # the only transport the MCP Gateway speaks.
