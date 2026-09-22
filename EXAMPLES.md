@@ -2064,8 +2064,7 @@ extraObjects:
       plugin:
         jwt:
           # /!\ Yes, you need to replace "changeme" with a better secret. /!\
-          # In production, use trustedIssuers with the jwksUrl of your
-          # identity provider instead.
+          # In production, use trustedIssuers with the jwksUrl of your IdP instead.
           signingSecret: changeme
   - apiVersion: traefik.io/v1alpha1
     kind: Middleware
