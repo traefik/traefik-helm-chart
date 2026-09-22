@@ -2001,9 +2001,6 @@ and the route uses `mcp.docker.localhost` with the default self-signed certifica
 
 ```yaml
 # The sidecar reads /api/rawdata, which is only served when the API is enabled.
-# The traefik entryPoint also carries /ping, which the kubelet probes from
-# outside the pod, so the API cannot be bound to loopback here: it listens on
-# the pod IP. ports.traefik.expose.default is false, so no Service publishes it.
 api:
   insecure: true
 
