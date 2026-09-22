@@ -1992,7 +1992,12 @@ The Service for port 8090, the two middlewares and the IngressRoute are shipped 
 middleware verifies tokens signed with a shared secret, and the route uses `mcp.docker.localhost`
 with the default self-signed certificate.
 
-```yaml
+This example runs it as a sidecar in the Traefik pod, listening on Streamable HTTP, and publishes it
+through the Traefik Hub Gateway, whose MCP Gateway authenticates the caller with a JWT and authorizes
+each tool call. 
+
+To try it without an identity provider, the JWT middleware verifies tokens signed with a shared secret,
+and the route uses `mcp.docker.localhost` with the default self-signed certificate.
 # The sidecar reads /api/rawdata, which is only served when the API is enabled.
 # The traefik entryPoint also carries /ping, which the kubelet probes from
 # outside the pod, so the API cannot be bound to loopback here: it listens on
