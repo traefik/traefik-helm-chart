@@ -1,0 +1,113 @@
+---
+suite: Traefik Hub proxy mode
+templates:
+  - deployment.yaml
+  - hub-license.yaml
+  - hub-apiportal.yaml
+  - requirements.yaml
+tests:
+  - it: should use the Traefik Proxy image when hub is not enabled
+    chart:
+      appVersion: v3.7.6
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.7.6
+        template: deployment.yaml
+
+  - it: should use the Traefik Hub image without a token when hub is enabled
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: ghcr.io/traefik/traefik-hub:v3.21.0-ea.1
+        template: deployment.yaml
+
+  - it: should not mount the license token in proxy mode
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-license.yaml
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+          any: true
+        template: deployment.yaml
+      - notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+          any: true
+        template: deployment.yaml
+
+  - it: should not set any hub argument in proxy mode
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tokenFilePath=/etc/secrets/token"
+        template: deployment.yaml
+
+  - it: should not expose the api portal in proxy mode
+    set:
+      hub:
+        enabled: true
+        apimanagement:
+          enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: hub-apiportal.yaml
+
+  - it: should keep using the Traefik Hub image and license when a token is set
+    set:
+      hub:
+        enabled: true
+        token: "my-hub-license"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: ^ghcr.io/traefik/traefik-hub:v\d+.\d+.\d+
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.tokenFilePath=/etc/secrets/token"
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+          any: true
+        template: deployment.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+          any: true
+        template: deployment.yaml
+
+  - it: should default hub.enabled to true when a token is set
+    set:
+      hub:
+        token: "my-hub-license"
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: ^ghcr.io/traefik/traefik-hub:v\d+.\d+.\d+
+        template: deployment.yaml

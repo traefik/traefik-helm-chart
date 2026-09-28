@@ -2,9 +2,9 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.0.2
+version: 41.6.0
 # renovate: image=traefik
-appVersion: v3.7.6
+appVersion: v3.7.13
 kubeVersion: '>=1.25.0-0'
 keywords:
   - traefik
@@ -23,11 +23,11 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   traefik.io/proxy-min-version: v3.6.0
-  traefik.io/proxy-max-version: v3.7.6
+  traefik.io/proxy-max-version: v3.7.13
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.6
+  traefik.io/hub-max-version: v3.20.13
   artifacthub.io/changes: |
-    - "fix(crds): add missing hub.traefik.io_uplinks to kustomization"
-    - "feat(deps): update traefik docker tag to v3.7.6"
-    - "feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.6"
-    - "chore(release): 🚀 publish 41.0.2"
+    - kind: fixed
+      description: "fix: use kubeversion to determine PDB apiVersion"
+    - kind: added
+      description: "feat(hub): support transparency logs"

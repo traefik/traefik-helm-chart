@@ -3,7 +3,8 @@
 {{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.kubernetesGateway).namespaces) -}}
 {{- $knativeNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.knative).namespaces) -}}
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces $knativeNamespaces $hubNamespaces)) -}}
+{{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
+{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces $knativeNamespaces $hubNamespaces $ingressNGINXNamespaces)) -}}
 
 {{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
 {{- range $allNamespaces }}

@@ -1,0 +1,27 @@
+apiVersion: v2
+name: hub-manager
+description: A Helm chart for hub-manager
+type: application
+version: 1.0.0
+# renovate: image=ghcr.io/traefik/hub-manager
+appVersion: v0.45.2
+kubeVersion: '>=1.25.0-0'
+keywords:
+  - traefik
+  - hub
+  - api-management
+home: https://traefik.io/
+sources:
+  - https://github.com/traefik/traefik-helm-chart
+maintainers:
+  - name: bpsoraggi
+    email: 108243062+bpsoraggi@users.noreply.github.com
+  - name: mloiseleur
+    email: michel.loiseleur@traefik.io
+  - name: darkweaver87
+    email: remi.buisson@traefik.io
+icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
+annotations:
+  artifacthub.io/changes: |
+    - "docs(hub-manager): 📚 rewrite EXAMPLES into a README install guide"
+    - "chore(release): 🚀 publish 41.1.0 and hub-manager 1.0.0"

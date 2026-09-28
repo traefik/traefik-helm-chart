@@ -1,0 +1,24 @@
+apiVersion: v2
+name: traefik
+description: A Traefik based Kubernetes ingress controller
+type: application
+version: 41.1.0
+appVersion: v3.7.9
+annotations:
+  traefik.io/proxy-min-version: v3.6.0
+  traefik.io/proxy-max-version: v3.7.9
+  artifacthub.io/changes: |
+    - kind: added
+      description: "feat(hub): add hub.enabled to run Traefik Hub in proxy mode"
+    - kind: changed
+      description: "feat(api)!: rename image.name to image.repository"
+    - kind: fixed
+      description: "fix(rbac): align namespaced RBAC with kubernetesIngressNGINX scoping"
+    - kind: fixed
+      description: "fix(ports): support \"quoted\" and back\\slashed values"
+    - kind: changed
+      description: "docs: see https://doc.traefik.io/traefik/v3.7/routing/a:b:c"
+    - kind: changed
+      description: "chore(deps): update release process docs"
+    - kind: changed
+      description: "clarify the need of an initContainer"

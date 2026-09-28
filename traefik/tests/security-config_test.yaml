@@ -49,7 +49,20 @@ tests:
           content: "--entryPoints.websecure.http.encodedCharacters.allowEncodedHash=false"
       - notContains:
           path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.aliasHeadersStrategy=keep"
+      - notContains:
+          path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.http.underscoreHeadersStrategy=keep"
+  - it: should be possible to set aliasHeadersStrategy on websecure
+    set:
+      ports:
+        websecure:
+          http:
+            aliasHeadersStrategy: reject
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.http.aliasHeadersStrategy=reject"
   - it: should be possible to set underscoreHeadersStrategy on websecure
     set:
       ports:

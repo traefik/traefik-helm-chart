@@ -41,6 +41,48 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "DEPRECATION: providing the Traefik Hub license token inline"
+  - it: should warn about missing pull credentials when using the hardened image
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      deployment:
+        imagePullSecrets:
+          - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should inform about proxy mode when hub is enabled without a token
+    set:
+      hub:
+        enabled: true
+      image:
+        tag: v3.21.0-ea.1
+    asserts:
+      - matchRegexRaw:
+          pattern: 'Traefik Hub is running in proxy mode'
+      - matchRegexRaw:
+          pattern: 'Set `hub.token` to a Secret containing your license to enable API Gateway'
+  - it: should not inform about proxy mode when a token is set
+    set:
+      hub:
+        enabled: true
+        token: "my-hub-license"
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "Traefik Hub is running in proxy mode"
   - it: should display warning when using an experimental image tag
     set:
       image:
@@ -301,3 +343,19 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!
+
+  - it: should warn when using underscoreHeadersStrategy on traefik >= 3.7.12
+    set:
+      image:
+        tag: v3.7.12
+      ports:
+        websecure:
+          http:
+            underscoreHeadersStrategy: reject
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with docker.io/traefik:v3.7.12 has been deployed successfully on NAMESPACE namespace!
+
+            ⚠️ DEPRECATION WARNING: 'http.underscoreHeadersStrategy' is deprecated and replaced with 'http.aliasHeadersStrategy' for traefik >= v3.7.12.
+            This option will be dropped from this chart in a future major version.

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: traefik
+description: A Traefik based Kubernetes ingress controller
+type: application
+version: 42.0.0
+appVersion: v3.8.0
+annotations: {}

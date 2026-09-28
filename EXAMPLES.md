@@ -864,6 +864,31 @@ experimental:
 > - **Scalable**: Centralized plugin storage, no per-node requirements
 > - **Consistent**: Uses existing Helm chart patterns (`additionalVolumes`)
 
+## Install Traefik Hub without a license (proxy mode)
+
+Traefik Hub can run without a license token. In this _proxy mode_, it behaves as a Traefik Proxy:
+no commercial feature is enabled, and no external connection is made. It requires Traefik Hub
+>= `v3.21.0-ea`, which is above the version this chart defaults to, so `image.tag` must be set:
+
+```yaml
+hub:
+  enabled: true
+image:
+  tag: v3.21.0-ea.1
+```
+
+This installs `ghcr.io/traefik/traefik-hub` instead of `docker.io/traefik`. To enable API Gateway
+later, set `hub.token` to the name of a `Secret` holding your license, on the same release and
+without changing the image:
+
+```yaml
+hub:
+  enabled: true
+  token: traefik-hub-license
+```
+
+Setting `hub.token` alone is enough: `hub.enabled` defaults to `true` when a token is set.
+
 ## Using Traefik-Hub with private plugin registries
 
 With Traefik Hub, it's possible to use plugins deployed on both public or private registries.
@@ -920,6 +945,76 @@ extraObjects:
 > [!NOTE]  
 > This code is only written for demonstration purpose.
 > The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
+
+## Use Traefik Hub transparency logs
+
+Transparency logs keep a tamper-evident record of logs and access logs. They are enabled as soon as
+a `hub.transparencyLogs.driver` is set, and require a license token and Traefik Hub
+>= `v3.21.0-ea.3`: they are not supported in proxy mode.
+
+`signerPrivateKey` and each witness `key` are file paths, so the keys have to exist in a `Secret`
+before installing the chart. Generate the log's own keypair with the `keygen` command shipped in the
+Traefik Hub image:
+
+```bash
+mkdir -p keys
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
+  ghcr.io/traefik/traefik-hub:v3.21.0-ea.3 \
+  keygen --name my-log --outputDir /keys
+```
+
+This writes `keys/private.key` and `keys/public.key`. `--name` becomes the checkpoint origin, so
+anyone verifying the log later needs that exact value. Share `public.key` with your witness — it has
+to add your log to its own configuration before it cosigns anything — and use the witness public key
+it gives you back:
+
+```bash
+kubectl create secret generic transparency-logs-keys -n traefik \
+  --from-file=private.key=./keys/private.key \
+  --from-file=witness-public.key=./witness-public.key
+```
+
+Then mount that `Secret` in the pod. With the `posix` driver, the tree also needs a writable volume:
+
+```yaml
+hub:
+  token: traefik-hub-license
+  transparencyLogs:
+    driver:
+      posix:
+        path: /data/transparency-logs
+    signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+    checkpointInterval: 10s
+    witnessGroup:
+      threshold: 1
+      witnesses:
+        - url: https://witness.example.com
+          key: /etc/traefik-hub/transparency-logs/witness-public.key
+
+image:
+  registry: ghcr.io
+  repository: traefik/traefik-hub
+  tag: v3.21.0-ea.3
+
+deployment:
+  additionalVolumes:
+    - name: transparency-logs-keys
+      secret:
+        secretName: transparency-logs-keys
+    - name: transparency-logs-data
+      persistentVolumeClaim:
+        claimName: transparency-logs-data
+
+additionalVolumeMounts:
+  - name: transparency-logs-keys
+    mountPath: /etc/traefik-hub/transparency-logs
+    readOnly: true
+  - name: transparency-logs-data
+    mountPath: /data/transparency-logs
+```
+
+> [!NOTE]
+> A wrong `signerPrivateKey` path makes Traefik Hub report `malformed verifier id` on startup.
 
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 

@@ -1,0 +1,50 @@
+suite: Service configuration
+templates:
+  - service.yaml
+
+tests:
+  - it: should render service with expected defaults
+    asserts:
+      - isKind:
+          of: Service
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-hub-manager
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ports[0].name
+          value: http
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+      - equal:
+          path: spec.ports[0].targetPort
+          value: http
+      - equal:
+          path: spec.ports[0].protocol
+          value: TCP
+  - it: should render service annotations when specified
+    set:
+      service:
+        annotations:
+          hub-manager/foo: bar
+          hub-manager/test: value
+    asserts:
+      - equal:
+          path: metadata.annotations.hub-manager/foo
+          value: bar
+      - equal:
+          path: metadata.annotations.hub-manager/test
+          value: value
+  - it: should include expected selector labels
+    asserts:
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: hub-manager

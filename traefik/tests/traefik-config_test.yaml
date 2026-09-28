@@ -766,6 +766,17 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--ping.entrypoint=web"
+  - it: should support a named probe port
+    set:
+      deployment:
+        healthchecksPort: traefik
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: traefik
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: traefik
   - it: should set custom probe scheme
     set:
       additionalArguments:
@@ -1187,3 +1198,82 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
+  - it: should not set safeNaming by default
+    set:
+      image:
+        tag: v3.7.11
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming"
+  - it: should enable safeNaming when set
+    set:
+      image:
+        tag: v3.7.11
+      providers:
+        kubernetesCRD:
+          safeNaming: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming=true"
+  - it: should not set safeNaming when explicitly set to false
+    set:
+      image:
+        tag: v3.7.11
+      providers:
+        kubernetesCRD:
+          safeNaming: false
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming=false"
+  - it: should not set safeNaming when the kubernetesCRD provider is disabled
+    set:
+      image:
+        tag: v3.7.11
+      providers:
+        kubernetesCRD:
+          enabled: false
+          safeNaming: true
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming=true"
+  - it: should set defaultTLSResourcesNamespace when specified
+    set:
+      image:
+        tag: v3.7.11
+      providers:
+        kubernetesCRD:
+          defaultTLSResourcesNamespace: traefik
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.defaultTLSResourcesNamespace=traefik"
+  - it: should not set defaultTLSResourcesNamespace by default
+    set:
+      image:
+        tag: v3.7.11
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.defaultTLSResourcesNamespace="
+  - it: should set strictTLSOptions when enabled
+    set:
+      image:
+        tag: v3.7.11
+      core:
+        strictTLSOptions: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.strictTLSOptions=true"
+  - it: should not set strictTLSOptions by default
+    set:
+      image:
+        tag: v3.7.11
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--core.strictTLSOptions=true"
