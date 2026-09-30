@@ -178,7 +178,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.13."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.0."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -989,13 +989,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
-  - it: should fail when using proxy mode with the default Traefik Hub version
+  - it: should pass when using proxy mode with the default Traefik Hub version
     set:
       hub:
         enabled: true
     asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
+      - notFailedTemplate: {}
   - it: should not gate on proxy mode version when a token is set
     set:
       hub:

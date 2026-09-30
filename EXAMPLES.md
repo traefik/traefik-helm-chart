@@ -868,13 +868,11 @@ experimental:
 
 Traefik Hub can run without a license token. In this _proxy mode_, it behaves as a Traefik Proxy:
 no commercial feature is enabled, and no external connection is made. It requires Traefik Hub
->= `v3.21.0-ea`, which is above the version this chart defaults to, so `image.tag` must be set:
+>= `v3.21.0`:
 
 ```yaml
 hub:
   enabled: true
-image:
-  tag: v3.21.0-ea.1
 ```
 
 This installs `ghcr.io/traefik/traefik-hub` instead of `docker.io/traefik`. To enable API Gateway
@@ -950,7 +948,7 @@ extraObjects:
 
 Transparency logs keep a tamper-evident record of logs and access logs. They are enabled as soon as
 a `hub.transparencyLogs.driver` is set, and require a license token and Traefik Hub
->= `v3.21.0-ea.3`: they are not supported in proxy mode.
+>= `v3.21.0`: they are not supported in proxy mode.
 
 `signerPrivateKey` and each witness `key` are file paths, so the keys have to exist in a `Secret`
 before installing the chart. Generate the log's own keypair with the `keygen` command shipped in the
@@ -959,7 +957,7 @@ Traefik Hub image:
 ```bash
 mkdir -p keys
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
-  ghcr.io/traefik/traefik-hub:v3.21.0-ea.3 \
+  ghcr.io/traefik/traefik-hub:v3.21.0 \
   keygen --name my-log --outputDir /keys
 ```
 
@@ -990,11 +988,6 @@ hub:
       witnesses:
         - url: https://witness.example.com
           key: /etc/traefik-hub/transparency-logs/witness-public.key
-
-image:
-  registry: ghcr.io
-  repository: traefik/traefik-hub
-  tag: v3.21.0-ea.3
 
 deployment:
   additionalVolumes:
