@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 41.6.0
+version: 41.6.1
 # renovate: image=traefik
 appVersion: v3.7.13
 kubeVersion: '>=1.25.0-0'
@@ -27,7 +27,5 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.21.0
   artifacthub.io/changes: |
-    - kind: fixed
-      description: "fix: use kubeversion to determine PDB apiVersion"
     - kind: added
-      description: "feat(hub): support transparency logs"
+      description: "feat(hub): support traefik hub v3.21.0"
