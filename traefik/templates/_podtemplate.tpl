@@ -605,6 +605,10 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- range $idx, $gateway := .gateways }}
+          - "--providers.kubernetesgateway.gateways[{{ $idx }}].name={{ $gateway.name }}"
+          - "--providers.kubernetesgateway.gateways[{{ $idx }}].namespace={{ $gateway.namespace | default (include "traefik.namespace" $) }}"
+            {{- end }}
             {{- with .qps }}
           - "--providers.kubernetesgateway.qps={{ . }}"
             {{- end }}

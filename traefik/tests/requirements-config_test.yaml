@@ -585,6 +585,59 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using kubernetesGateway gateways on traefik < 3.7.14
+    set:
+      image:
+        tag: v3.7.13
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14."
+  - it: should fail when using kubernetesGateway gateways on traefik-hub v3.21.0
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0
+      hub:
+        token: xxx
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14."
+  - it: should not fail when using kubernetesGateway gateways on traefik-hub v3.21.1
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.1
+      hub:
+        token: xxx
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when a kubernetesGateway gateway has no name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - namespace: edge
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways[0].name must be set."
   - it: should fail when using accesslog dualOutput on traefik < 3.7.0
     set:
       image:
