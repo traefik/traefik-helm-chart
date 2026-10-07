@@ -977,6 +977,9 @@
                 {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.transparencyLogs" "content" (omit . "driver" "witnessGroup")) | nindent 10 }}
                 {{- with .witnessGroup }}
                   {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.transparencyLogs.witnessGroup" "content" (omit . "witnesses")) | nindent 10 }}
+                  {{- if and (kindIs "slice" .witnesses) (empty .witnesses) }}
+          - "--hub.transparencyLogs.witnessGroup.witnesses="
+                  {{- end }}
                   {{- range $idx, $val := .witnesses }}
                     {{- $witnessPath := printf "hub.transparencyLogs.witnessGroup.witnesses[%d]" $idx }}
                     {{- include "traefik.yaml2CommandLineArgs" (dict "path" $witnessPath "content" $val) | nindent 10 }}

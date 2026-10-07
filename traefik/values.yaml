@@ -1649,8 +1649,8 @@ hub:  # @schema additionalProperties: false
       timeout: ""
       # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
       failOpen:  # @schema type:[boolean, null]
-      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
-      witnesses: []  # @schema item:object
+      # -- (list) Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
+      witnesses:  # @schema type:[array, null]; item:object
 
   tracing:
     additionalTraceHeaders:
