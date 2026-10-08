@@ -54,7 +54,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@e26264186543fd355dc60776e21f7fbb67ce6f85 # v46.3.2
+        uses: renovatebot/github-action@230ce922b08968d0a4f6f70f295601daff09ef1d # v46.3.7
         with:
           configurationFile: .github/renovate.json5
           token: ${{ steps.get_token.outputs.token }}
