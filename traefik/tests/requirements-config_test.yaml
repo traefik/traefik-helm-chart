@@ -1189,3 +1189,35 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold 2 exceeds the 1 configured witnesses."
+  - it: should fail when the witness threshold is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold 1 exceeds the 0 configured witnesses."
+  - it: should fail when witnesses is an explicit empty list
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            witnesses: []
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.witnesses must contain at least one witness. Remove the empty list to run without witnesses."

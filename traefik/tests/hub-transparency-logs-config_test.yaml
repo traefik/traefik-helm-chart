@@ -188,9 +188,6 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.transparencyLogs.witnessGroup.witnesses[1].key=/etc/traefik-hub/transparency-logs/witness2-public.key"
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.transparencyLogs.witnessGroup.witnesses="
 
   - it: should not render the witness group when witnesses are unset
     set:
@@ -203,18 +200,3 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "--hub.transparencyLogs.witnessGroup"
-
-  - it: should render the witness group when witnesses is an explicit empty list
-    set:
-      hub:
-        transparencyLogs:
-          driver:
-            posix:
-              path: /data/transparency-logs
-          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
-          witnessGroup:
-            witnesses: []
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].args
-          content: "--hub.transparencyLogs.witnessGroup.witnesses="
