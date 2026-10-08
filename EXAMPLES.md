@@ -2018,7 +2018,7 @@ hub:
 deployment:
   additionalContainers:
     - name: mcp-traefik
-      image: traefik/mcp-server:v0.0.1
+      image: traefik/mcp-server:v0.0.2
       # The sidecar reads API on http://localhost:8080, over the pod's shared network namespace.
       args:
         # An address switches the transport from stdio to Streamable HTTP,
