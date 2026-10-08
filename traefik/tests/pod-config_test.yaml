@@ -419,6 +419,36 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.burst=40"
+  - it: should not scope kubernetesGateway provider to gateways by default
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "--providers.kubernetesgateway.gateways"
+  - it: should scope kubernetesGateway provider to configured gateways
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+              namespace: edge
+            - name: internal
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.gateways[0].name=public"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.gateways[0].namespace=edge"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.gateways[1].name=internal"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.gateways[1].namespace=NAMESPACE"
 
   - it: should be able to enable knative provider
     set:
