@@ -220,7 +220,7 @@ It requires a dict with "Version" and "Hub".
 {{- define "traefik.proxyVersionFromHub" -}}
  {{- $version := .Version -}}
  {{- if .Hub -}}
-   {{- $hubProxyVersion := "v3.7.12" }}
+   {{- $hubProxyVersion := "v3.7.14" }}
    {{- if regexMatch "v[0-9]+.[0-9]+.[0-9]+" (default "" $version) }}
      {{- if semverCompare "<v3.19.0-0" $version }}
         {{- $hubProxyVersion = "v3.6.3" }}
@@ -242,6 +242,8 @@ It requires a dict with "Version" and "Hub".
        {{- $hubProxyVersion = "v3.7.10" }}
      {{- else if semverCompare "<v3.20.12-0" $version }}
        {{- $hubProxyVersion = "v3.7.11" }}
+     {{- else if semverCompare "<v3.20.14-0 || >=v3.21.0-0 <v3.21.1-0" $version }}
+       {{- $hubProxyVersion = "v3.7.12" }}
      {{- end -}}
    {{- end -}}
    {{- $hubProxyVersion }}
