@@ -1,5 +1,33 @@
 # Change Log
 
+## 41.7.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-08
+
+* feat(gateway): support scoping the provider to specific Gateways
+* feat(deps): update traefik to v3.7.14 and traefik-hub to v3.21.1
+* chore(release): 🚀 publish 41.7.0 and and hub-manager 1.0.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index d3132ec..7006d07 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -380,6 +380,9 @@ providers:
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelSelector: ""
++    # -- Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+).
++    # If left empty, Traefik processes all Gateways.
++    gateways: []
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+     # -- (int) Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
+```
+
+
 ## 41.6.1  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-09-30
