@@ -2000,7 +2000,7 @@ with the default self-signed certificate.
 
 This example runs it as a sidecar in the Traefik pod, listening on Streamable HTTP, and publishes it
 through the Traefik Hub Gateway, whose MCP Gateway authenticates the caller with a JWT and authorizes
-each tool call. 
+each tool call.
 
 To try it without an identity provider, the JWT middleware verifies tokens signed with a shared secret,
 and the route uses `mcp.docker.localhost` with the default self-signed certificate.
