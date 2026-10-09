@@ -957,7 +957,7 @@ Traefik Hub image:
 ```bash
 mkdir -p keys
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
-  ghcr.io/traefik/traefik-hub:v3.21.1 \
+  ghcr.io/traefik/traefik-hub:v3.21.2 \
   keygen --name my-log --outputDir /keys
 ```
 
