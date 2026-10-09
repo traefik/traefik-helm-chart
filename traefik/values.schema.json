@@ -1556,18 +1556,19 @@
                                         "integer",
                                         "null"
                                     ],
-                                    "minimum": 0
+                                    "minimum": 1
                                 },
                                 "timeout": {
                                     "description": "Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.",
                                     "type": "string"
                                 },
                                 "witnesses": {
-                                    "description": "Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: \"\u003curl\u003e\", key: \"\u003cpath-or-content\u003e\" }` entries.",
+                                    "description": "Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: \"\u003curl\u003e\", key: \"\u003cpath-or-content\u003e\" }` entries.",
                                     "type": [
                                         "array",
                                         "null"
                                     ],
+                                    "minItems": 1,
                                     "items": {
                                         "type": "object"
                                     }
