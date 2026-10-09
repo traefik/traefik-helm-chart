@@ -1,0 +1,99 @@
+suite: Hub license (BYO) token mount
+tests:
+  - it: rendered traefik.yaml sets tokenfilepath to the mounted file
+    template: configmap.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "tokenfilepath:\\s*/etc/secrets/token"
+
+  - it: user-provided tokenfilepath overrides the chart default
+    template: configmap.yaml
+    set:
+      traefik.hub.tokenfilepath: "/custom/path/token"
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "tokenfilepath:\\s*/custom/path/token"
+
+  - it: token mount + volume land on the pod, sourced from the BYO Secret
+    template: deployment.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+            secret:
+              secretName: RELEASE-NAME-traefik-hub-license
+
+  - it: no hub-token volume when Hub is not in use
+    template: deployment.yaml
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: hub-token
+            mountPath: /etc/secrets
+            readOnly: true
+      - notContains:
+          path: spec.template.spec.volumes
+          content:
+            name: hub-token
+
+  - it: POD_NAME + POD_NAMESPACE downward-API env vars land when Hub is in use
+    template: deployment.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+
+  - it: the downward-API env vars are present even without Hub (parity with the legacy chart)
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: USER, value: traefik }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: POD_NAME
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.name
+
+  - it: traefik.hub.namespaces and other hub keys flow verbatim into the config
+    template: configmap.yaml
+    set:
+      traefik.hub.namespaces:
+        - app-ns
+      traefik.hub.apimanagement: {}
+    asserts:
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "namespaces:\\s*\n\\s*- app-ns"
+      - matchRegex:
+          path: data["traefik.yaml"]
+          pattern: "apimanagement:\\s*\\{\\s*\\}"

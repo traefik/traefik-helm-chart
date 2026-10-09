@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "traefik.fullname" . }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+data:
+  traefik.yaml: |
+    {{- include "traefik.mergedConfig" . | nindent 4 }}

@@ -1,0 +1,45 @@
+suite: default install
+templates:
+  - configmap.yaml
+  - serviceaccount.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - deployment.yaml
+  - service.yaml
+tests:
+  - it: renders exactly the six expected kinds
+    asserts:
+      - isKind: { of: ConfigMap }
+        template: configmap.yaml
+      - isKind: { of: ServiceAccount }
+        template: serviceaccount.yaml
+      - isKind: { of: ClusterRole }
+        template: clusterrole.yaml
+      - isKind: { of: ClusterRoleBinding }
+        template: clusterrolebinding.yaml
+      - isKind: { of: Deployment }
+        template: deployment.yaml
+      - isKind: { of: Service }
+        template: service.yaml
+
+  - it: default image is docker.io/traefik at the chart's AppVersion
+    template: deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^docker\\.io/traefik:v\\d"
+
+  - it: serviceAccountName, SA name, ClusterRoleBinding subject all converge on fullname
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-traefik
+        template: deployment.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+        template: serviceaccount.yaml
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-traefik
+        template: clusterrolebinding.yaml

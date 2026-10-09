@@ -1,0 +1,45 @@
+suite: Gateway API (Gateway / GatewayClass)
+templates:
+  - gateway.yaml
+  - gateway-class.yaml
+tests:
+  - it: nothing rendered by default
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders a GatewayClass with the chart controller
+    template: gateway-class.yaml
+    set:
+      gatewayClass: {}
+    asserts:
+      - isKind:
+          of: GatewayClass
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: spec.controllerName
+          value: traefik.io/gateway-controller
+
+  - it: renders a Gateway pointing at the chart GatewayClass, with user listeners
+    template: gateway.yaml
+    set:
+      gateway:
+        spec:
+          listeners:
+            - name: web
+              port: 8000
+              protocol: HTTP
+    asserts:
+      - isKind:
+          of: Gateway
+      - equal:
+          path: spec.gatewayClassName
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: spec.listeners[0].name
+          value: web
+      - equal:
+          path: spec.listeners[0].port
+          value: 8000

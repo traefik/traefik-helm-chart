@@ -1,0 +1,65 @@
+suite: deployment.spec escape hatch (strategic merge over chart-rendered spec)
+templates:
+  - deployment.yaml
+tests:
+  - it: scalar at spec root is added (replicas)
+    set:
+      deployment.spec.replicas: 3
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 3
+
+  - it: scalar deep in the spec overrides the chart value
+    set:
+      deployment.spec.template.spec.serviceAccountName: my-custom-sa
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: my-custom-sa
+
+  - it: nested object deep-merges with chart-rendered values
+    set:
+      deployment.spec.template.metadata.annotations:
+        prometheus.io/scrape: "true"
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["prometheus.io/scrape"]
+          value: "true"
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: known lists merge by key (image overridden, chart ports kept)
+    set:
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          image: my/traefik:custom
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: traefik
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: my/traefik:custom
+      - exists:
+          path: spec.template.spec.containers[0].ports
+
+  - it: null in user spec deletes the chart-rendered key
+    set:
+      deployment.spec.template.spec.volumes: null
+    asserts:
+      - notExists:
+          path: spec.template.spec.volumes
+
+  - it: chart skeleton (kind, name, labels) is not reachable via spec
+    set:
+      deployment.spec.template.spec.serviceAccountName: tweaked
+    asserts:
+      - isKind: { of: Deployment }
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik

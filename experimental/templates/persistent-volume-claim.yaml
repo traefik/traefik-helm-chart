@@ -1,0 +1,10 @@
+{{- if and (kindIs "map" .Values.persistence) (not (.Values.persistence).existingClaim) -}}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "persistence" "name" (include "traefik.fullname" .) "namespaced" true) | nindent 2 }}
+spec:
+  {{- $chartSpec := dict "accessModes" (list "ReadWriteOnce") "resources" (dict "requests" (dict "storage" "128Mi")) -}}
+  {{- $userSpec := (.Values.persistence | default dict).spec | default dict -}}
+  {{- include "traefik.strategicMerge" (dict "base" $chartSpec "patch" $userSpec) | nindent 2 }}
+{{- end -}}

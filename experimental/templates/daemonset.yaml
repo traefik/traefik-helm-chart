@@ -1,0 +1,8 @@
+{{- if kindIs "map" .Values.daemonset -}}
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "daemonset" "name" (include "traefik.fullname" .) "namespaced" true) | nindent 2 }}
+spec:
+  {{- include "traefik.workloadSpec" (dict "ctx" . "key" "daemonset") | nindent 2 }}
+{{- end -}}

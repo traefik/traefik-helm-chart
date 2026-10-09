@@ -1,0 +1,10 @@
+{{- if kindIs "map" .Values.gatewayClass -}}
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "gatewayClass" "name" (include "traefik.fullname" .)) | nindent 2 }}
+spec:
+  {{- $chartSpec := dict "controllerName" "traefik.io/gateway-controller" -}}
+  {{- $userSpec := (.Values.gatewayClass | default dict).spec | default dict -}}
+  {{- include "traefik.strategicMerge" (dict "base" $chartSpec "patch" $userSpec) | nindent 2 }}
+{{- end -}}
