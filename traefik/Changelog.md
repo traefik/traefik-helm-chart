@@ -1,5 +1,14 @@
 # Change Log
 
+## 41.7.1  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-09
+
+* feat(hub): :rocket: support traefik hub v3.20.15 and v3.21.2
+* chore(release): 🚀 publish 41.7.1
+
+
+
 ## 41.7.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-08
