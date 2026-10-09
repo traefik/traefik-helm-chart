@@ -488,3 +488,31 @@ tests:
             protocol: TCP
             targetPort: a-way-too-long
         template: service.yaml
+  - it: should not have port 8000 of pod published to 80 of service nor be defined as entrypoint "web" when not enabled
+    set:
+      ports:
+        web:
+          enabled: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 8000
+            protocol: TCP
+        not: true
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            protocol: TCP
+            targetPort: web
+        not: true
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=:8000/tcp"
+        not: true
+        template: deployment.yaml

@@ -921,6 +921,7 @@ envFrom: []
 ports:
   # @schema additionalProperties: false
   traefik:
+    enabled: true
     port: 8080
     # -- (int) Use hostPort if set.
     hostPort:  # @schema type:[integer, null]; minimum:0
@@ -952,6 +953,7 @@ ports:
       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
+    enabled: true
     # -- (bool) Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     asDefault:  # @schema type: [boolean, null]; default: null
     port: 8000
@@ -1010,6 +1012,7 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   websecure:
+    enabled: true
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
     port: 8443
@@ -1100,6 +1103,7 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
+    enabled: true
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
     port: 9100

@@ -10,7 +10,7 @@
 {{- $udpPorts := dict -}}
 {{- $exposedPorts := false -}}
 {{- range $portName, $config := $.Values.ports -}}
-  {{- if $config -}}
+  {{- if and $config (dig "enabled" true $config) -}}
     {{- if ($config.http3).enabled -}}
       {{- if (not ($config.http).tls.enabled) -}}
         {{- fail "ERROR: You cannot enable http3 without enabling tls" -}}
