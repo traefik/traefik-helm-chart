@@ -591,3 +591,12 @@ A driver is what enables transparency logs, so this doubles as the feature switc
     {{- end -}}
     {{- join " " $drivers -}}
 {{- end -}}
+
+{{/*
+The name of the user-facing ClusterRoles (view, edit, view-sensitive, edit-sensitive) aggregated into the builtin roles.
+Takes the role suffix as `.suffix` and the root context as `.root`; the base name is
+truncated so the suffix always fits in the 63 characters Kubernetes allows.
+*/}}
+{{- define "traefik.userClusterRoleName" -}}
+{{- printf "%s-%s" (include "traefik.clusterRoleName" .root | trunc 57 | trimSuffix "-") .suffix -}}
+{{- end -}}

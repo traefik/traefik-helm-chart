@@ -1213,7 +1213,13 @@ rbac:  # @schema additionalProperties: false
   namespaced: false
   # -- Enable user-facing roles
   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+  # **NOTE**: this labels the Traefik `ClusterRole` itself, which grants access to Secrets. Prefer `rbac.userRoles`.
   aggregateTo: []
+  userRoles:  # @schema additionalProperties: false
+    # -- Create `ClusterRole`s aggregated into the builtin `view`, `edit` and `admin` roles for the Traefik CRDs.
+    # `AccessControlPolicy` (holds key and password hashes inline) is only aggregated into `edit` and `admin`, not `view`.
+    # Ignored when `rbac.namespaced` is true.
+    enabled: true
   # -- List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules.
   secretResourceNames: []
 
