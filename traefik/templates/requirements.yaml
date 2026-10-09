@@ -299,8 +299,13 @@
       {{- if not .signerPrivateKey }}
         {{ fail "ERROR: hub.transparencyLogs.signerPrivateKey must be set." }}
       {{- end }}
-      {{- if and .witnessGroup .witnessGroup.threshold (gt (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
-        {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
+      {{- with .witnessGroup }}
+        {{- if and (not .witnesses) (or (not (kindIs "invalid" .threshold)) .timeout (kindIs "bool" .failOpen)) }}
+          {{ fail "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses." }}
+        {{- end }}
+        {{- if and .threshold (gt (int .threshold) (len .witnesses)) }}
+          {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .threshold) (len .witnesses)) }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
