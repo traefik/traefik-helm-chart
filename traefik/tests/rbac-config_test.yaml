@@ -636,6 +636,7 @@ tests:
               - gateways/status
               - grpcroutes/status
               - httproutes/status
+              - listenersets/status
               - tcproutes/status
               - tlsroutes/status
             verbs:
@@ -652,6 +653,7 @@ tests:
               - gateways
               - grpcroutes
               - httproutes
+              - listenersets
               - referencegrants
               - tcproutes
               - tlsroutes

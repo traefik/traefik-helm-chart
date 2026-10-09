@@ -340,3 +340,54 @@ tests:
       - equal:
           path: spec.defaultScope
           value: "All"
+  - it: should configure "Same" allowedListeners on the Gateway
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          experimentalChannel: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: Same
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "Same"
+  - it: should configure "All" allowedListeners on the Gateway
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          experimentalChannel: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: All
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "All"
+  - it: should configure Selector for allowedListeners on the Gateway
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          experimentalChannel: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: Selector
+            selector:
+              matchLabels:
+                shared-gateway-access: "true"
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "Selector"
+            selector:
+              matchLabels:
+                shared-gateway-access: "true"
