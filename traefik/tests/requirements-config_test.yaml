@@ -1204,8 +1204,40 @@ tests:
             threshold: 1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold 1 exceeds the 0 configured witnesses."
-  - it: should fail when witnesses is an explicit empty list
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail when the witness timeout is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            timeout: 5m
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail when witness failOpen is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            failOpen: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail on an empty witnesses list
     set:
       image:
         tag: v3.21.0-ea.3
@@ -1220,4 +1252,23 @@ tests:
             witnesses: []
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.witnesses must contain at least one witness. Remove the empty list to run without witnesses."
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on a zero witness threshold
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 0
+            witnesses:
+              - url: https://witness.example.com
+                key: /etc/traefik-hub/transparency-logs/witness-public.key
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

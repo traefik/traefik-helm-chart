@@ -289,12 +289,11 @@
         {{ fail "ERROR: hub.transparencyLogs.signerPrivateKey must be set." }}
       {{- end }}
       {{- with .witnessGroup }}
-        {{- if and (kindIs "slice" .witnesses) (empty .witnesses) }}
-          {{ fail "ERROR: hub.transparencyLogs.witnessGroup.witnesses must contain at least one witness. Remove the empty list to run without witnesses." }}
+        {{- if and (not .witnesses) (or (not (kindIs "invalid" .threshold)) .timeout (kindIs "bool" .failOpen)) }}
+          {{ fail "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses." }}
         {{- end }}
-        {{- $witnessCount := len (default (list) .witnesses) }}
-        {{- if and .threshold (gt (int .threshold) $witnessCount) }}
-          {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .threshold) $witnessCount) }}
+        {{- if and .threshold (gt (int .threshold) (len .witnesses)) }}
+          {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .threshold) (len .witnesses)) }}
         {{- end }}
       {{- end }}
     {{- end }}
