@@ -54,7 +54,7 @@ jobs:
           ls -R $CACHE_DIR
 
       - name: Self-hosted Renovate
-        uses: renovatebot/github-action@230ce922b08968d0a4f6f70f295601daff09ef1d # v46.3.7
+        uses: renovatebot/github-action@f0f41e5f2e706165f6814b1d0f0d0e319de7d1d9 # v46.3.8
         with:
           configurationFile: .github/renovate.json5
           token: ${{ steps.get_token.outputs.token }}
@@ -69,7 +69,7 @@ jobs:
           ls $CACHE_DIR
           tar -czvf $CACHE_ARCHIVE -C $CACHE_DIR .
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ${{ env.CACHE_KEY }}
           path: ${{ env.CACHE_ARCHIVE }}
