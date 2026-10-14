@@ -627,7 +627,7 @@ providers:
 ## Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
-entrypoint. They have been available since v1.20 and in beta as of Kubernetes v1.24.
+entrypoint. They are generally available since Kubernetes v1.26.
 Availability may depend on your Kubernetes provider.
 
 When using TCP and UDP with a single service, you may encounter [this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741) from Kubernetes.

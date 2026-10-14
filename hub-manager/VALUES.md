@@ -20,7 +20,7 @@ A Helm chart for hub-manager
 
 ## Requirements
 
-Kubernetes: `>=1.25.0-0`
+Kubernetes: `>=1.30.0-0`
 
 ## Values
 

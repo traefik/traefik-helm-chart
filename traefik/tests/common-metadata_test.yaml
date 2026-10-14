@@ -40,7 +40,7 @@ tests:
         globalLabel: isConfigured
     capabilities:
       majorVersion: 1
-      minorVersion: 25
+      minorVersion: 30
       apiVersions:
         - monitoring.coreos.com/v1
     asserts:
