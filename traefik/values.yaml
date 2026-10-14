@@ -1317,6 +1317,10 @@ hub:  # @schema additionalProperties: false
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
+  # -- Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
+  # It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`.
+  # **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.
+  restrictSecretTypes: true
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
     enabled: false

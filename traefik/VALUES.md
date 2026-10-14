@@ -255,6 +255,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.redis.tls.insecureSkipVerify | bool | `false` | When insecureSkipVerify is set to true, the TLS connection accepts any certificate presented by the server. Default: false. |
 | hub.redis.tls.key | string | `""` | Path to the private key used for the secure connection. |
 | hub.redis.username | string | `""` | The username to use when connecting to Redis endpoints. Default: "". |
+| hub.restrictSecretTypes | bool | `true` | Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets. It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`. **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it. |
 | hub.sendlogs | bool | `nil` | Enable export of error logs to the platform. Default: true. |
 | hub.token | string | `""` | Name of `Secret` with key 'token' set to a valid license token. It enables API Gateway. |
 | hub.tokenMountPath | string | `"/etc/secrets"` | Mount path for token secret. |

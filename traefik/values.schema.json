@@ -1401,6 +1401,10 @@
                         }
                     }
                 },
+                "restrictSecretTypes": {
+                    "description": "Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets. It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`. **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.",
+                    "type": "boolean"
+                },
                 "sendlogs": {
                     "description": "Enable export of error logs to the platform. Default: true.",
                     "type": [
