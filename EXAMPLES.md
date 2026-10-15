@@ -1975,6 +1975,68 @@ hub:
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
 
+## Use Traefik Hub Gateway with the Traefik MCP server as a sidecar
+
+The Traefik MCP server (`traefik/mcp-server` image) gives an AI agent a read-only view of
+the running gateway. It reads the Traefik API over localhost and needs a Traefik Hub license, which it
+shares with Traefik through the `hub-token` volume.
+
+```yaml
+# The sidecar reads /api/rawdata, only served when the API is enabled.
+api:
+  insecure: true
+
+hub:
+  token: traefik-hub-license
+  mcpgateway:
+    enabled: true
+
+deployment:
+  additionalContainers:
+    - name: mcp-traefik
+      image: traefik/mcp-server:v0.0.2
+      args:
+        # Streamable HTTP, the transport spoken by the MCP Gateway.
+        - "-mcp.address=:8090"
+        - "-license.token-file=/etc/secrets/token"
+      ports:
+        - name: mcp
+          containerPort: 8090
+      volumeMounts:
+        - name: hub-token
+          mountPath: /etc/secrets
+          readOnly: true
+
+extraObjects:
+  # The chart's Service does not publish port 8090.
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-mcp
+    spec:
+      selector:
+        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+        app.kubernetes.io/instance: '{{ template "traefik.fullname" . }}-{{ .Release.Namespace }}'
+      ports:
+        - name: mcp
+          port: 8090
+          targetPort: mcp
+```
+
+> [!WARNING]
+> Do not add probes to the sidecar: a failing readiness probe would remove the whole Traefik pod from its Services.
+
+Check it locally:
+
+```bash
+kubectl port-forward -n traefik svc/traefik-mcp 8090 &
+curl -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' http://localhost:8090/mcp
+```
+
+To publish it, route to `traefik-mcp:8090` with JWT and MCP middlewares. See
+[MCP Gateway](https://doc.traefik.io/traefik-hub/mcp-gateway/mcp) for authentication and per-tool authorization.
+
 ## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 
 This example exposes two Gateways (e.g., `internal` and `external`) from a single Traefik installation.
