@@ -74,6 +74,14 @@ fix(ingressroute): use spec.ingressClassName with Proxy v3.7+
 chore(deps): update traefik image to v3.7.1
 ```
 
+## Bumping Traefik Hub
+
+- `traefik/Chart.yaml`: set `traefik.io/hub-max-version` to the latest Hub release
+- `traefik/tests/requirements-config_test.yaml`: update the "above the supported" error message
+- `EXAMPLES.md`: update the Hub image tag in the transparency logs keygen example
+- Check which Traefik Proxy version the Hub release is built on. If it's a new Proxy release, add a branch in `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`). An unreleased Proxy commit keeps the current default.
+- Check for CRD changes in the Hub release
+
 ## Philosophy (Scope Boundaries)
 
 Contributions must align with the chart's philosophy. Avoid introducing:
