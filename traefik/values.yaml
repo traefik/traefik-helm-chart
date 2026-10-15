@@ -1209,7 +1209,7 @@ rbac:  # @schema additionalProperties: false
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
   # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
-  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is still deployed. See `hub.restrictSecretTypes`. <br />
+  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. <br />
   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
   namespaced: false
   # -- Enable user-facing roles
