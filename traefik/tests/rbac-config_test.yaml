@@ -880,9 +880,6 @@ tests:
               resources:
                 - secrets
               verbs:
-                - get
-                - list
-                - watch
                 - create
                 - update
                 - delete
@@ -905,8 +902,32 @@ tests:
             name: RELEASE-NAME-traefik
             namespace: NAMESPACE
 
-  - it: should scope hub secrets write permissions to hub namespaces in cluster mode
+  - it: should not grant hub secrets write permissions in hub namespaces in cluster mode
     set:
+      hub:
+        token: xxx
+        namespaces:
+          - hub-ns
+    asserts:
+      - template: rbac/role.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/role.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - template: rbac/rolebinding.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/rolebinding.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+
+  - it: should grant hub secrets write permissions only in release namespace in namespaced mode
+    set:
+      rbac:
+        namespaced: true
       hub:
         token: xxx
         namespaces:
@@ -916,23 +937,56 @@ tests:
         hasDocuments:
           count: 2
       - template: rbac/role.yaml
-        documentIndex: 0
-        equal:
+        documentSelector:
           path: metadata.namespace
           value: NAMESPACE
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - delete
       - template: rbac/role.yaml
-        documentIndex: 1
-        equal:
+        documentSelector:
           path: metadata.namespace
           value: hub-ns
-      - template: rbac/rolebinding.yaml
-        hasDocuments:
-          count: 2
-      - template: rbac/rolebinding.yaml
-        documentIndex: 1
-        equal:
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - delete
+      - template: rbac/role.yaml
+        documentSelector:
           path: metadata.namespace
           value: hub-ns
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
 
   - it: should not create hub secrets role in cluster mode without hub token
     asserts:

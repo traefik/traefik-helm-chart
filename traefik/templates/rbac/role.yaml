@@ -5,8 +5,9 @@
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
 {{/* Mirrors the --providers.kubernetesingressnginx.watchnamespace arg: a single namespace, defaulting to the release one. */}}
 {{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
-{{- $namespaces := $hubNamespaces -}}
+{{- $namespaces := include "traefik.namespace" . | list -}}
 {{- if .Values.rbac.namespaced -}}
+  {{- $namespaces = concat $namespaces .Values.hub.namespaces -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesIngress).namespaces) -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesCRD).namespaces) -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesGateway).namespaces) -}}
@@ -26,15 +27,17 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
-{{- if (and (has . $hubNamespaces) $.Values.hub.token) }}
+{{- if and $.Values.hub.token (eq . (include "traefik.namespace" $)) }}
   - apiGroups:
       - ""
     resources:
       - secrets
     verbs:
+    {{- if $.Values.rbac.namespaced }}
       - get
       - list
       - watch
+    {{- end }}
       - create
       - update
       - delete

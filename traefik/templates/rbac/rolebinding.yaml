@@ -1,6 +1,7 @@
 {{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
-{{- $namespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
+{{- $namespaces := include "traefik.namespace" . | list -}}
 {{- if .Values.rbac.namespaced -}}
+  {{- $namespaces = concat $namespaces .Values.hub.namespaces -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesIngress).namespaces) -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesCRD).namespaces) -}}
   {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesGateway).namespaces) -}}
