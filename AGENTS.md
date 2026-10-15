@@ -79,7 +79,7 @@ chore(deps): update traefik image to v3.7.1
 - `traefik/Chart.yaml`: set `traefik.io/hub-max-version` to the latest Hub release
 - `traefik/tests/requirements-config_test.yaml`: update the "above the supported" error message
 - `EXAMPLES.md`: update the Hub image tag in the transparency logs keygen example
-- Check which Traefik Proxy version the Hub release is built on. If it's a new Proxy release, add a branch in `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`). An unreleased Proxy commit keeps the current default.
+- `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`): only add a branch when a chart condition depends on the Proxy version (e.g. a new CLI flag) and this Hub release changes its outcome. Keep this helper short.
 - Check for CRD changes in the Hub release
 
 ## Philosophy (Scope Boundaries)
