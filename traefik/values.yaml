@@ -1209,6 +1209,7 @@ rbac:  # @schema additionalProperties: false
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
   # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
+  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. <br />
   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
   namespaced: false
   # -- Enable user-facing roles
@@ -1317,6 +1318,10 @@ hub:  # @schema additionalProperties: false
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
+  # -- Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
+  # It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`.
+  # **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.
+  restrictSecretTypes: true
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
     enabled: false
