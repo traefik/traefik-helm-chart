@@ -588,7 +588,7 @@ Kubernetes: `>=1.30.0-0`
 | service.enabled | bool | `true` |  |
 | service.labels | object | `{}` | Additional service labels (e.g. for filtering Service by custom labels) |
 | service.nameOverride | string | `""` | Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller). |
-| service.single | bool | `true` | Single service is using `MixedProtocolLBService` feature gate. When set to false, it will create two Service, one for TCP and one for UDP. |
+| service.single | bool | `true` | Single service exposing both TCP and UDP ports. When set to false, it will create two Service, one for TCP and one for UDP. |
 | service.spec | object | `{"type":"LoadBalancer"}` | Additional entries here will be added to the Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core). Cannot contain selector or ports entries. |
 | serviceAccount | object | `{"name":""}` | The service account the pods will use to interact with the Kubernetes API |
 | serviceAccountAnnotations | object | `{}` | Additional serviceAccount annotations (e.g. for oidc authentication) |

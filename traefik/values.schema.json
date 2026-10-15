@@ -3344,7 +3344,7 @@
                     ]
                 },
                 "single": {
-                    "description": "Single service is using `MixedProtocolLBService` feature gate. When set to false, it will create two Service, one for TCP and one for UDP.",
+                    "description": "Single service exposing both TCP and UDP ports. When set to false, it will create two Service, one for TCP and one for UDP.",
                     "type": "boolean"
                 },
                 "spec": {
