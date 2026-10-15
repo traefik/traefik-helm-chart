@@ -1,5 +1,89 @@
 # Change Log
 
+## 42.0.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-15
+
+* fix(tlogs)!: empty witness config
+* fix(rbac)!: 🐛 scope Traefik Hub secret write permissions to release namespace
+* feat(hub): restrict Secret types written by Traefik Hub
+* feat(hub): :rocket: support traefik hub v3.20.16 and v3.21.3
+* feat(chart)!: require Kubernetes v1.30 or higher
+* chore(release): 🚀 publish 42.0.0
+
+## :warning: Breaking changes
+
+There are 3 breaking changes in this release
+
+**Upgrade Notes**
+
+1. **Kubernetes v1.30+**: The chart now requires Kubernetes v1.30 or higher with PR https://github.com/traefik/traefik-helm-chart/pull/2030.
+2. **Traefik Hub Secret RBAC**: Write verbs on Secrets (`create`, `update`, `delete`) are no longer granted cluster-wide.
+   * A `Role` now grants them in the release namespace only, where Traefik Hub writes its Secrets, with PR https://github.com/traefik/traefik-helm-chart/pull/2028.
+3. **Transparency logs witnesses**: With PR https://github.com/traefik/traefik-helm-chart/pull/2018:
+   * `hub.transparencyLogs.witnessGroup.witnesses` now defaults to `null` and `threshold` must be at least `1`.
+   * Setting `threshold`, `timeout` or `failOpen` without any witness now fails.
+
+> [!NOTE]
+> With `hub.token`, the chart now deploys a cluster-scoped `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
+> Set `hub.restrictSecretTypes: false` if the installer cannot create cluster-scoped resources.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 7006d07..c71de17 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1135,7 +1135,7 @@ service:
+   enabled: true
+   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
+   nameOverride: ""  # @schema type:[string, null]
+-  # -- Single service is using `MixedProtocolLBService` feature gate.
++  # -- Single service exposing both TCP and UDP ports.
+   # When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+@@ -1209,6 +1209,7 @@ rbac:  # @schema additionalProperties: false
+   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
+   # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
+   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
++  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. <br />
+   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
+   namespaced: false
+   # -- Enable user-facing roles
+@@ -1317,6 +1318,10 @@ hub:  # @schema additionalProperties: false
+   offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+   namespaces: []  # @schema required:true
++  # -- Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
++  # It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`.
++  # **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.
++  restrictSecretTypes: true
+   apimanagement:
+     # -- Set to true in order to enable API Management. Requires a valid license token.
+     enabled: false
+@@ -1646,14 +1651,14 @@ hub:  # @schema additionalProperties: false
+     # @default -- See _values.yaml_
+     witnessGroup:
+       # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
+-      threshold:  # @schema type:[integer, null]; minimum:0
++      threshold:  # @schema type:[integer, null]; minimum:1
+       # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
+       # @default -- `5s` when unset
+       timeout: ""
+       # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
+       failOpen:  # @schema type:[boolean, null]
+-      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
+-      witnesses: []  # @schema item:object
++      # -- (list) Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
++      witnesses:  # @schema type:[array, null]; item:object; minItems:1
+ 
+   tracing:
+     additionalTraceHeaders:
+```
+
+
 ## 41.7.1  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-09
