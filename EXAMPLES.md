@@ -1196,7 +1196,8 @@ provided as a name to service details mapping; for example you can use the follo
 service:
   additionalServices:
     internal:
-      type: ClusterIP
+      spec:
+        type: ClusterIP
       labels:
         traefik-service-label: internal
 ```
