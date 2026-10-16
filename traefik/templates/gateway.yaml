@@ -18,7 +18,7 @@ spec:
   gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   {{- with .Values.gateway.infrastructure }}
   infrastructure:
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.gateway.defaultScope }}
   defaultScope: {{ . }}
@@ -35,7 +35,7 @@ spec:
           {{ $found = true }}
         {{- end -}}
       {{- end -}}
-      {{ if not $found }}
+      {{- if not $found }}
         {{- fail (printf "ERROR: port %0.f is not declared in ports" .port ) }}
       {{- end -}}
       port: {{ .port }}
@@ -48,15 +48,15 @@ spec:
         namespaces:
           {{- toYaml . | nindent 10 }}
       {{- end }}
-      {{ if and (eq .protocol  "HTTPS") (not .certificateRefs) }}
+      {{- if and (eq .protocol  "HTTPS") (not .certificateRefs) }}
         {{- fail "ERROR: certificateRefs needs to be specified using HTTPS" }}
       {{- end }}
-      {{ if or .certificateRefs .mode }}
+      {{- if or .certificateRefs .mode }}
       tls:
-        {{ with .mode }}
+        {{- with .mode }}
         mode: {{ . }}
         {{- end }}
-        {{ with .certificateRefs }}
+        {{- with .certificateRefs }}
         certificateRefs:
           {{- toYaml . | nindent 10 }}
         {{- end }}
