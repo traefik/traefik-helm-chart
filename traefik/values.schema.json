@@ -2827,7 +2827,10 @@
                         },
                         "safeNaming": {
                             "description": "Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.",
-                            "type": "boolean"
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         }
                     },
                     "additionalProperties": false
