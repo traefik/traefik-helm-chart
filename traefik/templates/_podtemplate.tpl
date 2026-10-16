@@ -75,7 +75,7 @@
           {{- with .Values.resources }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
-        {{- if (and (empty .Values.ports.traefik) (empty .Values.deployment.healthchecksPort)) }}
+        {{- if (and (or (empty .Values.ports.traefik) (not (dig "traefik" "enabled" true .Values.ports))) (empty .Values.deployment.healthchecksPort)) }}
           {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
         {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
@@ -112,7 +112,7 @@
         ports:
         {{- $hostNetwork := .Values.hostNetwork }}
         {{- range $name, $config := .Values.ports }}
-         {{- if $config }}
+         {{- if and $config (dig "enabled" true $config) }}
           {{- if and $hostNetwork (and $config.hostPort $config.port) }}
             {{- if ne ($config.hostPort | int) ($config.port | int) }}
               {{- fail "ERROR: All hostPort must match their respective containerPort when `hostNetwork` is enabled" }}
@@ -214,7 +214,7 @@
            {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
-           {{- if $config }}
+           {{- if and $config (dig "enabled" true $config) }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
             {{- $hostIP := default "" $config.hostIP }}
             {{- if contains ":" $hostIP }}
@@ -660,7 +660,7 @@
            {{- end }}
           {{- end }}
           {{- range $name, $config := $.Values.ports }}
-          {{- if $config }}
+          {{- if and $config (dig "enabled" true $config) }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
             {{- with $config.http }}
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.%s.http.encodedCharacters" $entryPoints $name) "content" .encodedCharacters) | nindent 10 }}
