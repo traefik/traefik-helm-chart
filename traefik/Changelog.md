@@ -1,5 +1,21 @@
 # Change Log
 
+## 42.0.1  ![AppVersion: v3.7.15](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.15&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-16
+
+* fix(gateway): remove unnecessary blank lines from generated Gateway
+* feat(deps): update traefik docker tag to v3.7.15
+* chore(release): 🚀 publish 42.0.1
+
+**Upgrade Notes**
+
+Traefik Proxy v3.7.15 uses Gateway API v1.6.3. If you use the Kubernetes Gateway API provider, update the Gateway API CRDs before upgrading:
+
+```bash
+kubectl apply --server-side --force-conflicts -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
+```
+
 ## 42.0.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-15
