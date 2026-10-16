@@ -331,8 +331,8 @@ providers:
     namespaces: []
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
-    # -- Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.
-    safeNaming: false
+    # -- (bool) Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.
+    safeNaming:  # @schema type:[boolean, null]
 
   # @schema additionalProperties: false
   kubernetesIngress:
