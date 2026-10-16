@@ -1,0 +1,152 @@
+suite: name / fullname / namespace overrides
+tests:
+  - it: nameOverride changes the chart name in selector labels
+    template: deployment.yaml
+    set:
+      nameOverride: my-traefik
+    asserts:
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: my-traefik
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: my-traefik
+
+  - it: nameOverride changes the suffix in the fullname (default release prefix kept)
+    template: deployment.yaml
+    set:
+      nameOverride: my-traefik
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-my-traefik
+
+  - it: fullname collapses when the release name contains the chart name (legacy parity)
+    template: deployment.yaml
+    release:
+      name: traefik
+    asserts:
+      - equal:
+          path: metadata.name
+          value: traefik
+
+  - it: fullname keeps the release prefix when it does not contain the chart name
+    template: deployment.yaml
+    release:
+      name: prod
+    asserts:
+      - equal:
+          path: metadata.name
+          value: prod-traefik
+
+  - it: fullnameOverride wins over the release-name prefix
+    template: deployment.yaml
+    set:
+      fullnameOverride: traefik-shared
+    asserts:
+      - equal:
+          path: metadata.name
+          value: traefik-shared
+
+  - it: fullnameOverride propagates to the IngressRoute prefix
+    template: ingressroute.yaml
+    set:
+      fullnameOverride: traefik-shared
+      ingressRoute.dashboard.spec:
+        entryPoints: [traefik]
+        routes:
+          - { match: "PathPrefix(`/`)", kind: Rule, services: [{ name: api@internal, kind: TraefikService }] }
+    documentSelector:
+      path: metadata.name
+      value: traefik-shared-dashboard
+    asserts:
+      - equal:
+          path: metadata.name
+          value: traefik-shared-dashboard
+
+  - it: namespaceOverride stamps metadata.namespace on the Deployment
+    template: deployment.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: traefik-system
+
+  - it: namespaceOverride stamps metadata.namespace on the Service
+    template: service.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: traefik-system
+
+  - it: namespaceOverride stamps metadata.namespace on the IngressRoute
+    template: ingressroute.yaml
+    set:
+      namespaceOverride: traefik-system
+      ingressRoute.dashboard.spec:
+        entryPoints: [traefik]
+        routes:
+          - { match: "PathPrefix(`/`)", kind: Rule, services: [{ name: api@internal, kind: TraefikService }] }
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: traefik-system
+
+  - it: namespaceOverride stamps metadata.namespace on the ServiceAccount
+    template: serviceaccount.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: traefik-system
+
+  - it: cluster-scoped ClusterRole has no metadata.namespace
+    template: clusterrole.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - notExists:
+          path: metadata.namespace
+
+  - it: cluster-scoped ClusterRoleBinding has no metadata.namespace
+    template: clusterrolebinding.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - notExists:
+          path: metadata.namespace
+
+  - it: ClusterRoleBinding subject namespace follows namespaceOverride
+    template: clusterrolebinding.yaml
+    set:
+      namespaceOverride: traefik-system
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: traefik-system
+
+  - it: RoleBinding subject namespace follows namespaceOverride
+    template: rolebinding.yaml
+    set:
+      role: {}
+      roleBinding: {}
+      namespaceOverride: traefik-system
+      traefik.providers.kubernetesCRD.namespaces: [my-ns]
+    asserts:
+      - equal:
+          path: subjects[0].namespace
+          value: traefik-system
+
+  - it: user metadata.namespace via the spec hatch is overridden by the chart
+    template: deployment.yaml
+    set:
+      namespaceOverride: traefik-system
+      deployment.metadata.namespace: user-attempt
+    asserts:
+      - equal:
+          path: metadata.namespace
+          value: traefik-system

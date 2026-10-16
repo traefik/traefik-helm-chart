@@ -1,0 +1,14 @@
+deployment:
+  spec:
+    replicas: 3
+
+traefik:
+  providers:
+    kubernetesGateway: {}
+  metrics:
+    prometheus: {}
+  accessLog: {}
+  # BYO license Secret `<release>-traefik-hub-license` (see demo/README.md).
+  hub:
+    apimanagement:
+      admission: {}
