@@ -18,7 +18,7 @@ spec:
   gatewayClassName: {{ default "traefik" .Values.gatewayClass.name }}
   {{- with .Values.gateway.infrastructure }}
   infrastructure:
-    {{ toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with .Values.gateway.defaultScope }}
   defaultScope: {{ . }}
