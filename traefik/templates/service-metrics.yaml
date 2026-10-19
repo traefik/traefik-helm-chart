@@ -2,7 +2,7 @@
 {{- if .Values.metrics.prometheus.service }}
 {{- if (.Values.metrics.prometheus.service).enabled -}}
 
-{{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml) }}
+{{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml }}
 
 {{- $fullname := include "traefik.fullname" . }}
 {{- if ge (len $fullname) 50 }}

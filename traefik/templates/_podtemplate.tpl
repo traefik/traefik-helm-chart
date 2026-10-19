@@ -1,5 +1,5 @@
 {{- define "traefik.podTemplate" }}
-  {{ $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml }}
+  {{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml }}
   {{- $version := include "traefik.proxyVersion" $ }}
     metadata:
       annotations:
