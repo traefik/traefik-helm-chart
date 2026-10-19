@@ -313,3 +313,7 @@
   {{- end }}
 
 {{- end }}
+
+{{- if and .Values.metrics.prometheus (not (hasKey $enabledPorts .Values.metrics.prometheus.entryPoint)) }}
+  {{- fail "ERROR: metrics.prometheus.entryPoint cannot cannot point to a disabled port" -}}
+{{- end }}
