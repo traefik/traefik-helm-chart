@@ -200,3 +200,14 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
+  - it: should set app.kubernetes.io/version on the daemonset and its pod template
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
+      - matchRegex:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
