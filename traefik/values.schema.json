@@ -2393,6 +2393,7 @@
                         "minimum": 0
                     },
                     "enabled": {
+                        "description": "Defines whether the port/entryPoint is enabled or not",
                         "type": "boolean"
                     },
                     "expose": {
