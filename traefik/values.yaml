@@ -918,6 +918,7 @@ envFrom: []
 ports:
   # @schema additionalProperties: false
   traefik:
+    # -- Defines whether the port is enabled or not
     enabled: true
     port: 8080
     # -- (int) Use hostPort if set.
