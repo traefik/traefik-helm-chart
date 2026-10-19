@@ -2,6 +2,8 @@
 {{- if .Values.metrics.prometheus.service }}
 {{- if (.Values.metrics.prometheus.service).enabled -}}
 
+{{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml) }}
+
 {{- $fullname := include "traefik.fullname" . }}
 {{- if ge (len $fullname) 50 }}
   {{- fail "ERROR: Cannot create a metrics service when name contains more than 50 characters" }}
@@ -21,12 +23,12 @@ spec:
   selector:
     {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
-  - port: {{ (include "traefik.enabledPorts" $ | fromYaml).metrics.port }}
+  - port: {{ $enabledPorts.metrics.port }}
     name: metrics
     targetPort: metrics
     protocol: TCP
-    {{- if (include "traefik.enabledPorts" $ | fromYaml).metrics.nodePort }}
-    nodePort: {{ (include "traefik.enabledPorts" $ | fromYaml).metrics.nodePort }}
+    {{- if $enabledPorts.metrics.nodePort }}
+    nodePort: {{ $enabledPorts.metrics.nodePort }}
     {{- end }}
 {{- end }}
 {{- end }}

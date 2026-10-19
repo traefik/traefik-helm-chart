@@ -11,6 +11,8 @@
   {{- end }}
 {{- end }}
 
+{{- $enabledPorts := (include "traefik.enabledPorts" $ | fromYaml) }}
+
 {{- if and .Values.hub.token (eq (include "traefik.hub.enabled" .) "false") }}
   {{- fail "ERROR: hub.enabled cannot be false when hub.token is set." -}}
 {{- end }}
@@ -139,15 +141,14 @@
   {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
 {{- end }}
 
-{{- range $name, $config := (include "traefik.enabledPorts" $ | fromYaml) }}
-  {{- $enabled := (and $config (dig "enabled" true $config)) }}
-  {{- if and $enabled (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
+{{- range $name, $config := $enabledPorts }}
+  {{- if and (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
   {{- end }}
-  {{- if and $enabled (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
+  {{- if and (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
     {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
   {{- end }}
-  {{- if and $enabled (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
+  {{- if and (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
   {{- end }}
   {{- if and $config.uplink (empty $.Values.hub.token) }}
@@ -156,14 +157,14 @@
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
-    (eq (include "traefik.enabledPorts" $ | fromYaml).websecure.http.sanitizePath false)
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedSlash
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedBackSlash
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedNullCharacter
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedSemicolon
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedPercent
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedQuestionMark
-    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedHash )}}
+    (eq $enabledPorts.websecure.http.sanitizePath false)
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedSlash
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedBackSlash
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedNullCharacter
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedSemicolon
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedPercent
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedQuestionMark
+    $enabledPorts.websecure.http.encodedCharacters.allowEncodedHash )}}
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
@@ -216,7 +217,7 @@
     {{- end }}
   {{- end }}
 
-  {{- range $portName, $config := (include "traefik.enabledPorts" $ | fromYaml) }}
+  {{- range $portName, $config := $enabledPorts }}
     {{- if $config.uplink }}
       {{- if semverCompare "<v3.20.0-0" $hubVersion }}
         {{ fail "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."}}
