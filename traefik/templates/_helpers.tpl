@@ -101,6 +101,7 @@ app.kubernetes.io/instance: {{ template "traefik.instance-name" . }}
 {{/* Shared labels used in metada */}}
 {{- define "traefik.labels" -}}
 {{ include "traefik.labelselector" . }}
+app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.commonLabels }}

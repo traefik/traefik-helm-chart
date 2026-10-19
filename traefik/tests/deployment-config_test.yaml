@@ -577,3 +577,11 @@ tests:
       - equal:
           path: spec.template.spec.volumes[0].emptyDir.sizeLimit
           value: 50Mi
+  - it: should set app.kubernetes.io/version on the deployment and its pod template
+    asserts:
+      - matchRegex:
+          path: metadata.labels["app.kubernetes.io/version"]
+          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
+      - matchRegex:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
