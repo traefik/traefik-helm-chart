@@ -627,7 +627,7 @@ providers:
 ## Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
-entrypoint. They have been available since v1.20 and in beta as of Kubernetes v1.24.
+entrypoint. They are generally available since Kubernetes v1.26.
 Availability may depend on your Kubernetes provider.
 
 When using TCP and UDP with a single service, you may encounter [this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741) from Kubernetes.
@@ -868,13 +868,11 @@ experimental:
 
 Traefik Hub can run without a license token. In this _proxy mode_, it behaves as a Traefik Proxy:
 no commercial feature is enabled, and no external connection is made. It requires Traefik Hub
->= `v3.21.0-ea`, which is above the version this chart defaults to, so `image.tag` must be set:
+>= `v3.21.0`:
 
 ```yaml
 hub:
   enabled: true
-image:
-  tag: v3.21.0-ea.1
 ```
 
 This installs `ghcr.io/traefik/traefik-hub` instead of `docker.io/traefik`. To enable API Gateway
@@ -950,7 +948,7 @@ extraObjects:
 
 Transparency logs keep a tamper-evident record of logs and access logs. They are enabled as soon as
 a `hub.transparencyLogs.driver` is set, and require a license token and Traefik Hub
->= `v3.21.0-ea.3`: they are not supported in proxy mode.
+>= `v3.21.0`: they are not supported in proxy mode.
 
 `signerPrivateKey` and each witness `key` are file paths, so the keys have to exist in a `Secret`
 before installing the chart. Generate the log's own keypair with the `keygen` command shipped in the
@@ -959,7 +957,7 @@ Traefik Hub image:
 ```bash
 mkdir -p keys
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
-  ghcr.io/traefik/traefik-hub:v3.21.0-ea.3 \
+  ghcr.io/traefik/traefik-hub:v3.21.3 \
   keygen --name my-log --outputDir /keys
 ```
 
@@ -990,11 +988,6 @@ hub:
       witnesses:
         - url: https://witness.example.com
           key: /etc/traefik-hub/transparency-logs/witness-public.key
-
-image:
-  registry: ghcr.io
-  repository: traefik/traefik-hub
-  tag: v3.21.0-ea.3
 
 deployment:
   additionalVolumes:
@@ -1203,7 +1196,8 @@ provided as a name to service details mapping; for example you can use the follo
 service:
   additionalServices:
     internal:
-      type: ClusterIP
+      spec:
+        type: ClusterIP
       labels:
         traefik-service-label: internal
 ```
@@ -1980,6 +1974,68 @@ hub:
     enabled: true
     maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
+
+## Use Traefik Hub Gateway with the Traefik MCP server as a sidecar
+
+The Traefik MCP server (`traefik/mcp-server` image) gives an AI agent a read-only view of
+the running gateway. It reads the Traefik API over localhost and needs a Traefik Hub license, which it
+shares with Traefik through the `hub-token` volume.
+
+```yaml
+# The sidecar reads /api/rawdata, only served when the API is enabled.
+api:
+  insecure: true
+
+hub:
+  token: traefik-hub-license
+  mcpgateway:
+    enabled: true
+
+deployment:
+  additionalContainers:
+    - name: mcp-traefik
+      image: traefik/mcp-server:v0.0.2
+      args:
+        # Streamable HTTP, the transport spoken by the MCP Gateway.
+        - "-mcp.address=:8090"
+        - "-license.token-file=/etc/secrets/token"
+      ports:
+        - name: mcp
+          containerPort: 8090
+      volumeMounts:
+        - name: hub-token
+          mountPath: /etc/secrets
+          readOnly: true
+
+extraObjects:
+  # The chart's Service does not publish port 8090.
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: traefik-mcp
+    spec:
+      selector:
+        app.kubernetes.io/name: '{{ template "traefik.name" . }}'
+        app.kubernetes.io/instance: '{{ template "traefik.fullname" . }}-{{ .Release.Namespace }}'
+      ports:
+        - name: mcp
+          port: 8090
+          targetPort: mcp
+```
+
+> [!WARNING]
+> Do not add probes to the sidecar: a failing readiness probe would remove the whole Traefik pod from its Services.
+
+Check it locally:
+
+```bash
+kubectl port-forward -n traefik svc/traefik-mcp 8090 &
+curl -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' http://localhost:8090/mcp
+```
+
+To publish it, route to `traefik-mcp:8090` with JWT and MCP middlewares. See
+[MCP Gateway](https://doc.traefik.io/traefik-hub/mcp-gateway/mcp) for authentication and per-tool authorization.
 
 ## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 

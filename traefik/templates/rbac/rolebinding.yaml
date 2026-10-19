@@ -1,13 +1,17 @@
-{{- $ingressNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesIngress.namespaces -}}
-{{- $CRDNamespaces := concat (include "traefik.namespace" . | list) .Values.providers.kubernetesCRD.namespaces -}}
-{{- $gatewayNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.kubernetesGateway).namespaces) -}}
-{{- $knativeNamespaces := concat (include "traefik.namespace" . | list) ((.Values.providers.knative).namespaces) -}}
-{{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
 {{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $gatewayNamespaces $knativeNamespaces $hubNamespaces $ingressNGINXNamespaces)) -}}
+{{- $namespaces := include "traefik.namespace" . | list -}}
+{{- if .Values.rbac.namespaced -}}
+  {{- $namespaces = concat $namespaces .Values.hub.namespaces -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesIngress).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesCRD).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesGateway).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.knative).namespaces) -}}
+  {{- $namespaces = concat $namespaces $ingressNGINXNamespaces -}}
+{{- end -}}
+{{- $namespaces = sortAlpha (uniq $namespaces) -}}
 
-{{- if and .Values.rbac.enabled .Values.rbac.namespaced }}
-{{- range $allNamespaces }}
+{{- if and .Values.rbac.enabled (or .Values.rbac.namespaced .Values.hub.token) }}
+{{- range $namespaces }}
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1

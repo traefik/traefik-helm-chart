@@ -380,6 +380,9 @@ providers:
     namespaces: []
     # -- A label selector can be defined to filter on specific GatewayClass objects only.
     labelSelector: ""
+    # -- Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+).
+    # If left empty, Traefik processes all Gateways.
+    gateways: []
     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
     nativeLBByDefault: false
     # -- (int) Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
@@ -1137,7 +1140,7 @@ service:
   enabled: true
   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
   nameOverride: ""  # @schema type:[string, null]
-  # -- Single service is using `MixedProtocolLBService` feature gate.
+  # -- Single service exposing both TCP and UDP ports.
   # When set to false, it will create two Service, one for TCP and one for UDP.
   single: true
   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
@@ -1211,6 +1214,7 @@ rbac:  # @schema additionalProperties: false
   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
   # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
+  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. <br />
   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
   namespaced: false
   # -- Enable user-facing roles
@@ -1319,6 +1323,10 @@ hub:  # @schema additionalProperties: false
   offline:  # @schema type:[boolean, null]
   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
   namespaces: []  # @schema required:true
+  # -- Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
+  # It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`.
+  # **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.
+  restrictSecretTypes: true
   apimanagement:
     # -- Set to true in order to enable API Management. Requires a valid license token.
     enabled: false
@@ -1648,14 +1656,14 @@ hub:  # @schema additionalProperties: false
     # @default -- See _values.yaml_
     witnessGroup:
       # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
-      threshold:  # @schema type:[integer, null]; minimum:0
+      threshold:  # @schema type:[integer, null]; minimum:1
       # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
       # @default -- `5s` when unset
       timeout: ""
       # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
       failOpen:  # @schema type:[boolean, null]
-      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
-      witnesses: []  # @schema item:object
+      # -- (list) Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
+      witnesses:  # @schema type:[array, null]; item:object; minItems:1
 
   tracing:
     additionalTraceHeaders:

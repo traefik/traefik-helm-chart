@@ -128,6 +128,17 @@
   {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
 {{- end }}
 
+{{- with .Values.providers.kubernetesGateway.gateways }}
+  {{- if semverCompare "<v3.7.14-0" $version }}
+    {{- fail "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14." }}
+  {{- end }}
+  {{- range $idx, $gateway := . }}
+    {{- if not $gateway.name }}
+      {{- fail (printf "ERROR: providers.kubernetesGateway.gateways[%d].name must be set." $idx) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
 {{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
 {{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
   {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
@@ -290,8 +301,13 @@
       {{- if not .signerPrivateKey }}
         {{ fail "ERROR: hub.transparencyLogs.signerPrivateKey must be set." }}
       {{- end }}
-      {{- if and .witnessGroup .witnessGroup.threshold (gt (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
-        {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .witnessGroup.threshold) (len .witnessGroup.witnesses)) }}
+      {{- with .witnessGroup }}
+        {{- if and (not .witnesses) (or (not (kindIs "invalid" .threshold)) .timeout (kindIs "bool" .failOpen)) }}
+          {{ fail "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses." }}
+        {{- end }}
+        {{- if and .threshold (gt (int .threshold) (len .witnesses)) }}
+          {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .threshold) (len .witnesses)) }}
+        {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}

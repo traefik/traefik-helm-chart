@@ -93,14 +93,14 @@ tests:
         tag: v99.0.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.13."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.15."
   - it: should fail when trying to use this Chart with a Proxy major pre-release above max
     set:
       image:
         tag: v4.0.0-rc.1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.13."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.15."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -178,7 +178,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.20.13."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.3."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -585,6 +585,59 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: request path security options are only available for traefik >= v3.6.4."
+  - it: should fail when using kubernetesGateway gateways on traefik < 3.7.14
+    set:
+      image:
+        tag: v3.7.13
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14."
+  - it: should fail when using kubernetesGateway gateways on traefik-hub v3.21.0
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0
+      hub:
+        token: xxx
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14."
+  - it: should not fail when using kubernetesGateway gateways on traefik-hub v3.21.1
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.1
+      hub:
+        token: xxx
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - name: public
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when a kubernetesGateway gateway has no name
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+          gateways:
+            - namespace: edge
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.gateways[0].name must be set."
   - it: should fail when using accesslog dualOutput on traefik < 3.7.0
     set:
       image:
@@ -989,13 +1042,12 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
-  - it: should fail when using proxy mode with the default Traefik Hub version
+  - it: should pass when using proxy mode with the default Traefik Hub version
     set:
       hub:
         enabled: true
     asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: Traefik Hub proxy mode requires Traefik Hub >= v3.21.0-ea, set image.tag accordingly."
+      - notFailedTemplate: {}
   - it: should not gate on proxy mode version when a token is set
     set:
       hub:
@@ -1190,3 +1242,86 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold 2 exceeds the 1 configured witnesses."
+  - it: should fail when the witness threshold is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail when the witness timeout is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            timeout: 5m
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail when witness failOpen is set without witnesses
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            failOpen: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses."
+  - it: should fail on an empty witnesses list
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            witnesses: []
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail on a zero witness threshold
+    set:
+      image:
+        tag: v3.21.0-ea.3
+      hub:
+        token: my-token
+        transparencyLogs:
+          driver:
+            posix:
+              path: /data/transparency-logs
+          signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+          witnessGroup:
+            threshold: 0
+            witnesses:
+              - url: https://witness.example.com
+                key: /etc/traefik-hub/transparency-logs/witness-public.key
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

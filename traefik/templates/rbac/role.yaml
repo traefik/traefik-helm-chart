@@ -5,10 +5,19 @@
 {{- $hubNamespaces := concat (include "traefik.namespace" . | list) .Values.hub.namespaces -}}
 {{/* Mirrors the --providers.kubernetesingressnginx.watchnamespace arg: a single namespace, defaulting to the release one. */}}
 {{- $ingressNGINXNamespaces := ternary (splitList "," (include "providers.kubernetesIngressNGINX.namespaces" .)) (list) .Values.providers.kubernetesIngressNGINX.enabled -}}
-{{- $allNamespaces := sortAlpha (uniq (concat $ingressNamespaces $CRDNamespaces $hubNamespaces $knativeNamespaces $ingressNGINXNamespaces)) -}}
+{{- $namespaces := include "traefik.namespace" . | list -}}
+{{- if .Values.rbac.namespaced -}}
+  {{- $namespaces = concat $namespaces .Values.hub.namespaces -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesIngress).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesCRD).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.kubernetesGateway).namespaces) -}}
+  {{- $namespaces = concat $namespaces ((.Values.providers.knative).namespaces) -}}
+  {{- $namespaces = concat $namespaces $ingressNGINXNamespaces -}}
+{{- end -}}
+{{- $namespaces = sortAlpha (uniq $namespaces) -}}
 
-{{- if and .Values.rbac.enabled .Values.rbac.namespaced -}}
-{{- range $allNamespaces }}
+{{- if and .Values.rbac.enabled (or .Values.rbac.namespaced .Values.hub.token) -}}
+{{- range $namespaces }}
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
@@ -18,6 +27,22 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
+{{- if and $.Values.hub.token (eq . (include "traefik.namespace" $)) }}
+  - apiGroups:
+      - ""
+    resources:
+      - secrets
+    verbs:
+    {{- if $.Values.rbac.namespaced }}
+      - get
+      - list
+      - watch
+    {{- end }}
+      - create
+      - update
+      - delete
+{{- end }}
+{{- if $.Values.rbac.namespaced }}
   - apiGroups:
       - ""
     resources:
@@ -116,17 +141,6 @@ rules:
       - get
       - list
       - watch
-  - apiGroups:
-      - ""
-    resources:
-      - secrets
-    verbs:
-      - get
-      - list
-      - watch
-      - update
-      - create
-      - delete
   - apiGroups:
       - coordination.k8s.io
     resources:
@@ -235,6 +249,7 @@ rules:
       - list
       - watch
   {{- end }}
+{{- end }}
 {{- end }}
 {{- end -}}
 {{- end -}}
