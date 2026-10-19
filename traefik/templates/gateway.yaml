@@ -30,7 +30,7 @@ spec:
         {{- fail "ERROR: port needs to be specified" }}
       {{- end -}}
       {{ $found := false }}
-      {{- range $portName, $portConfig := $.Values.ports -}}
+      {{- range $portName, $portConfig := (include "traefik.enabledPorts" $ | fromYaml) -}}
         {{- if eq (int $portConfig.port) (int $config.port) -}}
           {{ $found = true }}
         {{- end -}}

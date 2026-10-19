@@ -21,12 +21,12 @@ spec:
   selector:
     {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
-  - port: {{ .Values.ports.metrics.port }}
+  - port: {{ (include "traefik.enabledPorts" $ | fromYaml).metrics.port }}
     name: metrics
     targetPort: metrics
     protocol: TCP
-    {{- if .Values.ports.metrics.nodePort }}
-    nodePort: {{ .Values.ports.metrics.nodePort }}
+    {{- if (include "traefik.enabledPorts" $ | fromYaml).metrics.nodePort }}
+    nodePort: {{ (include "traefik.enabledPorts" $ | fromYaml).metrics.nodePort }}
     {{- end }}
 {{- end }}
 {{- end }}

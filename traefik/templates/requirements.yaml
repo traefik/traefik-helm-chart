@@ -139,7 +139,7 @@
   {{- fail "ERROR: core.strictTLSOptions is only available for traefik >= v3.7.11." }}
 {{- end }}
 
-{{- range $name, $config := .Values.ports }}
+{{- range $name, $config := (include "traefik.enabledPorts" $ | fromYaml) }}
   {{- $enabled := (and $config (dig "enabled" true $config)) }}
   {{- if and $enabled (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
@@ -156,14 +156,14 @@
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
-    (eq .Values.ports.websecure.http.sanitizePath false)
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedSlash
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedBackSlash
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedNullCharacter
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedSemicolon
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedPercent
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedQuestionMark
-    .Values.ports.websecure.http.encodedCharacters.allowEncodedHash )}}
+    (eq (include "traefik.enabledPorts" $ | fromYaml).websecure.http.sanitizePath false)
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedSlash
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedBackSlash
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedNullCharacter
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedSemicolon
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedPercent
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedQuestionMark
+    (include "traefik.enabledPorts" $ | fromYaml).websecure.http.encodedCharacters.allowEncodedHash )}}
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
@@ -216,7 +216,7 @@
     {{- end }}
   {{- end }}
 
-  {{- range $portName, $config := .Values.ports }}
+  {{- range $portName, $config := (include "traefik.enabledPorts" $ | fromYaml) }}
     {{- if $config.uplink }}
       {{- if semverCompare "<v3.20.0-0" $hubVersion }}
         {{ fail "ERROR: uplink is a feature only available for Traefik Hub >= v3.20.0."}}
