@@ -577,11 +577,60 @@ tests:
       - equal:
           path: spec.template.spec.volumes[0].emptyDir.sizeLimit
           value: 50Mi
-  - it: should set app.kubernetes.io/version on the deployment and its pod template
+  - it: should set app.kubernetes.io/version from appVersion by default
+    chart:
+      appVersion: v3.6.10
     asserts:
-      - matchRegex:
+      - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
-      - matchRegex:
+          value: v3.6.10
+      - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
-          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+
+          value: v3.6.10
+  - it: should set app.kubernetes.io/version from image.tag without its digest
+    set:
+      image:
+        tag: v3.5.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.5.2
+  - it: should set app.kubernetes.io/version from versionOverride
+    set:
+      versionOverride: v3.4.1
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.4.1
+  - it: should set app.kubernetes.io/version to a valid label value
+    set:
+      image:
+        tag: v3.7.0-rc.1+build.42_
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.7.0-rc.1_build.42
+  - it: should set app.kubernetes.io/version to the Hub version when Hub is enabled
+    set:
+      hub:
+        token: xxx
+      image:
+        tag: v3.20.0
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.20.0
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+          value: v3.20.0
+  - it: should set app.kubernetes.io/version to the default Hub tag when Hub is enabled without image.tag
+    chart:
+      annotations:
+        traefik.io/hub-max-version: v3.21.3
+    set:
+      hub:
+        token: xxx
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.21.3
