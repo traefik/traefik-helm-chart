@@ -25,7 +25,7 @@
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
     spec:
-      {{- with .Values.deployment.imagePullSecrets }}
+      {{- with coalesce .Values.deployment.imagePullSecrets .Values.imagePullSecrets (.Values.global).imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}

@@ -421,7 +421,7 @@
                     ]
                 },
                 "imagePullSecrets": {
-                    "description": "Pull secret for fetching traefik container image",
+                    "description": "Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`",
                     "type": "array"
                 },
                 "initContainers": {
@@ -696,6 +696,10 @@
                 },
                 "checkNewVersion": {
                     "type": "boolean"
+                },
+                "imagePullSecrets": {
+                    "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
+                    "type": "array"
                 },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
@@ -1624,6 +1628,10 @@
                 }
             },
             "additionalProperties": false
+        },
+        "imagePullSecrets": {
+            "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty",
+            "type": "array"
         },
         "ingressClass": {
             "type": "object",

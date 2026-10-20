@@ -49,10 +49,10 @@ without changing the image. ℹ️
 
 
 {{/* Warn about missing pull credentials for the hardened image (SA-attached secrets are not visible here) */}}
-{{- if and .Values.hub.hardened (empty .Values.deployment.imagePullSecrets) -}}
+{{- if and .Values.hub.hardened (empty (coalesce .Values.deployment.imagePullSecrets .Values.imagePullSecrets (.Values.global).imagePullSecrets)) -}}
 {{- printf "\n" -}}
 🚨 hardened images are hosted on a private registry: pulling {{ include "traefik.image-name" . }} needs
-credentials, from `deployment.imagePullSecrets` or from the ServiceAccount used by Traefik. 🚨
+credentials, from `deployment.imagePullSecrets`, `imagePullSecrets`, `global.imagePullSecrets` or from the ServiceAccount used by Traefik. 🚨
 {{- printf "\n" -}}
 {{- end -}}
 
