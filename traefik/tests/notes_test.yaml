@@ -64,6 +64,19 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when global imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      global:
+        imagePullSecrets:
+          - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
   - it: should inform about proxy mode when hub is enabled without a token
     set:
       hub:

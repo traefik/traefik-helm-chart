@@ -15,6 +15,9 @@ image:  # @schema additionalProperties: false
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
 
+# -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty
+imagePullSecrets: []
+
 # -- Add additional label to all resources
 commonLabels: {}
 
@@ -889,6 +892,8 @@ global:
   sendAnonymousUsage: false
   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
   notAppendXForwardedFor: false
+  # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
+  imagePullSecrets: []
   # -- Required for Azure Marketplace integration.
   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
   # @default -- See _values.yaml_
@@ -1699,10 +1704,6 @@ oci_meta:
 # -- Required for IBM Cloud Marketplace integration.
 # Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart.
 offering_version: ""  # @schema type:[string, null]
-
-# -- Required for deployment tools that set image pull secrets on every chart.
-# Injected at the top level by these tools. This value is not used by the chart, use `deployment.imagePullSecrets` instead.
-imagePullSecrets: []
 
 # -- Allow the Helm chart to be used as optional subchart.
 enabled: true  # @schema type:boolean; const:true
