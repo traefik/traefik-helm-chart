@@ -1,5 +1,58 @@
 # Change Log
 
+## 42.1.0  ![AppVersion: v3.7.15](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.15&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-20
+
+* fix(gateway): remove unnecessary blank lines from generated Gateway
+* feat(hub): :rocket: support traefik hub v3.20.17 and v3.21.4
+* feat(deps): update traefik docker tag to v3.7.15
+* feat(chart): support top-level and global imagePullSecrets
+* chore(release): 🚀 publish 42.1.0
+
+**Upgrade Notes**
+
+> [!IMPORTANT]
+> This release requires a CRD update for Gateway API (v1.6.3). See chart [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v3715).
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c71de17..f9940eb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -15,6 +15,9 @@ image:  # @schema additionalProperties: false
+   # -- Traefik image pull policy
+   pullPolicy: IfNotPresent
+ 
++# -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty
++imagePullSecrets: []
++
+ # -- Add additional label to all resources
+ commonLabels: {}
+ 
+@@ -95,7 +98,7 @@ deployment:
+   dnsConfig: {}
+   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+   hostAliases: []
+-  # -- Pull secret for fetching traefik container image
++  # -- Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`
+   imagePullSecrets: []
+   # -- Pod lifecycle actions
+   lifecycle: {}
+@@ -889,6 +892,8 @@ global:
+   sendAnonymousUsage: false
+   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
+   notAppendXForwardedFor: false
++  # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
++  imagePullSecrets: []
+   # -- Required for Azure Marketplace integration.
+   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+   # @default -- See _values.yaml_
+```
+
+
 ## 42.0.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-15
