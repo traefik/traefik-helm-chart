@@ -51,6 +51,8 @@ tests:
     asserts:
       - matchRegexRaw:
           pattern: "hardened images are hosted on a private registry"
+      - matchRegexRaw:
+          pattern: "from `deployment.imagePullSecrets`, `imagePullSecrets`, `global.imagePullSecrets` or from the ServiceAccount"
   - it: should not warn about pull credentials when imagePullSecrets are set
     set:
       hub:
@@ -61,6 +63,18 @@ tests:
       deployment:
         imagePullSecrets:
           - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when top-level imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      imagePullSecrets:
+        - name: my-registry-credentials
     asserts:
       - notMatchRegexRaw:
           pattern: "hardened images are hosted on a private registry"

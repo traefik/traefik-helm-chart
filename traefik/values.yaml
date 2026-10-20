@@ -98,7 +98,7 @@ deployment:
   dnsConfig: {}
   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
   hostAliases: []
-  # -- Pull secret for fetching traefik container image
+  # -- Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`
   imagePullSecrets: []
   # -- Pod lifecycle actions
   lifecycle: {}

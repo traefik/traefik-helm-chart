@@ -90,7 +90,7 @@ Kubernetes: `>=1.30.0-0`
 | deployment.healthchecksScheme | string | `nil` | Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint. |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
 | deployment.hostUsers | bool | unset (inherits cluster default) | Whether to use the host user namespace. Setting this to false enables user namespaces, which can improve security by isolating the pod's users from the host. See https://kubernetes.io/docs/concepts/workloads/pods/user-namespaces/ |
-| deployment.imagePullSecrets | list | `[]` | Pull secret for fetching traefik container image |
+| deployment.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets` |
 | deployment.initContainers | list | `[]` | Additional initContainers (e.g. for setting file permission as shown below) |
 | deployment.kind | string | `"Deployment"` | Deployment or DaemonSet |
 | deployment.labels | object | `{}` | Additional deployment labels (e.g. for filtering deployment by custom labels) |

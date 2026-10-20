@@ -421,7 +421,7 @@
                     ]
                 },
                 "imagePullSecrets": {
-                    "description": "Pull secret for fetching traefik container image",
+                    "description": "Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`",
                     "type": "array"
                 },
                 "initContainers": {
