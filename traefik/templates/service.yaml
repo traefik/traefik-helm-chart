@@ -1,3 +1,7 @@
+{{- if hasKey .Values.service "type" }}
+  {{- fail "ERROR: `service.type` was removed in v40.0.0. Use `service.spec.type` instead." }}
+{{- end }}
+
 {{- $services := .Values.service.additionalServices -}}
 {{- $services = set $services "default" (omit .Values.service "additionalServices") }}
 
