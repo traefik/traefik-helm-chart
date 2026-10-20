@@ -1625,6 +1625,10 @@
             },
             "additionalProperties": false
         },
+        "imagePullSecrets": {
+            "description": "Required for deployment tools that set image pull secrets on every chart. Injected at the top level by these tools. This value is not used by the chart, use `deployment.imagePullSecrets` instead.",
+            "type": "array"
+        },
         "ingressClass": {
             "type": "object",
             "properties": {

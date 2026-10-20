@@ -1700,5 +1700,9 @@ oci_meta:
 # Injected by IBM Cloud Catalog when deploying via IBM Cloud Schematics. This value is not used by the chart.
 offering_version: ""  # @schema type:[string, null]
 
+# -- Required for deployment tools that set image pull secrets on every chart.
+# Injected at the top level by these tools. This value is not used by the chart, use `deployment.imagePullSecrets` instead.
+imagePullSecrets: []
+
 # -- Allow the Helm chart to be used as optional subchart.
 enabled: true  # @schema type:boolean; const:true
