@@ -4,7 +4,7 @@ description: A Traefik based Kubernetes ingress controller
 type: application
 version: 42.1.0
 # renovate: image=traefik
-appVersion: v3.7.15
+appVersion: v3.7.16
 kubeVersion: '>=1.30.0-0'
 keywords:
   - traefik
@@ -23,7 +23,7 @@ maintainers:
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
   traefik.io/proxy-min-version: v3.6.0
-  traefik.io/proxy-max-version: v3.7.15
+  traefik.io/proxy-max-version: v3.7.16
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.21.4
   artifacthub.io/changes: |
