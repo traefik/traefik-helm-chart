@@ -1,0 +1,146 @@
+{{- if and .Values.rbac.enabled (not .Values.rbac.namespaced) .Values.rbac.userRoles.enabled }}
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "traefik.userClusterRoleName" (dict "root" . "suffix" "view") }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    rbac.authorization.k8s.io/aggregate-to-view: "true"
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  # accesscontrolpolicies is not aggregated here: it inherently holds password/API key hashes with no secretRef alternative.
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - get
+      - list
+      - watch
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+      - apibundles
+      - apicatalogitems
+      - apiplans
+      - apiportalauths
+      - apiportals
+      - apiratelimits
+      - apis
+      - apiauths
+      - apiversions
+      - contentitems
+      - managedapplications
+      - managedsubscriptions
+      - uplinks
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "traefik.userClusterRoleName" (dict "root" . "suffix" "edit") }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  # Write verbs only.
+  - apiGroups:
+      - traefik.io
+    resources:
+      - ingressroutes
+      - ingressroutetcps
+      - ingressrouteudps
+      - middlewares
+      - middlewaretcps
+      - serverstransports
+      - serverstransporttcps
+      - tlsoptions
+      - tlsstores
+      - traefikservices
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - aiservices
+      - apibundles
+      - apicatalogitems
+      - apiplans
+      - apiportalauths
+      - apiportals
+      - apiratelimits
+      - apis
+      - apiauths
+      - apiversions
+      - contentitems
+      - managedapplications
+      - managedsubscriptions
+      - uplinks
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "traefik.userClusterRoleName" (dict "root" . "suffix" "view-sensitive") }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    # Deliberately NOT aggregated into view: accesscontrolpolicies holds key and password hashes inline.
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  # Read verbs for kinds that must not be readable through view: edit and admin only.
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+    verbs:
+      - get
+      - list
+      - watch
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: {{ include "traefik.userClusterRoleName" (dict "root" . "suffix" "edit-sensitive") }}
+  labels:
+    {{- include "traefik.labels" . | nindent 4 }}
+    rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    rbac.authorization.k8s.io/aggregate-to-admin: "true"
+rules:
+  # Write verbs only.
+  - apiGroups:
+      - hub.traefik.io
+    resources:
+      - accesscontrolpolicies
+    verbs:
+      - create
+      - update
+      - patch
+      - delete
+      - deletecollection
+{{- end }}
