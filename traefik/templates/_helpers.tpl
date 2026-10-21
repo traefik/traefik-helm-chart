@@ -591,3 +591,15 @@ A driver is what enables transparency logs, so this doubles as the feature switc
     {{- end -}}
     {{- join " " $drivers -}}
 {{- end -}}
+
+{{/*
+Return a struct of all enabled ports (as yaml string)
+*/}}
+{{- define "traefik.enabledPorts" }}
+{{- range $portName, $config := .Values.ports }}
+{{- if and $config (dig "enabled" true $config) }}
+{{ $portName }}:
+  {{- toYaml $config | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}
