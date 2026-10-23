@@ -22,7 +22,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/traefik/traefik-hub:v3.20.11
+          value: ghcr.io/traefik/traefik-hub:v3.21.6
 
   - it: explicit image override wins over the Hub auto-default
     set:

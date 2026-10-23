@@ -1250,7 +1250,7 @@ This can be achieved this way:
 > (see [Using plugins](#using-plugins)).
 
 ```yaml
-image: ghcr.io/traefik/traefik-hub:v3.20.11
+image: ghcr.io/traefik/traefik-hub:v3.21.6
 
 traefik:
   hub:

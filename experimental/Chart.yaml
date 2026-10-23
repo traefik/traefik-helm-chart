@@ -3,7 +3,7 @@ name: traefik-experimental
 description: EXPERIMENTAL Traefik chart (simplification proposal) — unreleased, not for production
 type: application
 version: 0.1.0
-appVersion: "v3.7.11"
+appVersion: "v3.7.16"
 # Matches the Kubernetes OpenAPI version values.schema.json is built
 # against (hack/build_schema.py K8S_VERSION) so the schema's validation
 # surface and the declared support window stay in lockstep.
@@ -21,6 +21,6 @@ icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/asse
 # happen here, not buried in helpers.
 annotations:
   traefik.io/proxy-min-version: v3.6.0
-  traefik.io/proxy-max-version: v3.7.11
+  traefik.io/proxy-max-version: v3.7.16
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.20.11
+  traefik.io/hub-max-version: v3.21.6
