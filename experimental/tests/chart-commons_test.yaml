@@ -1,0 +1,122 @@
+suite: chart-wide commonLabels and commonAnnotations
+tests:
+  - it: commonLabels lands on Deployment metadata
+    template: deployment.yaml
+    set:
+      commonLabels:
+        team: platform
+        env: prod
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+      - equal:
+          path: metadata.labels.env
+          value: prod
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: commonLabels lands on pod template metadata too
+    template: deployment.yaml
+    set:
+      commonLabels:
+        team: platform
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels.team
+          value: platform
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: commonAnnotations lands on Deployment metadata and pod template
+    template: deployment.yaml
+    set:
+      commonAnnotations:
+        owned-by: gitops
+    asserts:
+      - equal:
+          path: metadata.annotations["owned-by"]
+          value: gitops
+      - equal:
+          path: spec.template.metadata.annotations["owned-by"]
+          value: gitops
+
+  - it: commonLabels lands on Service metadata
+    template: service.yaml
+    set:
+      commonLabels:
+        team: platform
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: commonAnnotations lands on Service metadata
+    template: service.yaml
+    set:
+      commonAnnotations:
+        owned-by: gitops
+    asserts:
+      - equal:
+          path: metadata.annotations["owned-by"]
+          value: gitops
+
+  - it: commonLabels lands on IngressRoute metadata
+    template: ingressroute.yaml
+    set:
+      commonLabels:
+        team: platform
+      ingressRoute.dashboard.spec:
+        entryPoints: [traefik]
+        routes:
+          - { match: "PathPrefix(`/`)", kind: Rule, services: [{ name: api@internal, kind: TraefikService }] }
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: platform
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: commonAnnotations lands on IngressRoute metadata
+    template: ingressroute.yaml
+    set:
+      commonAnnotations:
+        owned-by: gitops
+      ingressRoute.dashboard.spec:
+        entryPoints: [traefik]
+        routes:
+          - { match: "PathPrefix(`/`)", kind: Rule, services: [{ name: api@internal, kind: TraefikService }] }
+    asserts:
+      - equal:
+          path: metadata.annotations["owned-by"]
+          value: gitops
+
+  - it: per-object metadata.labels override commonLabels for that object only
+    template: deployment.yaml
+    set:
+      commonLabels:
+        team: platform
+      deployment.metadata.labels:
+        team: networking
+    asserts:
+      - equal:
+          path: metadata.labels.team
+          value: networking
+
+  - it: default install has no user annotations on the Deployment metadata when commons is empty
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: metadata.annotations
+      # Pod template carries checksum/config (rolls pods on traefik.yaml changes)
+      # — the only chart-managed annotation; commons-driven annotations are absent.
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - notExists:
+          path: spec.template.metadata.annotations["owned-by"]
