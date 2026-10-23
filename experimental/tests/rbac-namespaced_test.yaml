@@ -10,6 +10,93 @@ tests:
     asserts:
       - hasDocuments: { count: 0 }
 
+  - it: Hub renders a release-namespace Role granting Secret write only
+    template: role.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - hasDocuments: { count: 1 }
+      - isKind: { of: Role }
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: rules
+          value:
+            - apiGroups: [""]
+              resources: [secrets]
+              verbs: [get, list, watch, create, update, delete]
+
+  - it: Hub renders a release-namespace RoleBinding to the chart ServiceAccount
+    template: rolebinding.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - hasDocuments: { count: 1 }
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: roleRef.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-traefik
+
+  - it: namespaced Hub keeps Secret write out of the provider namespaces
+    template: role.yaml
+    set:
+      traefik.hub: {}
+      role: {}
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [my-ns]
+    asserts:
+      - hasDocuments: { count: 2 }
+      - documentIndex: 0
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - documentIndex: 0
+        equal:
+          path: rules
+          value:
+            - apiGroups: [""]
+              resources: [secrets]
+              verbs: [get, list, watch, create, update, delete]
+      - documentIndex: 1
+        equal:
+          path: metadata.namespace
+          value: my-ns
+      - documentIndex: 1
+        notContains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [secrets]
+            verbs: [get, list, watch, create, update, delete]
+
+  - it: namespaced Hub merges Secret write into the release namespace provider Role
+    template: role.yaml
+    set:
+      traefik.hub: {}
+      role: {}
+      roleBinding: {}
+      traefik.providers.kubernetesCRD.namespaces: [NAMESPACE]
+    asserts:
+      - hasDocuments: { count: 1 }
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [secrets]
+            verbs: [get, list, watch, create, update, delete]
+      - contains:
+          path: rules
+          content:
+            apiGroups: [traefik.io]
+            resources: [ingressroutes, ingressroutetcps, ingressrouteudps, middlewares, middlewaretcps, serverstransports, serverstransporttcps, tlsoptions, tlsstores, traefikservices]
+            verbs: [get, list, watch]
+
   - it: role={} renders one Role per provider namespace
     template: role.yaml
     set:

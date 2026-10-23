@@ -1,8 +1,7 @@
-{{- if kindIs "map" .Values.roleBinding -}}
 {{- $ctx := . -}}
 {{- $fullname := include "traefik.fullname" $ctx -}}
 {{- $userMeta := ($ctx.Values.roleBinding | default dict).metadata | default dict -}}
-{{- $namespaces := include "traefik.providerNamespaces" $ctx | fromYamlArray -}}
+{{- $namespaces := include "traefik.roleNamespaces" $ctx | fromYamlArray -}}
 {{- range $ns := $namespaces }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -19,4 +18,3 @@ roleRef:
 subjects:
   {{- include "traefik.roleBindingSubjects" $ctx | nindent 2 }}
 {{- end }}
-{{- end -}}

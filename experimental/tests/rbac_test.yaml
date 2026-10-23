@@ -47,6 +47,24 @@ tests:
             resources: [leases]
             verbs: [get, list, watch, create, update, patch, delete]
 
+  - it: ClusterRole keeps Secrets read-only when Hub is enabled (write is scoped to the release namespace Role)
+    template: clusterrole.yaml
+    set:
+      traefik.hub: {}
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [services, secrets, nodes, configmaps, namespaces]
+            verbs: [get, list, watch]
+      - notContains:
+          path: rules
+          content:
+            apiGroups: [""]
+            resources: [secrets]
+            verbs: [get, list, watch, create, update, delete, deletecollection]
+
   - it: ClusterRole core layer grants endpointslices (needed by every k8s provider for backend resolution)
     template: clusterrole.yaml
     set:
@@ -140,14 +158,14 @@ tests:
     set:
       traefik.hub.apimanagement: {}
     asserts:
-      # Hub grants secrets write-back as its own rule (verbs differ from core,
-      # union applied) — proves verb-aware coalescing.
+      # APIM grants configmaps write (verbs differ from core, union applied)
+      # — proves verb-aware coalescing.
       - contains:
           path: rules
           content:
             apiGroups: [""]
-            resources: [secrets]
-            verbs: [get, list, watch, create, update, delete, deletecollection]
+            resources: [configmaps]
+            verbs: [get, list, watch, create, patch, delete]
       # the standalone pods (get) entry from core is gone (pods merged into the
       # get/list/watch group once Hub adds list/watch) — proves coalescing.
       - notContains:

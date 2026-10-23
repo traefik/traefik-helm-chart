@@ -1,8 +1,7 @@
-  {{- if kindIs "map" .Values.role -}}
 {{- $ctx := . -}}
 {{- $fullname := include "traefik.fullname" $ctx -}}
 {{- $userMeta := ($ctx.Values.role | default dict).metadata | default dict -}}
-{{- $namespaces := include "traefik.providerNamespaces" $ctx | fromYamlArray -}}
+{{- $namespaces := include "traefik.roleNamespaces" $ctx | fromYamlArray -}}
 {{- range $ns := $namespaces }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -17,4 +16,3 @@ metadata:
 rules:
   {{- include "traefik.roleRulesForNamespace" (dict "ctx" $ctx "ns" $ns) | nindent 2 }}
 {{- end }}
-{{- end -}}

@@ -160,6 +160,10 @@ helm install traefik ./traefik -n traefik-system --create-namespace \
 > Hub API Management requires cluster-wide RBAC (its CRDs are cluster-scoped).
 > Don't combine `traefik.hub.apimanagement` with `role: {}` — keep the default
 > cluster-wide setup for that.
+>
+> With Traefik Hub, Secret write permissions are only granted in the release
+> namespace: the chart always renders a `Role` + `RoleBinding` there, even with
+> cluster-wide RBAC, and adds them on top of `role.rules`.
 
 ## Install Traefik Hub (Gateway)
 

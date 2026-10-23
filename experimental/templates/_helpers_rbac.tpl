@@ -70,13 +70,10 @@ New provider = add a `traefik.rbacXxxRules` define + a branch in `traefik.rbacAs
 {{- end -}}
 
 {{/*
-Extra permissions Hub needs once a license token is set (secret write-back,
-AI services, lease cleanup), matching the legacy chart. Coalesces with core rules.
+Extra permissions Hub needs once a license token is set (AI services, lease
+cleanup), matching the legacy chart. Coalesces with core rules.
 */}}
 {{- define "traefik.rbacHubRules" -}}
-- apiGroups: [""]
-  resources: [secrets]
-  verbs: [create, update, delete, deletecollection]
 - apiGroups: [""]
   resources: [namespaces]
   verbs: [get]
@@ -86,6 +83,13 @@ AI services, lease cleanup), matching the legacy chart. Coalesces with core rule
 - apiGroups: [hub.traefik.io]
   resources: [aiservices]
   verbs: [get, list, watch]
+{{- end -}}
+
+{{/* Hub Secret write-back, granted only in the release namespace (legacy chart parity). */}}
+{{- define "traefik.rbacHubSecretRules" -}}
+- apiGroups: [""]
+  resources: [secrets]
+  verbs: [get, list, watch, create, update, delete]
 {{- end -}}
 
 {{- define "traefik.rbacHubAPIManagementRules" -}}
@@ -269,6 +273,21 @@ multiplication in namespaced mode. Returns a YAML list (possibly empty).
 {{- end -}}
 
 {{/*
+Namespaces getting a Role + RoleBinding: provider namespaces when `role` is
+enabled, plus the release namespace when Hub is enabled (Secret write-back).
+*/}}
+{{- define "traefik.roleNamespaces" -}}
+{{- $namespaces := list -}}
+{{- if kindIs "map" .Values.role -}}
+  {{- $namespaces = include "traefik.providerNamespaces" . | fromYamlArray -}}
+{{- end -}}
+{{- if include "traefik.hubEnabled" . -}}
+  {{- $namespaces = append $namespaces (include "traefik.namespace" .) -}}
+{{- end -}}
+{{- $namespaces | uniq | sortAlpha | toYaml -}}
+{{- end -}}
+
+{{/*
 Default RBAC subjects — the chart's own ServiceAccount in the release namespace.
 Used by both ClusterRoleBinding and (cross-namespace) RoleBinding(s).
 */}}
@@ -291,15 +310,25 @@ ClusterRole rules — user override (replace wholesale) else assembled cluster-w
 {{- end -}}
 
 {{/*
-Role rules for one namespace — user override (replace wholesale, applied
-identically to every Role) else the layers active for this ns.
+Role rules for one namespace — in provider namespaces, user override (replace
+wholesale, applied identically to every Role) else the layers active for this ns;
+in the release namespace, Hub Secret write-back is always added on top.
 */}}
 {{- define "traefik.roleRulesForNamespace" -}}
 {{- $ctx := .ctx -}}
-{{- with ($ctx.Values.role | default dict).rules -}}
-{{- toYaml . -}}
+{{- $ns := .ns -}}
+{{- $rules := list -}}
+{{- if and (kindIs "map" $ctx.Values.role) (has $ns (include "traefik.providerNamespaces" $ctx | fromYamlArray)) -}}
+  {{- with ($ctx.Values.role | default dict).rules -}}
+    {{- $rules = . -}}
+  {{- else -}}
+    {{- $rules = include "traefik.rbacAssembledRules" (dict "ctx" $ctx "ns" $ns) | fromYamlArray -}}
+  {{- end -}}
+{{- end -}}
+{{- if and (include "traefik.hubEnabled" $ctx) (eq $ns (include "traefik.namespace" $ctx)) -}}
+  {{- include "traefik.rbacMergeRules" (concat $rules (include "traefik.rbacHubSecretRules" $ctx | fromYamlArray)) -}}
 {{- else -}}
-{{- include "traefik.rbacAssembledRules" (dict "ctx" $ctx "ns" .ns) -}}
+  {{- toYaml $rules -}}
 {{- end -}}
 {{- end -}}
 

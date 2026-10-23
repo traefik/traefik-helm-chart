@@ -219,7 +219,9 @@ clusterRoleBinding: {}  # @schema additionalProperties:false; type:[object, null
 # watch its namespace (per-namespace precision). Hub APIM rules are appended when
 # enabled. Subkeys: `metadata: {}` (applied to every rendered Role),
 # `rules: []` (replaces chart defaults wholesale, applied identically
-# to every rendered Role). See EXAMPLES.md "Install in a dedicated
+# to every rendered Role). With a `traefik.hub` block, a Role granting
+# Secret write is always rendered in the release namespace, even when
+# `role` is null. See EXAMPLES.md "Install in a dedicated
 # namespace, with limited RBAC".
 role:         # @schema additionalProperties:false; type:[object, null]
 
