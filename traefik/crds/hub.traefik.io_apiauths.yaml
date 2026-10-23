@@ -99,8 +99,16 @@ spec:
                         description: TLS configures TLS for the HTTP client.
                         properties:
                           ca:
-                            description: CA sets the CA bundle used to verify the
-                              server certificate.
+                            description: |-
+                              CA sets the CA bundle used to verify the server certificate.
+                              Mutually exclusive with CASecretName.
+                            type: string
+                          caSecretName:
+                            description: |-
+                              CASecretName is the name of the Kubernetes Secret containing the CA bundle used to verify the server certificate.
+                              The secret must contain a key named 'tls.ca'.
+                              Mutually exclusive with CA.
+                            maxLength: 253
                             type: string
                           insecureSkipVerify:
                             description: |-
@@ -108,6 +116,10 @@ spec:
                               For testing purposes only, do not use in production.
                             type: boolean
                         type: object
+                        x-kubernetes-validations:
+                        - message: ca and caSecretName are mutually exclusive
+                          rule: '[has(self.ca), has(self.caSecretName)].filter(x,
+                            x).size() <= 1'
                     type: object
                   forwardHeaders:
                     additionalProperties:
