@@ -162,6 +162,21 @@
         "null"
       ]
     },
+    "hubSecretTypesPolicy": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "metadata": {
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "$ref": "#/definitions/io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicySpec"
+        }
+      }
+    },
     "image": {
       "type": [
         "string",

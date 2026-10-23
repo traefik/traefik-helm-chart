@@ -55,6 +55,7 @@ PDB_SPEC = ref("io.k8s.api.policy.v1.PodDisruptionBudgetSpec")
 INGRESSCLASS_SPEC = ref("io.k8s.api.networking.v1.IngressClassSpec")
 HPA_SPEC = ref("io.k8s.api.autoscaling.v2.HorizontalPodAutoscalerSpec")
 PVC_SPEC = ref("io.k8s.api.core.v1.PersistentVolumeClaimSpec")
+VAP_SPEC = ref("io.k8s.api.admissionregistration.v1.ValidatingAdmissionPolicySpec")
 LOOSE_SPEC = {"type": "object", "additionalProperties": True}
 RULES = {"type": "array", "items": ref("io.k8s.api.rbac.v1.PolicyRule")}
 ROLE_REF = ref("io.k8s.api.rbac.v1.RoleRef")
@@ -77,6 +78,7 @@ SINGLETONS = {
         "mountPath": {"type": ["string", "null"]},
         "subPath": {"type": ["string", "null"]},
     },
+    "hubSecretTypesPolicy": {"metadata": META, "spec": VAP_SPEC},
     "serviceAccount": {"metadata": META},
     "clusterRole": {"metadata": META, "rules": RULES},
     "clusterRoleBinding": {"metadata": META, "roleRef": ROLE_REF, "subjects": SUBJECTS},

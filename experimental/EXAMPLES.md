@@ -178,6 +178,10 @@ Setting a `traefik.hub` block enables Hub: the chart auto-defaults `image:` to
 `tokenfilepath` so traefik-hub reads the token from the mounted file. Override
 `image:` to pin a specific version or registry.
 
+Secret write permissions are scoped to the release namespace, and a cluster-scoped
+`ValidatingAdmissionPolicy` only lets Traefik Hub write `Opaque` and `kubernetes.io/tls`
+Secrets. Set `hubSecretTypesPolicy: null` only if the installer cannot create it.
+
 **Bring your own license Secret.** The token is never placed in values (an inline
 `traefik.hub.token` is rejected). Create a Secret named `<release>-traefik-hub-license`
 with a `token` key yourself — out-of-band, via your secret manager (External

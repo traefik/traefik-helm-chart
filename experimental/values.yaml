@@ -191,6 +191,14 @@ mutatingWebhookConfigurations:  # @schema type:[object, null]
   hub-acp: {}
   hub-api: {}
 
+# -- Traefik Hub — cluster-scoped ValidatingAdmissionPolicy (+ its binding)
+# only allowing the chart ServiceAccount to write `Opaque` and
+# `kubernetes.io/tls` Secrets. Rendered when a `traefik.hub` block is set;
+# disable with `null` only if the installer cannot create it. Subkeys:
+# `metadata: {}` (applied to both objects), `spec: {}` (policy spec hatch;
+# redeclare `matchConditions` with a BYO ServiceAccount).
+hubSecretTypesPolicy: {}  # @schema additionalProperties:false; type:[object, null]
+
 # -- ServiceAccount the pod runs as. Rendered by default. Set to `null`
 # to BYO via `deployment.spec.template.spec.serviceAccountName`.
 serviceAccount: {}      # @schema additionalProperties:false; type:[object, null]
