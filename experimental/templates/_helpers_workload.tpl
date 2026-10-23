@@ -146,7 +146,7 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
     "containers" (list $container)
     "volumes" $volumes
 -}}
-{{- with $ctx.Values.imagePullSecrets -}}
+{{- with coalesce $ctx.Values.imagePullSecrets ($ctx.Values.global).imagePullSecrets -}}
   {{- $_ := set $podSpec "imagePullSecrets" . -}}
 {{- end -}}
 

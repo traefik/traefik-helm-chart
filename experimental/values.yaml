@@ -20,6 +20,7 @@ image: ""  # @schema type:[string, null]
 
 # -- Image pull secrets, applied to every Pod the chart renders. List of
 # `{name: <secret>}` entries, mirroring the k8s-native field name.
+# Falls back to `global.imagePullSecrets` when empty (umbrella charts).
 imagePullSecrets: []
 
 # -- Labels merged into every rendered manifest's `metadata.labels`
