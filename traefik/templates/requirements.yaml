@@ -39,6 +39,10 @@
   {{- end }}
 {{- end }}
 
+{{- if and (not .Values.rbac.namespaced) (not (empty .Values.rbac.secretResourceNames)) }}
+  {{- fail "ERROR: rbac.secretResourceNames requires rbac.namespaced to be true. Kubernetes RBAC does not support resourceNames on cluster-scoped list/watch rules." }}
+{{- end }}
+
 {{- range $name, $config := .Values.ingressRoute }}
   {{- if regexMatch "[A-Z]" $name }}
     {{- fail (printf "ERROR: ingressRoute key %q contains uppercase characters and would generate an invalid Kubernetes resource name (RFC 1123 requires lowercase)." $name) }}
@@ -122,6 +126,17 @@
   {{- fail "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3." }}
 {{- end }}
 
+{{- with .Values.providers.kubernetesGateway.gateways }}
+  {{- if semverCompare "<v3.7.14-0" $version }}
+    {{- fail "ERROR: providers.kubernetesGateway.gateways is only available for traefik >= v3.7.14." }}
+  {{- end }}
+  {{- range $idx, $gateway := . }}
+    {{- if not $gateway.name }}
+      {{- fail (printf "ERROR: providers.kubernetesGateway.gateways[%d].name must be set." $idx) }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
 {{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
 {{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
   {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
@@ -138,6 +153,9 @@
 {{- range $name, $config := .Values.ports }}
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+  {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
+    {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
   {{- end }}
   {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
@@ -161,6 +179,10 @@
 
 {{- if and $.Values.hub.hardened (eq (include "traefik.hub.enabled" $) "false") }}
   {{ fail "ERROR: hub.hardened requires the Traefik Hub distribution, set hub.enabled." }}
+{{- end }}
+
+{{- if and (include "traefik.hub.transparencyLogsDrivers" $) (not $.Values.hub.token) }}
+  {{ fail "ERROR: hub.transparencyLogs requires a license, it is not supported in proxy mode. Set hub.token." }}
 {{- end }}
 
 {{- if eq (include "traefik.hub.enabled" $) "true" -}}
@@ -227,6 +249,10 @@
     {{ fail "ERROR: hub.hardened is only available for Traefik Hub >= v3.21.0-ea, set image.tag accordingly." }}
   {{- end }}
 
+  {{- if and $.Values.hub.apimanagement.openApi.refreshInterval (semverCompare "<v3.21.0-0" $hubVersion) }}
+    {{ fail "ERROR: hub.apimanagement.openApi.refreshInterval is only available for Traefik Hub >= v3.21.0." }}
+  {{- end }}
+
   {{- if semverCompare "<v3.20.0-ea.7" $hubVersion }}
     {{- range $childName, $childConfig := $.Values.hub.providers.multicluster.children }}
       {{- if or (($childConfig.serversTransport).forwardingTimeouts).readTimeout (($childConfig.serversTransport).forwardingTimeouts).writeTimeout }}
@@ -260,6 +286,28 @@
 
   {{- if and $.Values.hub.providers.nutanixPrismCentral.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
     {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
+  {{- end }}
+
+  {{- with (compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $))) }}
+    {{- if gt (len .) 1 }}
+      {{ fail (printf "ERROR: only one hub.transparencyLogs.driver can be set, got: %s." (join ", " .)) }}
+    {{- end }}
+    {{- if semverCompare "<v3.21.0-ea.3" $hubVersion }}
+      {{ fail "ERROR: hub.transparencyLogs is only available for Traefik Hub >= v3.21.0-ea.3, set image.tag accordingly." }}
+    {{- end }}
+    {{- with $.Values.hub.transparencyLogs }}
+      {{- if not .signerPrivateKey }}
+        {{ fail "ERROR: hub.transparencyLogs.signerPrivateKey must be set." }}
+      {{- end }}
+      {{- with .witnessGroup }}
+        {{- if and (not .witnesses) (or (not (kindIs "invalid" .threshold)) .timeout (kindIs "bool" .failOpen)) }}
+          {{ fail "ERROR: hub.transparencyLogs.witnessGroup.threshold, timeout and failOpen require at least one witness in hub.transparencyLogs.witnessGroup.witnesses." }}
+        {{- end }}
+        {{- if and .threshold (gt (int .threshold) (len .witnesses)) }}
+          {{ fail (printf "ERROR: hub.transparencyLogs.witnessGroup.threshold %d exceeds the %d configured witnesses." (int .threshold) (len .witnesses)) }}
+        {{- end }}
+      {{- end }}
+    {{- end }}
   {{- end }}
 
 {{- end }}

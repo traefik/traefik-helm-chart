@@ -56,14 +56,14 @@ jobs:
 
       - name: Get Previous tag
         id: previous_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de" # v2.0.0
+        uses: "WyriHaximus/github-action-get-previous-tag@83f26fea93bc7efcbca2eb5591f5eaaf66b8f206" # v2.1.0
         with:
           pattern: v*
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Tag release
         id: tag_version
-        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
+        uses: mathieudutour/github-tag-action@af99e60ce8132224b8e6ebab5023449fe256ed46 # v7.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
@@ -78,7 +78,7 @@ jobs:
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@aa013739bbc8e7067dbbecd4525ff11aeb51a84b # v6.4.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}
@@ -194,14 +194,14 @@ jobs:
 
       - name: Get Previous tag
         id: previous_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@61819f33034117e6c686e6a31dba995a85afc9de" # v2.0.0
+        uses: "WyriHaximus/github-action-get-previous-tag@83f26fea93bc7efcbca2eb5591f5eaaf66b8f206" # v2.1.0
         with:
           pattern: "${{ env.hub_manager_tag_prefix }}*"
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Tag release
         id: tag_version
-        uses: mathieudutour/github-tag-action@a22cf08638b34d5badda920f9daf6e72c477b07b # v6.2
+        uses: mathieudutour/github-tag-action@af99e60ce8132224b8e6ebab5023449fe256ed46 # v7.0.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           custom_tag: ${{ steps.chart_version.outputs.CHART_VERSION }}
@@ -210,13 +210,13 @@ jobs:
 
       - name: Render changelog configuration
         env:
-          REGEXP: '\\((hub-manager-.+)\\)'
+          REGEXP: '\\((hub-manager.*)\\)'
         run: ./hack/render-changelog-config.sh hub-manager
         if: steps.tag_exists.outputs.TAG_EXISTS == 'false'
 
       - name: Build Changelog
         id: changelog
-        uses: mikepenz/release-changelog-builder-action@c9bcd8238b6f41e05561348339429d360b1c0247 # v6.2.3
+        uses: mikepenz/release-changelog-builder-action@aa013739bbc8e7067dbbecd4525ff11aeb51a84b # v6.4.0
         with:
           fromTag: ${{ steps.previous_tag.outputs.tag }}
           toTag: ${{ steps.tag_version.outputs.new_tag }}

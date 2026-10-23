@@ -421,7 +421,7 @@
                     ]
                 },
                 "imagePullSecrets": {
-                    "description": "Pull secret for fetching traefik container image",
+                    "description": "Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`",
                     "type": "array"
                 },
                 "initContainers": {
@@ -697,6 +697,10 @@
                 "checkNewVersion": {
                     "type": "boolean"
                 },
+                "imagePullSecrets": {
+                    "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
+                    "type": "array"
+                },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
                     "type": "boolean"
@@ -773,6 +777,10 @@
                         "openApi": {
                             "type": "object",
                             "properties": {
+                                "refreshInterval": {
+                                    "description": "Interval to refresh the OpenAPI specification, as a Go duration. Must be at least `1m`.",
+                                    "type": "string"
+                                },
                                 "validateRequestMethodAndPath": {
                                     "description": "When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification",
                                     "type": "boolean"
@@ -1397,6 +1405,10 @@
                         }
                     }
                 },
+                "restrictSecretTypes": {
+                    "description": "Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets. It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`. **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.",
+                    "type": "boolean"
+                },
                 "sendlogs": {
                     "description": "Enable export of error logs to the platform. Default: true.",
                     "type": [
@@ -1446,6 +1458,134 @@
                             }
                         }
                     }
+                },
+                "transparencyLogs": {
+                    "description": "Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token and Traefik Hub \u003e= v3.21.",
+                    "type": "object",
+                    "properties": {
+                        "checkpointInterval": {
+                            "description": "Interval between checkpoint writes, as a Go duration. Must be at least `100ms`.",
+                            "type": "string"
+                        },
+                        "debug": {
+                            "description": "Also store the full rendered log line, not only its hash. Not recommended in production. Default: false.",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
+                        "driver": {
+                            "description": "Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set.",
+                            "type": "object",
+                            "properties": {
+                                "aws": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bucket": {
+                                            "description": "Name of the S3 bucket used to store log state.",
+                                            "type": "string"
+                                        },
+                                        "bucketPrefix": {
+                                            "description": "Prefix prepended to all log resource paths, to store multiple logs in one bucket.",
+                                            "type": "string"
+                                        },
+                                        "dsn": {
+                                            "description": "DSN of the MySQL instance to use. It carries the database password: treat it as a secret.",
+                                            "type": "string"
+                                        },
+                                        "maxIdleConns": {
+                                            "description": "Maximum number of idle connections in the MySQL connection pool.",
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "minimum": 0
+                                        },
+                                        "maxOpenConns": {
+                                            "description": "Maximum number of open connections to the MySQL database.",
+                                            "type": [
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "minimum": 0
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "gcp": {
+                                    "type": "object",
+                                    "properties": {
+                                        "bucket": {
+                                            "description": "Name of the GCS bucket used to store log state.",
+                                            "type": "string"
+                                        },
+                                        "bucketPrefix": {
+                                            "description": "Prefix prepended to all log resource paths, to store multiple logs in one bucket.",
+                                            "type": "string"
+                                        },
+                                        "spanner": {
+                                            "description": "GCP resource URI of the Spanner database instance to use.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "posix": {
+                                    "type": "object",
+                                    "properties": {
+                                        "path": {
+                                            "description": "Local filesystem path where the transparency log is stored.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "signerPrivateKey": {
+                            "description": "Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md.",
+                            "type": "string"
+                        },
+                        "witnessGroup": {
+                            "description": "Witnesses cosigning each checkpoint.",
+                            "type": "object",
+                            "properties": {
+                                "failOpen": {
+                                    "description": "Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.",
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "threshold": {
+                                    "description": "Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.",
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ],
+                                    "minimum": 1
+                                },
+                                "timeout": {
+                                    "description": "Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.",
+                                    "type": "string"
+                                },
+                                "witnesses": {
+                                    "description": "Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: \"\u003curl\u003e\", key: \"\u003cpath-or-content\u003e\" }` entries.",
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ],
+                                    "minItems": 1,
+                                    "items": {
+                                        "type": "object"
+                                    }
+                                }
+                            },
+                            "additionalProperties": false
+                        }
+                    },
+                    "additionalProperties": false
                 }
             },
             "additionalProperties": false
@@ -1488,6 +1628,10 @@
                 }
             },
             "additionalProperties": false
+        },
+        "imagePullSecrets": {
+            "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty",
+            "type": "array"
         },
         "ingressClass": {
             "type": "object",
@@ -2303,6 +2447,19 @@
                     "http": {
                         "type": "object",
                         "properties": {
+                            "aliasHeadersStrategy": {
+                                "description": "Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "enum": [
+                                    "keep",
+                                    "delete",
+                                    "reject",
+                                    null
+                                ]
+                            },
                             "encodedCharacters": {
                                 "description": "See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering)",
                                 "type": "object",
@@ -2402,7 +2559,8 @@
                                 }
                             },
                             "underscoreHeadersStrategy": {
-                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "description": "Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11). Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+. See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)",
+                                "deprecated": true,
                                 "type": [
                                     "string",
                                     "null"
@@ -2703,6 +2861,10 @@
                         "experimentalChannel": {
                             "description": "Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute.",
                             "type": "boolean"
+                        },
+                        "gateways": {
+                            "description": "Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+). If left empty, Traefik processes all Gateways.",
+                            "type": "array"
                         },
                         "labelSelector": {
                             "description": "A label selector can be defined to filter on specific GatewayClass objects only.",
@@ -3097,8 +3259,12 @@
                     "type": "boolean"
                 },
                 "namespaced": {
-                    "description": "When set to true: \u003cbr /\u003e 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.\u003cbr /\u003e 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers\u003cbr /\u003e **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. \u003cbr /\u003e See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.",
+                    "description": "When set to true: \u003cbr /\u003e 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.\u003cbr /\u003e 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers\u003cbr /\u003e **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. \u003cbr /\u003e **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. \u003cbr /\u003e See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.",
                     "type": "boolean"
+                },
+                "secretResourceNames": {
+                    "description": "List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules.",
+                    "type": "array"
                 }
             },
             "additionalProperties": false
@@ -3190,7 +3356,7 @@
                     ]
                 },
                 "single": {
-                    "description": "Single service is using `MixedProtocolLBService` feature gate. When set to false, it will create two Service, one for TCP and one for UDP.",
+                    "description": "Single service exposing both TCP and UDP ports. When set to false, it will create two Service, one for TCP and one for UDP.",
                     "type": "boolean"
                 },
                 "spec": {

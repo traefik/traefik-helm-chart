@@ -1,5 +1,363 @@
 # Change Log
 
+## 42.1.3  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-22
+
+* feat(hub): :rocket: support traefik hub v3.20.19 and v3.21.6
+* chore(release): 🚀 publish 42.1.3
+
+
+
+## 42.1.2  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-21
+
+* feat(hub): :rocket: support traefik hub v3.20.18 and v3.21.5
+* chore(release): 🚀 publish 42.1.2
+
+
+
+## 42.1.1  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-21
+
+* feat(deps): update traefik docker tag to v3.7.16
+* chore(release): 🚀 publish 42.1.1
+
+
+
+## 42.1.0  ![AppVersion: v3.7.15](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.15&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-20
+
+* fix(gateway): remove unnecessary blank lines from generated Gateway
+* feat(hub): :rocket: support traefik hub v3.20.17 and v3.21.4
+* feat(deps): update traefik docker tag to v3.7.15
+* feat(chart): support top-level and global imagePullSecrets
+* chore(release): 🚀 publish 42.1.0
+
+**Upgrade Notes**
+
+> [!IMPORTANT]
+> This release requires a CRD update for Gateway API (v1.6.3). See chart [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v3715).
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index c71de17..f9940eb 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -15,6 +15,9 @@ image:  # @schema additionalProperties: false
+   # -- Traefik image pull policy
+   pullPolicy: IfNotPresent
+ 
++# -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty
++imagePullSecrets: []
++
+ # -- Add additional label to all resources
+ commonLabels: {}
+ 
+@@ -95,7 +98,7 @@ deployment:
+   dnsConfig: {}
+   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
+   hostAliases: []
+-  # -- Pull secret for fetching traefik container image
++  # -- Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`
+   imagePullSecrets: []
+   # -- Pod lifecycle actions
+   lifecycle: {}
+@@ -889,6 +892,8 @@ global:
+   sendAnonymousUsage: false
+   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
+   notAppendXForwardedFor: false
++  # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
++  imagePullSecrets: []
+   # -- Required for Azure Marketplace integration.
+   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
+   # @default -- See _values.yaml_
+```
+
+
+## 42.0.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-15
+
+* fix(tlogs)!: empty witness config
+* fix(rbac)!: 🐛 scope Traefik Hub secret write permissions to release namespace
+* feat(hub): restrict Secret types written by Traefik Hub
+* feat(hub): :rocket: support traefik hub v3.20.16 and v3.21.3
+* feat(chart)!: require Kubernetes v1.30 or higher
+* chore(release): 🚀 publish 42.0.0
+
+## :warning: Breaking changes
+
+There are 3 breaking changes in this release
+
+**Upgrade Notes**
+
+1. **Kubernetes v1.30+**: The chart now requires Kubernetes v1.30 or higher with PR https://github.com/traefik/traefik-helm-chart/pull/2030.
+2. **Traefik Hub Secret RBAC**: Write verbs on Secrets (`create`, `update`, `delete`) are no longer granted cluster-wide.
+   * A `Role` now grants them in the release namespace only, where Traefik Hub writes its Secrets, with PR https://github.com/traefik/traefik-helm-chart/pull/2028.
+3. **Transparency logs witnesses**: With PR https://github.com/traefik/traefik-helm-chart/pull/2018:
+   * `hub.transparencyLogs.witnessGroup.witnesses` now defaults to `null` and `threshold` must be at least `1`.
+   * Setting `threshold`, `timeout` or `failOpen` without any witness now fails.
+
+> [!NOTE]
+> With `hub.token`, the chart now deploys a cluster-scoped `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
+> Set `hub.restrictSecretTypes: false` if the installer cannot create cluster-scoped resources.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 7006d07..c71de17 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1135,7 +1135,7 @@ service:
+   enabled: true
+   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
+   nameOverride: ""  # @schema type:[string, null]
+-  # -- Single service is using `MixedProtocolLBService` feature gate.
++  # -- Single service exposing both TCP and UDP ports.
+   # When set to false, it will create two Service, one for TCP and one for UDP.
+   single: true
+   # -- Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)
+@@ -1209,6 +1209,7 @@ rbac:  # @schema additionalProperties: false
+   # 1. It switches respectively the use of `ClusterRole` and `ClusterRoleBinding` to `Role` and `RoleBinding`.<br />
+   # 2. It adds `disableClusterScopeResources` on Ingress and CRD (Kubernetes) providers<br />
+   # **NOTE**: `IngressClass`, `NodePortLB` and **Gateway** provider cannot be used with namespaced RBAC. <br />
++  # **NOTE**: with Traefik Hub, a cluster-scoped `ValidatingAdmissionPolicy` is deployed by default but can be opt-out. See `hub.restrictSecretTypes`. <br />
+   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#opt-providers-kubernetesIngress-disableClusterScopeResources) for more details.
+   namespaced: false
+   # -- Enable user-facing roles
+@@ -1317,6 +1318,10 @@ hub:  # @schema additionalProperties: false
+   offline:  # @schema type:[boolean, null]
+   # -- By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array.
+   namespaces: []  # @schema required:true
++  # -- Deploy a `ValidatingAdmissionPolicy` that only allows Traefik Hub to write `Opaque` and `kubernetes.io/tls` Secrets.
++  # It prevents Traefik Hub from creating `kubernetes.io/service-account-token` Secrets. Requires `hub.token`.
++  # **NOTE**: it is a cluster-scoped resource, also deployed with `rbac.namespaced`. Disable it only if the chart installer cannot create it.
++  restrictSecretTypes: true
+   apimanagement:
+     # -- Set to true in order to enable API Management. Requires a valid license token.
+     enabled: false
+@@ -1646,14 +1651,14 @@ hub:  # @schema additionalProperties: false
+     # @default -- See _values.yaml_
+     witnessGroup:
+       # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
+-      threshold:  # @schema type:[integer, null]; minimum:0
++      threshold:  # @schema type:[integer, null]; minimum:1
+       # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
+       # @default -- `5s` when unset
+       timeout: ""
+       # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
+       failOpen:  # @schema type:[boolean, null]
+-      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
+-      witnesses: []  # @schema item:object
++      # -- (list) Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
++      witnesses:  # @schema type:[array, null]; item:object; minItems:1
+ 
+   tracing:
+     additionalTraceHeaders:
+```
+
+
+## 41.7.1  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-09
+
+* feat(hub): :rocket: support traefik hub v3.20.15 and v3.21.2
+* chore(release): 🚀 publish 41.7.1
+
+
+
+## 41.7.0  ![AppVersion: v3.7.14](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.14&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-08
+
+* feat(gateway): support scoping the provider to specific Gateways
+* feat(deps): update traefik to v3.7.14 and traefik-hub to v3.21.1
+* chore(release): 🚀 publish 41.7.0 and and hub-manager 1.0.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index d3132ec..7006d07 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -380,6 +380,9 @@ providers:
+     namespaces: []
+     # -- A label selector can be defined to filter on specific GatewayClass objects only.
+     labelSelector: ""
++    # -- Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+).
++    # If left empty, Traefik processes all Gateways.
++    gateways: []
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+     # -- (int) Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.
+```
+
+
+## 41.6.1  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-09-30
+
+* feat(hub): :rocket: support traefik hub v3.21.0
+* chore(release): 🚀 publish 41.6.1
+
+
+
+## 41.6.0  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-09-16
+
+* fix: use kubeversion to determine PDB apiVersion
+* feat(hub): support transparency logs
+* chore(release): 🚀 publish 41.6.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 6bef216..d3132ec 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1599,6 +1599,59 @@ hub:  # @schema additionalProperties: false
+   # -- (bool) Enable export of error logs to the platform. Default: true.
+   sendlogs:  # @schema type:[boolean, null]
+ 
++  # @schema additionalProperties: false
++  # -- Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured.
++  # Requires a valid license token and Traefik Hub >= v3.21.
++  # @default -- See _values.yaml_
++  transparencyLogs:
++    # @schema additionalProperties: false
++    # -- Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set.
++    driver:
++      # @schema additionalProperties: false
++      posix:
++        # -- Local filesystem path where the transparency log is stored.
++        path: ""
++      # @schema additionalProperties: false
++      gcp:
++        # -- Name of the GCS bucket used to store log state.
++        bucket: ""
++        # -- Prefix prepended to all log resource paths, to store multiple logs in one bucket.
++        bucketPrefix: ""
++        # -- GCP resource URI of the Spanner database instance to use.
++        spanner: ""
++      # @schema additionalProperties: false
++      aws:
++        # -- Name of the S3 bucket used to store log state.
++        bucket: ""
++        # -- Prefix prepended to all log resource paths, to store multiple logs in one bucket.
++        bucketPrefix: ""
++        # -- DSN of the MySQL instance to use. It carries the database password: treat it as a secret.
++        dsn: ""
++        # -- (int) Maximum number of open connections to the MySQL database.
++        maxOpenConns:  # @schema type:[integer, null]; minimum:0
++        # -- (int) Maximum number of idle connections in the MySQL connection pool.
++        maxIdleConns:  # @schema type:[integer, null]; minimum:0
++    # -- Private key used to sign each checkpoint, as a file path. It's required as soon as a `driver` is set and it needs to be mounted in the pod, see EXAMPLES.md.
++    signerPrivateKey: ""
++    # -- Interval between checkpoint writes, as a Go duration. Must be at least `100ms`.
++    # @default -- `1s` when unset
++    checkpointInterval: ""
++    # -- (bool) Also store the full rendered log line, not only its hash. Not recommended in production. Default: false.
++    debug:  # @schema type:[boolean, null]
++    # @schema additionalProperties: false
++    # -- Witnesses cosigning each checkpoint.
++    # @default -- See _values.yaml_
++    witnessGroup:
++      # -- (int) Minimum number of witnesses that must cosign for the group to be satisfied. It cannot exceed the number of configured witnesses. Default: 1.
++      threshold:  # @schema type:[integer, null]; minimum:0
++      # -- Maximum time to wait for witnesses to cosign a checkpoint, as a Go duration.
++      # @default -- `5s` when unset
++      timeout: ""
++      # -- (bool) Publish checkpoints even when the witness policy cannot be satisfied. Intended only for a non-blocking adoption of witnessing. Default: false.
++      failOpen:  # @schema type:[boolean, null]
++      # -- Witnesses cosigning each checkpoint. At least one is required when `threshold` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries.
++      witnesses: []  # @schema item:object
++
+   tracing:
+     additionalTraceHeaders:
+       # -- Tracing headers to duplicate.
+```
+
+
+## 41.5.0  ![AppVersion: v3.7.13](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.13&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-09-07
+
+* fix: grant ConfigMap write verbs to namespaced role
+* feat(deps): update traefik docker tag to v3.7.13
+* feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.13
+* feat(CRDs): update Traefik Hub to v1.34.0
+* chore(release): 🚀 publish 41.5.0
+
+
+
+## 41.4.0  ![AppVersion: v3.7.12](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.12&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-08-27
+
+* fix: :bug: hub/proxy mapping
+* fix(rbac): restore secretResourceNames for namespaced role
+* feat: deprecate `underscoreHeadersStrategy` value
+* feat: add `aliasHeadersStrategy` value
+* feat(hub): :sparkles: support apiManagement OpenAPI refresh interval
+* feat(deps): update traefik docker tag to v3.7.12
+* feat(deps): update ghcr.io/traefik/traefik-hub docker tag to v3.20.12
+* chore(release): 🚀 publish 41.4.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 54a55eb..6bef216 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1044,9 +1044,13 @@ ports:
+       middlewares: []  # @schema type: [array, null]
+       # -- (bool) See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+       sanitizePath:  # @schema type:[boolean, null]
+-      # -- Defines how request headers with underscores in their names are handled (v3.7.6+).
++      # -- Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+).
++      # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
++      aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
++      # -- Defines how request headers with underscores in their names are handled (v3.7.6-v3.7.11).
++      # Replaced by the aliasHeadersStrategy option for Traefik v3.7.12+.
+       # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#underscoreheadersstrategy)
+-      underscoreHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
++      underscoreHeadersStrategy:  # @schema deprecated; enum:[keep, delete, reject, null]; type:[string, null]
+       tls:
+         # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#opt-http-tls)
+         # @default -- true
+@@ -1207,6 +1211,8 @@ rbac:  # @schema additionalProperties: false
+   # -- Enable user-facing roles
+   # https://kubernetes.io/docs/reference/access-authn-authz/rbac/#user-facing-roles
+   aggregateTo: []
++  # -- List of Kubernetes secrets that are accessible for Traefik when `rbac.namespaced` is true. If empty, then access is granted to every secret. Ignored when `rbac.namespaced` is false (ClusterRole), since Kubernetes RBAC does not support `resourceNames` on cluster-scoped list/watch rules.
++  secretResourceNames: []
+ 
+ # -- The service account the pods will use to interact with the Kubernetes API
+ serviceAccount:  # @schema additionalProperties: false
+@@ -1327,6 +1333,9 @@ hub:  # @schema additionalProperties: false
+     openApi:
+       # -- When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification
+       validateRequestMethodAndPath: false
++      # -- Interval to refresh the OpenAPI specification, as a Go duration. Must be at least `1m`.
++      # @default -- `1m` when unset
++      refreshInterval: ""
+ 
+   mcpgateway:
+     # -- Set to true in order to enable AI MCP Gateway. Requires a valid license token.
+```
+
+
 ## 41.3.0  ![AppVersion: v3.7.11](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.11&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-08-19

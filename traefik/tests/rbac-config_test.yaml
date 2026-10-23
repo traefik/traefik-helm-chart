@@ -580,6 +580,68 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/rolebinding.yaml
+  - it: Role should allow get, list, watch access to every secret if secretResourceNames is empty
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+  - it: Role should allow get, list, watch access only to secrets listed in secretResourceNames if not empty
+    set:
+      rbac:
+        namespaced: true
+        secretResourceNames: [traefik-tls-cert]
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            resourceNames:
+              - traefik-tls-cert
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: Role should keep hub secrets access unrestricted by secretResourceNames
+    set:
+      rbac:
+        namespaced: true
+        secretResourceNames: [traefik-tls-cert]
+      hub:
+        token: xxx
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - delete
+
   - it: should provide expected cluster rbac when k8s gw api is enabled
     set:
       providers:
@@ -777,10 +839,6 @@ tests:
               - get
               - list
               - watch
-              - update
-              - create
-              - delete
-              - deletecollection
       - template: rbac/clusterrole.yaml
         contains:
           path: rules
@@ -797,6 +855,147 @@ tests:
               - update
               - patch
               - delete
+
+  - it: should scope hub secrets write permissions to release namespace in cluster mode
+    set:
+      hub:
+        token: xxx
+    asserts:
+      - template: rbac/role.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/role.yaml
+        isKind:
+          of: Role
+      - template: rbac/role.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - template: rbac/role.yaml
+        equal:
+          path: rules
+          value:
+            - apiGroups:
+                - ""
+              resources:
+                - secrets
+              verbs:
+                - create
+                - update
+                - delete
+      - template: rbac/rolebinding.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/rolebinding.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - template: rbac/rolebinding.yaml
+        equal:
+          path: roleRef.name
+          value: RELEASE-NAME-traefik
+      - template: rbac/rolebinding.yaml
+        equal:
+          path: subjects[0]
+          value:
+            kind: ServiceAccount
+            name: RELEASE-NAME-traefik
+            namespace: NAMESPACE
+
+  - it: should not grant hub secrets write permissions in hub namespaces in cluster mode
+    set:
+      hub:
+        token: xxx
+        namespaces:
+          - hub-ns
+    asserts:
+      - template: rbac/role.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/role.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - template: rbac/rolebinding.yaml
+        hasDocuments:
+          count: 1
+      - template: rbac/rolebinding.yaml
+        equal:
+          path: metadata.namespace
+          value: NAMESPACE
+
+  - it: should grant hub secrets write permissions only in release namespace in namespaced mode
+    set:
+      rbac:
+        namespaced: true
+      hub:
+        token: xxx
+        namespaces:
+          - hub-ns
+    asserts:
+      - template: rbac/role.yaml
+        hasDocuments:
+          count: 2
+      - template: rbac/role.yaml
+        documentSelector:
+          path: metadata.namespace
+          value: NAMESPACE
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - delete
+      - template: rbac/role.yaml
+        documentSelector:
+          path: metadata.namespace
+          value: hub-ns
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+              - create
+              - update
+              - delete
+      - template: rbac/role.yaml
+        documentSelector:
+          path: metadata.namespace
+          value: hub-ns
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - secrets
+            verbs:
+              - get
+              - list
+              - watch
+
+  - it: should not create hub secrets role in cluster mode without hub token
+    asserts:
+      - template: rbac/role.yaml
+        hasDocuments:
+          count: 0
+      - template: rbac/rolebinding.yaml
+        hasDocuments:
+          count: 0
 
   - it: should not contain additional RBACS for hub > 3.19.0 API management
     set:
@@ -907,6 +1106,91 @@ tests:
               - get
               - update
               - patch
+
+  - it: should contain ConfigMap write permissions for hub API management in namespaced mode
+    set:
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+
+  - it: should contain ConfigMap write permissions in every hub namespace
+    set:
+      hub:
+        token: xxx
+        namespaces:
+          - bar
+        apimanagement:
+          enabled: true
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 2
+        template: rbac/role.yaml
+      - template: rbac/role.yaml
+        documentIndex: 0
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+      - template: rbac/role.yaml
+        documentIndex: 1
+        contains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
+
+  - it: should not contain ConfigMap write permissions in namespaced mode without hub API management
+    set:
+      hub:
+        token: xxx
+        apimanagement:
+          enabled: false
+      rbac:
+        namespaced: true
+    asserts:
+      - template: rbac/role.yaml
+        notContains:
+          path: rules
+          content:
+            apiGroups:
+              - ""
+            resources:
+              - configmaps
+            verbs:
+              - create
+              - patch
+              - delete
 
   - it: should provide expected RBACS for Hub version >3.3.2 and <3.7.0
     set:

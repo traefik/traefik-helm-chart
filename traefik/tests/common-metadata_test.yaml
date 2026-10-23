@@ -16,6 +16,7 @@ templates:
   - rbac/clusterrole.yaml
   - rbac/clusterrolebinding.yaml
   - rbac/serviceaccount.yaml
+  - hub-secret-types-policy.yaml
 
 tests:
   - it: "should contains labels metadata with cluster rbac"
@@ -36,11 +37,12 @@ tests:
       service.internal.a: {}
       tlsOptions.a: {}
       tlsStore.a: {}
+      hub.token: my-token
       commonLabels:
         globalLabel: isConfigured
     capabilities:
       majorVersion: 1
-      minorVersion: 25
+      minorVersion: 30
       apiVersions:
         - monitoring.coreos.com/v1
     asserts:

@@ -42,12 +42,6 @@ rules:
       - get
       - list
       - watch
-    {{- if and .Values.hub.token }}
-      - update
-      - create
-      - delete
-      - deletecollection
-    {{- end }}
   {{- if or .Values.providers.kubernetesIngress.enabled .Values.providers.kubernetesIngressNGINX.enabled }}
   - apiGroups:
       - extensions

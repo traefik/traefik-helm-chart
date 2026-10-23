@@ -1,5 +1,16 @@
 # Change Log
 
+## 1.0.1  ![AppVersion: v0.45.3](https://img.shields.io/static/v1?label=AppVersion&message=v0.45.3&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-08
+
+* feat(deps): update ghcr.io/traefik/hub-manager docker tag to v0.45.3
+* feat(deps): update ghcr.io/traefik/hub-manager docker tag to v0.45.2
+* ci(renovate): scope updates per chart on VALUES.md & AppVersion
+* chore(release): 🚀 publish 41.7.0 and and hub-manager 1.0.1
+
+
+
 ## 1.0.0  ![AppVersion: v0.45.1](https://img.shields.io/static/v1?label=AppVersion&message=v0.45.1&color=success&logo=) ![Kubernetes: >=1.25.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.25.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-07-29

@@ -25,7 +25,7 @@
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
     spec:
-      {{- with .Values.deployment.imagePullSecrets }}
+      {{- with coalesce .Values.deployment.imagePullSecrets .Values.imagePullSecrets (.Values.global).imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -605,6 +605,10 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- range $idx, $gateway := .gateways }}
+          - "--providers.kubernetesgateway.gateways[{{ $idx }}].name={{ $gateway.name }}"
+          - "--providers.kubernetesgateway.gateways[{{ $idx }}].namespace={{ $gateway.namespace | default (include "traefik.namespace" $) }}"
+            {{- end }}
             {{- with .qps }}
           - "--providers.kubernetesgateway.qps={{ . }}"
             {{- end }}
@@ -691,6 +695,9 @@
                {{- with .sanitizePath | toString }}
           - "--{{$entryPoints}}.{{ $name }}.http.sanitizePath={{ . }}"
                {{- end }}
+              {{- end }}
+              {{- with .aliasHeadersStrategy }}
+          - "--{{$entryPoints}}.{{ $name }}.http.aliasHeadersStrategy={{ . }}"
               {{- end }}
               {{- with .underscoreHeadersStrategy }}
           - "--{{$entryPoints}}.{{ $name }}.http.underscoreHeadersStrategy={{ . }}"
@@ -870,6 +877,9 @@
               {{- if .openApi.validateRequestMethodAndPath }}
           - "--hub.apiManagement.openApi.validateRequestMethodAndPath=true"
               {{- end }}
+              {{- with .openApi.refreshInterval }}
+          - "--hub.apiManagement.openApi.refreshInterval={{ . }}"
+              {{- end }}
              {{- end }}
             {{- end }}
             {{- with .aigateway }}
@@ -960,6 +970,20 @@
                       {{- $certPath := printf "hub.providers.multicluster.children.%s.serversTransport.certificates[%d]" $childName $idx }}
                       {{- include "traefik.yaml2CommandLineArgs" (dict "path" $certPath "content" $val) | nindent 10 }}
                     {{- end }}
+                  {{- end }}
+                {{- end }}
+              {{- end }}
+            {{- end }}
+            {{- with .transparencyLogs }}
+              {{- $drivers := compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $)) }}
+              {{- if $drivers }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.transparencyLogs.driver" "content" (pick .driver (first $drivers))) | nindent 10 }}
+                {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.transparencyLogs" "content" (omit . "driver" "witnessGroup")) | nindent 10 }}
+                {{- with .witnessGroup }}
+                  {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.transparencyLogs.witnessGroup" "content" (omit . "witnesses")) | nindent 10 }}
+                  {{- range $idx, $val := .witnesses }}
+                    {{- $witnessPath := printf "hub.transparencyLogs.witnessGroup.witnesses[%d]" $idx }}
+                    {{- include "traefik.yaml2CommandLineArgs" (dict "path" $witnessPath "content" $val) | nindent 10 }}
                   {{- end }}
                 {{- end }}
               {{- end }}

@@ -1,6 +1,6 @@
 .PHONY: lint test snapshots test-changelog check-renovate
 
-IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.14.0
+IMAGE_CHART_TESTING=quay.io/helmpack/chart-testing:v3.15.0
 IMAGE_HELM_CHANGELOG=ghcr.io/traefik/helm-changelog:v1.0.0
 IMAGE_HELM_DOCS=jnorwood/helm-docs:v1.14.2
 
