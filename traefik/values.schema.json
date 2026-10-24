@@ -3327,7 +3327,34 @@
             "properties": {
                 "additionalServices": {
                     "description": "Can be used to create multiple Service. See EXAMPLES.md for more details.",
-                    "type": "object"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "annotations": {
+                                "type": "object"
+                            },
+                            "annotationsTCP": {
+                                "type": "object"
+                            },
+                            "annotationsUDP": {
+                                "type": "object"
+                            },
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "labels": {
+                                "type": "object"
+                            },
+                            "single": {
+                                "type": "boolean"
+                            },
+                            "spec": {
+                                "type": "object"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
                 },
                 "annotations": {
                     "description": "Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)",
@@ -3368,7 +3395,8 @@
                         }
                     }
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "serviceAccount": {
             "description": "The service account the pods will use to interact with the Kubernetes API",

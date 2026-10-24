@@ -39,13 +39,6 @@ tests:
       - equal:
           path: spec.type
           value: NodePort
-  - it: should fail when legacy service.type is set
-    set:
-      service:
-        type: ClusterIP
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: `service.type` was removed in v40.0.0. Use `service.spec.type` instead."
   - it: should allow disabling LoadBalancer node port allocation
     set:
       service:

@@ -1136,7 +1136,7 @@ tlsOptions: {}
 # This is useful if you want to set a default certificate. See EXAMPLE.md for details.
 tlsStore: {}
 
-service:
+service:  # @schema additionalProperties: false
   enabled: true
   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
   nameOverride: ""  # @schema type:[string, null]
@@ -1157,7 +1157,7 @@ service:
     type: LoadBalancer
   # -- Can be used to create multiple Service.
   # See EXAMPLES.md for more details.
-  additionalServices: {}
+  additionalServices: {}  # @schema additionalProperties: {"type": "object", "additionalProperties": false, "properties": {"enabled": {"type": "boolean"}, "single": {"type": "boolean"}, "spec": {"type": "object"}, "labels": {"type": "object"}, "annotations": {"type": "object"}, "annotationsTCP": {"type": "object"}, "annotationsUDP": {"type": "object"}}}
 
 autoscaling:  # @schema additionalProperties: false
   # -- Create HorizontalPodAutoscaler object.
