@@ -970,7 +970,7 @@ traefik:
 ## Use HTTP3
 
 By default, it will use a Load balancers with mixed protocols on `websecure`
-entrypoint. They have been available since v1.20 and in beta as of Kubernetes v1.24.
+entrypoint. They are generally available since Kubernetes v1.26.
 Availability may depend on your Kubernetes provider.
 
 When using TCP and UDP with a single service, you may encounter [this issue](https://github.com/kubernetes/kubernetes/issues/47249#issuecomment-587960741) from Kubernetes.
@@ -1317,6 +1317,73 @@ extraObjects:
 > [!NOTE]  
 > This code is only written for demonstration purpose.
 > The prefered way of configuration either Github or Gitlab credentials is to use an URN like `urn:k8s:secret:github-token:access-token`.
+
+## Use Traefik Hub transparency logs
+
+Transparency logs keep a tamper-evident record of logs and access logs. They are enabled as soon as
+a `traefik.hub.transparencyLogs.driver` is set, and require the Hub license Secret (see
+[Install Traefik Hub](#install-traefik-hub-gateway)) and Traefik Hub >= `v3.21.0`.
+
+`signerPrivateKey` and each witness `key` are file paths, so the keys have to exist in a `Secret`
+before installing the chart. Generate the log's own keypair with the `keygen` command shipped in the
+Traefik Hub image:
+
+```bash
+mkdir -p keys
+docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
+  ghcr.io/traefik/traefik-hub:v3.21.6 \
+  keygen --name my-log --outputDir /keys
+```
+
+This writes `keys/private.key` and `keys/public.key`. `--name` becomes the checkpoint origin, so
+anyone verifying the log later needs that exact value. Share `public.key` with your witness — it has
+to add your log to its own configuration before it cosigns anything — and use the witness public key
+it gives you back:
+
+```bash
+kubectl create secret generic transparency-logs-keys -n traefik \
+  --from-file=private.key=./keys/private.key \
+  --from-file=witness-public.key=./witness-public.key
+```
+
+Then mount that `Secret` in the pod. With the `posix` driver, store the tree on the chart's `data`
+volume (mounted at `/data`), backed by a PVC with `persistence`:
+
+```yaml
+traefik:
+  hub:
+    transparencyLogs:
+      driver:
+        posix:
+          path: /data/transparency-logs
+      signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
+      checkpointInterval: 10s
+      witnessGroup:
+        threshold: 1
+        witnesses:
+          - url: https://witness.example.com
+            key: /etc/traefik-hub/transparency-logs/witness-public.key
+
+persistence: {}
+
+deployment:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: traefik
+            volumeMounts:
+              - name: transparency-logs-keys
+                mountPath: /etc/traefik-hub/transparency-logs
+                readOnly: true
+        volumes:
+          - name: transparency-logs-keys
+            secret:
+              secretName: transparency-logs-keys
+```
+
+> [!NOTE]
+> A wrong `signerPrivateKey` path makes Traefik Hub report `malformed verifier id` on startup.
 
 ## Use Traefik native Let's Encrypt integration, without cert-manager
 
@@ -2270,7 +2337,6 @@ kubectl create secret tls traefik-hub-admission-cert --namespace traefik --cert=
 ```yaml
 traefik:
   hub:
-    token: <your-license-token>
     apimanagement: {}
 secret:
   hub-admission: null   # you own the admission cert Secret (traefik-hub-admission-cert)
@@ -2327,7 +2393,6 @@ hatch (the chart ships two entries, `hub-acp` and `hub-api`):
 ```yaml
 traefik:
   hub:
-    token: <your-license-token>
     apimanagement: {}
 secret:
   hub-admission: null   # cert-manager owns the admission cert Secret
@@ -2376,14 +2441,13 @@ for Traefik Hub webhooks* above:
 ```yaml
 traefik:
   hub:
-    token: <your-license-token>
     apimanagement: {}
 secret:
   hub-admission: null
 ```
 
 > [!NOTE]
-> The new chart requires `traefik.hub.token` whenever `traefik.hub.apimanagement` is set, or the render fails validation. The legacy `apimanagement.admission.selfManagedCertificate` flag is not implemented; `secret.hub-admission: null` is its native equivalent.
+> Like every Hub feature, `traefik.hub.apimanagement` needs the BYO license Secret (see [Install Traefik Hub](#install-traefik-hub-gateway)). The legacy `apimanagement.admission.selfManagedCertificate` flag is not implemented; `secret.hub-admission: null` is its native equivalent.
 
 ## Mount datadog DSD socket directly into the Traefik container (i.e. no more socat sidecar)
 
@@ -2417,11 +2481,72 @@ This example demonstrates how to enable AI Gateway in Traefik Hub and set a maxR
 ```yaml
 traefik:
   hub:
-    token: # <=== Set your token here
     aigateway:
       enabled: true
       maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
+
+## Use Traefik Hub Gateway with the Traefik MCP server as a sidecar
+
+The Traefik MCP server (`traefik/mcp-server` image) gives an AI agent a read-only view of
+the running gateway. It reads the Traefik API over localhost and needs the Traefik Hub license, which
+it shares with Traefik through the chart's `hub-token` volume.
+
+```yaml
+traefik:
+  # The sidecar reads /api/rawdata, only served when the API is enabled.
+  api:
+    insecure: true
+  hub:
+    mcpgateway: {}
+
+deployment:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: mcp-traefik
+            image: traefik/mcp-server:v0.2.0
+            args:
+              # Streamable HTTP, the transport spoken by the MCP Gateway.
+              - "-mcp.address=:8090"
+              - "-license.token-file=/etc/secrets/token"
+            ports:
+              - name: mcp
+                containerPort: 8090
+            volumeMounts:
+              - name: hub-token
+                mountPath: /etc/secrets
+                readOnly: true
+
+# Renders the <fullname>-mcp Service; the chart's default Service does not publish port 8090.
+service:
+  mcp:
+    spec:
+      type: ClusterIP
+      selector:
+        app.kubernetes.io/name: traefik
+        app.kubernetes.io/instance: traefik   # = your release name
+      ports:
+        - name: mcp
+          port: 8090
+          targetPort: 8090
+```
+
+> [!WARNING]
+> Do not add probes to the sidecar: a failing readiness probe would remove the whole Traefik pod from its Services.
+
+Check it locally:
+
+```bash
+kubectl port-forward -n traefik svc/traefik-mcp 8090 &
+curl -H 'Content-Type: application/json' -H 'Accept: application/json, text/event-stream' \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' http://localhost:8090/mcp
+```
+
+To publish it, route to `traefik-mcp:8090` with JWT and MCP middlewares. See
+[MCP Gateway](https://doc.traefik.io/traefik-hub/mcp-gateway/mcp) for authentication and per-tool authorization.
+
 ## Deploy multiple Gateways with a single Traefik Deployment/DaemonSet
 
 This example exposes two Gateways (e.g., `internal` and `external`) from a single Traefik installation.
@@ -2529,7 +2654,6 @@ The legacy `ports.multicluster.uplink: true` flag IS a native Traefik Hub concep
 ```yaml
 traefik:
   hub:
-    token: hub-token
     # Uplink entryPoint: the native equivalent of legacy `uplink: true`.
     uplinkEntryPoints:
       multicluster:
@@ -2580,7 +2704,6 @@ Configure the parent multi-cluster provider with the child's uplink entryPoint a
 ```yaml
 traefik:
   hub:
-    token: hub-token
     providers:
       multicluster:
         enabled: true
