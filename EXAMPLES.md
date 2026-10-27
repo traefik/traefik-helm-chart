@@ -975,6 +975,10 @@ kubectl create secret generic transparency-logs-keys -n traefik \
 Then mount that `Secret` in the pod. With the `posix` driver, the tree also needs a writable volume:
 
 ```yaml
+# Transparency logs require JSON logs.
+log:
+  format: json
+
 hub:
   token: traefik-hub-license
   transparencyLogs:
