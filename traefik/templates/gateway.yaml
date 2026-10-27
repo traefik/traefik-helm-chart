@@ -2,6 +2,8 @@
   {{- if not .Values.gateway.listeners }}
     {{- fail "ERROR: gateway must have at least one listener or should be disabled" }}
   {{- end }}
+
+{{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml }}
 ---
 apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
@@ -30,7 +32,7 @@ spec:
         {{- fail "ERROR: port needs to be specified" }}
       {{- end -}}
       {{ $found := false }}
-      {{- range $portName, $portConfig := $.Values.ports -}}
+      {{- range $portName, $portConfig := $enabledPorts -}}
         {{- if eq (int $portConfig.port) (int $config.port) -}}
           {{ $found = true }}
         {{- end -}}
