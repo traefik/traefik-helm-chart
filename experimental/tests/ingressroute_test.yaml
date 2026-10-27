@@ -1,0 +1,95 @@
+suite: ingressRoute
+templates:
+  - ingressroute.yaml
+tests:
+  - it: nothing rendered by default (dashboard exposure is opt-in, like the legacy chart)
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: an entry requires a spec
+    set:
+      ingressRoute.myroute: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingressRoute.myroute: spec is required (chart has no defaults for this route)"
+
+  - it: a user-defined route renders with chart-owned naming
+    set:
+      ingressRoute.myroute:
+        spec:
+          entryPoints: [web]
+          routes:
+            - match: Host(`example.com`)
+              kind: Rule
+              services:
+                - name: my-service
+                  port: 80
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-myroute
+    asserts:
+      - isKind: { of: IngressRoute }
+      - equal: { path: spec.entryPoints, value: [web] }
+
+  - it: the dashboard exposure is enabled by adding the entry
+    set:
+      ingressRoute.dashboard:
+        spec:
+          entryPoints: [traefik]
+          routes:
+            - match: PathPrefix(`/dashboard`) || PathPrefix(`/api`)
+              kind: Rule
+              services:
+                - name: api@internal
+                  kind: TraefikService
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-dashboard
+    asserts:
+      - isKind: { of: IngressRoute }
+      - equal: { path: spec.entryPoints, value: [traefik] }
+      - equal:
+          path: spec.routes[0].services
+          value:
+            - name: api@internal
+              kind: TraefikService
+
+  - it: metadata adds annotations without losing chart labels
+    set:
+      ingressRoute.dashboard:
+        metadata:
+          annotations:
+            external-dns.alpha.kubernetes.io/hostname: dashboard.example.com
+        spec:
+          entryPoints: [traefik]
+          routes:
+            - match: PathPrefix(`/dashboard`)
+              kind: Rule
+              services:
+                - name: api@internal
+                  kind: TraefikService
+    asserts:
+      - equal:
+          path: metadata.annotations["external-dns.alpha.kubernetes.io/hostname"]
+          value: dashboard.example.com
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: metadata.name is chart-owned (user attempt is ignored)
+    set:
+      ingressRoute.dashboard:
+        metadata:
+          name: my-custom-route
+        spec:
+          entryPoints: [traefik]
+          routes:
+            - match: PathPrefix(`/dashboard`)
+              kind: Rule
+              services:
+                - name: api@internal
+                  kind: TraefikService
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-dashboard

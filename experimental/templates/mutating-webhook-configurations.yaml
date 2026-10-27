@@ -1,0 +1,26 @@
+{{- if and (kindIs "map" .Values.mutatingWebhookConfigurations) (include "traefik.hubAPIManagementEnabled" .) -}}
+{{- $defaults := include "traefik.mutatingWebhookConfigurationsDefaults" . | fromYaml -}}
+{{- $userMap := .Values.mutatingWebhookConfigurations | default dict -}}
+{{- range $name, $userConfig := $userMap }}
+{{- $userConfig = $userConfig | default dict -}}
+{{- $defaultBody := index $defaults $name | default dict -}}
+{{- $userBody := omit $userConfig "metadata" -}}
+{{- if and (empty $defaultBody) (empty $userBody.webhooks) -}}
+  {{- fail (printf "mutatingWebhookConfigurations.%s: webhooks is required (chart has no defaults for this entry)" $name) -}}
+{{- end -}}
+{{- $body := include "traefik.strategicMerge" (dict "base" $defaultBody "patch" $userBody) | fromYaml }}
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  {{- include "traefik.objectMeta" (dict
+      "ctx" $
+      "name" (printf "%s-%s" (include "traefik.fullname" $) $name)
+      "userMetadata" ($userConfig.metadata | default dict)
+  ) | nindent 2 }}
+{{- if $body.webhooks }}
+webhooks:
+  {{- toYaml $body.webhooks | nindent 2 }}
+{{- end }}
+{{- end }}
+{{- end -}}

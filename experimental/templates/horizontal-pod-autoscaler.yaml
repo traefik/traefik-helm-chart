@@ -1,0 +1,10 @@
+{{- if kindIs "map" .Values.autoscaling -}}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "autoscaling" "name" (include "traefik.fullname" .) "namespaced" true) | nindent 2 }}
+spec:
+  {{- $chartSpec := dict "scaleTargetRef" (dict "apiVersion" "apps/v1" "kind" "Deployment" "name" (include "traefik.fullname" .)) -}}
+  {{- $userSpec := (.Values.autoscaling | default dict).spec | default dict -}}
+  {{- include "traefik.strategicMerge" (dict "base" $chartSpec "patch" $userSpec) | nindent 2 }}
+{{- end -}}

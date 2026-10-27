@@ -1,0 +1,67 @@
+suite: HorizontalPodAutoscaler
+templates:
+  - horizontal-pod-autoscaler.yaml
+  - validation.yaml
+tests:
+  - it: not rendered by default
+    template: horizontal-pod-autoscaler.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders an HPA targeting the Deployment
+    template: horizontal-pod-autoscaler.yaml
+    set:
+      autoscaling:
+        spec:
+          maxReplicas: 3
+          minReplicas: 1
+    asserts:
+      - isKind:
+          of: HorizontalPodAutoscaler
+      - equal:
+          path: spec.maxReplicas
+          value: 3
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-traefik
+
+  - it: spec hatch can retarget scaleTargetRef (e.g. Argo Rollout), keeping the chart name
+    template: horizontal-pod-autoscaler.yaml
+    set:
+      autoscaling:
+        spec:
+          maxReplicas: 5
+          scaleTargetRef:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Rollout
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Rollout
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-traefik
+
+  - it: fails when enabled without maxReplicas
+    template: validation.yaml
+    set:
+      autoscaling: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "autoscaling is enabled but spec.maxReplicas is not set — an HPA requires it"
+
+  - it: fails when combined with daemonset
+    template: validation.yaml
+    set:
+      deployment: null
+      daemonset: {}
+      autoscaling:
+        spec:
+          maxReplicas: 3
+    asserts:
+      - failedTemplate:
+          errorMessage: "autoscaling scales the Deployment and cannot be used with daemonset — disable one"
