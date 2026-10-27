@@ -33,7 +33,7 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
   ) -}}
 {{- end -}}
 
-{{/* /config (ConfigMap) + /tmp (writable; required by readOnlyRootFilesystem). */}}
+{{/* /config (config Secret) + /tmp (writable; required by readOnlyRootFilesystem). */}}
 {{- $volumeMounts := list
     (dict "name" "config" "mountPath" "/config")
     (dict "name" "tmp" "mountPath" "/tmp")
@@ -114,7 +114,7 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
 {{- $container := include "traefik.container" (dict "ctx" $ctx "key" .key) | fromYaml -}}
 
 {{- $volumes := list
-    (dict "name" "config" "configMap" (dict "name" $fullname))
+    (dict "name" "config" "secret" (dict "secretName" (include "traefik.configSecretName" $ctx)))
     (dict "name" "tmp" "emptyDir" (dict))
 -}}
 {{- if include "traefik.hubEnabled" $ctx -}}
@@ -157,7 +157,7 @@ Args (dict): ctx (root context), key ("deployment" or "daemonset").
 Builds the chart's `PodTemplateSpec` (metadata + spec) as a dict. Metadata uses
 `traefik.objectMeta` with no name/namespace (pod templates have none) so chart and
 common labels/annotations apply. A `checksum/config` annotation (hash of the static
-config) rolls the pods on traefik.yaml changes — ConfigMap updates alone wouldn't.
+config) rolls the pods on traefik.yaml changes — Secret updates alone wouldn't.
 Args (dict): ctx (root context), key ("deployment" or "daemonset").
 */}}
 {{- define "traefik.podTemplateSpec" -}}

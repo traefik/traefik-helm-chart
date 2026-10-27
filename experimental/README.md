@@ -74,7 +74,7 @@ Helper partials follow a two-prefix naming convention:
   `_lib_semver.tpl` (version predicates). Reusable as-is.
 - **`_helpers_*.tpl`** — domain helpers that render or resolve chart-specific things, named after
   the concern/consumer they serve: `_helpers_workload.tpl` (deployment/daemonset),
-  `_helpers_configmap.tpl` (Traefik config), `_helpers_image.tpl` (image + version resolution),
+  `_helpers_config.tpl` (Traefik config), `_helpers_image.tpl` (image + version resolution),
   `_helpers_rbac.tpl`, `_helpers_hub.tpl`, `_helpers_notes.tpl`, etc. The cross-cutting
   `_helpers_chart.tpl` (naming), `_helpers_meta.tpl` and `_helpers_labels.tpl` are used by every
   manifest, so they stay shared rather than mapping to one file.

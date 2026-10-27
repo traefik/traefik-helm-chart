@@ -1,3 +1,8 @@
+{{/* Secret holding traefik.yaml: static config can carry credentials (OTLP headers, …). */}}
+{{- define "traefik.configSecretName" -}}
+{{- printf "%s-config" (include "traefik.fullname" .) -}}
+{{- end -}}
+
 {{- define "traefik.mergedConfig" -}}
 {{- $merged := deepCopy (.Values.traefik | default dict) -}}
 

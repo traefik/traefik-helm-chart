@@ -1,21 +1,21 @@
 suite: Hub license (BYO) token mount
 tests:
   - it: rendered traefik.yaml sets tokenfilepath to the mounted file
-    template: configmap.yaml
+    template: config-secret.yaml
     set:
       traefik.hub: {}
     asserts:
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "tokenfilepath:\\s*/etc/secrets/token"
 
   - it: user-provided tokenfilepath overrides the chart default
-    template: configmap.yaml
+    template: config-secret.yaml
     set:
       traefik.hub.tokenfilepath: "/custom/path/token"
     asserts:
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "tokenfilepath:\\s*/custom/path/token"
 
   - it: token mount + volume land on the pod, sourced from the BYO Secret
@@ -85,15 +85,15 @@ tests:
                 fieldPath: metadata.name
 
   - it: traefik.hub.namespaces and other hub keys flow verbatim into the config
-    template: configmap.yaml
+    template: config-secret.yaml
     set:
       traefik.hub.namespaces:
         - app-ns
       traefik.hub.apimanagement: {}
     asserts:
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "namespaces:\\s*\n\\s*- app-ns"
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "apimanagement:\\s*\\{\\s*\\}"

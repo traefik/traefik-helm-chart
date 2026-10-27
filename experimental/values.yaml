@@ -34,8 +34,9 @@ commonLabels: {}       # @schema additionalProperties: { type: string }
 # per-object via `<object>.metadata.annotations`.
 commonAnnotations: {}  # @schema additionalProperties: { type: string }
 
-# -- Traefik Proxy static configuration, verbatim. Rendered into a
-# ConfigMap mounted at `/config/traefik.yaml`. User keys merge on top
+# -- Traefik Proxy static configuration, verbatim. Rendered into the
+# `<fullname>-config` Secret (it can hold credentials, e.g. OTLP headers),
+# mounted at `/config/traefik.yaml`. User keys merge on top
 # via Helm native merge — `key: null` removes a default. Anything Traefik
 # accepts in `traefik.yaml` is reachable here without a chart update.
 traefik:  # @schema additionalProperties:true; type:[object, null]

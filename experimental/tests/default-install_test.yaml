@@ -1,6 +1,6 @@
 suite: default install
 templates:
-  - configmap.yaml
+  - config-secret.yaml
   - serviceaccount.yaml
   - clusterrole.yaml
   - clusterrolebinding.yaml
@@ -9,8 +9,8 @@ templates:
 tests:
   - it: renders exactly the six expected kinds
     asserts:
-      - isKind: { of: ConfigMap }
-        template: configmap.yaml
+      - isKind: { of: Secret }
+        template: config-secret.yaml
       - isKind: { of: ServiceAccount }
         template: serviceaccount.yaml
       - isKind: { of: ClusterRole }
@@ -21,6 +21,31 @@ tests:
         template: deployment.yaml
       - isKind: { of: Service }
         template: service.yaml
+
+  - it: traefik.yaml is stored in an Opaque Secret (it can hold credentials)
+    template: config-secret.yaml
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-config
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: type
+          value: Opaque
+      - exists:
+          path: stringData["traefik.yaml"]
+
+  - it: the config volume mounts the config Secret
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            secret:
+              secretName: RELEASE-NAME-traefik-config
 
   - it: default image is docker.io/traefik at the chart's AppVersion
     template: deployment.yaml

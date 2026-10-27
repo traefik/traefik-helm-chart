@@ -100,24 +100,24 @@ tests:
           content: { name: admission, containerPort: 11443, protocol: TCP }
 
   - it: rendered traefik.yaml auto-sets admission.secretname
-    template: configmap.yaml
+    template: config-secret.yaml
     set:
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission: {}
     asserts:
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "secretname:\\s*RELEASE-NAME-traefik-hub-admission-cert"
 
   - it: user override of admission.secretname wins over the chart default
-    template: configmap.yaml
+    template: config-secret.yaml
     set:
       traefik.hub.apimanagement: {}
       traefik.hub.apimanagement.admission:
         secretname: my-custom-cert
     asserts:
       - matchRegex:
-          path: data["traefik.yaml"]
+          path: stringData["traefik.yaml"]
           pattern: "secretname:\\s*my-custom-cert"
 
   - it: chart ships two default MWCs (hub-acp + hub-api)
