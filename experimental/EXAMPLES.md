@@ -723,7 +723,7 @@ traefik:
   certificatesResolvers:
     letsencrypt:
       acme:
-        email: "{{ letsencrypt_email }}"
+        email: "<letsencrypt-email>"
         #caServer: https://acme-v02.api.letsencrypt.org/directory # Production server
         caServer: https://acme-staging-v02.api.letsencrypt.org/directory # Staging server
         dnsChallenge:
@@ -737,18 +737,18 @@ deployment:
           - name: traefik
             env:
               - name: AZURE_CLIENT_ID
-                value: "{{ azure_dns_challenge_application_id }}"
+                value: "<azure-dns-challenge-application-id>"
               - name: AZURE_CLIENT_SECRET
                 valueFrom:
                   secretKeyRef:
                     name: azuredns-secret
                     key: client-secret
               - name: AZURE_SUBSCRIPTION_ID
-                value: "{{ azure_subscription_id }}"
+                value: "<azure-subscription-id>"
               - name: AZURE_TENANT_ID
-                value: "{{ azure_tenant_id }}"
+                value: "<azure-tenant-id>"
               - name: AZURE_RESOURCE_GROUP
-                value: "{{ azure_resource_group }}"
+                value: "<azure-resource-group>"
         initContainers:
           - name: volume-permissions
             image: busybox:latest
@@ -766,10 +766,10 @@ service:
       type: LoadBalancer
     metadata:
       annotations:
-        service.beta.kubernetes.io/azure-load-balancer-resource-group: "{{ azure_node_resource_group }}"
-        service.beta.kubernetes.io/azure-pip-name: "{{ azure_resource_group }}"
-        service.beta.kubernetes.io/azure-dns-label-name: "{{ azure_resource_group }}"
-        service.beta.kubernetes.io/azure-allowed-ip-ranges: "{{ ip_range | join(',') }}"
+        service.beta.kubernetes.io/azure-load-balancer-resource-group: "<azure-node-resource-group>"
+        service.beta.kubernetes.io/azure-pip-name: "<azure-resource-group>"
+        service.beta.kubernetes.io/azure-dns-label-name: "<azure-resource-group>"
+        service.beta.kubernetes.io/azure-allowed-ip-ranges: "<ip-range-1>,<ip-range-2>"
 extraObjects:
   - apiVersion: v1
     kind: Secret
@@ -778,7 +778,7 @@ extraObjects:
       namespace: traefik
     type: Opaque
     stringData:
-      client-secret: "{{ azure_dns_challenge_application_secret }}"
+      client-secret: "<azure-dns-challenge-application-secret>"
 ```
 
 ## Install on Azure behind an Application Gateway (AGIC)
@@ -977,22 +977,77 @@ When using TCP and UDP with a single service, you may encounter [this issue](htt
 If you want to avoid this issue, you can set `traefik.entryPoints.websecure.http3.advertisedPort`
 to another value than 443
 
+HTTP/3 runs over UDP on the `websecure` port. The chart only derives TCP container ports from
+`traefik.entryPoints`, so declare the UDP container port and expose it on the Service (redeclaring
+`ports` replaces the default list):
+
 ```yaml
 traefik:
   entryPoints:
     websecure:
-      http3:
-        enabled: true
+      http3: {}
+
+deployment:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: traefik
+            ports:
+              - name: websecure-udp
+                containerPort: 8443
+                protocol: UDP
+
+service:
+  default:
+    spec:
+      ports:
+        - name: web
+          port: 80
+          targetPort: web
+          protocol: TCP
+        - name: websecure
+          port: 443
+          targetPort: websecure
+          protocol: TCP
+        - name: websecure-udp
+          port: 443
+          targetPort: 8443
+          protocol: UDP
 ```
 
-You can also create two `Service`, one for TCP and one for UDP.
+You can also create two `Service`, one for TCP and one for UDP, by keeping the default Service
+and adding a UDP one:
 
 ```yaml
 traefik:
   entryPoints:
     websecure:
-      http3:
-        enabled: true
+      http3: {}
+
+deployment:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: traefik
+            ports:
+              - name: websecure-udp
+                containerPort: 8443
+                protocol: UDP
+
+service:
+  udp:
+    spec:
+      type: LoadBalancer
+      selector:
+        app.kubernetes.io/name: traefik
+        app.kubernetes.io/instance: traefik   # = your release name
+      ports:
+        - name: websecure-udp
+          port: 443
+          targetPort: 8443
+          protocol: UDP
 ```
 
 ## Use PROXY protocol on Digital Ocean
@@ -1351,6 +1406,9 @@ volume (mounted at `/data`), backed by a PVC with `persistence`:
 
 ```yaml
 traefik:
+  # Transparency logs require JSON logs.
+  log:
+    format: json
   hub:
     transparencyLogs:
       driver:
@@ -1427,7 +1485,7 @@ metadata:
   name: cloudflare
 type: Opaque
 stringData:
-  token: {{ SET_A_VALID_TOKEN_HERE }}
+  token: "<your-cloudflare-token>"
 ```
 
 **Step 2**:
@@ -1593,7 +1651,7 @@ service:
       type: ClusterIP
       selector:
         app.kubernetes.io/name: traefik
-        app.kubernetes.io/instance: traefik-traefik
+        app.kubernetes.io/instance: traefik   # = your release name
       ports:
         # Sensitive data should not be exposed on the internet
         # => only expose the traefik API port on this internal Service.
@@ -1618,7 +1676,7 @@ spec:
   type: ClusterIP
   selector:
     app.kubernetes.io/name: traefik
-    app.kubernetes.io/instance: traefik-traefik
+    app.kubernetes.io/instance: traefik   # = your release name
   ports:
   - port: 8080
     name: traefik
@@ -1876,8 +1934,7 @@ One can use the new stable Kubernetes gateway API provider by setting the follow
 ```yaml
 traefik:
   providers:
-    kubernetesGateway:
-      enabled: true
+    kubernetesGateway: {}
 # Render the GatewayClass + a Gateway with at least one listener. A Gateway with
 # no listeners accepts no traffic, so HTTPRoutes never attach.
 gatewayClass: {}
@@ -1967,8 +2024,7 @@ One can use the new stable Kubernetes Gateway API provider with automatic TLS ce
 ```yaml
 traefik:
   providers:
-    kubernetesGateway:
-      enabled: true
+    kubernetesGateway: {}
 gateway:
   metadata:
     annotations:
@@ -2073,8 +2129,7 @@ Starting with Traefik Proxy v3.6.2, one can use the Kubernetes Ingress NGINX pro
 ```yaml
 traefik:
   providers:
-    kubernetesIngressNGINX:
-      enabled: true
+    kubernetesIngressNGINX: {}
 ```
 
 This provider allows Traefik to consume Kubernetes Ingress resources with NGINX-specific annotations. This is particularly useful when migrating from NGINX Ingress Controller to Traefik.
@@ -2171,7 +2226,7 @@ You should see the whoami response with your request details.
 ```bash
 helm upgrade --install traefik traefik/traefik \
   --namespace traefik --create-namespace \
-  --set traefik.providers.kubernetesIngressNGINX.enabled=true
+  --set-json 'traefik.providers.kubernetesIngressNGINX={}'
 ```
 
 Or using a values file:
@@ -2179,8 +2234,7 @@ Or using a values file:
 ```yaml
 traefik:
   providers:
-    kubernetesIngressNGINX:
-      enabled: true
+    kubernetesIngressNGINX: {}
 ```
 
 **Step 4**: Test that the application now also works with Traefik
@@ -2223,8 +2277,7 @@ traefik:
   experimental:
     knative: true
   providers:
-    knative:
-      enabled: true
+    knative: {}
 ```
 
 > :warning:
@@ -2278,33 +2331,6 @@ curl -k -H "Host: whoami.default.docker.localhost" https://localhost/
 ```
 
 </details>
-
-## Use templating for additionalVolumeMounts
-
-This example demonstrates how to use templating for the volume mount configuration to dynamically set the `subPath` parameter based on a variable.
-
-In the new chart, container volume mounts live under `deployment.spec.template.spec.containers[0].volumeMounts` (folded onto the `traefik` container by name). Helm templating in values is preserved verbatim:
-
-```yaml
-deployment:
-  spec:
-    template:
-      spec:
-        containers:
-          - name: traefik
-            volumeMounts:
-              - name: plugin-volume
-                mountPath: /plugins
-                subPath: "{{ .Values.pluginVersion }}"
-```
-
-In your `values.yaml` file, you can specify the `pluginVersion` variable:
-
-```yaml
-pluginVersion: "v1.2.3"
-```
-
-This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.
 
 ## Use a custom certificate for Traefik Hub webhooks
 
@@ -2482,7 +2508,6 @@ This example demonstrates how to enable AI Gateway in Traefik Hub and set a maxR
 traefik:
   hub:
     aigateway:
-      enabled: true
       maxRequestBodySize: 10485760 # optional, default to 1MiB
 ```
 
@@ -2565,15 +2590,16 @@ traefik:
     websecure-ext:
       address: ":9443/tcp"
   providers:
-    kubernetesGateway:
-      enabled: true
-      statusAddress:
-        service:
-          enabled: false
+    kubernetesGateway: {}
 
 # The chart-managed (internal) Gateway. The chart owns its name (<fullname>)
-# and gatewayClassName.
-gateway: {}
+# and gatewayClassName; a Gateway needs at least one listener.
+gateway:
+  spec:
+    listeners:
+      - name: web
+        port: 8000
+        protocol: HTTP
 gatewayClass: {}
 
 # Recreate the external exposure as a named Service entry (replaces the
@@ -2659,12 +2685,34 @@ traefik:
       multicluster:
         address: ":9443/tcp"
     providers:
-      multicluster:
-        enabled: true
+      multicluster: {}
   providers:
     file:
-      enabled: true
-      content:
+      directory: /dynamic
+
+# The file provider reads files only: ship the dynamic configuration in a ConfigMap and mount it.
+deployment:
+  spec:
+    template:
+      spec:
+        containers:
+          - name: traefik
+            volumeMounts:
+              - name: dynamic
+                mountPath: /dynamic
+                readOnly: true
+        volumes:
+          - name: dynamic
+            configMap:
+              name: traefik-multicluster-dynamic
+
+extraObjects:
+  - apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: traefik-multicluster-dynamic
+    data:
+      uplinks.yaml: |
         http:
           uplinks:
             whoami:
@@ -2706,7 +2754,6 @@ traefik:
   hub:
     providers:
       multicluster:
-        enabled: true
         children:
           child1:
             address: "http://child1.example.svc.cluster.local:9443"
