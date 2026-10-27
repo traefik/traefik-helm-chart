@@ -65,14 +65,11 @@ rules:
       - pods
     verbs:
       - get
-  # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
+  # Traefik lists every Secret of a watched namespace: resourceNames cannot restrict it, see https://github.com/traefik/traefik/issues/7097
   - apiGroups:
       - ""
     resources:
       - secrets
-    {{- if gt (len $.Values.rbac.secretResourceNames) 0 }}
-    resourceNames: {{ $.Values.rbac.secretResourceNames }}
-    {{- end }}
     verbs:
       - get
       - list
