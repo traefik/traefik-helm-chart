@@ -101,6 +101,7 @@ app.kubernetes.io/instance: {{ template "traefik.instance-name" . }}
 {{/* Shared labels used in metada */}}
 {{- define "traefik.labels" -}}
 {{ include "traefik.labelselector" . }}
+app.kubernetes.io/version: {{ include "traefik.appVersion" . | quote }}
 helm.sh/chart: {{ template "traefik.chart" . }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- with .Values.commonLabels }}
@@ -332,6 +333,16 @@ fallback policy (e.g. "v3.99" for floating tags, or skipping non-semver tags).
    {{- $hubVersion = $.Values.versionOverride -}}
  {{- end -}}
  {{- (split "@" (default "" $hubVersion))._0 -}}
+{{- end -}}
+
+{{/* Version of the running Proxy or Hub image, sanitized to be a valid label value */}}
+{{- define "traefik.appVersion" -}}
+{{- $version := include "traefik.proxyVersion" . -}}
+{{- if eq (include "traefik.hub.enabled" .) "true" -}}
+{{- $version = include "traefik.hubVersion" . | default (include "traefik.defaultTag" .) -}}
+{{- end -}}
+{{- $version = regexReplaceAll "[^A-Za-z0-9._-]" $version "_" | trunc 63 -}}
+{{- regexReplaceAll "[^A-Za-z0-9]+$" $version "" -}}
 {{- end -}}
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}
