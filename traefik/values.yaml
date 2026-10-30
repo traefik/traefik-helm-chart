@@ -1430,6 +1430,8 @@ hub:  # @schema additionalProperties: false
       accessKeyID: ""
       # -- AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
       secretAccessKey: ""
+      # -- AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.
+      sessionToken: ""
       # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
       exposedByDefault: true
       # -- Polling interval, in seconds, for the EC2 API.

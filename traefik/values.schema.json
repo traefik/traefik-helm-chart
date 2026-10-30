@@ -1035,6 +1035,10 @@
                                         }
                                     },
                                     "additionalProperties": false
+                                },
+                                "sessionToken": {
+                                    "description": "AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
                                 }
                             },
                             "additionalProperties": false
