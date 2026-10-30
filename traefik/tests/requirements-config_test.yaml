@@ -562,6 +562,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12."
+  - it: should fail when using maxHeaderValueCount on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      ports:
+        websecure:
+          http:
+            maxHeaderValueCount: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: http.maxHeaderValueCount is only available for traefik >= v3.7.17."
   - it: should fail when using underscoreHeadersStrategy on traefik < 3.7.6
     set:
       image:

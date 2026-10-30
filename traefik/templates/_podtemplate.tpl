@@ -667,6 +667,9 @@
               {{- with .maxHeaderBytes }}
           - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderBytes={{ . | int64 }}"
               {{- end }}
+              {{- with .maxHeaderValueCount }}
+          - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderValueCount={{ . | int64 }}"
+              {{- end }}
               {{- with .middlewares }}
           - "--{{$entryPoints}}.{{ $name }}.http.middlewares={{ join "," . }}"
               {{- end }}

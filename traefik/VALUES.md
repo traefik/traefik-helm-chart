@@ -463,6 +463,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.http.aliasHeadersStrategy | string | `nil` | Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy) |
 | ports.websecure.http.encodedCharacters | object | nil | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#encoded-character-filtering) |
 | ports.websecure.http.maxHeaderBytes | int | `nil` | Maximum size of request headers in bytes. Default: 1048576 (1 MB) |
+| ports.websecure.http.maxHeaderValueCount | int | `nil` | Maximum number of request header values (v3.7.17+). Default: 500 |
 | ports.websecure.http.middlewares | list | `[]` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares) |
 | ports.websecure.http.sanitizePath | bool | `nil` | See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization) |
 | ports.websecure.http.tls.certResolver | string | `""` |  |

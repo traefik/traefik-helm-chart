@@ -160,6 +160,9 @@
   {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
   {{- end }}
+  {{- if and $config (($config.http).maxHeaderValueCount) (semverCompare "<v3.7.17-0" $version) }}
+    {{- fail "ERROR: http.maxHeaderValueCount is only available for traefik >= v3.7.17." }}
+  {{- end }}
   {{- if and $config.uplink (empty $.Values.hub.token) }}
     {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}
   {{- end }}
