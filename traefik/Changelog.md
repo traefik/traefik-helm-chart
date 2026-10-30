@@ -1,5 +1,53 @@
 # Change Log
 
+## 42.2.0  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-10-30
+
+* feat(ports): :sparkles: add http.maxHeaderValueCount value
+* feat(hub): :sparkles: add ec2 sessionToken value
+* feat(hub): :rocket: support traefik hub v3.20.20 and v3.21.7
+* feat(global): :sparkles: add aliasHeadersStrategy value
+* chore(release): publish 42.2.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index f9940eb..ece68f1 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -892,6 +892,9 @@ global:
+   sendAnonymousUsage: false
+   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
+   notAppendXForwardedFor: false
++  # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
++  # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
++  aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+   # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
+   imagePullSecrets: []
+   # -- Required for Azure Marketplace integration.
+@@ -1048,6 +1051,8 @@ ports:
+         allowEncodedHash:  # @schema type:[boolean, null]
+       # -- (int) Maximum size of request headers in bytes. Default: 1048576 (1 MB)
+       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
++      # -- (int) Maximum number of request header values (v3.7.17+). Default: 500
++      maxHeaderValueCount:  # @schema type:[integer, null]; minimum:0
+       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
+       middlewares: []  # @schema type: [array, null]
+       # -- (bool) See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
+@@ -1430,6 +1435,8 @@ hub:  # @schema additionalProperties: false
+       accessKeyID: ""
+       # -- AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
+       secretAccessKey: ""
++      # -- AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.
++      sessionToken: ""
+       # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
+       exposedByDefault: true
+       # -- Polling interval, in seconds, for the EC2 API.
+```
+
+
 ## 42.1.3  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-22
