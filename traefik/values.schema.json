@@ -2521,6 +2521,14 @@
                                 ],
                                 "minimum": 0
                             },
+                            "maxHeaderValueCount": {
+                                "description": "Maximum number of request header values (v3.7.17+). Default: 500",
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "minimum": 0
+                            },
                             "middlewares": {
                                 "description": "See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)",
                                 "type": [

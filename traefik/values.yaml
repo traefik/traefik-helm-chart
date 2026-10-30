@@ -1048,6 +1048,8 @@ ports:
         allowEncodedHash:  # @schema type:[boolean, null]
       # -- (int) Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
+      # -- (int) Maximum number of request header values (v3.7.17+). Default: 500
+      maxHeaderValueCount:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
       middlewares: []  # @schema type: [array, null]
       # -- (bool) See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
