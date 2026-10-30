@@ -652,6 +652,19 @@
         "global": {
             "type": "object",
             "properties": {
+                "aliasHeadersStrategy": {
+                    "description": "Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "keep",
+                        "delete",
+                        "reject",
+                        null
+                    ]
+                },
                 "azure": {
                     "description": "Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart",
                     "type": "object",

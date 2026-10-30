@@ -892,6 +892,9 @@ global:
   sendAnonymousUsage: false
   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
   notAppendXForwardedFor: false
+  # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
+  # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
+  aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
   # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
   imagePullSecrets: []
   # -- Required for Azure Marketplace integration.

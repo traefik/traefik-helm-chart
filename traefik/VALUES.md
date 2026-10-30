@@ -132,6 +132,7 @@ Kubernetes: `>=1.30.0-0`
 | gatewayClass.enabled | bool | `true` | When providers.kubernetesGateway.enabled and gateway.enabled, deploy a default gatewayClass |
 | gatewayClass.labels | object | `{}` | Additional gatewayClass labels (e.g. for filtering gateway objects by custom labels) |
 | gatewayClass.name | string | `""` | Set a custom name to GatewayClass |
+| global.aliasHeadersStrategy | string | `nil` | Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy) |
 | global.azure | object | See _values.yaml_ | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |

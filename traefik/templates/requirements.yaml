@@ -111,6 +111,10 @@
   {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.17-0" $version) .Values.global.aliasHeadersStrategy }}
+  {{- fail "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.7.1-0" $version) (or
     (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
     (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
