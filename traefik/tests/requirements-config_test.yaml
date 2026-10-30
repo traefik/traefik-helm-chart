@@ -628,6 +628,21 @@ tests:
             - name: public
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using hub.providers.ec2.sessionToken on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+        providers:
+          ec2:
+            enabled: true
+            sessionToken: token
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.sessionToken is only available for Traefik Hub >= v3.21.7."
   - it: should fail when a kubernetesGateway gateway has no name
     set:
       providers:

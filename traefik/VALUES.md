@@ -195,6 +195,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.ec2.secretAccessKey | string | `""` | AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.ec2.securityGroupPortDiscovery.enabled | bool | `false` | Derive the backend port from the instance security-group rules when no port tag is set. |
 | hub.providers.ec2.securityGroupPortDiscovery.excludedPorts | list | `[]` | Ports excluded from security-group port discovery. When empty, the provider excludes privileged ports except 80 and 443. |
+| hub.providers.ec2.sessionToken | string | `""` | AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.microcks.auth.clientId | string | `""` | Microcks API client ID. |
 | hub.providers.microcks.auth.clientSecret | string | `""` | Microcks API client secret. |
 | hub.providers.microcks.auth.endpoint | string | `""` | Microcks API endpoint. |
