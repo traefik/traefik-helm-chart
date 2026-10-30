@@ -201,6 +201,18 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
+  - it: should not display warning when a Hub version embeds a Proxy above the Proxy max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.7
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.7 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
