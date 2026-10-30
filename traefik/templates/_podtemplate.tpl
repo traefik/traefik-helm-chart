@@ -212,6 +212,9 @@
            {{- if .notAppendXForwardedFor }}
           - "--global.notAppendXForwardedFor=true"
            {{- end }}
+           {{- with .aliasHeadersStrategy }}
+          - "--global.aliasHeadersStrategy={{ . }}"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}

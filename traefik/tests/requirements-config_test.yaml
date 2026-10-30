@@ -717,6 +717,65 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using global aliasHeadersStrategy on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.20.19
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.19
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.20.20
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.20
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.21.7
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.7
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using global notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
