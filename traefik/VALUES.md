@@ -123,8 +123,8 @@ Kubernetes: `>=1.30.0-0`
 | gateway.defaultScope | string | `nil` | Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways) by setting the `defaultScope` field (e.g. `All` or `Namespace`). |
 | gateway.enabled | bool | `true` | When providers.kubernetesGateway.enabled, deploy a default gateway |
 | gateway.infrastructure | object | `{}` | [Infrastructure](https://kubernetes.io/blog/2023/11/28/gateway-api-ga/#gateway-infrastructure-labels) |
-| gateway.listeners.web.hostname | string | `""` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/main/spec/#hostname) |
-| gateway.listeners.web.namespacePolicy | object | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/main/spec/#fromnamespaces) |
+| gateway.listeners.web.hostname | string | `""` | Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname) |
+| gateway.listeners.web.namespacePolicy | object | `nil` | Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces) |
 | gateway.listeners.web.port | int | `8000` | Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules. The port must match a port declared in ports section. |
 | gateway.listeners.web.protocol | string | `"HTTP"` |  |
 | gateway.name | string | `""` | Set a custom name to gateway |
