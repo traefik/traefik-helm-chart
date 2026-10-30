@@ -15,6 +15,9 @@ image:  # @schema additionalProperties: false
   # -- Traefik image pull policy
   pullPolicy: IfNotPresent
 
+# -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty
+imagePullSecrets: []
+
 # -- Add additional label to all resources
 commonLabels: {}
 
@@ -95,7 +98,7 @@ deployment:
   dnsConfig: {}
   # -- Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/)
   hostAliases: []
-  # -- Pull secret for fetching traefik container image
+  # -- Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`
   imagePullSecrets: []
   # -- Pod lifecycle actions
   lifecycle: {}
@@ -889,6 +892,11 @@ global:
   sendAnonymousUsage: false
   # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
   notAppendXForwardedFor: false
+  # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
+  # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
+  aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+  # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
+  imagePullSecrets: []
   # -- Required for Azure Marketplace integration.
   # See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart
   # @default -- See _values.yaml_
@@ -1043,6 +1051,8 @@ ports:
         allowEncodedHash:  # @schema type:[boolean, null]
       # -- (int) Maximum size of request headers in bytes. Default: 1048576 (1 MB)
       maxHeaderBytes:  # @schema type:[integer, null]; minimum:0
+      # -- (int) Maximum number of request header values (v3.7.17+). Default: 500
+      maxHeaderValueCount:  # @schema type:[integer, null]; minimum:0
       # -- See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#httpmiddlewares)
       middlewares: []  # @schema type: [array, null]
       # -- (bool) See [upstream documentation](https://doc.traefik.io/traefik/security/request-path/#path-sanitization)
@@ -1425,6 +1435,8 @@ hub:  # @schema additionalProperties: false
       accessKeyID: ""
       # -- AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`.
       secretAccessKey: ""
+      # -- AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.
+      sessionToken: ""
       # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
       exposedByDefault: true
       # -- Polling interval, in seconds, for the EC2 API.

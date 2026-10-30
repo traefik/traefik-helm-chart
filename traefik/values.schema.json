@@ -421,7 +421,7 @@
                     ]
                 },
                 "imagePullSecrets": {
-                    "description": "Pull secret for fetching traefik container image",
+                    "description": "Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`",
                     "type": "array"
                 },
                 "initContainers": {
@@ -652,6 +652,19 @@
         "global": {
             "type": "object",
             "properties": {
+                "aliasHeadersStrategy": {
+                    "description": "Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "keep",
+                        "delete",
+                        "reject",
+                        null
+                    ]
+                },
                 "azure": {
                     "description": "Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart",
                     "type": "object",
@@ -696,6 +709,10 @@
                 },
                 "checkNewVersion": {
                     "type": "boolean"
+                },
+                "imagePullSecrets": {
+                    "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
+                    "type": "array"
                 },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
@@ -1031,6 +1048,10 @@
                                         }
                                     },
                                     "additionalProperties": false
+                                },
+                                "sessionToken": {
+                                    "description": "AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
                                 }
                             },
                             "additionalProperties": false
@@ -1624,6 +1645,10 @@
                 }
             },
             "additionalProperties": false
+        },
+        "imagePullSecrets": {
+            "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty",
+            "type": "array"
         },
         "ingressClass": {
             "type": "object",
@@ -2503,6 +2528,14 @@
                             },
                             "maxHeaderBytes": {
                                 "description": "Maximum size of request headers in bytes. Default: 1048576 (1 MB)",
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "minimum": 0
+                            },
+                            "maxHeaderValueCount": {
+                                "description": "Maximum number of request header values (v3.7.17+). Default: 500",
                                 "type": [
                                     "integer",
                                     "null"

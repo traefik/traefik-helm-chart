@@ -8,7 +8,7 @@
 {{- $imageTag := (.Values.image.tag | default (include "traefik.defaultTag" .)) -}}
 {{- $version := include "traefik.proxyVersion" $ -}}
 {{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" -}}
-{{- if or (hasPrefix "experimental-" $imageTag) (eq (include "traefik.isAboveMaxVersion" (dict "version" $version "max" $proxyMaxVersion)) "true") -}}
+{{- if or (hasPrefix "experimental-" $imageTag) (and (ne (include "traefik.hub.enabled" .) "true") (eq (include "traefik.isAboveMaxVersion" (dict "version" $version "max" $proxyMaxVersion)) "true")) -}}
 {{- printf "\n" -}}
 {{ include "traefik.nonStandardVersionWarning" (dict "label" "image tag" "tag" $imageTag) }}
 {{- printf "\n" -}}
@@ -49,10 +49,10 @@ without changing the image. ℹ️
 
 
 {{/* Warn about missing pull credentials for the hardened image (SA-attached secrets are not visible here) */}}
-{{- if and .Values.hub.hardened (empty .Values.deployment.imagePullSecrets) -}}
+{{- if and .Values.hub.hardened (empty (coalesce .Values.deployment.imagePullSecrets .Values.imagePullSecrets (.Values.global).imagePullSecrets)) -}}
 {{- printf "\n" -}}
 🚨 hardened images are hosted on a private registry: pulling {{ include "traefik.image-name" . }} needs
-credentials, from `deployment.imagePullSecrets` or from the ServiceAccount used by Traefik. 🚨
+credentials, from `deployment.imagePullSecrets`, `imagePullSecrets`, `global.imagePullSecrets` or from the ServiceAccount used by Traefik. 🚨
 {{- printf "\n" -}}
 {{- end -}}
 

@@ -25,7 +25,7 @@
         hub-cert-hash: {{ $cert.Hash }}
       {{- end }}
     spec:
-      {{- with .Values.deployment.imagePullSecrets }}
+      {{- with coalesce .Values.deployment.imagePullSecrets .Values.imagePullSecrets (.Values.global).imagePullSecrets }}
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
@@ -211,6 +211,9 @@
            {{- end }}
            {{- if .notAppendXForwardedFor }}
           - "--global.notAppendXForwardedFor=true"
+           {{- end }}
+           {{- with .aliasHeadersStrategy }}
+          - "--global.aliasHeadersStrategy={{ . }}"
            {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
@@ -666,6 +669,9 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.%s.http.encodedCharacters" $entryPoints $name) "content" .encodedCharacters) | nindent 10 }}
               {{- with .maxHeaderBytes }}
           - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderBytes={{ . | int64 }}"
+              {{- end }}
+              {{- with .maxHeaderValueCount }}
+          - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderValueCount={{ . | int64 }}"
               {{- end }}
               {{- with .middlewares }}
           - "--{{$entryPoints}}.{{ $name }}.http.middlewares={{ join "," . }}"

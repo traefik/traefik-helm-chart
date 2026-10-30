@@ -251,6 +251,20 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.http.maxHeaderBytes=2097152"
 
+  - it: should be possible to set MaxHeaderValueCount on entrypoint
+    template: deployment.yaml
+    set:
+      image:
+        tag: v3.7.17
+      ports:
+        web:
+          http:
+            maxHeaderValueCount: 1000
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.http.maxHeaderValueCount=1000"
+
   - it: should be possible to use a different containerPort
     set:
       ports:

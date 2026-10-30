@@ -276,6 +276,52 @@ tests:
       - equal:
           path: spec.template.spec.imagePullSecrets[1].name
           value: myOtherRegistryKeySecretName
+  - it: should prefer top-level imagePullSecrets over global imagePullSecrets
+    set:
+      imagePullSecrets:
+        - name: topLevelRegistryKeySecretName
+      global:
+        imagePullSecrets:
+          - name: globalRegistryKeySecretName
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets
+          value:
+            - name: topLevelRegistryKeySecretName
+  - it: should fall back to top-level imagePullSecrets
+    set:
+      imagePullSecrets:
+        - name: topLevelRegistryKeySecretName
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets
+          value:
+            - name: topLevelRegistryKeySecretName
+  - it: should fall back to global imagePullSecrets
+    set:
+      global:
+        imagePullSecrets:
+          - name: globalRegistryKeySecretName
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets
+          value:
+            - name: globalRegistryKeySecretName
+  - it: should only use deployment.imagePullSecrets when top-level and global imagePullSecrets are set
+    set:
+      imagePullSecrets:
+        - name: topLevelRegistryKeySecretName
+      global:
+        imagePullSecrets:
+          - name: globalRegistryKeySecretName
+      deployment:
+        imagePullSecrets:
+          - name: myRegistryKeySecretName
+    asserts:
+      - equal:
+          path: spec.template.spec.imagePullSecrets
+          value:
+            - name: myRegistryKeySecretName
   - it: should have shareProcessNamespace enabled
     set:
       deployment:

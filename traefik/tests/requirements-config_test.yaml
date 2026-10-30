@@ -93,14 +93,14 @@ tests:
         tag: v99.0.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.15."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.16."
   - it: should fail when trying to use this Chart with a Proxy major pre-release above max
     set:
       image:
         tag: v4.0.0-rc.1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.15."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.16."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -178,7 +178,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.3."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.7."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -562,6 +562,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12."
+  - it: should fail when using maxHeaderValueCount on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      ports:
+        websecure:
+          http:
+            maxHeaderValueCount: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: http.maxHeaderValueCount is only available for traefik >= v3.7.17."
   - it: should fail when using underscoreHeadersStrategy on traefik < 3.7.6
     set:
       image:
@@ -628,6 +639,21 @@ tests:
             - name: public
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using hub.providers.ec2.sessionToken on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+        providers:
+          ec2:
+            enabled: true
+            sessionToken: token
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.sessionToken is only available for Traefik Hub >= v3.21.7."
   - it: should fail when a kubernetesGateway gateway has no name
     set:
       providers:
@@ -691,6 +717,65 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using global aliasHeadersStrategy on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.20.19
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.19
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.20.20
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.20
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.21.7
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.7
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using global notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
