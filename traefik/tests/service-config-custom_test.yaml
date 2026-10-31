@@ -34,8 +34,10 @@ tests:
       name: yesthisnameiscontainingwaymorethan50charactersinit
     set:
       service:
-        internal:
-          type: ClusterIP
+        additionalServices:
+          internal:
+            spec:
+              type: ClusterIP
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot create a service whose full name contains more than 60 characters"
