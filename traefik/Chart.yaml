@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 42.2.0
+version: 42.3.0
 # renovate: image=traefik
 appVersion: v3.7.17
 kubeVersion: '>=1.30.0-0'
@@ -28,10 +28,8 @@ annotations:
   traefik.io/hub-max-version: v3.21.7
   artifacthub.io/changes: |
     - kind: added
-      description: "feat(ports): add http.maxHeaderValueCount value"
+      description: "feat(labels): add app.kubernetes.io/version to resource metadata"
     - kind: added
-      description: "feat(hub): add ec2 sessionToken value"
-    - kind: added
-      description: "feat(hub): support traefik hub v3.20.20 and v3.21.7"
-    - kind: added
-      description: "feat(global): add aliasHeadersStrategy value"
+      description: "feat(deps): update traefik docker tag to v3.7.17"
+    - kind: changed
+      description: "docs(gateway): fix dead Gateway API spec links in values"
