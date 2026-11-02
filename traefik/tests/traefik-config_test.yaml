@@ -1216,17 +1216,6 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming"
-  - it: should not set safeNaming if a setting is omitted
-    set:
-      image:
-        tag: v3.7.11
-      providers:
-        kubernetesCRD:
-          safeNaming:
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetescrd.safeNaming"
   - it: should enable safeNaming when set
     set:
       image:

@@ -141,8 +141,8 @@
   {{- end }}
 {{- end }}
 
-{{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
-{{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
+{{/* safeNaming=nil is the Chart default, so setting the value is an error on older versions. */}}
+{{- if and (semverCompare "<v3.7.11-0" $version) (ne .Values.providers.kubernetesCRD.safeNaming nil) }}
   {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}
 {{- end }}
 
