@@ -342,7 +342,7 @@ fallback policy (e.g. "v3.99" for floating tags, or skipping non-semver tags).
 {{- $version = include "traefik.hubVersion" . | default (include "traefik.defaultTag" .) -}}
 {{- end -}}
 {{- $version = regexReplaceAll "[^A-Za-z0-9._-]" $version "_" | trunc 63 -}}
-{{- regexReplaceAll "[^A-Za-z0-9]+$" $version "" -}}
+{{- regexReplaceAll "^[^A-Za-z0-9]+|[^A-Za-z0-9]+$" $version "" -}}
 {{- end -}}
 
 {{/* Generate/load self-signed certificate for admission webhooks */}}

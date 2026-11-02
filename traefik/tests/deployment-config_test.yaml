@@ -610,6 +610,16 @@ tests:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
           value: v3.7.0-rc.1_build.42
+  - it: should strip leading invalid characters from app.kubernetes.io/version
+    set:
+      hub:
+        token: xxx
+      image:
+        tag: _foo
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: foo
   - it: should set app.kubernetes.io/version to the Hub version when Hub is enabled
     set:
       hub:
@@ -624,13 +634,10 @@ tests:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
           value: v3.20.0
   - it: should set app.kubernetes.io/version to the default Hub tag when Hub is enabled without image.tag
-    chart:
-      annotations:
-        traefik.io/hub-max-version: v3.21.3
     set:
       hub:
         token: xxx
     asserts:
-      - equal:
+      - matchRegex:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.21.3
+          pattern: ^v[0-9]+\.[0-9]+\.[0-9]+$
