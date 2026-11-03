@@ -119,6 +119,44 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: registry.example.com/acme/traefik:v3.7.0
+  - it: should use global.imageRegistry when image.registry is not set
+    set:
+      global:
+        imageRegistry: mirror.example.com
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: mirror.example.com/traefik:v3.6.10
+  - it: should let image.registry take precedence over global.imageRegistry
+    set:
+      global:
+        imageRegistry: mirror.example.com
+      image:
+        registry: example.org
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: example.org/traefik:v3.6.10
+  - it: should use global.imageRegistry with image.digest
+    set:
+      global:
+        imageRegistry: mirror.example.com
+      image:
+        digest: sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: mirror.example.com/traefik@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+  - it: should use global.imageRegistry for the Hub image
+    set:
+      global:
+        imageRegistry: mirror.example.com
+      hub:
+        token: xxx
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: ^mirror.example.com/traefik/traefik-hub:v\d+.\d+.\d+
 
   - it: should have no resource limit by default
     asserts:

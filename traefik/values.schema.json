@@ -714,6 +714,13 @@
                     "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
                     "type": "array"
                 },
+                "imageRegistry": {
+                    "description": "Registry for the Traefik image when `image.registry` is not set, e.g. a mirror. Leave empty to keep the default registry.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
+                },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
                     "type": "boolean"
@@ -1623,7 +1630,7 @@
                     "type": "string"
                 },
                 "registry": {
-                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
+                    "description": "Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
                     "type": [
                         "string",
                         "null"
