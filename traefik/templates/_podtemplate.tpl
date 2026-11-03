@@ -1085,7 +1085,7 @@
           {{- end }}
         {{- end }}
         {{- if .Values.deployment.additionalVolumes }}
-          {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+          {{- tpl (toYaml .Values.deployment.additionalVolumes) . | nindent 8 }}
         {{- end }}
         {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
         {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}

@@ -1838,6 +1838,16 @@ pluginVersion: "v1.2.3"
 
 This configuration will mount the `plugin-volume` at `/plugins` with the `subPath` set to `v1.2.3`.
 
+`deployment.additionalVolumes` supports templating as well, for example to reference a ConfigMap named after the release:
+
+```yaml
+deployment:
+  additionalVolumes:
+    - name: plugin-volume
+      configMap:
+        name: "{{ .Release.Name }}-plugins"
+```
+
 ## Use a custom certificate for Traefik Hub webhooks
 
 Some CD tools may regenerate Traefik Hub mutating webhooks continuously, when using helm template.
