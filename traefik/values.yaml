@@ -3,7 +3,7 @@
 # Declare variables to be passed into templates
 
 image:  # @schema additionalProperties: false
-  # -- Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
+  # -- Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
   registry:  # @schema type:[string, null]
   # -- Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true).
   repository:  # @schema type:[string, null]
@@ -895,6 +895,8 @@ global:
   # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
   aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+  # -- Registry for the Traefik image when `image.registry` is not set, e.g. a mirror. Leave empty to keep the default registry.
+  imageRegistry: ""  # @schema type:[string, null]
   # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
   imagePullSecrets: []
   # -- Required for Azure Marketplace integration.
