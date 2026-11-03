@@ -600,11 +600,11 @@
                             "type": "object",
                             "properties": {
                                 "hostname": {
-                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)",
+                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)",
                                     "type": "string"
                                 },
                                 "namespacePolicy": {
-                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces",
+                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)",
                                     "type": [
                                         "object",
                                         "null"
@@ -652,6 +652,19 @@
         "global": {
             "type": "object",
             "properties": {
+                "aliasHeadersStrategy": {
+                    "description": "Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "keep",
+                        "delete",
+                        "reject",
+                        null
+                    ]
+                },
                 "azure": {
                     "description": "Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart",
                     "type": "object",
@@ -1035,6 +1048,10 @@
                                         }
                                     },
                                     "additionalProperties": false
+                                },
+                                "sessionToken": {
+                                    "description": "AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
                                 }
                             },
                             "additionalProperties": false
@@ -2511,6 +2528,14 @@
                             },
                             "maxHeaderBytes": {
                                 "description": "Maximum size of request headers in bytes. Default: 1048576 (1 MB)",
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "minimum": 0
+                            },
+                            "maxHeaderValueCount": {
+                                "description": "Maximum number of request header values (v3.7.17+). Default: 500",
                                 "type": [
                                     "integer",
                                     "null"

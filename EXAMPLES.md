@@ -957,7 +957,7 @@ Traefik Hub image:
 ```bash
 mkdir -p keys
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
-  ghcr.io/traefik/traefik-hub:v3.21.6 \
+  ghcr.io/traefik/traefik-hub:v3.21.7 \
   keygen --name my-log --outputDir /keys
 ```
 
@@ -975,6 +975,10 @@ kubectl create secret generic transparency-logs-keys -n traefik \
 Then mount that `Secret` in the pod. With the `posix` driver, the tree also needs a writable volume:
 
 ```yaml
+# Transparency logs require JSON logs.
+log:
+  format: json
+
 hub:
   token: traefik-hub-license
   transparencyLogs:
@@ -1994,7 +1998,7 @@ hub:
 deployment:
   additionalContainers:
     - name: mcp-traefik
-      image: traefik/mcp-server:v0.2.0
+      image: traefik/mcp-server:v0.3.1
       args:
         # Streamable HTTP, the transport spoken by the MCP Gateway.
         - "-mcp.address=:8090"

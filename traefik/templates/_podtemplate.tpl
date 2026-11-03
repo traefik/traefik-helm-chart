@@ -212,6 +212,9 @@
            {{- if .notAppendXForwardedFor }}
           - "--global.notAppendXForwardedFor=true"
            {{- end }}
+           {{- with .aliasHeadersStrategy }}
+          - "--global.aliasHeadersStrategy={{ . }}"
+           {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
@@ -666,6 +669,9 @@
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" (printf "%s.%s.http.encodedCharacters" $entryPoints $name) "content" .encodedCharacters) | nindent 10 }}
               {{- with .maxHeaderBytes }}
           - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderBytes={{ . | int64 }}"
+              {{- end }}
+              {{- with .maxHeaderValueCount }}
+          - "--{{$entryPoints}}.{{ $name }}.http.maxHeaderValueCount={{ . | int64 }}"
               {{- end }}
               {{- with .middlewares }}
           - "--{{$entryPoints}}.{{ $name }}.http.middlewares={{ join "," . }}"

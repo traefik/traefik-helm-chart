@@ -8,7 +8,7 @@
 {{- $imageTag := (.Values.image.tag | default (include "traefik.defaultTag" .)) -}}
 {{- $version := include "traefik.proxyVersion" $ -}}
 {{- $proxyMaxVersion := index .Chart.Annotations "traefik.io/proxy-max-version" -}}
-{{- if or (hasPrefix "experimental-" $imageTag) (eq (include "traefik.isAboveMaxVersion" (dict "version" $version "max" $proxyMaxVersion)) "true") -}}
+{{- if or (hasPrefix "experimental-" $imageTag) (and (ne (include "traefik.hub.enabled" .) "true") (eq (include "traefik.isAboveMaxVersion" (dict "version" $version "max" $proxyMaxVersion)) "true")) -}}
 {{- printf "\n" -}}
 {{ include "traefik.nonStandardVersionWarning" (dict "label" "image tag" "tag" $imageTag) }}
 {{- printf "\n" -}}

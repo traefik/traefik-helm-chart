@@ -111,6 +111,10 @@
   {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
 {{- end }}
 
+{{- if and (semverCompare "<v3.7.17-0" $version) .Values.global.aliasHeadersStrategy }}
+  {{- fail "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17." }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.7.1-0" $version) (or
     (not (empty .Values.providers.kubernetesCRD.crossProviderNamespaces))
     (not (empty .Values.providers.kubernetesIngress.crossProviderNamespaces))
@@ -159,6 +163,9 @@
   {{- end }}
   {{- if and $config (($config.http).underscoreHeadersStrategy) (semverCompare "<v3.7.6-0" $version) }}
     {{- fail "ERROR: http.underscoreHeadersStrategy is only available for traefik >= v3.7.6." }}
+  {{- end }}
+  {{- if and $config (($config.http).maxHeaderValueCount) (semverCompare "<v3.7.17-0" $version) }}
+    {{- fail "ERROR: http.maxHeaderValueCount is only available for traefik >= v3.7.17." }}
   {{- end }}
   {{- if and $config.uplink (empty $.Values.hub.token) }}
     {{ fail "ERROR: uplink EntryPoints can only be used with Traefik Hub" }}
@@ -263,6 +270,10 @@
 
   {{- if and $.Values.hub.providers.ec2.enabled (semverCompare "<v3.21.0-0" $hubVersion) }}
     {{ fail "ERROR: hub.providers.ec2 is only available for Traefik Hub >= v3.21.0." }}
+  {{- end }}
+
+  {{- if and $.Values.hub.providers.ec2.sessionToken (semverCompare "<v3.21.7-0" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.ec2.sessionToken is only available for Traefik Hub >= v3.21.7." }}
   {{- end }}
 
   {{- if $.Values.hub.providers.ec2.enabled }}
