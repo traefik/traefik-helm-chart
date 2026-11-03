@@ -1,5 +1,60 @@
 # Change Log
 
+## 42.3.0  ![AppVersion: v3.7.17](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.17&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-02
+
+* feat(labels): add app.kubernetes.io/version to resource metadata
+* feat(deps): update traefik docker tag to v3.7.17
+* docs(gateway): fix dead Gateway API spec links in values
+* chore(release): 🚀 publish v42.3.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index ece68f1..d59840c 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -179,11 +179,11 @@ gateway:
+       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+       # The port must match a port declared in ports section.
+       port: 8000
+-      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
++      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)
+       hostname: ""
+-      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
++      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#protocoltype)
+       protocol: HTTP
+-      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces
++      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)
+       namespacePolicy:  # @schema type:[object, null]
+     # websecure listener is disabled by default because certificateRefs needs to be added,
+     # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
+@@ -191,15 +191,15 @@ gateway:
+     #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+     #   # The port must match a port declared in ports section.
+     #   port: 8443
+-    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)
++    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)
+     #   hostname:
+-    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.ProtocolType)
++    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#protocoltype)
+     #   protocol: HTTPS
+-    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces)
++    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)
+     #   namespacePolicy:
+-    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io%2fv1.GatewayTLSConfig)
++    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#gatewaytlsconfig)
+     #   certificateRefs:
+-    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.TLSModeType).
++    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#tlsmodetype).
+     #   mode:
+ 
+ gatewayClass:  # @schema additionalProperties: false
+```
+
+
 ## 42.2.0  ![AppVersion: v3.7.16](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.16&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-10-30
