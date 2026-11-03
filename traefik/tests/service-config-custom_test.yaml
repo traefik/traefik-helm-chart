@@ -41,6 +41,22 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: Cannot create a service whose full name contains more than 60 characters"
+  - it: should reject the removed service.type value
+    set:
+      service:
+        type: ClusterIP
+    asserts:
+      - failedTemplate:
+          errorPattern: "additional properties 'type' not allowed"
+  - it: should reject the legacy type value on additional services
+    set:
+      service:
+        additionalServices:
+          internal:
+            type: ClusterIP
+    asserts:
+      - failedTemplate:
+          errorPattern: "additional properties 'type' not allowed"
   - it: should fail when no ports are exposed
     set:
       ports:
