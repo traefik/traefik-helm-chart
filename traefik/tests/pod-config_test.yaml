@@ -226,6 +226,17 @@ tests:
       - equal:
           path: spec.template.spec.volumes[2].name
           value: bar
+  - it: should be possible to template the additional volumes
+    set:
+      deployment:
+        additionalVolumes:
+          - name: routes
+            configMap:
+              name: '{{ .Release.Name }}-routes'
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[2].configMap.name
+          value: RELEASE-NAME-routes
   - it: should support secret name with '.' for volumes
     set:
       volumes:
