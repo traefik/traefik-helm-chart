@@ -1,0 +1,169 @@
+suite: Traefik Proxy v3.8 compatibility
+templates:
+  - deployment.yaml
+  - daemonset.yaml
+  - requirements.yaml
+  - rbac/clusterrole.yaml
+  - NOTES.txt
+tests:
+  - it: should select a GatewayClass by name on rc.1
+    template: deployment.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.experimentalchannel=true
+  - it: should select a GatewayClass in a DaemonSet with a version override
+    template: daemonset.yaml
+    set:
+      deployment.kind: DaemonSet
+      image.tag: custom
+      versionOverride: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should reject gatewayClass on older Proxy versions
+    template: requirements.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1.'
+  - it: should reject gatewayClass on the currently supported Hub
+    template: requirements.yaml
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1.'
+  - it: should reject mutually exclusive GatewayClass selectors
+    template: requirements.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive.'
+  - it: should ignore GatewayClass selectors when the provider is disabled
+    template: deployment.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: false
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should grant ListenerSet and ClusterTrustBundle access on rc.1
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [gateway.networking.k8s.io]
+            resources: [backendtlspolicies, gatewayclasses, gateways, grpcroutes, httproutes, listenersets, referencegrants, tcproutes, tlsroutes]
+            verbs: [get, list, watch]
+      - contains:
+          path: rules
+          content:
+            apiGroups: [gateway.networking.k8s.io]
+            resources: [backendtlspolicies/status, gatewayclasses/status, gateways/status, grpcroutes/status, httproutes/status, listenersets/status, tcproutes/status, tlsroutes/status]
+            verbs: [update]
+      - contains:
+          path: rules
+          content:
+            apiGroups: [certificates.k8s.io]
+            resources: [clustertrustbundles]
+            verbs: [list, watch]
+  - it: should grant the same access on a stable v3.8 release
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [certificates.k8s.io]
+            resources: [clustertrustbundles]
+            verbs: [list, watch]
+  - it: should not grant new Gateway permissions when the provider is disabled
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]
+  - it: should preserve older Proxy Gateway permissions
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]
+  - it: should preserve Hub Gateway permissions
+    template: rbac/clusterrole.yaml
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]
+  - it: should recommend Gateway API v1.7.0 for rc.1 without an unsupported version warning
+    template: NOTES.txt
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.7.0/standard-install.yaml'
+      - notMatchRegexRaw:
+          pattern: 'not officially supported|no longer be shipped'
+  - it: should recommend Gateway API v1.6.1 for the stable default
+    template: NOTES.txt
+    set:
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
+  - it: should warn for an rc newer than the supported rc.1
+    template: NOTES.txt
+    set:
+      image.tag: v3.8.0-rc.2
+    asserts:
+      - matchRegexRaw:
+          pattern: 'not officially supported'

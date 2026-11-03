@@ -608,6 +608,9 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- with .gatewayClass }}
+          - "--providers.kubernetesgateway.gatewayClass={{ . }}"
+            {{- end }}
             {{- range $idx, $gateway := .gateways }}
           - "--providers.kubernetesgateway.gateways[{{ $idx }}].name={{ $gateway.name }}"
           - "--providers.kubernetesgateway.gateways[{{ $idx }}].namespace={{ $gateway.namespace | default (include "traefik.namespace" $) }}"

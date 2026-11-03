@@ -141,6 +141,17 @@
   {{- end }}
 {{- end }}
 
+{{- with .Values.providers.kubernetesGateway }}
+  {{- if .enabled }}
+    {{- if and .gatewayClass .labelSelector }}
+      {{- fail "ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive." }}
+    {{- end }}
+    {{- if and .gatewayClass (semverCompare "<v3.8.0-rc.1" $version) }}
+      {{- fail "ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1." }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+
 {{/* safeNaming=false is the Chart default, so only opting in is an error on older versions. */}}
 {{- if and (semverCompare "<v3.7.11-0" $version) (eq .Values.providers.kubernetesCRD.safeNaming true) }}
   {{- fail "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11." }}

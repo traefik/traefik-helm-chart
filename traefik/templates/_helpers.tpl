@@ -270,11 +270,12 @@ Non-standard versions include experimental, ea, rc, alpha, beta builds.
 
 {{/*
 Returns "true" when version is above max but shares the same major (the "use at your own
-risk" warning case). Pre-releases compare against "max-0" to also flag pre-releases of a
-version above max. Expects a dict: version, max.
+risk" warning case). When max is stable, pre-releases compare against "max-0" to also flag
+pre-releases of a version above max. A pre-release max is compared as-is.
+Expects a dict: version, max.
 */}}
 {{- define "traefik.isAboveMaxVersion" -}}
-  {{- if eq (include "traefik.isStableVersion" .version) "true" -}}
+  {{- if or (eq (include "traefik.isStableVersion" .version) "true") (ne (include "traefik.isStableVersion" .max) "true") -}}
     {{- semverCompare (printf ">%s" .max) .version -}}
   {{- else -}}
     {{- semverCompare (printf ">%s-0" .max) .version -}}
