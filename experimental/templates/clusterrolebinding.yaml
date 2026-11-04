@@ -1,0 +1,10 @@
+{{- if kindIs "map" .Values.clusterRoleBinding -}}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "clusterRoleBinding" "name" (include "traefik.clusterScopedName" .)) | nindent 2 }}
+roleRef:
+  {{- include "traefik.clusterRoleBindingRoleRef" . | nindent 2 }}
+subjects:
+  {{- include "traefik.clusterRoleBindingSubjects" . | nindent 2 }}
+{{- end -}}

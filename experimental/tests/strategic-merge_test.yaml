@@ -1,0 +1,170 @@
+suite: strategic merge on deployment.spec (merge lists by key)
+templates:
+  - deployment.yaml
+tests:
+  - it: merging into containers[0] by name preserves chart-rendered fields
+    set:
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          volumeMounts:
+            - name: extra
+              mountPath: /extra
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: traefik
+      - exists:
+          path: spec.template.spec.containers[0].ports
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].name
+          value: config
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content: { name: extra, mountPath: /extra }
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 1
+
+  - it: env merges by name into the traefik container
+    set:
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          env:
+            - name: FOO
+              value: bar
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: FOO, value: bar }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: USER, value: traefik }
+
+  - it: a new container name is appended, traefik kept
+    set:
+      deployment.spec.template.spec.containers:
+        - name: sidecar
+          image: busybox
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: traefik
+      - equal:
+          path: spec.template.spec.containers[1].name
+          value: sidecar
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 2
+
+  - it: container ports merge by name (chart-derived entryPoint ports kept)
+    set:
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          ports:
+            - { name: web, hostPort: 8000 }
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: web, containerPort: 8000, protocol: TCP, hostPort: 8000 }
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: websecure, containerPort: 8443, protocol: TCP }
+
+  - it: volumes merge by name (chart config volume kept)
+    set:
+      deployment.spec.template.spec.volumes:
+        - name: extra
+          emptyDir: {}
+    asserts:
+      - equal:
+          path: spec.template.spec.volumes[0].name
+          value: config
+      - contains:
+          path: spec.template.spec.volumes
+          content: { name: extra, emptyDir: {} }
+
+  - it: $patch replace replaces a chart-managed list wholesale
+    set:
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          volumeMounts:
+            - $patch: replace
+            - name: only
+              mountPath: /only
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].volumeMounts[0].name
+          value: only
+
+  - it: type-ambiguous scalars survive the merge round-trip (no YAML re-coercion)
+    set:
+      # values YAML would re-type if requoting were lost in the
+      # fromYaml/toYaml round-trip: octal-/boolean-/leading-zero-looking,
+      # YAML-1.1 booleans (yes/on), float-looking (trailing zero), and the
+      # empty string — each must come back out as the exact string given.
+      deployment.spec.template.spec.containers:
+        - name: traefik
+          env:
+            - { name: OCTAL, value: "0755" }
+            - { name: BOOLISH, value: "true" }
+            - { name: ZEROPAD, value: "007" }
+            - { name: BIGINTSTR, value: "9007199254740993" }
+            - { name: FLOATY, value: "3.10" }
+            - { name: YAMLBOOL, value: "yes" }
+            - { name: ONISH, value: "on" }
+            - { name: EMPTY, value: "" }
+      deployment.spec.template.metadata.annotations:
+        config/checksum: "0755"
+        feature/enabled: "true"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: OCTAL, value: "0755" }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: BOOLISH, value: "true" }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: ZEROPAD, value: "007" }
+      # large int that exceeds float64 mantissa precision (2^53): the
+      # round-trip must not reparse it as a float and lose the last digit.
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: BIGINTSTR, value: "9007199254740993" }
+      # float-looking: "3.10" must not be re-typed to 3.1 (lost trailing zero).
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: FLOATY, value: "3.10" }
+      # YAML-1.1 booleans: "yes"/"on" must not become true.
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: YAMLBOOL, value: "yes" }
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: ONISH, value: "on" }
+      # empty string must survive as "", not become null/omitted.
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content: { name: EMPTY, value: "" }
+      - equal:
+          path: spec.template.metadata.annotations["config/checksum"]
+          value: "0755"
+      - equal:
+          path: spec.template.metadata.annotations["feature/enabled"]
+          value: "true"
+
+  - it: large int numeric fields survive the merge without scientific notation
+    set:
+      # a numeric spec field carrying a large value must render as a plain
+      # integer after fromYaml/toYaml — not "9e+12" (invalid for a k8s int).
+      # Kept under 2^53 so helm-unittest's own float64 parsing of the
+      # expected value stays exact; the chart itself preserves max-int64
+      # (verified via `helm template`), but this harness cannot express it.
+      deployment.spec.minReadySeconds: 9000000000000
+    asserts:
+      - equal:
+          path: spec.minReadySeconds
+          value: 9000000000000

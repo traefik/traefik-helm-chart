@@ -1,0 +1,54 @@
+suite: PodDisruptionBudget
+templates:
+  - pod-disruption-budget.yaml
+  - validation.yaml
+tests:
+  - it: not rendered by default
+    template: pod-disruption-budget.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: renders with the chart selector and the user spec
+    template: pod-disruption-budget.yaml
+    set:
+      podDisruptionBudget:
+        spec:
+          maxUnavailable: 1
+    asserts:
+      - isKind:
+          of: PodDisruptionBudget
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+      - equal:
+          path: spec.maxUnavailable
+          value: 1
+      - equal:
+          path: spec.selector.matchLabels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: metadata hatch applies, chart owns the name
+    template: pod-disruption-budget.yaml
+    set:
+      podDisruptionBudget:
+        metadata:
+          annotations:
+            foo: bar
+        spec:
+          minAvailable: 2
+    asserts:
+      - equal:
+          path: metadata.annotations.foo
+          value: bar
+      - equal:
+          path: spec.minAvailable
+          value: 2
+
+  - it: fails when enabled without maxUnavailable or minAvailable
+    template: validation.yaml
+    set:
+      podDisruptionBudget: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "podDisruptionBudget is enabled but neither spec.maxUnavailable nor spec.minAvailable is set — a PDB requires one"

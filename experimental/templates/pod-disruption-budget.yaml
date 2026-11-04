@@ -1,0 +1,10 @@
+{{- if kindIs "map" .Values.podDisruptionBudget -}}
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "podDisruptionBudget" "name" (include "traefik.fullname" .) "namespaced" true) | nindent 2 }}
+spec:
+  {{- $chartSpec := dict "selector" (dict "matchLabels" (include "traefik.selectorLabels" . | fromYaml)) -}}
+  {{- $userSpec := (.Values.podDisruptionBudget | default dict).spec | default dict -}}
+  {{- include "traefik.strategicMerge" (dict "base" $chartSpec "patch" $userSpec) | nindent 2 }}
+{{- end -}}

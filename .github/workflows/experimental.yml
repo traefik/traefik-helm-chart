@@ -1,0 +1,48 @@
+name: experimental chart - tests
+
+on:
+  pull_request:
+    paths:
+      - "experimental/**"
+      - ".github/workflows/experimental.yml"
+      # stable CRDs are mirrored into experimental/crds — re-check on bumps
+      - "traefik/crds/**"
+  push:
+    branches: [ master ]
+    paths:
+      - "experimental/**"
+      - "traefik/crds/**"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: experimental
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-helm@v4
+      - name: Install helm-unittest plugin
+        # --verify=false: Helm v4 verifies plugins by default, but the
+        # GitHub-release source ships no verification data (as in test.yaml).
+        run: helm plugin install https://github.com/helm-unittest/helm-unittest --version 1.1.0 --verify=false
+      - name: CRDs in sync with the stable chart
+        run: ./hack/check-crds-sync.sh
+      - name: Unit tests
+        run: helm unittest .
+      - name: Lint
+        run: helm lint .
+      - name: Render defaults
+        run: helm template traefik . >/dev/null
+      - name: values.schema.json is up to date
+        # Regenerate and fail if it differs from the committed file, so
+        # values.yaml @schema annotations can't drift from the schema.
+        # Pin the plugin version: its output is not stable across releases.
+        run: |
+          python3 ./hack/test_build_schema.py
+          helm plugin install https://github.com/losisin/helm-values-schema-json --version v2.5.0 --verify=false
+          python3 ./hack/build_schema.py
+          git diff --exit-code values.schema.json
