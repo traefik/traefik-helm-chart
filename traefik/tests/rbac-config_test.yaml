@@ -662,6 +662,7 @@ tests:
               - httproutes/status
               - tcproutes/status
               - tlsroutes/status
+              - udproutes/status
             verbs:
               - update
       - template: rbac/clusterrole.yaml
@@ -679,6 +680,7 @@ tests:
               - referencegrants
               - tcproutes
               - tlsroutes
+              - udproutes
             verbs:
               - get
               - list
