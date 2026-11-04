@@ -1998,7 +1998,7 @@ hub:
 deployment:
   additionalContainers:
     - name: mcp-traefik
-      image: traefik/mcp-server:v0.3.1
+      image: traefik/mcp-server:v0.6.0
       args:
         # Streamable HTTP, the transport spoken by the MCP Gateway.
         - "-mcp.address=:8090"
