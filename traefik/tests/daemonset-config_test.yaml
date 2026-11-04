@@ -213,3 +213,16 @@ tests:
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
           value: v3.6.10
+
+  - it: should select a GatewayClass in a DaemonSet with a version override
+    template: daemonset.yaml
+    set:
+      deployment.kind: DaemonSet
+      image.tag: custom
+      versionOverride: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated

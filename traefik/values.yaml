@@ -381,7 +381,9 @@ providers:
     experimentalChannel: false
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
     namespaces: []
-    # -- Name of the GatewayClass to watch (v3.8.0-rc.1+). If empty, all GatewayClasses are processed. Mutually exclusive with labelSelector. Set gatewayClass.name separately when creating a matching GatewayClass with this chart.
+    # -- Name of the GatewayClass to watch (v3.8.0-rc.1+)
+    # Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set.
+    # Cannot be used with labelSelector.
     gatewayClass: ""
     # -- A label selector can be defined to filter on specific GatewayClass objects only. Deprecated in Proxy v3.8 in favor of gatewayClass; the two options are mutually exclusive.
     labelSelector: ""

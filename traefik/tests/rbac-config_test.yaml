@@ -1437,3 +1437,80 @@ tests:
               - get
               - list
               - watch
+
+  - it: should grant ListenerSet and ClusterTrustBundle access (v3.8.0-rc1+)
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [gateway.networking.k8s.io]
+            resources: [backendtlspolicies, gatewayclasses, gateways, grpcroutes, httproutes, listenersets, referencegrants, tcproutes, tlsroutes]
+            verbs: [get, list, watch]
+      - contains:
+          path: rules
+          content:
+            apiGroups: [gateway.networking.k8s.io]
+            resources: [backendtlspolicies/status, gatewayclasses/status, gateways/status, grpcroutes/status, httproutes/status, listenersets/status, tcproutes/status, tlsroutes/status]
+            verbs: [update]
+      - contains:
+          path: rules
+          content:
+            apiGroups: [certificates.k8s.io]
+            resources: [clustertrustbundles]
+            verbs: [list, watch]
+
+  - it: should grant the same access on a stable v3.8 release
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: rules
+          content:
+            apiGroups: [certificates.k8s.io]
+            resources: [clustertrustbundles]
+            verbs: [list, watch]
+
+  - it: should not grant new Gateway permissions when the provider is disabled
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]
+
+  - it: should preserve older Proxy Gateway permissions
+    template: rbac/clusterrole.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]
+
+  - it: should preserve Hub Gateway permissions
+    template: rbac/clusterrole.yaml
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notExists:
+          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets')]
+      - notExists:
+          path: rules[*].resources[?(@ == 'listenersets/status')]

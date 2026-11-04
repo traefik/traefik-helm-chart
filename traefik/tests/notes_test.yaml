@@ -397,3 +397,60 @@ tests:
 
             ⚠️ DEPRECATION WARNING: 'http.underscoreHeadersStrategy' is deprecated and replaced with 'http.aliasHeadersStrategy' for traefik >= v3.7.12.
             This option will be dropped from this chart in a future major version.
+
+  - it: should warn about Gateway labelSelector deprecation on v3.8
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - matchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector' is deprecated"
+      - matchRegexRaw:
+          pattern: "Set 'providers.kubernetesGateway.gatewayClass' to the name of the GatewayClass"
+  - it: should not warn about Gateway labelSelector when the provider is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should not warn about Gateway labelSelector on v3.7
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should not warn about Gateway labelSelector on the currently supported Hub
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should not warn about Gateway labelSelector when it is empty
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.17
+    template: NOTES.txt
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
+  - it: should recommend Gateway API v1.7.0 for stable v3.8
+    set:
+      image.tag: v3.8.0
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.7.0/standard-install.yaml'

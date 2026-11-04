@@ -162,18 +162,23 @@ Migration example:
 
 {{/* Gateway API CRDs are managed separately from this chart. */}}
 {{- if .Values.providers.kubernetesGateway.enabled }}
-{{- $gatewayAPIVersion := "v1.5.1" }}
-{{- if semverCompare ">=v3.8.0-rc.1" $version }}
-  {{- $gatewayAPIVersion = "v1.7.0" }}
-{{- else if semverCompare ">=v3.7.10-0" $version }}
-  {{- $gatewayAPIVersion = "v1.6.1" }}
-{{- end }}
+{{- $gatewayAPIVersion := include "traefik.gatewayAPIVersion" . }}
 {{- printf "\n" -}}
 ℹ️ Gateway API CRDs are not shipped with this chart. Install or update them before deploying Traefik:
   kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/{{ $gatewayAPIVersion }}/standard-install.yaml
 {{- if and (semverCompare "<v3.8.0-rc.1" $version) .Values.providers.kubernetesGateway.experimentalChannel }}
 For TCPRoute on this Proxy version, use experimental-install.yaml instead of standard-install.yaml.
 {{- end }}
+{{- printf "\n" -}}
+{{- end -}}
+
+
+{{/* Warn about the Gateway provider's deprecated label selector. */}}
+{{- if and .Values.providers.kubernetesGateway.enabled .Values.providers.kubernetesGateway.labelSelector (semverCompare ">=v3.8.0-rc.1" $version) }}
+{{- printf "\n" -}}
+⚠️ DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector' is deprecated in Traefik Proxy v3.8.
+Set 'providers.kubernetesGateway.gatewayClass' to the name of the GatewayClass to watch instead.
+The two options cannot be used together.
 {{- printf "\n" -}}
 {{- end -}}
 

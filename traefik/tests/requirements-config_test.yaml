@@ -93,14 +93,14 @@ tests:
         tag: v99.0.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.8.0-rc.1."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.17."
   - it: should fail when trying to use this Chart with a Proxy major pre-release above max
     set:
       image:
         tag: v4.0.0-rc.1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.8.0-rc.1."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.17."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -1410,3 +1410,35 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
+
+  - it: should reject gatewayClass on older Proxy versions
+    template: requirements.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1.'
+
+  - it: should reject gatewayClass on the currently supported Hub
+    template: requirements.yaml
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1.'
+
+  - it: should reject mutually exclusive GatewayClass selectors
+    template: requirements.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive.'

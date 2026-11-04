@@ -99,7 +99,7 @@ rules:
       - watch
   {{- end -}}
   {{- if (.Values.providers.kubernetesGateway).enabled }}
-  {{- if semverCompare ">=v3.8.0-rc.1" $version }}
+  {{- if semverCompare ">=v3.8.0-0" $version }}
   - apiGroups:
       - certificates.k8s.io
     resources:

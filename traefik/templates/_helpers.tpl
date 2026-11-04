@@ -257,6 +257,22 @@ It requires a dict with "Version" and "Hub".
 
 
 {{/*
+Gateway API CRD version to install for the effective Proxy version.
+Hub images use the embedded Proxy version resolved by traefik.proxyVersion.
+*/}}
+{{- define "traefik.gatewayAPIVersion" -}}
+  {{- $version := include "traefik.proxyVersion" . -}}
+  {{- if semverCompare ">=v3.8.0-rc.1" $version -}}
+    v1.7.0
+  {{- else if semverCompare ">=v3.7.10-0" $version -}}
+    v1.6.1
+  {{- else -}}
+    v1.5.1
+  {{- end -}}
+{{- end -}}
+
+
+{{/*
 Returns "true" if the given version is a stable release (vX.Y.Z or X.Y.Z), "false" otherwise.
 Non-standard versions include experimental, ea, rc, alpha, beta builds.
 */}}
@@ -270,12 +286,11 @@ Non-standard versions include experimental, ea, rc, alpha, beta builds.
 
 {{/*
 Returns "true" when version is above max but shares the same major (the "use at your own
-risk" warning case). When max is stable, pre-releases compare against "max-0" to also flag
-pre-releases of a version above max. A pre-release max is compared as-is.
-Expects a dict: version, max.
+risk" warning case). Pre-releases compare against "max-0" to also flag pre-releases of a
+version above max. Expects a dict: version, max.
 */}}
 {{- define "traefik.isAboveMaxVersion" -}}
-  {{- if or (eq (include "traefik.isStableVersion" .version) "true") (ne (include "traefik.isStableVersion" .max) "true") -}}
+  {{- if eq (include "traefik.isStableVersion" .version) "true" -}}
     {{- semverCompare (printf ">%s" .max) .version -}}
   {{- else -}}
     {{- semverCompare (printf ">%s-0" .max) .version -}}
