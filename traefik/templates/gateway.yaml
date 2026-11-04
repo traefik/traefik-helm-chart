@@ -23,6 +23,10 @@ spec:
   {{- with .Values.gateway.defaultScope }}
   defaultScope: {{ . }}
   {{- end }}
+  {{- with .Values.gateway.allowedListeners }}
+  allowedListeners:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   listeners:
     {{- range $name, $config := .Values.gateway.listeners }}
     - name: {{ $name }}
