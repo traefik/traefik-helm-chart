@@ -1,0 +1,46 @@
+suite: pod labels exclude the chart version
+templates:
+  - deployment.yaml
+tests:
+  - it: "should keep helm.sh/chart off the pod template"
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: "should pin the whole pod label set"
+    chart:
+      version: 99.99.99
+      appVersion: 0.0.0-test
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels
+          value:
+            app.kubernetes.io/name: hub-manager
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/version: 0.0.0-test
+            app.kubernetes.io/managed-by: Helm
+
+  - it: "should keep the immutable selector labels on the pod template"
+    asserts:
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+            app.kubernetes.io/name: hub-manager
+            app.kubernetes.io/instance: RELEASE-NAME
+      - isSubset:
+          path: spec.template.metadata.labels
+          content:
+            app.kubernetes.io/name: hub-manager
+            app.kubernetes.io/instance: RELEASE-NAME
+
+  - it: "should still render deployment.podLabels on the pod template"
+    set:
+      deployment.podLabels:
+        extraLabel: isConfigured
+    asserts:
+      - isSubset:
+          path: spec.template.metadata.labels
+          content:
+            extraLabel: isConfigured
