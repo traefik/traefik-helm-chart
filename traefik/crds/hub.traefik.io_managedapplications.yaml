@@ -75,6 +75,11 @@ spec:
               notes:
                 description: Notes contains notes about application.
                 type: string
+              organizationId:
+                description: |-
+                  OrganizationID represents the organization of the ManagedApplication.
+                  It should be the organization ID in the JWT claims.
+                type: string
               owner:
                 description: |-
                   Owner represents the owner of the ManagedApplication.
