@@ -43,3 +43,11 @@ Selector labels
 app.kubernetes.io/name: {{ include "hub-manager.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/* Shared labels used in pod templates */}}
+{{/* Same as hub-manager.labels without helm.sh/chart: that label carries the chart version, so */}}
+{{/* including it here restarts the pod on a chart upgrade, even when neither the image nor the */}}
+{{/* configuration changed. */}}
+{{- define "hub-manager.podlabels" -}}
+{{- omit (include "hub-manager.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
