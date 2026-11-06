@@ -12,3 +12,16 @@ extraObjects:
       name: "templated"
     data:
       something: {{ printf "templated" }}
+  - |
+    apiVersion: v1
+    kind: ConfigMap
+    metadata:
+      name: "from-extra-values"
+    data:
+      myKey: {{ .Values.extraValues.myKey }}
+      nested: {{ .Values.extraValues.nested.deep }}
+
+extraValues:
+  myKey: myValue
+  nested:
+    deep: nestedValue
