@@ -1,5 +1,82 @@
 # Change Log
 
+## 42.3.1  ![AppVersion: v3.7.17](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.17&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-06
+
+* fix(service): reject removed service.type value
+* fix(providers): update CRD safeNaming to reflect warning language
+* feat: support traefik v3.8-rc1
+* feat(hub): :rocket: support traefik hub v3.21.8
+* chore(release): publish 42.3.1
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index d59840c..9aac9ac 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -186,7 +186,7 @@ gateway:
+       # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)
+       namespacePolicy:  # @schema type:[object, null]
+     # websecure listener is disabled by default because certificateRefs needs to be added,
+-    # or you may specify TLS protocol with Passthrough mode and add "--providers.kubernetesGateway.experimentalChannel=true" in additionalArguments section.
++    # or you may specify TLS protocol with Passthrough mode.
+     # websecure:
+     #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+     #   # The port must match a port declared in ports section.
+@@ -331,8 +331,8 @@ providers:
+     namespaces: []
+     # -- Defines whether to use Native Kubernetes load-balancing mode by default.
+     nativeLBByDefault: false
+-    # -- Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.
+-    safeNaming: false
++    # -- (bool) Enables collision-safe naming. Unset: Traefik default (logs a warning).  `false`: Explicitly opt out of safe naming (suppresses warning). `true`: Opt in to safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.
++    safeNaming:  # @schema type:[boolean, null]
+ 
+   # @schema additionalProperties: false
+   kubernetesIngress:
+@@ -376,12 +376,15 @@ providers:
+     enabled: false
+     # -- List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.
+     crossProviderNamespaces: []
+-    # -- Toggles support for the Experimental Channel resources (Gateway API release channels documentation).
+-    # This option currently enables support for TCPRoute and TLSRoute.
++    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.
+     experimentalChannel: false
+     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
+     namespaces: []
+-    # -- A label selector can be defined to filter on specific GatewayClass objects only.
++    # -- Name of the GatewayClass to watch (v3.8+)
++    # Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set.
++    # Cannot be used with labelSelector.
++    gatewayClass: ""
++    # -- A label selector can be defined to filter on specific GatewayClass objects only. Deprecated in Proxy v3.8 in favor of gatewayClass; the two options are mutually exclusive.
+     labelSelector: ""
+     # -- Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+).
+     # If left empty, Traefik processes all Gateways.
+@@ -1141,7 +1144,7 @@ tlsOptions: {}
+ # This is useful if you want to set a default certificate. See EXAMPLE.md for details.
+ tlsStore: {}
+ 
+-service:
++service:  # @schema additionalProperties: false
+   enabled: true
+   # -- Override the default Service name. Useful for adopting an existing Service (e.g., during migration from another ingress controller).
+   nameOverride: ""  # @schema type:[string, null]
+@@ -1162,7 +1165,7 @@ service:
+     type: LoadBalancer
+   # -- Can be used to create multiple Service.
+   # See EXAMPLES.md for more details.
+-  additionalServices: {}
++  additionalServices: {}  # @schema additionalProperties: {"type": "object", "additionalProperties": false, "properties": {"enabled": {"type": "boolean"}, "single": {"type": "boolean"}, "spec": {"type": "object"}, "labels": {"type": "object"}, "annotations": {"type": "object"}, "annotationsTCP": {"type": "object"}, "annotationsUDP": {"type": "object"}}}
+ 
+ autoscaling:  # @schema additionalProperties: false
+   # -- Create HorizontalPodAutoscaler object.
+```
+
+
 ## 42.3.0  ![AppVersion: v3.7.17](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.17&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-02

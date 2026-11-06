@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 42.3.0
+version: 42.3.1
 # renovate: image=traefik
 appVersion: v3.7.17
 kubeVersion: '>=1.30.0-0'
@@ -27,9 +27,11 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.21.8
   artifacthub.io/changes: |
+    - kind: fixed
+      description: "fix(service): reject removed service.type value"
+    - kind: fixed
+      description: "fix(providers): update CRD safeNaming to reflect warning language"
     - kind: added
-      description: "feat(labels): add app.kubernetes.io/version to resource metadata"
+      description: "feat: support traefik v3.8-rc1"
     - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.17"
-    - kind: changed
-      description: "docs(gateway): fix dead Gateway API spec links in values"
+      description: "feat(hub): support traefik hub v3.21.8"
