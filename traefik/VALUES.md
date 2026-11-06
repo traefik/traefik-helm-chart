@@ -79,7 +79,7 @@ Kubernetes: `>=1.30.0-0`
 | core.defaultRuleSyntax | string | `""` | Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
 | core.strictTLSOptions | bool | `false` | Disables the unsafe fallback to default TLS options on conflict, mitigating [GHSA-g55h-rg46-x9c5](https://github.com/traefik/traefik/security/advisories/GHSA-g55h-rg46-x9c5). Requires traefik v3.7.11+. |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
-| deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
+| deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers. It supports templating. One can set it with values like name: '{{ .Release.Name }}-config' |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
 | deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |

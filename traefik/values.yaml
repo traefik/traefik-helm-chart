@@ -70,7 +70,8 @@ deployment:
   #   volumeMounts:
   #     - name: dsdsocket
   #       mountPath: /socket
-  # -- Additional volumes available for use with initContainers and additionalContainers
+  # -- Additional volumes available for use with initContainers and additionalContainers.
+  # It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'
   additionalVolumes: []
   # - name: dsdsocket
   #   hostPath:

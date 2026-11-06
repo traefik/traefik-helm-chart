@@ -360,7 +360,7 @@
                     "type": "array"
                 },
                 "additionalVolumes": {
-                    "description": "Additional volumes available for use with initContainers and additionalContainers",
+                    "description": "Additional volumes available for use with initContainers and additionalContainers. It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'",
                     "type": "array"
                 },
                 "annotations": {
