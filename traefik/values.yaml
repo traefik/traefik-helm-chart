@@ -187,7 +187,6 @@ gateway:
       namespacePolicy:  # @schema type:[object, null]
     # websecure listener is disabled by default because certificateRefs needs to be added,
     # or you may specify TLS protocol with Passthrough mode.
-    # Proxy v3.6 requires providers.kubernetesGateway.experimentalChannel=true for TLSRoute.
     # websecure:
     #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
     #   # The port must match a port declared in ports section.
@@ -377,7 +376,7 @@ providers:
     enabled: false
     # -- List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.
     crossProviderNamespaces: []
-    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7; no resources require it on v3.8.
+    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.
     experimentalChannel: false
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
     namespaces: []

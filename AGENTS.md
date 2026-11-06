@@ -74,12 +74,18 @@ fix(ingressroute): use spec.ingressClassName with Proxy v3.7+
 chore(deps): update traefik image to v3.7.1
 ```
 
+## Gateway API compatibility
+
+- `traefik.gatewayAPIVersion` (`traefik/templates/_helpers.tpl`) selects the Gateway API CRD version recommended in `NOTES.txt`. Review this mapping when a Proxy update changes the upstream CRD requirements.
+- For Hub updates, check whether `traefik.proxyVersionFromHub` needs a new branch: the Gateway API helper uses the embedded Proxy version resolved by that mapping.
+- Update `traefik/tests/notes_test.yaml` for affected Proxy version boundaries and Hub versions when either mapping changes.
+
 ## Bumping Traefik Hub
 
 - `traefik/Chart.yaml`: set `traefik.io/hub-max-version` to the latest Hub release
 - `traefik/tests/requirements-config_test.yaml`: update the "above the supported" error message
 - `EXAMPLES.md`: update the Hub image tag in the transparency logs keygen example
-- `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`): only add a branch when a chart condition depends on the Proxy version (a new CLI flag) and this Hub release changes its outcome. Keep this helper short.
+- `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`): only add a branch when a chart condition depends on the Proxy version (a new CLI flag or Gateway API CRD requirement) and this Hub release changes its outcome. Keep this helper short.
 - Check for CRD changes in the Hub release
 
 ## Philosophy (Scope Boundaries)

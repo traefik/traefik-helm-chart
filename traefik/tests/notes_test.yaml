@@ -126,13 +126,13 @@ tests:
   - it: should display warning when using an ea version just above max
     set:
       image:
-        tag: v3.9.0-ea.1
+        tag: v3.8.0-ea.1
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with docker.io/traefik:v3.9.0-ea.1 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:v3.8.0-ea.1 has been deployed successfully on NAMESPACE namespace!
 
-            ⚠️ WARNING: You are using a non-standard image tag (v3.9.0-ea.1). Non-standard versions can
+            ⚠️ WARNING: You are using a non-standard image tag (v3.8.0-ea.1). Non-standard versions can
             be unstable, may contain breaking changes, and are NOT recommended for production use.
             This version is not officially supported by this chart. Use at your own risk. ⚠️
 

@@ -2887,7 +2887,7 @@
                             "type": "boolean"
                         },
                         "experimentalChannel": {
-                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7; no resources require it on v3.8.",
+                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.",
                             "type": "boolean"
                         },
                         "gatewayClass": {
