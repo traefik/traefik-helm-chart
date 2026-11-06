@@ -123,7 +123,7 @@ rules:
       - gateways
       - grpcroutes
       - httproutes
-      {{- if semverCompare ">=v3.8.0-rc.1" $version }}
+      {{- if semverCompare ">=v3.8.0-0" $version }}
       - listenersets
       {{- end }}
       - referencegrants
@@ -141,7 +141,7 @@ rules:
       - gateways/status
       - grpcroutes/status
       - httproutes/status
-      {{- if semverCompare ">=v3.8.0-rc.1" $version }}
+      {{- if semverCompare ">=v3.8.0-0" $version }}
       - listenersets/status
       {{- end }}
       - tcproutes/status

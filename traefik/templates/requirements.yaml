@@ -146,8 +146,8 @@
     {{- if and .gatewayClass .labelSelector }}
       {{- fail "ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive." }}
     {{- end }}
-    {{- if and .gatewayClass (semverCompare "<v3.8.0-rc.1" $version) }}
-      {{- fail "ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-rc.1." }}
+    {{- if and .gatewayClass (semverCompare "<v3.8.0-0" $version) }}
+      {{- fail "ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0." }}
     {{- end }}
   {{- end }}
 {{- end }}

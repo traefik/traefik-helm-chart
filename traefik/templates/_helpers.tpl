@@ -262,7 +262,7 @@ Hub images use the embedded Proxy version resolved by traefik.proxyVersion.
 */}}
 {{- define "traefik.gatewayAPIVersion" -}}
   {{- $version := include "traefik.proxyVersion" . -}}
-  {{- if semverCompare ">=v3.8.0-rc.1" $version -}}
+  {{- if semverCompare ">=v3.8.0-0" $version -}}
     v1.7.0
   {{- else if semverCompare ">=v3.7.10-0" $version -}}
     v1.6.1

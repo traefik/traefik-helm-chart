@@ -2888,7 +2888,7 @@
                             "type": "boolean"
                         },
                         "gatewayClass": {
-                            "description": "Name of the GatewayClass to watch (v3.8.0-rc.1+) Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set. Cannot be used with labelSelector.",
+                            "description": "Name of the GatewayClass to watch (v3.8+) Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set. Cannot be used with labelSelector.",
                             "type": "string"
                         },
                         "gateways": {
