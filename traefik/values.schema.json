@@ -2887,15 +2887,19 @@
                             "type": "boolean"
                         },
                         "experimentalChannel": {
-                            "description": "Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute.",
+                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.",
                             "type": "boolean"
+                        },
+                        "gatewayClass": {
+                            "description": "Name of the GatewayClass to watch (v3.8+) Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set. Cannot be used with labelSelector.",
+                            "type": "string"
                         },
                         "gateways": {
                             "description": "Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+). If left empty, Traefik processes all Gateways.",
                             "type": "array"
                         },
                         "labelSelector": {
-                            "description": "A label selector can be defined to filter on specific GatewayClass objects only.",
+                            "description": "A label selector can be defined to filter on specific GatewayClass objects only. Deprecated in Proxy v3.8 in favor of gatewayClass; the two options are mutually exclusive.",
                             "type": "string"
                         },
                         "namespaces": {

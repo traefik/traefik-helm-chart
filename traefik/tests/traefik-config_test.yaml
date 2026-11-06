@@ -1293,3 +1293,105 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--core.strictTLSOptions=true"
+
+  - it: should default the Gateway provider to the chart-created GatewayClass on v3.8
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should use the default GatewayClass resource name when no name is configured
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=traefik
+  - it: should let an explicit provider GatewayClass override the chart-created class
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: external
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=external
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the provider GatewayClass when GatewayClass creation is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.enabled: false
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should retain labelSelector without adding a conflicting default GatewayClass
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.labelSelector=app=traefik
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the GatewayClass on an older Proxy
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the GatewayClass on the currently supported Hub
+    set:
+      hub.enabled: true
+      image.tag: v3.21.7
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the GatewayClass when the provider is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should use versionOverride when defaulting the provider GatewayClass
+    set:
+      image.tag: custom
+      versionOverride: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should ignore GatewayClass selectors when the provider is disabled
+    template: deployment.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: false
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated

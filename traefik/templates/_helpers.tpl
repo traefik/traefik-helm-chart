@@ -257,6 +257,22 @@ It requires a dict with "Version" and "Hub".
 
 
 {{/*
+Gateway API CRD version to install for the effective Proxy version.
+Hub images use the embedded Proxy version resolved by traefik.proxyVersion.
+*/}}
+{{- define "traefik.gatewayAPIVersion" -}}
+  {{- $version := include "traefik.proxyVersion" . -}}
+  {{- if semverCompare ">=v3.8.0-0" $version -}}
+    v1.7.0
+  {{- else if semverCompare ">=v3.7.10-0" $version -}}
+    v1.6.1
+  {{- else -}}
+    v1.5.1
+  {{- end -}}
+{{- end -}}
+
+
+{{/*
 Returns "true" if the given version is a stable release (vX.Y.Z or X.Y.Z), "false" otherwise.
 Non-standard versions include experimental, ea, rc, alpha, beta builds.
 */}}

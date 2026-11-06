@@ -608,6 +608,13 @@
             {{- with .labelSelector }}
           - "--providers.kubernetesgateway.labelSelector={{ . }}"
             {{- end }}
+            {{- $gatewayClass := .gatewayClass }}
+            {{- if and (not $gatewayClass) $.Values.gatewayClass.enabled (not .labelSelector) (semverCompare ">=v3.8.0-0" $version) }}
+              {{- $gatewayClass = default "traefik" $.Values.gatewayClass.name }}
+            {{- end }}
+            {{- with $gatewayClass }}
+          - "--providers.kubernetesgateway.gatewayClass={{ . }}"
+            {{- end }}
             {{- range $idx, $gateway := .gateways }}
           - "--providers.kubernetesgateway.gateways[{{ $idx }}].name={{ $gateway.name }}"
           - "--providers.kubernetesgateway.gateways[{{ $idx }}].namespace={{ $gateway.namespace | default (include "traefik.namespace" $) }}"
