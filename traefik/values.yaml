@@ -1570,6 +1570,8 @@ hub:  # @schema additionalProperties: false
       password: ""
       # -- Prism Central API key.
       apiKey: ""
+      # -- SP Central tenant name. When set, back ends are discovered as this SP Central tenant.
+      tenantName: ""
       # -- Base configuration file path.
       filename: ""
       # -- Polling interval for Nutanix Prism Central API.

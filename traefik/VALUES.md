@@ -240,6 +240,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
 | hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
 | hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
 | hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
