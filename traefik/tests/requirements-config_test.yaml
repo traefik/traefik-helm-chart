@@ -938,7 +938,7 @@ tests:
       image:
         registry: "ghcr.io"
         repository: "traefik/traefik-hub"
-        tag: v3.22.0
+        tag: v3.22.0-ea.1
       hub:
         token: "xxx"
         providers:
