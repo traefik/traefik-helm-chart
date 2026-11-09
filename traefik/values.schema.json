@@ -2736,6 +2736,7 @@
                                         ]
                                     },
                                     "requestAcceptGraceTimeout": {
+                                        "description": "Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.",
                                         "type": [
                                             "string",
                                             "integer",
