@@ -1609,6 +1609,46 @@ hub:  # @schema additionalProperties: false
         # -- (bool) TLS insecure skip verify
         # @default -- false
         insecureSkipVerify:  # @schema type:[boolean, null]
+    # @schema additionalProperties: false
+    vcenter:
+      # -- Enable VMware vCenter provider.
+      enabled: false
+      # -- vCenter or ESXi endpoint (host, host:port or URL).
+      endpoint: ""
+      # -- vCenter username. Use it with `password`.
+      username: ""
+      # @schema additionalProperties: false
+      password:
+        # -- Name of the Secret that holds the vCenter password.
+        secretName: ""
+        # -- Key of the vCenter password in the Secret.
+        key: "password"
+      # -- Certificate of the vCenter SSO solution user (file path or PEM content). Use it with `privateKey`.
+      certificate: ""
+      # @schema additionalProperties: false
+      privateKey:
+        # -- Name of the Secret that holds the private key of the vCenter SSO solution user.
+        secretName: ""
+        # -- Key of the private key in the Secret.
+        key: "tls.key"
+      tls:
+        # -- TLS CA
+        ca: ""
+        # -- TLS cert
+        cert: ""
+        # -- TLS key
+        key: ""
+        # -- TLS insecure skip verify
+        insecureSkipVerify: false
+      # -- Limits discovery to one branch of the vSphere inventory.
+      inventoryPath: ""
+      # -- Expose VMs by default. A VM needs a port label to get a route.
+      exposedByDefault: false
+      # -- Expression that Traefik matches against the VM labels to create routes.
+      constraints: ""
+      # @schema enum:[ipv4, ipv6]
+      # -- Default backend IP mode: `ipv4` or `ipv6`.
+      ipMode: "ipv4"
 
   redis:
     # -- (bool) Enable Redis Cluster. Default: true.

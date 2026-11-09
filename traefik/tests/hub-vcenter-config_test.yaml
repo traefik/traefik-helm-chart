@@ -1,0 +1,172 @@
+suite: Traefik Hub VMware vCenter provider
+templates:
+  - deployment.yaml
+set:
+  image:
+    registry: ghcr.io
+    repository: traefik/traefik-hub
+    tag: v3.22.0
+  hub:
+    token: "xxx"
+tests:
+  - it: should not configure vcenter by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter"
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PASSWORD
+          any: true
+
+  - it: should configure vcenter with default values
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.ipMode=ipv4"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.exposedByDefault=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+
+  - it: should configure vcenter with username and password from a Secret
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
+            tls:
+              ca: "/tls/ca.crt"
+              cert: "/tls/client.crt"
+              key: "/tls/client.key"
+              insecureSkipVerify: true
+            inventoryPath: "/dc1/vm/prod"
+            exposedByDefault: true
+            constraints: "Label(`env`, `prod`)"
+            ipMode: "ipv6"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.endpoint=vcenter.example.com"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.username=administrator@vsphere.local"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: vcenter-credentials
+                key: password
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.ca=/tls/ca.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.cert=/tls/client.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.key=/tls/client.key"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.insecureSkipVerify=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.inventoryPath=/dc1/vm/prod"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.exposedByDefault=true"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.constraints=Label(`env`, `prod`)"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.ipMode=ipv6"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+
+  - it: should configure vcenter with a solution user certificate and a private key from a Secret
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "https://vcenter.example.com/sdk"
+            certificate: "/certs/solution-user.crt"
+            privateKey:
+              secretName: "vcenter-solution-user"
+              key: "private.key"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.certificate=/certs/solution-user.crt"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: vcenter-solution-user
+                key: private.key
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+
+  - it: should fail on typo when configuring vcenter
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            endpoints: "vcenter.example.com" # <=== typo: endpoints instead of endpoint
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+
+  - it: should fail when password is a plain string
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            password: "secret"
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+
+  - it: should fail on unknown ipMode
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            ipMode: "dual"
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"

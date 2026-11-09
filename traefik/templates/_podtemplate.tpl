@@ -979,6 +979,16 @@
                 {{- include "traefik.yaml2CommandLineArgs" (dict "path" $vpcPath "content" $val) | nindent 10 }}
               {{- end }}
             {{- end }}
+            {{- if .providers.vcenter.enabled }}
+          - "--hub.providers.vcenter"
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.vcenter" "content" (omit $.Values.hub.providers.vcenter "enabled" "password" "privateKey")) | nindent 10 }}
+              {{- if .providers.vcenter.password.secretName }}
+          - "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+              {{- end }}
+              {{- if .providers.vcenter.privateKey.secretName }}
+          - "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+              {{- end }}
+            {{- end }}
             {{- if .providers.multicluster.enabled }}
           - "--hub.providers.multicluster=true"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.multicluster" "content" (omit $.Values.hub.providers.multicluster "enabled" "children")) | nindent 10 }}
@@ -1048,6 +1058,22 @@
                 fieldPath: metadata.namespace
           - name: USER
             value: traefik
+          {{- with .Values.hub.providers.vcenter }}
+            {{- if and .enabled .password.secretName }}
+          - name: HUB_VCENTER_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: {{ .password.secretName }}
+                key: {{ .password.key }}
+            {{- end }}
+            {{- if and .enabled .privateKey.secretName }}
+          - name: HUB_VCENTER_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: {{ .privateKey.secretName }}
+                key: {{ .privateKey.key }}
+            {{- end }}
+          {{- end }}
           {{- if ($.Values.resources.limits).cpu }}
           - name: GOMAXPROCS
             valueFrom:

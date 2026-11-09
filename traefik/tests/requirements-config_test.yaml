@@ -1012,6 +1012,33 @@ tests:
             tenantName: my-tenant
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using vcenter provider on Traefik Hub < v3.22.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.8
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter is only available for Traefik Hub >= v3.22.0-ea.1."
+  - it: should pass when using vcenter provider on Traefik Hub >= v3.22.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0-ea.1
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using ec2 provider on Traefik Hub < v3.21.0
     set:
       image:

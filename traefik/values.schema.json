@@ -1366,6 +1366,97 @@
                                 }
                             },
                             "additionalProperties": false
+                        },
+                        "vcenter": {
+                            "type": "object",
+                            "properties": {
+                                "certificate": {
+                                    "description": "Certificate of the vCenter SSO solution user (file path or PEM content). Use it with `privateKey`.",
+                                    "type": "string"
+                                },
+                                "constraints": {
+                                    "description": "Expression that Traefik matches against the VM labels to create routes.",
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "description": "Enable VMware vCenter provider.",
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "description": "vCenter or ESXi endpoint (host, host:port or URL).",
+                                    "type": "string"
+                                },
+                                "exposedByDefault": {
+                                    "description": "Expose VMs by default. A VM needs a port label to get a route.",
+                                    "type": "boolean"
+                                },
+                                "inventoryPath": {
+                                    "description": "Limits discovery to one branch of the vSphere inventory.",
+                                    "type": "string"
+                                },
+                                "ipMode": {
+                                    "description": "Default backend IP mode: `ipv4` or `ipv6`.",
+                                    "type": "string",
+                                    "enum": [
+                                        "ipv4",
+                                        "ipv6"
+                                    ]
+                                },
+                                "password": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "description": "Key of the vCenter password in the Secret.",
+                                            "type": "string"
+                                        },
+                                        "secretName": {
+                                            "description": "Name of the Secret that holds the vCenter password.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "privateKey": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "description": "Key of the private key in the Secret.",
+                                            "type": "string"
+                                        },
+                                        "secretName": {
+                                            "description": "Name of the Secret that holds the private key of the vCenter SSO solution user.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ca": {
+                                            "description": "TLS CA",
+                                            "type": "string"
+                                        },
+                                        "cert": {
+                                            "description": "TLS cert",
+                                            "type": "string"
+                                        },
+                                        "insecureSkipVerify": {
+                                            "description": "TLS insecure skip verify",
+                                            "type": "boolean"
+                                        },
+                                        "key": {
+                                            "description": "TLS key",
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "username": {
+                                    "description": "vCenter username. Use it with `password`.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
                         }
                     }
                 },

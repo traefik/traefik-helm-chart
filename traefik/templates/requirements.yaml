@@ -334,6 +334,10 @@
     {{ fail "ERROR: hub.providers.nutanixPrismCentral.tenantName is only available for Traefik Hub >= v3.22.0." }}
   {{- end }}
 
+  {{- if and $.Values.hub.providers.vcenter.enabled (semverCompare "<v3.22.0-ea.1" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.vcenter is only available for Traefik Hub >= v3.22.0-ea.1." }}
+  {{- end }}
+
   {{- with (compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $))) }}
     {{- if gt (len .) 1 }}
       {{ fail (printf "ERROR: only one hub.transparencyLogs.driver can be set, got: %s." (join ", " .)) }}
