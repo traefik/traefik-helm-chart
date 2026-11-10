@@ -1027,12 +1027,8 @@ tests:
           content: "--serversTransport.forwardingTimeouts.writeTimeout=0"
   - it: should not have serversTransport forwardingTimeouts args by default
     asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--serversTransport.forwardingTimeouts.readTimeout="
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--serversTransport.forwardingTimeouts.writeTimeout="
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--serversTransport\.forwardingTimeouts\.(readTimeout|writeTimeout)=/)]
   - it: should have global aliasHeadersStrategy arg when specified in values.yaml
     set:
       image:
