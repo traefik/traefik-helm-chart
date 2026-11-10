@@ -338,6 +338,25 @@
     {{ fail "ERROR: hub.providers.vcenter is only available for Traefik Hub >= v3.22.0-ea.1." }}
   {{- end }}
 
+  {{- with $.Values.hub.providers.vcenter }}
+    {{- if and .enabled $.Values.hub.token }}
+      {{- if not .endpoint }}
+        {{ fail "ERROR: hub.providers.vcenter.endpoint is required." }}
+      {{- end }}
+      {{- $hasPassword := or .username .password.secretName }}
+      {{- $hasSolutionUser := .solutionUser.secretName }}
+      {{- if and $hasPassword (not (and .username .password.secretName)) }}
+        {{ fail "ERROR: hub.providers.vcenter requires both username and password.secretName." }}
+      {{- end }}
+      {{- if and $hasPassword $hasSolutionUser }}
+        {{ fail "ERROR: hub.providers.vcenter accepts only one authentication method: username and password, or solutionUser." }}
+      {{- end }}
+      {{- if not (or $hasPassword $hasSolutionUser) }}
+        {{ fail "ERROR: hub.providers.vcenter requires an authentication method: username and password.secretName, or solutionUser.secretName." }}
+      {{- end }}
+    {{- end }}
+  {{- end }}
+
   {{- with (compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $))) }}
     {{- if gt (len .) 1 }}
       {{ fail (printf "ERROR: only one hub.transparencyLogs.driver can be set, got: %s." (join ", " .)) }}

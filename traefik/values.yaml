@@ -1623,14 +1623,15 @@ hub:  # @schema additionalProperties: false
         secretName: ""
         # -- Key of the vCenter password in the Secret.
         key: "password"
-      # -- Certificate of the vCenter SSO solution user (file path or PEM content). Use it with `privateKey`.
-      certificate: ""
       # @schema additionalProperties: false
-      privateKey:
-        # -- Name of the Secret that holds the private key of the vCenter SSO solution user.
+      solutionUser:
+        # -- Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user.
         secretName: ""
+        # -- Key of the certificate in the Secret.
+        certificateKey: "tls.crt"
         # -- Key of the private key in the Secret.
-        key: "tls.key"
+        privateKeyKey: "tls.key"
+      # @schema additionalProperties: false
       tls:
         # -- TLS CA
         ca: ""

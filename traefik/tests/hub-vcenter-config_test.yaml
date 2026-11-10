@@ -20,12 +20,47 @@ tests:
             name: HUB_VCENTER_PASSWORD
           any: true
 
+  - it: should not configure vcenter without a Hub token
+    set:
+      hub:
+        token: ""
+        providers:
+          vcenter:
+            enabled: true
+            password:
+              secretName: "vcenter-credentials"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter"
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PASSWORD
+          any: true
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_CERTIFICATE
+          any: true
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PRIVATE_KEY
+          any: true
+
   - it: should configure vcenter with default values
     set:
       hub:
         providers:
           vcenter:
             enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -38,7 +73,7 @@ tests:
           content: "--hub.providers.vcenter.exposedByDefault=false"
       - notContains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+          content: "--hub.providers.vcenter.certificate=$(HUB_VCENTER_CERTIFICATE)"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
@@ -108,24 +143,30 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
 
-  - it: should configure vcenter with a solution user certificate and a private key from a Secret
+  - it: should configure vcenter with a solution user from a TLS Secret
     set:
       hub:
         providers:
           vcenter:
             enabled: true
             endpoint: "https://vcenter.example.com/sdk"
-            certificate: "/certs/solution-user.crt"
-            privateKey:
+            solutionUser:
               secretName: "vcenter-solution-user"
-              key: "private.key"
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--hub.providers.vcenter.certificate=/certs/solution-user.crt"
+          content: "--hub.providers.vcenter.certificate=$(HUB_VCENTER_CERTIFICATE)"
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_CERTIFICATE
+            valueFrom:
+              secretKeyRef:
+                name: vcenter-solution-user
+                key: tls.crt
       - contains:
           path: spec.template.spec.containers[0].env
           content:
@@ -133,10 +174,53 @@ tests:
             valueFrom:
               secretKeyRef:
                 name: vcenter-solution-user
-                key: private.key
+                key: tls.key
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.solutionUser.secretName=vcenter-solution-user"
+
+  - it: should configure vcenter with a solution user from a Secret with custom keys
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "https://vcenter.example.com/sdk"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+              certificateKey: "solution-user.crt"
+              privateKeyKey: "solution-user.key"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_CERTIFICATE
+            valueFrom:
+              secretKeyRef:
+                name: vcenter-solution-user
+                key: solution-user.crt
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PRIVATE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: vcenter-solution-user
+                key: solution-user.key
+
+  - it: should fail when certificate is set inline
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            certificate: "/certs/solution-user.crt"
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
 
   - it: should fail on typo when configuring vcenter
     set:
@@ -145,6 +229,18 @@ tests:
           vcenter:
             enabled: true
             endpoints: "vcenter.example.com" # <=== typo: endpoints instead of endpoint
+    asserts:
+      - failedTemplate:
+          errorPattern: "values don't meet the specifications of the schema"
+
+  - it: should fail on typo in vcenter tls
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            tls:
+              insecureSkipVerfy: true # <=== typo: insecureSkipVerfy instead of insecureSkipVerify
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"

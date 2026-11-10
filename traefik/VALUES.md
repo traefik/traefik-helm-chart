@@ -247,7 +247,6 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
 | hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
-| hub.providers.vcenter.certificate | string | `""` | Certificate of the vCenter SSO solution user (file path or PEM content). Use it with `privateKey`. |
 | hub.providers.vcenter.constraints | string | `""` | Expression that Traefik matches against the VM labels to create routes. |
 | hub.providers.vcenter.enabled | bool | `false` | Enable VMware vCenter provider. |
 | hub.providers.vcenter.endpoint | string | `""` | vCenter or ESXi endpoint (host, host:port or URL). |
@@ -256,8 +255,9 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.vcenter.ipMode | string | `"ipv4"` | Default backend IP mode: `ipv4` or `ipv6`. |
 | hub.providers.vcenter.password.key | string | `"password"` | Key of the vCenter password in the Secret. |
 | hub.providers.vcenter.password.secretName | string | `""` | Name of the Secret that holds the vCenter password. |
-| hub.providers.vcenter.privateKey.key | string | `"tls.key"` | Key of the private key in the Secret. |
-| hub.providers.vcenter.privateKey.secretName | string | `""` | Name of the Secret that holds the private key of the vCenter SSO solution user. |
+| hub.providers.vcenter.solutionUser.certificateKey | string | `"tls.crt"` | Key of the certificate in the Secret. |
+| hub.providers.vcenter.solutionUser.privateKeyKey | string | `"tls.key"` | Key of the private key in the Secret. |
+| hub.providers.vcenter.solutionUser.secretName | string | `""` | Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user. |
 | hub.providers.vcenter.tls.ca | string | `""` | TLS CA |
 | hub.providers.vcenter.tls.cert | string | `""` | TLS cert |
 | hub.providers.vcenter.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |

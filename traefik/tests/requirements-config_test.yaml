@@ -1037,8 +1037,112 @@ tests:
         providers:
           vcenter:
             enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
     asserts:
       - notFailedTemplate: {}
+  - it: should pass when using vcenter provider with a solution user
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when vcenter provider has no endpoint
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter.endpoint is required."
+  - it: should fail when vcenter provider has no authentication method
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires an authentication method: username and password.secretName, or solutionUser.secretName."
+  - it: should fail when vcenter provider has a username without password
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires both username and password.secretName."
+  - it: should fail when vcenter provider has a password without username
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            password:
+              secretName: "vcenter-credentials"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires both username and password.secretName."
+  - it: should fail when vcenter provider has two authentication methods
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter accepts only one authentication method: username and password, or solutionUser."
   - it: should fail when using ec2 provider on Traefik Hub < v3.21.0
     set:
       image:

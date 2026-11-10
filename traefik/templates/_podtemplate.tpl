@@ -981,11 +981,12 @@
             {{- end }}
             {{- if .providers.vcenter.enabled }}
           - "--hub.providers.vcenter"
-              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.vcenter" "content" (omit $.Values.hub.providers.vcenter "enabled" "password" "privateKey")) | nindent 10 }}
+              {{- include "traefik.yaml2CommandLineArgs" (dict "path" "hub.providers.vcenter" "content" (omit $.Values.hub.providers.vcenter "enabled" "password" "solutionUser")) | nindent 10 }}
               {{- if .providers.vcenter.password.secretName }}
           - "--hub.providers.vcenter.password=$(HUB_VCENTER_PASSWORD)"
               {{- end }}
-              {{- if .providers.vcenter.privateKey.secretName }}
+              {{- if .providers.vcenter.solutionUser.secretName }}
+          - "--hub.providers.vcenter.certificate=$(HUB_VCENTER_CERTIFICATE)"
           - "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
               {{- end }}
             {{- end }}
@@ -1058,6 +1059,7 @@
                 fieldPath: metadata.namespace
           - name: USER
             value: traefik
+          {{- if .Values.hub.token }}
           {{- with .Values.hub.providers.vcenter }}
             {{- if and .enabled .password.secretName }}
           - name: HUB_VCENTER_PASSWORD
@@ -1066,13 +1068,19 @@
                 name: {{ .password.secretName }}
                 key: {{ .password.key }}
             {{- end }}
-            {{- if and .enabled .privateKey.secretName }}
+            {{- if and .enabled .solutionUser.secretName }}
+          - name: HUB_VCENTER_CERTIFICATE
+            valueFrom:
+              secretKeyRef:
+                name: {{ .solutionUser.secretName }}
+                key: {{ .solutionUser.certificateKey }}
           - name: HUB_VCENTER_PRIVATE_KEY
             valueFrom:
               secretKeyRef:
-                name: {{ .privateKey.secretName }}
-                key: {{ .privateKey.key }}
+                name: {{ .solutionUser.secretName }}
+                key: {{ .solutionUser.privateKeyKey }}
             {{- end }}
+          {{- end }}
           {{- end }}
           {{- if ($.Values.resources.limits).cpu }}
           - name: GOMAXPROCS
