@@ -566,8 +566,8 @@
            {{- if .Values.providers.kubernetesIngress.strictPrefixMatching }}
           - "--providers.kubernetesingress.strictPrefixMatching=true"
            {{- end }}
-           {{- if .Values.providers.kubernetesIngress.reportNodeInternalIPs }}
-          - "--providers.kubernetesingress.reportNodeInternalIPs=true"
+           {{- if ne .Values.providers.kubernetesIngress.reportNodeInternalIPs nil }}
+          - "--providers.kubernetesingress.reportNodeInternalIPs={{ .Values.providers.kubernetesIngress.reportNodeInternalIPs }}"
            {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}

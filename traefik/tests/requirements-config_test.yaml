@@ -713,7 +713,7 @@ tests:
   - it: should fail when using kubernetesIngress reportNodeInternalIPs on traefik < 3.8.0
     set:
       image.tag: v3.7.17
-      providers.kubernetesIngress.reportNodeInternalIPs: true
+      providers.kubernetesIngress.reportNodeInternalIPs: false
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs is only available for traefik >= v3.8.0."

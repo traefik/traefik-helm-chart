@@ -131,10 +131,10 @@
 {{- end }}
 
 {{- with .Values.providers.kubernetesIngress }}
+  {{- if and .enabled (ne .reportNodeInternalIPs nil) (semverCompare "<v3.8.0-0" $version) }}
+    {{- fail "ERROR: providers.kubernetesIngress.reportNodeInternalIPs is only available for traefik >= v3.8.0." }}
+  {{- end }}
   {{- if and .enabled .reportNodeInternalIPs }}
-    {{- if semverCompare "<v3.8.0-0" $version }}
-      {{- fail "ERROR: providers.kubernetesIngress.reportNodeInternalIPs is only available for traefik >= v3.8.0." }}
-    {{- end }}
     {{- if or .ingressEndpoint.hostname .ingressEndpoint.ip }}
       {{- fail "ERROR: providers.kubernetesIngress.reportNodeInternalIPs cannot be used with ingressEndpoint.hostname or ingressEndpoint.ip." }}
     {{- end }}

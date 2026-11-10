@@ -3061,8 +3061,11 @@
                             }
                         },
                         "reportNodeInternalIPs": {
-                            "description": "Report node internal IPs in Ingress status (v3.8+). It replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced.",
-                            "type": "boolean"
+                            "description": "Report node internal IPs in Ingress status (v3.8+). When true, it replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced.",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "strictPrefixMatching": {
                             "description": "Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.",
