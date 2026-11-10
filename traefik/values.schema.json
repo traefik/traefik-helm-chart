@@ -2929,6 +2929,13 @@
                                 "null"
                             ]
                         },
+                        "retryMaxRequestBodyBytes": {
+                            "description": "Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
                         "statusAddress": {
                             "type": "object",
                             "properties": {

@@ -695,6 +695,21 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when using kubernetesGateway retryMaxRequestBodyBytes on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.retryMaxRequestBodyBytes is only available for traefik >= v3.8.0."
+  - it: should not fail when using kubernetesGateway retryMaxRequestBodyBytes on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 1024
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using kubernetesGateway burst on traefik < 3.7.3
     set:
       image:

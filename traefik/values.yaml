@@ -396,6 +396,8 @@ providers:
     qps:  # @schema type:[integer, null]
     # -- (int) Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
     burst:  # @schema type:[integer, null]
+    # -- (int) Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.
+    retryMaxRequestBodyBytes:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
       ip: ""
