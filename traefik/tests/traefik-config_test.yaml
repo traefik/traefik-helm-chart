@@ -956,6 +956,22 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should have addXForwardedSchemeHeaders arg when specified in values.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=true"
+  - it: should not have addXForwardedSchemeHeaders arg by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=true"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.forwardedHeaders.addXForwardedSchemeHeaders=true"
   - it: should not have notAppendXForwardedFor arg by default
     asserts:
       - notContains:

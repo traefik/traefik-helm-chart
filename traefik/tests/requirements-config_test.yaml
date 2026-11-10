@@ -721,6 +721,19 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when using addXForwardedSchemeHeaders on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: forwardedHeaders.addXForwardedSchemeHeaders is only available for traefik >= v3.8.0."
+  - it: should not fail when using addXForwardedSchemeHeaders on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
