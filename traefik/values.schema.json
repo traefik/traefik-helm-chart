@@ -927,7 +927,10 @@
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "TLS insecure skip verify",
-                                                    "type": "boolean"
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "key": {
                                                     "description": "TLS key",
@@ -1109,7 +1112,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
@@ -1332,7 +1338,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
