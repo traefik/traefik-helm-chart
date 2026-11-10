@@ -19,6 +19,16 @@ tests:
           content:
             name: HUB_VCENTER_PASSWORD
           any: true
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_CERTIFICATE
+          any: true
+      - notContains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: HUB_VCENTER_PRIVATE_KEY
+          any: true
 
   - it: should not configure vcenter without a Hub token
     set:
