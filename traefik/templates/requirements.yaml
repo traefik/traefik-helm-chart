@@ -172,7 +172,7 @@
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
   {{- end }}
-  {{- if and $config (($config.forwardedHeaders).addXForwardedSchemeHeaders) (semverCompare "<v3.8.0-0" $version) }}
+  {{- if and $config (ne ($config.forwardedHeaders).addXForwardedSchemeHeaders nil) (semverCompare "<v3.8.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.addXForwardedSchemeHeaders is only available for traefik >= v3.8.0." }}
   {{- end }}
   {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}

@@ -724,7 +724,7 @@ tests:
   - it: should fail when using addXForwardedSchemeHeaders on traefik < 3.8.0
     set:
       image.tag: v3.7.17
-      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: false
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: forwardedHeaders.addXForwardedSchemeHeaders is only available for traefik >= v3.8.0."

@@ -2446,7 +2446,10 @@
                         "properties": {
                             "addXForwardedSchemeHeaders": {
                                 "description": "Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).",
-                                "type": "boolean"
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
                             },
                             "insecure": {
                                 "type": "boolean"

@@ -997,8 +997,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
-      # -- Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
-      addXForwardedSchemeHeaders: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1096,8 +1096,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
-      # -- Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
-      addXForwardedSchemeHeaders: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
