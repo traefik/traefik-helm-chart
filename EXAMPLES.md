@@ -1438,7 +1438,7 @@ and deploy Gateway API CRDs:
 
 ```sh
 # Install Gateway API CRDs from the Standard channel.
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
 ```
 
 For Proxy v3.8.0-rc.1, install Gateway API v1.7.0 instead and set `image.tag: v3.8.0-rc.1`.
