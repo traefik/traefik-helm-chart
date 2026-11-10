@@ -453,6 +453,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.web.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.web.transport | object | nil | Set transport settings for the entrypoint |
+| ports.web.transport.lifeCycle.requestAcceptGraceTimeout | string | `"5s"` | Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately. |
 | ports.web.uplink | bool | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
@@ -487,6 +488,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.websecure.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.websecure.transport | object | nil | Set transport settings for the entrypoint |
+| ports.websecure.transport.lifeCycle.requestAcceptGraceTimeout | string | `"5s"` | Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately. |
 | priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
 | providers.file.content | object | `{}` | File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |

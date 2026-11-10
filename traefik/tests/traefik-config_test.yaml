@@ -11,6 +11,30 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--the.force.is.with.me=true"
 
+  - it: should keep accepting requests for 5s on shutdown by default on web and websecure
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
+  - it: should allow to disable requestAcceptGraceTimeout on shutdown
+    set:
+      ports:
+        web:
+          transport:
+            lifeCycle:
+              requestAcceptGraceTimeout: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=0"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
   - it: should not have ingress nginx provider enabled by default
     asserts:
       - notContains:

@@ -1007,7 +1007,9 @@ ports:
         writeTimeout:  # @schema type:[string, integer, null]
         idleTimeout:   # @schema type:[string, integer, null]
       lifeCycle:
-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
+        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
+        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
@@ -1102,7 +1104,9 @@ ports:
         writeTimeout:  # @schema type:[string, integer, null]
         idleTimeout:   # @schema type:[string, integer, null]
       lifeCycle:
-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
+        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
+        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
