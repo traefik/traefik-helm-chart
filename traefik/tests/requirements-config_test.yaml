@@ -918,6 +918,35 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using hub.providers.nutanixPrismCentral.tenantName on Traefik Hub < v3.22.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.7
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            tenantName: my-tenant
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.nutanixPrismCentral.tenantName is only available for Traefik Hub >= v3.22.0."
+  - it: should pass when using hub.providers.nutanixPrismCentral.tenantName on Traefik Hub >= v3.22.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0-ea.1
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            tenantName: my-tenant
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using ec2 provider on Traefik Hub < v3.21.0
     set:
       image:

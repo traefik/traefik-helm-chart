@@ -1319,6 +1319,10 @@
                                     "description": "Category key used to derive the service name.",
                                     "type": "string"
                                 },
+                                "tenantName": {
+                                    "description": "SP Central tenant name. When set, back ends are discovered as this SP Central tenant.",
+                                    "type": "string"
+                                },
                                 "tls": {
                                     "type": "object",
                                     "properties": {

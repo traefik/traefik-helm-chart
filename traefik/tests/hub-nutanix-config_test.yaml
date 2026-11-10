@@ -81,6 +81,22 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.nutanixPrismCentral.tls.insecureSkipVerify=true"
 
+  - it: should be possible to set the nutanixPrismCentral tenant name
+    set:
+      image:
+        tag: v3.22.0
+      hub:
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            endpoint: "https://pc.domains.example.com"
+            apiKey: "api-xxx"
+            tenantName: "my-tenant"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.nutanixPrismCentral.tenantName=my-tenant"
+
   - it: should fail on typo when configuring nutanixPrismCentral
     set:
       hub:
