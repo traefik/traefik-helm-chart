@@ -348,13 +348,8 @@ tests:
       image.tag: v3.8.0-rc.1
     asserts:
       - template: deployment.yaml
-        notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.disableNonTLSRouters=false"
-      - template: deployment.yaml
-        notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.disableNonTLSRouters=true"
+        notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingressnginx\.disableNonTLSRouters/)]
 
   - it: should add disableNonTLSRouters without httpEntryPoint
     set:
@@ -366,9 +361,8 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.disableNonTLSRouters=true"
       - template: deployment.yaml
-        notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesingressnginx.httpEntryPoint=web"
+        notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingressnginx\.httpEntryPoint/)]
       - template: deployment.yaml
         contains:
           path: spec.template.spec.containers[0].args
