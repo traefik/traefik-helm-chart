@@ -370,6 +370,8 @@ providers:
     nativeLBByDefault: false
     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
     strictPrefixMatching: false
+    # -- Report node internal IPs in Ingress status (v3.8+). It replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced.
+    reportNodeInternalIPs: false
 
   # @schema additionalProperties: false
   kubernetesGateway:

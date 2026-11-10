@@ -538,6 +538,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
+| providers.kubernetesIngress.reportNodeInternalIPs | bool | `false` | Report node internal IPs in Ingress status (v3.8+). It replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
 | providers.kubernetesIngressNGINX.allowCrossNamespaceResources | bool | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
 | providers.kubernetesIngressNGINX.allowSnippetAnnotations | bool | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |

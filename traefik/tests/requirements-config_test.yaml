@@ -710,6 +710,43 @@ tests:
       providers.kubernetesGateway.retryMaxRequestBodyBytes: 1024
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs is only available for traefik >= v3.8.0."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with ingressEndpoint.hostname
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      providers.kubernetesIngress.ingressEndpoint.hostname: example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs cannot be used with ingressEndpoint.hostname or ingressEndpoint.ip."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with ingressEndpoint.ip
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      providers.kubernetesIngress.ingressEndpoint.ip: 10.0.0.1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs cannot be used with ingressEndpoint.hostname or ingressEndpoint.ip."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with rbac.namespaced
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      rbac.namespaced: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs requires cluster-scoped RBAC and cannot be used with rbac.namespaced."
+  - it: should not fail when using kubernetesIngress reportNodeInternalIPs on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using kubernetesGateway burst on traefik < 3.7.3
     set:
       image:
