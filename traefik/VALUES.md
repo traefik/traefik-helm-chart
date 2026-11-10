@@ -612,6 +612,8 @@ Kubernetes: `>=1.30.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container. |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
+| serversTransport.forwardingTimeouts.readTimeout | string | 0s | Timeout for reading a response from the proxied server (v3.8+). `0` disables it. |
+| serversTransport.forwardingTimeouts.writeTimeout | string | 0s | Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it. |
 | service.additionalServices | object | `{}` | Can be used to create multiple Service. See EXAMPLES.md for more details. |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |

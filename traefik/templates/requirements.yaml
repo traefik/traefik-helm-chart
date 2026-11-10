@@ -111,6 +111,12 @@
   {{- fail "ERROR: global.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
 {{- end }}
 
+{{- with .Values.serversTransport.forwardingTimeouts }}
+  {{- if and (semverCompare "<v3.8.0-0" $version) (or (ne .readTimeout nil) (ne .writeTimeout nil)) }}
+    {{- fail "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0." }}
+  {{- end }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.7.17-0" $version) .Values.global.aliasHeadersStrategy }}
   {{- fail "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17." }}
 {{- end }}

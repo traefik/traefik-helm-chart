@@ -1013,6 +1013,26 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should have serversTransport forwardingTimeouts args when specified in values.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.readTimeout=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.writeTimeout=0"
+  - it: should not have serversTransport forwardingTimeouts args by default
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.readTimeout="
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.writeTimeout="
   - it: should have global aliasHeadersStrategy arg when specified in values.yaml
     set:
       image:

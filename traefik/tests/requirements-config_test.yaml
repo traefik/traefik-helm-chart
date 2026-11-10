@@ -771,6 +771,26 @@ tests:
       ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using serversTransport forwardingTimeouts readTimeout on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0."
+  - it: should fail when using serversTransport forwardingTimeouts writeTimeout on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0."
+  - it: should not fail when using serversTransport forwardingTimeouts on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:

@@ -922,6 +922,19 @@ global:
         tag: latest
         registry: ghcr.io/traefik
 
+# @schema additionalProperties: false
+serversTransport:
+  # @schema additionalProperties: false
+  forwardingTimeouts:
+    # @schema type:[string, integer, null]
+    # -- Timeout for reading a response from the proxied server (v3.8+). `0` disables it.
+    # @default -- 0s
+    readTimeout:
+    # @schema type:[string, integer, null]
+    # -- Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it.
+    # @default -- 0s
+    writeTimeout:
+
 # -- Additional arguments to be passed at Traefik's binary
 # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
 # Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
