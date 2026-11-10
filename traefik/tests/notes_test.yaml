@@ -439,13 +439,20 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
-  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.14
+  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.13
+    set:
+      image.tag: v3.7.13
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.2 for Proxy v3.7.14
     set:
       image.tag: v3.7.14
       providers.kubernetesGateway.enabled: true
     asserts:
       - matchRegexRaw:
-          pattern: 'v1.6.1/standard-install.yaml'
+          pattern: 'v1.6.2/standard-install.yaml'
   - it: should recommend Gateway API v1.6.3 for Proxy v3.7.15
     set:
       image.tag: v3.7.15
