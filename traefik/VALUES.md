@@ -250,9 +250,9 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.vcenter.constraints | string | `""` | Expression that Traefik matches against the VM labels to create routes. |
 | hub.providers.vcenter.enabled | bool | `false` | Enable VMware vCenter provider. |
 | hub.providers.vcenter.endpoint | string | `""` | vCenter or ESXi endpoint (host, host:port or URL). |
-| hub.providers.vcenter.exposedByDefault | bool | `false` | Expose VMs by default. A VM needs a port label to get a route. |
+| hub.providers.vcenter.exposedByDefault | bool | `nil` | Expose VMs by default. A VM needs a port label to get a route. Default: false. |
 | hub.providers.vcenter.inventoryPath | string | `""` | Limits discovery to one branch of the vSphere inventory. |
-| hub.providers.vcenter.ipMode | string | `"ipv4"` | Default backend IP mode: `ipv4` or `ipv6`. |
+| hub.providers.vcenter.ipMode | string | `nil` | Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`. |
 | hub.providers.vcenter.password.key | string | `"password"` | Key of the vCenter password in the Secret. |
 | hub.providers.vcenter.password.secretName | string | `""` | Name of the Secret that holds the vCenter password. |
 | hub.providers.vcenter.solutionUser.certificateKey | string | `"tls.crt"` | Key of the certificate in the Secret. |
@@ -260,7 +260,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.vcenter.solutionUser.secretName | string | `""` | Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user. |
 | hub.providers.vcenter.tls.ca | string | `""` | TLS CA |
 | hub.providers.vcenter.tls.cert | string | `""` | TLS cert |
-| hub.providers.vcenter.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.vcenter.tls.insecureSkipVerify | bool | `nil` | TLS insecure skip verify. Default: false. |
 | hub.providers.vcenter.tls.key | string | `""` | TLS key |
 | hub.providers.vcenter.username | string | `""` | vCenter username. Use it with `password`. |
 | hub.redis.cluster | bool | `nil` | Enable Redis Cluster. Default: true. |

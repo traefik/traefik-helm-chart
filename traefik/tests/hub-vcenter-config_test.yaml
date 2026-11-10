@@ -65,18 +65,46 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter"
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.ipMode=ipv4"
-      - contains:
+      - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.exposedByDefault=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.insecureSkipVerify=false"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.certificate=$(HUB_VCENTER_CERTIFICATE)"
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.vcenter.privateKey=$(HUB_VCENTER_PRIVATE_KEY)"
+
+  - it: should render explicit false and ipv4 values
+    set:
+      hub:
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
+            tls:
+              insecureSkipVerify: false
+            exposedByDefault: false
+            ipMode: "ipv4"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.tls.insecureSkipVerify=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.exposedByDefault=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--hub.providers.vcenter.ipMode=ipv4"
 
   - it: should configure vcenter with username and password from a Secret
     set:

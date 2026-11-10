@@ -1639,17 +1639,16 @@ hub:  # @schema additionalProperties: false
         cert: ""
         # -- TLS key
         key: ""
-        # -- TLS insecure skip verify
-        insecureSkipVerify: false
+        # -- (bool) TLS insecure skip verify. Default: false.
+        insecureSkipVerify:  # @schema type:[boolean, null]
       # -- Limits discovery to one branch of the vSphere inventory.
       inventoryPath: ""
-      # -- Expose VMs by default. A VM needs a port label to get a route.
-      exposedByDefault: false
+      # -- (bool) Expose VMs by default. A VM needs a port label to get a route. Default: false.
+      exposedByDefault:  # @schema type:[boolean, null]
       # -- Expression that Traefik matches against the VM labels to create routes.
       constraints: ""
-      # @schema enum:[ipv4, ipv6]
-      # -- Default backend IP mode: `ipv4` or `ipv6`.
-      ipMode: "ipv4"
+      # -- (string) Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`.
+      ipMode:  # @schema enum:[ipv4, ipv6, null]; type:[string, null]
 
   redis:
     # -- (bool) Enable Redis Cluster. Default: true.

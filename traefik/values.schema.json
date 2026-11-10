@@ -1383,19 +1383,26 @@
                                     "type": "string"
                                 },
                                 "exposedByDefault": {
-                                    "description": "Expose VMs by default. A VM needs a port label to get a route.",
-                                    "type": "boolean"
+                                    "description": "Expose VMs by default. A VM needs a port label to get a route. Default: false.",
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "inventoryPath": {
                                     "description": "Limits discovery to one branch of the vSphere inventory.",
                                     "type": "string"
                                 },
                                 "ipMode": {
-                                    "description": "Default backend IP mode: `ipv4` or `ipv6`.",
-                                    "type": "string",
+                                    "description": "Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`.",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
                                     "enum": [
                                         "ipv4",
-                                        "ipv6"
+                                        "ipv6",
+                                        null
                                     ]
                                 },
                                 "password": {
@@ -1442,8 +1449,11 @@
                                             "type": "string"
                                         },
                                         "insecureSkipVerify": {
-                                            "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "description": "TLS insecure skip verify. Default: false.",
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
