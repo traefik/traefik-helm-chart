@@ -715,7 +715,7 @@
                     "type": "array"
                 },
                 "imageRegistry": {
-                    "description": "Registry for the Traefik image when `image.registry` is not set, e.g. a mirror. Leave empty to keep the default registry.",
+                    "description": "Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry.",
                     "type": [
                         "string",
                         "null"

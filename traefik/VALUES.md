@@ -136,7 +136,7 @@ Kubernetes: `>=1.30.0-0`
 | global.azure | object | See _values.yaml_ | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |
-| global.imageRegistry | string | `""` | Registry for the Traefik image when `image.registry` is not set, e.g. a mirror. Leave empty to keep the default registry. |
+| global.imageRegistry | string | `""` | Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry. |
 | global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
