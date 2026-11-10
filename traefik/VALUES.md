@@ -136,6 +136,7 @@ Kubernetes: `>=1.30.0-0`
 | global.azure | object | See _values.yaml_ | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |
+| global.imageRegistry | string | `""` | Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry. |
 | global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
@@ -289,7 +290,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.transparencyLogs.witnessGroup.witnesses | list | `nil` | Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries. |
 | image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
-| image.registry | string | `nil` | Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true). |
+| image.registry | string | `nil` | Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true). |
 | image.repository | string | `nil` | Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true). |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image). |
 | imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty |

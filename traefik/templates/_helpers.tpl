@@ -26,12 +26,13 @@ Install the Traefik Hub distribution. Enabled without a token means proxy mode. 
 {{- end -}}
 
 {{/*
-Image defaults. An explicit image value always wins; otherwise the chart picks the hardened
-default, then the Traefik Hub one when hub is enabled, then Traefik Proxy.
+Image defaults. An explicit image value always wins, then global.imageRegistry for the registry;
+otherwise the chart picks the hardened default, then the Traefik Hub one when hub is enabled,
+then Traefik Proxy.
 */}}
 {{- define "traefik.imageRegistry" -}}
 {{- $default := ternary "ghcr.io" "docker.io" (eq (include "traefik.hub.enabled" .) "true") -}}
-{{- .Values.image.registry | default (ternary "registry.traefik.io" $default .Values.hub.hardened) -}}
+{{- .Values.image.registry | default .Values.global.imageRegistry | default (ternary "registry.traefik.io" $default .Values.hub.hardened) -}}
 {{- end -}}
 
 {{- define "traefik.imageRepository" -}}
