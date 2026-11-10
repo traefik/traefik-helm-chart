@@ -481,9 +481,8 @@ tests:
       image.tag: v3.8.0-rc.1
       providers.kubernetesGateway.enabled: true
     asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: "--providers.kubernetesgateway.retryMaxRequestBodyBytes=0"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesgateway\.retryMaxRequestBodyBytes=/)]
   - it: should set kubernetesGateway retryMaxRequestBodyBytes when configured
     set:
       image.tag: v3.8.0-rc.1
