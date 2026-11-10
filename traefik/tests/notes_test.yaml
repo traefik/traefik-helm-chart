@@ -330,7 +330,7 @@ tests:
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
 
             ℹ️ Gateway API CRDs are not shipped with this chart. Install or update them before deploying Traefik:
-              kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.1/standard-install.yaml
+              kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
 
   - it: should not display any warning when hub watch all namespaces
     set:
@@ -439,14 +439,34 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
-  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.17
-    template: NOTES.txt
+  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.13
+    set:
+      image.tag: v3.7.13
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.2 for Proxy v3.7.14
+    set:
+      image.tag: v3.7.14
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.2/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Proxy v3.7.15
+    set:
+      image.tag: v3.7.15
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.3/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Proxy v3.7.17
     set:
       image.tag: v3.7.17
       providers.kubernetesGateway.enabled: true
     asserts:
       - matchRegexRaw:
-          pattern: 'v1.6.1/standard-install.yaml'
+          pattern: 'v1.6.3/standard-install.yaml'
   - it: should recommend Gateway API v1.7.0 for stable v3.8
     set:
       image.tag: v3.8.0
@@ -454,3 +474,11 @@ tests:
     asserts:
       - matchRegexRaw:
           pattern: 'v1.7.0/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Hub v3.21.10
+    set:
+      hub.enabled: true
+      image.tag: v3.21.10
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.3/standard-install.yaml'
