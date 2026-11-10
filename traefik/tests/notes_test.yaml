@@ -454,3 +454,11 @@ tests:
     asserts:
       - matchRegexRaw:
           pattern: 'v1.7.0/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.1 for Hub v3.21.10
+    set:
+      hub.enabled: true
+      image.tag: v3.21.10
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
