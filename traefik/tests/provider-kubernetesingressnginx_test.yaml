@@ -343,6 +343,37 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingressnginx.httpsEntryPoint=websecure"
 
+  - it: should not add disableNonTLSRouters by default
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.disableNonTLSRouters=false"
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.disableNonTLSRouters=true"
+
+  - it: should add disableNonTLSRouters without httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+    asserts:
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.disableNonTLSRouters=true"
+      - template: deployment.yaml
+        notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.httpEntryPoint=web"
+      - template: deployment.yaml
+        contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingressnginx.httpsEntryPoint=websecure"
+
   - it: should add modsec flags when enabled
     set:
       providers:

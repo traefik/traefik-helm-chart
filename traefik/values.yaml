@@ -507,6 +507,8 @@ providers:
     strictValidatePathType:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: "web"
+    # -- (bool) Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false)
+    disableNonTLSRouters: null  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTPS requests
     httpsEntryPoint: "websecure"
     # @schema additionalProperties: false
