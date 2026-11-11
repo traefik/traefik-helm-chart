@@ -702,6 +702,10 @@ metrics:
       enabled: false
       labels: {}
       annotations: {}
+      # -- IP family policy of the dedicated metrics service (SingleStack, PreferDualStack or RequireDualStack). Unset keeps the cluster default.
+      ipFamilyPolicy: ""
+      # -- IP families of the dedicated metrics service, e.g. [IPv4, IPv6]. Unset keeps the cluster default.
+      ipFamilies: []
     # -- (bool) When set to true, it won't check if Prometheus Operator CRDs are deployed
     disableAPICheck:  # @schema type:[boolean, null]
     serviceMonitor:

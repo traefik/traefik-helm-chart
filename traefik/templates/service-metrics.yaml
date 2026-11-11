@@ -18,6 +18,13 @@ metadata:
   {{- end }}
 spec:
   type: ClusterIP
+  {{- with .Values.metrics.prometheus.service.ipFamilyPolicy }}
+  ipFamilyPolicy: {{ . }}
+  {{- end }}
+  {{- with .Values.metrics.prometheus.service.ipFamilies }}
+  ipFamilies:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
   selector:
     {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
