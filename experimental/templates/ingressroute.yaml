@@ -1,0 +1,15 @@
+{{- range $name, $config := (.Values.ingressRoute | default dict) }}
+{{- $config = $config | default dict }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  {{- include "traefik.objectMeta" (dict
+      "ctx" $
+      "name" (printf "%s-%s" (include "traefik.fullname" $) $name)
+      "namespace" (include "traefik.namespace" $)
+      "userMetadata" ($config.metadata | default dict)
+  ) | nindent 2 }}
+spec:
+  {{- include "traefik.ingressRouteSpec" (dict "ctx" $ "name" $name "config" $config) | nindent 2 }}
+{{- end }}

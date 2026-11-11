@@ -1,0 +1,120 @@
+suite: deployment derives from traefik config
+templates:
+  - deployment.yaml
+tests:
+  - it: Prometheus scrape annotations + metrics port render by default (parity with legacy)
+    asserts:
+      - equal:
+          path: spec.template.metadata.annotations["prometheus.io/scrape"]
+          value: "true"
+      - equal:
+          path: spec.template.metadata.annotations["prometheus.io/port"]
+          value: "9100"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: metrics, containerPort: 9100, protocol: TCP }
+
+  - it: no Prometheus annotations when metrics.prometheus is disabled
+    set:
+      traefik.metrics: null
+    asserts:
+      - notExists:
+          path: spec.template.metadata.annotations["prometheus.io/scrape"]
+
+  - it: container ports derive from traefik.entryPoints (default set)
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: traefik,   containerPort: 8080, protocol: TCP }
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: web,       containerPort: 8000, protocol: TCP }
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: websecure, containerPort: 8443, protocol: TCP }
+
+  - it: removing an entryPoint removes its container port
+    set:
+      traefik.entryPoints.web: null
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: web, containerPort: 8000, protocol: TCP }
+
+  - it: adding an entryPoint adds a container port
+    set:
+      traefik.entryPoints.udp:
+        address: ":5353/udp"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content: { name: udp, containerPort: 5353, protocol: UDP }
+
+  - it: probes render by default, target the ping entryPoint port (default "traefik" = 8080)
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: 8080
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 8080
+
+  - it: probes disappear when ping is removed
+    set:
+      traefik.ping: null
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[0].readinessProbe
+      - isNull:
+          path: spec.template.spec.containers[0].livenessProbe
+
+  - it: probe target follows ping.entryPoint (web = 8000)
+    set:
+      traefik.ping.entryPoint: web
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.port
+          value: 8000
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.port
+          value: 8000
+
+  - it: image override is passthrough (single string)
+    set:
+      image: "my-registry/traefik:v3.7"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: "my-registry/traefik:v3.7"
+
+  - it: no `resources` block when deployment.resources unset
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].resources
+
+  - it: deployment.resources is applied verbatim to the traefik container
+    set:
+      deployment.resources:
+        requests: { cpu: 100m, memory: 128Mi }
+        limits:   { cpu: 500m, memory: 256Mi }
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].resources
+          value:
+            requests: { cpu: 100m, memory: 128Mi }
+            limits:   { cpu: 500m, memory: 256Mi }
+
+  - it: deployment=null skips the Deployment entirely (daemonset takes over)
+    set:
+      deployment: null
+      daemonset: {}
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: pod template stamps checksum/config so traefik.yaml changes roll the pods
+    asserts:
+      - exists:
+          path: spec.template.metadata.annotations["checksum/config"]
+      - matchRegex:
+          path: spec.template.metadata.annotations["checksum/config"]
+          pattern: "^[0-9a-f]{64}$"
