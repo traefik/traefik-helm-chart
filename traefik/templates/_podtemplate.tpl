@@ -625,6 +625,9 @@
             {{- with .burst }}
           - "--providers.kubernetesgateway.burst={{ . }}"
             {{- end }}
+            {{- if ne .retryMaxRequestBodyBytes nil }}
+          - "--providers.kubernetesgateway.retryMaxRequestBodyBytes={{ .retryMaxRequestBodyBytes | int64 }}"
+            {{- end }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}

@@ -149,6 +149,9 @@
     {{- if and .gatewayClass (semverCompare "<v3.8.0-0" $version) }}
       {{- fail "ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0." }}
     {{- end }}
+    {{- if and (ne .retryMaxRequestBodyBytes nil) (semverCompare "<v3.8.0-0" $version) }}
+      {{- fail "ERROR: providers.kubernetesGateway.retryMaxRequestBodyBytes is only available for traefik >= v3.8.0." }}
+    {{- end }}
   {{- end }}
 {{- end }}
 

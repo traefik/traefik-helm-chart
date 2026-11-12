@@ -476,6 +476,40 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesgateway.burst=40"
+  - it: should not set kubernetesGateway retryMaxRequestBodyBytes by default
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesgateway\.retryMaxRequestBodyBytes=/)]
+  - it: should set kubernetesGateway retryMaxRequestBodyBytes when configured
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 4194304
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.retryMaxRequestBodyBytes=4194304"
+  - it: should set a negative kubernetesGateway retryMaxRequestBodyBytes
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: -1
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.retryMaxRequestBodyBytes=-1"
+  - it: should set a zero kubernetesGateway retryMaxRequestBodyBytes
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesgateway.retryMaxRequestBodyBytes=0"
   - it: should not scope kubernetesGateway provider to gateways by default
     set:
       providers:
