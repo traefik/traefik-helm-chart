@@ -81,6 +81,7 @@ chore(deps): update traefik image to v3.7.1
 - `traefik.gatewayAPIVersion` (`traefik/templates/_helpers.tpl`) selects the Gateway API CRD version recommended in `NOTES.txt`. Review this mapping when a Proxy update changes the upstream CRD requirements.
 - For Hub updates, check whether `traefik.proxyVersionFromHub` needs a new branch: the Gateway API helper uses the embedded Proxy version resolved by that mapping.
 - Update `traefik/tests/notes_test.yaml` for affected Proxy version boundaries and Hub versions when either mapping changes.
+- When the default Proxy version changes the recommended Gateway API version, also update the CRD install commands in `README.md` (install and upgrade sections) and `EXAMPLES.md`, and the `api-spec/` links in `traefik/values.yaml` (then `make docs schema`).
 
 ## Bumping Traefik Hub
 
