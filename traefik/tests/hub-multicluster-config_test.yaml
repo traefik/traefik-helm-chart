@@ -2,6 +2,16 @@ suite: Traefik configuration
 templates:
   - deployment.yaml
 tests:
+  - it: should not render Hub defaults for multicluster provider
+    set:
+      hub:
+        token: "xxx"
+        providers:
+          multicluster:
+            enabled: true
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.multicluster\.(pollInterval|pollTimeout)=/)]
   - it: should be possible to configure Traefik Hub multicluster provider
     set:
       hub:

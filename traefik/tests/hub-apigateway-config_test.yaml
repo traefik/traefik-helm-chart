@@ -317,7 +317,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.microcks"
       - notExists:
-          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.microcks\.tls\.insecureSkipVerify/)]
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.microcks\.(pollInterval|pollTimeout|tls\.insecureSkipVerify)=/)]
   - it: should be possible to configure Traefik Hub microcks provider
     set:
       hub:
@@ -343,7 +343,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.nutanixPrismCentral"
       - notExists:
-          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.nutanixPrismCentral\.tls\.insecureSkipVerify/)]
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.nutanixPrismCentral\.(pollInterval|pollTimeout|serviceNameCategoryKey|tls\.insecureSkipVerify)=/)]
   - it: should be possible to enable Traefik Hub consulCatalogEnterprise provider with default config
     set:
       hub:
@@ -355,7 +355,7 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.consulCatalogEnterprise"
       - notExists:
-          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.consulCatalogEnterprise\.endpoint\.tls\.insecureSkipVerify/)]
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.consulCatalogEnterprise\.(cache|connectAware|connectByDefault|defaultRule|endpoint\.tls\.insecureSkipVerify|exposedByDefault|prefix|refreshInterval|requireConsistent|serviceName|stale|strictChecks|watch)=/)]
   - it: should be possible to configure Traefik Hub consulCatalogEnterprise provider
     set:
       hub:

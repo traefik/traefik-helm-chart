@@ -158,11 +158,11 @@ Kubernetes: `>=1.30.0-0`
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | hub.offline | bool | `nil` | Disables all external network connections. |
 | hub.pluginRegistry.sources | object | `{}` |  |
-| hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
-| hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
-| hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
+| hub.providers.consulCatalogEnterprise.cache | bool | false | Use local agent caching for catalog reads. |
+| hub.providers.consulCatalogEnterprise.connectAware | bool | false | Enable Consul Connect support. |
+| hub.providers.consulCatalogEnterprise.connectByDefault | bool | false | Consider every service as Connect capable by default. |
 | hub.providers.consulCatalogEnterprise.constraints | string | `""` | Constraints is an expression that Traefik matches against the container's labels |
-| hub.providers.consulCatalogEnterprise.defaultRule | string | `"Host(`{{ normalize .Name }}`)"` | Default rule. |
+| hub.providers.consulCatalogEnterprise.defaultRule | string | "Host(`{{ normalize .Name }}`)" | Default rule. |
 | hub.providers.consulCatalogEnterprise.enabled | bool | `false` | Enable Consul Catalog Enterprise backend with default settings. |
 | hub.providers.consulCatalogEnterprise.endpoint.address | string | `""` | The address of the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.datacenter | string | `""` | Data center to use. If not provided, the default agent data center is used |
@@ -175,24 +175,24 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
 | hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
-| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
+| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | true | Expose containers by default. |
 | hub.providers.consulCatalogEnterprise.namespaces | string | `""` | Sets the namespaces used to discover services (Consul Enterprise only). |
 | hub.providers.consulCatalogEnterprise.partition | string | `""` | Sets the partition used to discover services (Consul Enterprise only). |
-| hub.providers.consulCatalogEnterprise.prefix | string | `"traefik"` | Prefix for consul service tags. |
-| hub.providers.consulCatalogEnterprise.refreshInterval | int | `15` | Interval for checking Consul API. |
-| hub.providers.consulCatalogEnterprise.requireConsistent | bool | `false` | Forces the read to be fully consistent. |
-| hub.providers.consulCatalogEnterprise.serviceName | string | `"traefik"` | Name of the Traefik service in Consul Catalog (needs to be registered via the |
-| hub.providers.consulCatalogEnterprise.stale | bool | `false` | Use stale consistency for catalog reads. |
-| hub.providers.consulCatalogEnterprise.strictChecks | string | `"passing, warning"` | A list of service health statuses to allow taking traffic. |
-| hub.providers.consulCatalogEnterprise.watch | bool | `false` | Watch Consul API events. |
+| hub.providers.consulCatalogEnterprise.prefix | string | "traefik" | Prefix for consul service tags. |
+| hub.providers.consulCatalogEnterprise.refreshInterval | int | 15 | Interval for checking Consul API. |
+| hub.providers.consulCatalogEnterprise.requireConsistent | bool | false | Forces the read to be fully consistent. |
+| hub.providers.consulCatalogEnterprise.serviceName | string | "traefik" | Name of the Traefik service in Consul Catalog (needs to be registered via the |
+| hub.providers.consulCatalogEnterprise.stale | bool | false | Use stale consistency for catalog reads. |
+| hub.providers.consulCatalogEnterprise.strictChecks | string | "passing, warning" | A list of service health statuses to allow taking traffic. |
+| hub.providers.consulCatalogEnterprise.watch | bool | false | Watch Consul API events. |
 | hub.providers.ec2.accessKeyID | string | `""` | AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.ec2.constraints | string | `""` | Expression matched against instance tags to determine whether to create routes for an instance. |
 | hub.providers.ec2.defaultRule | string | `""` | Default rule applied to instances that do not define a router rule tag. |
 | hub.providers.ec2.enabled | bool | `false` | Enable AWS EC2 provider. |
-| hub.providers.ec2.exposedByDefault | bool | `true` | Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed. |
+| hub.providers.ec2.exposedByDefault | bool | true | Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed. |
 | hub.providers.ec2.filters | list | `[]` | EC2 API filters used to scope instance discovery. List of `{ name: "<filter>", values: ["<value>"] }` entries. |
 | hub.providers.ec2.ipMode | string | `""` | Default backend IP mode: private, public or ipv6. Overridable per instance with the `traefik.ec2.ipmode` tag. |
-| hub.providers.ec2.refreshSeconds | int | `15` | Polling interval, in seconds, for the EC2 API. |
+| hub.providers.ec2.refreshSeconds | int | 15 | Polling interval, in seconds, for the EC2 API. |
 | hub.providers.ec2.region | string | `""` | AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service. |
 | hub.providers.ec2.secretAccessKey | string | `""` | AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.ec2.securityGroupPortDiscovery.enabled | bool | `false` | Derive the backend port from the instance security-group rules when no port tag is set. |
@@ -204,8 +204,8 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.microcks.auth.token | string | `""` | Microcks API token. |
 | hub.providers.microcks.enabled | bool | `false` | Enable Microcks provider. |
 | hub.providers.microcks.endpoint | string | `""` | Microcks API endpoint. |
-| hub.providers.microcks.pollInterval | int | `30` | Polling interval for Microcks API. |
-| hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
+| hub.providers.microcks.pollInterval | int | 30 | Polling interval for Microcks API. |
+| hub.providers.microcks.pollTimeout | int | 5 | Polling timeout for Microcks API. |
 | hub.providers.microcks.tls.ca | string | `""` | TLS CA |
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
 | hub.providers.microcks.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
@@ -230,17 +230,17 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
-| hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
-| hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
+| hub.providers.multicluster.pollInterval | int | 5 | Polling interval for Multi-cluster. |
+| hub.providers.multicluster.pollTimeout | int | 5 | Polling timeout for Multi-cluster. |
 | hub.providers.nutanixPrismCentral.allowedVpcs | list | `[]` | Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries. |
 | hub.providers.nutanixPrismCentral.apiKey | string | `""` | Prism Central API key. |
 | hub.providers.nutanixPrismCentral.enabled | bool | `false` | Enable Nutanix Prism Central provider. |
 | hub.providers.nutanixPrismCentral.endpoint | string | `""` | Prism Central endpoint. |
 | hub.providers.nutanixPrismCentral.filename | string | `""` | Base configuration file path. |
 | hub.providers.nutanixPrismCentral.password | string | `""` | Prism Central password. |
-| hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
-| hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
-| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.pollInterval | int | 30 | Polling interval for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.pollTimeout | int | 5 | Polling timeout for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | "TraefikServiceName" | Category key used to derive the service name. |
 | hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |

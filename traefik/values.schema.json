@@ -864,15 +864,24 @@
                             "properties": {
                                 "cache": {
                                     "description": "Use local agent caching for catalog reads.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "connectAware": {
                                     "description": "Enable Consul Connect support.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "connectByDefault": {
                                     "description": "Consider every service as Connect capable by default.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "constraints": {
                                     "description": "Constraints is an expression that Traefik matches against the container's labels",
@@ -953,7 +962,10 @@
                                 },
                                 "exposedByDefault": {
                                     "description": "Expose containers by default.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "namespaces": {
                                     "description": "Sets the namespaces used to discover services (Consul Enterprise only).",
@@ -969,11 +981,17 @@
                                 },
                                 "refreshInterval": {
                                     "description": "Interval for checking Consul API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "requireConsistent": {
                                     "description": "Forces the read to be fully consistent.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "serviceName": {
                                     "description": "Name of the Traefik service in Consul Catalog (needs to be registered via the",
@@ -981,7 +999,10 @@
                                 },
                                 "stale": {
                                     "description": "Use stale consistency for catalog reads.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "strictChecks": {
                                     "description": "A list of service health statuses to allow taking traffic.",
@@ -989,7 +1010,10 @@
                                 },
                                 "watch": {
                                     "description": "Watch Consul API events.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -1014,7 +1038,10 @@
                                 },
                                 "exposedByDefault": {
                                     "description": "Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "filters": {
                                     "description": "EC2 API filters used to scope instance discovery. List of `{ name: \"\u003cfilter\u003e\", values: [\"\u003cvalue\u003e\"] }` entries.",
@@ -1035,7 +1062,10 @@
                                 },
                                 "refreshSeconds": {
                                     "description": "Polling interval, in seconds, for the EC2 API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "region": {
                                     "description": "AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.",
@@ -1100,11 +1130,17 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Microcks API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Microcks API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "type": "object",
@@ -1285,11 +1321,17 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Multi-cluster.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Multi-cluster.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -1322,11 +1364,17 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Nutanix Prism Central API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Nutanix Prism Central API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "serviceNameCategoryKey": {
                                     "description": "Category key used to derive the service name.",
