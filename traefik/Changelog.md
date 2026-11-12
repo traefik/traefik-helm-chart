@@ -1,5 +1,423 @@
 # Change Log
 
+## 42.4.0  ![AppVersion: v3.7.18](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.18&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-12
+
+* test(unittest): replace vacuous notMatchRegexRaw asserts on deployment templates
+* test(hub): 🚨 drop Proxy version gate tests duplicated for Hub
+* style(values): use empty values for nil defaults
+* fix(hub): :bug: stop rendering hard-coded hub provider defaults
+* fix(hub): :bug: stop rendering default insecureSkipVerify on hub providers
+* feat(serverstransport): :sparkles: add forwardingTimeouts readTimeout and writeTimeout values
+* feat(ports): keep accepting requests for 5s on shutdown by default
+* feat(ingress-nginx): :sparkles: add disableNonTLSRouters value
+* feat(ingress): :sparkles: add reportNodeInternalIPs value
+* feat(hub): :sparkles: support VMware vCenter provider
+* feat(hub): :sparkles: add nutanixPrismCentral tenantName value
+* feat(hub): :rocket: support traefik hub v3.22.0-ea.1
+* feat(hub): :rocket: support traefik hub v3.21.11 and v3.22.0-ea.2
+* feat(global): add imageRegistry value
+* feat(gateway): :sparkles: add retryMaxRequestBodyBytes value
+* feat(entrypoints): :sparkles: add forwardedHeaders.addXForwardedSchemeHeaders value
+* feat(deps): update traefik docker tag to v3.7.18
+* feat(deployment): allow templating the additionalVolumes configuration
+* feat(CRDs): update for Traefik Hub v3.22
+* chore(release): publish 42.4.0
+
+**Upgrade Notes**
+
+1. **Graceful shutdown**: `ports.web` and `ports.websecure` now keep accepting requests for 5s after SIGTERM (`transport.lifeCycle.requestAcceptGraceTimeout: 5s`), so Kubernetes can remove the pod from Service endpoints before new requests stop. Pod termination takes 5s longer. Set it to `0` to restore the previous behavior, with PR https://github.com/traefik/traefik-helm-chart/pull/2083.
+2. **Traefik Hub v3.22 CRDs**: Helm does not upgrade CRDs. Apply them before using Hub v3.22.0-ea.2.
+3. **Gateway API**: Proxy v3.8.0-rc.1 and Hub v3.22.0-ea.2 need Gateway API v1.7.0 CRDs. Proxy v3.7.18 and Hub v3.21.11 stay on v1.6.3.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 9aac9ac..2305126 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -3,7 +3,7 @@
+ # Declare variables to be passed into templates
+ 
+ image:  # @schema additionalProperties: false
+-  # -- Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
++  # -- Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
+   registry:  # @schema type:[string, null]
+   # -- Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true).
+   repository:  # @schema type:[string, null]
+@@ -70,7 +70,8 @@ deployment:
+   #   volumeMounts:
+   #     - name: dsdsocket
+   #       mountPath: /socket
+-  # -- Additional volumes available for use with initContainers and additionalContainers
++  # -- Additional volumes available for use with initContainers and additionalContainers.
++  # It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'
+   additionalVolumes: []
+   # - name: dsdsocket
+   #   hostPath:
+@@ -173,7 +174,7 @@ gateway:
+   infrastructure: {}
+   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
+   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
+-  defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
++  defaultScope:  # @schema enum:["All", "None", null]; type:[string, null]; default: null
+   listeners:
+     web:
+       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+@@ -369,6 +370,8 @@ providers:
+     nativeLBByDefault: false
+     # -- Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.
+     strictPrefixMatching: false
++    # -- (bool) Report node internal IPs in Ingress status (v3.8+). When true, it replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced.
++    reportNodeInternalIPs:  # @schema type:[boolean, null]
+ 
+   # @schema additionalProperties: false
+   kubernetesGateway:
+@@ -395,6 +398,8 @@ providers:
+     qps:  # @schema type:[integer, null]
+     # -- (int) Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
+     burst:  # @schema type:[integer, null]
++    # -- (int) Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.
++    retryMaxRequestBodyBytes:  # @schema type:[integer, null]
+     statusAddress:
+       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
+       ip: ""
+@@ -454,13 +459,13 @@ providers:
+     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
+     token: ""
+     # -- (bool) Defines whether to enable request buffering (default: false)
+-    proxyRequestBuffering: null  # @schema type:[boolean, null]
++    proxyRequestBuffering:  # @schema type:[boolean, null]
+     # -- (int) Default buffer size for reading client request body in bytes (default: 16384)
+     clientBodyBufferSize:  # @schema type:[integer, null]
+     # -- (int) Default maximum size of a client request body in bytes (default: 1048576)
+     proxyBodySize:  # @schema type:[integer, null]
+     # -- (bool) Defines whether to enable response buffering (default: false)
+-    proxyBuffering: null  # @schema type:[boolean, null]
++    proxyBuffering:  # @schema type:[boolean, null]
+     # -- (int) Default buffer size for reading the response body in bytes (default: 8192)
+     proxyBufferSize:  # @schema type:[integer, null]
+     # -- (int) Default number of buffers for reading a response (default: 4)
+@@ -482,7 +487,7 @@ providers:
+     # -- (int) Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
+     upstreamKeepaliveTimeout:  # @schema type:[integer, null]
+     # -- (bool) Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
+-    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
++    allowCrossNamespaceResources:  # @schema type:[boolean, null]
+     # -- List of allowed response headers inside the custom headers annotations
+     globalAllowedResponseHeaders: []
+     # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
+@@ -497,11 +502,13 @@ providers:
+       # -- IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping.
+       ipv6Subnet: 0
+     # -- (bool) Enables parsing and adding -snippet annotations/directives (default: false)
+-    allowSnippetAnnotations: null  # @schema type:[boolean, null]
++    allowSnippetAnnotations:  # @schema type:[boolean, null]
+     # -- (bool) Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
+-    strictValidatePathType: null  # @schema type:[boolean, null]
++    strictValidatePathType:  # @schema type:[boolean, null]
+     # -- Defines the EntryPoint to use for HTTP requests
+     httpEntryPoint: "web"
++    # -- (bool) Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false)
++    disableNonTLSRouters:  # @schema type:[boolean, null]
+     # -- Defines the EntryPoint to use for HTTPS requests
+     httpsEntryPoint: "websecure"
+     # @schema additionalProperties: false
+@@ -898,6 +905,8 @@ global:
+   # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
+   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
+   aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
++  # -- Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry.
++  imageRegistry: ""  # @schema type:[string, null]
+   # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
+   imagePullSecrets: []
+   # -- Required for Azure Marketplace integration.
+@@ -915,6 +924,19 @@ global:
+         tag: latest
+         registry: ghcr.io/traefik
+ 
++# @schema additionalProperties: false
++serversTransport:
++  # @schema additionalProperties: false
++  forwardingTimeouts:
++    # @schema type:[string, integer, null]
++    # -- Timeout for reading a response from the proxied server (v3.8+). `0` disables it.
++    # @default -- 0s
++    readTimeout:
++    # @schema type:[string, integer, null]
++    # -- Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it.
++    # @default -- 0s
++    writeTimeout:
++
+ # -- Additional arguments to be passed at Traefik's binary
+ # See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)
+ # Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"`
+@@ -992,6 +1014,8 @@ ports:
+       insecure: false
+       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
+       notAppendXForwardedFor: false
++      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
++      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
+     proxyProtocol:
+       # -- Enable the Proxy Protocol header parsing for the entry point
+       trustedIPs: []
+@@ -1004,7 +1028,9 @@ ports:
+         writeTimeout:  # @schema type:[string, integer, null]
+         idleTimeout:   # @schema type:[string, integer, null]
+       lifeCycle:
+-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
++        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
++        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
++        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
+         graceTimeOut:               # @schema type:[string, integer, null]
+       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+       keepAliveMaxTime:             # @schema type:[string, integer, null]
+@@ -1087,6 +1113,8 @@ ports:
+       insecure: false
+       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
+       notAppendXForwardedFor: false
++      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
++      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
+     proxyProtocol:
+       # -- Enable the Proxy Protocol header parsing for the entry point
+       trustedIPs: []
+@@ -1099,7 +1127,9 @@ ports:
+         writeTimeout:  # @schema type:[string, integer, null]
+         idleTimeout:   # @schema type:[string, integer, null]
+       lifeCycle:
+-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
++        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
++        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
++        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
+         graceTimeOut:               # @schema type:[string, integer, null]
+       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
+       keepAliveMaxTime:             # @schema type:[string, integer, null]
+@@ -1373,16 +1403,20 @@ hub:  # @schema additionalProperties: false
+     consulCatalogEnterprise:
+       # -- Enable Consul Catalog Enterprise backend with default settings.
+       enabled: false
+-      # -- Use local agent caching for catalog reads.
+-      cache: false
+-      # -- Enable Consul Connect support.
+-      connectAware: false
+-      # -- Consider every service as Connect capable by default.
+-      connectByDefault: false
++      # -- (bool) Use local agent caching for catalog reads.
++      # @default -- false
++      cache:  # @schema type:[boolean, null]
++      # -- (bool) Enable Consul Connect support.
++      # @default -- false
++      connectAware:  # @schema type:[boolean, null]
++      # -- (bool) Consider every service as Connect capable by default.
++      # @default -- false
++      connectByDefault:  # @schema type:[boolean, null]
+       # -- Constraints is an expression that Traefik matches against the container's labels
+       constraints: ""
+       # -- Default rule.
+-      defaultRule: "Host(`{{ normalize .Name }}`)"
++      # @default -- "Host(`{{ normalize .Name }}`)"
++      defaultRule: ""
+       endpoint:
+         # -- The address of the Consul server
+         address: ""
+@@ -1402,32 +1436,41 @@ hub:  # @schema additionalProperties: false
+           ca: ""
+           # -- TLS cert
+           cert: ""
+-          # -- TLS insecure skip verify
+-          insecureSkipVerify: false
++          # -- (bool) TLS insecure skip verify
++          # @default -- false
++          insecureSkipVerify:  # @schema type:[boolean, null]
+           # -- TLS key
+           key: ""
+         # -- Token is used to provide a per-request ACL token which overrides the agent's
+         token: ""
+-      # -- Expose containers by default.
+-      exposedByDefault: true
++      # -- (bool) Expose containers by default.
++      # @default -- true
++      exposedByDefault:  # @schema type:[boolean, null]
+       # -- Sets the namespaces used to discover services (Consul Enterprise only).
+       namespaces: ""
+       # -- Sets the partition used to discover services (Consul Enterprise only).
+       partition: ""
+       # -- Prefix for consul service tags.
+-      prefix: "traefik"
+-      # -- Interval for checking Consul API.
+-      refreshInterval: 15
+-      # -- Forces the read to be fully consistent.
+-      requireConsistent: false
++      # @default -- "traefik"
++      prefix: ""
++      # -- (int) Interval for checking Consul API.
++      # @default -- 15
++      refreshInterval:  # @schema type:[integer, null]
++      # -- (bool) Forces the read to be fully consistent.
++      # @default -- false
++      requireConsistent:  # @schema type:[boolean, null]
+       # -- Name of the Traefik service in Consul Catalog (needs to be registered via the
+-      serviceName: "traefik"
+-      # -- Use stale consistency for catalog reads.
+-      stale: false
++      # @default -- "traefik"
++      serviceName: ""
++      # -- (bool) Use stale consistency for catalog reads.
++      # @default -- false
++      stale:  # @schema type:[boolean, null]
+       # -- A list of service health statuses to allow taking traffic.
+-      strictChecks: "passing, warning"
+-      # -- Watch Consul API events.
+-      watch: false
++      # @default -- "passing, warning"
++      strictChecks: ""
++      # -- (bool) Watch Consul API events.
++      # @default -- false
++      watch:  # @schema type:[boolean, null]
+     # @schema additionalProperties: false
+     ec2:
+       # -- Enable AWS EC2 provider.
+@@ -1440,10 +1483,12 @@ hub:  # @schema additionalProperties: false
+       secretAccessKey: ""
+       # -- AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.
+       sessionToken: ""
+-      # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
+-      exposedByDefault: true
+-      # -- Polling interval, in seconds, for the EC2 API.
+-      refreshSeconds: 15
++      # -- (bool) Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
++      # @default -- true
++      exposedByDefault:  # @schema type:[boolean, null]
++      # -- (int) Polling interval, in seconds, for the EC2 API.
++      # @default -- 15
++      refreshSeconds:  # @schema type:[integer, null]
+       # -- Default rule applied to instances that do not define a router rule tag.
+       defaultRule: ""
+       # -- Expression matched against instance tags to determine whether to create routes for an instance.
+@@ -1472,26 +1517,31 @@ hub:  # @schema additionalProperties: false
+         token: ""
+       # -- Microcks API endpoint.
+       endpoint: ""
+-      # -- Polling interval for Microcks API.
+-      pollInterval: 30
+-      # -- Polling timeout for Microcks API.
+-      pollTimeout: 5
++      # -- (int) Polling interval for Microcks API.
++      # @default -- 30
++      pollInterval:  # @schema type:[integer, null]
++      # -- (int) Polling timeout for Microcks API.
++      # @default -- 5
++      pollTimeout:  # @schema type:[integer, null]
+       tls:
+         # -- TLS CA
+         ca: ""
+         # -- TLS cert
+         cert: ""
+-        # -- TLS insecure skip verify
+-        insecureSkipVerify: false
++        # -- (bool) TLS insecure skip verify
++        # @default -- false
++        insecureSkipVerify:  # @schema type:[boolean, null]
+         # -- TLS key
+         key: ""
+     multicluster:
+       # -- Enable Multi-cluster provider.
+       enabled: false
+-      # -- Polling interval for Multi-cluster.
+-      pollInterval: 5
+-      # -- Polling timeout for Multi-cluster.
+-      pollTimeout: 5
++      # -- (int) Polling interval for Multi-cluster.
++      # @default -- 5
++      pollInterval:  # @schema type:[integer, null]
++      # -- (int) Polling timeout for Multi-cluster.
++      # @default -- 5
++      pollTimeout:  # @schema type:[integer, null]
+       # @schema mergeProperties: true
+       # -- Child cluster configurations, keyed by a unique name.
+       # @default -- {}
+@@ -1570,14 +1620,19 @@ hub:  # @schema additionalProperties: false
+       password: ""
+       # -- Prism Central API key.
+       apiKey: ""
++      # -- SP Central tenant name. When set, back ends are discovered as this SP Central tenant.
++      tenantName: ""
+       # -- Base configuration file path.
+       filename: ""
+-      # -- Polling interval for Nutanix Prism Central API.
+-      pollInterval: 30
+-      # -- Polling timeout for Nutanix Prism Central API.
+-      pollTimeout: 5
++      # -- (int) Polling interval for Nutanix Prism Central API.
++      # @default -- 30
++      pollInterval:  # @schema type:[integer, null]
++      # -- (int) Polling timeout for Nutanix Prism Central API.
++      # @default -- 5
++      pollTimeout:  # @schema type:[integer, null]
+       # -- Category key used to derive the service name.
+-      serviceNameCategoryKey: "TraefikServiceName"
++      # @default -- "TraefikServiceName"
++      serviceNameCategoryKey: ""
+       # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
+       allowedVpcs: []
+       tls:
+@@ -1587,8 +1642,49 @@ hub:  # @schema additionalProperties: false
+         cert: ""
+         # -- TLS key
+         key: ""
+-        # -- TLS insecure skip verify
+-        insecureSkipVerify: false
++        # -- (bool) TLS insecure skip verify
++        # @default -- false
++        insecureSkipVerify:  # @schema type:[boolean, null]
++    # @schema additionalProperties: false
++    vcenter:
++      # -- Enable VMware vCenter provider.
++      enabled: false
++      # -- vCenter or ESXi endpoint (host, host:port or URL).
++      endpoint: ""
++      # -- vCenter username. Use it with `password`.
++      username: ""
++      # @schema additionalProperties: false
++      password:
++        # -- Name of the Secret that holds the vCenter password.
++        secretName: ""
++        # -- Key of the vCenter password in the Secret.
++        key: "password"
++      # @schema additionalProperties: false
++      solutionUser:
++        # -- Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user.
++        secretName: ""
++        # -- Key of the certificate in the Secret.
++        certificateKey: "tls.crt"
++        # -- Key of the private key in the Secret.
++        privateKeyKey: "tls.key"
++      # @schema additionalProperties: false
++      tls:
++        # -- TLS CA
++        ca: ""
++        # -- TLS cert
++        cert: ""
++        # -- TLS key
++        key: ""
++        # -- (bool) TLS insecure skip verify. Default: false.
++        insecureSkipVerify:  # @schema type:[boolean, null]
++      # -- Limits discovery to one branch of the vSphere inventory.
++      inventoryPath: ""
++      # -- (bool) Expose VMs by default. A VM needs a port label to get a route. Default: false.
++      exposedByDefault:  # @schema type:[boolean, null]
++      # -- Expression that Traefik matches against the VM labels to create routes.
++      constraints: ""
++      # -- (string) Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`.
++      ipMode:  # @schema enum:[ipv4, ipv6, null]; type:[string, null]
+ 
+   redis:
+     # -- (bool) Enable Redis Cluster. Default: true.
+```
+
+
 ## 42.3.2  ![AppVersion: v3.7.17](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.17&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-10
