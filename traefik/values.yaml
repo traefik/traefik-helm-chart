@@ -1415,8 +1415,9 @@ hub:  # @schema additionalProperties: false
           ca: ""
           # -- TLS cert
           cert: ""
-          # -- TLS insecure skip verify
-          insecureSkipVerify: false
+          # -- (bool) TLS insecure skip verify
+          # @default -- false
+          insecureSkipVerify:  # @schema type:[boolean, null]
           # -- TLS key
           key: ""
         # -- Token is used to provide a per-request ACL token which overrides the agent's
@@ -1494,8 +1495,9 @@ hub:  # @schema additionalProperties: false
         ca: ""
         # -- TLS cert
         cert: ""
-        # -- TLS insecure skip verify
-        insecureSkipVerify: false
+        # -- (bool) TLS insecure skip verify
+        # @default -- false
+        insecureSkipVerify:  # @schema type:[boolean, null]
         # -- TLS key
         key: ""
     multicluster:
@@ -1602,8 +1604,9 @@ hub:  # @schema additionalProperties: false
         cert: ""
         # -- TLS key
         key: ""
-        # -- TLS insecure skip verify
-        insecureSkipVerify: false
+        # -- (bool) TLS insecure skip verify
+        # @default -- false
+        insecureSkipVerify:  # @schema type:[boolean, null]
 
   redis:
     # -- (bool) Enable Redis Cluster. Default: true.

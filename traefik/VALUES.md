@@ -172,7 +172,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.ca | string | `""` | TLS CA |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.cert | string | `""` | TLS cert |
-| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
 | hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
 | hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
@@ -208,7 +208,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
 | hub.providers.microcks.tls.ca | string | `""` | TLS CA |
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
-| hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.microcks.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
 | hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
@@ -244,7 +244,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
-| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
 | hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
 | hub.redis.cluster | bool | `nil` | Enable Redis Cluster. Default: true. |
