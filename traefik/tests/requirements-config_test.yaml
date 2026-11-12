@@ -764,6 +764,14 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters cannot be used with httpEntryPoint."
+  - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters with a null httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+      providers.kubernetesIngressNGINX.httpEntryPoint: null
+    asserts:
+      - notFailedTemplate: {}
   - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters on traefik >= 3.8.0
     set:
       image.tag: v3.8.0-rc.1

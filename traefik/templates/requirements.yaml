@@ -87,7 +87,7 @@
   {{- if and .enabled (ne .disableNonTLSRouters nil) (semverCompare "<v3.8.0-0" $version) }}
     {{- fail "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters is only available for traefik >= v3.8.0." }}
   {{- end }}
-  {{- if and .enabled .disableNonTLSRouters (not (has .httpEntryPoint (list "" "web"))) }}
+  {{- if and .enabled .disableNonTLSRouters (not (has (.httpEntryPoint | default "") (list "" "web"))) }}
     {{- fail "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters cannot be used with httpEntryPoint." }}
   {{- end }}
 {{- end }}
