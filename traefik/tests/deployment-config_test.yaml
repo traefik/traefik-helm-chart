@@ -285,7 +285,9 @@ tests:
             - --providers.kubernetesingress
             - --providers.kubernetesingress.allowEmptyServices=true
             - --providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik
+            - --entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s
             - --entryPoints.websecure.http.tls=true
+            - --entryPoints.websecure.transport.lifeCycle.requestAcceptGraceTimeout=5s
             - --log.level=INFO
       - notContains:
           path: spec.template.spec.containers[0].args

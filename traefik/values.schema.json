@@ -360,7 +360,7 @@
                     "type": "array"
                 },
                 "additionalVolumes": {
-                    "description": "Additional volumes available for use with initContainers and additionalContainers",
+                    "description": "Additional volumes available for use with initContainers and additionalContainers. It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'",
                     "type": "array"
                 },
                 "annotations": {
@@ -713,6 +713,13 @@
                 "imagePullSecrets": {
                     "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
                     "type": "array"
+                },
+                "imageRegistry": {
+                    "description": "Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
@@ -1325,6 +1332,10 @@
                                     "description": "Category key used to derive the service name.",
                                     "type": "string"
                                 },
+                                "tenantName": {
+                                    "description": "SP Central tenant name. When set, back ends are discovered as this SP Central tenant.",
+                                    "type": "string"
+                                },
                                 "tls": {
                                     "type": "object",
                                     "properties": {
@@ -1632,7 +1643,7 @@
                     "type": "string"
                 },
                 "registry": {
-                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
+                    "description": "Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
                     "type": [
                         "string",
                         "null"
@@ -2442,6 +2453,13 @@
                     "forwardedHeaders": {
                         "type": "object",
                         "properties": {
+                            "addXForwardedSchemeHeaders": {
+                                "description": "Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).",
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            },
                             "insecure": {
                                 "type": "boolean"
                             },
@@ -2734,6 +2752,7 @@
                                         ]
                                     },
                                     "requestAcceptGraceTimeout": {
+                                        "description": "Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.",
                                         "type": [
                                             "string",
                                             "integer",
@@ -2921,6 +2940,13 @@
                         },
                         "qps": {
                             "description": "Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "retryMaxRequestBodyBytes": {
+                            "description": "Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.",
                             "type": [
                                 "integer",
                                 "null"

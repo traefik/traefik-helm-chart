@@ -149,6 +149,9 @@
     {{- if and .gatewayClass (semverCompare "<v3.8.0-0" $version) }}
       {{- fail "ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0." }}
     {{- end }}
+    {{- if and (ne .retryMaxRequestBodyBytes nil) (semverCompare "<v3.8.0-0" $version) }}
+      {{- fail "ERROR: providers.kubernetesGateway.retryMaxRequestBodyBytes is only available for traefik >= v3.8.0." }}
+    {{- end }}
   {{- end }}
 {{- end }}
 
@@ -168,6 +171,9 @@
 {{- range $name, $config := .Values.ports }}
   {{- if and $config (($config.forwardedHeaders).notAppendXForwardedFor) (semverCompare "<v3.7.0-0" $version) }}
     {{- fail "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0." }}
+  {{- end }}
+  {{- if and $config (ne ($config.forwardedHeaders).addXForwardedSchemeHeaders nil) (semverCompare "<v3.8.0-0" $version) }}
+    {{- fail "ERROR: forwardedHeaders.addXForwardedSchemeHeaders is only available for traefik >= v3.8.0." }}
   {{- end }}
   {{- if and $config (($config.http).aliasHeadersStrategy) (semverCompare "<v3.7.12-0" $version) }}
     {{- fail "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12." }}
@@ -308,6 +314,10 @@
 
   {{- if and $.Values.hub.providers.nutanixPrismCentral.enabled (semverCompare "<v3.20.0-ea.1" $hubVersion) }}
     {{ fail "ERROR: hub.providers.nutanixPrismCentral is only available for Traefik Hub >= v3.20.0-ea.1." }}
+  {{- end }}
+
+  {{- if and $.Values.hub.providers.nutanixPrismCentral.tenantName (semverCompare "<v3.22.0-0" $hubVersion) }}
+    {{ fail "ERROR: hub.providers.nutanixPrismCentral.tenantName is only available for Traefik Hub >= v3.22.0." }}
   {{- end }}
 
   {{- with (compact (splitList " " (include "traefik.hub.transparencyLogsDrivers" $))) }}

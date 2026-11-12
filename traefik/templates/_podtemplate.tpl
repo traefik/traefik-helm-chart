@@ -625,6 +625,9 @@
             {{- with .burst }}
           - "--providers.kubernetesgateway.burst={{ . }}"
             {{- end }}
+            {{- if ne .retryMaxRequestBodyBytes nil }}
+          - "--providers.kubernetesgateway.retryMaxRequestBodyBytes={{ .retryMaxRequestBodyBytes | int64 }}"
+            {{- end }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.kubernetesIngress }}
@@ -753,6 +756,9 @@
               {{- end }}
               {{- if $config.forwardedHeaders.notAppendXForwardedFor }}
           - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.notAppendXForwardedFor=true"
+              {{- end }}
+              {{- if ne $config.forwardedHeaders.addXForwardedSchemeHeaders nil }}
+          - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.addXForwardedSchemeHeaders={{ $config.forwardedHeaders.addXForwardedSchemeHeaders }}"
               {{- end }}
             {{- end }}
             {{- if $config.proxyProtocol }}
@@ -1092,7 +1098,7 @@
           {{- end }}
         {{- end }}
         {{- if .Values.deployment.additionalVolumes }}
-          {{- toYaml .Values.deployment.additionalVolumes | nindent 8 }}
+          {{- tpl (toYaml .Values.deployment.additionalVolumes) . | nindent 8 }}
         {{- end }}
         {{- range $localPluginName, $localPlugin := .Values.experimental.localPlugins }}
         {{- $pluginType := include "traefik.getLocalPluginType" (dict "plugin" $localPlugin "pluginName" $localPluginName) }}

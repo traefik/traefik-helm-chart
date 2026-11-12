@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 42.3.1](https://img.shields.io/badge/Version-42.3.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.17](https://img.shields.io/badge/AppVersion-v3.7.17-informational?style=flat-square)
+![Version: 42.3.2](https://img.shields.io/badge/Version-42.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.17](https://img.shields.io/badge/AppVersion-v3.7.17-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -79,7 +79,7 @@ Kubernetes: `>=1.30.0-0`
 | core.defaultRuleSyntax | string | `""` | Can be used to use globally v2 router syntax. Deprecated since v3.4 /!\. See https://doc.traefik.io/traefik/v3.0/migration/v2-to-v3/#new-v3-syntax-notable-changes |
 | core.strictTLSOptions | bool | `false` | Disables the unsafe fallback to default TLS options on conflict, mitigating [GHSA-g55h-rg46-x9c5](https://github.com/traefik/traefik/security/advisories/GHSA-g55h-rg46-x9c5). Requires traefik v3.7.11+. |
 | deployment.additionalContainers | list | `[]` | Additional containers (e.g. for metric offloading sidecars) |
-| deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers |
+| deployment.additionalVolumes | list | `[]` | Additional volumes available for use with initContainers and additionalContainers. It supports templating. One can set it with values like name: '{{ .Release.Name }}-config' |
 | deployment.annotations | object | `{}` | Additional deployment annotations (e.g. for jaeger-operator sidecar injection) |
 | deployment.dnsConfig | object | `{}` | Custom pod [DNS config](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.30/#poddnsconfig-v1-core) |
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
@@ -136,6 +136,7 @@ Kubernetes: `>=1.30.0-0`
 | global.azure | object | See _values.yaml_ | Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart |
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |
+| global.imageRegistry | string | `""` | Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry. |
 | global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
@@ -240,6 +241,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
 | hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
 | hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
 | hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
@@ -288,7 +290,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.transparencyLogs.witnessGroup.witnesses | list | `nil` | Witnesses cosigning each checkpoint. At least one is required when `threshold`, `timeout` or `failOpen` is set. List of `{ url: "<url>", key: "<path-or-content>" }` entries. |
 | image.digest | string | `nil` | Traefik image digest (e.g. `sha256:abc...`). When set, takes precedence over `tag`. Set `versionOverride` alongside it so the chart's version-checking logic knows the version (it cannot be derived from the digest). |
 | image.pullPolicy | string | `"IfNotPresent"` | Traefik image pull policy |
-| image.registry | string | `nil` | Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true). |
+| image.registry | string | `nil` | Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true). |
 | image.repository | string | `nil` | Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true). |
 | image.tag | string | `nil` | defaults to appVersion. It's used for version checking, even prefixed with experimental- or latest-. To pin by digest, prefer `image.digest`. A `<version>@<digest>` combo is also accepted here; in that case the digest is what Kubernetes verifies and the version is informational (and can drift from the underlying image). |
 | imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty |
@@ -436,6 +438,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
+| ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -451,12 +454,14 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.web.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.web.transport | object | nil | Set transport settings for the entrypoint |
+| ports.web.transport.lifeCycle.requestAcceptGraceTimeout | string | `"5s"` | Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately. |
 | ports.web.uplink | bool | `nil` | Enable this port as an uplink for multi cluster. ⚠️ This feature is experimental and requires Traefik Hub with a specific subscription. |
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
 | ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
+| ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -485,6 +490,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.proxyProtocol.trustedIPs | list | `[]` | Enable the Proxy Protocol header parsing for the entry point |
 | ports.websecure.targetPort | string/int | `nil` | Different target traefik port on the cluster, useful for IP type LB |
 | ports.websecure.transport | object | nil | Set transport settings for the entrypoint |
+| ports.websecure.transport.lifeCycle.requestAcceptGraceTimeout | string | `"5s"` | Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately. |
 | priorityClassName | string | `""` | [Pod Priority and Preemption](https://kubernetes.io/docs/concepts/scheduling-eviction/pod-priority-preemption/) |
 | providers.file.content | object | `{}` | File content as an object (will be YAML-formatted, go template supported) (see https://doc.traefik.io/traefik/reference/install-configuration/providers/others/file/) |
 | providers.file.enabled | bool | `false` | Create a file provider |
@@ -513,6 +519,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesGateway.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported. |
 | providers.kubernetesGateway.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesGateway.qps | int | `nil` | Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50. |
+| providers.kubernetesGateway.retryMaxRequestBodyBytes | int | `nil` | Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152. |
 | providers.kubernetesGateway.statusAddress.hostname | string | `""` | This Hostname will get copied to the Gateway status.addresses. |
 | providers.kubernetesGateway.statusAddress.ip | string | `""` | This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6). |
 | providers.kubernetesGateway.statusAddress.service.enabled | bool | `true` | The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart. |

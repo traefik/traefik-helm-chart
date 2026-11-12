@@ -11,6 +11,30 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--the.force.is.with.me=true"
 
+  - it: should keep accepting requests for 5s on shutdown by default on web and websecure
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
+  - it: should allow to disable requestAcceptGraceTimeout on shutdown
+    set:
+      ports:
+        web:
+          transport:
+            lifeCycle:
+              requestAcceptGraceTimeout: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=0"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
   - it: should not have ingress nginx provider enabled by default
     asserts:
       - notContains:
@@ -932,6 +956,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should have addXForwardedSchemeHeaders arg when specified in values.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=true"
+  - it: should have addXForwardedSchemeHeaders arg when explicitly disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=false"
+  - it: should not have addXForwardedSchemeHeaders arg by default
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--entryPoints\.[^.]+\.forwardedHeaders\.addXForwardedSchemeHeaders/)]
   - it: should not have notAppendXForwardedFor arg by default
     asserts:
       - notContains:

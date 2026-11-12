@@ -3,7 +3,7 @@
 # Declare variables to be passed into templates
 
 image:  # @schema additionalProperties: false
-  # -- Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
+  # -- Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).
   registry:  # @schema type:[string, null]
   # -- Traefik image repository. Defaults to `traefik` for Traefik Proxy and `traefik/traefik-hub` for Traefik Hub (when `hub.enabled` is true).
   repository:  # @schema type:[string, null]
@@ -70,7 +70,8 @@ deployment:
   #   volumeMounts:
   #     - name: dsdsocket
   #       mountPath: /socket
-  # -- Additional volumes available for use with initContainers and additionalContainers
+  # -- Additional volumes available for use with initContainers and additionalContainers.
+  # It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'
   additionalVolumes: []
   # - name: dsdsocket
   #   hostPath:
@@ -173,7 +174,7 @@ gateway:
   infrastructure: {}
   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
-  defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
+  defaultScope:  # @schema enum:["All", "None", null]; type:[string, null]; default: null
   listeners:
     web:
       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
@@ -395,6 +396,8 @@ providers:
     qps:  # @schema type:[integer, null]
     # -- (int) Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
     burst:  # @schema type:[integer, null]
+    # -- (int) Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.
+    retryMaxRequestBodyBytes:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
       ip: ""
@@ -454,13 +457,13 @@ providers:
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
     token: ""
     # -- (bool) Defines whether to enable request buffering (default: false)
-    proxyRequestBuffering: null  # @schema type:[boolean, null]
+    proxyRequestBuffering:  # @schema type:[boolean, null]
     # -- (int) Default buffer size for reading client request body in bytes (default: 16384)
     clientBodyBufferSize:  # @schema type:[integer, null]
     # -- (int) Default maximum size of a client request body in bytes (default: 1048576)
     proxyBodySize:  # @schema type:[integer, null]
     # -- (bool) Defines whether to enable response buffering (default: false)
-    proxyBuffering: null  # @schema type:[boolean, null]
+    proxyBuffering:  # @schema type:[boolean, null]
     # -- (int) Default buffer size for reading the response body in bytes (default: 8192)
     proxyBufferSize:  # @schema type:[integer, null]
     # -- (int) Default number of buffers for reading a response (default: 4)
@@ -482,7 +485,7 @@ providers:
     # -- (int) Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
     upstreamKeepaliveTimeout:  # @schema type:[integer, null]
     # -- (bool) Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
-    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+    allowCrossNamespaceResources:  # @schema type:[boolean, null]
     # -- List of allowed response headers inside the custom headers annotations
     globalAllowedResponseHeaders: []
     # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
@@ -497,9 +500,9 @@ providers:
       # -- IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping.
       ipv6Subnet: 0
     # -- (bool) Enables parsing and adding -snippet annotations/directives (default: false)
-    allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    allowSnippetAnnotations:  # @schema type:[boolean, null]
     # -- (bool) Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
-    strictValidatePathType: null  # @schema type:[boolean, null]
+    strictValidatePathType:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: "web"
     # -- Defines the EntryPoint to use for HTTPS requests
@@ -898,6 +901,8 @@ global:
   # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
   aliasHeadersStrategy:  # @schema enum:[keep, delete, reject, null]; type:[string, null]
+  # -- Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry.
+  imageRegistry: ""  # @schema type:[string, null]
   # -- Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty
   imagePullSecrets: []
   # -- Required for Azure Marketplace integration.
@@ -992,6 +997,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1004,7 +1011,9 @@ ports:
         writeTimeout:  # @schema type:[string, integer, null]
         idleTimeout:   # @schema type:[string, integer, null]
       lifeCycle:
-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
+        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
+        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
@@ -1087,6 +1096,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1099,7 +1110,9 @@ ports:
         writeTimeout:  # @schema type:[string, integer, null]
         idleTimeout:   # @schema type:[string, integer, null]
       lifeCycle:
-        requestAcceptGraceTimeout:  # @schema type:[string, integer, null]
+        # -- Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints.
+        # Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.
+        requestAcceptGraceTimeout: 5s  # @schema type:[string, integer, null]
         graceTimeOut:               # @schema type:[string, integer, null]
       keepAliveMaxRequests:         # @schema type:[integer, null]; minimum:0
       keepAliveMaxTime:             # @schema type:[string, integer, null]
@@ -1572,6 +1585,8 @@ hub:  # @schema additionalProperties: false
       password: ""
       # -- Prism Central API key.
       apiKey: ""
+      # -- SP Central tenant name. When set, back ends are discovered as this SP Central tenant.
+      tenantName: ""
       # -- Base configuration file path.
       filename: ""
       # -- Polling interval for Nutanix Prism Central API.
