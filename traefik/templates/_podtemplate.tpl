@@ -13,7 +13,7 @@
       {{- end }}
       {{- end }}
       labels:
-      {{- include "traefik.labels" . | nindent 8 -}}
+      {{- include "traefik.podlabels" . | nindent 8 -}}
       {{- with .Values.deployment.podLabels }}
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}

@@ -1,0 +1,81 @@
+suite: pod labels exclude the chart version
+templates:
+  - deployment.yaml
+  - daemonset.yaml
+tests:
+  - it: "should keep helm.sh/chart off the Deployment pod template"
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: "should keep helm.sh/chart off the DaemonSet pod template"
+    template: daemonset.yaml
+    set:
+      deployment.kind: DaemonSet
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: "should pin the whole pod label set"
+    template: deployment.yaml
+    chart:
+      version: 99.99.99
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels
+          value:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+            app.kubernetes.io/version: v3.7.17
+            app.kubernetes.io/managed-by: Helm
+
+  - it: "should keep the immutable selector labels on the pod template"
+    template: deployment.yaml
+    asserts:
+      - isSubset:
+          path: spec.template.metadata.labels
+          content:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+      - isSubset:
+          path: spec.selector.matchLabels
+          content:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+
+  - it: "should still render commonLabels and deployment.podLabels on the pod template"
+    template: deployment.yaml
+    set:
+      commonLabels:
+        globalLabel: isConfigured
+      deployment.podLabels:
+        extraLabel: isConfigured
+    asserts:
+      - isSubset:
+          path: spec.template.metadata.labels
+          content:
+            globalLabel: isConfigured
+            extraLabel: isConfigured
+      - isSubset:
+          path: metadata.labels
+          content:
+            globalLabel: isConfigured
+
+  - it: "should keep app.kubernetes.io/version tracking the image tag, not the chart"
+    template: deployment.yaml
+    set:
+      image.tag: v3.7.10
+    chart:
+      version: 99.99.99
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+          value: v3.7.10
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: docker.io/traefik:v3.7.10
