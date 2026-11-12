@@ -757,6 +757,9 @@
               {{- if $config.forwardedHeaders.notAppendXForwardedFor }}
           - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.notAppendXForwardedFor=true"
               {{- end }}
+              {{- if ne $config.forwardedHeaders.addXForwardedSchemeHeaders nil }}
+          - "--{{$entryPoints}}.{{ $name }}.forwardedHeaders.addXForwardedSchemeHeaders={{ $config.forwardedHeaders.addXForwardedSchemeHeaders }}"
+              {{- end }}
             {{- end }}
             {{- if $config.proxyProtocol }}
               {{- if $config.proxyProtocol.trustedIPs }}
