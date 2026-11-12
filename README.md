@@ -158,7 +158,7 @@ helm search repo traefik/traefik
 # Update Traefik CRDs
 helm show crds traefik/traefik | kubectl apply --server-side --force-conflicts -f -
 # Update Gateway API CRDs, if needed
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
 # Upgrade Traefik release
 helm upgrade traefik traefik/traefik
 ```
