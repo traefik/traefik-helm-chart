@@ -216,6 +216,14 @@
           - "--global.aliasHeadersStrategy={{ . }}"
            {{- end }}
           {{- end }}
+          {{- with .Values.serversTransport.forwardingTimeouts }}
+           {{- with .readTimeout }}
+          - "--serversTransport.forwardingTimeouts.readTimeout={{ if kindIs "float64" . }}{{ printf "%.0f" . }}{{ else }}{{ . }}{{ end }}"
+           {{- end }}
+           {{- with .writeTimeout }}
+          - "--serversTransport.forwardingTimeouts.writeTimeout={{ if kindIs "float64" . }}{{ printf "%.0f" . }}{{ else }}{{ . }}{{ end }}"
+           {{- end }}
+          {{- end }}
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}

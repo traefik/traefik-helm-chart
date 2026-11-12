@@ -3553,6 +3553,34 @@
                 }
             }
         },
+        "serversTransport": {
+            "type": "object",
+            "properties": {
+                "forwardingTimeouts": {
+                    "type": "object",
+                    "properties": {
+                        "readTimeout": {
+                            "description": "Timeout for reading a response from the proxied server (v3.8+). `0` disables it.",
+                            "type": [
+                                "string",
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "writeTimeout": {
+                            "description": "Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it.",
+                            "type": [
+                                "string",
+                                "integer",
+                                "null"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
         "service": {
             "type": "object",
             "properties": {
