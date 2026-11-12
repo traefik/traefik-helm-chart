@@ -540,7 +540,7 @@
           - "--providers.kubernetesingress.allowEmptyServices={{ . }}"
             {{- end }}
            {{- end }}
-           {{- if .Values.providers.kubernetesIngress.publishedService.enabled }}
+           {{- if and .Values.providers.kubernetesIngress.publishedService.enabled (not .Values.providers.kubernetesIngress.reportNodeInternalIPs) }}
             {{- if or .Values.service.enabled .Values.providers.kubernetesIngress.publishedService.pathOverride }}
           - "--providers.kubernetesingress.ingressendpoint.publishedservice={{ template "providers.kubernetesIngress.publishedServicePath" . }}"
             {{- end }}
@@ -565,6 +565,9 @@
            {{- end }}
            {{- if .Values.providers.kubernetesIngress.strictPrefixMatching }}
           - "--providers.kubernetesingress.strictPrefixMatching=true"
+           {{- end }}
+           {{- if ne .Values.providers.kubernetesIngress.reportNodeInternalIPs nil }}
+          - "--providers.kubernetesingress.reportNodeInternalIPs={{ .Values.providers.kubernetesIngress.reportNodeInternalIPs }}"
            {{- end }}
           {{- end }}
           {{- if .Values.experimental.kubernetesGateway.enabled }}

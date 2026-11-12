@@ -376,6 +376,33 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.strictPrefixMatching=true"
+  - it: should not set reportNodeInternalIPs by default
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingress\.reportNodeInternalIPs/)]
+  - it: should set reportNodeInternalIPs without publishedService
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.reportNodeInternalIPs=true"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingress\.ingressendpoint/)]
+  - it: should keep publishedService when reportNodeInternalIPs is explicitly disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.reportNodeInternalIPs=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
 
   - it: should have a plugin storage and args if the experimental feature is enabled
     set:
