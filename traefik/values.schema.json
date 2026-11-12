@@ -3264,6 +3264,13 @@
                             "description": "Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'",
                             "type": "string"
                         },
+                        "disableNonTLSRouters": {
+                            "description": "Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
                         "disableSvcExternalName": {
                             "description": "Disable support for Services of type ExternalName",
                             "type": "boolean"

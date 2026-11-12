@@ -747,6 +747,38 @@ tests:
       providers.kubernetesIngress.reportNodeInternalIPs: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngressNGINX disableNonTLSRouters on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters is only available for traefik >= v3.8.0."
+  - it: should fail when using kubernetesIngressNGINX disableNonTLSRouters with a custom httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+      providers.kubernetesIngressNGINX.httpEntryPoint: http
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters cannot be used with httpEntryPoint."
+  - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters with a null httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+      providers.kubernetesIngressNGINX.httpEntryPoint: null
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using kubernetesGateway burst on traefik < 3.7.3
     set:
       image:

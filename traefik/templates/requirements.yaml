@@ -83,6 +83,15 @@
   {{- end }}
 {{- end }}
 
+{{- with .Values.providers.kubernetesIngressNGINX }}
+  {{- if and .enabled (ne .disableNonTLSRouters nil) (semverCompare "<v3.8.0-0" $version) }}
+    {{- fail "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters is only available for traefik >= v3.8.0." }}
+  {{- end }}
+  {{- if and .enabled .disableNonTLSRouters (not (has (.httpEntryPoint | default "") (list "" "web"))) }}
+    {{- fail "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters cannot be used with httpEntryPoint." }}
+  {{- end }}
+{{- end }}
+
 {{- if and (semverCompare "<v3.7.0-ea.2" $version) (ne (.Values.providers.kubernetesIngressNGINX).strictValidatePathType nil) }}
   {{- fail "ERROR: Kubernetes Ingress NGINX provider strictValidatePathType option requires traefik >= v3.7.0-ea.2." }}
 {{- end }}

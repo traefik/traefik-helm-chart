@@ -563,6 +563,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
 | providers.kubernetesIngressNGINX.customHTTPErrors | list | `[]` | Defines which HTTP status codes should result in calling the default backend to return an error page |
 | providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
+| providers.kubernetesIngressNGINX.disableNonTLSRouters | bool | `nil` | Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false) |
 | providers.kubernetesIngressNGINX.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
 | providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
