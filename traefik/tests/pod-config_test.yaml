@@ -458,10 +458,10 @@ tests:
         kubernetesGateway:
           enabled: true
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--providers.kubernetesgateway.qps="
-      - notMatchRegexRaw:
-          pattern: "--providers.kubernetesgateway.burst="
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesgateway\.qps=/)]
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesgateway\.burst=/)]
   - it: should set kubernetesGateway qps and burst when configured
     set:
       providers:
@@ -516,8 +516,8 @@ tests:
         kubernetesGateway:
           enabled: true
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--providers.kubernetesgateway.gateways"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesgateway\.gateways/)]
   - it: should scope kubernetesGateway provider to configured gateways
     set:
       providers:
