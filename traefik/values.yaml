@@ -1403,6 +1403,7 @@ hub:  # @schema additionalProperties: false
           # -- TLS cert
           cert: ""
           # -- (bool) TLS insecure skip verify
+          # @default -- false
           insecureSkipVerify:  # @schema type:[boolean, null]
           # -- TLS key
           key: ""
@@ -1482,6 +1483,7 @@ hub:  # @schema additionalProperties: false
         # -- TLS cert
         cert: ""
         # -- (bool) TLS insecure skip verify
+        # @default -- false
         insecureSkipVerify:  # @schema type:[boolean, null]
         # -- TLS key
         key: ""
@@ -1588,6 +1590,7 @@ hub:  # @schema additionalProperties: false
         # -- TLS key
         key: ""
         # -- (bool) TLS insecure skip verify
+        # @default -- false
         insecureSkipVerify:  # @schema type:[boolean, null]
 
   redis:
