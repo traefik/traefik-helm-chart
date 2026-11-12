@@ -1438,15 +1438,12 @@ and deploy Gateway API CRDs:
 
 ```sh
 # Install Gateway API CRDs from the Standard channel.
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.7.0/standard-install.yaml
 ```
 
-For Proxy v3.8.0-rc.1, install Gateway API v1.7.0 instead and set `image.tag: v3.8.0-rc.1`.
 To watch only the GatewayClass created by the chart:
 
 ```yaml
-image:
-  tag: v3.8.0-rc.1
 providers:
   kubernetesGateway:
     enabled: true
@@ -1456,7 +1453,7 @@ gatewayClass:
 ```
 
 Do not combine this provider option with `providers.kubernetesGateway.labelSelector`.
-TCPRoute uses `gateway.networking.k8s.io/v1` and does not require `experimentalChannel` on Proxy v3.8.
+TCPRoute uses `gateway.networking.k8s.io/v1` and does not require `experimentalChannel`.
 
 <details>
 
