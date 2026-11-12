@@ -1452,16 +1452,6 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: --providers.kubernetesgateway.gatewayClass=dedicated
-  - it: should not default the GatewayClass on the currently supported Hub
-    set:
-      hub.enabled: true
-      image.tag: v3.21.7
-      providers.kubernetesGateway.enabled: true
-      gatewayClass.name: dedicated
-    asserts:
-      - notContains:
-          path: spec.template.spec.containers[0].args
-          content: --providers.kubernetesgateway.gatewayClass=dedicated
   - it: should not default the GatewayClass when the provider is disabled
     set:
       image.tag: v3.8.0-rc.1

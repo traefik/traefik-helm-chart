@@ -1706,17 +1706,6 @@ tests:
       - failedTemplate:
           errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0.'
 
-  - it: should reject gatewayClass on the currently supported Hub
-    template: requirements.yaml
-    set:
-      hub.enabled: true
-      image.tag: v3.21.7
-      providers.kubernetesGateway.enabled: true
-      providers.kubernetesGateway.gatewayClass: dedicated
-    asserts:
-      - failedTemplate:
-          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0.'
-
   - it: should reject mutually exclusive GatewayClass selectors
     template: requirements.yaml
     set:

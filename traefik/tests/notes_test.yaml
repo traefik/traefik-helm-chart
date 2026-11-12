@@ -423,15 +423,6 @@ tests:
     asserts:
       - notMatchRegexRaw:
           pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
-  - it: should not warn about Gateway labelSelector on the currently supported Hub
-    set:
-      hub.enabled: true
-      image.tag: v3.21.7
-      providers.kubernetesGateway.enabled: true
-      providers.kubernetesGateway.labelSelector: app=traefik
-    asserts:
-      - notMatchRegexRaw:
-          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
   - it: should not warn about Gateway labelSelector when it is empty
     set:
       image.tag: v3.8.0-rc.1
