@@ -1017,14 +1017,21 @@ tests:
     set:
       image.tag: v3.8.0-rc.1
       serversTransport.forwardingTimeouts.readTimeout: 30s
-      serversTransport.forwardingTimeouts.writeTimeout: 0
+      serversTransport.forwardingTimeouts.writeTimeout: 1000000
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--serversTransport.forwardingTimeouts.readTimeout=30s"
       - contains:
           path: spec.template.spec.containers[0].args
-          content: "--serversTransport.forwardingTimeouts.writeTimeout=0"
+          content: "--serversTransport.forwardingTimeouts.writeTimeout=1000000"
+  - it: should not have serversTransport forwardingTimeouts args when set to zero
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--serversTransport\.forwardingTimeouts\.writeTimeout=/)]
   - it: should not have serversTransport forwardingTimeouts args by default
     asserts:
       - notExists:

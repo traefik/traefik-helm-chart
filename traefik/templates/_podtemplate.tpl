@@ -217,11 +217,11 @@
            {{- end }}
           {{- end }}
           {{- with .Values.serversTransport.forwardingTimeouts }}
-           {{- if and (ne .readTimeout nil) (toString .readTimeout) }}
-          - "--serversTransport.forwardingTimeouts.readTimeout={{ .readTimeout }}"
+           {{- with .readTimeout }}
+          - "--serversTransport.forwardingTimeouts.readTimeout={{ if kindIs "float64" . }}{{ printf "%.0f" . }}{{ else }}{{ . }}{{ end }}"
            {{- end }}
-           {{- if and (ne .writeTimeout nil) (toString .writeTimeout) }}
-          - "--serversTransport.forwardingTimeouts.writeTimeout={{ .writeTimeout }}"
+           {{- with .writeTimeout }}
+          - "--serversTransport.forwardingTimeouts.writeTimeout={{ if kindIs "float64" . }}{{ printf "%.0f" . }}{{ else }}{{ . }}{{ end }}"
            {{- end }}
           {{- end }}
           {{- range $name, $config := .Values.ports }}

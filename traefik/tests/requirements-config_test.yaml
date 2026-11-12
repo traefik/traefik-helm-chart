@@ -781,10 +781,17 @@ tests:
   - it: should fail when using serversTransport forwardingTimeouts writeTimeout on traefik < 3.8.0
     set:
       image.tag: v3.7.17
-      serversTransport.forwardingTimeouts.writeTimeout: 0
+      serversTransport.forwardingTimeouts.writeTimeout: 10s
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0."
+  - it: should not fail when using serversTransport forwardingTimeouts empty or zero values on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.readTimeout: ""
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - notFailedTemplate: {}
   - it: should not fail when using serversTransport forwardingTimeouts on traefik >= 3.8.0
     set:
       image.tag: v3.8.0-rc.1

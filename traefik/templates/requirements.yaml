@@ -112,7 +112,7 @@
 {{- end }}
 
 {{- with .Values.serversTransport.forwardingTimeouts }}
-  {{- if and (semverCompare "<v3.8.0-0" $version) (or (ne .readTimeout nil) (ne .writeTimeout nil)) }}
+  {{- if and (semverCompare "<v3.8.0-0" $version) (or .readTimeout .writeTimeout) }}
     {{- fail "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0." }}
   {{- end }}
 {{- end }}
