@@ -174,7 +174,7 @@ gateway:
   infrastructure: {}
   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
-  defaultScope: null  # @schema enum:["All", "None", null]; type:[string, null]; default: null
+  defaultScope:  # @schema enum:["All", "None", null]; type:[string, null]; default: null
   listeners:
     web:
       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
@@ -396,6 +396,8 @@ providers:
     qps:  # @schema type:[integer, null]
     # -- (int) Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100.
     burst:  # @schema type:[integer, null]
+    # -- (int) Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.
+    retryMaxRequestBodyBytes:  # @schema type:[integer, null]
     statusAddress:
       # -- This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6).
       ip: ""
@@ -455,13 +457,13 @@ providers:
     # -- Kubernetes bearer token (not needed for in-cluster client). It accepts either a token value or a file path to the token
     token: ""
     # -- (bool) Defines whether to enable request buffering (default: false)
-    proxyRequestBuffering: null  # @schema type:[boolean, null]
+    proxyRequestBuffering:  # @schema type:[boolean, null]
     # -- (int) Default buffer size for reading client request body in bytes (default: 16384)
     clientBodyBufferSize:  # @schema type:[integer, null]
     # -- (int) Default maximum size of a client request body in bytes (default: 1048576)
     proxyBodySize:  # @schema type:[integer, null]
     # -- (bool) Defines whether to enable response buffering (default: false)
-    proxyBuffering: null  # @schema type:[boolean, null]
+    proxyBuffering:  # @schema type:[boolean, null]
     # -- (int) Default buffer size for reading the response body in bytes (default: 8192)
     proxyBufferSize:  # @schema type:[integer, null]
     # -- (int) Default number of buffers for reading a response (default: 4)
@@ -483,7 +485,7 @@ providers:
     # -- (int) Defines the idle timeout for keep-alive connections to upstream servers. Unitless, in seconds (default: 60)
     upstreamKeepaliveTimeout:  # @schema type:[integer, null]
     # -- (bool) Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false)
-    allowCrossNamespaceResources: null  # @schema type:[boolean, null]
+    allowCrossNamespaceResources:  # @schema type:[boolean, null]
     # -- List of allowed response headers inside the custom headers annotations
     globalAllowedResponseHeaders: []
     # -- URL to the service that provides authentication for all the locations. Per ingress auth-url annotation has precedence over this option.
@@ -498,9 +500,9 @@ providers:
       # -- IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping.
       ipv6Subnet: 0
     # -- (bool) Enables parsing and adding -snippet annotations/directives (default: false)
-    allowSnippetAnnotations: null  # @schema type:[boolean, null]
+    allowSnippetAnnotations:  # @schema type:[boolean, null]
     # -- (bool) Defines whether to reject the entire ingress when any path contains regex characters and pathType is Prefix or Exact (default: true)
-    strictValidatePathType: null  # @schema type:[boolean, null]
+    strictValidatePathType:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: "web"
     # -- Defines the EntryPoint to use for HTTPS requests
@@ -995,6 +997,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1092,6 +1096,8 @@ ports:
       insecure: false
       # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
       notAppendXForwardedFor: false
+      # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+      addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
     proxyProtocol:
       # -- Enable the Proxy Protocol header parsing for the entry point
       trustedIPs: []
@@ -1409,8 +1415,9 @@ hub:  # @schema additionalProperties: false
           ca: ""
           # -- TLS cert
           cert: ""
-          # -- TLS insecure skip verify
-          insecureSkipVerify: false
+          # -- (bool) TLS insecure skip verify
+          # @default -- false
+          insecureSkipVerify:  # @schema type:[boolean, null]
           # -- TLS key
           key: ""
         # -- Token is used to provide a per-request ACL token which overrides the agent's
@@ -1488,8 +1495,9 @@ hub:  # @schema additionalProperties: false
         ca: ""
         # -- TLS cert
         cert: ""
-        # -- TLS insecure skip verify
-        insecureSkipVerify: false
+        # -- (bool) TLS insecure skip verify
+        # @default -- false
+        insecureSkipVerify:  # @schema type:[boolean, null]
         # -- TLS key
         key: ""
     multicluster:
@@ -1596,8 +1604,9 @@ hub:  # @schema additionalProperties: false
         cert: ""
         # -- TLS key
         key: ""
-        # -- TLS insecure skip verify
-        insecureSkipVerify: false
+        # -- (bool) TLS insecure skip verify
+        # @default -- false
+        insecureSkipVerify:  # @schema type:[boolean, null]
 
   redis:
     # -- (bool) Enable Redis Cluster. Default: true.

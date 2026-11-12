@@ -934,7 +934,10 @@
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "TLS insecure skip verify",
-                                                    "type": "boolean"
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "key": {
                                                     "description": "TLS key",
@@ -1116,7 +1119,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
@@ -1343,7 +1349,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
@@ -2444,6 +2453,13 @@
                     "forwardedHeaders": {
                         "type": "object",
                         "properties": {
+                            "addXForwardedSchemeHeaders": {
+                                "description": "Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).",
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            },
                             "insecure": {
                                 "type": "boolean"
                             },
@@ -2924,6 +2940,13 @@
                         },
                         "qps": {
                             "description": "Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "retryMaxRequestBodyBytes": {
+                            "description": "Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.",
                             "type": [
                                 "integer",
                                 "null"

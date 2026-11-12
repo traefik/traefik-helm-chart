@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 42.3.2](https://img.shields.io/badge/Version-42.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.17](https://img.shields.io/badge/AppVersion-v3.7.17-informational?style=flat-square)
+![Version: 42.3.2](https://img.shields.io/badge/Version-42.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.18](https://img.shields.io/badge/AppVersion-v3.7.18-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -172,7 +172,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.ca | string | `""` | TLS CA |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.cert | string | `""` | TLS cert |
-| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
 | hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
 | hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
@@ -208,7 +208,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
 | hub.providers.microcks.tls.ca | string | `""` | TLS CA |
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
-| hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.microcks.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
 | hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
@@ -244,7 +244,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
-| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
 | hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
 | hub.redis.cluster | bool | `nil` | Enable Redis Cluster. Default: true. |
@@ -438,6 +438,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
+| ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -460,6 +461,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
+| ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -517,6 +519,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesGateway.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported. |
 | providers.kubernetesGateway.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesGateway.qps | int | `nil` | Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50. |
+| providers.kubernetesGateway.retryMaxRequestBodyBytes | int | `nil` | Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152. |
 | providers.kubernetesGateway.statusAddress.hostname | string | `""` | This Hostname will get copied to the Gateway status.addresses. |
 | providers.kubernetesGateway.statusAddress.ip | string | `""` | This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6). |
 | providers.kubernetesGateway.statusAddress.service.enabled | bool | `true` | The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart. |
