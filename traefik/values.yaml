@@ -507,6 +507,8 @@ providers:
     strictValidatePathType:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTP requests
     httpEntryPoint: "web"
+    # -- (bool) Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false)
+    disableNonTLSRouters:  # @schema type:[boolean, null]
     # -- Defines the EntryPoint to use for HTTPS requests
     httpsEntryPoint: "websecure"
     # @schema additionalProperties: false
@@ -1401,16 +1403,20 @@ hub:  # @schema additionalProperties: false
     consulCatalogEnterprise:
       # -- Enable Consul Catalog Enterprise backend with default settings.
       enabled: false
-      # -- Use local agent caching for catalog reads.
-      cache: false
-      # -- Enable Consul Connect support.
-      connectAware: false
-      # -- Consider every service as Connect capable by default.
-      connectByDefault: false
+      # -- (bool) Use local agent caching for catalog reads.
+      # @default -- false
+      cache:  # @schema type:[boolean, null]
+      # -- (bool) Enable Consul Connect support.
+      # @default -- false
+      connectAware:  # @schema type:[boolean, null]
+      # -- (bool) Consider every service as Connect capable by default.
+      # @default -- false
+      connectByDefault:  # @schema type:[boolean, null]
       # -- Constraints is an expression that Traefik matches against the container's labels
       constraints: ""
       # -- Default rule.
-      defaultRule: "Host(`{{ normalize .Name }}`)"
+      # @default -- "Host(`{{ normalize .Name }}`)"
+      defaultRule: ""
       endpoint:
         # -- The address of the Consul server
         address: ""
@@ -1437,26 +1443,34 @@ hub:  # @schema additionalProperties: false
           key: ""
         # -- Token is used to provide a per-request ACL token which overrides the agent's
         token: ""
-      # -- Expose containers by default.
-      exposedByDefault: true
+      # -- (bool) Expose containers by default.
+      # @default -- true
+      exposedByDefault:  # @schema type:[boolean, null]
       # -- Sets the namespaces used to discover services (Consul Enterprise only).
       namespaces: ""
       # -- Sets the partition used to discover services (Consul Enterprise only).
       partition: ""
       # -- Prefix for consul service tags.
-      prefix: "traefik"
-      # -- Interval for checking Consul API.
-      refreshInterval: 15
-      # -- Forces the read to be fully consistent.
-      requireConsistent: false
+      # @default -- "traefik"
+      prefix: ""
+      # -- (int) Interval for checking Consul API.
+      # @default -- 15
+      refreshInterval:  # @schema type:[integer, null]
+      # -- (bool) Forces the read to be fully consistent.
+      # @default -- false
+      requireConsistent:  # @schema type:[boolean, null]
       # -- Name of the Traefik service in Consul Catalog (needs to be registered via the
-      serviceName: "traefik"
-      # -- Use stale consistency for catalog reads.
-      stale: false
+      # @default -- "traefik"
+      serviceName: ""
+      # -- (bool) Use stale consistency for catalog reads.
+      # @default -- false
+      stale:  # @schema type:[boolean, null]
       # -- A list of service health statuses to allow taking traffic.
-      strictChecks: "passing, warning"
-      # -- Watch Consul API events.
-      watch: false
+      # @default -- "passing, warning"
+      strictChecks: ""
+      # -- (bool) Watch Consul API events.
+      # @default -- false
+      watch:  # @schema type:[boolean, null]
     # @schema additionalProperties: false
     ec2:
       # -- Enable AWS EC2 provider.
@@ -1469,10 +1483,12 @@ hub:  # @schema additionalProperties: false
       secretAccessKey: ""
       # -- AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.
       sessionToken: ""
-      # -- Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
-      exposedByDefault: true
-      # -- Polling interval, in seconds, for the EC2 API.
-      refreshSeconds: 15
+      # -- (bool) Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.
+      # @default -- true
+      exposedByDefault:  # @schema type:[boolean, null]
+      # -- (int) Polling interval, in seconds, for the EC2 API.
+      # @default -- 15
+      refreshSeconds:  # @schema type:[integer, null]
       # -- Default rule applied to instances that do not define a router rule tag.
       defaultRule: ""
       # -- Expression matched against instance tags to determine whether to create routes for an instance.
@@ -1501,10 +1517,12 @@ hub:  # @schema additionalProperties: false
         token: ""
       # -- Microcks API endpoint.
       endpoint: ""
-      # -- Polling interval for Microcks API.
-      pollInterval: 30
-      # -- Polling timeout for Microcks API.
-      pollTimeout: 5
+      # -- (int) Polling interval for Microcks API.
+      # @default -- 30
+      pollInterval:  # @schema type:[integer, null]
+      # -- (int) Polling timeout for Microcks API.
+      # @default -- 5
+      pollTimeout:  # @schema type:[integer, null]
       tls:
         # -- TLS CA
         ca: ""
@@ -1518,10 +1536,12 @@ hub:  # @schema additionalProperties: false
     multicluster:
       # -- Enable Multi-cluster provider.
       enabled: false
-      # -- Polling interval for Multi-cluster.
-      pollInterval: 5
-      # -- Polling timeout for Multi-cluster.
-      pollTimeout: 5
+      # -- (int) Polling interval for Multi-cluster.
+      # @default -- 5
+      pollInterval:  # @schema type:[integer, null]
+      # -- (int) Polling timeout for Multi-cluster.
+      # @default -- 5
+      pollTimeout:  # @schema type:[integer, null]
       # @schema mergeProperties: true
       # -- Child cluster configurations, keyed by a unique name.
       # @default -- {}
@@ -1604,12 +1624,15 @@ hub:  # @schema additionalProperties: false
       tenantName: ""
       # -- Base configuration file path.
       filename: ""
-      # -- Polling interval for Nutanix Prism Central API.
-      pollInterval: 30
-      # -- Polling timeout for Nutanix Prism Central API.
-      pollTimeout: 5
+      # -- (int) Polling interval for Nutanix Prism Central API.
+      # @default -- 30
+      pollInterval:  # @schema type:[integer, null]
+      # -- (int) Polling timeout for Nutanix Prism Central API.
+      # @default -- 5
+      pollTimeout:  # @schema type:[integer, null]
       # -- Category key used to derive the service name.
-      serviceNameCategoryKey: "TraefikServiceName"
+      # @default -- "TraefikServiceName"
+      serviceNameCategoryKey: ""
       # -- Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries.
       allowedVpcs: []
       tls:

@@ -669,7 +669,11 @@
           - "--providers.kubernetesingressnginx.modsec=true"
               {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx.modsec" "content" (omit .modsec "enabled")) | nindent 10 }}
             {{- end }}
-            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" (omit . "enabled" "publishService" "watchNamespace" "modsec")) | nindent 10 }}
+            {{- $nginxArgs := omit . "enabled" "publishService" "watchNamespace" "modsec" }}
+            {{- if .disableNonTLSRouters }}
+              {{- $nginxArgs = omit $nginxArgs "httpEntryPoint" }}
+            {{- end }}
+            {{- include "traefik.yaml2CommandLineArgs" (dict "path" "providers.kubernetesingressnginx" "content" $nginxArgs) | nindent 10 }}
            {{- end }}
           {{- end }}
           {{- with .Values.providers.knative }}
