@@ -224,7 +224,7 @@
             }
         },
         "additionalArguments": {
-            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)",
+            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set=\"additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}\"`",
             "type": "array"
         },
         "additionalVolumeMounts": {
@@ -232,7 +232,7 @@
             "type": "array"
         },
         "affinity": {
-            "description": "This example pod anti-affinity forces the scheduler to put traefik pods It should be used when hostNetwork: true to prevent port conflicts",
+            "description": "This example pod anti-affinity forces the scheduler to put traefik pods on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts",
             "type": "object"
         },
         "api": {
@@ -3859,7 +3859,7 @@
             "type": "string"
         },
         "volumes": {
-            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments:",
+            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - \"--providers.file.filename=/config/dynamic.toml\" - \"--ping\" - \"--ping.entrypoint=web\"`",
             "type": "array"
         }
     },
