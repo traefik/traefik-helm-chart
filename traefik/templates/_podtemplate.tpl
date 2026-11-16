@@ -227,7 +227,10 @@
           {{- range $name, $config := .Values.ports }}
            {{- if $config }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
-            {{- $hostIP := default "" $config.hostIP }}
+            {{- $hostIP := "" }}
+            {{- if $.Values.hostNetwork }}
+              {{- $hostIP = default "" $config.hostIP }}
+            {{- end }}
             {{- if contains ":" $hostIP }}
               {{- $hostIP = printf "[%s]" $hostIP }}
             {{- end }}
