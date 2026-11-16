@@ -442,7 +442,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
-| ports.traefik.hostIP | string | `nil` | Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which means it's listening on all your interfaces and all your IPs. You may want to set this value if you need traefik to listen on specific interface only. |
+| ports.traefik.hostIP | string | `nil` | With hostNetwork enabled, bind Traefik's entrypoint listener to this IP. Otherwise, only set the Kubernetes container port's hostIP field (typically with hostPort); Traefik listens on all pod interfaces. |
 | ports.traefik.hostPort | int | `nil` | Use hostPort if set. |
 | ports.traefik.observability.accessLogs | bool | `nil` | Defines whether a router attached to this EntryPoint produces access-logs by default. |
 | ports.traefik.observability.metrics | bool | `nil` | Defines whether a router attached to this EntryPoint produces metrics by default. |
