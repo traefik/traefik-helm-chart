@@ -170,9 +170,34 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.asDefault=true"
 
-  - it: should set entrypoint host when hostIP is configured
+  - it: should not bind Traefik entrypoint to hostIP without hostNetwork
     template: deployment.yaml
     set:
+      hostNetwork: false
+      ports:
+        web:
+          hostIP: "192.0.2.10"
+          hostPort: 8000
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=:8000/tcp"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=192.0.2.10:8000/tcp"
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 8000
+            hostPort: 8000
+            hostIP: "192.0.2.10"
+            protocol: TCP
+
+  - it: should set entrypoint host when hostNetwork is enabled
+    template: deployment.yaml
+    set:
+      hostNetwork: true
       ports:
         web:
           hostIP: 127.0.0.1
@@ -190,6 +215,7 @@ tests:
   - it: should render IPv6 hostIP in ports and bracket the entrypoint address
     template: deployment.yaml
     set:
+      hostNetwork: true
       ports:
         web:
           hostIP: "::"
@@ -208,6 +234,7 @@ tests:
   - it: should render IPv6 hostIP as the probes host
     template: deployment.yaml
     set:
+      hostNetwork: true
       ports:
         traefik:
           hostIP: "::"
@@ -225,6 +252,7 @@ tests:
   - it: should set probes host when hostIP is configured
     template: deployment.yaml
     set:
+      hostNetwork: true
       ports:
         traefik:
           hostIP: localhost
