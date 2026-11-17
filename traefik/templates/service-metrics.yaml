@@ -26,7 +26,7 @@ spec:
   ports:
   - port: {{ $port.port }}
     name: metrics
-    targetPort: {{ .Values.metrics.prometheus.entryPoint }}
+    targetPort: "{{ .Values.metrics.prometheus.entryPoint }}"
     protocol: TCP
     {{- if $port.nodePort }}
     nodePort: {{ $port.nodePort }}
