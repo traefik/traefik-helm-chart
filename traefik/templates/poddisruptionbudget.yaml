@@ -10,10 +10,10 @@ spec:
   selector:
     matchLabels:
       {{- include "traefik.labelselector" . | nindent 6 }}
-  {{- if .Values.podDisruptionBudget.minAvailable }}
+  {{- if ne .Values.podDisruptionBudget.minAvailable nil }}
   minAvailable: {{ .Values.podDisruptionBudget.minAvailable }}
   {{- end }}
-  {{- if .Values.podDisruptionBudget.maxUnavailable }}
+  {{- if ne .Values.podDisruptionBudget.maxUnavailable nil }}
   maxUnavailable: {{ .Values.podDisruptionBudget.maxUnavailable }}
   {{- end }}
 {{- end -}}
