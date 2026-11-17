@@ -168,14 +168,14 @@
 {{- end }}
 
 {{- if and (semverCompare "<v3.6.4-0" $version) (or
-    (eq $enabledPorts.websecure.http.sanitizePath false)
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedSlash
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedBackSlash
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedNullCharacter
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedSemicolon
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedPercent
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedQuestionMark
-    $enabledPorts.websecure.http.encodedCharacters.allowEncodedHash )}}
+    (eq ((($enabledPorts.websecure).http).sanitizePath) false)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedSlash)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedBackSlash)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedNullCharacter)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedSemicolon)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedPercent)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedQuestionMark)
+    (((($enabledPorts.websecure).http).encodedCharacters).allowEncodedHash) )}}
   {{- fail "ERROR: request path security options are only available for traefik >= v3.6.4." }}
 {{- end }}
 
