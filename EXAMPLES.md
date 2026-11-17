@@ -1525,10 +1525,20 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 ## Run multiple Traefik instances with Gateway API
 
 You can deploy separate Traefik instances for internal and public traffic in the
-same Kubernetes cluster. Because a `GatewayClass` is cluster-scoped, each Helm
-release must create a class with a unique name. With Traefik Proxy v3.7, use
-distinct GatewayClass labels and matching `labelSelector` settings so each
-instance handles only its own GatewayClass.
+same Kubernetes cluster. Because `GatewayClass` is cluster-scoped, give each Helm
+release a unique `gatewayClass.name`. With Traefik Proxy v3.8 or later, the chart
+automatically configures `providers.kubernetesGateway.gatewayClass` from that
+name so each instance handles only its own GatewayClass.
+
+This example isolates **Gateway API resources only**. By default, both releases
+also enable the Kubernetes CRD (IngressRoute) and Kubernetes Ingress providers,
+as well as an IngressClass. For Gateway API-only deployments, additionally set
+`providers.kubernetesCRD.enabled: false`,
+`providers.kubernetesIngress.enabled: false`, and `ingressClass.enabled: false`
+in both values files.
+
+To expose multiple Gateways from just one Traefik instance, see
+[Deploy multiple Gateways with a single Traefik Deployment/DaemonSet](#deploy-multiple-gateways-with-a-single-traefik-deploymentdaemonset).
 
 Install the Gateway API CRDs once for the cluster, as described above, then
 create separate values files for the two releases.
@@ -1539,13 +1549,8 @@ create separate values files for the two releases.
 providers:
   kubernetesGateway:
     enabled: true
-    labelSelector: "example.com/traffic-scope=internal"
 gatewayClass:
   name: traefik-internal
-  labels:
-    example.com/traffic-scope: internal
-gateway:
-  name: traefik-internal-gateway
 ```
 
 **`values-public.yaml`:**
@@ -1554,13 +1559,8 @@ gateway:
 providers:
   kubernetesGateway:
     enabled: true
-    labelSelector: "example.com/traffic-scope=public"
 gatewayClass:
   name: traefik-public
-  labels:
-    example.com/traffic-scope: public
-gateway:
-  name: traefik-public-gateway
 ```
 
 Install the two releases into separate namespaces:
@@ -1575,25 +1575,10 @@ helm upgrade --install traefik-public traefik/traefik \
   --values values-public.yaml
 ```
 
-Check that both GatewayClasses and Gateways exist:
-
-```sh
-kubectl get gatewayclasses
-kubectl get gateways --all-namespaces
-```
-
-An `HTTPRoute` selects the intended Gateway through its `parentRefs`. For
-example, use `traefik-internal-gateway` for internal routes, or
-`traefik-public-gateway` for public routes. By default, each Gateway accepts
-routes from its own namespace; configure listener namespace policies if routes
-are in other namespaces.
-
-> [!NOTE]
-> For Traefik Proxy v3.8 and later, prefer
-> `providers.kubernetesGateway.gatewayClass: traefik-internal` (or
-> `traefik-public`) instead of `labelSelector`. These two provider options
-> cannot be used together. The Gateway API selector does not restrict other
-> Kubernetes providers such as `kubernetesIngress` or `kubernetesCRD`.
+Each release creates its own GatewayClass and a Gateway in its namespace.
+An `HTTPRoute` selects the intended Gateway through its `parentRefs`. By
+default, each Gateway accepts routes from its own namespace; configure listener
+namespace policies if routes are in other namespaces.
 
 ## Use Kubernetes Gateway API with cert-manager
 
