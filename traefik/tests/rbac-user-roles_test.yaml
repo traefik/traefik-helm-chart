@@ -1,0 +1,255 @@
+suite: RBAC user-facing roles
+templates:
+  - rbac/clusterrole-user.yaml
+tests:
+  - it: should create view, edit, view-sensitive and edit-sensitive ClusterRoles by default
+    asserts:
+      - hasDocuments:
+          count: 4
+      - isKind:
+          of: ClusterRole
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE-view
+        documentIndex: 0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE-edit
+        documentIndex: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE-view-sensitive
+        documentIndex: 2
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-NAMESPACE-edit-sensitive
+        documentIndex: 3
+  - it: view role should aggregate into view, edit and admin with read verbs only
+    asserts:
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+          value: "true"
+        documentIndex: 0
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        documentIndex: 0
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
+          value: "true"
+        documentIndex: 0
+      - equal:
+          path: rules[0].apiGroups
+          value:
+            - traefik.io
+        documentIndex: 0
+      - equal:
+          path: rules[0].verbs
+          value:
+            - get
+            - list
+            - watch
+        documentIndex: 0
+      - equal:
+          path: rules[1].apiGroups
+          value:
+            - hub.traefik.io
+        documentIndex: 0
+      - equal:
+          path: rules[1].verbs
+          value:
+            - get
+            - list
+            - watch
+        documentIndex: 0
+      - lengthEqual:
+          path: rules
+          count: 2
+        documentIndex: 0
+  - it: view role should not expose accesscontrolpolicies
+    asserts:
+      - notContains:
+          path: rules[1].resources
+          content: accesscontrolpolicies
+        documentIndex: 0
+      - contains:
+          path: rules[0].resources
+          content: ingressroutes
+        documentIndex: 0
+      - contains:
+          path: rules[0].resources
+          content: middlewares
+        documentIndex: 0
+      - contains:
+          path: rules[1].resources
+          content: managedapplications
+        documentIndex: 0
+  - it: edit role should aggregate into edit and admin with write verbs only
+    asserts:
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        documentIndex: 1
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
+          value: "true"
+        documentIndex: 1
+      - isNull:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+        documentIndex: 1
+      - equal:
+          path: rules[0].verbs
+          value:
+            - create
+            - update
+            - patch
+            - delete
+            - deletecollection
+        documentIndex: 1
+      - equal:
+          path: rules[1].verbs
+          value:
+            - create
+            - update
+            - patch
+            - delete
+            - deletecollection
+        documentIndex: 1
+      - equal:
+          path: rules[0].resources
+          value:
+            - ingressroutes
+            - ingressroutetcps
+            - ingressrouteudps
+            - middlewares
+            - middlewaretcps
+            - serverstransports
+            - serverstransporttcps
+            - tlsoptions
+            - tlsstores
+            - traefikservices
+        documentIndex: 1
+      - contains:
+          path: rules[1].resources
+          content: managedapplications
+        documentIndex: 1
+      - notContains:
+          path: rules[1].resources
+          content: accesscontrolpolicies
+        documentIndex: 1
+      - lengthEqual:
+          path: rules
+          count: 2
+        documentIndex: 1
+  - it: view-sensitive role should give edit and admin (not view) read on accesscontrolpolicies only
+    asserts:
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        documentIndex: 2
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
+          value: "true"
+        documentIndex: 2
+      - isNull:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+        documentIndex: 2
+      - equal:
+          path: rules[0].apiGroups
+          value:
+            - hub.traefik.io
+        documentIndex: 2
+      - equal:
+          path: rules[0].resources
+          value:
+            - accesscontrolpolicies
+        documentIndex: 2
+      - equal:
+          path: rules[0].verbs
+          value:
+            - get
+            - list
+            - watch
+        documentIndex: 2
+      - lengthEqual:
+          path: rules
+          count: 1
+        documentIndex: 2
+  - it: edit-sensitive role should give edit and admin write on accesscontrolpolicies only
+    asserts:
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-edit"]
+          value: "true"
+        documentIndex: 3
+      - equal:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-admin"]
+          value: "true"
+        documentIndex: 3
+      - isNull:
+          path: metadata.labels["rbac.authorization.k8s.io/aggregate-to-view"]
+        documentIndex: 3
+      - equal:
+          path: rules[0].apiGroups
+          value:
+            - hub.traefik.io
+        documentIndex: 3
+      - equal:
+          path: rules[0].resources
+          value:
+            - accesscontrolpolicies
+        documentIndex: 3
+      - equal:
+          path: rules[0].verbs
+          value:
+            - create
+            - update
+            - patch
+            - delete
+            - deletecollection
+        documentIndex: 3
+      - lengthEqual:
+          path: rules
+          count: 1
+        documentIndex: 3
+  - it: should not render when rbac is disabled
+    set:
+      rbac:
+        enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not render when rbac is namespaced
+    set:
+      rbac:
+        namespaced: true
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should not render when userRoles is disabled
+    set:
+      rbac:
+        userRoles:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: should keep names within 63 characters
+    set:
+      fullnameOverride: this-is-a-very-long-release-name-that-goes-on-and-on-forever
+    asserts:
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.{1,63}-view$
+        documentIndex: 0
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.{1,63}-edit$
+        documentIndex: 1
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.{1,63}-edit-sensitive$
+        documentIndex: 3
+      - matchRegex:
+          path: metadata.name
+          pattern: ^.{1,63}-view-sensitive$
+        documentIndex: 2
