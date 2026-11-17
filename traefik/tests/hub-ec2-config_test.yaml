@@ -28,6 +28,8 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--hub.providers.ec2"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.providers\.ec2\.(exposedByDefault|refreshSeconds)=/)]
 
   - it: should be possible to set the ec2 session token
     set:

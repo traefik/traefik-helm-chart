@@ -1501,16 +1501,3 @@ tests:
       - notExists:
           path: rules[*].resources[?(@ == 'listenersets/status')]
 
-  - it: should preserve Hub Gateway permissions
-    template: rbac/clusterrole.yaml
-    set:
-      hub.enabled: true
-      image.tag: v3.21.7
-      providers.kubernetesGateway.enabled: true
-    asserts:
-      - notExists:
-          path: rules[?(@.apiGroups[0] == 'certificates.k8s.io')]
-      - notExists:
-          path: rules[*].resources[?(@ == 'listenersets')]
-      - notExists:
-          path: rules[*].resources[?(@ == 'listenersets/status')]

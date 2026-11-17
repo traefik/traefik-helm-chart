@@ -11,8 +11,8 @@ set:
 tests:
   - it: should not configure transparency logs by default
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--hub.transparencyLogs"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.transparencyLogs/)]
 
   - it: should not configure transparency logs without a driver
     set:
@@ -21,8 +21,8 @@ tests:
           signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
           checkpointInterval: 10s
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--hub.transparencyLogs"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.transparencyLogs/)]
 
   - it: should configure the posix driver
     set:
@@ -102,8 +102,8 @@ tests:
               path: /data/transparency-logs
           signerPrivateKey: /etc/traefik-hub/transparency-logs/private.key
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--hub.transparencyLogs.driver.(gcp|aws)"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.transparencyLogs\.driver\.(gcp|aws)/)]
 
   - it: should render debug when enabled
     set:
@@ -154,8 +154,8 @@ tests:
               - url: https://witness.example.com
                 key: /etc/traefik-hub/transparency-logs/witness-public.key
     asserts:
-      - notMatchRegexRaw:
-          pattern: "--hub.transparencyLogs.witnessGroup.(threshold|timeout|failOpen)="
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--hub\.transparencyLogs\.witnessGroup\.(threshold|timeout|failOpen)=/)]
 
   - it: should render each witness with its index
     set:

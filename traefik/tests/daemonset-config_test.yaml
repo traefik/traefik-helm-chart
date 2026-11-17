@@ -86,6 +86,22 @@ tests:
       - equal:
           path: spec.revisionHistoryLimit
           value: 1
+  - it: should have revisionHistoryLimit set to 0 when specified as 0
+    set:
+      deployment:
+        kind: DaemonSet
+        revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+  - it: should not have revisionHistoryLimit when not set
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
   - it: should have a preStop command hook with specified values
     set:
       deployment:

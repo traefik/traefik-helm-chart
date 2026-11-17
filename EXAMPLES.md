@@ -957,7 +957,7 @@ Traefik Hub image:
 ```bash
 mkdir -p keys
 docker run --rm --user "$(id -u):$(id -g)" -v "$PWD/keys:/keys" \
-  ghcr.io/traefik/traefik-hub:v3.21.10 \
+  ghcr.io/traefik/traefik-hub:v3.21.12 \
   keygen --name my-log --outputDir /keys
 ```
 
@@ -2025,7 +2025,7 @@ hub:
 deployment:
   additionalContainers:
     - name: mcp-traefik
-      image: traefik/mcp-server:v0.6.0
+      image: traefik/mcp-server:v0.7.1
       args:
         # Streamable HTTP, the transport spoken by the MCP Gateway.
         - "-mcp.address=:8090"

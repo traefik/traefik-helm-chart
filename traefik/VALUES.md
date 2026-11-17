@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 42.3.2](https://img.shields.io/badge/Version-42.3.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.17](https://img.shields.io/badge/AppVersion-v3.7.17-informational?style=flat-square)
+![Version: 42.4.1](https://img.shields.io/badge/Version-42.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.19](https://img.shields.io/badge/AppVersion-v3.7.19-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -61,7 +61,7 @@ Kubernetes: `>=1.30.0-0`
 | accessLog.timezone | string | `""` | Set [timezone](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#time-zones) |
 | additionalArguments | list | `[]` | Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set="additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}"` |
 | additionalVolumeMounts | list | `[]` | Additional volumeMounts to add to the Traefik container |
-| affinity | object | `{}` | on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
+| affinity | object | `{}` | This example pod anti-affinity forces the scheduler to put traefik pods on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | api.basePath | string | `""` | Configure API basePath |
 | api.dashboard | bool | `true` | Enable the dashboard |
 | api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
@@ -158,11 +158,11 @@ Kubernetes: `>=1.30.0-0`
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
 | hub.offline | bool | `nil` | Disables all external network connections. |
 | hub.pluginRegistry.sources | object | `{}` |  |
-| hub.providers.consulCatalogEnterprise.cache | bool | `false` | Use local agent caching for catalog reads. |
-| hub.providers.consulCatalogEnterprise.connectAware | bool | `false` | Enable Consul Connect support. |
-| hub.providers.consulCatalogEnterprise.connectByDefault | bool | `false` | Consider every service as Connect capable by default. |
+| hub.providers.consulCatalogEnterprise.cache | bool | false | Use local agent caching for catalog reads. |
+| hub.providers.consulCatalogEnterprise.connectAware | bool | false | Enable Consul Connect support. |
+| hub.providers.consulCatalogEnterprise.connectByDefault | bool | false | Consider every service as Connect capable by default. |
 | hub.providers.consulCatalogEnterprise.constraints | string | `""` | Constraints is an expression that Traefik matches against the container's labels |
-| hub.providers.consulCatalogEnterprise.defaultRule | string | `"Host(`{{ normalize .Name }}`)"` | Default rule. |
+| hub.providers.consulCatalogEnterprise.defaultRule | string | "Host(`{{ normalize .Name }}`)" | Default rule. |
 | hub.providers.consulCatalogEnterprise.enabled | bool | `false` | Enable Consul Catalog Enterprise backend with default settings. |
 | hub.providers.consulCatalogEnterprise.endpoint.address | string | `""` | The address of the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.datacenter | string | `""` | Data center to use. If not provided, the default agent data center is used |
@@ -172,27 +172,27 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.consulCatalogEnterprise.endpoint.scheme | string | `""` | The URI scheme for the Consul server |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.ca | string | `""` | TLS CA |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.cert | string | `""` | TLS cert |
-| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.consulCatalogEnterprise.endpoint.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.consulCatalogEnterprise.endpoint.tls.key | string | `""` | TLS key |
 | hub.providers.consulCatalogEnterprise.endpoint.token | string | `""` | Token is used to provide a per-request ACL token which overrides the agent's |
-| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | `true` | Expose containers by default. |
+| hub.providers.consulCatalogEnterprise.exposedByDefault | bool | true | Expose containers by default. |
 | hub.providers.consulCatalogEnterprise.namespaces | string | `""` | Sets the namespaces used to discover services (Consul Enterprise only). |
 | hub.providers.consulCatalogEnterprise.partition | string | `""` | Sets the partition used to discover services (Consul Enterprise only). |
-| hub.providers.consulCatalogEnterprise.prefix | string | `"traefik"` | Prefix for consul service tags. |
-| hub.providers.consulCatalogEnterprise.refreshInterval | int | `15` | Interval for checking Consul API. |
-| hub.providers.consulCatalogEnterprise.requireConsistent | bool | `false` | Forces the read to be fully consistent. |
-| hub.providers.consulCatalogEnterprise.serviceName | string | `"traefik"` | Name of the Traefik service in Consul Catalog (needs to be registered via the |
-| hub.providers.consulCatalogEnterprise.stale | bool | `false` | Use stale consistency for catalog reads. |
-| hub.providers.consulCatalogEnterprise.strictChecks | string | `"passing, warning"` | A list of service health statuses to allow taking traffic. |
-| hub.providers.consulCatalogEnterprise.watch | bool | `false` | Watch Consul API events. |
+| hub.providers.consulCatalogEnterprise.prefix | string | "traefik" | Prefix for consul service tags. |
+| hub.providers.consulCatalogEnterprise.refreshInterval | int | 15 | Interval for checking Consul API. |
+| hub.providers.consulCatalogEnterprise.requireConsistent | bool | false | Forces the read to be fully consistent. |
+| hub.providers.consulCatalogEnterprise.serviceName | string | "traefik" | Name of the Traefik service in Consul Catalog (needs to be registered via the |
+| hub.providers.consulCatalogEnterprise.stale | bool | false | Use stale consistency for catalog reads. |
+| hub.providers.consulCatalogEnterprise.strictChecks | string | "passing, warning" | A list of service health statuses to allow taking traffic. |
+| hub.providers.consulCatalogEnterprise.watch | bool | false | Watch Consul API events. |
 | hub.providers.ec2.accessKeyID | string | `""` | AWS access key ID, set together with secretAccessKey. Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.ec2.constraints | string | `""` | Expression matched against instance tags to determine whether to create routes for an instance. |
 | hub.providers.ec2.defaultRule | string | `""` | Default rule applied to instances that do not define a router rule tag. |
 | hub.providers.ec2.enabled | bool | `false` | Enable AWS EC2 provider. |
-| hub.providers.ec2.exposedByDefault | bool | `true` | Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed. |
+| hub.providers.ec2.exposedByDefault | bool | true | Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed. |
 | hub.providers.ec2.filters | list | `[]` | EC2 API filters used to scope instance discovery. List of `{ name: "<filter>", values: ["<value>"] }` entries. |
 | hub.providers.ec2.ipMode | string | `""` | Default backend IP mode: private, public or ipv6. Overridable per instance with the `traefik.ec2.ipmode` tag. |
-| hub.providers.ec2.refreshSeconds | int | `15` | Polling interval, in seconds, for the EC2 API. |
+| hub.providers.ec2.refreshSeconds | int | 15 | Polling interval, in seconds, for the EC2 API. |
 | hub.providers.ec2.region | string | `""` | AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service. |
 | hub.providers.ec2.secretAccessKey | string | `""` | AWS secret access key, set together with accessKeyID. Readable from the Pod spec: prefer IRSA, the instance role or `env`. |
 | hub.providers.ec2.securityGroupPortDiscovery.enabled | bool | `false` | Derive the backend port from the instance security-group rules when no port tag is set. |
@@ -204,11 +204,11 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.microcks.auth.token | string | `""` | Microcks API token. |
 | hub.providers.microcks.enabled | bool | `false` | Enable Microcks provider. |
 | hub.providers.microcks.endpoint | string | `""` | Microcks API endpoint. |
-| hub.providers.microcks.pollInterval | int | `30` | Polling interval for Microcks API. |
-| hub.providers.microcks.pollTimeout | int | `5` | Polling timeout for Microcks API. |
+| hub.providers.microcks.pollInterval | int | 30 | Polling interval for Microcks API. |
+| hub.providers.microcks.pollTimeout | int | 5 | Polling timeout for Microcks API. |
 | hub.providers.microcks.tls.ca | string | `""` | TLS CA |
 | hub.providers.microcks.tls.cert | string | `""` | TLS cert |
-| hub.providers.microcks.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.microcks.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.microcks.tls.key | string | `""` | TLS key |
 | hub.providers.multicluster.children | object | {} | Child cluster configurations, keyed by a unique name. |
 | hub.providers.multicluster.children.cluster-1.address | string | `""` | URL of the child cluster's uplink entrypoint. |
@@ -230,23 +230,39 @@ Kubernetes: `>=1.30.0-0`
 | hub.providers.multicluster.children.cluster-1.serversTransport.serverName | string | `""` | Server name used for SNI and certificate verification. |
 | hub.providers.multicluster.children.cluster-1.serversTransport.spiffe.trustDomain | string | `""` | SPIFFE trust domain. |
 | hub.providers.multicluster.enabled | bool | `false` | Enable Multi-cluster provider. |
-| hub.providers.multicluster.pollInterval | int | `5` | Polling interval for Multi-cluster. |
-| hub.providers.multicluster.pollTimeout | int | `5` | Polling timeout for Multi-cluster. |
+| hub.providers.multicluster.pollInterval | int | 5 | Polling interval for Multi-cluster. |
+| hub.providers.multicluster.pollTimeout | int | 5 | Polling timeout for Multi-cluster. |
 | hub.providers.nutanixPrismCentral.allowedVpcs | list | `[]` | Filter VMs by VPCs. List of `{ uuid: "<vpc-uuid>" }` entries. |
 | hub.providers.nutanixPrismCentral.apiKey | string | `""` | Prism Central API key. |
 | hub.providers.nutanixPrismCentral.enabled | bool | `false` | Enable Nutanix Prism Central provider. |
 | hub.providers.nutanixPrismCentral.endpoint | string | `""` | Prism Central endpoint. |
 | hub.providers.nutanixPrismCentral.filename | string | `""` | Base configuration file path. |
 | hub.providers.nutanixPrismCentral.password | string | `""` | Prism Central password. |
-| hub.providers.nutanixPrismCentral.pollInterval | int | `30` | Polling interval for Nutanix Prism Central API. |
-| hub.providers.nutanixPrismCentral.pollTimeout | int | `5` | Polling timeout for Nutanix Prism Central API. |
-| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | `"TraefikServiceName"` | Category key used to derive the service name. |
+| hub.providers.nutanixPrismCentral.pollInterval | int | 30 | Polling interval for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.pollTimeout | int | 5 | Polling timeout for Nutanix Prism Central API. |
+| hub.providers.nutanixPrismCentral.serviceNameCategoryKey | string | "TraefikServiceName" | Category key used to derive the service name. |
 | hub.providers.nutanixPrismCentral.tenantName | string | `""` | SP Central tenant name. When set, back ends are discovered as this SP Central tenant. |
 | hub.providers.nutanixPrismCentral.tls.ca | string | `""` | TLS CA |
 | hub.providers.nutanixPrismCentral.tls.cert | string | `""` | TLS cert |
-| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | `false` | TLS insecure skip verify |
+| hub.providers.nutanixPrismCentral.tls.insecureSkipVerify | bool | false | TLS insecure skip verify |
 | hub.providers.nutanixPrismCentral.tls.key | string | `""` | TLS key |
 | hub.providers.nutanixPrismCentral.username | string | `""` | Prism Central username. |
+| hub.providers.vcenter.constraints | string | `""` | Expression that Traefik matches against the VM labels to create routes. |
+| hub.providers.vcenter.enabled | bool | `false` | Enable VMware vCenter provider. |
+| hub.providers.vcenter.endpoint | string | `""` | vCenter or ESXi endpoint (host, host:port or URL). |
+| hub.providers.vcenter.exposedByDefault | bool | `nil` | Expose VMs by default. A VM needs a port label to get a route. Default: false. |
+| hub.providers.vcenter.inventoryPath | string | `""` | Limits discovery to one branch of the vSphere inventory. |
+| hub.providers.vcenter.ipMode | string | `nil` | Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`. |
+| hub.providers.vcenter.password.key | string | `"password"` | Key of the vCenter password in the Secret. |
+| hub.providers.vcenter.password.secretName | string | `""` | Name of the Secret that holds the vCenter password. |
+| hub.providers.vcenter.solutionUser.certificateKey | string | `"tls.crt"` | Key of the certificate in the Secret. |
+| hub.providers.vcenter.solutionUser.privateKeyKey | string | `"tls.key"` | Key of the private key in the Secret. |
+| hub.providers.vcenter.solutionUser.secretName | string | `""` | Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user. |
+| hub.providers.vcenter.tls.ca | string | `""` | TLS CA |
+| hub.providers.vcenter.tls.cert | string | `""` | TLS cert |
+| hub.providers.vcenter.tls.insecureSkipVerify | bool | `nil` | TLS insecure skip verify. Default: false. |
+| hub.providers.vcenter.tls.key | string | `""` | TLS key |
+| hub.providers.vcenter.username | string | `""` | vCenter username. Use it with `password`. |
 | hub.redis.cluster | bool | `nil` | Enable Redis Cluster. Default: true. |
 | hub.redis.database | int | `nil` | Database used to store information. Default: 0. |
 | hub.redis.endpoints | string | `""` | Endpoints of the Redis instances to connect to. Default: "". |
@@ -440,6 +456,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
+| ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
 | ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -462,6 +479,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
+| ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
 | ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
@@ -519,6 +537,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesGateway.namespaces | list | `[]` | Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported. |
 | providers.kubernetesGateway.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesGateway.qps | int | `nil` | Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50. |
+| providers.kubernetesGateway.retryMaxRequestBodyBytes | int | `nil` | Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152. |
 | providers.kubernetesGateway.statusAddress.hostname | string | `""` | This Hostname will get copied to the Gateway status.addresses. |
 | providers.kubernetesGateway.statusAddress.ip | string | `""` | This IP will get copied to the Gateway status.addresses, and currently only supports one IP value (IPv4 or IPv6). |
 | providers.kubernetesGateway.statusAddress.service.enabled | bool | `true` | The Kubernetes service to copy status addresses from. When using third parties tools like External-DNS, this option can be used to copy the service loadbalancer.status (containing the service's endpoints IPs) to the gateways. Default to Service of this Chart. |
@@ -537,6 +556,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesIngress.nativeLBByDefault | bool | `false` | Defines whether to use Native Kubernetes load-balancing mode by default. |
 | providers.kubernetesIngress.publishedService.enabled | bool | `true` | Enable [publishedService](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-ingress/#ingressendpointpublishedservice), usually with the Service provided by this Chart. It's possible to use it with an external Service using pathOverride. |
 | providers.kubernetesIngress.publishedService.pathOverride | string | `""` | Override path of Kubernetes Service used to copy status from. Format: namespace/servicename. Default to Service deployed with this Chart. |
+| providers.kubernetesIngress.reportNodeInternalIPs | bool | `nil` | Report node internal IPs in Ingress status (v3.8+). When true, it replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced. |
 | providers.kubernetesIngress.strictPrefixMatching | bool | `false` | Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification. |
 | providers.kubernetesIngressNGINX.allowCrossNamespaceResources | bool | `nil` | Allow Ingress to reference resources (e.g. ConfigMaps, Secrets) in different namespaces (default: false) |
 | providers.kubernetesIngressNGINX.allowSnippetAnnotations | bool | `nil` | Enables parsing and adding -snippet annotations/directives (default: false) |
@@ -545,6 +565,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesIngressNGINX.controllerClass | string | `"k8s.io/ingress-nginx"` | Ingress Class Controller value this controller satisfies |
 | providers.kubernetesIngressNGINX.customHTTPErrors | list | `[]` | Defines which HTTP status codes should result in calling the default backend to return an error page |
 | providers.kubernetesIngressNGINX.defaultBackendService | string | `""` | Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name' |
+| providers.kubernetesIngressNGINX.disableNonTLSRouters | bool | `nil` | Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false) |
 | providers.kubernetesIngressNGINX.disableSvcExternalName | bool | `false` | Disable support for Services of type ExternalName |
 | providers.kubernetesIngressNGINX.enabled | bool | `false` | Enable Kubernetes Ingress NGINX provider |
 | providers.kubernetesIngressNGINX.endpoint | string | `""` | Kubernetes server endpoint (required for external cluster client) |
@@ -594,6 +615,8 @@ Kubernetes: `>=1.30.0-0`
 | readinessProbe.timeoutSeconds | int | `2` | The number of seconds to wait for a probe response before considering it as failed. |
 | resources | object | `{}` | [Resources](https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/) for `traefik` container. |
 | securityContext | object | See _values.yaml_ | [SecurityContext](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context-1) |
+| serversTransport.forwardingTimeouts.readTimeout | string | 0s | Timeout for reading a response from the proxied server (v3.8+). `0` disables it. |
+| serversTransport.forwardingTimeouts.writeTimeout | string | 0s | Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it. |
 | service.additionalServices | object | `{}` | Can be used to create multiple Service. See EXAMPLES.md for more details. |
 | service.annotations | object | `{}` | Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config) |
 | service.annotationsTCP | object | `{}` | Additional annotations for TCP service only |
