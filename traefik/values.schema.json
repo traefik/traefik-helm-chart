@@ -2335,6 +2335,10 @@
                                 },
                                 "labels": {
                                     "type": "object"
+                                },
+                                "spec": {
+                                    "description": "Additional entries here will be added to the dedicated metrics Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core), e.g. ipFamilyPolicy or ipFamilies. Cannot contain type, selector or ports entries.",
+                                    "type": "object"
                                 }
                             }
                         },

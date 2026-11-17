@@ -53,3 +53,40 @@ tests:
             name: metrics
             targetPort: metrics
             protocol: TCP
+  - it: should not add extra spec entries to the metrics service by default
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+    asserts:
+      - notExists:
+          path: spec.ipFamilyPolicy
+      - notExists:
+          path: spec.ipFamilies
+  - it: should add metrics.prometheus.service.spec entries to the metrics service
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+            spec:
+              ipFamilyPolicy: PreferDualStack
+              ipFamilies:
+                - IPv4
+                - IPv6
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - equal:
+          path: spec.ipFamilyPolicy
+          value: PreferDualStack
+      - equal:
+          path: spec.ipFamilies
+          value:
+            - IPv4
+            - IPv6
+      - equal:
+          path: spec.ports[0].name
+          value: metrics

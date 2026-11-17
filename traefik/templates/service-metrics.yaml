@@ -18,6 +18,9 @@ metadata:
   {{- end }}
 spec:
   type: ClusterIP
+  {{- with .Values.metrics.prometheus.service.spec }}
+  {{- toYaml . | nindent 2 }}
+  {{- end }}
   selector:
     {{- include "traefik.labelselector" . | nindent 4 }}
   ports:
