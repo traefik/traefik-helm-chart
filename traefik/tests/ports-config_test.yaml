@@ -406,10 +406,19 @@ tests:
           kind: Service
           apiVersion: v1
         template: service.yaml
-  - it: should fail when disabling traefik port and not specifying an healthcheck port
+  - it: should fail when disabling traefik port with null and not specifying an healthcheck port
     set:
       ports:
         traefik: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
+        template: deployment.yaml
+  - it: should fail when disabling traefik port with enabled=false and not specifying an healthcheck port
+    set:
+      ports:
+        traefik:
+          enabled: false
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
