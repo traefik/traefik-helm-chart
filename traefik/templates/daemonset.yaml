@@ -51,7 +51,7 @@ spec:
     {{- end }}
   {{- end }}
   minReadySeconds: {{ .Values.deployment.minReadySeconds }}
-  {{- if .Values.deployment.revisionHistoryLimit }}
+  {{- if ne .Values.deployment.revisionHistoryLimit nil }}
   revisionHistoryLimit: {{ .Values.deployment.revisionHistoryLimit }}
   {{- end }}
   {{/* This dual conversion is used to remove all spurious newlines */}}
