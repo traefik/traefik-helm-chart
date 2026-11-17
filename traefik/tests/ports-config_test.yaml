@@ -231,6 +231,40 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.address=[::]:8000/tcp"
 
+  - it: should not set probe hosts from hostIP without hostNetwork
+    template: deployment.yaml
+    set:
+      hostNetwork: false
+      ports:
+        traefik:
+          hostIP: "192.0.2.10"
+          hostPort: 8080
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.traefik.address=:8080/tcp"
+      - notExists:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.host
+      - notExists:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.host
+
+  - it: should respect an explicit healthchecksHost without hostNetwork
+    template: deployment.yaml
+    set:
+      hostNetwork: false
+      deployment:
+        healthchecksHost: "127.0.0.1"
+      ports:
+        traefik:
+          hostIP: "192.0.2.10"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].livenessProbe.httpGet.host
+          value: "127.0.0.1"
+      - equal:
+          path: spec.template.spec.containers[0].readinessProbe.httpGet.host
+          value: "127.0.0.1"
+
   - it: should render IPv6 hostIP as the probes host
     template: deployment.yaml
     set:
