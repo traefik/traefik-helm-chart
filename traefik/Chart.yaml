@@ -25,7 +25,7 @@ annotations:
   traefik.io/proxy-min-version: v3.6.0
   traefik.io/proxy-max-version: v3.7.19
   traefik.io/hub-min-version: v3.19.3
-  traefik.io/hub-max-version: v3.21.11
+  traefik.io/hub-max-version: v3.21.12
   artifacthub.io/changes: |
     - kind: changed
       description: "test(unittest): replace vacuous notMatchRegexRaw asserts on deployment templates"
