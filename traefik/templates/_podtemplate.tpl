@@ -79,7 +79,10 @@
           {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
         {{- $healthchecksPort := (default (.Values.ports.traefik).port .Values.deployment.healthchecksPort) }}
-        {{- $healthchecksHost := (default (.Values.ports.traefik).hostIP .Values.deployment.healthchecksHost) }}
+        {{- $healthchecksHost := .Values.deployment.healthchecksHost }}
+        {{- if and .Values.hostNetwork (not $healthchecksHost) .Values.ports.traefik }}
+          {{- $healthchecksHost = .Values.ports.traefik.hostIP }}
+        {{- end }}
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         {{- $readinessPath := (default "/ping" .Values.deployment.readinessPath) }}
         {{- $livenessPath := (default "/ping" .Values.deployment.livenessPath) }}
