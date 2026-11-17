@@ -53,3 +53,24 @@ tests:
             name: metrics
             targetPort: metrics
             protocol: TCP
+  - it: should use the correct port when not using the default entryPoint
+    set:
+      metrics:
+        prometheus:
+          entryPoint: traefik
+          service:
+            enabled: true
+      ports:
+        traefik:
+          enabled: true
+          port: 8080
+    asserts:
+      - hasDocuments:
+          count: 1
+      - contains:
+          path: spec.ports
+          content:
+            port: 8080
+            name: metrics
+            targetPort: traefik
+            protocol: TCP
