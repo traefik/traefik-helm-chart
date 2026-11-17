@@ -668,7 +668,7 @@
               {{- end }}
               {{- with (.redirections).entryPoint }}
                {{- if not (hasKey $enabledPorts .to) }}
-                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found" $name .to }}
+                 {{- $errorMsg := printf "ERROR: Cannot redirect %s to %s: entryPoint not found (or disabled)" $name .to }}
                  {{- fail $errorMsg }}
                {{- end }}
                {{- $toPort := index $enabledPorts .to }}

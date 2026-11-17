@@ -461,7 +461,20 @@ tests:
           exposedPort: 443
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: Cannot redirect web to foo: entryPoint not found"
+          errorMessage: "ERROR: Cannot redirect web to foo: entryPoint not found (or disabled)"
+  - it: should fail when redirect on disabled entrypoint
+    set:
+      ports:
+        web:
+          http:
+            redirections:
+              entryPoint:
+                to: websecure
+        websecure:
+          enabled: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: Cannot redirect web to websecure: entryPoint not found (or disabled)"
   - it: should be possible to set an http redirections
     set:
       ports:
