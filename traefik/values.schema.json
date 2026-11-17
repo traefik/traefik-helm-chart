@@ -2393,7 +2393,7 @@
                         "minimum": 0
                     },
                     "enabled": {
-                        "description": "Defines whether the port/entryPoint is enabled or not",
+                        "description": "Defines whether the port/entryPoint is enabled or not. When disabling the metrics port, due to Helm v4 merge behavior in umbrella charts, you can not set `.metrics.prometheus: null`, you must point `.metrics.prometheus.entryPoint` to a different port (e.g. `traefik`).",
                         "type": "boolean"
                     },
                     "expose": {

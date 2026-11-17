@@ -410,7 +410,7 @@ Kubernetes: `>=1.30.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
-| ports.metrics.enabled | bool | `true` | Defines whether the port/entryPoint is enabled or not |
+| ports.metrics.enabled | bool | `true` | Defines whether the port/entryPoint is enabled or not. When disabling the metrics port, due to Helm v4 merge behavior in umbrella charts, you can not set `.metrics.prometheus: null`, you must point `.metrics.prometheus.entryPoint` to a different port (e.g. `traefik`). |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
