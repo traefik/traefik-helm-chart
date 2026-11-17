@@ -516,3 +516,31 @@ tests:
           content: "--entryPoints.web.address=:8000/tcp"
         not: true
         template: deployment.yaml
+  - it: should not have port 8443 of pod published to 443 of service nor be defined as entrypoint "websecure" when not enabled
+    set:
+      ports:
+        websecure:
+          enabled: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: websecure
+            containerPort: 8443
+            protocol: TCP
+        not: true
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure
+            port: 443
+            protocol: TCP
+            targetPort: websecure
+        not: true
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.address=:8443/tcp"
+        not: true
+        template: deployment.yaml
