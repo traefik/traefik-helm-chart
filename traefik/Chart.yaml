@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 42.4.0
+version: 42.4.1
 # renovate: image=traefik
 appVersion: v3.7.19
 kubeVersion: '>=1.30.0-0'
@@ -27,41 +27,13 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.21.12
   artifacthub.io/changes: |
-    - kind: changed
-      description: "test(unittest): replace vacuous notMatchRegexRaw asserts on deployment templates"
-    - kind: changed
-      description: "test(hub): 🚨 drop Proxy version gate tests duplicated for Hub"
-    - kind: changed
-      description: "style(values): use empty values for nil defaults"
     - kind: fixed
-      description: "fix(hub): stop rendering hard-coded hub provider defaults"
+      description: "fix(poddisruptionbudget): keep minAvailable and maxUnavailable when set to 0"
     - kind: fixed
-      description: "fix(hub): stop rendering default insecureSkipVerify on hub providers"
+      description: "fix(daemonset): keep revisionHistoryLimit when set to 0"
     - kind: added
-      description: "feat(serverstransport): add forwardingTimeouts readTimeout and writeTimeout values"
+      description: "feat(hub): support traefik hub v3.21.12"
     - kind: added
-      description: "feat(ports): keep accepting requests for 5s on shutdown by default"
-    - kind: added
-      description: "feat(ingress-nginx): add disableNonTLSRouters value"
-    - kind: added
-      description: "feat(ingress): add reportNodeInternalIPs value"
-    - kind: added
-      description: "feat(hub): support VMware vCenter provider"
-    - kind: added
-      description: "feat(hub): add nutanixPrismCentral tenantName value"
-    - kind: added
-      description: "feat(hub): support traefik hub v3.22.0-ea.1"
-    - kind: added
-      description: "feat(hub): support traefik hub v3.21.11 and v3.22.0-ea.2"
-    - kind: added
-      description: "feat(global): add imageRegistry value"
-    - kind: added
-      description: "feat(gateway): add retryMaxRequestBodyBytes value"
-    - kind: added
-      description: "feat(entrypoints): add forwardedHeaders.addXForwardedSchemeHeaders value"
-    - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.18"
-    - kind: added
-      description: "feat(deployment): allow templating the additionalVolumes configuration"
-    - kind: added
-      description: "feat(CRDs): update for Traefik Hub v3.22"
+      description: "feat(deps): update traefik docker tag to v3.7.19"
+    - kind: changed
+      description: "chore(deps): update github actions"

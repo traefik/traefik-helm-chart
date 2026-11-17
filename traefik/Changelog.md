@@ -1,5 +1,35 @@
 # Change Log
 
+## 42.4.1  ![AppVersion: v3.7.19](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.19&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-17
+
+* fix(poddisruptionbudget): keep minAvailable and maxUnavailable when set to 0
+* fix(daemonset): keep revisionHistoryLimit when set to 0
+* feat(hub): :rocket: support traefik hub v3.21.12
+* feat(deps): update traefik docker tag to v3.7.19
+* chore(release): publish 42.4.1
+* chore(deps): update github actions
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 2305126..8e5f521 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1274,7 +1274,7 @@ serviceAccountAnnotations: {}
+ resources: {}
+ 
+ # -- This example pod anti-affinity forces the scheduler to put traefik pods
+-# -- on nodes where no other traefik pods are scheduled.
++# on nodes where no other traefik pods are scheduled.
+ # It should be used when hostNetwork: true to prevent port conflicts
+ affinity: {}
+ #  podAntiAffinity:
+```
+
+
 ## 42.4.0  ![AppVersion: v3.7.18](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.18&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-12
