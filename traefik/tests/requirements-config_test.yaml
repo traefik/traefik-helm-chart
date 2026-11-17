@@ -1325,3 +1325,14 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
+  - it: should fail if metrics.prometheus.entryPoint points to a disabled port
+    set:
+      ports:
+        metrics:
+          enabled: false
+      metrics:
+        prometheus:
+          entryPoint: metrics
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: metrics.prometheus.entryPoint cannot point to a disabled port"
