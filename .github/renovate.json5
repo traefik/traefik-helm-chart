@@ -56,6 +56,13 @@
       allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
     },
     {
+      matchPackageNames: ['traefik/mcp-server'],
+      semanticCommitType: 'docs',
+      semanticCommitScope: 'examples',
+      // Skip v0.6 and -<os>-<arch> tags.
+      allowedVersions: '/^v\\d+\\.\\d+\\.\\d+$/',
+    },
+    {
       matchPackageNames: ['bpsoraggi/helm-gh-pages'],
       enabled: false,
     },
@@ -107,6 +114,13 @@
         "!\\[AppVersion:\\s*(?<currentValue>[\\w+\\.\\-]*)\\]",
         "\\(https:\\/\\/img\\.shields\\.io\\/badge\\/AppVersion-(?<currentValue>[\\w+\\.\\-]*)-informational.+\\)"
       ]
+    },
+    {
+      customType: 'regex',
+      datasourceTemplate: 'docker',
+      managerFilePatterns: ['/^EXAMPLES\\.md$/'],
+      versioningTemplate: 'docker',
+      matchStrings: ['image: (?<depName>traefik/mcp-server):(?<currentValue>\\S+)'],
     },
     // Update traefik.io/{proxy,hub}-max-version annotations (and the matching test
     // assertions) with the latest stable Traefik Proxy / Hub releases. The captured

@@ -93,14 +93,14 @@ tests:
         tag: v99.0.0
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.15."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v99.0.0, which is a major version above the supported v3.7.19."
   - it: should fail when trying to use this Chart with a Proxy major pre-release above max
     set:
       image:
         tag: v4.0.0-rc.1
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.15."
+          errorMessage: "ERROR: This Chart does not support Traefik Proxy v4.0.0-rc.1, which is a major version above the supported v3.7.19."
   - it: should not fail when trying to use this Chart with an ea Proxy version above max
     set:
       image:
@@ -178,7 +178,7 @@ tests:
         token: xxx
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.3."
+          errorMessage: "ERROR: This Chart does not support Traefik Hub v99.0.0, which is a major version above the supported v3.21.12."
   - it: should not fail when trying to use this Chart with an ea Hub version above max
     set:
       image:
@@ -562,6 +562,17 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: http.aliasHeadersStrategy is only available for traefik >= v3.7.12."
+  - it: should fail when using maxHeaderValueCount on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      ports:
+        websecure:
+          http:
+            maxHeaderValueCount: 1000
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: http.maxHeaderValueCount is only available for traefik >= v3.7.17."
   - it: should fail when using underscoreHeadersStrategy on traefik < 3.7.6
     set:
       image:
@@ -628,6 +639,21 @@ tests:
             - name: public
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using hub.providers.ec2.sessionToken on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+        providers:
+          ec2:
+            enabled: true
+            sessionToken: token
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.ec2.sessionToken is only available for Traefik Hub >= v3.21.7."
   - it: should fail when a kubernetesGateway gateway has no name
     set:
       providers:
@@ -669,6 +695,90 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when using kubernetesGateway retryMaxRequestBodyBytes on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 0
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesGateway.retryMaxRequestBodyBytes is only available for traefik >= v3.8.0."
+  - it: should not fail when using kubernetesGateway retryMaxRequestBodyBytes on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.retryMaxRequestBodyBytes: 1024
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesIngress.reportNodeInternalIPs: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs is only available for traefik >= v3.8.0."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with ingressEndpoint.hostname
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      providers.kubernetesIngress.ingressEndpoint.hostname: example.com
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs cannot be used with ingressEndpoint.hostname or ingressEndpoint.ip."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with ingressEndpoint.ip
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      providers.kubernetesIngress.ingressEndpoint.ip: 10.0.0.1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs cannot be used with ingressEndpoint.hostname or ingressEndpoint.ip."
+  - it: should fail when using kubernetesIngress reportNodeInternalIPs with rbac.namespaced
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+      rbac.namespaced: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngress.reportNodeInternalIPs requires cluster-scoped RBAC and cannot be used with rbac.namespaced."
+  - it: should not fail when using kubernetesIngress reportNodeInternalIPs on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using kubernetesIngressNGINX disableNonTLSRouters on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters is only available for traefik >= v3.8.0."
+  - it: should fail when using kubernetesIngressNGINX disableNonTLSRouters with a custom httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+      providers.kubernetesIngressNGINX.httpEntryPoint: http
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesIngressNGINX.disableNonTLSRouters cannot be used with httpEntryPoint."
+  - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters with a null httpEntryPoint
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+      providers.kubernetesIngressNGINX.httpEntryPoint: null
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail when using kubernetesIngressNGINX disableNonTLSRouters on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngressNGINX.enabled: true
+      providers.kubernetesIngressNGINX.disableNonTLSRouters: true
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using kubernetesGateway burst on traefik < 3.7.3
     set:
       image:
@@ -680,6 +790,46 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesGateway.qps and .burst are only available for traefik >= v3.7.3."
+  - it: should fail when using addXForwardedSchemeHeaders on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: forwardedHeaders.addXForwardedSchemeHeaders is only available for traefik >= v3.8.0."
+  - it: should not fail when using addXForwardedSchemeHeaders on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using serversTransport forwardingTimeouts readTimeout on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0."
+  - it: should fail when using serversTransport forwardingTimeouts writeTimeout on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.writeTimeout: 10s
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: serversTransport.forwardingTimeouts.readTimeout and .writeTimeout are only available for traefik >= v3.8.0."
+  - it: should not fail when using serversTransport forwardingTimeouts empty or zero values on traefik < 3.8.0
+    set:
+      image.tag: v3.7.17
+      serversTransport.forwardingTimeouts.readTimeout: ""
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail when using serversTransport forwardingTimeouts on traefik >= 3.8.0
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
@@ -691,6 +841,65 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: forwardedHeaders.notAppendXForwardedFor is only available for traefik >= v3.7.0."
+  - it: should fail when using global aliasHeadersStrategy on traefik v3.7.16
+    set:
+      image:
+        tag: v3.7.16
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.20.19
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.19
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.20.20
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.20.20
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using global aliasHeadersStrategy on traefik-hub v3.21.6
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.6
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: global.aliasHeadersStrategy is only available for traefik >= v3.7.17."
+  - it: should not fail when using global aliasHeadersStrategy on traefik-hub v3.21.7
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.7
+      hub:
+        token: xxx
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - notFailedTemplate: {}
   - it: should fail when using global notAppendXForwardedFor on traefik < 3.7.0
     set:
       image:
@@ -833,6 +1042,166 @@ tests:
             enabled: true
     asserts:
       - notFailedTemplate: {}
+  - it: should fail when using hub.providers.nutanixPrismCentral.tenantName on Traefik Hub < v3.22.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.7
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            tenantName: my-tenant
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.nutanixPrismCentral.tenantName is only available for Traefik Hub >= v3.22.0."
+  - it: should pass when using hub.providers.nutanixPrismCentral.tenantName on Traefik Hub >= v3.22.0
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0-ea.1
+      hub:
+        token: "xxx"
+        providers:
+          nutanixPrismCentral:
+            enabled: true
+            tenantName: my-tenant
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when using vcenter provider on Traefik Hub < v3.22.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.21.8
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter is only available for Traefik Hub >= v3.22.0-ea.1."
+  - it: should pass when using vcenter provider on Traefik Hub >= v3.22.0-ea.1
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0-ea.1
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should pass when using vcenter provider with a solution user
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when vcenter provider has no endpoint
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter.endpoint is required."
+  - it: should fail when vcenter provider has no authentication method
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires an authentication method: username and password.secretName, or solutionUser.secretName."
+  - it: should fail when vcenter provider has a username without password
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires both username and password.secretName."
+  - it: should fail when vcenter provider has a password without username
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            password:
+              secretName: "vcenter-credentials"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter requires both username and password.secretName."
+  - it: should fail when vcenter provider has two authentication methods
+    set:
+      image:
+        registry: "ghcr.io"
+        repository: "traefik/traefik-hub"
+        tag: v3.22.0
+      hub:
+        token: "xxx"
+        providers:
+          vcenter:
+            enabled: true
+            endpoint: "vcenter.example.com"
+            username: "administrator@vsphere.local"
+            password:
+              secretName: "vcenter-credentials"
+            solutionUser:
+              secretName: "vcenter-solution-user"
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: hub.providers.vcenter accepts only one authentication method: username and password, or solutionUser."
   - it: should fail when using ec2 provider on Traefik Hub < v3.21.0
     set:
       image:
@@ -1095,7 +1464,7 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11."
-  - it: should pass when disabling safeNaming on Traefik Proxy < v3.7.11
+  - it: should fail when setting safeNaming on Traefik Proxy < v3.7.11
     set:
       image:
         tag: v3.7.10
@@ -1103,7 +1472,8 @@ tests:
         kubernetesCRD:
           safeNaming: false
     asserts:
-      - notFailedTemplate: {}
+      - failedTemplate:
+          errorMessage: "ERROR: providers.kubernetesCRD.safeNaming is only available for traefik >= v3.7.11."
   - it: should pass when safeNaming is unset on Traefik Proxy < v3.7.11
     set:
       image:
@@ -1336,3 +1706,24 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: metrics.prometheus.entryPoint cannot point to a disabled port"
+
+  - it: should reject gatewayClass on older Proxy versions
+    template: requirements.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass is only available for traefik >= v3.8.0-0.'
+
+  - it: should reject mutually exclusive GatewayClass selectors
+    template: requirements.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive.'

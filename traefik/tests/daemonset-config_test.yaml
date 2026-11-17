@@ -86,6 +86,22 @@ tests:
       - equal:
           path: spec.revisionHistoryLimit
           value: 1
+  - it: should have revisionHistoryLimit set to 0 when specified as 0
+    set:
+      deployment:
+        kind: DaemonSet
+        revisionHistoryLimit: 0
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 0
+  - it: should not have revisionHistoryLimit when not set
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - notExists:
+          path: spec.revisionHistoryLimit
   - it: should have a preStop command hook with specified values
     set:
       deployment:
@@ -200,3 +216,29 @@ tests:
       - equal:
           path: metadata.namespace
           value: "traefik-ns-override"
+  - it: should set app.kubernetes.io/version on the daemonset and its pod template
+    chart:
+      appVersion: v3.6.10
+    set:
+      deployment:
+        kind: DaemonSet
+    asserts:
+      - equal:
+          path: metadata.labels["app.kubernetes.io/version"]
+          value: v3.6.10
+      - equal:
+          path: spec.template.metadata.labels["app.kubernetes.io/version"]
+          value: v3.6.10
+
+  - it: should select a GatewayClass in a DaemonSet with a version override
+    template: daemonset.yaml
+    set:
+      deployment.kind: DaemonSet
+      image.tag: custom
+      versionOverride: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated

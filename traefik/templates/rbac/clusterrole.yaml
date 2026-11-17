@@ -99,6 +99,15 @@ rules:
       - watch
   {{- end -}}
   {{- if (.Values.providers.kubernetesGateway).enabled }}
+  {{- if semverCompare ">=v3.8.0-0" $version }}
+  - apiGroups:
+      - certificates.k8s.io
+    resources:
+      - clustertrustbundles
+    verbs:
+      - list
+      - watch
+  {{- end }}
   - apiGroups:
       - ""
     resources:
@@ -114,6 +123,9 @@ rules:
       - gateways
       - grpcroutes
       - httproutes
+      {{- if semverCompare ">=v3.8.0-0" $version }}
+      - listenersets
+      {{- end }}
       - referencegrants
       - tcproutes
       - tlsroutes
@@ -129,6 +141,9 @@ rules:
       - gateways/status
       - grpcroutes/status
       - httproutes/status
+      {{- if semverCompare ">=v3.8.0-0" $version }}
+      - listenersets/status
+      {{- end }}
       - tcproutes/status
       - tlsroutes/status
     verbs:

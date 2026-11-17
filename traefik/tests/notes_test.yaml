@@ -51,6 +51,8 @@ tests:
     asserts:
       - matchRegexRaw:
           pattern: "hardened images are hosted on a private registry"
+      - matchRegexRaw:
+          pattern: "from `deployment.imagePullSecrets`, `imagePullSecrets`, `global.imagePullSecrets` or from the ServiceAccount"
   - it: should not warn about pull credentials when imagePullSecrets are set
     set:
       hub:
@@ -59,6 +61,31 @@ tests:
       image:
         tag: v3.21.0-ea.1
       deployment:
+        imagePullSecrets:
+          - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when top-level imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      imagePullSecrets:
+        - name: my-registry-credentials
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "hardened images are hosted on a private registry"
+  - it: should not warn about pull credentials when global imagePullSecrets are set
+    set:
+      hub:
+        token: "my-hub-license"
+        hardened: true
+      image:
+        tag: v3.21.0-ea.1
+      global:
         imagePullSecrets:
           - name: my-registry-credentials
     asserts:
@@ -174,6 +201,18 @@ tests:
       - equalRaw:
           value: |
             RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
+  - it: should not display warning when a Hub version embeds a Proxy above the Proxy max
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.7
+      hub:
+        token: "xxx"
+    asserts:
+      - equalRaw:
+          value: |
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.7 has been deployed successfully on NAMESPACE namespace!
   - it: should not display a warning when persistence and initContainer are enabled
     set:
       persistence:
@@ -290,9 +329,8 @@ tests:
             WARNING: kubernetesGateway provider is configured to watch namespaces [ns2] but those ones are not watched by Hub provider.
             WARNING: kubernetesIngress provider is configured to watch all namespaces but Hub provider only watches [ns1].
 
-            ⚠️ DEPRECATION WARNING: Gateway API CRDs will no longer be shipped with this chart in a future major version.
-            You will need to install them yourself before deploying Traefik v3.7:
-              kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.5.1/standard-install.yaml
+            ℹ️ Gateway API CRDs are not shipped with this chart. Install or update them before deploying Traefik:
+              kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
 
   - it: should not display any warning when hub watch all namespaces
     set:
@@ -359,3 +397,87 @@ tests:
 
             ⚠️ DEPRECATION WARNING: 'http.underscoreHeadersStrategy' is deprecated and replaced with 'http.aliasHeadersStrategy' for traefik >= v3.7.12.
             This option will be dropped from this chart in a future major version.
+
+  - it: should warn about Gateway labelSelector deprecation on v3.8
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - matchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector' is deprecated"
+      - matchRegexRaw:
+          pattern: "Set 'providers.kubernetesGateway.gatewayClass' to the name of the GatewayClass"
+  - it: should not warn about Gateway labelSelector when the provider is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should not warn about Gateway labelSelector on v3.7
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should not warn about Gateway labelSelector when it is empty
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - notMatchRegexRaw:
+          pattern: "DEPRECATION WARNING: 'providers.kubernetesGateway.labelSelector'"
+  - it: should recommend Gateway API v1.6.1 for Proxy v3.7.13
+    set:
+      image.tag: v3.7.13
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.1/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.2 for Proxy v3.7.14
+    set:
+      image.tag: v3.7.14
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.2/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Proxy v3.7.15
+    set:
+      image.tag: v3.7.15
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.3/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Proxy v3.7.17
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.3/standard-install.yaml'
+  - it: should recommend Gateway API v1.7.0 for stable v3.8
+    set:
+      image.tag: v3.8.0
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.7.0/standard-install.yaml'
+  - it: should recommend Gateway API v1.6.3 for Hub v3.21.10
+    set:
+      hub.enabled: true
+      image.tag: v3.21.10
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.6.3/standard-install.yaml'
+  - it: should recommend Gateway API v1.7.0 for Hub v3.22.0-ea.1
+    set:
+      hub.enabled: true
+      image.tag: v3.22.0-ea.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - matchRegexRaw:
+          pattern: 'v1.7.0/standard-install.yaml'

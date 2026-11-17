@@ -224,7 +224,7 @@
             }
         },
         "additionalArguments": {
-            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)",
+            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set=\"additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}\"`",
             "type": "array"
         },
         "additionalVolumeMounts": {
@@ -232,7 +232,7 @@
             "type": "array"
         },
         "affinity": {
-            "description": "This example pod anti-affinity forces the scheduler to put traefik pods It should be used when hostNetwork: true to prevent port conflicts",
+            "description": "This example pod anti-affinity forces the scheduler to put traefik pods on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts",
             "type": "object"
         },
         "api": {
@@ -360,7 +360,7 @@
                     "type": "array"
                 },
                 "additionalVolumes": {
-                    "description": "Additional volumes available for use with initContainers and additionalContainers",
+                    "description": "Additional volumes available for use with initContainers and additionalContainers. It supports templating. One can set it with values like name: '{{ .Release.Name }}-config'",
                     "type": "array"
                 },
                 "annotations": {
@@ -421,7 +421,7 @@
                     ]
                 },
                 "imagePullSecrets": {
-                    "description": "Pull secret for fetching traefik container image",
+                    "description": "Pull secrets for fetching traefik container image. Takes precedence over `imagePullSecrets` and `global.imagePullSecrets`",
                     "type": "array"
                 },
                 "initContainers": {
@@ -600,11 +600,11 @@
                             "type": "object",
                             "properties": {
                                 "hostname": {
-                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.Hostname)",
+                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)",
                                     "type": "string"
                                 },
                                 "namespacePolicy": {
-                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/spec/#gateway.networking.k8s.io/v1.FromNamespaces",
+                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)",
                                     "type": [
                                         "object",
                                         "null"
@@ -652,6 +652,19 @@
         "global": {
             "type": "object",
             "properties": {
+                "aliasHeadersStrategy": {
+                    "description": "Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "keep",
+                        "delete",
+                        "reject",
+                        null
+                    ]
+                },
                 "azure": {
                     "description": "Required for Azure Marketplace integration. See https://learn.microsoft.com/en-us/partner-center/marketplace-offers/azure-container-technical-assets-kubernetes?tabs=linux,linux2#update-the-helm-chart",
                     "type": "object",
@@ -696,6 +709,17 @@
                 },
                 "checkNewVersion": {
                     "type": "boolean"
+                },
+                "imagePullSecrets": {
+                    "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty",
+                    "type": "array"
+                },
+                "imageRegistry": {
+                    "description": "Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry.",
+                    "type": [
+                        "string",
+                        "null"
+                    ]
                 },
                 "notAppendXForwardedFor": {
                     "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
@@ -840,15 +864,24 @@
                             "properties": {
                                 "cache": {
                                     "description": "Use local agent caching for catalog reads.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "connectAware": {
                                     "description": "Enable Consul Connect support.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "connectByDefault": {
                                     "description": "Consider every service as Connect capable by default.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "constraints": {
                                     "description": "Constraints is an expression that Traefik matches against the container's labels",
@@ -910,7 +943,10 @@
                                                 },
                                                 "insecureSkipVerify": {
                                                     "description": "TLS insecure skip verify",
-                                                    "type": "boolean"
+                                                    "type": [
+                                                        "boolean",
+                                                        "null"
+                                                    ]
                                                 },
                                                 "key": {
                                                     "description": "TLS key",
@@ -926,7 +962,10 @@
                                 },
                                 "exposedByDefault": {
                                     "description": "Expose containers by default.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "namespaces": {
                                     "description": "Sets the namespaces used to discover services (Consul Enterprise only).",
@@ -942,11 +981,17 @@
                                 },
                                 "refreshInterval": {
                                     "description": "Interval for checking Consul API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "requireConsistent": {
                                     "description": "Forces the read to be fully consistent.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "serviceName": {
                                     "description": "Name of the Traefik service in Consul Catalog (needs to be registered via the",
@@ -954,7 +999,10 @@
                                 },
                                 "stale": {
                                     "description": "Use stale consistency for catalog reads.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "strictChecks": {
                                     "description": "A list of service health statuses to allow taking traffic.",
@@ -962,7 +1010,10 @@
                                 },
                                 "watch": {
                                     "description": "Watch Consul API events.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -987,7 +1038,10 @@
                                 },
                                 "exposedByDefault": {
                                     "description": "Expose instances by default. When false, only instances with the `traefik.enable=true` tag are exposed.",
-                                    "type": "boolean"
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
                                 },
                                 "filters": {
                                     "description": "EC2 API filters used to scope instance discovery. List of `{ name: \"\u003cfilter\u003e\", values: [\"\u003cvalue\u003e\"] }` entries.",
@@ -1008,7 +1062,10 @@
                                 },
                                 "refreshSeconds": {
                                     "description": "Polling interval, in seconds, for the EC2 API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "region": {
                                     "description": "AWS region used for EC2 API requests. When empty, the region is retrieved from the EC2 Instance Metadata Service.",
@@ -1031,6 +1088,10 @@
                                         }
                                     },
                                     "additionalProperties": false
+                                },
+                                "sessionToken": {
+                                    "description": "AWS session token, required with temporary credentials (Hub v3.21.7+). Readable from the Pod spec: prefer IRSA, the instance role or `env`.",
+                                    "type": "string"
                                 }
                             },
                             "additionalProperties": false
@@ -1069,11 +1130,17 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Microcks API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Microcks API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "tls": {
                                     "type": "object",
@@ -1088,7 +1155,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
@@ -1251,11 +1321,17 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Multi-cluster.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Multi-cluster.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 }
                             }
                         },
@@ -1288,14 +1364,24 @@
                                 },
                                 "pollInterval": {
                                     "description": "Polling interval for Nutanix Prism Central API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "pollTimeout": {
                                     "description": "Polling timeout for Nutanix Prism Central API.",
-                                    "type": "integer"
+                                    "type": [
+                                        "integer",
+                                        "null"
+                                    ]
                                 },
                                 "serviceNameCategoryKey": {
                                     "description": "Category key used to derive the service name.",
+                                    "type": "string"
+                                },
+                                "tenantName": {
+                                    "description": "SP Central tenant name. When set, back ends are discovered as this SP Central tenant.",
                                     "type": "string"
                                 },
                                 "tls": {
@@ -1311,7 +1397,10 @@
                                         },
                                         "insecureSkipVerify": {
                                             "description": "TLS insecure skip verify",
-                                            "type": "boolean"
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
                                         },
                                         "key": {
                                             "description": "TLS key",
@@ -1321,6 +1410,108 @@
                                 },
                                 "username": {
                                     "description": "Prism Central username.",
+                                    "type": "string"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "vcenter": {
+                            "type": "object",
+                            "properties": {
+                                "constraints": {
+                                    "description": "Expression that Traefik matches against the VM labels to create routes.",
+                                    "type": "string"
+                                },
+                                "enabled": {
+                                    "description": "Enable VMware vCenter provider.",
+                                    "type": "boolean"
+                                },
+                                "endpoint": {
+                                    "description": "vCenter or ESXi endpoint (host, host:port or URL).",
+                                    "type": "string"
+                                },
+                                "exposedByDefault": {
+                                    "description": "Expose VMs by default. A VM needs a port label to get a route. Default: false.",
+                                    "type": [
+                                        "boolean",
+                                        "null"
+                                    ]
+                                },
+                                "inventoryPath": {
+                                    "description": "Limits discovery to one branch of the vSphere inventory.",
+                                    "type": "string"
+                                },
+                                "ipMode": {
+                                    "description": "Default backend IP mode: `ipv4` or `ipv6`. Default: `ipv4`.",
+                                    "type": [
+                                        "string",
+                                        "null"
+                                    ],
+                                    "enum": [
+                                        "ipv4",
+                                        "ipv6",
+                                        null
+                                    ]
+                                },
+                                "password": {
+                                    "type": "object",
+                                    "properties": {
+                                        "key": {
+                                            "description": "Key of the vCenter password in the Secret.",
+                                            "type": "string"
+                                        },
+                                        "secretName": {
+                                            "description": "Name of the Secret that holds the vCenter password.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "solutionUser": {
+                                    "type": "object",
+                                    "properties": {
+                                        "certificateKey": {
+                                            "description": "Key of the certificate in the Secret.",
+                                            "type": "string"
+                                        },
+                                        "privateKeyKey": {
+                                            "description": "Key of the private key in the Secret.",
+                                            "type": "string"
+                                        },
+                                        "secretName": {
+                                            "description": "Name of the Secret that holds the certificate and the private key of the vCenter SSO solution user.",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "tls": {
+                                    "type": "object",
+                                    "properties": {
+                                        "ca": {
+                                            "description": "TLS CA",
+                                            "type": "string"
+                                        },
+                                        "cert": {
+                                            "description": "TLS cert",
+                                            "type": "string"
+                                        },
+                                        "insecureSkipVerify": {
+                                            "description": "TLS insecure skip verify. Default: false.",
+                                            "type": [
+                                                "boolean",
+                                                "null"
+                                            ]
+                                        },
+                                        "key": {
+                                            "description": "TLS key",
+                                            "type": "string"
+                                        }
+                                    },
+                                    "additionalProperties": false
+                                },
+                                "username": {
+                                    "description": "vCenter username. Use it with `password`.",
                                     "type": "string"
                                 }
                             },
@@ -1602,7 +1793,7 @@
                     "type": "string"
                 },
                 "registry": {
-                    "description": "Traefik image host registry. Defaults to `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
+                    "description": "Traefik image host registry. Defaults to `global.imageRegistry` when set, otherwise `docker.io` for Traefik Proxy and `ghcr.io` for Traefik Hub (when `hub.enabled` is true).",
                     "type": [
                         "string",
                         "null"
@@ -1624,6 +1815,10 @@
                 }
             },
             "additionalProperties": false
+        },
+        "imagePullSecrets": {
+            "description": "Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` is empty",
+            "type": "array"
         },
         "ingressClass": {
             "type": "object",
@@ -2412,6 +2607,13 @@
                     "forwardedHeaders": {
                         "type": "object",
                         "properties": {
+                            "addXForwardedSchemeHeaders": {
+                                "description": "Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).",
+                                "type": [
+                                    "boolean",
+                                    "null"
+                                ]
+                            },
                             "insecure": {
                                 "type": "boolean"
                             },
@@ -2507,6 +2709,14 @@
                             },
                             "maxHeaderBytes": {
                                 "description": "Maximum size of request headers in bytes. Default: 1048576 (1 MB)",
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "minimum": 0
+                            },
+                            "maxHeaderValueCount": {
+                                "description": "Maximum number of request header values (v3.7.17+). Default: 500",
                                 "type": [
                                     "integer",
                                     "null"
@@ -2696,6 +2906,7 @@
                                         ]
                                     },
                                     "requestAcceptGraceTimeout": {
+                                        "description": "Keep accepting requests this long after SIGTERM, while Kubernetes removes the pod from Service endpoints. Avoids connection errors during rollouts. Set to 0 to stop accepting immediately.",
                                         "type": [
                                             "string",
                                             "integer",
@@ -2830,8 +3041,11 @@
                             "type": "boolean"
                         },
                         "safeNaming": {
-                            "description": "Enables collision-safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.",
-                            "type": "boolean"
+                            "description": "Enables collision-safe naming. Unset: Traefik default (logs a warning).  `false`: Explicitly opt out of safe naming (suppresses warning). `true`: Opt in to safe naming. ⚠️ It can be breaking, see [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/providers/kubernetes/kubernetes-crd/#safenaming). Requires traefik v3.7.11+.",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         }
                     },
                     "additionalProperties": false
@@ -2855,15 +3069,19 @@
                             "type": "boolean"
                         },
                         "experimentalChannel": {
-                            "description": "Toggles support for the Experimental Channel resources (Gateway API release channels documentation). This option currently enables support for TCPRoute and TLSRoute.",
+                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.",
                             "type": "boolean"
+                        },
+                        "gatewayClass": {
+                            "description": "Name of the GatewayClass to watch (v3.8+) Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set. Cannot be used with labelSelector.",
+                            "type": "string"
                         },
                         "gateways": {
                             "description": "Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+). If left empty, Traefik processes all Gateways.",
                             "type": "array"
                         },
                         "labelSelector": {
-                            "description": "A label selector can be defined to filter on specific GatewayClass objects only.",
+                            "description": "A label selector can be defined to filter on specific GatewayClass objects only. Deprecated in Proxy v3.8 in favor of gatewayClass; the two options are mutually exclusive.",
                             "type": "string"
                         },
                         "namespaces": {
@@ -2876,6 +3094,13 @@
                         },
                         "qps": {
                             "description": "Maximum QPS to the Kubernetes API server. A negative value disables client-side ratelimiting (v3.7.3+). Defaults to 50.",
+                            "type": [
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "retryMaxRequestBodyBytes": {
+                            "description": "Maximum request body size in bytes buffered for HTTPRoute retries. A negative value disables the limit (v3.8+). Defaults to 2097152.",
                             "type": [
                                 "integer",
                                 "null"
@@ -2989,6 +3214,13 @@
                                 }
                             }
                         },
+                        "reportNodeInternalIPs": {
+                            "description": "Report node internal IPs in Ingress status (v3.8+). When true, it replaces publishedService and cannot be used with ingressEndpoint or rbac.namespaced.",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
+                        },
                         "strictPrefixMatching": {
                             "description": "Defines whether to make prefix matching strictly comply with the Kubernetes Ingress specification.",
                             "type": "boolean"
@@ -3035,6 +3267,13 @@
                         "defaultBackendService": {
                             "description": "Service used to serve HTTP requests not matching any known server name (catch-all). Takes the form 'namespace/name'",
                             "type": "string"
+                        },
+                        "disableNonTLSRouters": {
+                            "description": "Disables the creation of non-TLS routers for Ingress resources (v3.8+). When true, httpEntryPoint is not set (default: false)",
+                            "type": [
+                                "boolean",
+                                "null"
+                            ]
                         },
                         "disableSvcExternalName": {
                             "description": "Disable support for Services of type ExternalName",
@@ -3318,12 +3557,67 @@
                 }
             }
         },
+        "serversTransport": {
+            "type": "object",
+            "properties": {
+                "forwardingTimeouts": {
+                    "type": "object",
+                    "properties": {
+                        "readTimeout": {
+                            "description": "Timeout for reading a response from the proxied server (v3.8+). `0` disables it.",
+                            "type": [
+                                "string",
+                                "integer",
+                                "null"
+                            ]
+                        },
+                        "writeTimeout": {
+                            "description": "Timeout for transmitting a request to the proxied server (v3.8+). `0` disables it.",
+                            "type": [
+                                "string",
+                                "integer",
+                                "null"
+                            ]
+                        }
+                    },
+                    "additionalProperties": false
+                }
+            },
+            "additionalProperties": false
+        },
         "service": {
             "type": "object",
             "properties": {
                 "additionalServices": {
                     "description": "Can be used to create multiple Service. See EXAMPLES.md for more details.",
-                    "type": "object"
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                            "annotations": {
+                                "type": "object"
+                            },
+                            "annotationsTCP": {
+                                "type": "object"
+                            },
+                            "annotationsUDP": {
+                                "type": "object"
+                            },
+                            "enabled": {
+                                "type": "boolean"
+                            },
+                            "labels": {
+                                "type": "object"
+                            },
+                            "single": {
+                                "type": "boolean"
+                            },
+                            "spec": {
+                                "type": "object"
+                            }
+                        },
+                        "additionalProperties": false
+                    }
                 },
                 "annotations": {
                     "description": "Additional annotations applied to both TCP and UDP services (e.g. for cloud provider specific config)",
@@ -3364,7 +3658,8 @@
                         }
                     }
                 }
-            }
+            },
+            "additionalProperties": false
         },
         "serviceAccount": {
             "description": "The service account the pods will use to interact with the Kubernetes API",
@@ -3568,7 +3863,7 @@
             "type": "string"
         },
         "volumes": {
-            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments:",
+            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - \"--providers.file.filename=/config/dynamic.toml\" - \"--ping\" - \"--ping.entrypoint=web\"`",
             "type": "array"
         }
     },

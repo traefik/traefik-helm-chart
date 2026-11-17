@@ -34,7 +34,8 @@ tests:
       metrics.prometheus.serviceMonitor.namespace: test
       metrics.prometheus.service.enabled: true
       rbac.enabled: true
-      service.internal.a: {}
+      service.additionalServices.a: {}
+      ports.web.expose.a: true
       tlsOptions.a: {}
       tlsStore.a: {}
       hub.token: my-token

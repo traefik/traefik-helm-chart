@@ -11,6 +11,30 @@ tests:
           path: spec.template.spec.containers[0].args
           content: "--the.force.is.with.me=true"
 
+  - it: should keep accepting requests for 5s on shutdown by default on web and websecure
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
+  - it: should allow to disable requestAcceptGraceTimeout on shutdown
+    set:
+      ports:
+        web:
+          transport:
+            lifeCycle:
+              requestAcceptGraceTimeout: 0
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=0"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.transport.lifeCycle.requestAcceptGraceTimeout=5s"
+
   - it: should not have ingress nginx provider enabled by default
     asserts:
       - notContains:
@@ -352,6 +376,33 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetesingress.strictPrefixMatching=true"
+  - it: should not set reportNodeInternalIPs by default
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingress\.reportNodeInternalIPs/)]
+  - it: should set reportNodeInternalIPs without publishedService
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.reportNodeInternalIPs=true"
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--providers\.kubernetesingress\.ingressendpoint/)]
+  - it: should keep publishedService when reportNodeInternalIPs is explicitly disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesIngress.reportNodeInternalIPs: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.reportNodeInternalIPs=false"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetesingress.ingressendpoint.publishedservice=NAMESPACE/RELEASE-NAME-traefik"
 
   - it: should have a plugin storage and args if the experimental feature is enabled
     set:
@@ -932,6 +983,28 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.websecure.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should have addXForwardedSchemeHeaders arg when specified in values.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=true"
+  - it: should have addXForwardedSchemeHeaders arg when explicitly disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.forwardedHeaders.addXForwardedSchemeHeaders=false"
+  - it: should not have addXForwardedSchemeHeaders arg by default
+    set:
+      image.tag: v3.8.0-rc.1
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--entryPoints\.[^.]+\.forwardedHeaders\.addXForwardedSchemeHeaders/)]
   - it: should not have notAppendXForwardedFor arg by default
     asserts:
       - notContains:
@@ -940,6 +1013,39 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--entryPoints.web.forwardedHeaders.notAppendXForwardedFor=true"
+  - it: should have serversTransport forwardingTimeouts args when specified in values.yaml
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.readTimeout: 30s
+      serversTransport.forwardingTimeouts.writeTimeout: 1000000
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.readTimeout=30s"
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--serversTransport.forwardingTimeouts.writeTimeout=1000000"
+  - it: should not have serversTransport forwardingTimeouts args when set to zero
+    set:
+      image.tag: v3.8.0-rc.1
+      serversTransport.forwardingTimeouts.writeTimeout: 0
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--serversTransport\.forwardingTimeouts\.writeTimeout=/)]
+  - it: should not have serversTransport forwardingTimeouts args by default
+    asserts:
+      - notExists:
+          path: spec.template.spec.containers[0].args[?(@ =~ /^--serversTransport\.forwardingTimeouts\.(readTimeout|writeTimeout)=/)]
+  - it: should have global aliasHeadersStrategy arg when specified in values.yaml
+    set:
+      image:
+        tag: v3.7.17
+      global:
+        aliasHeadersStrategy: reject
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--global.aliasHeadersStrategy=reject"
   - it: should have multiple transport configuration args when specified in values.yaml for port
     set:
       ports:
@@ -1217,7 +1323,10 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=true"
-  - it: should not set safeNaming when explicitly set to false
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming=false"
+  - it: should set safeNaming to false when explicitly set to false
     set:
       image:
         tag: v3.7.11
@@ -1225,9 +1334,12 @@ tests:
         kubernetesCRD:
           safeNaming: false
     asserts:
-      - notContains:
+      - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.safeNaming=false"
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: "--providers.kubernetescrd.safeNaming=true"
   - it: should not set safeNaming when the kubernetesCRD provider is disabled
     set:
       image:
@@ -1277,3 +1389,95 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--core.strictTLSOptions=true"
+
+  - it: should default the Gateway provider to the chart-created GatewayClass on v3.8
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should use the default GatewayClass resource name when no name is configured
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=traefik
+  - it: should let an explicit provider GatewayClass override the chart-created class
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.gatewayClass: external
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=external
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the provider GatewayClass when GatewayClass creation is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.enabled: false
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should retain labelSelector without adding a conflicting default GatewayClass
+    set:
+      image.tag: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      providers.kubernetesGateway.labelSelector: app=traefik
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.labelSelector=app=traefik
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the GatewayClass on an older Proxy
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should not default the GatewayClass when the provider is disabled
+    set:
+      image.tag: v3.8.0-rc.1
+      gatewayClass.name: dedicated
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should use versionOverride when defaulting the provider GatewayClass
+    set:
+      image.tag: custom
+      versionOverride: v3.8.0-rc.1
+      providers.kubernetesGateway.enabled: true
+      gatewayClass.name: dedicated
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
+  - it: should ignore GatewayClass selectors when the provider is disabled
+    template: deployment.yaml
+    set:
+      image.tag: v3.7.17
+      providers.kubernetesGateway.enabled: false
+      providers.kubernetesGateway.gatewayClass: dedicated
+      providers.kubernetesGateway.labelSelector: app=traefik
+    asserts:
+      - notContains:
+          path: spec.template.spec.containers[0].args
+          content: --providers.kubernetesgateway.gatewayClass=dedicated
