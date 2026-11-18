@@ -74,3 +74,19 @@ tests:
             name: metrics
             targetPort: traefik
             protocol: TCP
+  - it: should normalize entryPoint value for use as targetPort
+    set:
+      metrics:
+        prometheus:
+          entryPoint: MyMetricsEntryPoint
+          service:
+            enabled: true
+      ports:
+        MyMetricsEntryPoint:
+          port: 1234
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.ports[0].targetPort
+          value: mymetricsentryp
