@@ -60,10 +60,6 @@ tests:
           entryPoint: traefik
           service:
             enabled: true
-      ports:
-        traefik:
-          enabled: true
-          port: 8080
     asserts:
       - hasDocuments:
           count: 1

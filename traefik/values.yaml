@@ -954,7 +954,7 @@ envFrom: []
 ports:
   # @schema additionalProperties: false
   traefik:
-    # -- Defines whether the port/entryPoint is enabled or not
+    # -- Set to false to disable this entryPoint
     enabled: true
     port: 8080
     # -- (int) Use hostPort if set.
@@ -987,7 +987,7 @@ ports:
       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
-    # -- Defines whether the port/entryPoint is enabled or not
+    # -- Set to false to disable this entryPoint
     enabled: true
     # -- (bool) Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     asDefault:  # @schema type: [boolean, null]; default: null
@@ -1051,7 +1051,7 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   websecure:
-    # -- Defines whether the port/entryPoint is enabled or not
+    # -- Set to false to disable this entryPoint
     enabled: true
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
@@ -1149,10 +1149,8 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
-    # -- Defines whether the port/entryPoint is enabled or not.
-    # When disabling the metrics port, due to Helm v4 merge behavior in umbrella charts,
-    # you can not set `.metrics.prometheus: null`, you must point
-    # `.metrics.prometheus.entryPoint` to a different port (e.g. `traefik`).
+    # -- Set to false to disable this entryPoint.
+    # metrics.prometheus.entrypoint must then point to another port.
     enabled: true
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
