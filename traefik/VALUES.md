@@ -432,7 +432,7 @@ Kubernetes: `>=1.30.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
-| ports.metrics.enabled | bool | `true` | Set to false to disable this entryPoint. metrics.prometheus.entrypoint must then point to another port. |
+| ports.metrics.enabled | bool | `true` | Set to false to disable this entryPoint. |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
