@@ -633,10 +633,10 @@ Return a struct of all enabled ports (as yaml string)
 */}}
 {{- define "traefik.enabledPorts" }}
 {{- $ports := dict }}
-{{- range $portName, $config := .Values.ports }}
-{{- if and $config (dig "enabled" true $config) }}
-{{- $_ := set $ports $portName $config }}
-{{- end }}
-{{- end }}
+ {{- range $portName, $config := .Values.ports }}
+  {{- if and $config (dig "enabled" true $config) }}
+   {{- $_ := set $ports $portName $config }}
+  {{- end }}
+ {{- end }}
 {{- toYaml $ports }}
 {{- end -}}
