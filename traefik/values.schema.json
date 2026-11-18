@@ -224,7 +224,7 @@
             }
         },
         "additionalArguments": {
-            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set=\"additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}\"`",
+            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)",
             "type": "array"
         },
         "additionalVolumeMounts": {
@@ -2588,7 +2588,7 @@
                         "minimum": 0
                     },
                     "enabled": {
-                        "description": "Defines whether the port/entryPoint is enabled or not. When disabling the metrics port, due to Helm v4 merge behavior in umbrella charts, you can not set `.metrics.prometheus: null`, you must point `.metrics.prometheus.entryPoint` to a different port (e.g. `traefik`).",
+                        "description": "Set to false to disable this entryPoint. metrics.prometheus.entrypoint must then point to another port.",
                         "type": "boolean"
                     },
                     "expose": {
@@ -3863,7 +3863,7 @@
             "type": "string"
         },
         "volumes": {
-            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments: - \"--providers.file.filename=/config/dynamic.toml\" - \"--ping\" - \"--ping.entrypoint=web\"`",
+            "description": "Add volumes to the traefik pod. The volume name will be passed to tpl. This can be used to mount a cert pair or a configmap that holds a config.toml file. After the volume has been mounted, add the configs into traefik by using the `additionalArguments` list below, eg: `additionalArguments:",
             "type": "array"
         }
     },
