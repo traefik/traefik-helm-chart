@@ -224,7 +224,7 @@
             }
         },
         "additionalArguments": {
-            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/)",
+            "description": "Additional arguments to be passed at Traefik's binary See [CLI Reference](https://docs.traefik.io/reference/static-configuration/cli/) Use curly braces to pass values: `helm install --set=\"additionalArguments={--providers.kubernetesingress.ingressclass=traefik-internal,--log.level=DEBUG}\"`",
             "type": "array"
         },
         "additionalVolumeMounts": {
