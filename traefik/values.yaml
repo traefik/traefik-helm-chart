@@ -1150,7 +1150,6 @@ ports:
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
     # -- Set to false to disable this entryPoint.
-    # metrics.prometheus.entrypoint must then point to another port.
     enabled: true
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
