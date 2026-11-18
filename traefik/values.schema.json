@@ -2588,7 +2588,7 @@
                         "minimum": 0
                     },
                     "enabled": {
-                        "description": "Set to false to disable this entryPoint. metrics.prometheus.entrypoint must then point to another port.",
+                        "description": "Set to false to disable this entryPoint.",
                         "type": "boolean"
                     },
                     "expose": {
