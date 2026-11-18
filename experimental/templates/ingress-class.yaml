@@ -1,0 +1,10 @@
+{{- if kindIs "map" .Values.ingressClass -}}
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  {{- include "traefik.singletonMeta" (dict "ctx" . "key" "ingressClass" "name" (include "traefik.fullname" .)) | nindent 2 }}
+spec:
+  {{- $chartSpec := dict "controller" "traefik.io/ingress-controller" -}}
+  {{- $userSpec := (.Values.ingressClass | default dict).spec | default dict -}}
+  {{- include "traefik.strategicMerge" (dict "base" $chartSpec "patch" $userSpec) | nindent 2 }}
+{{- end -}}

@@ -1,0 +1,70 @@
+suite: default install
+templates:
+  - config-secret.yaml
+  - serviceaccount.yaml
+  - clusterrole.yaml
+  - clusterrolebinding.yaml
+  - deployment.yaml
+  - service.yaml
+tests:
+  - it: renders exactly the six expected kinds
+    asserts:
+      - isKind: { of: Secret }
+        template: config-secret.yaml
+      - isKind: { of: ServiceAccount }
+        template: serviceaccount.yaml
+      - isKind: { of: ClusterRole }
+        template: clusterrole.yaml
+      - isKind: { of: ClusterRoleBinding }
+        template: clusterrolebinding.yaml
+      - isKind: { of: Deployment }
+        template: deployment.yaml
+      - isKind: { of: Service }
+        template: service.yaml
+
+  - it: traefik.yaml is stored in an Opaque Secret (it can hold credentials)
+    template: config-secret.yaml
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik-config
+      - equal:
+          path: metadata.namespace
+          value: NAMESPACE
+      - equal:
+          path: type
+          value: Opaque
+      - exists:
+          path: stringData["traefik.yaml"]
+
+  - it: the config volume mounts the config Secret
+    template: deployment.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            secret:
+              secretName: RELEASE-NAME-traefik-config
+
+  - it: default image is docker.io/traefik at the chart's AppVersion
+    template: deployment.yaml
+    asserts:
+      - matchRegex:
+          path: spec.template.spec.containers[0].image
+          pattern: "^docker\\.io/traefik:v\\d"
+
+  - it: serviceAccountName, SA name, ClusterRoleBinding subject all converge on fullname
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-traefik
+        template: deployment.yaml
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+        template: serviceaccount.yaml
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-traefik
+        template: clusterrolebinding.yaml
