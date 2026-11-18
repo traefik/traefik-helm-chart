@@ -398,6 +398,8 @@
 
 {{- end }}
 
-{{- if and .Values.metrics.prometheus (not (hasKey $enabledPorts .Values.metrics.prometheus.entryPoint)) }}
-  {{- fail "ERROR: metrics.prometheus.entryPoint cannot point to a disabled port" -}}
+{{- if and .Values.metrics.prometheus (eq .Values.metrics.prometheus.entryPoint "metrics") (not (hasKey $enabledPorts "metrics")) }}
+  {{- fail "ERROR: must point metrics.prometheus.entryPoint to a different entryPoint when disabling the default metrics port (ports.metrics=null or ports.metrics.enabled=false)" -}}
+{{- else if and .Values.metrics.prometheus (not (hasKey $enabledPorts .Values.metrics.prometheus.entryPoint)) }}
+  {{- fail "ERROR: metrics.prometheus.entryPoint cannot point to a disabled or nonexisting port" -}}
 {{- end }}

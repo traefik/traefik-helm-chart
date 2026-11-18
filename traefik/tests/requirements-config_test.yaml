@@ -1695,17 +1695,33 @@ tests:
     asserts:
       - failedTemplate:
           errorPattern: "values don't meet the specifications of the schema"
-  - it: should fail if metrics.prometheus.entryPoint points to a disabled port
+  - it: should fail with detailed error if metrics port is disabled, but metrics.prometheus.entryPoint default is unchanged
     set:
       ports:
         metrics:
           enabled: false
-      metrics:
-        prometheus:
-          entryPoint: metrics
     asserts:
       - failedTemplate:
-          errorMessage: "ERROR: metrics.prometheus.entryPoint cannot point to a disabled port"
+          errorMessage: "ERROR: must point metrics.prometheus.entryPoint to a different entryPoint when disabling the default metrics port (ports.metrics=null or ports.metrics.enabled=false)"
+  - it: should fail if metrics.prometheus.entryPoint points to nonexisting port
+    set:
+      metrics:
+        prometheus:
+          entryPoint: doesnotexist
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: metrics.prometheus.entryPoint cannot point to a disabled or nonexisting port"
+  - it: should fail if metrics.prometheus.entryPoint points to a disabled port
+    set:
+      ports:
+        foobar:
+          enabled: false
+      metrics:
+        prometheus:
+          entryPoint: foobar
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: metrics.prometheus.entryPoint cannot point to a disabled or nonexisting port"
 
   - it: should reject gatewayClass on older Proxy versions
     template: requirements.yaml
