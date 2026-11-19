@@ -25,12 +25,13 @@ tests:
     template: deployment.yaml
     chart:
       version: 99.99.99
+      appVersion: v3.7.0
     asserts:
       - equal:
           path: spec.template.metadata.labels
           value:
             app.kubernetes.io/name: traefik
             app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
-            app.kubernetes.io/version: v3.7.17
+            app.kubernetes.io/version: v3.7.0
             app.kubernetes.io/managed-by: Helm
 
