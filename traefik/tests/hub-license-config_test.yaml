@@ -5,7 +5,7 @@ templates:
   - hub-license.yaml
 set:
   image:
-    tag: v3.16.0
+    tag: v3.21.0
 tests:
   - it: should not create secret by default
     asserts:

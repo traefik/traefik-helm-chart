@@ -906,7 +906,7 @@ hub:
 image:
   registry: ghcr.io
   repository: traefik/traefik-hub
-  tag: v3.18.0
+  tag: v3.21.12
 
 experimental:
   plugins:
@@ -1628,7 +1628,7 @@ Once it's applied, whoami should be accessible on https://whoami.docker.localhos
 
 ## Use Kubernetes Ingress NGINX Provider
 
-Starting with Traefik Proxy v3.6.2, one can use the Kubernetes Ingress NGINX provider by setting the following _values_:
+One can use the Kubernetes Ingress NGINX provider by setting the following _values_:
 
 ```yaml
 providers:
@@ -1774,7 +1774,7 @@ The same Ingress resource is now served by **both** NGINX and Traefik! You can v
 
 ## Use Knative Provider
 
-Starting with Traefik Proxy v3.6, one can use the Knative provider (_experimental_) by setting the following _values_:
+One can use the Knative provider (_experimental_) by setting the following _values_:
 
 ```yaml
 experimental:
@@ -2288,7 +2288,7 @@ service:
 deployment:
   initContainers:
     - name: copy-binary
-      image: traefik:v3.6.12
+      image: traefik:v3.7.19
       command: ["cp", "/usr/local/bin/traefik", "/shared/traefik"]
       volumeMounts:
         - name: traefik-bin

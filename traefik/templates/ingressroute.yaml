@@ -1,23 +1,16 @@
 {{ range $name, $config := .Values.ingressRoute }}
 {{ if $config.enabled }}
-{{- $version := include "traefik.proxyVersion" $ }}
 {{ $ingressClassName := "" }}
 {{- if and $.Values.ingressClass.enabled $.Values.providers.kubernetesCRD.enabled $.Values.providers.kubernetesCRD.ingressClass }}
   {{ $ingressClassName = $.Values.providers.kubernetesCRD.ingressClass }}
 {{- end }}
-{{ $useIngressClassNameField := semverCompare ">=v3.7.0-0" $version }}
-{{ $ingressClassAnnotations := dict }}
-{{- if and $ingressClassName (not $useIngressClassNameField) }}
-  {{ $ingressClassAnnotations = dict "kubernetes.io/ingress.class" $ingressClassName }}
-{{- end }}
-{{ $annotations := merge $ingressClassAnnotations (default $config.annotations dict) }}
 ---
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
   name: {{ $.Release.Name }}-{{ $name }}
   namespace: {{ template "traefik.namespace" $ }}
-  {{- with $annotations }}
+  {{- with $config.annotations }}
   annotations:
     {{- tpl (toYaml .) $ | nindent 4 }}
   {{- end }}
@@ -27,8 +20,8 @@ metadata:
     {{- tpl (toYaml .) $ | nindent 4 }}
     {{- end }}
 spec:
-  {{- if and $ingressClassName $useIngressClassNameField }}
-  ingressClassName: {{ $ingressClassName }}
+  {{- with $ingressClassName }}
+  ingressClassName: {{ . }}
   {{- end }}
   entryPoints:
   {{- range $config.entryPoints }}

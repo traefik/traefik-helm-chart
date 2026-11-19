@@ -379,7 +379,7 @@ providers:
     enabled: false
     # -- List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.
     crossProviderNamespaces: []
-    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.
+    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8.
     experimentalChannel: false
     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
     namespaces: []
@@ -513,7 +513,7 @@ providers:
     httpsEntryPoint: "websecure"
     # @schema additionalProperties: false
     modsec:
-      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
+      # -- Enable ModSec engine. Requires Traefik Hub.
       enabled: false
       # -- Enable OWASP Core Rules.
       owaspCoreRules: false
@@ -1352,8 +1352,7 @@ fullnameOverride: ""
 
 # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
 hub:  # @schema additionalProperties: false
-  # -- (bool) Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik
-  # Proxy, which requires Traefik Hub >= v3.21.0-ea.
+  # -- (bool) Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy.
   # @default -- `true` when `hub.token` is set
   enabled:  # @schema type:[boolean, null]
   # -- Name of `Secret` with key 'token' set to a valid license token.
@@ -1362,7 +1361,7 @@ hub:  # @schema additionalProperties: false
   # -- Mount path for token secret.
   tokenMountPath: "/etc/secrets"
   # -- Use the hardened image variant. It appends `-hardened` to the tag and defaults the image
-  # to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub >= v3.21.0-ea.
+  # to `registry.traefik.io/traefik-hub`. Requires `hub.enabled`.
   hardened: false
   # -- (bool) Disables all external network connections.
   offline:  # @schema type:[boolean, null]
@@ -1727,7 +1726,7 @@ hub:  # @schema additionalProperties: false
 
   # @schema additionalProperties: false
   # -- Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured.
-  # Requires a valid license token and Traefik Hub >= v3.21.
+  # Requires a valid license token.
   # @default -- See _values.yaml_
   transparencyLogs:
     # @schema additionalProperties: false

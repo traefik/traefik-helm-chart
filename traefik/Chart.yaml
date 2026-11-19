@@ -22,9 +22,9 @@ maintainers:
   - name: jnoordsij
 icon: https://raw.githubusercontent.com/traefik/traefik/master/docs/content/assets/img/traefik.logo.png
 annotations:
-  traefik.io/proxy-min-version: v3.6.0
+  traefik.io/proxy-min-version: v3.7.0
   traefik.io/proxy-max-version: v3.7.20
-  traefik.io/hub-min-version: v3.19.3
+  traefik.io/hub-min-version: v3.21.0
   traefik.io/hub-max-version: v3.21.13
   artifacthub.io/changes: |
     - kind: added
