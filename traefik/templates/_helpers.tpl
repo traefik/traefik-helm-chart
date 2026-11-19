@@ -110,10 +110,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 {{- end }}
 
-{{/* Shared labels used in pod templates */}}
-{{/* Same as traefik.labels without helm.sh/chart: that label carries the chart version, so */}}
-{{/* including it here restarts every pod on a chart upgrade, even when neither the image nor */}}
-{{/* the configuration changed. app.kubernetes.io/version stays, as it tracks the running image. */}}
+{{/* traefik.labels without helm.sh/chart, to avoid pod restarts on chart-only upgrades */}}
 {{- define "traefik.podlabels" -}}
 {{- omit (include "traefik.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
 {{- end }}

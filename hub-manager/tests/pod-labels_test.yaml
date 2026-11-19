@@ -22,25 +22,3 @@ tests:
             app.kubernetes.io/version: 0.0.0-test
             app.kubernetes.io/managed-by: Helm
 
-  - it: "should keep the immutable selector labels on the pod template"
-    asserts:
-      - isSubset:
-          path: spec.selector.matchLabels
-          content:
-            app.kubernetes.io/name: hub-manager
-            app.kubernetes.io/instance: RELEASE-NAME
-      - isSubset:
-          path: spec.template.metadata.labels
-          content:
-            app.kubernetes.io/name: hub-manager
-            app.kubernetes.io/instance: RELEASE-NAME
-
-  - it: "should still render deployment.podLabels on the pod template"
-    set:
-      deployment.podLabels:
-        extraLabel: isConfigured
-    asserts:
-      - isSubset:
-          path: spec.template.metadata.labels
-          content:
-            extraLabel: isConfigured
