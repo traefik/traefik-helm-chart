@@ -1149,7 +1149,7 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
-    # -- Set to false to disable this entryPoint.
+    # -- Set to false to disable this entryPoint
     enabled: true
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
