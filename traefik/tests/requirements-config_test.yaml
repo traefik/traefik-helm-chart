@@ -16,6 +16,19 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3.7.0+"
+  - it: should fail when trying to use this Chart with a Traefik Proxy v3.7.0 pre-release
+    set:
+      image:
+        tag: v3.7.0-rc.1
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: This version of the Chart only supports Traefik Proxy v3.7.0+"
+  - it: should pass when trying to use this Chart with a pre-release above the minimum version
+    set:
+      image:
+        tag: v3.8.0-rc.1
+    asserts:
+      - notFailedTemplate: {}
   - it: should pass when trying to use this Chart with Traefik Proxy v3.7 experimental
     set:
       image:
@@ -51,7 +64,7 @@ tests:
         enabled: true
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - notFailedTemplate: {}
   - it: should pass when hub.hardened is set with a supported Traefik Hub version
@@ -60,7 +73,7 @@ tests:
         token: my-token
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - notFailedTemplate: {}
   - it: should not pass when trying to use this Chart with unknown tag
@@ -174,7 +187,7 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
       hub:
         token: xxx
     asserts:
@@ -185,6 +198,27 @@ tests:
         registry: ghcr.io
         repository: traefik/traefik-hub
         tag: v3.21.5
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
+  - it: should fail when trying to use this Chart with a pre-release of the minimum Hub version
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-ea.3
+      hub:
+        token: xxx
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: this Chart supports *only* Traefik Hub >= v3.21.0."
+  - it: should not fail when trying to use this Chart with a FIPS build of the minimum Hub version
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-fips
       hub:
         token: xxx
     asserts:
@@ -1078,7 +1112,7 @@ tests:
       hub:
         enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - notFailedTemplate: {}
   - it: should pass when using proxy mode with the default Traefik Hub version
@@ -1178,7 +1212,7 @@ tests:
   - it: should pass when using transparency logs with a supported Traefik Hub version
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1191,7 +1225,7 @@ tests:
   - it: should fail when using transparency logs in proxy mode
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         enabled: true
         transparencyLogs:
@@ -1216,7 +1250,7 @@ tests:
   - it: should fail when more than one transparency logs driver is set
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1233,7 +1267,7 @@ tests:
   - it: should fail when transparency logs are set without a signing key
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1246,7 +1280,7 @@ tests:
   - it: should fail when the witness threshold exceeds the number of witnesses
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1265,7 +1299,7 @@ tests:
   - it: should fail when the witness threshold is set without witnesses
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1281,7 +1315,7 @@ tests:
   - it: should fail when the witness timeout is set without witnesses
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1297,7 +1331,7 @@ tests:
   - it: should fail when witness failOpen is set without witnesses
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1313,7 +1347,7 @@ tests:
   - it: should fail on an empty witnesses list
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:
@@ -1329,7 +1363,7 @@ tests:
   - it: should fail on a zero witness threshold
     set:
       image:
-        tag: v3.21.0-ea.3
+        tag: v3.21.0
       hub:
         token: my-token
         transparencyLogs:

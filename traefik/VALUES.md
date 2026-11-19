@@ -30,7 +30,7 @@ Kubernetes: `>=1.30.0-0`
 | accessLog | object | `{"addInternals":false,"bufferingSize":null,"dualOutput":false,"enabled":false,"fields":{"defaultMode":"keep","headers":{"defaultMode":"drop","names":{}},"names":{},"queryParameters":{"defaultMode":null}},"filters":{"minDuration":"","retryAttempts":false,"statusCodes":""},"format":null,"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":"","insecure":false,"tls":{"ca":"","cert":"","insecureSkipVerify":null,"key":""}},"http":{"enabled":false,"endpoint":"","headers":{},"tls":{"ca":"","cert":"","insecureSkipVerify":null,"key":""}},"resourceAttributes":{},"serviceName":null},"timezone":""}` | See [access logs reference](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/) |
 | accessLog.addInternals | bool | `false` | Enables accessLogs for internal resources. Default: false. |
 | accessLog.bufferingSize | int | `nil` | Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize) |
-| accessLog.dualOutput | bool | `false` | Enables access log output alongside OTLP (v3.7+). |
+| accessLog.dualOutput | bool | `false` | Enables access log output alongside OTLP. |
 | accessLog.enabled | bool | `false` | To enable access logs |
 | accessLog.fields.defaultMode | string | `"keep"` | Set default mode for fields.names |
 | accessLog.fields.headers.defaultMode | string | `"drop"` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization) |
@@ -64,7 +64,7 @@ Kubernetes: `>=1.30.0-0`
 | affinity | object | `{}` | This example pod anti-affinity forces the scheduler to put traefik pods on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | api.basePath | string | `""` | Configure API basePath |
 | api.dashboard | bool | `true` | Enable the dashboard |
-| api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
+| api.dashboardName | string | `""` | Custom name for the dashboard. |
 | api.debug | bool | `nil` | Enable the debug API |
 | api.disableDashboardAd | bool | `nil` | Disable the advertisement from the dashboard. |
 | api.insecure | bool | `nil` | Enable the insecure API (HTTP) |
@@ -137,7 +137,7 @@ Kubernetes: `>=1.30.0-0`
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |
 | global.imageRegistry | string | `""` | Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry. |
-| global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
+| global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally. |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.aigateway.enabled | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
@@ -459,7 +459,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
-| ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
+| ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header. |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.web.http.redirections.entryPoint | object | `{}` | Port Redirections Added in 2.2, one can make permanent redirects via entrypoints. Same sets of parameters: to, scheme, permanent and priority. https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example |
 | ports.web.nodePort | int | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
@@ -483,7 +483,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
-| ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
+| ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header. |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | int | `nil` | Use hostPort if set. |
 | ports.websecure.http.aliasHeadersStrategy | string | `nil` | Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy) |

@@ -4,11 +4,11 @@ templates:
 tests:
   - it: should not set global.azure arg by default
     chart:
-      appVersion: v3.6.10
+      appVersion: v3.7.19
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v3.6.10
+          value: docker.io/traefik:v3.7.19
       - notExists:
           path: spec.template.metadata.labels.azure-extensions-usage-release-identifier
 

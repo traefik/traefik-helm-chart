@@ -2,13 +2,13 @@ suite: Main Container configuration
 templates:
   - deployment.yaml
 chart:
-  appVersion: v3.6.10
+  appVersion: v3.7.19
 tests:
   - it: should have the default Docker image when no value is specified
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v3.6.10
+          value: docker.io/traefik:v3.7.19
   - it: should change image when image.tag value is specified
     set:
       image:
@@ -24,7 +24,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik/traefik:v3.6.10
+          value: docker.io/traefik/traefik:v3.7.19
   - it: should change image when image.registry value is specified
     set:
       image:
@@ -32,7 +32,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: example.org/traefik:v3.6.10
+          value: example.org/traefik:v3.7.19
   - it: should use digest when image.digest is specified
     set:
       image:
@@ -126,7 +126,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: mirror.example.com/traefik:v3.6.10
+          value: mirror.example.com/traefik:v3.7.19
   - it: should let image.registry take precedence over global.imageRegistry
     set:
       global:
@@ -136,7 +136,7 @@ tests:
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: example.org/traefik:v3.6.10
+          value: example.org/traefik:v3.7.19
   - it: should use global.imageRegistry with image.digest
     set:
       global:

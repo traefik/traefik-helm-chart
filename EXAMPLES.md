@@ -1339,7 +1339,7 @@ spec:
   values:
     # Your Traefik values here
     image:
-      tag: v3.6.12
+      tag: v3.7.19
 ```
 
 > [!NOTE]
@@ -1373,8 +1373,8 @@ The tag does not follow semver, so it requires a _versionOverride_:
 ```yaml
 image:
   repository: traefik/traefik
-  tag: experimental-v3.4
-versionOverride: v3.4
+  tag: experimental-v3.8
+versionOverride: v3.8
 ```
 
 ## Use Prometheus Operator
@@ -1785,8 +1785,8 @@ providers:
 ```
 
 > :warning:
-> You must first have Knative deployed. With Proxy v3.6, v1.19 of Knative is supported.
-> Knative 1.19 requires Kubernetes v1.32+
+> You must first have Knative deployed. With Proxy v3.7, v1.20 of Knative is supported.
+> Knative 1.20 requires Kubernetes v1.32+
 
 > :information_source:
 > If you want to test it using k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
@@ -1795,9 +1795,9 @@ Finish configuring Knative:
 
 ```shell
 # 1. Install/update the Knative CRDs
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.20.0/serving-crds.yaml
 # 2. Install the Knative Serving core components
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-core.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.20.0/serving-core.yaml
 # 3. Update the config-network configuration to use the Traefik ingress class
 kubectl patch configmap/config-network -n knative-serving --type merge \
   -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'

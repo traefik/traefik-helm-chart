@@ -21,7 +21,7 @@
                     ]
                 },
                 "dualOutput": {
-                    "description": "Enables access log output alongside OTLP (v3.7+).",
+                    "description": "Enables access log output alongside OTLP.",
                     "type": "boolean"
                 },
                 "enabled": {
@@ -251,7 +251,7 @@
                     "type": "boolean"
                 },
                 "dashboardName": {
-                    "description": "Custom name for the dashboard (v3.7+).",
+                    "description": "Custom name for the dashboard.",
                     "type": [
                         "string",
                         "null"
@@ -722,7 +722,7 @@
                     ]
                 },
                 "notAppendXForwardedFor": {
-                    "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
+                    "description": "Disable appending RemoteAddr to X-Forwarded-For header globally.",
                     "type": "boolean"
                 },
                 "sendAnonymousUsage": {
@@ -2618,7 +2618,7 @@
                                 "type": "boolean"
                             },
                             "notAppendXForwardedFor": {
-                                "description": "Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).",
+                                "description": "Disable appending RemoteAddr to X-Forwarded-For header.",
                                 "type": "boolean"
                             },
                             "trustedIPs": {

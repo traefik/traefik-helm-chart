@@ -117,14 +117,14 @@ tests:
   - equal:
       path: spec.ingressClassName
       value: test-class
-- it: should insert annotations correctly and give precedence to user annotations
+- it: should keep user annotations when an ingressClass is configured
   set:
+    providers:
+      kubernetesCRD:
+        ingressClass: test-class
     ingressRoute:
       dashboard:
         enabled: true
-        providers:
-          kubernetesCRD:
-            ingressClass: test-class
         annotations:
           foo: bar
           fis: fas
@@ -136,6 +136,9 @@ tests:
         foo: bar
         fis: fas
         kubernetes.io/ingress.class: test-class2
+  - equal:
+      path: spec.ingressClassName
+      value: test-class
 - it: should support templating in annotations
   set:
     ingressRoute:
