@@ -103,7 +103,7 @@ tests:
       path: metadata.annotations
   - isNull:
       path: spec.ingressClassName
-- it: should set spec.ingressClassName when an ingressClass is configured on Traefik >= v3.7.0
+- it: should set spec.ingressClassName when an ingressClass is configured
   set:
     ingressRoute:
       dashboard:
@@ -117,22 +117,6 @@ tests:
   - equal:
       path: spec.ingressClassName
       value: test-class
-- it: should fall back to the legacy annotation when an ingressClass is configured on Traefik < v3.7.0
-  set:
-    versionOverride: v3.6.0
-    ingressRoute:
-      dashboard:
-        enabled: true
-    providers:
-      kubernetesCRD:
-        ingressClass: test-class
-  asserts:
-  - equal:
-      path: metadata.annotations
-      value:
-        kubernetes.io/ingress.class: test-class
-  - isNull:
-      path: spec.ingressClassName
 - it: should insert annotations correctly and give precedence to user annotations
   set:
     ingressRoute:

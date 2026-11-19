@@ -627,14 +627,14 @@ tests:
       hub:
         token: xxx
       image:
-        tag: v3.20.0
+        tag: v3.21.0
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.20.0
+          value: v3.21.0
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
-          value: v3.20.0
+          value: v3.21.0
   - it: should set app.kubernetes.io/version to the default Hub tag when Hub is enabled without image.tag
     set:
       hub:

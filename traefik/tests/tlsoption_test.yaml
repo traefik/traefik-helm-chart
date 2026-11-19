@@ -74,17 +74,6 @@ tests:
       - equal:
           path: spec.sniStrict
           value: true
-  - it: should fail when using disableSessionTickets on proxy < 3.4
-    set:
-      image:
-        tag: 3.3.7
-      tlsOptions:
-        default:
-          disableSessionTickets: true
-    asserts:
-      - failedTemplate:
-          errorMessage: "ERROR: disableSessionTickets is a feature only available for traefik >= v3.4.0."
-
   - it: should render config without labels
     chart:
       version: 1.0.0

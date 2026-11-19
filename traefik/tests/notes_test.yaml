@@ -194,13 +194,13 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: v3.19.5
+        tag: v3.21.5
       hub:
         token: "xxx"
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.5 has been deployed successfully on NAMESPACE namespace!
   - it: should not display warning when a Hub version embeds a Proxy above the Proxy max
     set:
       image:
@@ -362,7 +362,7 @@ tests:
         images:
           hub:
             image: traefik-hub
-            tag: v3.20.4
+            tag: v3.21.4
 
       rbac:
         enabled: true
@@ -380,7 +380,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with myrepo/traefik-hub:v3.21.4 has been deployed successfully on NAMESPACE namespace!
 
   - it: should warn when using underscoreHeadersStrategy on traefik >= 3.7.12
     set:
