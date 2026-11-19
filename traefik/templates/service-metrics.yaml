@@ -3,7 +3,7 @@
 {{- if (.Values.metrics.prometheus.service).enabled -}}
 
 {{- $enabledPorts := (include "traefik.enabledPorts" .) | fromYaml }}
-{{- $port := get $enabledPorts .Values.metrics.prometheus.entryPoint }}
+{{- $port := get $enabledPorts .Values.metrics.prometheus.entryPoint | default dict }}
 
 {{- $fullname := include "traefik.fullname" . }}
 {{- if ge (len $fullname) 50 }}

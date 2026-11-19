@@ -86,3 +86,15 @@ tests:
       - equal:
           path: spec.ports[0].targetPort
           value: mymetricsentryp
+  - it: should render when trying to use a disabled port, so that the human friendly error from requirements.yaml will be shown
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+      ports:
+        metrics:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1
