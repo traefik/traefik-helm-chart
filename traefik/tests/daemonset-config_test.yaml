@@ -218,17 +218,17 @@ tests:
           value: "traefik-ns-override"
   - it: should set app.kubernetes.io/version on the daemonset and its pod template
     chart:
-      appVersion: v3.6.10
+      appVersion: v3.7.19
     set:
       deployment:
         kind: DaemonSet
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.6.10
+          value: v3.7.19
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
-          value: v3.6.10
+          value: v3.7.19
 
   - it: should select a GatewayClass in a DaemonSet with a version override
     template: daemonset.yaml

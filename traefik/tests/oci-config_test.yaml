@@ -4,11 +4,11 @@ templates:
 tests:
   - it: should not set oci_meta arg by default
     chart:
-      appVersion: v3.6.10
+      appVersion: v3.7.19
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v3.6.10
+          value: docker.io/traefik:v3.7.19
 
   - it: should use oci_meta with proxy when enabled
     set:

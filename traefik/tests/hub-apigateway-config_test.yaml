@@ -144,7 +144,7 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
       hub:
         apimanagement:
           enabled: true

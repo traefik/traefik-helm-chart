@@ -77,7 +77,7 @@ tests:
   - it: should render config without labels
     chart:
       version: 1.0.0
-      appVersion: v3.6.10
+      appVersion: v3.7.19
     set:
       tlsOptions:
         default:
@@ -92,7 +92,7 @@ tests:
               app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
               app.kubernetes.io/managed-by: Helm
               app.kubernetes.io/name: traefik
-              app.kubernetes.io/version: v3.6.10
+              app.kubernetes.io/version: v3.7.19
               helm.sh/chart: traefik-1.0.0
       - equal:
           path: spec
