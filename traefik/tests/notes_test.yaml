@@ -2,7 +2,7 @@ suite: NOTES.txt output
 templates:
   - NOTES.txt
 chart:
-  appVersion: 3.6.10
+  appVersion: 3.7.19
 tests:
   - it: should use helm managed namespace in release notes output
     set:
@@ -11,14 +11,14 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on NAMESPACE namespace!
   - it: should use helm managed namespace in release notes output
     set:
       namespaceOverride: "traefik-ns-override"
     asserts:
       - equalRaw:
           value: |2
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on traefik-ns-override namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on traefik-ns-override namespace!
   - it: should use tag version in release notes output if set
     set:
       image:
@@ -47,7 +47,7 @@ tests:
         token: "my-hub-license"
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - matchRegexRaw:
           pattern: "hardened images are hosted on a private registry"
@@ -59,7 +59,7 @@ tests:
         token: "my-hub-license"
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
       deployment:
         imagePullSecrets:
           - name: my-registry-credentials
@@ -72,7 +72,7 @@ tests:
         token: "my-hub-license"
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
       imagePullSecrets:
         - name: my-registry-credentials
     asserts:
@@ -84,7 +84,7 @@ tests:
         token: "my-hub-license"
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
       global:
         imagePullSecrets:
           - name: my-registry-credentials
@@ -96,7 +96,7 @@ tests:
       hub:
         enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - matchRegexRaw:
           pattern: 'Traefik Hub is running in proxy mode'
@@ -152,11 +152,11 @@ tests:
   - it: should not display warning when using a stable Proxy version within range
     set:
       image:
-        tag: v3.6.8
+        tag: v3.7.8
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with docker.io/traefik:v3.6.8 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:v3.7.8 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when using a stable Hub minor/patch version above max
     set:
       image:
@@ -194,13 +194,13 @@ tests:
       image:
         registry: ghcr.io
         repository: traefik/traefik-hub
-        tag: v3.19.5
+        tag: v3.21.5
       hub:
         token: "xxx"
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.19.5 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with ghcr.io/traefik/traefik-hub:v3.21.5 has been deployed successfully on NAMESPACE namespace!
   - it: should not display warning when a Hub version embeds a Proxy above the Proxy max
     set:
       image:
@@ -228,7 +228,7 @@ tests:
     asserts:
       - equalRaw:
           value: |2
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on NAMESPACE namespace!
   - it: should display warning when enabling persistence without initContainer
     set:
       persistence:
@@ -236,7 +236,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on NAMESPACE namespace!
 
             🚨 When enabling persistence for certificates, permissions on acme.json can be
             lost when Traefik restarts. You can ensure correct permissions with an
@@ -254,7 +254,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Resources populated with this chart don't match with labelSelector `not_here=CRD` applied on kubernetesCRD provider. 🚨
 
@@ -271,7 +271,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with docker.io/traefik:3.6.10 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with docker.io/traefik:3.7.19 has been deployed successfully on NAMESPACE namespace!
 
             🚨 Port name `web-http-too-long-name` does not comply with Kubernetes standards and will be renamed to `web-http-too-lo` in services. 🚨
             ℹ️ See the "traefik.portname" helper in this chart for additional details. ℹ️
@@ -362,7 +362,7 @@ tests:
         images:
           hub:
             image: traefik-hub
-            tag: v3.20.4
+            tag: v3.21.4
 
       rbac:
         enabled: true
@@ -380,7 +380,7 @@ tests:
     asserts:
       - equalRaw:
           value: |
-            RELEASE-NAME with myrepo/traefik-hub:v3.20.4 has been deployed successfully on NAMESPACE namespace!
+            RELEASE-NAME with myrepo/traefik-hub:v3.21.4 has been deployed successfully on NAMESPACE namespace!
 
   - it: should warn when using underscoreHeadersStrategy on traefik >= 3.7.12
     set:

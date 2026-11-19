@@ -54,6 +54,7 @@ Below is non-exhaustive compatibility list:
 |-----------|-------|---------------|
 | v2.x      | v27   | [latest v27](https://artifacthub.io/packages/helm/traefik/traefik/27.0.2)  |
 | v3.0-v3.5 | v39   | [latest v39](https://artifacthub.io/packages/helm/traefik/traefik/39.0.9)  |
+| v3.6      | v42   | [latest v42](https://artifacthub.io/packages/helm/traefik/traefik/42.4.1)  |
 
 ## Installing
 
