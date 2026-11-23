@@ -1,0 +1,37 @@
+suite: pod labels exclude the chart version
+templates:
+  - deployment.yaml
+  - daemonset.yaml
+tests:
+  - it: "should keep helm.sh/chart off the Deployment pod template"
+    template: deployment.yaml
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: "should keep helm.sh/chart off the DaemonSet pod template"
+    template: daemonset.yaml
+    set:
+      deployment.kind: DaemonSet
+    asserts:
+      - notExists:
+          path: spec.template.metadata.labels["helm.sh/chart"]
+      - exists:
+          path: metadata.labels["helm.sh/chart"]
+
+  - it: "should pin the whole pod label set"
+    template: deployment.yaml
+    chart:
+      version: 99.99.99
+      appVersion: v3.7.0
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels
+          value:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME-NAMESPACE
+            app.kubernetes.io/version: v3.7.0
+            app.kubernetes.io/managed-by: Helm
+
