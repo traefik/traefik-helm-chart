@@ -2538,7 +2538,7 @@
                     "minimum": 0
                 },
                 "unhealthyPodEvictionPolicy": {
-                    "description": "Policy for evicting running but unhealthy pods during node drains. When unset, Kubernetes uses IfHealthyBudget.",
+                    "description": "Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget.",
                     "type": [
                         "string",
                         "null"
