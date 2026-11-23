@@ -91,6 +91,18 @@ chore(deps): update traefik image to v3.7.1
 - `traefik.proxyVersionFromHub` (`traefik/templates/_helpers.tpl`): only add a branch when a chart condition depends on the Proxy version (a new CLI flag or Gateway API CRD requirement) and this Hub release changes its outcome. Keep this helper short.
 - Check for CRD changes in the Hub release
 
+## Releasing
+
+1. Pick the version from the commits since the last `chore(release)`:
+   - major: any `!` commit
+   - minor: any `feat`, except a Traefik Hub patch-version support bump alone, which is a patch release
+   - patch: everything else
+2. Bump `version` in `traefik/Chart.yaml` (and `hub-manager/Chart.yaml` only if that chart is released too), then `make docs`.
+3. Commit `chore(release): 🚀 publish X.Y.Z`. helm-changelog needs this commit to title the section, so commit first.
+4. Run `make changelog`, then amend the release commit with the updated `Changelog.md` and `Chart.yaml`.
+5. Add an `**Upgrade Notes**` block by hand in `Changelog.md`, after the commit list and before `### Default value changes`, when a change needs user action. Keep each note short and link its PR.
+6. Run `make test-changelog`, then open the PR with the `kind/release` label.
+
 ## Philosophy (Scope Boundaries)
 
 Contributions must align with the chart's philosophy. Avoid introducing:
