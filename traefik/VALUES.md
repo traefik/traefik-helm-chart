@@ -85,7 +85,7 @@ Kubernetes: `>=1.30.0-0`
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
 | deployment.goMemLimitPercentage | float | `0.9` | Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env) |
-| deployment.healthchecksHost | string | `ports.traefik.hostIP` if set, otherwise Pod IP | Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint. |
+| deployment.healthchecksHost | string | `ports.traefik.hostIP` when `hostNetwork` is enabled and set, otherwise Pod IP | Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint. |
 | deployment.healthchecksPort | string/int | `ports.traefik.port` | Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks. |
 | deployment.healthchecksScheme | string | `nil` | Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint. |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
@@ -442,7 +442,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
-| ports.traefik.hostIP | string | `nil` | Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which means it's listening on all your interfaces and all your IPs. You may want to set this value if you need traefik to listen on specific interface only. |
+| ports.traefik.hostIP | string | `nil` | With hostNetwork enabled, bind Traefik's entrypoint listener to this IP. Otherwise, only set the Kubernetes container port's hostIP field (typically with hostPort); Traefik listens on all pod interfaces. |
 | ports.traefik.hostPort | int | `nil` | Use hostPort if set. |
 | ports.traefik.observability.accessLogs | bool | `nil` | Defines whether a router attached to this EntryPoint produces access-logs by default. |
 | ports.traefik.observability.metrics | bool | `nil` | Defines whether a router attached to this EntryPoint produces metrics by default. |
