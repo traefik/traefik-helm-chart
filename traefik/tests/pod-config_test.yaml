@@ -1102,7 +1102,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--log.otlp.resourceAttributes.foo=bar"
-  - it: should be possible to set genericCLF accesslog format with Proxy v3.5.2
+  - it: should be possible to set genericCLF accesslog format
     set:
       accessLog:
         enabled: true

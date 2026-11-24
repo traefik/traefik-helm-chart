@@ -20,11 +20,11 @@ tests:
       hub:
         enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: ghcr.io/traefik/traefik-hub:v3.21.0-ea.1
+          value: ghcr.io/traefik/traefik-hub:v3.21.0
         template: deployment.yaml
 
   - it: should not mount the license token in proxy mode
@@ -32,7 +32,7 @@ tests:
       hub:
         enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - hasDocuments:
           count: 0
@@ -55,7 +55,7 @@ tests:
       hub:
         enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - notContains:
           path: spec.template.spec.containers[0].args
@@ -69,7 +69,7 @@ tests:
         apimanagement:
           enabled: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - hasDocuments:
           count: 0

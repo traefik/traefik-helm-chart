@@ -27,10 +27,6 @@ spec:
     {{- toYaml . | nindent 4 }}
   {{- end }}
   {{- with $config.disableSessionTickets }}
-    {{- $version := include "traefik.proxyVersion" $ }}
-    {{- if semverCompare "<v3.4.0-0" $version }}
-      {{- fail "ERROR: disableSessionTickets is a feature only available for traefik >= v3.4.0." }}
-    {{- end }}
   disableSessionTickets: {{ . }}
   {{- end }}
   {{- with $config.maxVersion }}

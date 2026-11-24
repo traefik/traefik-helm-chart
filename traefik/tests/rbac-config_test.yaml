@@ -1010,10 +1010,10 @@ tests:
         hasDocuments:
           count: 0
 
-  - it: should not contain additional RBACS for hub > 3.19.0 API management
+  - it: should not contain additional RBACS for hub API management
     set:
       image:
-        tag: v3.19.0
+        tag: v3.21.0
       hub:
         token: xxx
         apimanagement:
@@ -1045,7 +1045,7 @@ tests:
   - it: should contain status subresource permissions for hub API management in namespaced mode
     set:
       image:
-        tag: v3.19.0
+        tag: v3.21.0
       hub:
         token: xxx
         apimanagement:
@@ -1079,7 +1079,7 @@ tests:
   - it: should contain status subresource permissions for hub API management in cluster mode
     set:
       image:
-        tag: v3.19.0
+        tag: v3.21.0
       hub:
         token: xxx
         apimanagement:
@@ -1205,10 +1205,10 @@ tests:
               - patch
               - delete
 
-  - it: should provide expected RBACS for Hub version >3.3.2 and <3.7.0
+  - it: should provide expected RBACS for Hub
     set:
       image:
-        tag: v3.6.0
+        tag: v3.21.0
       hub:
         token: "xxx"
     asserts:

@@ -4,11 +4,11 @@ templates:
 tests:
   - it: should not use the hardened image by default
     chart:
-      appVersion: v3.3.0
+      appVersion: v3.7.19
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: docker.io/traefik:v3.3.0
+          value: docker.io/traefik:v3.7.19
 
   - it: should use the hardened registry and repository when enabled
     set:
@@ -16,11 +16,11 @@ tests:
         token: my-token
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
+          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-hardened
 
   - it: should use the hardened image in proxy mode
     set:
@@ -28,11 +28,11 @@ tests:
         enabled: true
         hardened: true
       image:
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
+          value: registry.traefik.io/traefik-hub/traefik-hub:v3.21.0-hardened
 
   - it: should append -hardened to a FIPS tag when enabled
     set:
@@ -53,11 +53,11 @@ tests:
         hardened: true
       image:
         registry: myregistry.example.com
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: myregistry.example.com/traefik-hub/traefik-hub:v3.21.0-ea.1-hardened
+          value: myregistry.example.com/traefik-hub/traefik-hub:v3.21.0-hardened
 
   - it: should let the repository be overridden
     set:
@@ -66,11 +66,11 @@ tests:
         hardened: true
       image:
         repository: acme/traefik-hub
-        tag: v3.21.0-ea.1
+        tag: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
-          value: registry.traefik.io/acme/traefik-hub:v3.21.0-ea.1-hardened
+          value: registry.traefik.io/acme/traefik-hub:v3.21.0-hardened
 
   - it: should not append -hardened when pinning by digest
     set:
@@ -79,7 +79,7 @@ tests:
         hardened: true
       image:
         digest: sha256:1c5b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2c65b1b8b4e2
-      versionOverride: v3.21.0-ea.1
+      versionOverride: v3.21.0
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image

@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 42.4.2](https://img.shields.io/badge/Version-42.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.8.0](https://img.shields.io/badge/AppVersion-v3.8.0-informational?style=flat-square)
+![Version: 42.4.3](https://img.shields.io/badge/Version-42.4.3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.20](https://img.shields.io/badge/AppVersion-v3.7.20-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -30,7 +30,7 @@ Kubernetes: `>=1.30.0-0`
 | accessLog | object | `{"addInternals":false,"bufferingSize":null,"dualOutput":false,"enabled":false,"fields":{"defaultMode":"keep","headers":{"defaultMode":"drop","names":{}},"names":{},"queryParameters":{"defaultMode":null}},"filters":{"minDuration":"","retryAttempts":false,"statusCodes":""},"format":null,"otlp":{"enabled":false,"grpc":{"enabled":false,"endpoint":"","insecure":false,"tls":{"ca":"","cert":"","insecureSkipVerify":null,"key":""}},"http":{"enabled":false,"endpoint":"","headers":{},"tls":{"ca":"","cert":"","insecureSkipVerify":null,"key":""}},"resourceAttributes":{},"serviceName":null},"timezone":""}` | See [access logs reference](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/) |
 | accessLog.addInternals | bool | `false` | Enables accessLogs for internal resources. Default: false. |
 | accessLog.bufferingSize | int | `nil` | Set [bufferingSize](https://doc.traefik.io/traefik/reference/install-configuration/observability/logs-and-accesslogs/#opt-accesslog-bufferingSize) |
-| accessLog.dualOutput | bool | `false` | Enables access log output alongside OTLP (v3.7+). |
+| accessLog.dualOutput | bool | `false` | Enables access log output alongside OTLP. |
 | accessLog.enabled | bool | `false` | To enable access logs |
 | accessLog.fields.defaultMode | string | `"keep"` | Set default mode for fields.names |
 | accessLog.fields.headers.defaultMode | string | `"drop"` | [Limit logged fields or headers](https://doc.traefik.io/traefik/observe/logs-and-access-logs/#log-fields-customization) |
@@ -64,7 +64,7 @@ Kubernetes: `>=1.30.0-0`
 | affinity | object | `{}` | This example pod anti-affinity forces the scheduler to put traefik pods on nodes where no other traefik pods are scheduled. It should be used when hostNetwork: true to prevent port conflicts |
 | api.basePath | string | `""` | Configure API basePath |
 | api.dashboard | bool | `true` | Enable the dashboard |
-| api.dashboardName | string | `""` | Custom name for the dashboard (v3.7+). |
+| api.dashboardName | string | `""` | Custom name for the dashboard. |
 | api.debug | bool | `nil` | Enable the debug API |
 | api.disableDashboardAd | bool | `nil` | Disable the advertisement from the dashboard. |
 | api.insecure | bool | `nil` | Enable the insecure API (HTTP) |
@@ -137,7 +137,7 @@ Kubernetes: `>=1.30.0-0`
 | global.checkNewVersion | bool | `true` |  |
 | global.imagePullSecrets | list | `[]` | Pull secrets for fetching traefik container image when `deployment.imagePullSecrets` and `imagePullSecrets` are empty |
 | global.imageRegistry | string | `""` | Registry for the Traefik image, e.g. a mirror. `image.registry` takes precedence over it. Leave empty to keep the default registry. |
-| global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+). |
+| global.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header globally. |
 | global.sendAnonymousUsage | bool | `false` | Please take time to consider whether or not you wish to share anonymous data with us See https://doc.traefik.io/traefik/contributing/data-collection/ |
 | hostNetwork | bool | `false` | If hostNetwork is true, runs traefik in the host network namespace To prevent unschedulable pods due to port collisions, if hostNetwork=true and replicas>1, a pod anti-affinity is recommended and will be set if the affinity is left as default. |
 | hub.aigateway.enabled | bool | `false` | Set to true in order to enable AI Gateway. Requires a valid license token. |
@@ -151,8 +151,8 @@ Kubernetes: `>=1.30.0-0`
 | hub.apimanagement.enabled | bool | `false` | Set to true in order to enable API Management. Requires a valid license token. |
 | hub.apimanagement.openApi.refreshInterval | string | `1m` when unset | Interval to refresh the OpenAPI specification, as a Go duration. Must be at least `1m`. |
 | hub.apimanagement.openApi.validateRequestMethodAndPath | bool | `false` | When set to true, it will only accept paths and methods that are explicitly defined in its OpenAPI specification |
-| hub.enabled | bool | `true` when `hub.token` is set | Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy, which requires Traefik Hub >= v3.21.0-ea. |
-| hub.hardened | bool | `false` | Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub >= v3.21.0-ea. |
+| hub.enabled | bool | `true` when `hub.token` is set | Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy. |
+| hub.hardened | bool | `false` | Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled`. |
 | hub.mcpgateway.enabled | bool | `false` | Set to true in order to enable AI MCP Gateway. Requires a valid license token. |
 | hub.mcpgateway.maxRequestBodySize | int | `nil` | Hard limit for the size of request bodies inspected by the gateway. Accepts a plain integer representing **bytes**. The default value is `1048576` (1 MiB). |
 | hub.namespaces | list | `[]` | By default, Traefik Hub provider watches all namespaces. When using `rbac.namespaced`, it will watch helm release namespace and namespaces listed in this array. |
@@ -285,7 +285,7 @@ Kubernetes: `>=1.30.0-0`
 | hub.tracing.additionalTraceHeaders.traceContext.traceId | string | `""` | Name of the header that will contain the trace-id copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceParent | string | `""` | Name of the header that will contain the traceparent copy. |
 | hub.tracing.additionalTraceHeaders.traceContext.traceState | string | `""` | Name of the header that will contain the tracestate copy. |
-| hub.transparencyLogs | object | See _values.yaml_ | Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token and Traefik Hub >= v3.21. |
+| hub.transparencyLogs | object | See _values.yaml_ | Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token. |
 | hub.transparencyLogs.checkpointInterval | string | `1s` when unset | Interval between checkpoint writes, as a Go duration. Must be at least `100ms`. |
 | hub.transparencyLogs.debug | bool | `nil` | Also store the full rendered log line, not only its hash. Not recommended in production. Default: false. |
 | hub.transparencyLogs.driver | object | `{"aws":{"bucket":"","bucketPrefix":"","dsn":"","maxIdleConns":null,"maxOpenConns":null},"gcp":{"bucket":"","bucketPrefix":"","spanner":""},"posix":{"path":""}}` | Storage backend for the transparency log tree. Exactly one of `posix`, `gcp` or `aws` can be set. |
@@ -432,6 +432,7 @@ Kubernetes: `>=1.30.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
+| ports.metrics.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
@@ -440,6 +441,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.metrics.observability.tracing | bool | `nil` | Enables tracing for this entryPoint. |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| ports.traefik.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
 | ports.traefik.hostIP | string | `nil` | With hostNetwork enabled, bind Traefik's entrypoint listener to this IP. Otherwise, only set the Kubernetes container port's hostIP field (typically with hostPort); Traefik listens on all pod interfaces. |
@@ -452,11 +454,12 @@ Kubernetes: `>=1.30.0-0`
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
+| ports.web.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.web.forwardedHeaders.insecure | bool | `false` |  |
-| ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
+| ports.web.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header. |
 | ports.web.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.web.http.redirections.entryPoint | object | `{}` | Port Redirections Added in 2.2, one can make permanent redirects via entrypoints. Same sets of parameters: to, scheme, permanent and priority. https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#configuration-example |
 | ports.web.nodePort | int | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport) |
@@ -475,11 +478,12 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
 | ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
+| ports.websecure.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
 | ports.websecure.forwardedHeaders.insecure | bool | `false` |  |
-| ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header (v3.7+). |
+| ports.websecure.forwardedHeaders.notAppendXForwardedFor | bool | `false` | Disable appending RemoteAddr to X-Forwarded-For header. |
 | ports.websecure.forwardedHeaders.trustedIPs | list | `[]` | Trust forwarded headers information (X-Forwarded-*). |
 | ports.websecure.hostPort | int | `nil` | Use hostPort if set. |
 | ports.websecure.http.aliasHeadersStrategy | string | `nil` | Defines how request headers with non-alphanumeric characters in their names are handled (v3.7.12+). See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy) |
@@ -528,7 +532,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesGateway.burst | int | `nil` | Maximum burst of requests to the Kubernetes API server (v3.7.3+). Defaults to 100. |
 | providers.kubernetesGateway.crossProviderNamespaces | list | `[]` | List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+. |
 | providers.kubernetesGateway.enabled | bool | `false` | Enable Traefik Gateway provider for Gateway API |
-| providers.kubernetesGateway.experimentalChannel | bool | `false` | Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7. |
+| providers.kubernetesGateway.experimentalChannel | bool | `false` | Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8. |
 | providers.kubernetesGateway.gatewayClass | string | `""` | Name of the GatewayClass to watch (v3.8+) Defaults to the class created by this chart when gatewayClass.enabled is true and labelSelector is not set. Cannot be used with labelSelector. |
 | providers.kubernetesGateway.gateways | list | `[]` | Scopes the provider to specific Gateways, as a list of `name` and `namespace` (defaults to the release namespace) (v3.7.14+). If left empty, Traefik processes all Gateways. |
 | providers.kubernetesGateway.labelSelector | string | `""` | A label selector can be defined to filter on specific GatewayClass objects only. Deprecated in Proxy v3.8 in favor of gatewayClass; the two options are mutually exclusive. |
@@ -577,7 +581,7 @@ Kubernetes: `>=1.30.0-0`
 | providers.kubernetesIngressNGINX.ipAllowListStrategy.depth | int | `0` | Number of trusted proxy hops to skip when extracting the client IP from the X-Forwarded-For header. 0 disables depth-based extraction. (default: 0) |
 | providers.kubernetesIngressNGINX.ipAllowListStrategy.excludedIPS | list | `[]` | List of IPs to exclude when scanning the X-Forwarded-For header to find the client IP. |
 | providers.kubernetesIngressNGINX.ipAllowListStrategy.ipv6Subnet | int | `0` | IPv6 subnet size used to group IPv6 addresses when checking the allow list. 0 disables subnet grouping. |
-| providers.kubernetesIngressNGINX.modsec.enabled | bool | `false` | Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8. |
+| providers.kubernetesIngressNGINX.modsec.enabled | bool | `false` | Enable ModSec engine. Requires Traefik Hub. |
 | providers.kubernetesIngressNGINX.modsec.owaspCoreRules | bool | `false` | Enable OWASP Core Rules. |
 | providers.kubernetesIngressNGINX.modsec.snippet | string | `""` | Custom ModSec rules snippet. |
 | providers.kubernetesIngressNGINX.proxyBodySize | int | `nil` | Default maximum size of a client request body in bytes (default: 1048576) |
