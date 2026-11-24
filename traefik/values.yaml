@@ -708,11 +708,14 @@ metrics:
     manualRouting: false
     # -- Add HTTP header labels to metrics. See EXAMPLES.md or upstream doc for usage.
     headerLabels: {}  # @schema type:[object, null]
-    service:
+    service:  # @schema additionalProperties: false
       # -- Create a dedicated metrics service to use with ServiceMonitor
       enabled: false
       labels: {}
       annotations: {}
+      # -- Additional entries here will be added to the dedicated metrics Service [spec](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.35/#servicespec-v1-core), e.g. ipFamilyPolicy or ipFamilies.
+      # Cannot contain type, selector or ports entries.
+      spec: {}
     # -- (bool) When set to true, it won't check if Prometheus Operator CRDs are deployed
     disableAPICheck:  # @schema type:[boolean, null]
     serviceMonitor:

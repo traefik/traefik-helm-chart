@@ -53,6 +53,30 @@ tests:
             name: metrics
             targetPort: metrics
             protocol: TCP
+      - notExists:
+          path: spec.ipFamilyPolicy
+      - notExists:
+          path: spec.ipFamilies
+  - it: should add metrics.prometheus.service.spec entries to the metrics service
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+            spec:
+              ipFamilyPolicy: PreferDualStack
+              ipFamilies:
+                - IPv4
+                - IPv6
+    asserts:
+      - equal:
+          path: spec.ipFamilyPolicy
+          value: PreferDualStack
+      - equal:
+          path: spec.ipFamilies
+          value:
+            - IPv4
+            - IPv6
   - it: should use the correct port when not using the default entryPoint
     set:
       metrics:
