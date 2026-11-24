@@ -9,8 +9,17 @@
 * feat(gateway-api): add support for ListenerSets
 * feat(deps): update traefik docker tag to v3.8.0
 * docs(gateway): update Gateway API references to v1.7 (#2101)
+* fix(ports): add enabled option to ports (#2004)
 * chore: merge v42.4.3 into master for release v42.4.3
 * chore(release): publish 43.0.0
+
+**Upgrade Notes**
+
+1. **Supported versions.** The minimum supported versions are Traefik Proxy v3.7.0 and Traefik Hub v3.21.0. The chart now defaults to Proxy v3.8.0. Chart-generated IngressRoutes use `spec.ingressClassName` when an ingress class is configured. ([#2114](https://github.com/traefik/traefik-helm-chart/pull/2114), [#2122](https://github.com/traefik/traefik-helm-chart/pull/2122))
+2. **Gateway API CRDs.** If you use the Kubernetes Gateway provider with Proxy v3.8.0, install the [Gateway API v1.7.0 CRDs](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.7.0) before upgrading. Update `TCPRoute` manifests to `gateway.networking.k8s.io/v1`. Use the Experimental bundle and keep `providers.kubernetesGateway.experimentalChannel` enabled if you use listener filters. If you pin Proxy v3.7, follow the [v3.7 Gateway API instructions](https://doc.traefik.io/traefik/v3.7/reference/install-configuration/providers/kubernetes/kubernetes-gateway/). ([#2101](https://github.com/traefik/traefik-helm-chart/pull/2101), [Proxy v3.8 migration guide](https://doc.traefik.io/traefik/v3.8/migrate/v3/#kubernetes-gateway-api-provider))
+3. **Traefik CRDs.** The bundled Traefik CRDs are the same as in chart v42.4.3. If your cluster still has older Traefik CRDs, apply the bundled CRDs before `helm upgrade`. Helm does not update them automatically. ([Chart upgrade instructions](https://github.com/traefik/traefik-helm-chart#upgrading), [#2073](https://github.com/traefik/traefik-helm-chart/pull/2073))
+4. **GatewayClass and HTTPS listeners.** On Proxy v3.8, if `gatewayClass.enabled` is true and neither `providers.kubernetesGateway.gatewayClass` nor `providers.kubernetesGateway.labelSelector` is set, the provider watches the GatewayClass created by the chart. Review this behavior if you use a different GatewayClass. Review HTTPS listener TLS settings if you relied on the default `TLSOption`, because each listener now has its own TLS options. ([#2073](https://github.com/traefik/traefik-helm-chart/pull/2073), [Listener TLS options](https://doc.traefik.io/traefik/v3.8/migrate/v3/#listener-tls-options))
+5. **Disabled ports.** Use `ports.<name>.enabled: false` to disable an entry point. If Prometheus still points to the disabled metrics port, point `metrics.prometheus.entryPoint` at an enabled port or disable Prometheus metrics. ([#2004](https://github.com/traefik/traefik-helm-chart/pull/2004))
 
 ### Default value changes
 
