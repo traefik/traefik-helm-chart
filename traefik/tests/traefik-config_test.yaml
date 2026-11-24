@@ -1158,7 +1158,7 @@ tests:
       rbac:
         namespaced: true
       image:
-        tag: v3.6.10
+        tag: v3.7.19
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1166,7 +1166,7 @@ tests:
       - contains:
           path: spec.template.spec.containers[0].args
           content: "--providers.kubernetescrd.disableClusterScopeResources=true"
-  - it: should set disableClusterScopeResources when version > v3.6.10+ only on crd enabled provider
+  - it: should set disableClusterScopeResources only on crd enabled provider
     set:
       rbac:
         namespaced: true
@@ -1174,7 +1174,7 @@ tests:
         kubernetesIngress:
           enabled: false
       image:
-        tag: v3.6.10
+        tag: v3.7.19
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args
@@ -1187,7 +1187,7 @@ tests:
         kubernetesCRD:
           enabled: false
       image:
-        tag: v3.6.10
+        tag: v3.7.19
     asserts:
       - contains:
           path: spec.template.spec.containers[0].args

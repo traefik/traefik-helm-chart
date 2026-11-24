@@ -5,7 +5,7 @@ set:
   image:
     registry: ghcr.io
     repository: traefik/traefik-hub
-    tag: v3.20.0-rc.1
+    tag: v3.21.0
   hub:
     token: "xxx"
 tests:
