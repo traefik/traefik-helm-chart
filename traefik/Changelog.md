@@ -15,10 +15,9 @@
 
 **Upgrade Notes**
 
-1. **Traefik versions.** This release supports **only** Traefik Proxy v3.7.0+ and Traefik Hub v3.21.0+. If you run an older version, update `image.tag` before upgrading. ([#2114](https://github.com/traefik/traefik-helm-chart/pull/2114))
-2. **Gateway API.** Before upgrading to Proxy v3.8, install the [Gateway API v1.7.0 CRDs](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.7.0) if you use the Gateway provider. Update `TCPRoute` manifests to `gateway.networking.k8s.io/v1`. For listener filters, install the Experimental bundle and enable `providers.kubernetesGateway.experimentalChannel`. ([#2101](https://github.com/traefik/traefik-helm-chart/pull/2101), [#2122](https://github.com/traefik/traefik-helm-chart/pull/2122))
-3. **Traefik CRDs.** If your cluster still uses Traefik CRDs older than those shipped in chart v42.4.0, [apply the bundled CRDs](https://github.com/traefik/traefik-helm-chart#upgrading) before `helm upgrade`. ([#2073](https://github.com/traefik/traefik-helm-chart/pull/2073), [#2054](https://github.com/traefik/traefik-helm-chart/pull/2054))
-4. **GatewayClass.** When upgrading to Proxy v3.8, if the chart creates a GatewayClass and your provider previously watched a different class without a `labelSelector`, set `providers.kubernetesGateway.gatewayClass` to that class. ([#2073](https://github.com/traefik/traefik-helm-chart/pull/2073))
+1. **Traefik versions.** This release supports **only** Traefik Proxy v3.7.0+ and Traefik Hub v3.21.0+. ([#2114](https://github.com/traefik/traefik-helm-chart/pull/2114))
+2. **Gateway API.** Before upgrading to Proxy v3.8, install the [Gateway API v1.7.0 CRDs](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.7.0) and update `TCPRoute` manifests to `gateway.networking.k8s.io/v1`. 
+3. **Traefik CRDs.** You need to [apply the bundled CRDs](https://github.com/traefik/traefik-helm-chart#upgrading) before `helm upgrade`. ([#2073](https://github.com/traefik/traefik-helm-chart/pull/2073), [#2054](https://github.com/traefik/traefik-helm-chart/pull/2054))
 
 ### Default value changes
 
