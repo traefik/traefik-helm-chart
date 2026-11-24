@@ -1,5 +1,207 @@
 # Change Log
 
+## 43.0.0  ![AppVersion: v3.8.0](https://img.shields.io/static/v1?label=AppVersion&message=v3.8.0&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-24
+
+* refactor(chart)!: support only Proxy v3.7+ & Hub v3.21+
+* feat(pdb): support unhealthyPodEvictionPolicy
+* feat(gateway-api): add support for ListenerSets
+* feat(deps): update traefik docker tag to v3.8.0
+* docs(gateway): update Gateway API references to v1.7 (#2101)
+* chore: merge v42.4.3 into master for release v42.4.3
+* chore(release): publish 43.0.0
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 02a529a..698525a 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -126,6 +126,8 @@ podDisruptionBudget:  # @schema additionalProperties: false
+   enabled: false
+   maxUnavailable:  # @schema type:[string, integer, null];minimum:0
+   minAvailable:    # @schema type:[string, integer, null];minimum:0
++  # -- Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget.
++  unhealthyPodEvictionPolicy:  # @schema enum:[IfHealthyBudget, AlwaysAllow, null]; type:[string, null]
+ 
+ ingressClass:  # @schema additionalProperties: false
+   # -- Create a default IngressClass for Traefik
+@@ -175,16 +177,19 @@ gateway:
+   # -- Configure this Gateway as a [Default Gateway](https://kubernetes.io/blog/2025/11/06/gateway-api-v1-4/#introducing-default-gateways)
+   # by setting the `defaultScope` field (e.g. `All` or `Namespace`).
+   defaultScope:  # @schema enum:["All", "None", null]; type:[string, null]; default: null
++  # -- Namespaces allowed to attach [ListenerSets](https://gateway-api.sigs.k8s.io/guides/user-guides/listener-set/) to this Gateway (Traefik >= v3.8).
++  # The Gateway API default (`from: None`) rejects every ListenerSet. See [AllowedListeners](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#allowedlisteners).
++  allowedListeners:  # @schema type:[object, null]
+   listeners:
+     web:
+       # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+       # The port must match a port declared in ports section.
+       port: 8000
+-      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)
++      # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#hostname)
+       hostname: ""
+-      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#protocoltype)
++      # Specify expected protocol on this listener. See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#protocoltype)
+       protocol: HTTP
+-      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)
++      # -- (object) Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#fromnamespaces)
+       namespacePolicy:  # @schema type:[object, null]
+     # websecure listener is disabled by default because certificateRefs needs to be added,
+     # or you may specify TLS protocol with Passthrough mode.
+@@ -192,15 +197,15 @@ gateway:
+     #   # -- Port is the network port. Multiple listeners may use the same port, subject to the Listener compatibility rules.
+     #   # The port must match a port declared in ports section.
+     #   port: 8443
+-    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)
++    #   # -- Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#hostname)
+     #   hostname:
+-    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#protocoltype)
++    #   # Specify expected protocol on this listener See [ProtocolType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#protocoltype)
+     #   protocol: HTTPS
+-    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)
++    #   # -- Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#fromnamespaces)
+     #   namespacePolicy:
+-    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#gatewaytlsconfig)
++    #   # -- Add certificates for TLS or HTTPS protocols. See [GatewayTLSConfig](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#gatewaytlsconfig)
+     #   certificateRefs:
+-    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#tlsmodetype).
++    #   # -- TLS behavior for the TLS session initiated by the client. See [TLSModeType](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#tlsmodetype).
+     #   mode:
+ 
+ gatewayClass:  # @schema additionalProperties: false
+@@ -214,7 +219,7 @@ gatewayClass:  # @schema additionalProperties: false
+ api:  # @schema additionalProperties: false
+   # -- Enable the dashboard
+   dashboard: true
+-  # -- Custom name for the dashboard (v3.7+).
++  # -- Custom name for the dashboard.
+   dashboardName: ""  # @schema type:[string, null]
+   # -- (bool) Disable the advertisement from the dashboard.
+   disableDashboardAd:  # @schema type:[boolean, null]
+@@ -379,7 +384,7 @@ providers:
+     enabled: false
+     # -- List of namespaces from which Gateway API routes are allowed to declare TraefikService backendRef references. Requires traefik v3.7.1+.
+     crossProviderNamespaces: []
+-    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.
++    # -- Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8.
+     experimentalChannel: false
+     # -- Array of namespaces to watch. If left empty, Traefik watches all namespaces. kubernetesGateway provider requires ClusterRole and as a consequence `rbac.namespaced` is not supported.
+     namespaces: []
+@@ -513,7 +518,7 @@ providers:
+     httpsEntryPoint: "websecure"
+     # @schema additionalProperties: false
+     modsec:
+-      # -- Enable ModSec engine. Requires Traefik Hub >= v3.20.0-ea.8.
++      # -- Enable ModSec engine. Requires Traefik Hub.
+       enabled: false
+       # -- Enable OWASP Core Rules.
+       owaspCoreRules: false
+@@ -625,7 +630,7 @@ accessLog:
+     minDuration: ""
+   # -- Enables accessLogs for internal resources. Default: false.
+   addInternals: false
+-  # -- Enables access log output alongside OTLP (v3.7+).
++  # -- Enables access log output alongside OTLP.
+   dualOutput: false
+   fields:
+     # -- Set default mode for fields.names
+@@ -900,7 +905,7 @@ global:
+   # -- Please take time to consider whether or not you wish to share anonymous data with us
+   # See https://doc.traefik.io/traefik/contributing/data-collection/
+   sendAnonymousUsage: false
+-  # -- Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).
++  # -- Disable appending RemoteAddr to X-Forwarded-For header globally.
+   notAppendXForwardedFor: false
+   # -- Default strategy for request headers with non-alphanumeric characters in their names, applied to entry points without their own `http.aliasHeadersStrategy` or `http.underscoreHeadersStrategy` (v3.7.17+).
+   # See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#aliasheadersstrategy)
+@@ -954,6 +959,8 @@ envFrom: []
+ ports:
+   # @schema additionalProperties: false
+   traefik:
++    # -- Set to false to disable this entryPoint
++    enabled: true
+     port: 8080
+     # -- (int) Use hostPort if set.
+     hostPort:  # @schema type:[integer, null]; minimum:0
+@@ -984,6 +991,8 @@ ports:
+       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
+       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   web:
++    # -- Set to false to disable this entryPoint
++    enabled: true
+     # -- (bool) Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     asDefault:  # @schema type: [boolean, null]; default: null
+     port: 8000
+@@ -1011,7 +1020,7 @@ ports:
+       # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+       insecure: false
+-      # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
++      # -- Disable appending RemoteAddr to X-Forwarded-For header.
+       notAppendXForwardedFor: false
+       # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+       addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
+@@ -1046,6 +1055,8 @@ ports:
+       # -- Defines the tracing verbosity level for this entryPoint.
+       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   websecure:
++    # -- Set to false to disable this entryPoint
++    enabled: true
+     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
+     # asDefault: true
+     port: 8443
+@@ -1110,7 +1121,7 @@ ports:
+         # -- Trust forwarded headers information (X-Forwarded-*).
+       trustedIPs: []
+       insecure: false
+-      # -- Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).
++      # -- Disable appending RemoteAddr to X-Forwarded-For header.
+       notAppendXForwardedFor: false
+       # -- (bool) Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+).
+       addXForwardedSchemeHeaders:  # @schema type:[boolean, null]
+@@ -1142,6 +1153,8 @@ ports:
+       # -- Defines the tracing verbosity level for this entryPoint.
+       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
+   metrics:
++    # -- Set to false to disable this entryPoint
++    enabled: true
+     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
+     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
+     port: 9100
+@@ -1344,8 +1357,7 @@ fullnameOverride: ""
+ 
+ # Traefik Hub configuration. See https://doc.traefik.io/traefik-hub/
+ hub:  # @schema additionalProperties: false
+-  # -- (bool) Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik
+-  # Proxy, which requires Traefik Hub >= v3.21.0-ea.
++  # -- (bool) Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy.
+   # @default -- `true` when `hub.token` is set
+   enabled:  # @schema type:[boolean, null]
+   # -- Name of `Secret` with key 'token' set to a valid license token.
+@@ -1354,7 +1366,7 @@ hub:  # @schema additionalProperties: false
+   # -- Mount path for token secret.
+   tokenMountPath: "/etc/secrets"
+   # -- Use the hardened image variant. It appends `-hardened` to the tag and defaults the image
+-  # to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub >= v3.21.0-ea.
++  # to `registry.traefik.io/traefik-hub`. Requires `hub.enabled`.
+   hardened: false
+   # -- (bool) Disables all external network connections.
+   offline:  # @schema type:[boolean, null]
+@@ -1719,7 +1731,7 @@ hub:  # @schema additionalProperties: false
+ 
+   # @schema additionalProperties: false
+   # -- Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured.
+-  # Requires a valid license token and Traefik Hub >= v3.21.
++  # Requires a valid license token.
+   # @default -- See _values.yaml_
+   transparencyLogs:
+     # @schema additionalProperties: false
+```
+
+
 ## 42.4.3  ![AppVersion: v3.7.20](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.20&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-24

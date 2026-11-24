@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 42.4.3
+version: 43.0.0
 # renovate: image=traefik
 appVersion: v3.8.0
 kubeVersion: '>=1.30.0-0'
@@ -27,5 +27,8 @@ annotations:
   traefik.io/hub-min-version: v3.21.0
   traefik.io/hub-max-version: v3.21.13
   artifacthub.io/changes: |
-    - kind: added
-      description: "feat(deps): update traefik docker tag to v3.7.20"
+    - kind: changed
+      description: "This is a major release with breaking changes. Read the upgrade notes before upgrading."
+      links:
+        - name: Upgrade Notes
+          url: https://github.com/traefik/traefik-helm-chart/releases/tag/v43.0.0
