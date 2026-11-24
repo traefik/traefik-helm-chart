@@ -223,6 +223,26 @@ tests:
         token: xxx
     asserts:
       - notFailedTemplate: {}
+  - it: should not fail when trying to use this Chart with a hardened build of the minimum Hub version
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-hardened
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
+  - it: should not fail when trying to use this Chart with a FIPS hardened build of the minimum Hub version
+    set:
+      image:
+        registry: ghcr.io
+        repository: traefik/traefik-hub
+        tag: v3.21.0-fips-hardened
+      hub:
+        token: xxx
+    asserts:
+      - notFailedTemplate: {}
   - it: should not fail when trying to use this Chart with an ea Hub version within range
     set:
       image:
