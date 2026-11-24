@@ -482,10 +482,19 @@ tests:
           kind: Service
           apiVersion: v1
         template: service.yaml
-  - it: should fail when disabling traefik port and not specifying an healthcheck port
+  - it: should fail when disabling traefik port with null and not specifying an healthcheck port
     set:
       ports:
         traefik: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
+        template: deployment.yaml
+  - it: should fail when disabling traefik port with enabled=false and not specifying an healthcheck port
+    set:
+      ports:
+        traefik:
+          enabled: false
     asserts:
       - failedTemplate:
           errorMessage: "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`"
@@ -564,3 +573,59 @@ tests:
             protocol: TCP
             targetPort: a-way-too-long
         template: service.yaml
+  - it: should not have port 8000 of pod published to 80 of service nor be defined as entrypoint "web" when not enabled
+    set:
+      ports:
+        web:
+          enabled: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: web
+            containerPort: 8000
+            protocol: TCP
+        not: true
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: web
+            port: 80
+            protocol: TCP
+            targetPort: web
+        not: true
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.web.address=:8000/tcp"
+        not: true
+        template: deployment.yaml
+  - it: should not have port 8443 of pod published to 443 of service nor be defined as entrypoint "websecure" when not enabled
+    set:
+      ports:
+        websecure:
+          enabled: false
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: websecure
+            containerPort: 8443
+            protocol: TCP
+        not: true
+        template: deployment.yaml
+      - contains:
+          path: spec.ports
+          content:
+            name: websecure
+            port: 443
+            protocol: TCP
+            targetPort: websecure
+        not: true
+        template: service.yaml
+      - contains:
+          path: spec.template.spec.containers[0].args
+          content: "--entryPoints.websecure.address=:8443/tcp"
+        not: true
+        template: deployment.yaml
