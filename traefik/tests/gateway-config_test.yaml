@@ -59,7 +59,7 @@ tests:
   - it: should set expected apiVersion with v3 version
     set:
       image:
-        tag: 3.0.0-beta4
+        tag: v3.7.19
       providers:
         kubernetesGateway:
           enabled: true
@@ -340,3 +340,65 @@ tests:
       - equal:
           path: spec.defaultScope
           value: "All"
+  - it: should not set allowedListeners on the Gateway by default
+    set:
+      providers:
+        kubernetesGateway:
+          enabled: true
+    asserts:
+      - notExists:
+          path: spec.allowedListeners
+  - it: should configure "Same" allowedListeners on the Gateway
+    set:
+      image:
+        tag: v3.8.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: Same
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "Same"
+  - it: should configure "All" allowedListeners on the Gateway
+    set:
+      image:
+        tag: v3.8.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: All
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "All"
+  - it: should configure Selector for allowedListeners on the Gateway
+    set:
+      image:
+        tag: v3.8.0
+      providers:
+        kubernetesGateway:
+          enabled: true
+      gateway:
+        allowedListeners:
+          namespaces:
+            from: Selector
+            selector:
+              matchLabels:
+                shared-gateway-access: "true"
+    asserts:
+      - equal:
+          path: spec.allowedListeners.namespaces
+          value:
+            from: "Selector"
+            selector:
+              matchLabels:
+                shared-gateway-access: "true"

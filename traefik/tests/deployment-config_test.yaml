@@ -337,10 +337,10 @@ tests:
       - notContains:
           path: spec.template.spec.containers[0].args
           content: "--global.notAppendXForwardedFor=true"
-  - it: should have abortOnPluginFailure, when enabled on traefik >=3.3.0
+  - it: should have abortOnPluginFailure when enabled
     set:
       image:
-        tag: v3.6.10
+        tag: v3.7.19
       experimental:
         abortOnPluginFailure: true
     asserts:
@@ -594,29 +594,29 @@ tests:
           value: 50Mi
   - it: should set app.kubernetes.io/version from appVersion by default
     chart:
-      appVersion: v3.6.10
+      appVersion: v3.7.19
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.6.10
+          value: v3.7.19
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
-          value: v3.6.10
+          value: v3.7.19
   - it: should set app.kubernetes.io/version from image.tag without its digest
     set:
       image:
-        tag: v3.5.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+        tag: v3.7.2@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.5.2
+          value: v3.7.2
   - it: should set app.kubernetes.io/version from versionOverride
     set:
-      versionOverride: v3.4.1
+      versionOverride: v3.7.1
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.4.1
+          value: v3.7.1
   - it: should set app.kubernetes.io/version to a valid label value
     set:
       image:
@@ -640,14 +640,14 @@ tests:
       hub:
         token: xxx
       image:
-        tag: v3.20.0
+        tag: v3.21.0
     asserts:
       - equal:
           path: metadata.labels["app.kubernetes.io/version"]
-          value: v3.20.0
+          value: v3.21.0
       - equal:
           path: spec.template.metadata.labels["app.kubernetes.io/version"]
-          value: v3.20.0
+          value: v3.21.0
   - it: should set app.kubernetes.io/version to the default Hub tag when Hub is enabled without image.tag
     set:
       hub:

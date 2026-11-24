@@ -17,7 +17,7 @@ tests:
   - it: should set expected apiVersion with v3 version
     set:
       image:
-        tag: 3.0.0-beta4
+        tag: v3.7.19
       providers:
         kubernetesGateway:
           enabled: true

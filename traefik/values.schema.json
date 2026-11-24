@@ -21,7 +21,7 @@
                     ]
                 },
                 "dualOutput": {
-                    "description": "Enables access log output alongside OTLP (v3.7+).",
+                    "description": "Enables access log output alongside OTLP.",
                     "type": "boolean"
                 },
                 "enabled": {
@@ -251,7 +251,7 @@
                     "type": "boolean"
                 },
                 "dashboardName": {
-                    "description": "Custom name for the dashboard (v3.7+).",
+                    "description": "Custom name for the dashboard.",
                     "type": [
                         "string",
                         "null"
@@ -569,6 +569,13 @@
         "gateway": {
             "type": "object",
             "properties": {
+                "allowedListeners": {
+                    "description": "Namespaces allowed to attach [ListenerSets](https://gateway-api.sigs.k8s.io/guides/user-guides/listener-set/) to this Gateway (Traefik \u003e= v3.8). The Gateway API default (`from: None`) rejects every ListenerSet. See [AllowedListeners](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#allowedlisteners).",
+                    "type": [
+                        "object",
+                        "null"
+                    ]
+                },
                 "annotations": {
                     "description": "Additional gateway annotations (e.g. for cert-manager.io/issuer)",
                     "type": "object"
@@ -600,11 +607,11 @@
                             "type": "object",
                             "properties": {
                                 "hostname": {
-                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#hostname)",
+                                    "description": "Optional hostname. See [Hostname](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#hostname)",
                                     "type": "string"
                                 },
                                 "namespacePolicy": {
-                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.6/spec/#fromnamespaces)",
+                                    "description": "Routes are restricted to namespace of the gateway [by default](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#fromnamespaces)",
                                     "type": [
                                         "object",
                                         "null"
@@ -722,7 +729,7 @@
                     ]
                 },
                 "notAppendXForwardedFor": {
-                    "description": "Disable appending RemoteAddr to X-Forwarded-For header globally (v3.7+).",
+                    "description": "Disable appending RemoteAddr to X-Forwarded-For header globally.",
                     "type": "boolean"
                 },
                 "sendAnonymousUsage": {
@@ -810,14 +817,14 @@
                     }
                 },
                 "enabled": {
-                    "description": "Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy, which requires Traefik Hub \u003e= v3.21.0-ea.",
+                    "description": "Install Traefik Hub. Without `hub.token`, it runs in proxy mode: a drop-in Traefik Proxy.",
                     "type": [
                         "boolean",
                         "null"
                     ]
                 },
                 "hardened": {
-                    "description": "Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled` and Traefik Hub \u003e= v3.21.0-ea.",
+                    "description": "Use the hardened image variant. It appends `-hardened` to the tag and defaults the image to `registry.traefik.io/traefik-hub`. Requires `hub.enabled`.",
                     "type": "boolean"
                 },
                 "mcpgateway": {
@@ -1647,7 +1654,7 @@
                     }
                 },
                 "transparencyLogs": {
-                    "description": "Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token and Traefik Hub \u003e= v3.21.",
+                    "description": "Tamper-evident transparency logs. It's enabled as soon as a `driver` is configured. Requires a valid license token.",
                     "type": "object",
                     "properties": {
                         "checkpointInterval": {
@@ -2534,6 +2541,18 @@
                         "null"
                     ],
                     "minimum": 0
+                },
+                "unhealthyPodEvictionPolicy": {
+                    "description": "Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "IfHealthyBudget",
+                        "AlwaysAllow",
+                        null
+                    ]
                 }
             },
             "additionalProperties": false
@@ -2623,7 +2642,7 @@
                                 "type": "boolean"
                             },
                             "notAppendXForwardedFor": {
-                                "description": "Disable appending RemoteAddr to X-Forwarded-For header (v3.7+).",
+                                "description": "Disable appending RemoteAddr to X-Forwarded-For header.",
                                 "type": "boolean"
                             },
                             "trustedIPs": {
@@ -3074,7 +3093,7 @@
                             "type": "boolean"
                         },
                         "experimentalChannel": {
-                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8 and TLSRoute before v3.7.",
+                            "description": "Toggles support for Experimental Channel resources. Required for TCPRoute before Proxy v3.8.",
                             "type": "boolean"
                         },
                         "gatewayClass": {
@@ -3338,7 +3357,7 @@
                             "type": "object",
                             "properties": {
                                 "enabled": {
-                                    "description": "Enable ModSec engine. Requires Traefik Hub \u003e= v3.20.0-ea.8.",
+                                    "description": "Enable ModSec engine. Requires Traefik Hub.",
                                     "type": "boolean"
                                 },
                                 "owaspCoreRules": {

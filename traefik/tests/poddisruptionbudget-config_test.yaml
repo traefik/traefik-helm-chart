@@ -89,3 +89,40 @@ tests:
           value: 0
       - notExists:
           path: spec.maxUnavailable
+
+  - it: should omit unhealthyPodEvictionPolicy by default
+    set:
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+    asserts:
+      - notExists:
+          path: spec.unhealthyPodEvictionPolicy
+
+  - it: should allow evicting unhealthy pods when configured
+    set:
+      podDisruptionBudget:
+        enabled: true
+        minAvailable: 1
+        unhealthyPodEvictionPolicy: AlwaysAllow
+    asserts:
+      - equal:
+          path: spec.unhealthyPodEvictionPolicy
+          value: AlwaysAllow
+      - equal:
+          path: spec.minAvailable
+          value: 1
+
+  - it: should support the Kubernetes default eviction policy explicitly
+    set:
+      podDisruptionBudget:
+        enabled: true
+        maxUnavailable: 1
+        unhealthyPodEvictionPolicy: IfHealthyBudget
+    asserts:
+      - equal:
+          path: spec.unhealthyPodEvictionPolicy
+          value: IfHealthyBudget
+      - equal:
+          path: spec.maxUnavailable
+          value: 1

@@ -906,7 +906,7 @@ hub:
 image:
   registry: ghcr.io
   repository: traefik/traefik-hub
-  tag: v3.18.0
+  tag: v3.21.12
 
 experimental:
   plugins:
@@ -1339,7 +1339,7 @@ spec:
   values:
     # Your Traefik values here
     image:
-      tag: v3.6.12
+      tag: v3.7.19
 ```
 
 > [!NOTE]
@@ -1373,8 +1373,8 @@ The tag does not follow semver, so it requires a _versionOverride_:
 ```yaml
 image:
   repository: traefik/traefik
-  tag: experimental-v3.4
-versionOverride: v3.4
+  tag: experimental-v3.8
+versionOverride: v3.8
 ```
 
 ## Use Prometheus Operator
@@ -1438,15 +1438,12 @@ and deploy Gateway API CRDs:
 
 ```sh
 # Install Gateway API CRDs from the Standard channel.
-kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.6.3/standard-install.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.7.0/standard-install.yaml
 ```
 
-For Proxy v3.8.0-rc.1, install Gateway API v1.7.0 instead and set `image.tag: v3.8.0-rc.1`.
 To watch only the GatewayClass created by the chart:
 
 ```yaml
-image:
-  tag: v3.8.0-rc.1
 providers:
   kubernetesGateway:
     enabled: true
@@ -1456,7 +1453,7 @@ gatewayClass:
 ```
 
 Do not combine this provider option with `providers.kubernetesGateway.labelSelector`.
-TCPRoute uses `gateway.networking.k8s.io/v1` and does not require `experimentalChannel` on Proxy v3.8.
+TCPRoute uses `gateway.networking.k8s.io/v1` and does not require `experimentalChannel`.
 
 <details>
 
@@ -1628,7 +1625,7 @@ Once it's applied, whoami should be accessible on https://whoami.docker.localhos
 
 ## Use Kubernetes Ingress NGINX Provider
 
-Starting with Traefik Proxy v3.6.2, one can use the Kubernetes Ingress NGINX provider by setting the following _values_:
+One can use the Kubernetes Ingress NGINX provider by setting the following _values_:
 
 ```yaml
 providers:
@@ -1774,7 +1771,7 @@ The same Ingress resource is now served by **both** NGINX and Traefik! You can v
 
 ## Use Knative Provider
 
-Starting with Traefik Proxy v3.6, one can use the Knative provider (_experimental_) by setting the following _values_:
+One can use the Knative provider (_experimental_) by setting the following _values_:
 
 ```yaml
 experimental:
@@ -1785,8 +1782,8 @@ providers:
 ```
 
 > :warning:
-> You must first have Knative deployed. With Proxy v3.6, v1.19 of Knative is supported.
-> Knative 1.19 requires Kubernetes v1.32+
+> You must first have Knative deployed. With Proxy v3.7, v1.20 of Knative is supported.
+> Knative 1.20 requires Kubernetes v1.32+
 
 > :information_source:
 > If you want to test it using k3d, you'll need to set the image accordingly, for instance: `--image rancher/k3s:v1.34.1-k3s1`
@@ -1795,9 +1792,9 @@ Finish configuring Knative:
 
 ```shell
 # 1. Install/update the Knative CRDs
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-crds.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.20.0/serving-crds.yaml
 # 2. Install the Knative Serving core components
-kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.19.0/serving-core.yaml
+kubectl apply -f https://github.com/knative/serving/releases/download/knative-v1.20.0/serving-core.yaml
 # 3. Update the config-network configuration to use the Traefik ingress class
 kubectl patch configmap/config-network -n knative-serving --type merge \
   -p '{"data":{"ingress.class":"traefik.ingress.networking.knative.dev"}}'
@@ -2288,7 +2285,7 @@ service:
 deployment:
   initContainers:
     - name: copy-binary
-      image: traefik:v3.6.12
+      image: traefik:v3.7.19
       command: ["cp", "/usr/local/bin/traefik", "/shared/traefik"]
       volumeMounts:
         - name: traefik-bin
