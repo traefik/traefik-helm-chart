@@ -1447,3 +1447,22 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: 'ERROR: providers.kubernetesGateway.gatewayClass and labelSelector are mutually exclusive.'
+
+  - it: should reject gateway.allowedListeners on older Proxy versions
+    template: requirements.yaml
+    set:
+      image.tag: v3.7.19
+      providers.kubernetesGateway.enabled: true
+      gateway.allowedListeners.namespaces.from: All
+    asserts:
+      - failedTemplate:
+          errorMessage: 'ERROR: gateway.allowedListeners is only available for traefik >= v3.8.0-0.'
+
+  - it: should accept gateway.allowedListeners on Proxy v3.8.0 without experimentalChannel
+    template: requirements.yaml
+    set:
+      image.tag: v3.8.0
+      providers.kubernetesGateway.enabled: true
+      gateway.allowedListeners.namespaces.from: All
+    asserts:
+      - notFailedTemplate: {}
