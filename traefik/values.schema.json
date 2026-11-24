@@ -569,6 +569,13 @@
         "gateway": {
             "type": "object",
             "properties": {
+                "allowedListeners": {
+                    "description": "Namespaces allowed to attach [ListenerSets](https://gateway-api.sigs.k8s.io/guides/user-guides/listener-set/) to this Gateway (Traefik \u003e= v3.8). The Gateway API default (`from: None`) rejects every ListenerSet. See [AllowedListeners](https://gateway-api.sigs.k8s.io/reference/api-spec/1.7/spec/#allowedlisteners).",
+                    "type": [
+                        "object",
+                        "null"
+                    ]
+                },
                 "annotations": {
                     "description": "Additional gateway annotations (e.g. for cert-manager.io/issuer)",
                     "type": "object"
