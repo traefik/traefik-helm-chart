@@ -16,7 +16,7 @@
 **Upgrade Notes**
 
 1. This release includes a CRD update. See chart [UPGRADING](https://github.com/traefik/traefik-helm-chart?tab=readme-ov-file#upgrading) instructions and upstream [migration guide](https://doc.traefik.io/traefik/v3.7/migrate/v3/#v3710).
-2. **Traefik versions.** This release supports **only** Traefik Proxy v3.7.0+ and Traefik Hub v3.21.0+. ([#2114](https://github.com/traefik/traefik-helm-chart/pull/2114))
+2. This release supports **only** Traefik Proxy v3.7.0+ and Traefik Hub v3.21.0+. ([#2114](https://github.com/traefik/traefik-helm-chart/pull/2114))
 3. **Gateway API.** Before upgrading to Proxy v3.8, install the [Gateway API v1.7.0 CRDs](https://github.com/kubernetes-sigs/gateway-api/releases/tag/v1.7.0) and update `TCPRoute` manifests to `gateway.networking.k8s.io/v1`. 
 
 ### Default value changes
