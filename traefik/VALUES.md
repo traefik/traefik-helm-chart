@@ -1,6 +1,6 @@
 # traefik
 
-![Version: 42.4.1](https://img.shields.io/badge/Version-42.4.1-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.19](https://img.shields.io/badge/AppVersion-v3.7.19-informational?style=flat-square)
+![Version: 42.4.2](https://img.shields.io/badge/Version-42.4.2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: v3.7.20](https://img.shields.io/badge/AppVersion-v3.7.20-informational?style=flat-square)
 
 A Traefik based Kubernetes ingress controller
 
@@ -85,7 +85,7 @@ Kubernetes: `>=1.30.0-0`
 | deployment.dnsPolicy | string | `""` | Custom pod DNS policy. Apply if `hostNetwork: true` |
 | deployment.enabled | bool | `true` | Enable deployment |
 | deployment.goMemLimitPercentage | float | `0.9` | Percentage of memory limit to set for GOMEMLIMIT, set as decimal (0.9 = 90%, 0.95 = 95% etc). Only takes effect when resources.limits.memory is set. Set to 0 to disable (e.g. when using VPA or setting it via env) |
-| deployment.healthchecksHost | string | `ports.traefik.hostIP` if set, otherwise Pod IP | Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint. |
+| deployment.healthchecksHost | string | `ports.traefik.hostIP` when `hostNetwork` is enabled and set, otherwise Pod IP | Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint. |
 | deployment.healthchecksPort | string/int | `ports.traefik.port` | Override the liveness/readiness port. This is useful to integrate traefik with an external Load Balancer that performs healthchecks. |
 | deployment.healthchecksScheme | string | `nil` | Override the liveness/readiness scheme. Useful for getting ping to respond on websecure entryPoint. |
 | deployment.hostAliases | list | `[]` | Custom [host aliases](https://kubernetes.io/docs/tasks/network/customize-hosts-file-for-pods/) |
@@ -433,6 +433,7 @@ Kubernetes: `>=1.30.0-0`
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
+| ports.metrics.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.metrics.exposedPort | int | `9100` | The exposed port for this service |
 | ports.metrics.observability.accessLogs | bool | `nil` | Enables access-logs for this entryPoint. |
@@ -441,9 +442,10 @@ Kubernetes: `>=1.30.0-0`
 | ports.metrics.observability.tracing | bool | `nil` | Enables tracing for this entryPoint. |
 | ports.metrics.port | int | `9100` | When using hostNetwork, use another port to avoid conflict with node exporter: https://github.com/prometheus/prometheus/wiki/Default-port-allocations |
 | ports.metrics.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
+| ports.traefik.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.traefik.expose | object | `{"default":false}` | You SHOULD NOT expose the traefik port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |
 | ports.traefik.exposedPort | int | `8080` | The exposed port for this service |
-| ports.traefik.hostIP | string | `nil` | Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which means it's listening on all your interfaces and all your IPs. You may want to set this value if you need traefik to listen on specific interface only. |
+| ports.traefik.hostIP | string | `nil` | With hostNetwork enabled, bind Traefik's entrypoint listener to this IP. Otherwise, only set the Kubernetes container port's hostIP field (typically with hostPort); Traefik listens on all pod interfaces. |
 | ports.traefik.hostPort | int | `nil` | Use hostPort if set. |
 | ports.traefik.observability.accessLogs | bool | `nil` | Defines whether a router attached to this EntryPoint produces access-logs by default. |
 | ports.traefik.observability.metrics | bool | `nil` | Defines whether a router attached to this EntryPoint produces metrics by default. |
@@ -453,6 +455,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.traefik.protocol | string | `"TCP"` | The port protocol (TCP/UDP) |
 | ports.web.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.web.asDefault | bool | `nil` | Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint. |
+| ports.web.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.web.expose.default | bool | `true` |  |
 | ports.web.exposedPort | int | `80` |  |
 | ports.web.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |
@@ -476,6 +479,7 @@ Kubernetes: `>=1.30.0-0`
 | ports.websecure.allowACMEByPass | bool | `false` | See [upstream documentation](https://doc.traefik.io/traefik/reference/install-configuration/entrypoints/#allowacmebypass) |
 | ports.websecure.appProtocol | string | `nil` | See [upstream documentation](https://kubernetes.io/docs/concepts/services-networking/service/#application-protocol) |
 | ports.websecure.containerPort | int | `nil` | Use containerPort if set. |
+| ports.websecure.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.websecure.expose.default | bool | `true` |  |
 | ports.websecure.exposedPort | int | `443` |  |
 | ports.websecure.forwardedHeaders.addXForwardedSchemeHeaders | bool | `nil` | Add the X-Forwarded-Scheme and X-Scheme headers (v3.8+). |

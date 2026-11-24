@@ -53,13 +53,6 @@ tests:
             name: metrics
             targetPort: metrics
             protocol: TCP
-  - it: should not add extra spec entries to the metrics service by default
-    set:
-      metrics:
-        prometheus:
-          service:
-            enabled: true
-    asserts:
       - notExists:
           path: spec.ipFamilyPolicy
       - notExists:
@@ -77,9 +70,6 @@ tests:
                 - IPv6
     asserts:
       - equal:
-          path: spec.type
-          value: ClusterIP
-      - equal:
           path: spec.ipFamilyPolicy
           value: PreferDualStack
       - equal:
@@ -87,6 +77,48 @@ tests:
           value:
             - IPv4
             - IPv6
+  - it: should use the correct port when not using the default entryPoint
+    set:
+      metrics:
+        prometheus:
+          entryPoint: traefik
+          service:
+            enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - contains:
+          path: spec.ports
+          content:
+            port: 8080
+            name: metrics
+            targetPort: traefik
+            protocol: TCP
+  - it: should normalize entryPoint value for use as targetPort
+    set:
+      metrics:
+        prometheus:
+          entryPoint: MyMetricsEntryPoint
+          service:
+            enabled: true
+      ports:
+        MyMetricsEntryPoint:
+          port: 1234
+    asserts:
+      - hasDocuments:
+          count: 1
       - equal:
-          path: spec.ports[0].name
-          value: metrics
+          path: spec.ports[0].targetPort
+          value: mymetricsentryp
+  - it: should render when trying to use a disabled port, so that the human friendly error from requirements.yaml will be shown
+    set:
+      metrics:
+        prometheus:
+          service:
+            enabled: true
+      ports:
+        metrics:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 1

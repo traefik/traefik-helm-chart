@@ -110,6 +110,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 {{- end }}
 
+{{/* traefik.labels without helm.sh/chart, to avoid pod restarts on chart-only upgrades */}}
+{{- define "traefik.podlabels" -}}
+{{- omit (include "traefik.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
+
 {{/*
 Construct the namespace for all namespaced resources
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).
@@ -626,4 +631,17 @@ A driver is what enables transparency logs, so this doubles as the feature switc
         {{- end -}}
     {{- end -}}
     {{- join " " $drivers -}}
+{{- end -}}
+
+{{/*
+Return a struct of all enabled ports (as yaml string)
+*/}}
+{{- define "traefik.enabledPorts" }}
+{{- $ports := dict }}
+ {{- range $portName, $config := .Values.ports }}
+  {{- if and $config (dig "enabled" true $config) }}
+   {{- $_ := set $ports $portName $config }}
+  {{- end }}
+ {{- end }}
+{{- toYaml $ports }}
 {{- end -}}

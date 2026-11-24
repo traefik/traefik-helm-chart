@@ -40,7 +40,7 @@ deployment:
   # @default -- `ports.traefik.port`
   healthchecksPort:  # @schema type:[string, integer, null]; minimum:0
   # -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
-  # @default -- `ports.traefik.hostIP` if set, otherwise Pod IP
+  # @default -- `ports.traefik.hostIP` when `hostNetwork` is enabled and set, otherwise Pod IP
   healthchecksHost: ""
   # -- Override the liveness/readiness scheme. Useful for getting ping to
   # respond on websecure entryPoint.
@@ -957,13 +957,14 @@ envFrom: []
 ports:
   # @schema additionalProperties: false
   traefik:
+    # -- Set to false to disable this entryPoint
+    enabled: true
     port: 8080
     # -- (int) Use hostPort if set.
     hostPort:  # @schema type:[integer, null]; minimum:0
-    # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
-    # means it's listening on all your interfaces and all your IPs. You may want
-    # to set this value if you need traefik to listen on specific interface
-    # only.
+    # -- With hostNetwork enabled, bind Traefik's entrypoint listener to this IP.
+    # Otherwise, only set the Kubernetes container port's hostIP field (typically
+    # with hostPort); Traefik listens on all pod interfaces.
     hostIP:  # @schema type:[string, null]
 
     # Defines whether the port is exposed if service.type is LoadBalancer or
@@ -988,6 +989,8 @@ ports:
       # -- Defines the tracing verbosity level for routers attached to this EntryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   web:
+    # -- Set to false to disable this entryPoint
+    enabled: true
     # -- (bool) Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     asDefault:  # @schema type: [boolean, null]; default: null
     port: 8000
@@ -1050,6 +1053,8 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   websecure:
+    # -- Set to false to disable this entryPoint
+    enabled: true
     ## -- Enable this entrypoint as a default entrypoint. When a service doesn't explicitly set an entrypoint it will only use this entrypoint.
     # asDefault: true
     port: 8443
@@ -1146,6 +1151,8 @@ ports:
       # -- Defines the tracing verbosity level for this entryPoint.
       traceVerbosity:  # @schema enum:[minimal, detailed, null]; type:[string, null]; default: minimal
   metrics:
+    # -- Set to false to disable this entryPoint
+    enabled: true
     # -- When using hostNetwork, use another port to avoid conflict with node exporter:
     # https://github.com/prometheus/prometheus/wiki/Default-port-allocations
     port: 9100

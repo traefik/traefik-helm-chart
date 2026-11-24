@@ -43,3 +43,8 @@ Selector labels
 app.kubernetes.io/name: {{ include "hub-manager.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/* hub-manager.labels without helm.sh/chart, to avoid pod restarts on chart-only upgrades */}}
+{{- define "hub-manager.podlabels" -}}
+{{- omit (include "hub-manager.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
