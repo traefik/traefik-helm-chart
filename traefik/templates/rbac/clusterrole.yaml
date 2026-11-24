@@ -129,6 +129,7 @@ rules:
       - referencegrants
       - tcproutes
       - tlsroutes
+      - udproutes
     verbs:
       - get
       - list
@@ -146,6 +147,7 @@ rules:
       {{- end }}
       - tcproutes/status
       - tlsroutes/status
+      - udproutes/status
     verbs:
       - update
   {{- end }}
