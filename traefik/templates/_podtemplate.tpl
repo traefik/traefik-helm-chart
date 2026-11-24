@@ -14,7 +14,7 @@
       {{- end }}
       {{- end }}
       labels:
-      {{- include "traefik.labels" . | nindent 8 -}}
+      {{- include "traefik.podlabels" . | nindent 8 -}}
       {{- with .Values.deployment.podLabels }}
         {{- tpl (toYaml .) $ | nindent 8 }}
       {{- end }}
@@ -80,7 +80,10 @@
           {{- fail "ERROR: When disabling traefik port, you need to specify `deployment.healthchecksPort`" }}
         {{- end }}
         {{- $healthchecksPort := (default ($enabledPorts.traefik).port .Values.deployment.healthchecksPort) }}
-        {{- $healthchecksHost := (default ($enabledPorts.traefik).hostIP .Values.deployment.healthchecksHost) }}
+        {{- $healthchecksHost := .Values.deployment.healthchecksHost }}
+        {{- if and .Values.hostNetwork (not $healthchecksHost) $enabledPorts.traefik }}
+          {{- $healthchecksHost = $enabledPorts.traefik.hostIP }}
+        {{- end }}
         {{- $healthchecksScheme := (default "HTTP" .Values.deployment.healthchecksScheme) }}
         {{- $readinessPath := (default "/ping" .Values.deployment.readinessPath) }}
         {{- $livenessPath := (default "/ping" .Values.deployment.livenessPath) }}
@@ -225,7 +228,10 @@
           {{- end }}
           {{- range $name, $config := $enabledPorts }}
             {{- $entryPoints := (empty $config.uplink) | ternary "entryPoints" "hub.uplinkEntryPoints" }}
-            {{- $hostIP := default "" $config.hostIP }}
+            {{- $hostIP := "" }}
+            {{- if $.Values.hostNetwork }}
+              {{- $hostIP = default "" $config.hostIP }}
+            {{- end }}
             {{- if contains ":" $hostIP }}
               {{- $hostIP = printf "[%s]" $hostIP }}
             {{- end }}

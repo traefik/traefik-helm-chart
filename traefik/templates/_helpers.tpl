@@ -110,6 +110,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end }}
 {{- end }}
 
+{{/* traefik.labels without helm.sh/chart, to avoid pod restarts on chart-only upgrades */}}
+{{- define "traefik.podlabels" -}}
+{{- omit (include "traefik.labels" . | fromYaml) "helm.sh/chart" | toYaml -}}
+{{- end }}
+
 {{/*
 Construct the namespace for all namespaced resources
 We truncate at 63 chars because some Kubernetes name fields are limited to this (by the DNS naming spec).

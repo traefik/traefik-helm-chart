@@ -1,5 +1,82 @@
 # Change Log
 
+## 42.4.2  ![AppVersion: v3.7.19](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.19&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-23
+
+* fix(ports): only use hostIP for entrypoint binding with hostNetwork
+* fix(labels): keep the chart version out of the pod labels
+* feat(hub): :rocket: support traefik hub v3.21.13
+* chore(release): 🚀 publish 42.4.2
+
+**Upgrade Notes**
+
+1. **Pod labels**: `helm.sh/chart` is removed from pods. Pod selectors on `helm.sh/chart` must use `app.kubernetes.io/name` and `app.kubernetes.io/instance` instead, with PR https://github.com/traefik/traefik-helm-chart/pull/2075.
+2. **hostIP**: `ports.<name>.hostIP` binds the entrypoint and probes only with `hostNetwork` enabled, with PR https://github.com/traefik/traefik-helm-chart/pull/2110.
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 8e5f521..02a529a 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -40,7 +40,7 @@ deployment:
+   # @default -- `ports.traefik.port`
+   healthchecksPort:  # @schema type:[string, integer, null]; minimum:0
+   # -- Override the liveness/readiness host. Useful for getting ping to respond on non-default entryPoint.
+-  # @default -- `ports.traefik.hostIP` if set, otherwise Pod IP
++  # @default -- `ports.traefik.hostIP` when `hostNetwork` is enabled and set, otherwise Pod IP
+   healthchecksHost: ""
+   # -- Override the liveness/readiness scheme. Useful for getting ping to
+   # respond on websecure entryPoint.
+@@ -957,10 +957,9 @@ ports:
+     port: 8080
+     # -- (int) Use hostPort if set.
+     hostPort:  # @schema type:[integer, null]; minimum:0
+-    # -- Use hostIP if set. If not set, Kubernetes will default to 0.0.0.0, which
+-    # means it's listening on all your interfaces and all your IPs. You may want
+-    # to set this value if you need traefik to listen on specific interface
+-    # only.
++    # -- With hostNetwork enabled, bind Traefik's entrypoint listener to this IP.
++    # Otherwise, only set the Kubernetes container port's hostIP field (typically
++    # with hostPort); Traefik listens on all pod interfaces.
+     hostIP:  # @schema type:[string, null]
+ 
+     # Defines whether the port is exposed if service.type is LoadBalancer or
+```
+
+
+## 42.4.1  ![AppVersion: v3.7.19](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.19&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-17
+
+* fix(poddisruptionbudget): keep minAvailable and maxUnavailable when set to 0
+* fix(daemonset): keep revisionHistoryLimit when set to 0
+* feat(hub): :rocket: support traefik hub v3.21.12
+* feat(deps): update traefik docker tag to v3.7.19
+* chore(release): publish 42.4.1
+* chore(deps): update github actions
+
+### Default value changes
+
+```diff
+diff --git a/traefik/values.yaml b/traefik/values.yaml
+index 2305126..8e5f521 100644
+--- a/traefik/values.yaml
++++ b/traefik/values.yaml
+@@ -1274,7 +1274,7 @@ serviceAccountAnnotations: {}
+ resources: {}
+ 
+ # -- This example pod anti-affinity forces the scheduler to put traefik pods
+-# -- on nodes where no other traefik pods are scheduled.
++# on nodes where no other traefik pods are scheduled.
+ # It should be used when hostNetwork: true to prevent port conflicts
+ affinity: {}
+ #  podAntiAffinity:
+```
+
+
 ## 42.4.0  ![AppVersion: v3.7.18](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.18&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-12
