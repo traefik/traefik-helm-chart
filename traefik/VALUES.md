@@ -432,6 +432,7 @@ Kubernetes: `>=1.30.0-0`
 | persistence.subPath | string | `""` | Only mount a subpath of the Volume into the pod |
 | persistence.volumeName | string | `""` |  |
 | podDisruptionBudget | object | See _values.yaml_ | [Pod Disruption Budget](https://kubernetes.io/docs/reference/kubernetes-api/policy-resources/pod-disruption-budget-v1/) |
+| podDisruptionBudget.unhealthyPodEvictionPolicy | string | `nil` | Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget. |
 | podSecurityContext | object | See _values.yaml_ | [Pod Security Context](https://kubernetes.io/docs/reference/kubernetes-api/workload-resources/pod-v1/#security-context) |
 | ports.metrics.enabled | bool | `true` | Set to false to disable this entryPoint |
 | ports.metrics.expose | object | `{"default":false}` | You may not want to expose the metrics port on production deployments. If you want to access it from outside your cluster, use `kubectl port-forward` or create a secure ingress |

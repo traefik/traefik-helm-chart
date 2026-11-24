@@ -126,6 +126,8 @@ podDisruptionBudget:  # @schema additionalProperties: false
   enabled: false
   maxUnavailable:  # @schema type:[string, integer, null];minimum:0
   minAvailable:    # @schema type:[string, integer, null];minimum:0
+  # -- Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget.
+  unhealthyPodEvictionPolicy:  # @schema enum:[IfHealthyBudget, AlwaysAllow, null]; type:[string, null]
 
 ingressClass:  # @schema additionalProperties: false
   # -- Create a default IngressClass for Traefik

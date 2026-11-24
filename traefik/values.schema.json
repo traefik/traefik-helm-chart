@@ -2536,6 +2536,18 @@
                         "null"
                     ],
                     "minimum": 0
+                },
+                "unhealthyPodEvictionPolicy": {
+                    "description": "Set [unhealthy pod eviction policy](https://kubernetes.io/docs/tasks/run-application/configure-pdb/#unhealthy-pod-eviction-policy). When unset, Kubernetes uses IfHealthyBudget.",
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "enum": [
+                        "IfHealthyBudget",
+                        "AlwaysAllow",
+                        null
+                    ]
                 }
             },
             "additionalProperties": false
