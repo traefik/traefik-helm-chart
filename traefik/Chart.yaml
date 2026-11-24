@@ -2,7 +2,7 @@ apiVersion: v2
 name: traefik
 description: A Traefik based Kubernetes ingress controller
 type: application
-version: 42.4.2
+version: 42.4.3
 # renovate: image=traefik
 appVersion: v3.7.20
 kubeVersion: '>=1.30.0-0'
@@ -27,9 +27,5 @@ annotations:
   traefik.io/hub-min-version: v3.19.3
   traefik.io/hub-max-version: v3.21.13
   artifacthub.io/changes: |
-    - kind: fixed
-      description: "fix(ports): only use hostIP for entrypoint binding with hostNetwork"
-    - kind: fixed
-      description: "fix(labels): keep the chart version out of the pod labels"
     - kind: added
-      description: "feat(hub): support traefik hub v3.21.13"
+      description: "feat(deps): update traefik docker tag to v3.7.20"
