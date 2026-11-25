@@ -66,6 +66,18 @@ tests:
       - equal:
           path: spec.selector.matchLabels["app.kubernetes.io/name"]
           value: traefik
+  - it: should not set jobLabel by default
+    capabilities:
+      apiVersions:
+        - monitoring.coreos.com/v1
+    set:
+      metrics:
+        prometheus:
+          serviceMonitor:
+            enabled: true
+    asserts:
+      - notExists:
+          path: spec.jobLabel
   - it: should provide ServiceMonitor pointing to metrics service, when prometheus.service.enabled is true
     capabilities:
       apiVersions:
