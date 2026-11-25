@@ -1519,6 +1519,44 @@ Once it's applied, whoami should be accessible on [whoami.docker.localhost](http
 
 :information_source: In this example, `Deployment` and `HTTPRoute` should be deployed in the same namespace as the Traefik Gateway: Chart namespace.
 
+## Run multiple Traefik instances with Gateway API
+
+You can deploy separate Traefik instances for internal and public traffic in the same Kubernetes cluster.
+Because `GatewayClass` is cluster-scoped, give each Helm release a unique `gatewayClass.name`.
+With Traefik Proxy v3.8 or later, the chart sets `providers.kubernetesGateway.gatewayClass` from that name so each instance handles only its own GatewayClass.
+
+This isolates Gateway API resources only: both releases still enable the IngressRoute and Ingress providers and a default IngressClass.
+For Gateway API-only instances, disable `providers.kubernetesCRD.enabled`, `providers.kubernetesIngress.enabled` and `ingressClass.enabled` in the shared `values.yaml`.
+
+To expose multiple Gateways from just one Traefik instance, see [Deploy multiple Gateways with a single Traefik Deployment/DaemonSet](#deploy-multiple-gateways-with-a-single-traefik-deploymentdaemonset).
+
+Install the Gateway API CRDs once for the cluster, as described above, then create a shared `values.yaml`:
+
+```yaml
+providers:
+  kubernetesGateway:
+    enabled: true
+```
+
+Install the two releases into separate namespaces, setting each release's GatewayClass name:
+
+```sh
+helm upgrade --install traefik-internal traefik/traefik \
+  --namespace traefik-internal --create-namespace \
+  --values values.yaml \
+  --set gatewayClass.name=traefik-internal
+
+helm upgrade --install traefik-public traefik/traefik \
+  --namespace traefik-public --create-namespace \
+  --values values.yaml \
+  --set gatewayClass.name=traefik-public
+```
+
+Each release creates its own GatewayClass and a Gateway in its namespace.
+An `HTTPRoute` selects the intended Gateway through its `parentRefs`.
+By default, each Gateway accepts routes from its own namespace only.
+Set `gateway.listeners.<name>.namespacePolicy` to accept routes from other namespaces.
+
 ## Use Kubernetes Gateway API with cert-manager
 
 One can use the new stable Kubernetes Gateway API provider with automatic TLS certificate delivery (with cert-manager) by setting the following _values_:
