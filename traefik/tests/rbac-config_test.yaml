@@ -580,7 +580,7 @@ tests:
       - hasDocuments:
           count: 0
         template: rbac/rolebinding.yaml
-  - it: Role should allow get, list, watch access to every secret if secretResourceNames is empty
+  - it: Role should allow get, list, watch access to every secret
     set:
       rbac:
         namespaced: true
@@ -597,32 +597,10 @@ tests:
               - get
               - list
               - watch
-  - it: Role should allow get, list, watch access only to secrets listed in secretResourceNames if not empty
+  - it: Role should grant hub secrets write access in the release namespace
     set:
       rbac:
         namespaced: true
-        secretResourceNames: [traefik-tls-cert]
-    asserts:
-      - template: rbac/role.yaml
-        contains:
-          path: rules
-          content:
-            apiGroups:
-              - ""
-            resources:
-              - secrets
-            resourceNames:
-              - traefik-tls-cert
-            verbs:
-              - get
-              - list
-              - watch
-
-  - it: Role should keep hub secrets access unrestricted by secretResourceNames
-    set:
-      rbac:
-        namespaced: true
-        secretResourceNames: [traefik-tls-cert]
       hub:
         token: xxx
     asserts:
