@@ -1,5 +1,13 @@
 # Change Log
 
+## 42.4.4  ![AppVersion: v3.7.20](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.20&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
+
+**Release date:** 2026-11-25
+
+* fix(release): publish 42.4.4. Tag v42.4.3 points at chart version 42.4.2 (#2130).
+
+
+
 ## 42.4.3  ![AppVersion: v3.7.20](https://img.shields.io/static/v1?label=AppVersion&message=v3.7.20&color=success&logo=) ![Kubernetes: >=1.30.0-0](https://img.shields.io/static/v1?label=Kubernetes&message=%3E%3D1.30.0-0&color=informational&logo=kubernetes) ![Helm: v3](https://img.shields.io/static/v1?label=Helm&message=v3&color=informational&logo=helm)
 
 **Release date:** 2026-11-24
