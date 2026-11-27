@@ -164,6 +164,33 @@ spec:
                     maxItems: 100
                     type: array
                 type: object
+              parentRefs:
+                description: |-
+                  ParentRefs references the APIPortals that expose this APICatalogItem.
+                  If not set, all the APIPortals of the namespace of this APICatalogItem expose it.
+                  An APIPortal can refuse this APICatalogItem with its `allowedApiCatalogItems` field.
+                  Each reference must be unique.
+                items:
+                  description: APIPortalReference references an APIPortal.
+                  properties:
+                    name:
+                      description: Name of the APIPortal.
+                      maxLength: 253
+                      type: string
+                    namespace:
+                      description: |-
+                        Namespace of the APIPortal.
+                        If not set, the namespace of the APICatalogItem applies.
+                      maxLength: 63
+                      type: string
+                  required:
+                  - name
+                  type: object
+                  x-kubernetes-map-type: atomic
+                maxItems: 100
+                minItems: 1
+                type: array
+                x-kubernetes-list-type: set
             type: object
             x-kubernetes-validations:
             - message: groups and everyone are mutually exclusive
@@ -248,6 +275,23 @@ spec:
                   - name
                   type: object
                 type: array
+              resolvedParentRefs:
+                description: ResolvedParentRefs is the list of APIPortals that expose
+                  this APICatalogItem.
+                items:
+                  description: ResolvedAPIPortalReference references a resolved APIPortal.
+                  properties:
+                    name:
+                      description: Name of the APIPortal.
+                      type: string
+                    namespace:
+                      description: Namespace of the APIPortal.
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
               syncedAt:
                 format: date-time
                 type: string
@@ -262,6 +306,23 @@ spec:
                       type: string
                   required:
                   - name
+                  type: object
+                type: array
+              unresolvedParentRefs:
+                description: UnresolvedParentRefs is the list of APIPortals that do
+                  not exist or that do not allow this APICatalogItem.
+                items:
+                  description: ResolvedAPIPortalReference references a resolved APIPortal.
+                  properties:
+                    name:
+                      description: Name of the APIPortal.
+                      type: string
+                    namespace:
+                      description: Namespace of the APIPortal.
+                      type: string
+                  required:
+                  - name
+                  - namespace
                   type: object
                 type: array
               version:

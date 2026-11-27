@@ -221,6 +221,12 @@ spec:
                     x-kubernetes-validations:
                     - message: must be a valid URL
                       rule: isURL(self)
+                  matches:
+                    description: |-
+                      Matches is a matcher expression evaluated against the JWT claims to restrict access to the portal.
+                      Only users whose claims match the expression are granted access.
+                      Example: OneOf(`https://clients.hub.traefik.io/role`, `admin`, `editor`)
+                    type: string
                   scopes:
                     description: Scopes is a list of OAuth2 scopes.
                     items:
