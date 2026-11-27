@@ -40,6 +40,105 @@ spec:
           spec:
             description: The desired behavior of this APIPortal.
             properties:
+              allowedApiCatalogItems:
+                description: |-
+                  AllowedAPICatalogItems limits the APICatalogItems that can attach to this APIPortal.
+                  If not set, only the APICatalogItems of the namespace of this APIPortal can attach to it.
+                properties:
+                  namespaces:
+                    description: Namespaces indicates the namespaces from which APICatalogItems
+                      can attach to this APIPortal.
+                    properties:
+                      from:
+                        default: Same
+                        description: |-
+                          From indicates where this APIPortal selects APICatalogItems. Possible values are:
+
+                          * All: APICatalogItems in all namespaces can attach to this APIPortal.
+                          * Selector: APICatalogItems in the namespaces that Selector matches, or that Names lists,
+                            can attach to this APIPortal.
+                          * Same: only APICatalogItems in the namespace of this APIPortal can attach to it.
+
+                          An empty From means "Same".
+                        enum:
+                        - All
+                        - Selector
+                        - Same
+                        type: string
+                      names:
+                        description: |-
+                          Names lists the namespaces from which APICatalogItems can attach to this APIPortal.
+                          Setting this field requires From to be "Selector".
+                          These namespaces come in addition to the namespaces that Selector matches.
+                          Each name must be unique.
+                        items:
+                          maxLength: 63
+                          type: string
+                        maxItems: 100
+                        minItems: 1
+                        type: array
+                        x-kubernetes-list-type: set
+                      selector:
+                        description: |-
+                          Selector matches the namespaces from which APICatalogItems can attach to this APIPortal.
+                          Setting this field requires From to be "Selector".
+                          An empty Selector matches all the namespaces.
+                          An unset Selector matches no namespace, so Names must then list at least one.
+                        properties:
+                          matchExpressions:
+                            description: matchExpressions is a list of label selector
+                              requirements. The requirements are ANDed.
+                            items:
+                              description: |-
+                                A label selector requirement is a selector that contains values, a key, and an operator that
+                                relates the key and values.
+                              properties:
+                                key:
+                                  description: key is the label key that the selector
+                                    applies to.
+                                  type: string
+                                operator:
+                                  description: |-
+                                    operator represents a key's relationship to a set of values.
+                                    Valid operators are In, NotIn, Exists and DoesNotExist.
+                                  type: string
+                                values:
+                                  description: |-
+                                    values is an array of string values. If the operator is In or NotIn,
+                                    the values array must be non-empty. If the operator is Exists or DoesNotExist,
+                                    the values array must be empty. This array is replaced during a strategic
+                                    merge patch.
+                                  items:
+                                    type: string
+                                  type: array
+                                  x-kubernetes-list-type: atomic
+                              required:
+                              - key
+                              - operator
+                              type: object
+                            type: array
+                            x-kubernetes-list-type: atomic
+                          matchLabels:
+                            additionalProperties:
+                              type: string
+                            description: |-
+                              matchLabels is a map of {key,value} pairs. A single {key,value} in the matchLabels
+                              map is equivalent to an element of matchExpressions, whose key field is "key", the
+                              operator is "In", and the values array contains only "value". The requirements are ANDed.
+                            type: object
+                        type: object
+                        x-kubernetes-map-type: atomic
+                    type: object
+                    x-kubernetes-validations:
+                    - message: selector or names is required when from is Selector
+                      rule: '!(has(self.from) && self.from == ''Selector'') || has(self.selector)
+                        || has(self.names)'
+                    - message: selector and names can only be set when from is Selector
+                      rule: (has(self.from) && self.from == 'Selector') || (!has(self.selector)
+                        && !has(self.names))
+                required:
+                - namespaces
+                type: object
               auth:
                 description: Auth references the APIPortalAuth resource for authentication
                   configuration.
@@ -195,6 +294,24 @@ spec:
                       the user ID.
                     type: string
                 type: object
+              resolvedApiCatalogItems:
+                description: ResolvedAPICatalogItems is the list of APICatalogItems
+                  that are attached to this APIPortal.
+                items:
+                  description: ResolvedAPICatalogItemReference references a resolved
+                    APICatalogItem.
+                  properties:
+                    name:
+                      description: Name of the APICatalogItem.
+                      type: string
+                    namespace:
+                      description: Namespace of the APICatalogItem.
+                      type: string
+                  required:
+                  - name
+                  - namespace
+                  type: object
+                type: array
               syncedAt:
                 format: date-time
                 type: string
