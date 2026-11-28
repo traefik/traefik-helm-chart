@@ -10,7 +10,7 @@
 {{- end -}}
 {{- $namespaces = sortAlpha (uniq $namespaces) -}}
 
-{{- if and .Values.rbac.enabled (or .Values.rbac.namespaced .Values.hub.token) }}
+{{- if .Values.rbac.enabled }}
 {{- range $namespaces }}
 ---
 kind: RoleBinding

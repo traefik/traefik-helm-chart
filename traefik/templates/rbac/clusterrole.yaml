@@ -31,12 +31,6 @@ rules:
   - apiGroups:
       - ""
     resources:
-      - pods
-    verbs:
-      - get
-  - apiGroups:
-      - ""
-    resources:
       - secrets
     verbs:
       - get
