@@ -1,0 +1,136 @@
+suite: service
+templates:
+  - service.yaml
+tests:
+  - it: default entry renders LoadBalancer, selector matches deployment, exposes web/websecure on 80/443 (not traefik)
+    asserts:
+      - equal: { path: spec.type, value: LoadBalancer }
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/name: traefik
+            app.kubernetes.io/instance: RELEASE-NAME
+      - lengthEqual: { path: spec.ports, count: 2 }
+      - contains:
+          path: spec.ports
+          content: { name: web,       port: 80,  targetPort: web,       protocol: TCP }
+      - contains:
+          path: spec.ports
+          content: { name: websecure, port: 443, targetPort: websecure, protocol: TCP }
+      - notContains:
+          path: spec.ports
+          content: { name: traefik,   port: 9000, targetPort: traefik,   protocol: TCP }
+
+  - it: default entry uses the chart fullname (no `-default` suffix)
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+
+  - it: Service ports are decoupled from entryPoints (adding one does not auto-expose it)
+    set:
+      traefik.entryPoints.udp: { address: ":5353/udp" }
+    asserts:
+      - lengthEqual: { path: spec.ports, count: 2 }
+      - notContains:
+          path: spec.ports
+          content: { name: udp, port: 5353, targetPort: udp, protocol: UDP }
+
+  - it: overriding default.spec.ports replaces the shipped list wholesale (Helm list semantics)
+    set:
+      service.default.spec.ports:
+        - { name: traefik, port: 9000, targetPort: traefik, protocol: TCP }
+    asserts:
+      - lengthEqual: { path: spec.ports, count: 1 }
+      - equal:
+          path: spec.ports[0]
+          value: { name: traefik, port: 9000, targetPort: traefik, protocol: TCP }
+
+  - it: service=null skips the Service entirely
+    set:
+      service: null
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: service.default=null disables the default Service
+    set:
+      service.default: null
+    asserts:
+      - hasDocuments: { count: 0 }
+
+  - it: default.metadata.annotations are added without losing chart labels
+    set:
+      service.default.metadata.annotations:
+        external-dns.alpha.kubernetes.io/hostname: traefik.example.com
+    asserts:
+      - equal:
+          path: metadata.annotations["external-dns.alpha.kubernetes.io/hostname"]
+          value: traefik.example.com
+      - equal:
+          path: metadata.labels["app.kubernetes.io/name"]
+          value: traefik
+
+  - it: default.metadata.name is chart-owned (user attempt is ignored)
+    set:
+      service.default.metadata.name: my-custom-service
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-traefik
+
+  - it: default.spec.type override switches to ClusterIP, keeps the shipped ports
+    set:
+      service.default.spec.type: ClusterIP
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+      - contains:
+          path: spec.ports
+          content: { name: web, port: 80, targetPort: web, protocol: TCP }
+
+  - it: default.spec scalar fields are added (externalTrafficPolicy)
+    set:
+      service.default.spec.externalTrafficPolicy: Local
+    asserts:
+      - equal:
+          path: spec.externalTrafficPolicy
+          value: Local
+
+  - it: user-defined service requires its own spec
+    set:
+      service.web: {}
+    asserts:
+      - failedTemplate:
+          errorMessage: "service.web: spec is required (chart has no defaults for this service)"
+
+  - it: user-defined service renders with its provided spec and `<fullname>-<name>` naming
+    set:
+      service.web:
+        spec:
+          type: LoadBalancer
+          selector:
+            app.kubernetes.io/name: traefik
+          ports:
+            - { name: web, port: 80, targetPort: web, protocol: TCP }
+    documentSelector:
+      path: metadata.name
+      value: RELEASE-NAME-traefik-web
+    asserts:
+      - isKind: { of: Service }
+      - equal:
+          path: spec.type
+          value: LoadBalancer
+      - equal:
+          path: spec.ports[0].port
+          value: 80
+
+  - it: default + named user service render as two documents
+    set:
+      service.web:
+        spec:
+          type: LoadBalancer
+          selector: { app.kubernetes.io/name: traefik }
+          ports: [{ name: web, port: 80, targetPort: web }]
+    asserts:
+      - hasDocuments: { count: 2 }
