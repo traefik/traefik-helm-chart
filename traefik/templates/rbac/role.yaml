@@ -16,7 +16,7 @@
 {{- end -}}
 {{- $namespaces = sortAlpha (uniq $namespaces) -}}
 
-{{- if and .Values.rbac.enabled (or .Values.rbac.namespaced .Values.hub.token) -}}
+{{- if .Values.rbac.enabled -}}
 {{- range $namespaces }}
 ---
 kind: Role
@@ -27,6 +27,15 @@ metadata:
   labels:
     {{- include "traefik.labels" $ | nindent 4 }}
 rules:
+{{- if eq . (include "traefik.namespace" $) }}
+  # Traefik reads its own pod to add Kubernetes attributes to OpenTelemetry resources.
+  - apiGroups:
+      - ""
+    resources:
+      - pods
+    verbs:
+      - get
+{{- end }}
 {{- if and $.Values.hub.token (eq . (include "traefik.namespace" $)) }}
   - apiGroups:
       - ""
@@ -59,12 +68,6 @@ rules:
     verbs:
       - list
       - watch
-  - apiGroups:
-      - ""
-    resources:
-      - pods
-    verbs:
-      - get
   # Required while https://github.com/traefik/traefik/issues/7097#issuecomment-1983581843
   - apiGroups:
       - ""
